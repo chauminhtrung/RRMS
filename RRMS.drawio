@@ -35,7 +35,7 @@
           <mxGeometry x="250" y="390" width="120" height="160" as="geometry" />
         </mxCell>
         <mxCell id="Zx9yhmI7MYSLRwEMKLJb-10" value="Điện" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
-          <mxGeometry x="414" y="760" width="120" height="160" as="geometry" />
+          <mxGeometry x="260" y="760" width="120" height="160" as="geometry" />
         </mxCell>
         <mxCell id="Zx9yhmI7MYSLRwEMKLJb-11" value="Nước&amp;nbsp;" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
           <mxGeometry x="570" y="390" width="120" height="160" as="geometry" />
@@ -57,9 +57,6 @@
         </mxCell>
         <mxCell id="0Gv9EPK4i53cQy_oenAs-0" value="Vai trò" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
           <mxGeometry x="710" y="40" width="120" height="160" as="geometry" />
-        </mxCell>
-        <mxCell id="Zx9yhmI7MYSLRwEMKLJb-17" value="Vai Trò" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
-          <mxGeometry x="270" y="760" width="120" height="160" as="geometry" />
         </mxCell>
         <mxCell id="0Gv9EPK4i53cQy_oenAs-1" value="Quyền" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
           <mxGeometry x="710" y="210" width="120" height="160" as="geometry" />
