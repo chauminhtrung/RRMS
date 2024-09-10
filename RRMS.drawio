@@ -52,12 +52,6 @@
         <mxCell id="Zx9yhmI7MYSLRwEMKLJb-15" value="Báo Cáo" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
           <mxGeometry x="570" y="570" width="120" height="160" as="geometry" />
         </mxCell>
-        <mxCell id="uNns6n_JclZBmVgXCh4A-0" value="Vertical Container" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
-          <mxGeometry x="270" y="30" width="200" height="200" as="geometry" />
-        </mxCell>
-        <mxCell id="uNns6n_JclZBmVgXCh4A-1" value="Vertical Container" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
-          <mxGeometry x="540" y="30" width="200" height="200" as="geometry" />
-        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
