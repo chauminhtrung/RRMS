@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36" version="24.7.12">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
-    <mxGraphModel dx="1400" dy="759" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1500" dy="813" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
@@ -88,11 +88,59 @@
         <mxCell id="Zx9yhmI7MYSLRwEMKLJb-27" value="Hỗ Trợ" style="swimlane;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="410" y="930" width="120" height="160" as="geometry" />
         </mxCell>
-        <mxCell id="s34-9yYWKcVvulhdYOap-0" value="" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="s34-9yYWKcVvulhdYOap-0" value="Đăng Nhập" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
           <mxGeometry x="1170" y="90" width="130" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="s34-9yYWKcVvulhdYOap-2" value="Actor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
-          <mxGeometry x="1410" y="360" width="70" height="110" as="geometry" />
+        <mxCell id="s34-9yYWKcVvulhdYOap-2" value="Chủ Trọ" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1410" y="360" width="70" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="s34-9yYWKcVvulhdYOap-7" value="Người Thuê Trọ" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1140" y="430" width="70" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="s34-9yYWKcVvulhdYOap-8" value="Admin" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1280" y="360" width="70" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="s34-9yYWKcVvulhdYOap-9" value="Nhân Viên" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1340" y="550" width="70" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="s34-9yYWKcVvulhdYOap-10" value="Quản Lý Phòng Trọ" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1350" y="100" width="130" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s34-9yYWKcVvulhdYOap-11" value="Quản Lý Phòng Trọ" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1010" y="180" width="130" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s34-9yYWKcVvulhdYOap-12" value="Quản Lý Hợp Đồng" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1170" y="235" width="130" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s34-9yYWKcVvulhdYOap-13" value="Quản Lý Người Nhà Trọ" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1360" y="230" width="130" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s34-9yYWKcVvulhdYOap-14" value="Quản Lý Nhà Cung Cấp" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1710" y="120" width="130" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s34-9yYWKcVvulhdYOap-15" value="Quản Lý Trang Thiết Bị" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1590" y="235" width="130" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s34-9yYWKcVvulhdYOap-16" value="Quản Lý Lịch Làm Việc" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1520" y="100" width="130" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s34-9yYWKcVvulhdYOap-17" value="Quản Lý Nhân Viên" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1750" y="270" width="130" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s34-9yYWKcVvulhdYOap-18" value="Báo Cáo Và Thống Kê" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1520" y="360" width="130" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s34-9yYWKcVvulhdYOap-19" value="Đăng Ký" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1700" y="415" width="130" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s34-9yYWKcVvulhdYOap-20" value="Tìm Kiếm" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1880" y="415" width="130" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s34-9yYWKcVvulhdYOap-21" value="Quản Lý Bài Đăng" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1590" y="570" width="130" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s34-9yYWKcVvulhdYOap-22" value="Quên Mật Khẩu" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1780" y="520" width="130" height="110" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
