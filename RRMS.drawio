@@ -58,6 +58,12 @@
         <mxCell id="0Gv9EPK4i53cQy_oenAs-1" value="Quyền" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
           <mxGeometry x="710" y="210" width="120" height="160" as="geometry" />
         </mxCell>
+        <mxCell id="0Gv9EPK4i53cQy_oenAs-2" value="Hóa đơn" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="710" y="390" width="120" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="0Gv9EPK4i53cQy_oenAs-3" value="Sự cố" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="710" y="570" width="120" height="160" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
