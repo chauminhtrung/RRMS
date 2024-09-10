@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0" version="24.7.12">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36" version="24.7.12">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
-    <mxGraphModel dx="1050" dy="573" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1400" dy="759" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
@@ -35,7 +35,7 @@
           <mxGeometry x="250" y="390" width="120" height="160" as="geometry" />
         </mxCell>
         <mxCell id="Zx9yhmI7MYSLRwEMKLJb-10" value="Điện" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
-          <mxGeometry x="414" y="390" width="120" height="160" as="geometry" />
+          <mxGeometry x="414" y="760" width="120" height="160" as="geometry" />
         </mxCell>
         <mxCell id="Zx9yhmI7MYSLRwEMKLJb-11" value="Nước&amp;nbsp;" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
           <mxGeometry x="570" y="390" width="120" height="160" as="geometry" />
@@ -52,11 +52,20 @@
         <mxCell id="Zx9yhmI7MYSLRwEMKLJb-15" value="Báo Cáo" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
           <mxGeometry x="570" y="570" width="120" height="160" as="geometry" />
         </mxCell>
+        <mxCell id="Zx9yhmI7MYSLRwEMKLJb-16" value="Phương Thức Thanh Toán" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="80" y="750" width="160" height="160" as="geometry" />
+        </mxCell>
         <mxCell id="0Gv9EPK4i53cQy_oenAs-0" value="Vai trò" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
           <mxGeometry x="710" y="40" width="120" height="160" as="geometry" />
         </mxCell>
+        <mxCell id="Zx9yhmI7MYSLRwEMKLJb-17" value="Vai Trò" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="270" y="760" width="120" height="160" as="geometry" />
+        </mxCell>
         <mxCell id="0Gv9EPK4i53cQy_oenAs-1" value="Quyền" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
           <mxGeometry x="710" y="210" width="120" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="Zx9yhmI7MYSLRwEMKLJb-18" value="Chi Tiết Hợp Đồng" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="394" y="390" width="160" height="160" as="geometry" />
         </mxCell>
         <mxCell id="0Gv9EPK4i53cQy_oenAs-2" value="Hóa đơn" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
           <mxGeometry x="710" y="390" width="120" height="160" as="geometry" />
