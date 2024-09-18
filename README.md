@@ -17,11 +17,6 @@ Hệ thống quản lý nhà trọ
 <a href="https://getbootstrap.com/" target="_blank" rel="noreferrer">
  <img src="https://upload.vectorlogo.zone/logos/getbootstrap/images/987f8f6c-263a-47b1-a85d-853cfca215d9.svg" alt="mysql" width="40" height="40"/>
 </a> 
-<a href="https://www.java.com" target="_blank" rel="noreferrer">
- <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" alt="java" width="40" height="40"/> </a> 
- <a href="https://react.dev/" target="_blank" rel="noreferrer">
-  <img src="https://www.vectorlogo.zone/logos/reactjs/reactjs-icon.svg" alt="mysql" width="40" height="40"/> 
-  </a>
 <a href="https://firebase.google.com/" target="_blank" rel="noreferrer">
  <img src="https://www.vectorlogo.zone/logos/firebase/firebase-icon.svg" alt="mysql" width="40" height="40"/>
 </a> 
