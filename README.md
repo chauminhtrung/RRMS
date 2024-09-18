@@ -4,7 +4,7 @@ Hệ thống quản lý nhà trọ
 
 ## Các công nghệ được sử dụng trong dự án (RRMS)
 
-<p align="left"> 
+<p align="left" style="display: flex; gap: 20px"> 
 <a href="https://git-scm.com/" target="_blank" rel="noreferrer"> 
 <img src="https://www.vectorlogo.zone/logos/github/github-icon.svg" alt="git" width="40" height="40"/> </a> 
 <a href="https://www.java.com" target="_blank" rel="noreferrer">
