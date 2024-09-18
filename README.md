@@ -14,11 +14,20 @@ Hệ thống quản lý nhà trọ
  <a href="https://react.dev/" target="_blank" rel="noreferrer">
   <img src="https://www.vectorlogo.zone/logos/reactjs/reactjs-icon.svg" alt="mysql" width="40" height="40"/> 
   </a>
+   <a href="https://maven.apache.org/" target="_blank" rel="noreferrer">
+  <img src="https://www.vectorlogo.zone/logos/apache_maven/apache_maven-icon.svg" alt="mysql" width="40" height="40"/> 
+  </a>
+     <a href="https://nodejs.org/en" target="_blank" rel="noreferrer">
+  <img src="https://www.vectorlogo.zone/logos/nodejs/nodejs-icon.svg" alt="mysql" width="40" height="40"/> 
+  </a>
 <a href="https://getbootstrap.com/" target="_blank" rel="noreferrer">
  <img src="https://upload.vectorlogo.zone/logos/getbootstrap/images/987f8f6c-263a-47b1-a85d-853cfca215d9.svg" alt="mysql" width="40" height="40"/>
 </a> 
 <a href="https://firebase.google.com/" target="_blank" rel="noreferrer">
  <img src="https://www.vectorlogo.zone/logos/firebase/firebase-icon.svg" alt="mysql" width="40" height="40"/>
+</a> 
+<a href="https://redis.io/" target="_blank" rel="noreferrer">
+ <img src="https://www.vectorlogo.zone/logos/redis/redis-icon.svg" alt="mysql" width="40" height="40"/>
 </a> 
 <a href="https://www.microsoft.com/en-us/sql-server" target="_blank" rel="noreferrer">
 <img width="40" height="40" src="https://img.icons8.com/color/48/microsoft-sql-server.png" alt="microsoft-sql-server"/>
