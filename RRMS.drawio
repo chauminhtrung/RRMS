@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36" version="24.7.14" pages="2">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0" version="24.7.13" pages="2">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
     <mxGraphModel dx="4654" dy="1626" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -1216,12 +1216,24 @@
     </mxGraphModel>
   </diagram>
   <diagram id="KO5N4lZRbTm_Ett8uHkw" name="Activity diagram">
-    <mxGraphModel dx="604" dy="391" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1050" dy="545" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="weMotZ8b7OvY8TWEH0bi-12" value="Đăng nhập" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;" vertex="1" parent="1">
           <mxGeometry x="110" y="168" width="300" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="b0hlI6KdY4oMpSdXjaje-5" value="&lt;div align=&quot;left&quot;&gt;&lt;font style=&quot;font-size: 9px;&quot;&gt;quản lý người dùng&lt;/font&gt;&lt;/div&gt;" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;align=left;" vertex="1" parent="1">
+          <mxGeometry x="99" y="763" width="681" height="429" as="geometry" />
+        </mxCell>
+        <mxCell id="b0hlI6KdY4oMpSdXjaje-7" value="&lt;p style=&quot;line-height: 100%;&quot;&gt;&lt;font face=&quot;Verdana&quot;&gt;User&lt;/font&gt;&lt;/p&gt;" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="119" y="799" width="340" height="389" as="geometry" />
+        </mxCell>
+        <mxCell id="b0hlI6KdY4oMpSdXjaje-9" value="" style="shape=waypoint;sketch=0;fillStyle=solid;size=6;pointerEvents=1;points=[];fillColor=none;resizable=0;rotatable=0;perimeter=centerPerimeter;snapToPoint=1;perimeterSpacing=7;strokeWidth=10;" vertex="1" parent="b0hlI6KdY4oMpSdXjaje-7">
+          <mxGeometry x="47" y="64" width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="b0hlI6KdY4oMpSdXjaje-11" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="b0hlI6KdY4oMpSdXjaje-7">
+          <mxGeometry x="133" y="61" width="120" height="26" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
