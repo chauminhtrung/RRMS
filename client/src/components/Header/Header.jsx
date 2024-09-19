@@ -51,6 +51,14 @@ const Header = () => {
                 >
                   Chi tiết
                 </Button>
+                <Button
+                  component={Link}
+                  to="/search"
+                  variant="text"
+                  color="inherit"
+                >
+                  Tìm kiếm
+                </Button>
               </Typography>
             </Box>
             <Box>
