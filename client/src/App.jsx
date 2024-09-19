@@ -1,7 +1,18 @@
+import Detail from "./pages/Detail/Detail";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Header from "./components/Header/Header";
+
 function App() {
   return (
     <>
-      <h2>Hello word</h2>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/detail" element={<Detail />} />
+        </Routes>
+      </Router>
     </>
   );
 }
