@@ -16,7 +16,7 @@ const ModeSelect = () => {
   }
 
   return (
-    <FormControl size="small" sx={{ maxWidth: "120px" }}>
+    <FormControl size="small" sx={{}}>
       <Select
         value={mode}
         onChange={(event) => {

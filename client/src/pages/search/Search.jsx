@@ -58,12 +58,36 @@ const Search = () => {
         <DialogContent dividers>
           <Grid container spacing={2} textAlign="center">
             {[
-              { name: "Hà Nội", image: "sp1.webp" },
-              { name: "Hồ Chí Minh", image: "hochiminh.jpg" },
-              { name: "Đà Nẵng", image: "danang.jpg" },
-              { name: "Bình Dương", image: "binhduong.jpg" },
-              { name: "Đồng Nai", image: "dongnai.jpg" },
-              { name: "Khánh Hòa", image: "khanhhoa.jpg" },
+              {
+                name: "Hà Nội",
+                image:
+                  "https://mui.com/static/images/cards/contemplative-reptile.jpg",
+              },
+              {
+                name: "Hồ Chí Minh",
+                image:
+                  "https://mui.com/static/images/cards/contemplative-reptile.jpg",
+              },
+              {
+                name: "Đà Nẵng",
+                image:
+                  "https://mui.com/static/images/cards/contemplative-reptile.jpg",
+              },
+              {
+                name: "Bình Dương",
+                image:
+                  "https://mui.com/static/images/cards/contemplative-reptile.jpg",
+              },
+              {
+                name: "Đồng Nai",
+                image:
+                  "https://mui.com/static/images/cards/contemplative-reptile.jpg",
+              },
+              {
+                name: "Khánh Hòa",
+                image:
+                  "https://mui.com/static/images/cards/contemplative-reptile.jpg",
+              },
             ].map((city) => (
               <Grid item xs={4} md={2} key={city.name}>
                 <Card>

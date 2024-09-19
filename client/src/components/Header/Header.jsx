@@ -1,9 +1,11 @@
 import {
   AppBar,
+  Avatar,
   Box,
   Button,
   IconButton,
   Toolbar,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import ModeSelect from "./ModeSelect";
@@ -61,8 +63,14 @@ const Header = () => {
                 </Button>
               </Typography>
             </Box>
-            <Box>
-              <Button color="inherit">Login</Button>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
+              <Tooltip title="Hello Dũng">
+                <Avatar
+                  alt="Remy Sharp"
+                  src="https://mui.com/static/images/avatar/1.jpg"
+                />
+              </Tooltip>
+
               <ModeSelect />
             </Box>
           </Toolbar>
