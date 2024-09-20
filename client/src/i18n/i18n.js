@@ -4,7 +4,7 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   en: {
     translation: {
-      "Welcome to React": "Welcome to React and react-i18next",
+      "Welcome to React": "Welcome to React and react-i18next !",
       English: "English",
       Vietnamese: "Vietnamese",
       Light: "Light",
@@ -14,7 +14,7 @@ const resources = {
   },
   vi: {
     translation: {
-      "Welcome to React": "Chào mừng đến với React và react-i18next",
+      "Welcome to React": "Chào mừng đến với React và react-i18next !",
       English: "Tiếng Anh",
       Vietnamese: "Tiếng Việt",
       Light: "Sáng",
