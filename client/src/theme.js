@@ -8,6 +8,7 @@ const theme = createTheme({
       palette: {
         primary: {
           main: "#5352ed", // Đổi màu chính của giao diện tại đây
+          contrastText: "#fff",
         },
         secondary: {
           main: "#dcdde1",

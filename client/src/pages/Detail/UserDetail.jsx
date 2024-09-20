@@ -4,7 +4,10 @@ const UserDetail = () => {
   return (
     <Box
       sx={{
-        border: "1px solid black",
+        border: (theme) =>
+          theme.palette.mode === "light"
+            ? "1px solid #747d8c"
+            : "1px solid #a4b0be",
         padding: "10px",
         borderRadius: "10px",
         display: "flex",
@@ -23,13 +26,44 @@ const UserDetail = () => {
         Đã được chứng thực
       </Typography>
       <Box sx={{ gap: 2.5, display: "flex" }}>
-        <Button variant="contained">Nhắn tin Zalo</Button>
-        <Button variant="contained">Xem số điện thoại</Button>
+        <Button
+          variant="contained"
+          sx={{
+            bgcolor: (theme) =>
+              theme.palette.mode === "light" ? "#3742fa" : "#5352ed",
+          }}
+        >
+          Nhắn tin Zalo
+        </Button>
+        <Button
+          variant="contained"
+          sx={{
+            bgcolor: (theme) =>
+              theme.palette.mode === "light" ? "#ffa502" : "#eccc68",
+          }}
+        >
+          Xem số điện thoại
+        </Button>
       </Box>
-      <Button variant="contained" sx={{ my: 2 }}>
+      <Button
+        variant="contained"
+        sx={{
+          my: 2,
+          bgcolor: (theme) =>
+            theme.palette.mode === "light" ? "#2ed573" : "#7bed9f",
+        }}
+      >
         Quan tâm
       </Button>
-      <Button variant="contained">Báo cáo tin</Button>
+      <Button
+        variant="contained"
+        sx={{
+          bgcolor: (theme) =>
+            theme.palette.mode === "light" ? "#ff4757" : "#ff6b81",
+        }}
+      >
+        Báo cáo tin
+      </Button>
     </Box>
   );
 };
