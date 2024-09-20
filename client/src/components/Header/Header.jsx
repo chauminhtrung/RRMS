@@ -8,9 +8,9 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import ModeSelect from "./ModeSelect";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
+import Option from "./Options/Option";
 
 const Header = () => {
   return (
@@ -71,7 +71,7 @@ const Header = () => {
                 />
               </Tooltip>
 
-              <ModeSelect />
+              <Option />
             </Box>
           </Toolbar>
         </AppBar>
