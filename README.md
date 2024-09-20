@@ -2,7 +2,7 @@
 
 Hệ thống quản lý nhà trọ
 
-## Các công nghệ được sử dụng trong dự án (RRMS)
+## Các công nghệ được sử dụng trong dự án (RRMS) 
 
 <p align="left" style="display: flex; gap: 20px"> 
 <a href="https://git-scm.com/" target="_blank" rel="noreferrer"> 
