@@ -1,7 +1,13 @@
 /* eslint-disable react/prop-types */
 import { Box, Button, Typography } from "@mui/material";
+import FmdGoodIcon from "@mui/icons-material/FmdGood";
 
-const Item = ({ item, index, totalItems }) => {
+const Item = ({ item, index, totalItems, addressDetail }) => {
+  const openGoogleMap = () => {
+    const url = `https://www.google.com/maps/search/?api=1&query=${addressDetail}`;
+    window.open(url, "_blank");
+  };
+
   return (
     <Box sx={{ position: "relative" }}>
       <img
@@ -20,7 +26,12 @@ const Item = ({ item, index, totalItems }) => {
           width: "95%",
         }}
       >
-        <Button sx={{ bgcolor: "primary.main" }} variant="contained">
+        <Button
+          sx={{ bgcolor: "primary.main" }}
+          variant="contained"
+          onClick={openGoogleMap}
+          startIcon={<FmdGoodIcon />}
+        >
           Xem vị trí
         </Button>
         <Typography color="white" variant="h6">
