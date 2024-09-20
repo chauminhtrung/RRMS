@@ -14,7 +14,13 @@ import {
   Typography,
   CardMedia,
   IconButton,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  InputAdornment,
 } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 
 const Search = () => {
@@ -27,18 +33,120 @@ const Search = () => {
   const handleClose = () => {
     setOpen(false);
   };
+  const [loaiNha, setLoaiNha] = useState("");
+
+  const handleLoaiNhaChange = (event) => {
+    setLoaiNha(event.target.value);
+  };
+
+  const [gia, setGia] = useState("");
+
+  const handleGiaChange = (event) => {
+    setGia(event.target.value);
+  };
+
+  const [dienTich, setDienTich] = useState("");
+
+  const handleDienTichChange = (event) => {
+    setDienTich(event.target.value);
+  };
 
   return (
     <Box>
-      <Container sx={{ mt: 4 }}>
-        <Grid container justifyContent="center">
-          <Grid item xs={12} md={6}>
+      <Container
+        sx={{
+          mt: 4,
+          border: "2px solid #ccc",
+          borderRadius: "6px",
+          bgcolor: "secondary.main",
+        }}
+      >
+        <Grid container justifyContent="center" spacing={2}>
+          <Grid item xs={12} sm={10} md={10}>
             <TextField
+              sx={{ mt: 3 }}
               fullWidth
               label="Tìm kiếm tỉnh thành..."
               variant="outlined"
               onClick={handleClickOpen}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton color="primary" onClick={handleClickOpen}>
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-helper-label">
+                Loại Nhà
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-helper-label"
+                id="demo-simple-select-helper"
+                value={loaiNha}
+                label="Age"
+                onChange={handleLoaiNhaChange}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value={10}>Tất cả</MenuItem>
+                <MenuItem value={20}>Căn hộ trung cư</MenuItem>
+                <MenuItem value={30}>Nhà riêng</MenuItem>
+                <MenuItem value={40}>Nhà mặt phố</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-helper-label">Giá</InputLabel>
+              <Select
+                labelId="demo-simple-select-helper-label"
+                id="demo-simple-select-helper"
+                value={gia}
+                label="Age"
+                onChange={handleGiaChange}
+              >
+                <Typography sx={{ display: "flex ", justifyContent: "center" }}>
+                  Mức Giá
+                </Typography>
+                <Typography
+                  sx={{ display: "flex", justifyContent: "center" }}
+                ></Typography>
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value={10}>Dưới 1 triệu</MenuItem>
+                <MenuItem value={20}>Từ 2 triệu đến 5 triệu</MenuItem>
+                <MenuItem value={30}>Trên 5 triệu</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-helper-label">
+                Diện Tích
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-helper-label"
+                id="demo-simple-select-helper"
+                value={dienTich}
+                label="dienTich"
+                onChange={handleDienTichChange}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value={10}>Ten</MenuItem>
+                <MenuItem value={20}>Twenty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
         </Grid>
       </Container>
@@ -60,36 +168,30 @@ const Search = () => {
             {[
               {
                 name: "Hà Nội",
-                image:
-                  "https://mui.com/static/images/cards/contemplative-reptile.jpg",
+                image: "https://picsum.photos/500/1000?random=1",
               },
               {
                 name: "Hồ Chí Minh",
-                image:
-                  "https://mui.com/static/images/cards/contemplative-reptile.jpg",
+                image: "https://picsum.photos/500/1000?random=6",
               },
               {
                 name: "Đà Nẵng",
-                image:
-                  "https://mui.com/static/images/cards/contemplative-reptile.jpg",
+                image: "https://picsum.photos/500/1000?random=2",
               },
               {
                 name: "Bình Dương",
-                image:
-                  "https://mui.com/static/images/cards/contemplative-reptile.jpg",
+                image: "https://picsum.photos/500/1000?random=3",
               },
               {
                 name: "Đồng Nai",
-                image:
-                  "https://mui.com/static/images/cards/contemplative-reptile.jpg",
+                image: "https://picsum.photos/500/1000?random=4",
               },
               {
                 name: "Khánh Hòa",
-                image:
-                  "https://mui.com/static/images/cards/contemplative-reptile.jpg",
+                image: "https://picsum.photos/500/1000?random=5",
               },
             ].map((city) => (
-              <Grid item xs={4} md={2} key={city.name}>
+              <Grid item xs={6} sm={4} md={2} key={city.name}>
                 <Card>
                   <CardMedia
                     component="img"
@@ -112,7 +214,7 @@ const Search = () => {
           <Grid container spacing={2} sx={{ mt: 2 }}>
             {["An Giang", "Bà Rịa Vũng Tàu", "Bắc Giang", "Bắc Kạn"].map(
               (city) => (
-                <Grid item xs={6} md={3} key={city}>
+                <Grid item xs={12} sm={6} md={3} key={city}>
                   <Typography variant="body2">
                     <Button variant="text" href="#" color="inherit">
                       {city}
