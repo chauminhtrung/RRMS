@@ -22,6 +22,10 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
+import RoomList from "./RoomList";
+import SearchList from "./SearchList";
+import BoxSideBar from "./BoxSideBar";
+import Name from "./Name";
 
 const Search = () => {
   const [open, setOpen] = useState(false);
@@ -55,8 +59,8 @@ const Search = () => {
     <Box>
       <Container
         sx={{
-          mt: 4,
-          border: "2px solid #ccc",
+          mt: 5,
+          border: "3px solid #ccc",
           borderRadius: "6px",
           bgcolor: "secondary.main",
         }}
@@ -232,6 +236,26 @@ const Search = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <SearchList />
+      <Container>
+        <Grid container>
+          <Grid item md={10}>
+            <RoomList />
+            <RoomList />
+            <RoomList />
+            <RoomList />
+            <RoomList />
+          </Grid>
+          <Grid item md={2} sx={{ mt: 4 }}>
+            <Name />
+            <BoxSideBar />
+            <BoxSideBar />
+            <BoxSideBar />
+            <BoxSideBar />
+            <BoxSideBar />
+          </Grid>
+        </Grid>
+      </Container>
     </Box>
   );
 };
