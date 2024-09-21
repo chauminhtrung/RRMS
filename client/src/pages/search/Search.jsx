@@ -19,6 +19,7 @@ import {
   Select,
   MenuItem,
   InputAdornment,
+  Slider, // Import Slider ở đây
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
@@ -26,6 +27,7 @@ import RoomList from "./RoomList";
 import SearchList from "./SearchList";
 import BoxSideBar from "./BoxSideBar";
 import Name from "./Name";
+import ButtonPre from "./ButtonPre";
 
 const Search = () => {
   const [open, setOpen] = useState(false);
@@ -34,27 +36,31 @@ const Search = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
   const [loaiNha, setLoaiNha] = useState("");
-
   const handleLoaiNhaChange = (event) => {
     setLoaiNha(event.target.value);
   };
 
-  const [gia, setGia] = useState("");
-
-  const handleGiaChange = (event) => {
-    setGia(event.target.value);
-  };
-
-  const [dienTich, setDienTich] = useState("");
-
-  const handleDienTichChange = (event) => {
+  const [dienTich, setDienTich] = useState([0, 50]);
+  const handleDienTichChange = (event, newValue) => {
     setDienTich(event.target.value);
+    setDienTich(newValue);
   };
 
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const [gia, setGia] = useState([0, 50]);
+
+  const handleChange = (event, newValue) => {
+    setGia(event.target.value);
+    setGia(newValue);
+  };
+
+  const valuetext = (value) => {
+    return `${value}°C`;
+  };
   return (
     <Box>
       <Container
@@ -84,6 +90,8 @@ const Search = () => {
               }}
             />
           </Grid>
+
+          {/* Select Loại Nhà */}
           <Grid item xs={12} sm={6} md={4}>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-helper-label">
@@ -93,7 +101,7 @@ const Search = () => {
                 labelId="demo-simple-select-helper-label"
                 id="demo-simple-select-helper"
                 value={loaiNha}
-                label="Age"
+                label="Loại Nhà"
                 onChange={handleLoaiNhaChange}
               >
                 <MenuItem value="">
@@ -106,6 +114,8 @@ const Search = () => {
               </Select>
             </FormControl>
           </Grid>
+
+          {/* Select Giá */}
           <Grid item xs={12} sm={6} md={4}>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-helper-label">Giá</InputLabel>
@@ -113,24 +123,38 @@ const Search = () => {
                 labelId="demo-simple-select-helper-label"
                 id="demo-simple-select-helper"
                 value={gia}
-                label="Age"
-                onChange={handleGiaChange}
+                label="Giá"
+                onChange={handleChange}
               >
-                <Typography sx={{ display: "flex ", justifyContent: "center" }}>
-                  Mức Giá
+                <Typography gutterBottom sx={{ mt: 2, mx: 1.5 }}>
+                  Khoảng giá (Triệu)
                 </Typography>
-                <Typography
-                  sx={{ display: "flex", justifyContent: "center" }}
-                ></Typography>
+                <Box sx={{ width: 300 }}>
+                  <Slider
+                    sx={{ mx: 2, width: 320 }}
+                    getAriaLabel={() => "Temperature range"}
+                    value={gia}
+                    onChange={handleChange}
+                    valueLabelDisplay="auto"
+                    getAriaValueText={valuetext}
+                    max={50}
+                  />
+                </Box>
+                <Typography sx={{ mx: 1.5 }}>
+                  {`Giá từ: ${gia[0]} triệu - ${gia[1]} triệu`}
+                </Typography>
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
                 <MenuItem value={10}>Dưới 1 triệu</MenuItem>
-                <MenuItem value={20}>Từ 2 triệu đến 5 triệu</MenuItem>
-                <MenuItem value={30}>Trên 5 triệu</MenuItem>
+                <MenuItem value={20}>Từ 1 triệu - 5 triệu</MenuItem>
+                <MenuItem value={30}>Từ 5 triệu - 10 triệu</MenuItem>
+                <MenuItem value={40}>Dưới 50 triệu</MenuItem>
               </Select>
             </FormControl>
           </Grid>
+
+          {/* Select Diện Tích */}
           <Grid item xs={12} sm={6} md={4}>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-helper-label">
@@ -140,22 +164,40 @@ const Search = () => {
                 labelId="demo-simple-select-helper-label"
                 id="demo-simple-select-helper"
                 value={dienTich}
-                label="dienTich"
+                label="Diện Tích"
                 onChange={handleDienTichChange}
               >
+                <Typography gutterBottom sx={{ mt: 2, mx: 1.5 }}>
+                  Diện tích (m2)
+                </Typography>
+                <Box sx={{ width: 300 }}>
+                  <Slider
+                    sx={{ mx: 2, width: 320 }}
+                    getAriaLabel={() => "Temperature range"}
+                    value={dienTich}
+                    onChange={handleDienTichChange}
+                    valueLabelDisplay="auto"
+                    getAriaValueText={valuetext}
+                    max={50}
+                  />
+                </Box>
+                <Typography sx={{ mx: 1.5 }}>
+                  {`Diện tích từ: ${dienTich[0]} m2 - ${dienTich[1]} m2`}
+                </Typography>
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                <MenuItem value={10}>Dưới 50m²</MenuItem>
+                <MenuItem value={20}>50m² - 100m²</MenuItem>
+                <MenuItem value={30}>100m² - 200m²</MenuItem>
+                <MenuItem value={40}>Trên 200m²</MenuItem>
               </Select>
             </FormControl>
           </Grid>
         </Grid>
       </Container>
 
-      <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth>
+      <Dialog open={open} maxWidth="lg" fullWidth>
         <DialogTitle>
           Top những tỉnh thành nổi bật
           <IconButton
@@ -214,7 +256,6 @@ const Search = () => {
           <Typography variant="h5" sx={{ mt: 4 }}>
             Tất cả tỉnh thành
           </Typography>
-
           <Grid container spacing={2} sx={{ mt: 2 }}>
             {["An Giang", "Bà Rịa Vũng Tàu", "Bắc Giang", "Bắc Kạn"].map(
               (city) => (
@@ -231,11 +272,12 @@ const Search = () => {
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button color="primary" onClick={handleClose}>
             Close
           </Button>
         </DialogActions>
       </Dialog>
+
       <SearchList />
       <Container>
         <Grid container>
@@ -245,9 +287,12 @@ const Search = () => {
             <RoomList />
             <RoomList />
             <RoomList />
+            <RoomList />
+            <ButtonPre />
           </Grid>
           <Grid item md={2} sx={{ mt: 4 }}>
             <Name />
+            <BoxSideBar />
             <BoxSideBar />
             <BoxSideBar />
             <BoxSideBar />
