@@ -12,20 +12,12 @@ import {
 const RoomList = () => {
   return (
     <Box>
-      {" "}
-      {/* Giảm padding */}
-      {/* Room Card */}
       <Grid container spacing={1}>
-        {" "}
-        {/* Giảm khoảng cách */}
-        {/* Main Content */}
         <Grid item xs={12}>
           <Box p={1}>
-            {" "}
-            {/* Giảm padding giữa các Box */}
             <Card
               sx={{
-                p: 1, // Giảm padding trong card
+                p: 1,
                 display: "flex",
                 flexDirection: { xs: "column", md: "row" },
                 justifyContent: "space-between",
@@ -65,7 +57,7 @@ const RoomList = () => {
                 <Box sx={{ display: "flex", alignItems: "center", mt: 1 }}>
                   <Avatar
                     alt="Trinh"
-                    src="https://via.placeholder.com/150" // Thay bằng đường dẫn ảnh thực tế
+                    src="https://via.placeholder.com/150"
                     sx={{ mr: 1 }}
                   />
                   <Typography variant="caption">Trinh, 2 ngày trước</Typography>

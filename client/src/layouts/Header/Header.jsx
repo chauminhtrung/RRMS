@@ -61,7 +61,7 @@ const Header = () => {
                   variant="text"
                   color="inherit"
                 >
-                  Tìm kiếm
+                  {t("Search")}
                 </Button>
               </Typography>
             </Box>
