@@ -12,7 +12,6 @@ import { Link } from "react-router-dom";
 import Carousel from "react-material-ui-carousel";
 import Item from "./Item";
 import UserDetail from "./UserDetail";
-import { detail } from "../../apis/mock-data-detail";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -27,8 +26,18 @@ import GroupIcon from "@mui/icons-material/Group";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
 import LanguageIcon from "@mui/icons-material/Language";
+import { useEffect, useState } from "react";
+import { getDetail } from "~/apis/apiClient";
 
 const Detail = () => {
+  const [detail, setDetail] = useState(null);
+
+  useEffect(() => {
+    getDetail().then((res) => {
+      setDetail(res.data);
+    });
+  }, []);
+
   const getUlr = () => {
     navigator.clipboard.writeText(window.location.href);
     alert("Đã sao chép đường dẫn");
@@ -44,6 +53,10 @@ const Detail = () => {
   };
 
   const isMobile = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+
+  if (!detail) {
+    return <Typography>Loading...</Typography>;
+  }
 
   return (
     <Container>
