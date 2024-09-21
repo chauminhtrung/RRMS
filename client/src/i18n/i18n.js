@@ -11,6 +11,7 @@ const resources = {
       Dark: "Dark",
       System: "System",
       Detail: "Detail",
+      Search: "Search",
     },
   },
   vi: {
@@ -22,6 +23,7 @@ const resources = {
       Dark: "Tối",
       System: "Hệ thống",
       Detail: "Chi tiết",
+      Search: "Tìm kiếm",
     },
   },
 };

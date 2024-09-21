@@ -19,7 +19,7 @@ import {
   Select,
   MenuItem,
   InputAdornment,
-  Slider, // Import Slider ở đây
+  Slider,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
@@ -92,7 +92,7 @@ const Search = () => {
           </Grid>
 
           {/* Select Loại Nhà */}
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} sm={6} md={4} sx={{ mb: 5 }}>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-helper-label">
                 Loại Nhà
