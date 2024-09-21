@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36" version="24.7.16" pages="2">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
-    <mxGraphModel dx="10816" dy="3445" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="8716" dy="2307" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
@@ -248,14 +248,17 @@
             <mxPoint x="-4300" y="1160" as="targetPoint" />
           </mxGeometry>
         </mxCell>
+        <mxCell id="R4Wuy2c4UjqvDZ8o_7R3-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="NSnPgF9qsIxd3IQdrI8Y-33" target="R4Wuy2c4UjqvDZ8o_7R3-0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="NSnPgF9qsIxd3IQdrI8Y-33" value="Khách hàng" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="-4230" y="180" width="80" height="120" as="geometry" />
         </mxCell>
         <mxCell id="NSnPgF9qsIxd3IQdrI8Y-34" value="Đăng Ký" style="ellipse;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
-          <mxGeometry x="-4630" y="140" width="130" height="80" as="geometry" />
+          <mxGeometry x="-4640" y="120" width="130" height="80" as="geometry" />
         </mxCell>
         <mxCell id="NSnPgF9qsIxd3IQdrI8Y-35" value="Đăng Nhập" style="ellipse;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
-          <mxGeometry x="-4630" y="260" width="130" height="80" as="geometry" />
+          <mxGeometry x="-4640" y="240" width="130" height="80" as="geometry" />
         </mxCell>
         <mxCell id="NSnPgF9qsIxd3IQdrI8Y-36" value="" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="NSnPgF9qsIxd3IQdrI8Y-33" target="NSnPgF9qsIxd3IQdrI8Y-34" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -1518,6 +1521,9 @@
               <mxPoint x="-701" y="704" />
             </Array>
           </mxGeometry>
+        </mxCell>
+        <mxCell id="R4Wuy2c4UjqvDZ8o_7R3-0" value="Xem phòng trọ" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="-4770" y="180" width="130" height="80" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
