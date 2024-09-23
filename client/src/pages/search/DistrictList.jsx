@@ -1,4 +1,3 @@
-import React from "react";
 import { Grid, Link, Box, Typography } from "@mui/material";
 
 const districts = [

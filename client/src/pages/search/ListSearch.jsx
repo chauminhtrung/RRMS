@@ -25,8 +25,6 @@ const RoomFeatureCard = ({ image, title, description }) => (
       sx={{ width: "60px", height: "60px", margin: "auto" }}
     />
     <CardContent sx={{ flexGrow: 1 }}>
-      {" "}
-      {/* Đảm bảo phần nội dung co dãn */}
       <Typography variant="h6" gutterBottom>
         {title}
       </Typography>
