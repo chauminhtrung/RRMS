@@ -28,6 +28,8 @@ import SearchList from "./SearchList";
 import BoxSideBar from "./BoxSideBar";
 import Name from "./Name";
 import ButtonPre from "./ButtonPre";
+import ListSearch from "./ListSearch";
+import DistrictList from "./DistrictList";
 
 const Search = () => {
   const [open, setOpen] = useState(false);
@@ -277,11 +279,11 @@ const Search = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
+      <ListSearch />
       <SearchList />
       <Container>
         <Grid container>
-          <Grid item md={10}>
+          <Grid item md={9} sx={{ mb: 3 }}>
             <RoomList />
             <RoomList />
             <RoomList />
@@ -290,14 +292,12 @@ const Search = () => {
             <RoomList />
             <ButtonPre />
           </Grid>
-          <Grid item md={2} sx={{ mt: 4 }}>
+          <Grid item md={3} sx={{ mt: { xs: 2, md: 4 } }}>
             <Name />
             <BoxSideBar />
             <BoxSideBar />
             <BoxSideBar />
-            <BoxSideBar />
-            <BoxSideBar />
-            <BoxSideBar />
+            <DistrictList />
           </Grid>
         </Grid>
       </Container>
