@@ -4,8 +4,11 @@ import Home from "./pages/Home";
 import Header from "./layouts/Header/Header";
 import Search from "./pages/search/Search";
 import Footer from "./layouts/Footer/Footer";
+import { env } from "./configs/environment";
 
 function App() {
+  console.log(env.API_URL);
+
   return (
     <>
       <Router>

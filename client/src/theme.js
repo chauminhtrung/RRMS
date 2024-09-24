@@ -3,11 +3,10 @@ import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
   colorSchemes: {
-    // dark: true,
     light: {
       palette: {
         primary: {
-          main: "#5352ed", // Đổi màu chính của giao diện tại đây
+          main: "#5eb7ff", // Đổi màu chính của giao diện tại đây
           contrastText: "#fff",
         },
         secondary: {
