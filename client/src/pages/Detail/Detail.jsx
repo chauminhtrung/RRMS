@@ -220,6 +220,9 @@ const Detail = () => {
               </Grid>
             ))}
           </Grid>
+          <Box sx={{ mb: 2, display: isMobile ? "block" : "none" }}>
+            <UserDetail item={detail} />
+          </Box>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography variant="h5">Thông tin mô tả</Typography>
             <Button
@@ -314,7 +317,13 @@ const Detail = () => {
                 justifyContent: "center",
               }}
             >
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  flexWrap: "wrap",
+                }}
+              >
                 <Typography variant="h5">
                   Phòng trọ, nhà trọ cùng địa chỉ
                 </Typography>
@@ -322,14 +331,22 @@ const Detail = () => {
                   Xem thêm {detail.type}, nhà trọ tại {detail.address}
                 </Typography>
               </Box>
-              <Box sx={{ width: isMobile ? "325px" : "756px", mb: 2 }}>
-                <RoomOther items={roomOrder} />
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Box
+                  sx={{
+                    width: isMobile ? "325px" : "756px",
+                    mb: 2,
+                    mx: "auto",
+                  }}
+                >
+                  <RoomOther items={roomOrder} />
+                </Box>
               </Box>
             </Box>
           </Box>
         </Grid>
 
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={4} sx={{ display: isMobile ? "none" : "block" }}>
           <UserDetail item={detail} />
         </Grid>
       </Grid>
