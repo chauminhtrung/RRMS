@@ -5,6 +5,7 @@ import Header from "./layouts/Header/Header";
 import Search from "./pages/search/Search";
 import Footer from "./layouts/Footer/Footer";
 import { env } from "./configs/environment";
+// import ValidCaptcha from "./components/ValidCaptcha";
 
 function App() {
   console.log(env.API_URL);
@@ -12,6 +13,7 @@ function App() {
   return (
     <>
       <Router>
+        {/* <ValidCaptcha /> */}
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
