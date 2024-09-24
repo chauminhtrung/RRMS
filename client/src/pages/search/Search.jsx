@@ -29,6 +29,7 @@ import Name from "./Name";
 import ListSearch from "./ListSearch";
 import DistrictList from "./DistrictList";
 import BannerHorizontal from "~/components/BannerHorizontal";
+import Text from "./Text";
 
 const Search = () => {
   const [open, setOpen] = useState(false);
@@ -290,9 +291,12 @@ const Search = () => {
             <DistrictList />
           </Grid>
         </Grid>
-        <BannerHorizontal />
       </Container>
       {/* <ResponsiveMenu /> */}
+      <Container>
+        <Text />
+        <BannerHorizontal />
+      </Container>
     </Box>
   );
 };
