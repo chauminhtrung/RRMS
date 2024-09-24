@@ -7,6 +7,7 @@ import {
   CardContent,
   Button,
   Avatar,
+  Pagination,
 } from "@mui/material";
 import { search } from "~/apis/mock-data-search";
 
@@ -132,94 +133,8 @@ const RoomList = () => {
           </Grid>
         </Grid>
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: { xs: 0.5, sm: 1 },
-          mt: 1,
-          flexWrap: "nowrap",
-          overflow: "hidden",
-          px: 1,
-        }}
-      >
-        <Button
-          variant="contained"
-          sx={{
-            minWidth: { xs: "30px", sm: "50px" },
-            fontSize: { xs: "12px", sm: "14px" },
-            padding: { xs: "4px", sm: "6px 8px" },
-          }}
-        >
-          Trước
-        </Button>
-
-        <Button
-          variant="contained"
-          sx={{
-            minWidth: { xs: "25px", sm: "40px" },
-            fontSize: { xs: "12px", sm: "14px" },
-            padding: { xs: "4px", sm: "6px 8px" },
-          }}
-        >
-          1
-        </Button>
-
-        <Button
-          variant="contained"
-          sx={{
-            minWidth: { xs: "25px", sm: "40px" },
-            fontSize: { xs: "12px", sm: "14px" },
-            padding: { xs: "4px", sm: "6px 8px" },
-          }}
-        >
-          2
-        </Button>
-
-        <Button
-          variant="contained"
-          sx={{
-            minWidth: { xs: "25px", sm: "40px" },
-            fontSize: { xs: "12px", sm: "14px" },
-            padding: { xs: "4px", sm: "6px 8px" },
-          }}
-        >
-          3
-        </Button>
-
-        <Button
-          variant="contained"
-          sx={{
-            minWidth: { xs: "25px", sm: "40px" },
-            fontSize: { xs: "12px", sm: "14px" },
-            padding: { xs: "4px", sm: "6px 8px" },
-          }}
-        >
-          ...
-        </Button>
-
-        <Button
-          variant="contained"
-          sx={{
-            minWidth: { xs: "25px", sm: "40px" },
-            fontSize: { xs: "12px", sm: "14px" },
-            padding: { xs: "4px", sm: "6px 8px" },
-          }}
-        >
-          28
-        </Button>
-
-        <Button
-          variant="contained"
-          sx={{
-            minWidth: { xs: "30px", sm: "50px" },
-            fontSize: { xs: "12px", sm: "14px" },
-            padding: { xs: "4px", sm: "6px 8px" },
-          }}
-        >
-          Sau
-        </Button>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+        <Pagination count={20} color="primary.main" size="medium" />
       </Box>
     </Box>
   );
