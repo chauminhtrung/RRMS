@@ -4,6 +4,9 @@ import {
   Button,
   Container,
   Grid,
+  Pagination,
+  Rating,
+  TextareaAutosize,
   TextField,
   Typography,
   useMediaQuery,
@@ -31,9 +34,12 @@ import { getDetail } from "~/apis/apiClient";
 import BannerHorizontal from "~/components/BannerHorizontal";
 import { roomOrder } from "~/apis/mock-data-room-order";
 import RoomOther from "./RoomOther";
+import RaitingAvg from "./RaitingAvg";
+import Comment from "./Comment";
 
 const Detail = () => {
   const [detail, setDetail] = useState(null);
+  const [raiting, setRaiting] = useState(0);
 
   useEffect(() => {
     getDetail().then((res) => {
@@ -241,6 +247,7 @@ const Detail = () => {
             value={detail.description}
             sx={{ width: "100%", my: 2 }}
           />
+          {/* 3 nút action */}
           <Grid
             container
             sx={{
@@ -302,6 +309,41 @@ const Detail = () => {
             </Grid>
           </Grid>
           <BannerHorizontal />
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <Typography component="legend" sx={{ fontSize: "20px" }}>
+              Đánh giá của bạn:
+            </Typography>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Rating
+                sx={{
+                  alignItems: "center",
+                  mx: "auto",
+                  my: 0.5,
+                }}
+                name="simple-controlled"
+                value={raiting}
+                size="large"
+                onChange={(event, newValue) => {
+                  setRaiting(newValue);
+                }}
+              />
+            </Box>
+            <TextareaAutosize
+              minRows={4}
+              sx={{ width: "100vw" }}
+            ></TextareaAutosize>
+            <Button variant="contained" sx={{ mt: 2, right: 1, ml: "auto" }}>
+              Đánh giá
+            </Button>
+          </Box>
+          <RaitingAvg />
+          <Comment />
+          <Comment />
+          <Comment />
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Pagination count={10} color="primary.main" size="medium" />
+          </Box>
+          {/* Giới thiệu trọ khác */}
           <Box
             sx={{
               display: "flex",
@@ -345,7 +387,6 @@ const Detail = () => {
             </Box>
           </Box>
         </Grid>
-
         <Grid item xs={12} md={4} sx={{ display: isMobile ? "none" : "block" }}>
           <UserDetail item={detail} />
         </Grid>
