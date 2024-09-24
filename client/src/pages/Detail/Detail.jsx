@@ -28,9 +28,10 @@ import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
 import LanguageIcon from "@mui/icons-material/Language";
 import { useEffect, useState } from "react";
 import { getDetail } from "~/apis/apiClient";
-import BannerHorizontal from "~/components/BannerHorizontal";
+
 import { roomOrder } from "~/apis/mock-data-room-order";
 import RoomOther from "./RoomOther";
+import BannerHorizontal from "~/components/BannerHorizontal";
 
 const Detail = () => {
   const [detail, setDetail] = useState(null);

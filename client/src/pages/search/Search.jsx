@@ -28,6 +28,7 @@ import SearchList from "./SearchList";
 import Name from "./Name";
 import ListSearch from "./ListSearch";
 import DistrictList from "./DistrictList";
+import BannerHorizontal from "~/components/BannerHorizontal";
 
 const Search = () => {
   const [open, setOpen] = useState(false);
@@ -62,7 +63,7 @@ const Search = () => {
     return `${value}°C`;
   };
   return (
-    <Box>
+    <Box container>
       <Container
         sx={{
           mt: 5,
@@ -71,7 +72,7 @@ const Search = () => {
           bgcolor: "secondary.main",
         }}
       >
-        <Grid container justifyContent="center" spacing={2}>
+        <Grid container justifyContent="center" spacing={2} sx={{ mb: 4 }}>
           <Grid item xs={12} sm={10} md={10}>
             <TextField
               sx={{ mt: 3 }}
@@ -92,7 +93,7 @@ const Search = () => {
           </Grid>
 
           {/* Select Loại Nhà */}
-          <Grid item xs={12} sm={6} md={4} sx={{ mb: 5 }}>
+          <Grid item xs={12} sm={6} md={4}>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-helper-label">
                 Loại Nhà
@@ -129,7 +130,7 @@ const Search = () => {
                 <Typography gutterBottom sx={{ mt: 2, mx: 1.5 }}>
                   Khoảng giá (Triệu)
                 </Typography>
-                <Box sx={{ width: 300 }}>
+                <Box sx={{ width: 20 }}>
                   <Slider
                     sx={{ mx: 2, width: 320 }}
                     getAriaLabel={() => "Temperature range"}
@@ -289,6 +290,7 @@ const Search = () => {
             <DistrictList />
           </Grid>
         </Grid>
+        <BannerHorizontal />
       </Container>
       {/* <ResponsiveMenu /> */}
     </Box>
