@@ -27,7 +27,7 @@ const districts = [
 
 const DistrictLinks = () => {
   return (
-    <Box>
+    <Box sx={{ m: 1 }}>
       <Box
         sx={{
           padding: "20px",

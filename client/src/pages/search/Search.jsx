@@ -25,9 +25,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import RoomList from "./RoomList";
 import SearchList from "./SearchList";
-import BoxSideBar from "./BoxSideBar";
 import Name from "./Name";
-import ButtonPre from "./ButtonPre";
 import ListSearch from "./ListSearch";
 import DistrictList from "./DistrictList";
 
@@ -285,22 +283,14 @@ const Search = () => {
         <Grid container>
           <Grid item md={9} sx={{ mb: 3 }}>
             <RoomList />
-            <RoomList />
-            <RoomList />
-            <RoomList />
-            <RoomList />
-            <RoomList />
-            <ButtonPre />
           </Grid>
           <Grid item md={3} sx={{ mt: { xs: 2, md: 4 } }}>
             <Name />
-            <BoxSideBar />
-            <BoxSideBar />
-            <BoxSideBar />
             <DistrictList />
           </Grid>
         </Grid>
       </Container>
+      {/* <ResponsiveMenu /> */}
     </Box>
   );
 };
