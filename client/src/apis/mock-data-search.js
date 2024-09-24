@@ -50,5 +50,8 @@ export const search = {
     {
       image: "https://picsum.photos/1000/500?random=6",
     },
+    {
+      image: "https://picsum.photos/1000/500?random=7",
+    },
   ],
 };
