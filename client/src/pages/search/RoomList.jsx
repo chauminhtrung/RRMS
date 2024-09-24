@@ -8,132 +8,218 @@ import {
   Button,
   Avatar,
 } from "@mui/material";
-import { search } from "../../apis/mock-data-search";
-// import { useEffect, useState } from "react";
-// import { getDetail } from "~/apis/apiClient";
+import { search } from "~/apis/mock-data-search";
 
 const RoomList = () => {
-  // const [detail, setDetail] = useState(null);
-  // useEffect(() => {
-  //   getDetail().then((res) => {
-  //     setDetail(res.data);
-  //   });
-  // }, []);
+  console.log(search.images); // Kiểm tra dữ liệu
 
   return (
-    <Box sx={{ width: "100%", overflow: "hidden", mt: 2 }}>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          {search.images.map((item, i) => (
-            <Card
-              key={i}
-              sx={{
-                display: "flex",
-                flexDirection: { xs: "column", sm: "row" },
-                alignItems: "center",
-                p: 2,
-                boxShadow: 3,
-                width: "100%",
-                boxSizing: "border-box",
-                overflow: "hidden",
-                border: "1px solid #ccc",
-                borderRadius: "8px",
-                mt: 1,
-              }}
-            >
-              <CardMedia
-                component="img"
-                image={item.image}
-                alt="Chung cư"
-                sx={{
-                  width: { xs: "100%", sm: 200 },
-                  height: { xs: 200, sm: 150 },
-                  objectFit: "cover",
-                  borderRadius: "8px",
-                }}
-              />
+    <Box>
+      <Box sx={{ width: "100%", overflow: "hidden", mt: 2 }}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            {search.images.length > 0 ? (
+              search.images.map((item, i) => (
+                <Card
+                  key={i}
+                  sx={{
+                    display: "flex",
+                    flexDirection: { xs: "column", sm: "row" },
+                    alignItems: "center",
+                    p: 2,
+                    boxShadow: 3,
+                    width: "100%",
+                    boxSizing: "border-box",
+                    overflow: "hidden",
+                    border: "1px solid #ccc",
+                    borderRadius: "8px",
+                    mt: 1,
+                  }}
+                >
+                  <CardMedia
+                    component="img"
+                    image={item.image}
+                    alt="Chung cư"
+                    sx={{
+                      width: { xs: "100%", sm: 200 },
+                      height: { xs: 200, sm: 150 },
+                      objectFit: "cover",
+                      borderRadius: "8px",
+                    }}
+                  />
 
-              <CardContent
-                sx={{
-                  flexGrow: 1,
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  textAlign: { xs: "center", sm: "left" },
-                }}
-              >
-                <Typography variant="h6" noWrap>
-                  {search.address}
-                </Typography>
-                <Typography variant="body2" color="textSecondary" noWrap>
-                  {search.addressDetail}
-                </Typography>
-                <Typography variant="h6" color="error" sx={{ mt: 1 }}>
-                  {search.price} VNĐ /Tháng
-                </Typography>
-                <Typography variant="body2" sx={{ mt: 1 }}>
-                  <Box component="span" sx={{ mr: 2 }}>
-                    {search.acreage} m²
+                  <CardContent
+                    sx={{
+                      flexGrow: 1,
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                      textAlign: { xs: "center", sm: "left" },
+                    }}
+                  >
+                    <Typography variant="h6" noWrap>
+                      {search.address}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      sx={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "normal", // Cho phép xuống dòng
+                      }}
+                    >
+                      {search.addressDetail} {/* Sử dụng item.addressDetail */}
+                    </Typography>
+
+                    <Typography variant="h6" color="error" sx={{ mt: 1 }}>
+                      {search.price} VNĐ /Tháng
+                    </Typography>
+                    <Typography variant="body2" sx={{ mt: 1 }}>
+                      <Box component="span" sx={{ mr: 2 }}>
+                        {search.acreage} m²
+                      </Box>
+                      <Box component="span" sx={{ mr: 2 }}>
+                        {search.water}/khối
+                      </Box>
+                      <Box component="span">{search.electricity}đ/Kw</Box>
+                    </Typography>
+                    <Box sx={{ display: "flex", alignItems: "center", mt: 1 }}>
+                      <Avatar src={item.avata} sx={{ mr: 1 }} />
+                      <Typography
+                        variant="caption"
+                        color="textSecondary"
+                        noWrap
+                      >
+                        Trinh, 2 ngày trước
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: { xs: "row", sm: "column" },
+                      alignItems: { xs: "center", sm: "flex-end" },
+                      gap: 1,
+                      width: { xs: "100%", sm: "auto" },
+                      mt: { xs: 2, sm: 0 },
+                    }}
+                  >
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      fullWidth
+                      sx={{ textTransform: "none" }}
+                    >
+                      Zalo
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      fullWidth
+                      sx={{ textTransform: "none", ml: { xs: 2, sm: 0 } }}
+                    >
+                      Xem SĐT
+                    </Button>
                   </Box>
-                  <Box component="span" sx={{ mr: 2 }}>
-                    {search.water}/khối
-                  </Box>
-                  <Box component="span"> {search.electricity}đ/Kw</Box>
-                </Typography>
-                <Box sx={{ display: "flex", alignItems: "center", mt: 1 }}>
-                  <Avatar src={search.avata} sx={{ mr: 1 }} />
-                  <Typography variant="caption" color="textSecondary" noWrap>
-                    Trinh, 2 ngày trước
-                  </Typography>
-                </Box>
-              </CardContent>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: { xs: "row", sm: "column" },
-                  alignItems: { xs: "center", sm: "flex-end" },
-                  gap: 1,
-                  width: { xs: "100%", sm: "auto" },
-                  mt: { xs: 2, sm: 0 },
-                }}
-              >
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  fullWidth={true}
-                  sx={{ textTransform: "none" }}
-                >
-                  Zalo
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  fullWidth={true}
-                  sx={{ textTransform: "none", ml: { xs: 2, sm: 0 } }}
-                >
-                  Xem SĐT
-                </Button>
-              </Box>
-            </Card>
-          ))}
+                </Card>
+              ))
+            ) : (
+              <Typography variant="h6" color="textSecondary">
+                Không có dữ liệu để hiển thị.
+              </Typography>
+            )}
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
       <Box
         sx={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          mx: 2,
-          gap: 1,
+          gap: { xs: 0.5, sm: 1 },
           mt: 1,
+          flexWrap: "nowrap",
+          overflow: "hidden",
+          px: 1,
         }}
       >
-        <Button variant="contained">Trước</Button>
-        <Button variant="contained">1</Button>
-        <Button variant="contained">2</Button>
-        <Button variant="contained">3</Button>
-        <Button variant="contained">...</Button>
-        <Button variant="contained">Sau</Button>
+        <Button
+          variant="contained"
+          sx={{
+            minWidth: { xs: "30px", sm: "50px" },
+            fontSize: { xs: "12px", sm: "14px" },
+            padding: { xs: "4px", sm: "6px 8px" },
+          }}
+        >
+          Trước
+        </Button>
+
+        <Button
+          variant="contained"
+          sx={{
+            minWidth: { xs: "25px", sm: "40px" },
+            fontSize: { xs: "12px", sm: "14px" },
+            padding: { xs: "4px", sm: "6px 8px" },
+          }}
+        >
+          1
+        </Button>
+
+        <Button
+          variant="contained"
+          sx={{
+            minWidth: { xs: "25px", sm: "40px" },
+            fontSize: { xs: "12px", sm: "14px" },
+            padding: { xs: "4px", sm: "6px 8px" },
+          }}
+        >
+          2
+        </Button>
+
+        <Button
+          variant="contained"
+          sx={{
+            minWidth: { xs: "25px", sm: "40px" },
+            fontSize: { xs: "12px", sm: "14px" },
+            padding: { xs: "4px", sm: "6px 8px" },
+          }}
+        >
+          3
+        </Button>
+
+        <Button
+          variant="contained"
+          sx={{
+            minWidth: { xs: "25px", sm: "40px" },
+            fontSize: { xs: "12px", sm: "14px" },
+            padding: { xs: "4px", sm: "6px 8px" },
+          }}
+        >
+          ...
+        </Button>
+
+        <Button
+          variant="contained"
+          sx={{
+            minWidth: { xs: "25px", sm: "40px" },
+            fontSize: { xs: "12px", sm: "14px" },
+            padding: { xs: "4px", sm: "6px 8px" },
+          }}
+        >
+          28
+        </Button>
+
+        <Button
+          variant="contained"
+          sx={{
+            minWidth: { xs: "30px", sm: "50px" },
+            fontSize: { xs: "12px", sm: "14px" },
+            padding: { xs: "4px", sm: "6px 8px" },
+          }}
+        >
+          Sau
+        </Button>
       </Box>
     </Box>
   );
