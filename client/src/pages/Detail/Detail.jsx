@@ -28,6 +28,9 @@ import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
 import LanguageIcon from "@mui/icons-material/Language";
 import { useEffect, useState } from "react";
 import { getDetail } from "~/apis/apiClient";
+import BannerHorizontal from "~/components/BannerHorizontal";
+import { roomOrder } from "~/apis/mock-data-room-order";
+import RoomOther from "./RoomOther";
 
 const Detail = () => {
   const [detail, setDetail] = useState(null);
@@ -295,6 +298,35 @@ const Detail = () => {
               </Button>
             </Grid>
           </Grid>
+          <BannerHorizontal />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              my: 2,
+              alignItems: "center",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+              }}
+            >
+              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Typography variant="h5">
+                  Phòng trọ, nhà trọ cùng địa chỉ
+                </Typography>
+                <Typography variant="subtitle1">
+                  Xem thêm {detail.type}, nhà trọ tại {detail.address}
+                </Typography>
+              </Box>
+              <Box sx={{ width: isMobile ? "325px" : "756px", mb: 2 }}>
+                <RoomOther items={roomOrder} />
+              </Box>
+            </Box>
+          </Box>
         </Grid>
 
         <Grid item xs={12} md={4}>
