@@ -50,9 +50,16 @@ const Detail = () => {
     });
   }, []);
 
-  const getUlr = () => {
-    navigator.clipboard.writeText(window.location.href);
-    alert("Đã sao chép đường dẫn");
+  const share = async () => {
+    try {
+      await navigator.share({
+        title: detail.title,
+        text: detail.name,
+        url: window.location.href,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const getDescription = (description) => {
@@ -348,9 +355,9 @@ const Detail = () => {
                     theme.palette.mode === "light" ? "#ffa502" : "#eccc68",
                 }}
                 startIcon={<SendIcon />}
-                onClick={getUlr}
+                onClick={share}
               >
-                Copy link
+                Chia sẻ
               </Button>
             </Grid>
           </Grid>
