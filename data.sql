@@ -1,4 +1,8 @@
-use rrms;
+CREATE DATABASE rrms;
+
+USE rrms;
+
+DROP DATABASE rrms;
 
 CREATE TABLE Roles (
     roleId BINARY(16) PRIMARY KEY,
@@ -27,15 +31,18 @@ CREATE TABLE Motels (
 );
 
 CREATE TABLE Rooms (
-    RoomId INT NOT NULL,
-    MobileId INT,
-    InvoiceId INT,
-    RoomServiceId INT,
-    RoomDeviceId INT
+    Room_id BINARY(16) PRIMARY KEY,
+    Motel_id BINARY(16),
+    TypeRoom_id BINARY(16),
+    Image_id BINARY(16),
+    Price DECIMAL(10, 2),
+    RoomArea DECIMAL(10, 2),
+    Available BOOLEAN,
+    Description TEXT
 );
 
 CREATE TABLE Supports (
-    SupportId INT NOT NULL,
+    SupportId BINARY(16) NOT NULL,
     Username VARCHAR(255),
     DateOfStay DATE,
     CreateDate DATE,
@@ -43,8 +50,8 @@ CREATE TABLE Supports (
 );
 
 CREATE TABLE Notifications (
-    NotificationId INT NOT NULL,
-    RoomId INT,
+    NotificationId BINARY(16) NOT NULL,
+    RoomId BINARY(16),
     UsernameLandlord VARCHAR(255),
     UsernameTenant VARCHAR(255),
     Title VARCHAR(255),
@@ -52,10 +59,10 @@ CREATE TABLE Notifications (
     NumberOfRecipients INT
 );
 
-CREATE TABLE NotificationRoom (
-    NotificationRoomId INT NOT NULL,
-    RoomId INT,
-    NotificationId INT
+CREATE TABLE NotificationRooms (
+    NotificationRoomId BINARY(16) NOT NULL,
+    RoomId BINARY(16),
+    NotificationId BINARY(16)
 );
 
 CREATE TABLE Accounts (
@@ -70,35 +77,113 @@ CREATE TABLE Accounts (
 );
 
 CREATE TABLE BulletinBoards (
-    BulletinBoardId INT NOT NULL,
-    RoomId INT,
+    BulletinBoardId BINARY(16) NOT NULL,
+    RoomId BINARY(16),
     Username VARCHAR(255),
     Title VARCHAR(255),
     DateOfCity DATE
 );
 
 CREATE TABLE Devices (
-    DeviceId INT NOT NULL,
+    DeviceId BINARY(16) NOT NULL,
     DeviceName VARCHAR(255),
     Available BOOLEAN
 );
 
 CREATE TABLE RoomDevices (
-    RoomDeviceId INT NOT NULL,
-    RoomId INT,
-    DeviceId INT,
+    RoomDeviceId BINARY(16) NOT NULL,
+    RoomId BINARY(16),
+    DeviceId BINARY(16),
     Quantity INT
 );
 
 CREATE TABLE RoomServices (
-    RoomServiceId INT NOT NULL,
-    RoomId INT,
-    ServiceId INT
+    RoomServiceId INBINARY (16) T NOT NULL,
+    RoomId BINARY(16),
+    ServiceId BINARY(16)
 );
 
 CREATE TABLE Services (
-    ServiceId INT NOT NULL,
+    ServiceId BINARY(16) NOT NULL,
     TypeService VARCHAR(255),
     NameService VARCHAR(255),
     Price DECIMAL(10, 2)
+);
+
+CREATE TABLE Detail_invoices (
+    Detail_invoice_id BINARY(16) PRIMARY KEY,
+    Invoice_id BINARY(16),
+    RoomService_id BINARY(16),
+    RoomDevice_id BINARY(16)
+);
+
+CREATE TABLE Invoices (
+    Invoice_id BINARY(16) PRIMARY KEY,
+    Username VARCHAR(255),
+    Room_id BINARY(16),
+    Payment_id BINARY(16),
+    Status VARCHAR(50),
+    CreateDate DATE
+);
+
+CREATE TABLE Payments (
+    Payment_id BINARY(16) PRIMARY KEY,
+    Payment_name VARCHAR(255),
+    Description TEXT
+);
+
+CREATE TABLE RoomReviews (
+    RoomReview_id BINARY(16) PRIMARY KEY,
+    Content TEXT,
+    Rating INT
+);
+
+CREATE TABLE TypeRooms (
+    TypeRoom_id BINARY(16) PRIMARY KEY,
+    Name VARCHAR(50)
+);
+
+CREATE TABLE RoomImages (
+    RoomImage_id BINARY(16) PRIMARY KEY,
+    Room_id BINARY(16),
+    File_name VARCHAR(255),
+    linkimg TEXT,
+    MainImg BOOLEAN,
+);
+
+CREATE TABLE Contracts (
+    Contract_Id IBINARY (16) PRIMARY KEY,
+    Room_id BINARY(16),
+    Username_Tenant VARCHAR(50),
+    Username_Landlord VARCHAR(50),
+    FirstTime DATE,
+    Leaseterm INT,
+    Description TEXT,
+    Deposit DECIMAL(10, 2),
+    Status ENUM('ACTIVE', 'ENDED'),
+);
+
+CREATE TABLE MotelServices (
+    MotelRule_id BINARY(16) PRIMARY KEY,
+    Motel_id BINARY(16),
+    NameMTService_id BINARY(16)
+);
+
+CREATE TABLE MotelRules (
+    MotelRule_id IBINARY (16) PRIMARY KEY,
+    Motel_id BINARY(16),
+    Rule_id BINARY(16)
+);
+
+CREATE TABLE NameMTServices (
+    NameMTService_id BINARY(16) PRIMARY KEY,
+    Type_Service VARCHAR(50),
+    Name_Service VARCHAR(100),
+    Price DECIMAL(10, 2)
+);
+
+CREATE TABLE Auths (
+    Auth_id BINARY(16) PRIMARY KEY,
+    Username VARCHAR(50),
+    Role_id BINARY(16)
 );
