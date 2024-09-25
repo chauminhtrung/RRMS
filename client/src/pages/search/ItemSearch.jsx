@@ -310,7 +310,7 @@ const ItemSearch = () => {
                   justifyContent: "center",
                 }}
               >
-                3,000+
+                3,000+ aaaaaa
               </Typography>
               <Typography
                 sx={{
