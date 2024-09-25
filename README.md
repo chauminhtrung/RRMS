@@ -6,7 +6,7 @@
 
 ## 📖 Giới thiệu
 
-RRMS (Lodging Management System) là một hệ thống quản lý nhà trọ được phát triển nhằm giúp người dùng dễ dàng tìm kiếm, quản lý và đặt phòng nhà trọ một cách nhanh chóng và hiệu quả. Hệ thống cung cấp giao diện thân thiện với người dùng cùng các chức năng đa dạng, từ việc xem thông tin phòng đến quản lý đặt chỗ.
+RRMS (Room Rental Management System) là một hệ thống quản lý nhà trọ được phát triển nhằm giúp người dùng dễ dàng tìm kiếm, quản lý và đặt phòng nhà trọ một cách nhanh chóng và hiệu quả. Hệ thống cung cấp giao diện thân thiện với người dùng cùng các chức năng đa dạng, từ việc xem thông tin phòng đến quản lý đặt chỗ.
 
 ---
 
