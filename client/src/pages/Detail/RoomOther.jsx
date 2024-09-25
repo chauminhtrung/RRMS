@@ -1,21 +1,14 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
-import {
-  Box,
-  Card,
-  CardContent,
-  CardMedia,
-  Rating,
-  Typography,
-} from "@mui/material";
-import Slider from "react-slick";
+import { useState } from 'react'
+import { Box, Card, CardContent, CardMedia, Rating, Typography } from '@mui/material'
+import Slider from 'react-slick'
 
-import Person4OutlinedIcon from "@mui/icons-material/Person4Outlined";
-import PrevArrow from "./PrevArrow";
-import NextArrow from "./NextArrow";
+import Person4OutlinedIcon from '@mui/icons-material/Person4Outlined'
+import PrevArrow from './PrevArrow'
+import NextArrow from './NextArrow'
 
 const RoomOther = ({ items }) => {
-  const [showArrows, setShowArrows] = useState(false);
+  const [showArrows, setShowArrows] = useState(false)
 
   const settings = {
     infinite: true,
@@ -38,26 +31,26 @@ const RoomOther = ({ items }) => {
         },
       },
     ],
-  };
+  }
 
   return (
     <Box
       sx={{
         padding: 2,
-        position: "relative",
+        position: 'relative',
       }}
       onMouseEnter={() => setShowArrows(true)}
       onMouseLeave={() => setShowArrows(false)}
     >
       <Slider {...settings}>
         {items.map((item, index) => (
-          <Box key={index} sx={{ padding: "0 10px" }}>
+          <Box key={index} sx={{ padding: '0 10px' }}>
             <Card>
               <CardMedia component="img" image={item.images[0]} />
               <CardContent
                 sx={{
                   p: 1,
-                  "&:last-child": {
+                  '&:last-child': {
                     pb: 0,
                   },
                 }}
@@ -65,14 +58,14 @@ const RoomOther = ({ items }) => {
                 <Typography variant="inherit">{item.name}</Typography>
                 <Box
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
+                    display: 'flex',
+                    alignItems: 'center',
                     ml: 0,
                   }}
                 >
                   <Rating
                     sx={{
-                      alignItems: "center",
+                      alignItems: 'center',
                       my: 0.5,
                     }}
                     name="simple-controlled"
@@ -80,9 +73,9 @@ const RoomOther = ({ items }) => {
                     size="small"
                     readOnly
                   />
-                  <Typography>{"(5)"}</Typography>
+                  <Typography>{'(5)'}</Typography>
                 </Box>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   <Person4OutlinedIcon />
                   <Typography variant="subtitle2" color="text.secondary">
                     {item.owner} -
@@ -93,17 +86,16 @@ const RoomOther = ({ items }) => {
                 </Box>
                 <Box
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
+                    display: 'flex',
+                    alignItems: 'center',
                     gap: 0.5,
-                    justifyContent: "space-between",
+                    justifyContent: 'space-between',
                   }}
                 >
                   <Typography
                     variant="h6"
                     sx={{
-                      color: (theme) =>
-                        theme.palette.mode === "light" ? "#ff4757" : "#ff6b81",
+                      color: (theme) => (theme.palette.mode === 'light' ? '#ff4757' : '#ff6b81'),
                     }}
                   >
                     {item.price} VND
@@ -118,7 +110,7 @@ const RoomOther = ({ items }) => {
         ))}
       </Slider>
     </Box>
-  );
-};
+  )
+}
 
-export default RoomOther;
+export default RoomOther

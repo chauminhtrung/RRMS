@@ -1,21 +1,21 @@
-import { Box, LinearProgress, Rating, Typography } from "@mui/material";
-import { Grid } from "@mui/material";
+import { Box, LinearProgress, Rating, Typography } from '@mui/material'
+import { Grid } from '@mui/material'
 
 const RaitingAvg = () => {
   return (
     <Box>
-      <Typography component="legend" sx={{ fontSize: "20px" }}>
+      <Typography component="legend" sx={{ fontSize: '20px' }}>
         Đánh giá trung bình:
       </Typography>
       <Grid container>
         <Grid item xs={4}>
-          <Typography component="legend" sx={{ fontSize: "60px" }}>
+          <Typography component="legend" sx={{ fontSize: '60px' }}>
             {0}
           </Typography>
           <Rating
             sx={{
-              alignItems: "center",
-              mx: "auto",
+              alignItems: 'center',
+              mx: 'auto',
             }}
             name="simple-controlled"
             value={6}
@@ -35,8 +35,8 @@ const RaitingAvg = () => {
                 flexGrow: 1,
                 height: 12,
                 mr: 5,
-                "& .MuiLinearProgress-bar": {
-                  borderRadius: "8px",
+                '& .MuiLinearProgress-bar': {
+                  borderRadius: '8px',
                 },
               }}
             />
@@ -53,8 +53,8 @@ const RaitingAvg = () => {
                 flexGrow: 1,
                 height: 12,
                 mr: 5,
-                "& .MuiLinearProgress-bar": {
-                  borderRadius: "8px",
+                '& .MuiLinearProgress-bar': {
+                  borderRadius: '8px',
                 },
               }}
             />
@@ -71,8 +71,8 @@ const RaitingAvg = () => {
                 flexGrow: 1,
                 height: 12,
                 mr: 5,
-                "& .MuiLinearProgress-bar": {
-                  borderRadius: "8px",
+                '& .MuiLinearProgress-bar': {
+                  borderRadius: '8px',
                 },
               }}
             />
@@ -89,8 +89,8 @@ const RaitingAvg = () => {
                 flexGrow: 1,
                 height: 12,
                 mr: 5,
-                "& .MuiLinearProgress-bar": {
-                  borderRadius: "8px",
+                '& .MuiLinearProgress-bar': {
+                  borderRadius: '8px',
                 },
               }}
             />
@@ -107,8 +107,8 @@ const RaitingAvg = () => {
                 flexGrow: 1,
                 height: 12,
                 mr: 5,
-                "& .MuiLinearProgress-bar": {
-                  borderRadius: "8px",
+                '& .MuiLinearProgress-bar': {
+                  borderRadius: '8px',
                 },
               }}
             />
@@ -116,7 +116,7 @@ const RaitingAvg = () => {
         </Grid>
       </Grid>
     </Box>
-  );
-};
+  )
+}
 
-export default RaitingAvg;
+export default RaitingAvg
