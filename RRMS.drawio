@@ -3779,7 +3779,7 @@
           <mxGeometry x="492" y="172" width="496" height="614" as="geometry" />
         </mxCell>
         <mxCell id="weMotZ8b7OvY8TWEH0bi-30" value="Hiển thị thông báo đăng nhập không thành công" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="weMotZ8b7OvY8TWEH0bi-20" vertex="1">
-          <mxGeometry x="292" y="427" width="171" height="43" as="geometry" />
+          <mxGeometry x="276.5" y="427" width="171" height="43" as="geometry" />
         </mxCell>
         <mxCell id="weMotZ8b7OvY8TWEH0bi-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="weMotZ8b7OvY8TWEH0bi-20" source="weMotZ8b7OvY8TWEH0bi-35" target="weMotZ8b7OvY8TWEH0bi-30" edge="1">
           <mxGeometry relative="1" as="geometry" />
