@@ -30,6 +30,7 @@ import ListSearch from "./ListSearch";
 import DistrictList from "./DistrictList";
 import BannerHorizontal from "~/components/BannerHorizontal";
 import Text from "./Text";
+import ItemSearch from "./ItemSearch";
 
 const Search = () => {
   const [open, setOpen] = useState(false);
@@ -296,6 +297,7 @@ const Search = () => {
       <Container>
         <Text />
         <BannerHorizontal />
+        <ItemSearch />
       </Container>
     </Box>
   );

@@ -5,23 +5,23 @@ const Text = () => {
   return (
     <Box>
       <Typography
-        variant="h5"
+        variant="h6"
         sx={{ textAlign: "center", fontWeight: "bold", mt: 3 }}
       >
         Cho thuê phòng trọ TPHCM chất lượng, giá rẻ
       </Typography>
-      <Typography variant="h5" sx={{ mt: 2 }}>
+      <Typography variant="h6" sx={{ mt: 2 }}>
         TPHCM là khu vực tập trung dân cư đông nhất cả nước với số dân hơn 9
         triệu người, trong đó dân cư ngoại tỉnh chiếm phần đông. Vì vậy, cho
         thuê phòng trọ TPHCM là dịch vụ rất phát triển tại đây.
       </Typography>
-      <Typography variant="h5" sx={{ mt: 3 }}>
+      <Typography variant="h6" sx={{ mt: 3 }}>
         Với thực trạng “đất chật người đông” và dịch vụ cho thuê phòng trọ TPHCM
         có nhiều cạnh tranh, việc tìm được một căn trọ như ý là điều không dễ
         dàng. Hiểu được nỗi lòng đó, LOZIDO mang đến cho bạn giải pháp tìm phòng
         trọ TPHCM nhanh chóng, uy tín, chất lượng.
       </Typography>
-      <Typography variant="h5" sx={{ fontWeight: "bold", mt: 3 }}>
+      <Typography variant="h6" sx={{ fontWeight: "bold", mt: 3 }}>
         Đặc điểm khu vực
       </Typography>
       <Box
@@ -44,7 +44,7 @@ const Text = () => {
           }}
         />
       </Box>
-      <Typography variant="h5" sx={{ mt: 3 }}>
+      <Typography variant="h6" sx={{ mt: 3 }}>
         TPHCM hiện có 16 quận, 5 huyện và 1 thành phố. Dịch vụ {}
         <Typography variant="span" sx={{ fontWeight: "bold", mt: 3 }}>
           cho thuê phòng trọ TPHCM
@@ -53,7 +53,7 @@ const Text = () => {
         gần KCN, gần chợ, gần siêu thị là những vị trí “đắc địa”, nhận được
         nhiều sự quan tâm của khách thuê.
       </Typography>
-      <Typography variant="h5" sx={{ mt: 3 }}>
+      <Typography variant="h6" sx={{ mt: 3 }}>
         Có thể thấy, đối tượng lựa chọn loại hình {}
         <Typography variant="span" sx={{ fontWeight: "bold", mt: 3 }}>
           cho thuê phòng trọ TPHCM
@@ -62,7 +62,7 @@ const Text = () => {
         ra nhu cầu tìm phòng trọ khác nhau, bao gồm cả về vị trí, giá cả, diện
         tích và các tiện ích xung quanh.
       </Typography>
-      <Typography variant="h5" sx={{ mt: 3 }}>
+      <Typography variant="h6" sx={{ mt: 3 }}>
         <Typography variant="span" sx={{ fontWeight: "bold", mt: 3 }}>
           Cho thuê phòng trọ TPHCM
         </Typography>
@@ -71,7 +71,7 @@ const Text = () => {
         vị trí, cơ sở vật chất mà mức giá cho thuê cũng có sự chênh lệch đáng
         kể.
       </Typography>
-      <Typography variant="h5" sx={{ mt: 3 }}>
+      <Typography variant="h6" sx={{ mt: 3 }}>
         Cụ thể, dịch vụ {}
         <Typography variant="span" sx={{ fontWeight: "bold", mt: 3 }}>
           cho thuê phòng trọ TPHCM
@@ -81,7 +81,7 @@ const Text = () => {
         trung tâm như Bình Thạnh, Phú Nhuận, Tân Bình sẽ dao động từ 2.000.000 -
         5.000.000 đồng/tháng.
       </Typography>
-      <Typography variant="h5" sx={{ mt: 3 }}>
+      <Typography variant="h6" sx={{ mt: 3 }}>
         Các khu vực càng xa trung tâm thành phố hoặc xa các khu vực trường Đại
         học, khu công nghiệp thì phân khúc giá {}
         <Typography variant="span" sx={{ fontWeight: "bold", mt: 3 }}>
@@ -90,16 +90,22 @@ const Text = () => {
         {} sẽ rẻ hơn. Đồng thời, không gian phòng trọ cũng thoáng đãng, yên tĩnh
         và rộng rãi hơn.
       </Typography>
-      <Typography variant="h5" sx={{ fontWeight: "bold", mt: 3 }}>
+      <Typography variant="h6" sx={{ fontWeight: "bold", mt: 3 }}>
         Kết luận
       </Typography>
-      <Typography variant="h5" sx={{ mt: 3 }}>
+      <Typography variant="h6" sx={{ mt: 3 }}>
         Không chỉ cung cấp thông tin về dịch vụ
         <Typography variant="span" sx={{ fontWeight: "bold", mt: 3 }}>
           {} cho thuê phòng trọ TPHCM
         </Typography>
         , {}
-        <Link variant="span" sx={{ fontWeight: "bold", color: "blue", m: 2 }}>
+        <Link
+          onClick={() => {
+            window.open("https://rrms.vercel.app", "_blank");
+          }}
+          variant="span"
+          sx={{ fontWeight: "bold", color: "blue", m: 2 }}
+        >
           rrms.vercel.app
         </Link>
         {} còn mang giải pháp tìm trọ nhanh đến người dùng trên mọi miền đất
