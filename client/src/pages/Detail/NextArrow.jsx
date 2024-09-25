@@ -14,8 +14,7 @@ const NextArrow = ({ onClick, visible }) => {
         opacity: visible ? 1 : 0,
         transform: visible ? 'translateX(0)' : 'translateX(20px)',
         transition: 'opacity 0.5s ease, transform 0.5s ease',
-      }}
-    >
+      }}>
       <ArrowCircleRightIcon sx={{ color: '#f1f2f6' }} fontSize="large" />
     </div>
   )

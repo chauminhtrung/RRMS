@@ -1,9 +1,11 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react'
-import { Box, Card, CardContent, CardMedia, Rating, Typography } from '@mui/material'
+import { Badge, Box, Card, CardContent, CardMedia, Rating, Typography } from '@mui/material'
 import Slider from 'react-slick'
-
+import BookmarkIcon from '@mui/icons-material/Bookmark'
 import Person4OutlinedIcon from '@mui/icons-material/Person4Outlined'
+import CameraAltIcon from '@mui/icons-material/CameraAlt'
+import GppGoodIcon from '@mui/icons-material/GppGood'
 import PrevArrow from './PrevArrow'
 import NextArrow from './NextArrow'
 
@@ -40,34 +42,38 @@ const RoomOther = ({ items }) => {
         position: 'relative',
       }}
       onMouseEnter={() => setShowArrows(true)}
-      onMouseLeave={() => setShowArrows(false)}
-    >
+      onMouseLeave={() => setShowArrows(false)}>
       <Slider {...settings}>
         {items.map((item, index) => (
-          <Box key={index} sx={{ padding: '0 10px' }}>
+          <Box key={index} sx={{ padding: '0 10px', position: 'relative' }}>
+            <Box sx={{ position: 'absolute', top: 10, right: 20 }}>
+              <BookmarkIcon sx={{ color: 'primary.main', mx: 1, fontSize: '30px' }} />
+              <Badge badgeContent={4} color="secondary">
+                <CameraAltIcon sx={{ color: 'primary.main', fontSize: '30px' }} />
+              </Badge>
+            </Box>
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: 150,
+                left: 20,
+                border: '1px solid #fff',
+                bgcolor: '#fff',
+                borderRadius: '5px',
+                color: '#333',
+                fontSize: '12px',
+                opacity: 0.5,
+                px: 0.5,
+              }}>
+              <GppGoodIcon sx={{ color: '#2ed573' }} /> Đã xác minh
+            </Box>
             <Card>
               <CardMedia component="img" image={item.images[0]} />
-              <CardContent
-                sx={{
-                  p: 1,
-                  '&:last-child': {
-                    pb: 0,
-                  },
-                }}
-              >
+              <CardContent sx={{ p: 1, '&:last-child': { pb: 0 } }}>
                 <Typography variant="inherit">{item.name}</Typography>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    ml: 0,
-                  }}
-                >
+                <Box sx={{ display: 'flex', alignItems: 'center', ml: 0 }}>
                   <Rating
-                    sx={{
-                      alignItems: 'center',
-                      my: 0.5,
-                    }}
+                    sx={{ alignItems: 'center', my: 0.5 }}
                     name="simple-controlled"
                     value={2}
                     size="small"
@@ -84,20 +90,10 @@ const RoomOther = ({ items }) => {
                     {item.address}
                   </Typography>
                 </Box>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 0.5,
-                    justifyContent: 'space-between',
-                  }}
-                >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, justifyContent: 'space-between' }}>
                   <Typography
                     variant="h6"
-                    sx={{
-                      color: (theme) => (theme.palette.mode === 'light' ? '#ff4757' : '#ff6b81'),
-                    }}
-                  >
+                    sx={{ color: (theme) => (theme.palette.mode === 'light' ? '#ff4757' : '#ff6b81') }}>
                     {item.price} VND
                   </Typography>
                   <Typography variant="subtitle1" color="text.secondary">
