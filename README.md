@@ -42,6 +42,9 @@ Hệ thống được xây dựng dựa trên các công nghệ hiện đại v�
   <a href="https://getbootstrap.com/" target="_blank" rel="noreferrer">
     <img src="https://upload.vectorlogo.zone/logos/getbootstrap/images/987f8f6c-263a-47b1-a85d-853cfca215d9.svg" alt="Bootstrap" width="40" height="40"/>
   </a>
+    <a href="https://mui.com/" target="_blank" rel="noreferrer">
+    <img src="https://icon.icepanel.io/Technology/svg/Material-UI.svg" alt="Bootstrap" width="40" height="40"/>
+  </a>
   <a href="https://firebase.google.com/" target="_blank" rel="noreferrer">
     <img src="https://www.vectorlogo.zone/logos/firebase/firebase-icon.svg" alt="Firebase" width="40" height="40"/>
   </a>
