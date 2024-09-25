@@ -28,8 +28,7 @@ const Item = ({ item, index, totalItems, addressDetail }) => {
           display: 'flex',
           justifyContent: 'space-between',
           width: isMobile ? '90%' : '95%',
-        }}
-      >
+        }}>
         <Button
           sx={{
             bgcolor: 'primary.main',
@@ -39,8 +38,7 @@ const Item = ({ item, index, totalItems, addressDetail }) => {
           }}
           variant="contained"
           onClick={openGoogleMap}
-          startIcon={<FmdGoodIcon />}
-        >
+          startIcon={<FmdGoodIcon />}>
           {isMobile ? '' : 'Xem vị trí'}
         </Button>
         <Typography color="white" variant="h6">

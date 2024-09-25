@@ -38,6 +38,7 @@ import BannerHorizontal from '~/components/BannerHorizontal'
 import Slider from 'react-slick'
 import NextArrow from './NextArrow'
 import PrevArrow from './PrevArrow'
+import LoadingPage from '~/components/LoadingPage'
 
 const Detail = () => {
   const [detail, setDetail] = useState(null)
@@ -74,7 +75,7 @@ const Detail = () => {
   const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'))
 
   if (!detail) {
-    return <Typography>Loading...</Typography>
+    return <LoadingPage />
   }
 
   const settings = {
@@ -133,16 +134,8 @@ const Detail = () => {
             '.slick-dots.slick-thumb li.slick-active a img': {
               transform: 'scale(1.2)',
             },
-          }}
-        >
-          <Slider
-            {...settings}
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
+          }}>
+          <Slider {...settings} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {detail.images.map((item, i) => (
               <Item
                 key={i}
@@ -158,36 +151,55 @@ const Detail = () => {
             {detail.name}
           </Typography>
           <Typography variant="h6">{detail.addressDetail}</Typography>
-          <Typography variant="h5" sx={{ my: 2, color: 'red' }}>
-            {formatNumber(detail.price)}đ/tháng
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Typography variant="h5" sx={{ my: 2, color: 'red' }}>
+              {formatNumber(detail.price)}đ/tháng
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', ml: 0 }}>
+              <Rating
+                sx={{ alignItems: 'center', my: 0.5 }}
+                name="simple-controlled"
+                value={5}
+                size="medium"
+                readOnly
+              />
+              <Typography>{'(5)'}</Typography>
+            </Box>
+          </Box>
+
           <Grid container>
             <Grid item xs={6}>
-              <Typography>
-                <TagIcon />
-                Chuyên mục: {detail.type}
+              <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+                <TagIcon sx={{ mr: 0.5 }} />
+                <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>Chuyên mục: </Typography>
+                {detail.type}
               </Typography>
-              <Typography>
-                <LanguageIcon />
-                Tình trạng: {detail.status}
+              <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+                <LanguageIcon sx={{ mr: 0.5 }} />
+                <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>Tình trạng: </Typography>
+                {detail.status}
               </Typography>
-              <Typography>
-                <CalendarMonthIcon />
-                Giờ giấc: {detail.hours}
+              <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+                <CalendarMonthIcon sx={{ mr: 0.5 }} />
+                <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>Giờ giấc: </Typography>
+                {detail.hours}
               </Typography>
             </Grid>
             <Grid item xs={6}>
-              <Typography>
-                <AccessTimeIcon />
-                Ngày bắt đầu cho thuê: {detail.rentalStartTime}
+              <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+                <AccessTimeIcon sx={{ mr: 0.5 }} />
+                <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>Ngày bắt đầu cho thuê:</Typography>
+                {detail.rentalStartTime}
               </Typography>
-              <Typography>
-                <ShieldOutlinedIcon />
-                Kiểm duyệt: {detail.censor}
+              <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+                <ShieldOutlinedIcon sx={{ mr: 0.5 }} />
+                <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>Kiểm duyệt: </Typography>
+                {detail.censor}
               </Typography>
-              <Typography>
-                <GroupIcon />
-                Tối đa người ở: {detail.maximum}
+              <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+                <GroupIcon sx={{ mr: 0.5 }} />
+                <Typography sx={{ display: isMobile ? 'none' : 'block', mr: 0.5 }}>Tối đa người ở: </Typography>
+                {detail.maximum}
               </Typography>
             </Grid>
           </Grid>
@@ -230,24 +242,10 @@ const Detail = () => {
             </Grid>
           </Grid>
           <Typography variant="h5">Điểm (+)</Typography>
-          <Grid
-            container
-            sx={{
-              gap: 2,
-              justifyContent: isMobile ? 'center' : 'start',
-              my: 2,
-            }}
-          >
+          <Grid container sx={{ gap: 2, justifyContent: isMobile ? 'center' : 'start', my: 2 }}>
             {detail.plusPoint.map((item, i) => (
               <Grid item md={3.8} xs={5} key={i}>
-                <Box
-                  sx={{
-                    bgcolor: 'primary.main',
-                    color: 'primary.contrastText',
-                    borderRadius: '5px',
-                    p: '10px',
-                  }}
-                >
+                <Box sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', borderRadius: '5px', p: '10px' }}>
                   {item}
                 </Box>
               </Grid>
@@ -262,8 +260,7 @@ const Detail = () => {
               variant="outlined"
               sx={{ borderRadius: '25px' }}
               startIcon={<ContentCopyIcon />}
-              onClick={() => getDescription(detail.description)}
-            >
+              onClick={() => getDescription(detail.description)}>
               Copy
             </Button>
           </Box>
@@ -280,8 +277,7 @@ const Detail = () => {
             sx={{
               justifyContent: 'center',
               gap: 2,
-            }}
-          >
+            }}>
             <Grid item md={3.8} sx={{ display: 'flex', justifyContent: 'center' }}>
               <Button
                 variant="contained"
@@ -289,8 +285,7 @@ const Detail = () => {
                   width: '200px',
                   bgcolor: (theme) => (theme.palette.mode === 'light' ? '#2ed573' : '#7bed9f'),
                 }}
-                startIcon={<BookmarkIcon />}
-              >
+                startIcon={<BookmarkIcon />}>
                 Lưu xem sau
               </Button>
             </Grid>
@@ -301,8 +296,7 @@ const Detail = () => {
                   width: '200px',
                   bgcolor: (theme) => (theme.palette.mode === 'light' ? '#1e90ff' : '#70a1ff'),
                 }}
-                startIcon={<FacebookIcon />}
-              >
+                startIcon={<FacebookIcon />}>
                 Chia sẻ facebook
               </Button>
             </Grid>
@@ -314,8 +308,7 @@ const Detail = () => {
                   bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffa502' : '#eccc68'),
                 }}
                 startIcon={<SendIcon />}
-                onClick={share}
-              >
+                onClick={share}>
                 Chia sẻ
               </Button>
             </Grid>
@@ -359,22 +352,19 @@ const Detail = () => {
               justifyContent: 'space-between',
               my: 2,
               alignItems: 'center',
-            }}
-          >
+            }}>
             <Box
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-              }}
-            >
+              }}>
               <Box
                 sx={{
                   display: 'flex',
                   justifyContent: 'space-between',
                   flexWrap: 'wrap',
-                }}
-              >
+                }}>
                 <Typography variant="h5">Phòng trọ, nhà trọ cùng địa chỉ</Typography>
                 <Typography variant="subtitle1">
                   Xem thêm {detail.type}, nhà trọ tại {detail.address}
@@ -386,8 +376,7 @@ const Detail = () => {
                     width: isMobile ? '325px' : '756px',
                     mb: 2,
                     mx: 'auto',
-                  }}
-                >
+                  }}>
                   <RoomOther items={roomOrder} />
                 </Box>
               </Box>
