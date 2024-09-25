@@ -1,59 +1,38 @@
 /* eslint-disable react/prop-types */
-import { Box, Card, CardContent, CardMedia, Typography } from "@mui/material";
+import { useState } from "react";
+import {
+  Box,
+  Card,
+  CardContent,
+  CardMedia,
+  Rating,
+  Typography,
+} from "@mui/material";
 import Slider from "react-slick";
-import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
-import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
-import Person4OutlinedIcon from "@mui/icons-material/Person4Outlined";
-// Nút Next tùy chỉnh
-const NextArrow = ({ onClick }) => (
-  <div
-    onClick={onClick}
-    style={{
-      position: "absolute",
-      top: "50%",
-      right: 10,
-      zIndex: 1,
-      cursor: "pointer",
-    }}
-  >
-    <ArrowCircleRightOutlinedIcon sx={{ color: "#fff" }} fontSize="large" />
-  </div>
-);
 
-// Nút Previous tùy chỉnh
-const PrevArrow = ({ onClick }) => (
-  <div
-    onClick={onClick}
-    style={{
-      position: "absolute",
-      top: "50%",
-      left: 10,
-      zIndex: 1,
-      cursor: "pointer",
-    }}
-  >
-    <ArrowCircleLeftOutlinedIcon sx={{ color: "#fff" }} fontSize="large" />
-  </div>
-);
+import Person4OutlinedIcon from "@mui/icons-material/Person4Outlined";
+import PrevArrow from "./PrevArrow";
+import NextArrow from "./NextArrow";
 
 const RoomOther = ({ items }) => {
+  const [showArrows, setShowArrows] = useState(false);
+
   const settings = {
-    // dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
+    nextArrow: <NextArrow visible={showArrows} />,
+    prevArrow: <PrevArrow visible={showArrows} />,
     responsive: [
       {
-        breakpoint: 1024, // 1024px
+        breakpoint: 1024,
         settings: {
           slidesToShow: 2,
         },
       },
       {
-        breakpoint: 600, // 600px
+        breakpoint: 600,
         settings: {
           slidesToShow: 1,
         },
@@ -62,7 +41,14 @@ const RoomOther = ({ items }) => {
   };
 
   return (
-    <Box sx={{ padding: 2, position: "relative" }}>
+    <Box
+      sx={{
+        padding: 2,
+        position: "relative",
+      }}
+      onMouseEnter={() => setShowArrows(true)}
+      onMouseLeave={() => setShowArrows(false)}
+    >
       <Slider {...settings}>
         {items.map((item, index) => (
           <Box key={index} sx={{ padding: "0 10px" }}>
@@ -77,6 +63,25 @@ const RoomOther = ({ items }) => {
                 }}
               >
                 <Typography variant="inherit">{item.name}</Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    ml: 0,
+                  }}
+                >
+                  <Rating
+                    sx={{
+                      alignItems: "center",
+                      my: 0.5,
+                    }}
+                    name="simple-controlled"
+                    value={2}
+                    size="small"
+                    readOnly
+                  />
+                  <Typography>{"(5)"}</Typography>
+                </Box>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                   <Person4OutlinedIcon />
                   <Typography variant="subtitle2" color="text.secondary">

@@ -30,6 +30,7 @@ const RaitingAvg = () => {
             <LinearProgress
               value={6}
               variant="buffer"
+              valueBuffer={6}
               sx={{
                 flexGrow: 1,
                 height: 12,
@@ -47,6 +48,7 @@ const RaitingAvg = () => {
             <LinearProgress
               value={6}
               variant="buffer"
+              valueBuffer={6}
               sx={{
                 flexGrow: 1,
                 height: 12,
@@ -64,6 +66,7 @@ const RaitingAvg = () => {
             <LinearProgress
               value={6}
               variant="buffer"
+              valueBuffer={6}
               sx={{
                 flexGrow: 1,
                 height: 12,
@@ -81,6 +84,7 @@ const RaitingAvg = () => {
             <LinearProgress
               value={6}
               variant="buffer"
+              valueBuffer={6}
               sx={{
                 flexGrow: 1,
                 height: 12,
@@ -98,6 +102,7 @@ const RaitingAvg = () => {
             <LinearProgress
               value={6}
               variant="buffer"
+              valueBuffer={6}
               sx={{
                 flexGrow: 1,
                 height: 12,

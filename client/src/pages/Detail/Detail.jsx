@@ -12,7 +12,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import Carousel from "react-material-ui-carousel";
 import Item from "./Item";
 import UserDetail from "./UserDetail";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
@@ -36,10 +35,14 @@ import RoomOther from "./RoomOther";
 import RaitingAvg from "./RaitingAvg";
 import Comment from "./Comment";
 import BannerHorizontal from "~/components/BannerHorizontal";
+import Slider from "react-slick";
+import NextArrow from "./NextArrow";
+import PrevArrow from "./PrevArrow";
 
 const Detail = () => {
   const [detail, setDetail] = useState(null);
   const [raiting, setRaiting] = useState(0);
+  const [showArrows, setShowArrows] = useState(false);
 
   useEffect(() => {
     getDetail().then((res) => {
@@ -67,6 +70,25 @@ const Detail = () => {
     return <Typography>Loading...</Typography>;
   }
 
+  const settings = {
+    dotsClass: "slick-dots slick-thumb",
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    nextArrow: <NextArrow visible={showArrows} />,
+    prevArrow: <PrevArrow visible={showArrows} />,
+    customPaging: function (i) {
+      if (isMobile) return <Box sx={{ display: "none" }}></Box>;
+      return (
+        <a>
+          <img className="image-paging" src={detail.images[i].image}></img>
+        </a>
+      );
+    },
+  };
+
   return (
     <Container>
       <Breadcrumbs aria-label="breadcrumb" sx={{ my: 2 }}>
@@ -82,16 +104,37 @@ const Detail = () => {
         <Typography sx={{ color: "text.primary" }}>{detail.name}</Typography>
       </Breadcrumbs>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={8}>
-          <Carousel
+        <Grid
+          item
+          xs={12}
+          md={8}
+          onMouseEnter={() => setShowArrows(true)}
+          onMouseLeave={() => setShowArrows(false)}
+          sx={{
+            ".slick-dots.slick-thumb": {
+              position: "relative",
+              ml: -3,
+            },
+            ".slick-dots.slick-thumb li": {
+              mx: "30px",
+            },
+            ".image-paging": {
+              width: "50px",
+              height: "50px",
+              transition: "all 0.1s ease-in-out",
+            },
+            ".slick-dots.slick-thumb li.slick-active a img": {
+              transform: "scale(1.2)",
+            },
+          }}
+        >
+          <Slider
+            {...settings}
             sx={{
-              // width: isMobile ? "100vw" : "auto",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
             }}
-            animation="slide"
-            autoPlay={false}
           >
             {detail.images.map((item, i) => (
               <Item
@@ -102,8 +145,11 @@ const Detail = () => {
                 totalItems={detail.images.length}
               />
             ))}
-          </Carousel>
-          <Typography variant="h5">{detail.name}</Typography>
+          </Slider>
+
+          <Typography variant="h5" sx={{ mt: 8 }}>
+            {detail.name}
+          </Typography>
           <Typography variant="h6">{detail.addressDetail}</Typography>
           <Typography variant="h5" sx={{ my: 2, color: "red" }}>
             {formatNumber(detail.price)}đ/tháng
