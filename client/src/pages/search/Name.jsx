@@ -2,7 +2,15 @@ import { Box, Typography, Button } from "@mui/material";
 
 const Name = () => {
   return (
-    <Box sx={{ gap: 1, m: 2 }}>
+    <Box
+      sx={{
+        gap: 1,
+        m: 2,
+        bgcolor: (theme) =>
+          theme.palette.mode === "light" ? "#fff" : "#dcdde1",
+        color: (theme) => (theme.palette.mode === "light" ? "#333" : "#00b894"),
+      }}
+    >
       {/* Tiêu đề */}
       <Box>
         <Typography variant="h6">Phòng trọ, nhà trọ gần khu vực này</Typography>
