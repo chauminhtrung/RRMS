@@ -5,218 +5,218 @@ USE rrms;
 DROP DATABASE rrms;
 
 CREATE TABLE Roles (
-    Role_id BINARY(16) PRIMARY KEY,
-    RoleName VARCHAR(255),
-    Description TEXT
+    roleId BINARY(16) PRIMARY KEY,
+    roleName VARCHAR(255),
+    description TEXT
 );
 
 CREATE TABLE Accounts (
-    Username VARCHAR(255) NOT NULL PRIMARY KEY,
-    Password VARCHAR(255),
-    Fullname VARCHAR(255),
-    Phone VARCHAR(20),
-    Email VARCHAR(255),
-    Birthday DATE,
-    Gender VARCHAR(10),
-    CCCD INT
+    username VARCHAR(255) NOT NULL PRIMARY KEY,
+    password VARCHAR(255),
+    fullname VARCHAR(255),
+    phone VARCHAR(20),
+    email VARCHAR(255),
+    birthday DATE,
+    gender ENUM('Male', 'Female'),
+    cccd VARCHAR(15)
 );
 
 CREATE TABLE Motels (
-    Motel_id BINARY(16) PRIMARY KEY,
-    MotelName VARCHAR(255),
-    Area DOUBLE,
-    AveragePrice DECIMAL(10, 2),
-    Address NVARCHAR (255),
-    Username VARCHAR(255),
-    FOREIGN KEY (Username) REFERENCES Accounts (Username)
+    motelId BINARY(16) PRIMARY KEY,
+    motelName VARCHAR(255),
+    area DOUBLE,
+    averagePrice DECIMAL(10, 2),
+    address NVARCHAR (255),
+    username VARCHAR(255),
+    FOREIGN KEY (username) REFERENCES Accounts (username)
 );
 
 CREATE TABLE Rules (
-    Rule_id BINARY(16) PRIMARY KEY,
-    RuleName NVARCHAR (255),
-    Price DECIMAL(10, 2)
+    ruleId BINARY(16) PRIMARY KEY,
+    ruleName NVARCHAR (255),
+    price DECIMAL(10, 2)
 );
 
 CREATE TABLE NameMotelServices (
-    NameMotelServices_id BINARY(16) PRIMARY KEY,
-    TypeService NVARCHAR (255),
-    NameService NVARCHAR (255),
-    Price DECIMAL(10, 2)
+    nameMotelServicesId BINARY(16) PRIMARY KEY,
+    typeService NVARCHAR (255),
+    nameService NVARCHAR (255),
+    price DECIMAL(10, 2)
 );
 
 CREATE TABLE Auths (
-    Auth_id BINARY(16) PRIMARY KEY,
-    Username VARCHAR(50),
-    Role_id BINARY(16),
-    FOREIGN KEY (Username) REFERENCES Accounts (Username),
-    FOREIGN KEY (Role_id) REFERENCES Roles (Role_id)
+    authId BINARY(16) PRIMARY KEY,
+    username VARCHAR(50),
+    roleId BINARY(16),
+    FOREIGN KEY (username) REFERENCES Accounts (username),
+    FOREIGN KEY (roleId) REFERENCES Roles (roleId)
 );
 
 CREATE TABLE Searchs (
-    Search_id BINARY(16) PRIMARY KEY,
-    Username VARCHAR(100) NOT NULL,
-    Content TEXT,
-    FOREIGN KEY (Username) REFERENCES Accounts (Username)
+    searchId BINARY(16) PRIMARY KEY,
+    username VARCHAR(100) NOT NULL,
+    content TEXT,
+    FOREIGN KEY (username) REFERENCES Accounts (username)
 );
 
 CREATE TABLE MotelRules (
-    MotelRule_id BINARY(16) PRIMARY KEY,
-    Motel_id BINARY(16),
-    Rule_id BINARY(16),
-    FOREIGN KEY (Motel_id) REFERENCES Motels (Motel_id),
-    FOREIGN KEY (Rule_id) REFERENCES Rules (Rule_id)
+    motelRuleId BINARY(16) PRIMARY KEY,
+    motelId BINARY(16),
+    ruleId BINARY(16),
+    FOREIGN KEY (motelId) REFERENCES Motels (motelId),
+    FOREIGN KEY (ruleId) REFERENCES Rules (ruleId)
 );
 
 CREATE TABLE MotelServices (
-    MotelService_id BINARY(16) PRIMARY KEY,
-    Motel_id BINARY(16),
-    NameMotelService_id BINARY(16),
-    FOREIGN KEY (Motel_id) REFERENCES Motels (Motel_id),
-    FOREIGN KEY (NameMotelService_id) REFERENCES NameMotelServices (NameMotelServices_id)
+    motelServiceId BINARY(16) PRIMARY KEY,
+    motelId BINARY(16),
+    nameMotelServiceId BINARY(16),
+    FOREIGN KEY (motelId) REFERENCES Motels (motelId),
+    FOREIGN KEY (nameMotelServiceId) REFERENCES NameMotelServices (nameMotelServicesId)
 );
 
 CREATE TABLE Supports (
-    Support_id BINARY(16) NOT NULL PRIMARY KEY,
-    Username VARCHAR(255),
-    DateOfStay DATE,
-    CreateDate DATE,
-    Price DECIMAL(10, 2),
-    FOREIGN KEY (Username) REFERENCES Accounts (Username)
+    supportId BINARY(16) NOT NULL PRIMARY KEY,
+    username VARCHAR(255),
+    dateOfStay DATE,
+    createDate DATE,
+    price DECIMAL(10, 2),
+    FOREIGN KEY (username) REFERENCES Accounts (username)
 );
 
 CREATE TABLE TypeRooms (
-    TypeRoom_id BINARY(16) PRIMARY KEY,
-    Name VARCHAR(50)
+    typeRoomId BINARY(16) PRIMARY KEY,
+    name VARCHAR(50)
 );
 
 CREATE TABLE Devices (
-    Device_id BINARY(16) PRIMARY KEY,
-    DeviceName VARCHAR(255),
-    Available BOOLEAN
+    deviceId BINARY(16) PRIMARY KEY,
+    deviceName VARCHAR(255),
+    available BOOLEAN
 );
 
 CREATE TABLE Services (
-    Service_id BINARY(16) PRIMARY KEY,
-    TypeService VARCHAR(255),
-    NameService VARCHAR(255),
-    Price DECIMAL(10, 2)
+    serviceId BINARY(16) PRIMARY KEY,
+    typeService VARCHAR(255),
+    nameService VARCHAR(255),
+    price DECIMAL(10, 2)
 );
 
 CREATE TABLE Payments (
-    Payment_id BINARY(16) PRIMARY KEY,
-    Payment_name VARCHAR(255),
-    Description TEXT
+    paymentId BINARY(16) PRIMARY KEY,
+    paymentName VARCHAR(255),
+    description TEXT
 );
 
 CREATE TABLE Rooms (
-    Room_id BINARY(16) PRIMARY KEY,
-    Motel_id BINARY(16),
-    TypeRoom_id BINARY(16),
-    Price DECIMAL(10, 2),
-    RoomArea DECIMAL(10, 2),
-    Available BOOLEAN,
-    Description TEXT,
-    FOREIGN KEY (Motel_id) REFERENCES Motels (Motel_id),
-    FOREIGN KEY (TypeRoom_id) REFERENCES TypeRooms (TypeRoom_id)
+    roomId BINARY(16) PRIMARY KEY,
+    motelId BINARY(16),
+    typeRoomId BINARY(16),
+    price DECIMAL(10, 2),
+    roomArea DECIMAL(10, 2),
+    available BOOLEAN,
+    description TEXT,
+    FOREIGN KEY (motelId) REFERENCES Motels (motelId),
+    FOREIGN KEY (typeRoomId) REFERENCES TypeRooms (typeRoomId)
 );
 
 CREATE TABLE RoomImages (
-    RoomImage_id BINARY(16) PRIMARY KEY,
-    Room_id BINARY(16),
-    File_name VARCHAR(255),
-    Linkimg TEXT,
-    MainImg BOOLEAN,
-    FOREIGN KEY (Room_id) REFERENCES Rooms (Room_id)
+    roomImageId BINARY(16) PRIMARY KEY,
+    roomId BINARY(16),
+    fileName VARCHAR(255),
+    linkImg TEXT,
+    mainImg BOOLEAN,
+    FOREIGN KEY (roomId) REFERENCES Rooms (roomId)
 );
 
 CREATE TABLE RoomReviews (
-    RoomReview_id BINARY(16) PRIMARY KEY,
-    Username VARCHAR(255),
-    Room_id BINARY(16),
-    Content TEXT,
-    Rating INT,
-    FOREIGN KEY (Room_id) REFERENCES Rooms (Room_id)
+    roomReviewId BINARY(16) PRIMARY KEY,
+    username VARCHAR(255),
+    roomId BINARY(16),
+    content TEXT,
+    rating INT,
+    FOREIGN KEY (roomId) REFERENCES Rooms (roomId)
 );
 
 CREATE TABLE Invoices (
-    Invoice_id BINARY(16) PRIMARY KEY,
-    Username VARCHAR(255),
-    Room_id BINARY(16),
-    Payment_id BINARY(16),
-    Status VARCHAR(50),
-    CreateDate DATE,
-    FOREIGN KEY (Username) REFERENCES Accounts (Username),
-    FOREIGN KEY (Room_id) REFERENCES Rooms (Room_id),
-    FOREIGN KEY (Payment_id) REFERENCES Payments (Payment_id)
+    invoiceId BINARY(16) PRIMARY KEY,
+    username VARCHAR(255),
+    roomId BINARY(16),
+    paymentId BINARY(16),
+    status VARCHAR(50),
+    createDate DATE,
+    FOREIGN KEY (username) REFERENCES Accounts (username),
+    FOREIGN KEY (roomId) REFERENCES Rooms (roomId),
+    FOREIGN KEY (paymentId) REFERENCES Payments (paymentId)
 );
 
 CREATE TABLE RoomDevices (
-    RoomDevice_id BINARY(16) PRIMARY KEY,
-    Room_id BINARY(16),
-    Device_id BINARY(16),
-    Quantity INT,
-    FOREIGN KEY (Room_id) REFERENCES Rooms (Room_id),
-    FOREIGN KEY (Device_id) REFERENCES Devices (Device_id)
+    roomDeviceId BINARY(16) PRIMARY KEY,
+    roomId BINARY(16),
+    deviceId BINARY(16),
+    quantity INT,
+    FOREIGN KEY (roomId) REFERENCES Rooms (roomId),
+    FOREIGN KEY (deviceId) REFERENCES Devices (deviceId)
 );
 
 CREATE TABLE RoomServices (
-    RoomService_id BINARY(16) PRIMARY KEY,
-    Room_id BINARY(16),
-    Service_id BINARY(16),
-    FOREIGN KEY (Room_id) REFERENCES Rooms (Room_id),
-    FOREIGN KEY (Service_id) REFERENCES Services (Service_id)
+    roomServiceId BINARY(16) PRIMARY KEY,
+    roomId BINARY(16),
+    serviceId BINARY(16),
+    FOREIGN KEY (roomId) REFERENCES Rooms (roomId),
+    FOREIGN KEY (serviceId) REFERENCES Services (serviceId)
 );
 
-CREATE TABLE Detail_invoices (
-    Detail_invoice_id BINARY(16) PRIMARY KEY,
-    Invoice_id BINARY(16),
-    RoomService_id BINARY(16),
-    RoomDevice_id BINARY(16),
-    FOREIGN KEY (Invoice_id) REFERENCES Invoices (Invoice_id),
-    FOREIGN KEY (RoomService_id) REFERENCES RoomServices (RoomService_id),
-    FOREIGN KEY (RoomDevice_id) REFERENCES RoomDevices (RoomDevice_id)
+CREATE TABLE DetailInvoices (
+    detailInvoiceId BINARY(16) PRIMARY KEY,
+    invoiceId BINARY(16),
+    roomServiceId BINARY(16),
+    roomDeviceId BINARY(16),
+    FOREIGN KEY (invoiceId) REFERENCES Invoices (invoiceId),
+    FOREIGN KEY (roomServiceId) REFERENCES RoomServices (roomServiceId),
+    FOREIGN KEY (roomDeviceId) REFERENCES RoomDevices (roomDeviceId)
 );
 
 CREATE TABLE Notifications (
-    Notification_id BINARY(16) NOT NULL PRIMARY KEY,
-    Username_Landlord VARCHAR(255),
-    Username_Tenant VARCHAR(255),
-    Title VARCHAR(255),
-    Content TEXT,
-    NumberOfRecipients INT,
-    FOREIGN KEY (Username_Landlord) REFERENCES Accounts (Username)
+    notificationId BINARY(16) NOT NULL PRIMARY KEY,
+    usernameLandlord VARCHAR(255),
+    usernameTenant VARCHAR(255),
+    title VARCHAR(255),
+    content TEXT,
+    numberOfRecipients INT,
+    FOREIGN KEY (usernameLandlord) REFERENCES Accounts (username)
 );
 
 CREATE TABLE NotificationRooms (
-    NotificationRoom_id BINARY(16) PRIMARY KEY,
-    Room_id BINARY(16),
-    Notification_id BINARY(16),
-    FOREIGN KEY (Room_id) REFERENCES Rooms (Room_id),
-    FOREIGN KEY (Notification_id) REFERENCES Notifications (Notification_id)
+    notificationRoomId BINARY(16) PRIMARY KEY,
+    roomId BINARY(16),
+    notificationId BINARY(16),
+    FOREIGN KEY (roomId) REFERENCES Rooms (roomId),
+    FOREIGN KEY (notificationId) REFERENCES Notifications (notificationId)
 );
 
 CREATE TABLE BulletinBoards (
-    BulletinBoard_id BINARY(16) PRIMARY KEY,
-    Room_id BINARY(16),
-    Username VARCHAR(255),
-    Title VARCHAR(255),
-    DateOfStay DATE,
-    -- FOREIGN KEY (Username) REFERENCES Accounts(Username),
-    FOREIGN KEY (Room_id) REFERENCES Rooms (Room_id)
+    bulletinBoardId BINARY(16) PRIMARY KEY,
+    roomId BINARY(16),
+    username VARCHAR(255),
+    title VARCHAR(255),
+    dateOfStay DATE,
+    -- FOREIGN KEY (username) REFERENCES Accounts (username),
+    FOREIGN KEY (roomId) REFERENCES Rooms (roomId)
 );
 
 CREATE TABLE Contracts (
-    Contract_id BINARY(16) PRIMARY KEY,
-    Room_id BINARY(16),
-    Username_Tenant VARCHAR(50),
-    Username_Landlord VARCHAR(50),
-    FirstTime DATE,
-    LeaseTerm INT,
-    Description TEXT,
-    Deposit DECIMAL(10, 2),
-    Status ENUM('ACTIVE', 'ENDED'),
-    -- FOREIGN KEY (Username_Landlord) REFERENCES Accounts(Username),
-    FOREIGN KEY (Room_id) REFERENCES Rooms (Room_id)
+    contractId BINARY(16) PRIMARY KEY,
+    roomId BINARY(16),
+    usernameTenant VARCHAR(50),
+    usernameLandlord VARCHAR(50),
+    firstTime DATE,
+    leaseTerm INT,
+    description TEXT,
+    deposit DECIMAL(10, 2),
+    status ENUM('ACTIVE', 'ENDED'),
+    -- FOREIGN KEY (usernameLandlord) REFERENCES Accounts (username),
+    FOREIGN KEY (roomId) REFERENCES Rooms (roomId)
 );
 
-SELECT * FROM Rooms;
+SELECT * FROM Accounts;
