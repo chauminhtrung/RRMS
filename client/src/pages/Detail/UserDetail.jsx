@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Typography, useMediaQuery, Button } from '@mui/material'
+import { Avatar, Box, Button, Typography, useMediaQuery } from '@mui/material'
 import { useState } from 'react'
 import { Grid } from '@mui/material'
 
