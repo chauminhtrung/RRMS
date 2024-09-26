@@ -39,6 +39,7 @@ import Slider from 'react-slick'
 import NextArrow from './NextArrow'
 import PrevArrow from './PrevArrow'
 import LoadingPage from '~/components/LoadingPage'
+import { formatterAmount } from '~/utils/formatterAmount'
 
 const Detail = () => {
   const [detail, setDetail] = useState(null)
@@ -149,7 +150,7 @@ const Detail = () => {
           <Typography variant="h6">{detail.addressDetail}</Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography variant="h5" sx={{ my: 2, color: 'red' }}>
-              {formatNumber(detail.price)}đ/tháng
+              {formatterAmount(detail.price)}/tháng
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', ml: 0 }}>
               <Rating
@@ -205,9 +206,8 @@ const Detail = () => {
                 <AttachMoneyIcon />
                 <Box>
                   <Typography>Tiền cọc</Typography>
-                  <Typography sx={{ color: '#2ed573' }}>{formatterAmount(detail.deposit)}đ</Typography>
+                  <Typography sx={{ color: '#2ed573' }}>{formatterAmount(detail.deposit)}</Typography>
                 </Box>
-                <Skeleton></Skeleton>
               </Box>
             </Grid>
             <Grid item xs={5} md={2.8} sx={{ border: '1px solid black', borderRadius: '5px', p: '5px' }}>
@@ -224,7 +224,7 @@ const Detail = () => {
                 <ElectricBoltIcon />
                 <Box>
                   <Typography>Tiền điện</Typography>
-                  <Typography>{formatNumber(detail.priceElectric)}đ/Kw</Typography>
+                  <Typography>{formatterAmount(detail.priceElectric)}/Kw</Typography>
                 </Box>
               </Box>
             </Grid>
@@ -233,7 +233,7 @@ const Detail = () => {
                 <WaterDropOutlinedIcon />
                 <Box>
                   <Typography>Tiền nước</Typography>
-                  <Typography>{formatNumber(detail.priceWater)}đ/Khối</Typography>
+                  <Typography>{formatterAmount(detail.priceWater)}/Khối</Typography>
                 </Box>
               </Box>
             </Grid>
