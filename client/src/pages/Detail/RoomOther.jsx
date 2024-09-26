@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useState } from 'react'
 import { Badge, Box, Card, CardContent, CardMedia, Rating, Typography } from '@mui/material'
 import Slider from 'react-slick'

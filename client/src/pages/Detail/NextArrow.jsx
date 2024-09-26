@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 
 const NextArrow = ({ onClick, visible }) => {
