@@ -2,6 +2,8 @@ import { Box, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
 
 const Text = () => {
+  const [showMore, setShowMore] = useState(false) // State to manage the visibility
+
   return (
     <Box>
       <Typography variant="h6" sx={{ textAlign: 'center', fontWeight: 'bold', mt: 3 }}>
