@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { Box, Grid, Typography, Card, CardMedia, CardContent, Container } from '@mui/material'
 
 const RoomFeatureCard = ({ image, title, description }) => (

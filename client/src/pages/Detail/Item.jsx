@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { Box, Button, Typography, useMediaQuery } from '@mui/material'
 import FmdGoodIcon from '@mui/icons-material/FmdGood'
 
