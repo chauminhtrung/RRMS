@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import eslintPlugin from 'vite-plugin-eslint'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -27,6 +28,7 @@ export default defineConfig({
         ],
       },
     }),
+    eslintPlugin({ cache: false }),
   ],
   resolve: {
     alias: [{ find: '~', replacement: '/src' }],
