@@ -265,7 +265,6 @@ const Search = () => {
             ))}
           </Grid>
         </DialogContent>
-
         <DialogActions>
           <Button color="primary" onClick={handleClose}>
             Close
