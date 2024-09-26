@@ -68,10 +68,6 @@ const Detail = () => {
     alert('Đã sao chép mô tả')
   }
 
-  const formatNumber = (value) => {
-    return new Intl.NumberFormat('vi-VN').format(value)
-  }
-
   const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'))
 
   if (!detail) {
@@ -209,8 +205,9 @@ const Detail = () => {
                 <AttachMoneyIcon />
                 <Box>
                   <Typography>Tiền cọc</Typography>
-                  <Typography sx={{ color: '#2ed573' }}>{formatNumber(detail.deposit)}đ</Typography>
+                  <Typography sx={{ color: '#2ed573' }}>{formatterAmount(detail.deposit)}đ</Typography>
                 </Box>
+                <Skeleton></Skeleton>
               </Box>
             </Grid>
             <Grid item xs={5} md={2.8} sx={{ border: '1px solid black', borderRadius: '5px', p: '5px' }}>
