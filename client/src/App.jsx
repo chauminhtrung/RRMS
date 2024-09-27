@@ -1,12 +1,13 @@
 import Detail from './pages/Detail/Detail'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Home from './pages/Homes/Home'
+import Home from './pages/Homes/Home.jsx'
 import Header from './layouts/Header/Header'
 import Search from './pages/search/Search'
 import Footer from './layouts/Footer/Footer'
 import { env } from './configs/environment'
-import TestPage from './pages/TestPage'
-// import ValidCaptcha from "./components/ValidCaptcha";
+import MainManagement from './pages/admin/MainManagement'
+// import TestPage from './pages/TestPage'
+// import ValidCaptcha from './components/ValidCaptcha'
 
 function App() {
   console.log(env.API_URL)
@@ -18,9 +19,10 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/admin" element={<MainManagement />} />
           <Route path="/search" element={<Search />} />
           <Route path="/detail" element={<Detail />} />
-          <Route path="/test" element={<TestPage />} />
+          {/* <Route path="/test" element={<TestPage />} /> */}
         </Routes>
         <Footer />
       </Router>
