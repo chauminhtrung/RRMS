@@ -1,65 +1,72 @@
+.banner {
+  padding-top: 70px;
+  height: 650px;
+  background-image: url(https://quanlytro.me/images/backgrounds/bg-banner.webp);
+}
+
+.title {
+  font-size: 2.5rem;
+  width: 700px;
+  color: #5eb7ff;
+}
+
 .text-gradient {
   background: -webkit-linear-gradient(0deg, #e84452 0%, #6119da 100%);
-  -webkit-background-clip: text; /* Clip background to text */
-  -webkit-text-fill-color: transparent; /* Makes text color transparent */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.overlay-box {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  color: #5eb7ff;
-  font-weight: 800;
-}
-.title-banner {
-  width: 700px;
-}
-.image-list {
-  width: 100%;
-}
-.description-banner {
-  width: 650px;
-}
-
-.button-container {
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  margin-top: 100px;
-}
-
-.button-yellow {
+.btn-media {
   background: #faca4b !important;
   color: black !important;
-  border-radius: 20px;
-  font-size: 20px;
-  font-weight: bold;
-  padding: 15px 20px !important;
-  border-radius: 100px !important;
-  display: flex;
-  align-items: center;
+  border-radius: 50px !important;
 }
 
-.button-blue {
+.btn-registry {
   background-color: #5eb7ff !important;
   color: white !important;
-  border-radius: 20px;
-  font-size: 20px;
-  font-weight: bold;
-  margin-left: 50px !important;
-  padding: 15px 20px !important;
-  border-radius: 100px !important;
-  display: flex;
-  align-items: center;
+  border-radius: 50px !important;
 }
 
-.button-icon {
-  margin-right: 8px;
-  font-size: 20px;
+.shadow {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
+.inner-banner {
+  text-align: center;
+}
+@media (max-width: 428px) {
+  .banner {
+    padding-top: 30px;
+    height: 820px;
+    background-image: url(https://quanlytro.me/images/backgrounds/bg-banner.webp);
+  }
+
+  .title {
+    width: 360px;
+    font-size: 2.5rem;
+    color: #5eb7ff;
+  }
+  .title-descrip {
+    width: 360px;
+  }
+  .image-slider img {
+    display: none; /* Ẩn hình ảnh tại kích thước màn hình nhỏ hơn 428px */
+  }
+  .button1 {
+    flex-direction: column;
+    align-items: center;
+  }
+  .btn-registry {
+    margin-right: 49px !important;
+  }
+}
+
 /* Highlights */
+.header-title {
+  font-size: 100px;
+  font-weight: bold;
+}
 .feature-home {
   background-color: white;
   padding: 20px;
@@ -118,6 +125,14 @@
 .item-inner {
   padding: 30px 0;
 }
+@media (max-width: 428px) {
+  .custom-box {
+    height: 192px;
+  }
+  .subtitle-strong {
+    display: none;
+  }
+}
 
 /* Quản lý trên đa nền tảng */
 .inner {
@@ -166,17 +181,19 @@
   font-size: 14px;
   color: #444;
 }
+@media (max-width: 428px) {
+  .item-wrap {
+    height: 230px;
+  }
+  .item-wraptext {
+    font-size: 20px !important;
+  }
+}
 
-/*  */
+/*  Lý do chủ nhà chọn chúng tôi*/
 .section-title {
   font-size: 24px;
   font-weight: bold;
-}
-
-.title-feature {
-  display: block;
-  font-size: 18px;
-  color: #5eb7ff;
 }
 
 .section-description {
@@ -204,7 +221,7 @@
   border-radius: 10px;
 }
 
-/*  */
+/* Đồng hành cùng chúng tôi */
 
 .col-inner {
   padding: 10px;
@@ -243,4 +260,10 @@
 
 .mt-3 {
   margin-top: 1rem !important;
+}
+
+@media (max-width: 428px) {
+  .card-feature {
+    height: 410px;
+  }
 }
