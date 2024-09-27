@@ -1,65 +1,86 @@
-import { Typography, Button, Box, Grid ,Container,Paper} from '@mui/material';  
-import ImageList from '@mui/material/ImageList';  
-import ImageListItem from '@mui/material/ImageListItem';   
-import { PlayArrow, Person } from '@mui/icons-material'; // Import icon   
+import { Typography, Button, Box, Grid ,Container,Paper} from '@mui/material'; 
 
+// test
 export default function HomePage() {  
   return (  
     <div>  
-      <ImageList className="image-list" cols={1} rowHeight="auto">  
-        {itemData.map((item) => (  
-          <ImageListItem key={item.img} sx={{ position: 'relative' }}>  
-            <img  
-              srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}  
-              src={`${item.img}?w=164&h=164&fit=crop&auto=format`}  
-              alt={item.title}  
-              loading="lazy"  
-              style={{ width: '100%', height: '675px', objectFit: 'cover' }}  
-            />  
-
-            <Box className="overlay-box" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px' }}>   
-              <Box sx={{ flex: 1 }}> {/* Text Box */}  
-                <Typography variant="h3" component="h3" gutterBottom fontWeight="bold" className='title-banner'>  
-                  Phần mềm quản lý nhà cho thuê  
-                </Typography>  
-                <Typography variant="h3" component="h3" gutterBottom className="text-gradient" fontWeight="bold">  
-                  Điện thoại - iPad - Máy tính  
-                </Typography>  
-                <Typography variant="h6" component="h2" gutterBottom>  
-                  Quản lý nhẹ nhàng như chiếc smartphone trong tay của bạn!  
-                </Typography>   
-                <Typography component="h6" gutterBottom className='description-banner'>  
-                  Chúng tôi mang đến một ứng dụng tuyệt vời giúp bạn có thể dễ dàng quản lý nhà trọ, nhà cho thuê, chung cư mini, chuỗi căn hộ, ký túc xá, văn phòng cho thuê... Dù quy mô nhỏ hay lớn với công nghệ 4.0 không còn thời quản lý phòng cho thuê bằng excel, LOZIDO sẽ hỗ trợ bạn giải quyết các vấn đề như lưu trữ thông tin, hợp đồng, khách hàng, hóa đơn tiền thuê nhà tự động... Giúp ban quản trị quản lý một cách nhanh chóng, dễ dàng, hiệu quả chỉ với chiếc điện thoại thông minh.  
-                </Typography>   
-                
-                <Box className="button-container">   
-                  <Button variant="contained" className="button-yellow">  
-                    <PlayArrow className="button-icon" />  
-                    Giới thiệu phần mềm  
-                  </Button>  
-                  <Button variant="contained" className="button-blue">  
-                    <Person className="button-icon" />  
-                    Tư vấn về dịch vụ  
-                  </Button>   
-                </Box>  
-              </Box>  
-              <img   
-                src="https://quanlytro.me/images/quan-ly-tro-smart-7-2022.png?version=244342"   
-                alt="App Screenshot"   
-                style={{ width: '526px', height: '522px', marginLeft: '100px' }}   
-              /> {/* Image on the right */}  
-            </Box>  
-          </ImageListItem>  
-        ))}  
-      </ImageList>  
+      <section className="banner">  
+            <Container>  
+                <div className="inner-banner">  
+                    <Grid container spacing={2}>  
+                        <Grid item xl={7} md={12} className="d-flex align-content-center text-center">  
+                            <div className="inner-slider align-self-center align-baseline">  
+                                <Typography variant="h3" className="title" fontWeight="bold">  
+                                    Phần mềm quản lý nhà cho thuê
+                                </Typography> 
+                                <Typography variant="h3" className="title" fontWeight="bold">  
+                                    <span className="text-gradient">Điện thoại - iPad - Máy tính</span> 🎉  
+                                </Typography> 
+                                <article>  
+                                    <Typography variant="h4" className="title-descrip">  
+                                        <span className="wrap">Quản lý nhẹ nhàng như chiếc smartphone trong tay của bạn!</span>  
+                                    </Typography>  
+                                    <Typography variant="body1" className="title-descrip">  
+                                        Chúng tôi mang đến một ứng dụng tuyệt vời giúp bạn có thể dễ dàng <b>quản lý nhà trọ, nhà cho thuê, chung cư mini, chuỗi căn hộ, ký túc xá, văn phòng cho thuê...</b> Dù quy mô nhỏ hay lớn với công nghệ 4.0 không còn thời quản lý phòng cho thuê bằng excel, RRMS sẽ hỗ trợ bạn giải quyết các vấn đề như lưu trữ thông tin, hợp đồng, khách hàng, hóa đơn tiền thuê nhà tự động... Giúp ban quản trị quản lý một cách nhanh chóng, dễ dàng, hiệu quả chỉ với chiếc điện thoại thông minh.  
+                                    </Typography>  
+                                </article>  
+                                <div className="d-flex justify-content-center mt-3 button1">  
+                                    <div className="text-end mt-2">  
+                                        <Button  
+                                            variant="contained"  
+                                            className="btn-media shadow"  
+                                            data-toggle="modal"  
+                                            data-target="#modalVideoIntroduce"  
+                                        >  
+                                            <span className="icon-btn-media me-3">  
+                                                <img  
+                                                    src="https://quanlytro.me/images/icons/button_media.svg?version=244342"  
+                                                    alt="play video"  
+                                                />  
+                                            </span>  
+                                            Giới thiệu phần mềm  
+                                        </Button>  
+                                    </div>  
+                                    <div className="text-start mt-2 ms-5">  
+                                        <Button  
+                                            variant="contained"  
+                                            className="btn-registry shadow"  
+                                            data-toggle="modal"  
+                                            data-target="#registerModal"  
+                                        >  
+                                            <span className="icon-btn-media me-3">  
+                                            <img  
+                                                    src="https://quanlytro.me/images/icons/button_media.svg?version=244342"  
+                                                    alt="play video"  
+                                                />  
+                                            </span>  
+                                            Tư vấn về dịch vụ  
+                                        </Button>  
+                                    </div>  
+                                </div>  
+                            </div>  
+                        </Grid>  
+                        <Grid item xl={5} md={12} className="image-slider text-center">  
+                            <img  
+                                className="custom-logo home-logo2"  
+                                style={{ width: '100%', height: 'auto', maxWidth: '526px' }}  
+                                src="https://quanlytro.me/images/quan-ly-tro-smart-7-2022.png?version=244342"  
+                                alt="Phần mềm quản lý nhà trọ trên điện thoại - RRMS"  
+                                title="Phần mềm quản lý nhà trọ điện thoại"  
+                            />  
+                        </Grid>  
+                    </Grid>  
+                </div>  
+            </Container>  
+        </section>  
 
       {/* Highlights */}
       <section className="feature-home">  
       <div className="container">  
         <div className="text-center">  
-          <Typography variant="h2" className="header-title" fontWeight="bold">  
-            Điểm nổi bật  
-          </Typography>  
+        <Typography className="header-title" sx={{ fontSize: '40px', fontWeight: 'bold' }}>  
+          Điểm nổi bật  
+        </Typography> 
           <Typography variant="body1">  
             Một số điểm nổi bật của phần mềm bạn có thể tham khảo ngoài ra còn có nhiều tính năng đang chờ bạn khám phá!  
           </Typography>  
@@ -67,7 +88,7 @@ export default function HomePage() {
 
         <Grid container spacing={2} mt={4}>  
             {features.map((feature, index) => (  
-                <Grid item xs={12} sm={6} md={4} lg={2} key={index}>  {/* Chỉnh sửa cột cho lg = 2 để có 6 cột  */}  
+                <Grid item xs={6} sm={6} md={4} lg={2} key={index}>  {/* Chỉnh sửa cột cho lg = 2 để có 6 cột  */}  
                 <Box textAlign="center">  
                     <img  
                     src={feature.img}  
@@ -80,7 +101,7 @@ export default function HomePage() {
                 </Box>  
                 </Grid>  
             ))}  
-            <Grid item xs={12} sm={6} md={4} lg={2}>   
+            <Grid item xs={6} sm={6} md={4} lg={2}>   
                 <Box className="custom-box">  
                     <Box display="flex" alignItems="center">  
                         <Typography component="a" href="#all-function" className="link">  
@@ -93,7 +114,7 @@ export default function HomePage() {
                         </svg>   
                     </Box> 
                 </Box>  
-                <Typography variant="subtitle1" mt={1} marginLeft={1} className="subtitle-strong">  
+                <Typography variant="subtitle1" mt={1} className="subtitle-strong">  
                     <strong>Nhiều tính năng khác đang chờ khám phá</strong>  
                 </Typography>
             </Grid>  
@@ -106,11 +127,11 @@ export default function HomePage() {
       <Container>  
         <div className="item-inner inner-platform-app">  
           <div className="text-center">  
-            <Typography variant="h2" className="title" fontWeight="bold">  
+            <Typography  sx={{ fontSize: '40px', fontWeight: 'bold' }}>  
               Quản lý trên đa nền tảng   
             </Typography>  
-            <Typography variant="h2" className="title" fontWeight="bold" color='#5eb7ff'> 
-              <span className="title-feature">Điện thoại - iPad - Máy tính - Website</span>  
+            <Typography color='#5eb7ff' sx={{ fontSize: '40px', fontWeight: 'bold' }}> 
+              Điện thoại - iPad - Máy tính - Website
             </Typography>
             <Typography variant="body1">  
               Với sự đa dạng về nền tảng sẽ giúp bạn quản lý nhà trọ linh động hơn, thay vì mẫu excel phức tạp hay sổ sách rờm rà. Thật tuyệt vời khi nay bạn đã có thể quản lý nhà trọ của mình trên mọi thiết bị bạn có.  
@@ -145,8 +166,8 @@ export default function HomePage() {
       <section className="function" id="all-function">  
             <Container>  
                 <header className="function-header text-center">  
-                    <Typography variant="h4" marginBottom={3} fontWeight="bold">  
-                        Với những <span className="title-feature">tính năng tuyệt vời</span> phần mềm quản lý sẽ hỗ trợ bạn.  
+                    <Typography marginBottom={3} sx={{ fontSize: '40px', fontWeight: 'bold' }}>  
+                        Với những tính năng tuyệt vời phần mềm quản lý sẽ hỗ trợ bạn.  
                     </Typography>  
                     <Typography marginBottom={2}>  
                         Nhiều tính năng căn bản và mở rộng sẽ giúp công việc <b>quản lý phòng trọ</b> của bạn dễ dàng hơn bao giờ hết. Hãy tham khảo một vài chức năng cơ bản mà chúng tôi đang hỗ trợ.  
@@ -167,7 +188,7 @@ export default function HomePage() {
                                             <img className="item-image" src={feature.icon} alt={`icon ${feature.title}`} />  
                                         </Box>  
                                         <Box className="item-content-wrap p-2">  
-                                            <Typography variant="h4">{feature.title}</Typography>  
+                                            <Typography className="item-wraptext" sx={{ fontSize: '25px', fontWeight: 'bold'  }}>{feature.title}</Typography>  
                                             <Typography className="item-content-des">{feature.description}</Typography>  
                                         </Box>  
                                     </Box>  
@@ -185,10 +206,10 @@ export default function HomePage() {
             <Container>  
                 <div className="item-inner inner-testimonial">  
                     <article className="text-center">  
-                        <Typography variant="h2" fontWeight="bold">  
-                            Lý do chủ nhà chọn chúng tôi<br/>  
+                        <Typography sx={{ fontSize: '40px', fontWeight: 'bold' }}>  
+                            Lý do chủ nhà chọn chúng tôi 
                         </Typography>  
-                        <Typography variant="h4" fontWeight="bold" className="title-feature">  
+                        <Typography color='#5eb7ff' sx={{ fontSize: '40px', fontWeight: 'bold' }}>  
                             Cảm nhận từ khách hàng  
                         </Typography>
                         <Typography className="section-description">  
@@ -228,7 +249,9 @@ export default function HomePage() {
             <Container>  
                 <div className="item-inner">  
                     <div className="text-center">  
-                        <Typography variant="h2" fontWeight="bold">Đồng hành cùng chúng tôi</Typography>  
+                        <Typography sx={{ fontSize: '40px', fontWeight: 'bold' }}>
+                          Đồng hành cùng chúng tôi
+                        </Typography>  
                         <Typography>  
                             Cùng hướng đến sự phát triển bền vững, mang lại giá trị thực cho cộng đồng.  
                             <br className="d-none d-md-block" />  
@@ -272,7 +295,7 @@ export default function HomePage() {
                         <Grid container spacing={3}>  
                             <Grid item sm={12} md={6} >  
                                 <article className="card-feature" >  
-                                    <Typography variant="h3">Sự ra đời của RRMS - Quản lý nhà cho thuê</Typography>  
+                                    <Typography className="item-wraptext" sx={{ fontSize: '40px', fontWeight: 'bold'  }}>Sự ra đời của RRMS - Quản lý nhà cho thuê</Typography>  
                                     <Typography paragraph style={{ textAlign: 'justify' }}>  
                                         Với số lượng phòng trọ ngày càng tăng theo nhu cầu, các chủ nhà sẽ gặp khó khăn trong việc quản lý theo cách truyền thống.   
                                         Sử dụng các cuốn sổ dày cộm rồi ghi chép tất cả các thông tin hay các file excel phức tạp, đến các khoản tiền dịch vụ khách sử dụng, đến phiếu thu tiền, hóa đơn, thống kê các khoản chi thu.   
@@ -283,7 +306,7 @@ export default function HomePage() {
                             </Grid>  
                             <Grid item sm={12} md={6}>  
                                 <article className="card-feature">  
-                                    <Typography variant="h3">Giá trị cốt lõi của RRMS - Quản lý nhà cho thuê</Typography>  
+                                    <Typography className="item-wraptext" sx={{ fontSize: '40px', fontWeight: 'bold'  }}>Giá trị cốt lõi của RRMS - Quản lý nhà cho thuê</Typography>  
                                     <Typography paragraph style={{ textAlign: 'justify' }}>  
                                         Hiểu được nỗi khó khăn trong việc quản lý nhà cho thuê, mục tiêu của đội ngủ RRMS là phải mang sản phẩm chất lượng, tiện ích tới khách hàng.   
                                         Phần mềm phải được cập nhật, gia cố thường xuyên để đáp ứng kịp thời nghiệp vụ quản lý trong hoạt động kinh doanh nhà trọ sớm và tốt nhất có thể.   
@@ -302,12 +325,6 @@ export default function HomePage() {
   );  
 }  
 
-const itemData = [  
-  {  
-    img: 'https://quanlytro.me/images/backgrounds/bg-banner.webp',  
-    title: 'Breakfast',  
-  },  
-];
 const features = [  
     {  
       img: 'https://quanlytro.me/images/home_feature/feature-1-app-danh-rieng-cho-khac-thue-doc.jpg',  
