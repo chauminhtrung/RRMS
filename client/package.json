@@ -16,6 +16,7 @@
     "@marsidev/react-turnstile": "1.0.2",
     "@mui/icons-material": "6.1.0",
     "@mui/material": "6.1.0",
+    "@mui/x-charts": "^7.18.0",
     "axios": "1.7.7",
     "bootstrap": "5.3.3",
     "i18next": "23.15.1",
