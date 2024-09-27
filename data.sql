@@ -184,7 +184,8 @@ CREATE TABLE Notifications (
     title VARCHAR(255),
     content TEXT,
     numberOfRecipients INT,
-    FOREIGN KEY (usernameLandlord) REFERENCES Accounts (username)
+    FOREIGN KEY (usernameLandlord) REFERENCES Accounts (username),
+    FOREIGN KEY (usernameTenant) REFERENCES Accounts (username)
 );
 
 CREATE TABLE NotificationRooms (
@@ -201,7 +202,7 @@ CREATE TABLE BulletinBoards (
     username VARCHAR(255),
     title VARCHAR(255),
     dateOfStay DATE,
-    -- FOREIGN KEY (username) REFERENCES Accounts (username),
+    FOREIGN KEY (username) REFERENCES Accounts (username),
     FOREIGN KEY (roomId) REFERENCES Rooms (roomId)
 );
 
@@ -215,7 +216,8 @@ CREATE TABLE Contracts (
     description TEXT,
     deposit DECIMAL(10, 2),
     status ENUM('ACTIVE', 'ENDED'),
-    -- FOREIGN KEY (usernameLandlord) REFERENCES Accounts (username),
+    FOREIGN KEY (usernameTenant) REFERENCES Accounts (username), 
+    FOREIGN KEY (usernameLandlord) REFERENCES Accounts (username),
     FOREIGN KEY (roomId) REFERENCES Rooms (roomId)
 );
 
