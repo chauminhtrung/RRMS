@@ -1,27 +1,24 @@
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import { Facebook, Instagram, Twitter } from "@mui/icons-material";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import YouTubeIcon from "@mui/icons-material/YouTube";
-import SendIcon from "@mui/icons-material/Send";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Box, useMediaQuery } from "@mui/material";
-import "./footer.css";
-import { red } from "@mui/material/colors";
+import Container from '@mui/material/Container'
+import Typography from '@mui/material/Typography'
+import Link from '@mui/material/Link'
+import Grid from '@mui/material/Grid'
+import { Facebook, Instagram, Twitter } from '@mui/icons-material'
+import LinkedInIcon from '@mui/icons-material/LinkedIn'
+import YouTubeIcon from '@mui/icons-material/YouTube'
+import SendIcon from '@mui/icons-material/Send'
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import { Box, useMediaQuery } from '@mui/material'
+import './Footer.css'
+import { red } from '@mui/material/colors'
 export default function Footer() {
-  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'))
 
   return (
     <Box
       sx={{
         backgroundColor: (theme) =>
-          theme.palette.mode === "light"
-            ? theme.palette.grey[200]
-            : theme.palette.grey[800],
-      }}
-    >
+          theme.palette.mode === 'light' ? theme.palette.grey[200] : theme.palette.grey[800],
+      }}>
       <footer className="footer-section">
         <div className="container">
           <div className="footer-text">
@@ -34,24 +31,23 @@ export default function Footer() {
                     </a>
                   </div>
                   <Typography>
-                    RRMS là kênh chuyên cung cấp giải pháp tìm kiếm nhà ở chất
-                    lượng và thuận tiện.
+                    RRMS là kênh chuyên cung cấp giải pháp tìm kiếm nhà ở chất lượng và thuận tiện.
                   </Typography>
                   <div className="fa-social">
                     <a href="#">
-                      <Facebook sx={{ color: "#3498db" }} />
+                      <Facebook sx={{ color: '#3498db' }} />
                     </a>
                     <a href="#">
-                      <Twitter sx={{ color: "#2980b9" }} />
+                      <Twitter sx={{ color: '#2980b9' }} />
                     </a>
                     <a href="#">
-                      <Instagram sx={{ color: "#f8a5c2" }} />
+                      <Instagram sx={{ color: '#f8a5c2' }} />
                     </a>
                     <a href="#">
-                      <LinkedInIcon sx={{ color: "#2bcbba" }} />
+                      <LinkedInIcon sx={{ color: '#2bcbba' }} />
                     </a>
                     <a href="#">
-                      <YouTubeIcon sx={{ color: "#eb3b5a" }} />
+                      <YouTubeIcon sx={{ color: '#eb3b5a' }} />
                     </a>
                   </div>
                 </div>
@@ -104,16 +100,13 @@ export default function Footer() {
                 <div className="co-text">
                   <Typography
                     sx={{
-                      fontSize: "16px",
-                      color: "#707079",
-                      textAlign: isMobile ? "center" : "right",
-                      marginTop: isMobile ? "15px" : "",
-                    }}
-                  >
-                    Copyright ©
-                    <script>document.write(new Date().getFullYear());</script>
-                    2024 All rights reserved | This template is made with{" "}
-                    <FavoriteIcon /> by{" "}
+                      fontSize: '16px',
+                      color: '#707079',
+                      textAlign: isMobile ? 'center' : 'right',
+                      marginTop: isMobile ? '15px' : '',
+                    }}>
+                    Copyright ©<script>document.write(new Date().getFullYear());</script>
+                    2024 All rights reserved | This template is made with <FavoriteIcon /> by{' '}
                     <a href="https://colorlib.com" target="_blank">
                       RRMS
                     </a>
@@ -125,5 +118,5 @@ export default function Footer() {
         </div>
       </footer>
     </Box>
-  );
+  )
 }
