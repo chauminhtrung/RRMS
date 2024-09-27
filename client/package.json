@@ -7,7 +7,8 @@
     "dev": "vite --host",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@emotion/react": "11.13.3",
@@ -15,8 +16,10 @@
     "@marsidev/react-turnstile": "1.0.2",
     "@mui/icons-material": "6.1.0",
     "@mui/material": "6.1.0",
+    "@mui/x-charts": "^7.18.0",
     "axios": "1.7.7",
     "bootstrap": "5.3.3",
+    "firebase": "10.13.2",
     "i18next": "23.15.1",
     "react": "18.3.1",
     "react-bootstrap": "2.10.4",
@@ -24,7 +27,8 @@
     "react-i18next": "15.0.2",
     "react-router-dom": "6.26.2",
     "react-slick": "0.30.2",
-    "slick-carousel": "1.8.1"
+    "slick-carousel": "1.8.1",
+    "uuid": "10.0.0"
   },
   "devDependencies": {
     "@eslint/js": "9.9.0",

@@ -16,7 +16,7 @@ const Item = ({ item, index, totalItems, addressDetail }) => {
         style={{
           width: '100%',
           height: isMobile ? '250px' : '500px',
-          objectFit: 'cover',
+          objectFit: 'cover'
         }}
       />
       <Box
@@ -26,14 +26,14 @@ const Item = ({ item, index, totalItems, addressDetail }) => {
           left: 20,
           display: 'flex',
           justifyContent: 'space-between',
-          width: isMobile ? '90%' : '95%',
+          width: isMobile ? '90%' : '95%'
         }}>
         <Button
           sx={{
             bgcolor: 'primary.main',
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center',
+            alignItems: 'center'
           }}
           variant="contained"
           onClick={openGoogleMap}

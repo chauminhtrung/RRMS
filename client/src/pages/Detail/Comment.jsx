@@ -5,7 +5,7 @@ const Comment = () => {
     <>
       <Card variant="outlined" sx={{ borderRadius: 3, '--Card-radius': 0, mb: 1 }}>
         <CardContent orientation="horizontal">
-          <Avatar src="https://mui.com/static/images/avatar/1.jpg" variant="rectangular" width={44} height={44} />
+          <Avatar src="https://mui.com/static/images/avatar/2.jpg" variant="rectangular" width={44} height={44} />
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
             <Typography variant="text" width={100}>
               Trí Dũng

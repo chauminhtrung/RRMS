@@ -6,7 +6,6 @@ import {
   Grid,
   Pagination,
   Rating,
-  TextareaAutosize,
   TextField,
   Typography,
   useMediaQuery,
@@ -28,7 +27,6 @@ import GroupIcon from '@mui/icons-material/Group'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined'
 import LanguageIcon from '@mui/icons-material/Language'
-import { useEffect, useState } from 'react'
 import { getDetail } from '~/apis/apiClient'
 import { roomOrder } from '~/apis/mock-data-room-order'
 import RoomOther from './RoomOther'
@@ -39,6 +37,9 @@ import Slider from 'react-slick'
 import NextArrow from './NextArrow'
 import PrevArrow from './PrevArrow'
 import LoadingPage from '~/components/LoadingPage'
+import { formatterAmount } from '~/utils/formatterAmount'
+import { useEffect, useState } from 'react'
+import UserRaiting from './UserRaiting'
 
 const Detail = () => {
   const [detail, setDetail] = useState(null)
@@ -66,10 +67,6 @@ const Detail = () => {
   const getDescription = (description) => {
     navigator.clipboard.writeText(description)
     alert('Đã sao chép mô tả')
-  }
-
-  const formatNumber = (value) => {
-    return new Intl.NumberFormat('vi-VN').format(value)
   }
 
   const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'))
@@ -153,7 +150,7 @@ const Detail = () => {
           <Typography variant="h6">{detail.addressDetail}</Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography variant="h5" sx={{ my: 2, color: 'red' }}>
-              {formatNumber(detail.price)}đ/tháng
+              {formatterAmount(detail.price)}/tháng
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', ml: 0 }}>
               <Rating
@@ -209,7 +206,7 @@ const Detail = () => {
                 <AttachMoneyIcon />
                 <Box>
                   <Typography>Tiền cọc</Typography>
-                  <Typography sx={{ color: '#2ed573' }}>{formatNumber(detail.deposit)}đ</Typography>
+                  <Typography sx={{ color: '#2ed573' }}>{formatterAmount(detail.deposit)}</Typography>
                 </Box>
               </Box>
             </Grid>
@@ -227,7 +224,7 @@ const Detail = () => {
                 <ElectricBoltIcon />
                 <Box>
                   <Typography>Tiền điện</Typography>
-                  <Typography>{formatNumber(detail.priceElectric)}đ/Kw</Typography>
+                  <Typography>{formatterAmount(detail.priceElectric)}/Kw</Typography>
                 </Box>
               </Box>
             </Grid>
@@ -236,7 +233,7 @@ const Detail = () => {
                 <WaterDropOutlinedIcon />
                 <Box>
                   <Typography>Tiền nước</Typography>
-                  <Typography>{formatNumber(detail.priceWater)}đ/Khối</Typography>
+                  <Typography>{formatterAmount(detail.priceWater)}/Khối</Typography>
                 </Box>
               </Box>
             </Grid>
@@ -314,30 +311,6 @@ const Detail = () => {
             </Grid>
           </Grid>
           <BannerHorizontal />
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography component="legend" sx={{ fontSize: '20px' }}>
-              Đánh giá của bạn:
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Rating
-                sx={{
-                  alignItems: 'center',
-                  mx: 'auto',
-                  my: 0.5,
-                }}
-                name="simple-controlled"
-                value={raiting}
-                size="large"
-                onChange={(event, newValue) => {
-                  setRaiting(newValue)
-                }}
-              />
-            </Box>
-            <TextareaAutosize minRows={4} sx={{ width: '100vw' }}></TextareaAutosize>
-            <Button variant="contained" sx={{ mt: 2, right: 1, ml: 'auto' }}>
-              Đánh giá
-            </Button>
-          </Box>
           <RaitingAvg />
           <Comment />
           <Comment />
@@ -345,6 +318,7 @@ const Detail = () => {
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Pagination count={10} color="primary.main" size="medium" />
           </Box>
+          <UserRaiting raiting={raiting} setRaiting={setRaiting} />
           {/* Giới thiệu trọ khác */}
           <Box
             sx={{

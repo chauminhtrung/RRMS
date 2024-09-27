@@ -1,4 +1,20 @@
+/* eslint-disable no-unused-vars */
 import { Box, Grid, Typography, Card, CardMedia, CardContent, Container } from '@mui/material'
+import { styled } from '@mui/system'
+
+const HoverCardMedia = styled(CardMedia)(({ theme }) => ({
+  transition: 'transform 0.3s ease',
+  '&:hover': {
+    transform: 'scale(1.1)', // Scale the image on hover
+  },
+}))
+
+const HoverTypography = styled(Typography)(({ theme }) => ({
+  transition: 'color 0.3s ease',
+  '&:hover': {
+    color: theme.palette.primary.main, // Change text color on hover
+  },
+}))
 
 const RoomFeatureCard = ({ image, title, description }) => (
   <Card
@@ -8,13 +24,17 @@ const RoomFeatureCard = ({ image, title, description }) => (
       height: '100%',
       display: 'flex',
       flexDirection: 'column',
+      boxShadow: 3,
+      '&:hover': {
+        boxShadow: 6,
+      },
     }}>
-    <CardMedia component="img" alt={title} image={image} sx={{ width: '60px', height: '60px', margin: 'auto' }} />
+    <HoverCardMedia component="img" alt={title} image={image} sx={{ width: '100%', height: '100', margin: 'auto' }} />
     <CardContent sx={{ flexGrow: 1 }}>
-      <Typography variant="h6" gutterBottom>
+      <HoverTypography variant="h6" gutterBottom>
         {title}
-      </Typography>
-      <Typography variant="body2">{description}</Typography>
+      </HoverTypography>
+      <HoverTypography variant="body2">{description}</HoverTypography>
     </CardContent>
   </Card>
 )
@@ -23,7 +43,7 @@ const ListSearch = () => {
   return (
     <Container>
       <Box p={2}>
-        {/* Row 2: Chương trình - LOZIDO */}
+        {/* Row 2: Chương trình - DQ4T */}
         <Typography variant="h5" sx={{ mb: 2 }}>
           Chương trình - DQ4T
         </Typography>
@@ -32,22 +52,22 @@ const ListSearch = () => {
             {
               title: 'Hỗ trợ tân sinh viên',
               description: 'Hỗ trợ tân sinh viên nhập học',
-              image: 'https://via.placeholder.com/60',
+              image: 'https://picsum.photos/1000/500?random=9',
             },
             {
               title: 'Giảm giá cực sâu',
-              description: 'Giảm giá tại LOZIDO',
-              image: 'https://via.placeholder.com/60',
+              description: 'Giảm giá tại DQ4T',
+              image: 'https://picsum.photos/1000/500?random=7',
             },
             {
               title: 'Kết nối chủ nhà',
               description: 'Giúp theo dõi hóa đơn',
-              image: 'https://via.placeholder.com/60',
+              image: 'https://picsum.photos/1000/500?random=10',
             },
             {
               title: 'Tour xe Hot',
               description: 'Tour tại Ninh Thuận 2.999k',
-              image: 'https://via.placeholder.com/60',
+              image: 'https://picsum.photos/1000/500?random=1',
             },
           ].map((item, index) => (
             <Grid item xs={12} sm={6} md={3} key={index}>
@@ -64,23 +84,23 @@ const ListSearch = () => {
           {[
             {
               title: 'Phòng trọ Hồ Chí Minh',
-              image: 'https://via.placeholder.com/60',
+              image: 'https://picsum.photos/1000/500?random=2',
             },
             {
               title: 'Phòng trọ Hà Nội',
-              image: 'https://via.placeholder.com/60',
+              image: 'https://picsum.photos/1000/500?random=3',
             },
             {
               title: 'Phòng trọ Cần Thơ',
-              image: 'https://via.placeholder.com/60',
+              image: 'https://picsum.photos/1000/500?random=4',
             },
             {
               title: 'Phòng trọ Bình Dương',
-              image: 'https://via.placeholder.com/60',
+              image: 'https://picsum.photos/1000/500?random=5',
             },
             {
               title: 'Phòng trọ Đà Nẵng',
-              image: 'https://via.placeholder.com/60',
+              image: 'https://picsum.photos/1000/500?random=6',
             },
           ].map((item, index) => (
             <Grid item xs={12} sm={6} md={4} lg={2.4} key={index}>

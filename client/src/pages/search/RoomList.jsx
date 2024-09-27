@@ -1,5 +1,6 @@
 import { Box, Grid, Typography, Card, CardMedia, CardContent, Button, Avatar, Pagination } from '@mui/material'
 import { search } from '~/apis/mock-data-search'
+import { formatterAmount } from '~/utils/formatterAmount'
 
 const RoomList = () => {
   // console.log(search.images); // Kiểm tra dữ liệu
@@ -61,16 +62,16 @@ const RoomList = () => {
                     </Typography>
 
                     <Typography variant="h6" color="error" sx={{ mt: 1 }}>
-                      {search.price} VNĐ /Tháng
+                      {formatterAmount(search.price)} /Tháng
                     </Typography>
                     <Typography variant="body2" sx={{ mt: 1 }}>
                       <Box component="span" sx={{ mr: 2 }}>
                         {search.acreage} m²
                       </Box>
                       <Box component="span" sx={{ mr: 2 }}>
-                        {search.water}/khối
+                        {formatterAmount(search.water)}/khối
                       </Box>
-                      <Box component="span">{search.electricity}đ/Kw</Box>
+                      <Box component="span">{formatterAmount(search.electricity)}/Kw</Box>
                     </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
                       <Avatar src={item.avata} sx={{ mr: 1 }} />

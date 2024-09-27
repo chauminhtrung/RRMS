@@ -7,6 +7,7 @@ import CameraAltIcon from '@mui/icons-material/CameraAlt'
 import GppGoodIcon from '@mui/icons-material/GppGood'
 import PrevArrow from './PrevArrow'
 import NextArrow from './NextArrow'
+import { formatterAmount } from '~/utils/formatterAmount'
 
 const RoomOther = ({ items }) => {
   const [showArrows, setShowArrows] = useState(false)
@@ -93,7 +94,7 @@ const RoomOther = ({ items }) => {
                   <Typography
                     variant="h6"
                     sx={{ color: (theme) => (theme.palette.mode === 'light' ? '#ff4757' : '#ff6b81') }}>
-                    {item.price} VND
+                    {formatterAmount(item.price)}
                   </Typography>
                   <Typography variant="subtitle1" color="text.secondary">
                     {item.area} m2

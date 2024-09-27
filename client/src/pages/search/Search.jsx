@@ -32,6 +32,7 @@ import BannerHorizontal from '~/components/BannerHorizontal'
 import Text from './Text'
 import ItemSearch from './ItemSearch'
 import { getTinhThanh } from '~/apis/apiClient'
+import LoadingPage from '~/components/LoadingPage'
 
 const Search = () => {
   const [provinces, setProvinces] = useState([])
@@ -77,6 +78,10 @@ const Search = () => {
 
   const valuetext = (value) => {
     return `${value}°C`
+  }
+
+  if (!provinces) {
+    return <LoadingPage />
   }
 
   return (
@@ -265,7 +270,6 @@ const Search = () => {
             ))}
           </Grid>
         </DialogContent>
-
         <DialogActions>
           <Button color="primary" onClick={handleClose}>
             Close
