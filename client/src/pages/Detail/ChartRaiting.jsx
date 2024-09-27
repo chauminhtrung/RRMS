@@ -25,6 +25,7 @@ const dataset = [
 
 const chartSetting = {
   xAxis: [],
+  height: 200,
 }
 
 const ChartRaiting = () => {
