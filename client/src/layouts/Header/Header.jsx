@@ -44,7 +44,14 @@ const Header = () => {
                 <MenuIcon />
               </IconButton>
               <Typography variant="h6" component="div">
-                News
+              <Button
+                  component={Link}
+                  to="/"
+                  variant="text"
+                  color="inherit"
+                >
+                  {t("Home")}
+                </Button>
               </Typography>
               <Typography variant="h6" component="div">
                 <Button
