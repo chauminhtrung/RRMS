@@ -37,10 +37,10 @@
 		</dependency>
 
 		<!-- Spring Boot Starter Data JPA: Cung cấp JPA để thao tác với cơ sở dữ liệu thông qua ORM -->
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-starter-data-jpa</artifactId>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
 
 		<!-- Spring Boot Starter WebSocket: Hỗ trợ cho các ứng dụng WebSocket -->
 		<dependency>
@@ -49,10 +49,10 @@
 		</dependency>
 
 		<!-- Spring Boot Starter OAuth2 Resource Server: Cung cấp OAuth2 Resource Server cho bảo mật API -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>-->
+<!--		</dependency>-->
 
 		<!-- Spring Boot Starter Validation: Hỗ trợ xác thực dữ liệu input thông qua Hibernate Validator -->
 		<dependency>
