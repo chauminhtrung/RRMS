@@ -1,5 +1,6 @@
-import { Box, LinearProgress, Rating, Typography } from '@mui/material'
+import { Box, Rating, Typography } from '@mui/material'
 import { Grid } from '@mui/material'
+import ChartRaiting from './ChartRaiting'
 
 const RaitingAvg = () => {
   return (
@@ -7,7 +8,7 @@ const RaitingAvg = () => {
       <Typography component="legend" sx={{ fontSize: '20px' }}>
         Đánh giá trung bình:
       </Typography>
-      <Grid container>
+      <Grid container sx={{ display: 'flex', alignItems: 'center' }}>
         <Grid item xs={4}>
           <Typography component="legend" sx={{ fontSize: '60px' }}>
             {0}
@@ -23,19 +24,21 @@ const RaitingAvg = () => {
           />
         </Grid>
         <Grid item xs={8}>
-          <Box display="flex" alignItems="center">
+          {/* <Box display="flex" alignItems="center">
             <Typography variant="subtitle1" style={{ marginRight: 16 }}>
               5
             </Typography>
             <LinearProgress
-              value={6}
-              variant="buffer"
-              valueBuffer={6}
+              variant="determinate"
+              value={28}
               sx={{
                 flexGrow: 1,
                 height: 12,
                 mr: 5,
                 '& .MuiLinearProgress-bar': {
+                  borderRadius: '8px',
+                },
+                '& .MuiLinearProgress-root': {
                   borderRadius: '8px',
                 },
               }}
@@ -46,9 +49,8 @@ const RaitingAvg = () => {
               4
             </Typography>
             <LinearProgress
-              value={6}
-              variant="buffer"
-              valueBuffer={6}
+              variant="determinate"
+              value={28}
               sx={{
                 flexGrow: 1,
                 height: 12,
@@ -64,9 +66,8 @@ const RaitingAvg = () => {
               3
             </Typography>
             <LinearProgress
-              value={6}
-              variant="buffer"
-              valueBuffer={6}
+              variant="determinate"
+              value={28}
               sx={{
                 flexGrow: 1,
                 height: 12,
@@ -82,9 +83,8 @@ const RaitingAvg = () => {
               2
             </Typography>
             <LinearProgress
-              value={6}
-              variant="buffer"
-              valueBuffer={6}
+              variant="determinate"
+              value={28}
               sx={{
                 flexGrow: 1,
                 height: 12,
@@ -100,9 +100,8 @@ const RaitingAvg = () => {
               1
             </Typography>
             <LinearProgress
-              value={6}
-              variant="buffer"
-              valueBuffer={6}
+              variant="determinate"
+              value={28}
               sx={{
                 flexGrow: 1,
                 height: 12,
@@ -112,7 +111,8 @@ const RaitingAvg = () => {
                 },
               }}
             />
-          </Box>
+          </Box> */}
+          <ChartRaiting />
         </Grid>
       </Grid>
     </Box>

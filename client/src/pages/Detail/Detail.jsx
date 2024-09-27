@@ -6,7 +6,6 @@ import {
   Grid,
   Pagination,
   Rating,
-  TextareaAutosize,
   TextField,
   Typography,
   useMediaQuery,
@@ -28,7 +27,6 @@ import GroupIcon from '@mui/icons-material/Group'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined'
 import LanguageIcon from '@mui/icons-material/Language'
-import { useEffect, useState } from 'react'
 import { getDetail } from '~/apis/apiClient'
 import { roomOrder } from '~/apis/mock-data-room-order'
 import RoomOther from './RoomOther'
@@ -40,6 +38,8 @@ import NextArrow from './NextArrow'
 import PrevArrow from './PrevArrow'
 import LoadingPage from '~/components/LoadingPage'
 import { formatterAmount } from '~/utils/formatterAmount'
+import { useEffect, useState } from 'react'
+import UserRaiting from './UserRaiting'
 
 const Detail = () => {
   const [detail, setDetail] = useState(null)
@@ -311,30 +311,6 @@ const Detail = () => {
             </Grid>
           </Grid>
           <BannerHorizontal />
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography component="legend" sx={{ fontSize: '20px' }}>
-              Đánh giá của bạn:
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Rating
-                sx={{
-                  alignItems: 'center',
-                  mx: 'auto',
-                  my: 0.5,
-                }}
-                name="simple-controlled"
-                value={raiting}
-                size="large"
-                onChange={(event, newValue) => {
-                  setRaiting(newValue)
-                }}
-              />
-            </Box>
-            <TextareaAutosize minRows={4} sx={{ width: '100vw' }}></TextareaAutosize>
-            <Button variant="contained" sx={{ mt: 2, right: 1, ml: 'auto' }}>
-              Đánh giá
-            </Button>
-          </Box>
           <RaitingAvg />
           <Comment />
           <Comment />
@@ -342,6 +318,7 @@ const Detail = () => {
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Pagination count={10} color="primary.main" size="medium" />
           </Box>
+          <UserRaiting raiting={raiting} setRaiting={setRaiting} />
           {/* Giới thiệu trọ khác */}
           <Box
             sx={{
