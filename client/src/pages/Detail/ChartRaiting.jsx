@@ -1,4 +1,4 @@
-import { BarChart } from '@mui/x-charts'
+import { BarChart } from '@mui/icons-material'
 
 const dataset = [
   {
