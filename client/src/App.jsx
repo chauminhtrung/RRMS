@@ -5,6 +5,7 @@ import Header from './layouts/Header/Header'
 import Search from './pages/search/Search'
 import Footer from './layouts/Footer/Footer'
 import { env } from './configs/environment'
+import MainManagement from './pages/admin/MainManagement'
 // import ValidCaptcha from "./components/ValidCaptcha";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/admin" element= {<MainManagement/>}/>
           <Route path="/search" element={<Search />} />
           <Route path="/detail" element={<Detail />} />
         </Routes>
