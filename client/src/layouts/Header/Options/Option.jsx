@@ -2,7 +2,7 @@ import { Button, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
 import LanguageSelect from "./LanguageSelect";
 import ModeSelect from "./ModeSelect";
-import SettingsIcon from "@mui/icons-material/Settings";
+import SettingsIcon from "@mui/icons-material/SettingsSuggestOutlined";
 
 const Option = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -23,7 +23,7 @@ const Option = () => {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
         sx={{
-          color: "white",
+          color: "black",
         }}
       >
         <SettingsIcon fontSize="large" />
