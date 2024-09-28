@@ -21,7 +21,7 @@ const MainManagement = () => {
           <Navbar />
         </Grid>
         <Grid item xs={2} md={2}>
-          md=8
+          md=8 ok
         </Grid>
         <Grid item xs={10} md={10}>
           {/* <Button
