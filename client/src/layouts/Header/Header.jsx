@@ -1,40 +1,36 @@
-import {
-  AppBar,
-  Avatar,
-  Box,
-  Button,
-  IconButton,
-  Toolbar,
-  Tooltip,
-  Typography,
-} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import { Link } from "react-router-dom";
-import Option from "./Options/Option";
-import { useTranslation } from "react-i18next";
-import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
-import EmailIcon from "@mui/icons-material/Email";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import TravelExploreOutlinedIcon from "@mui/icons-material/TravelExploreOutlined";
-import CloseIcon from "@mui/icons-material/Close";
-import "./Header.css";
+// import {
+//   AppBar,
+//   Avatar,
+//   Box,
+//   Button,
+//   IconButton,
+//   Toolbar,
+//   Tooltip,
+//   Typography,
+// } from "@mui/material";
+import MenuIcon from '@mui/icons-material/Menu'
+// import { Link } from "react-router-dom";
+import Option from './Options/Option'
+// import { useTranslation } from "react-i18next";
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone'
+import EmailIcon from '@mui/icons-material/Email'
+import FacebookIcon from '@mui/icons-material/Facebook'
+import TwitterIcon from '@mui/icons-material/Twitter'
+import InstagramIcon from '@mui/icons-material/Instagram'
+import LinkedInIcon from '@mui/icons-material/LinkedIn'
+import TravelExploreOutlinedIcon from '@mui/icons-material/TravelExploreOutlined'
+import CloseIcon from '@mui/icons-material/Close'
+import './Header.css'
 
 const Header = () => {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   return (
     <>
       {/* Offcanvas Menu Section Begin  */}
       <div className="offcanvas offcanvas-start" id="myNav">
         <div className="offcanvas-header">
           <div className="canvas-close">
-            <CloseIcon
-              sx={{ fontSize: "12px" }}
-              className="btn-close"
-              data-bs-dismiss="offcanvas"
-            />
+            <CloseIcon sx={{ fontSize: '12px' }} className="btn-close" data-bs-dismiss="offcanvas" />
           </div>
         </div>
         <div className="offcanvas-body">
@@ -45,53 +41,48 @@ const Header = () => {
           <div className="header-configure-area">
             <div className="language-option">
               <Option />
-              <a href="#" className="bk-btn">
-                {" "}
+              <a href="/login" className="bk-btn">
+                {' '}
                 Đăng nhập
               </a>
             </div>
           </div>
 
           <div className="slicknav-menu">
-            <ul class="list-group  list-group-flush">
-              <li class="list-group-item">
+            <ul className="list-group  list-group-flush">
+              <li className="list-group-item">
                 <a href="">Home</a>
               </li>
-              <li class="list-group-item">
+              <li className="list-group-item">
                 <a href="">Host software</a>
               </li>
-              <li class="list-group-item">
+              <li className="list-group-item">
                 <a href="">Tenant APP</a>
               </li>
 
-              <li class="list-group-item">
+              <li className="list-group-item">
                 <a href="">Price list</a>
               </li>
-              <li class="list-group-item">
+              <li className="list-group-item">
                 <a href="">RRMS Plus+</a>
               </li>
-              <li class="list-group-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                >
+              <li className="list-group-item dropdown">
+                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                   More+
                 </a>
-                <ul class="dropdown-menu">
+                <ul className="dropdown-menu">
                   <li>
-                    <a class="dropdown-item" href="#">
+                    <a className="dropdown-item" href="#">
                       Information portal
                     </a>
                   </li>
                   <li>
-                    <a class="dropdown-item" href="#">
+                    <a className="dropdown-item" href="#">
                       Recruitment
                     </a>
                   </li>
                   <li>
-                    <a class="dropdown-item" href="#">
+                    <a className="dropdown-item" href="#">
                       instruct
                     </a>
                   </li>
@@ -100,7 +91,7 @@ const Header = () => {
             </ul>
           </div>
 
-          <div class="top-social">
+          <div className="top-social">
             <a href="#">
               <FacebookIcon />
             </a>
@@ -115,13 +106,13 @@ const Header = () => {
             </a>
           </div>
 
-          <ul class="top-widget">
+          <ul className="top-widget">
             <li>
-              {" "}
-              <LocalPhoneIcon sx={{ color: "#4bcffa;" }} /> (84+) 07274629
+              {' '}
+              <LocalPhoneIcon sx={{ color: '#4bcffa;' }} /> (84+) 07274629
             </li>
             <li>
-              <EmailIcon sx={{ color: "#4bcffa;" }} /> nhatroRRMS.com
+              <EmailIcon sx={{ color: '#4bcffa;' }} /> nhatroRRMS.com
             </li>
           </ul>
         </div>
@@ -130,7 +121,7 @@ const Header = () => {
         <MenuIcon
           data-bs-toggle="offcanvas"
           data-bs-target="#myNav"
-          sx={{ textAlign: "center", marginBottom: "5px" }}
+          sx={{ textAlign: 'center', marginBottom: '5px' }}
         />
       </div>
 
@@ -238,16 +229,12 @@ const Header = () => {
             <i className="icon_close"></i>
           </div>
           <form className="search-model-form">
-            <input
-              type="text"
-              id="search-input"
-              placeholder="Search here....."
-            />
+            <input type="text" id="search-input" placeholder="Search here....." />
           </form>
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header
