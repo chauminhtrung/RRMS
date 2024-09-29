@@ -23,10 +23,10 @@ const Profile = () => {
         <TabContext value={tabIndex}>
           <Box>
             <TabList onChange={handleChange} aria-label="lab API tabs example">
-              <Tab icon={<PersonIcon />} iconPosition="start" label="Profile" value="1" />
-              <Tab icon={<AttachMoneyIcon />} iconPosition="start" label="Billing" value="2" />
-              <Tab icon={<ShieldIcon />} iconPosition="start" label="Security" value="3" />
-              <Tab icon={<NotificationsIcon />} iconPosition="start" label="Notifications" value="4" />
+              <Tab icon={<PersonIcon />} iconPosition="start" label="Hồ sơ" value="1" />
+              <Tab icon={<AttachMoneyIcon />} iconPosition="start" label="Chi tiêu" value="2" />
+              <Tab icon={<ShieldIcon />} iconPosition="start" label="Bảo mật" value="3" />
+              <Tab icon={<NotificationsIcon />} iconPosition="start" label="Thông báo" value="4" />
             </TabList>
           </Box>
           <TabPanel value="1">

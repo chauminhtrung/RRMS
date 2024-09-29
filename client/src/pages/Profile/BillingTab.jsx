@@ -1,80 +1,150 @@
+import { formatterAmount } from '~/utils/formatterAmount'
 import {
   Box,
   Button,
   Grid,
+  IconButton,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
+  TableFooter,
+  TablePagination,
   TableRow,
   Typography,
 } from '@mui/material'
+import { useState } from 'react'
+import PropTypes from 'prop-types'
+import { useTheme } from '@emotion/react'
+import FirstPageIcon from '@mui/icons-material/FirstPage'
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
+import LastPageIcon from '@mui/icons-material/LastPage'
+
+function TablePaginationActions(props) {
+  const theme = useTheme()
+  const { count, page, rowsPerPage, onPageChange } = props
+
+  const handleFirstPageButtonClick = (event) => {
+    onPageChange(event, 0)
+  }
+
+  const handleBackButtonClick = (event) => {
+    onPageChange(event, page - 1)
+  }
+
+  const handleNextButtonClick = (event) => {
+    onPageChange(event, page + 1)
+  }
+
+  const handleLastPageButtonClick = (event) => {
+    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1))
+  }
+
+  return (
+    <Box sx={{ flexShrink: 0, ml: 2.5 }}>
+      <IconButton onClick={handleFirstPageButtonClick} disabled={page === 0} aria-label="first page">
+        {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+      </IconButton>
+      <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page">
+        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+      </IconButton>
+      <IconButton
+        onClick={handleNextButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="next page">
+        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+      </IconButton>
+      <IconButton
+        onClick={handleLastPageButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="last page">
+        {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+      </IconButton>
+    </Box>
+  )
+}
+
+TablePaginationActions.propTypes = {
+  count: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired,
+  page: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
+}
+
+function createData(name, calories, fat) {
+  return { name, calories, fat }
+}
+
+const rows = [
+  createData('Cupcake', 305, 3.7),
+  createData('Donut', 452, 25.0),
+  createData('Eclair', 262, 16.0),
+  createData('Frozen yoghurt', 159, 6.0),
+  createData('Gingerbread', 356, 16.0),
+  createData('Honeycomb', 408, 3.2),
+  createData('Ice cream sandwich', 237, 9.0),
+  createData('Jelly Bean', 375, 0.0),
+  createData('KitKat', 518, 26.0),
+  createData('Lollipop', 392, 0.2),
+  createData('Marshmallow', 318, 0),
+  createData('Nougat', 360, 19.0),
+  createData('Oreo', 437, 18.0),
+].sort((a, b) => (a.calories < b.calories ? -1 : 1))
 
 const BillingTab = () => {
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(5)
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage)
+  }
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10))
+    setPage(0)
+  }
   return (
     <Box sx={{ padding: '20px' }}>
       <Grid container spacing={4}>
         {/* Billing Info Section */}
         <Grid item xs={12} md={4}>
           <Paper elevation={3} sx={{ padding: '20px' }}>
-            <Typography variant="h6">Current monthly bill</Typography>
+            <Typography variant="h6">Chi tiêu trong tháng</Typography>
             <Typography variant="h4" sx={{ marginTop: '10px' }}>
-              $20.00
+              {formatterAmount(1000000)}
             </Typography>
             <Button variant="text" sx={{ marginTop: '10px' }}>
-              Switch to yearly billing
+              Xem chi tiết
             </Button>
           </Paper>
         </Grid>
 
         <Grid item xs={12} md={4}>
           <Paper elevation={3} sx={{ padding: '20px' }}>
-            <Typography variant="h6">Next payment due</Typography>
+            <Typography variant="h6">Chi tiêu so với tháng trước</Typography>
             <Typography variant="h4" sx={{ marginTop: '10px' }}>
-              July 15
+              {formatterAmount(1300000)}
             </Typography>
             <Button variant="text" sx={{ marginTop: '10px' }}>
-              View payment history
+              Xem chi tiết
             </Button>
           </Paper>
         </Grid>
 
         <Grid item xs={12} md={4}>
           <Paper elevation={3} sx={{ padding: '20px' }}>
-            <Typography variant="h6">Current plan</Typography>
+            <Typography variant="h6">Dư nợ phải trả</Typography>
             <Typography variant="h4" sx={{ marginTop: '10px' }}>
-              Freelancer
+              {formatterAmount(0)}
             </Typography>
             <Button variant="text" sx={{ marginTop: '10px' }}>
-              Upgrade plan
+              Xem chi tiết
             </Button>
-          </Paper>
-        </Grid>
-
-        {/* Payment Methods Section */}
-        <Grid item xs={12}>
-          <Paper elevation={3} sx={{ padding: '20px' }}>
-            <Typography variant="h6" gutterBottom>
-              Payment Methods
-            </Typography>
-            <Button variant="contained" color="primary" sx={{ marginBottom: '20px' }}>
-              Add Payment Method
-            </Button>
-            {/* Payment methods list */}
-            <Box>
-              <Typography variant="body1">Visa ending in 1234, Expires 04/2024</Typography>
-              <Button variant="text">Default</Button> | <Button variant="text">Edit</Button>
-            </Box>
-            <Box sx={{ marginTop: '10px' }}>
-              <Typography variant="body1">Mastercard ending in 5678, Expires 05/2022</Typography>
-              <Button variant="text">Make Default</Button> | <Button variant="text">Edit</Button>
-            </Box>
-            <Box sx={{ marginTop: '10px' }}>
-              <Typography variant="body1">American Express ending in 9012, Expires 01/2026</Typography>
-              <Button variant="text">Make Default</Button> | <Button variant="text">Edit</Button>
-            </Box>
           </Paper>
         </Grid>
 
@@ -82,50 +152,62 @@ const BillingTab = () => {
         <Grid item xs={12}>
           <Paper elevation={3} sx={{ padding: '20px' }}>
             <Typography variant="h6" gutterBottom>
-              Billing History
+              Lịch sử chi tiêu
             </Typography>
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Transaction ID</TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Amount</TableCell>
-                    <TableCell>Status</TableCell>
-                  </TableRow>
-                </TableHead>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
                 <TableBody>
-                  <TableRow>
-                    <TableCell>#39201</TableCell>
-                    <TableCell>06/15/2021</TableCell>
-                    <TableCell>$29.99</TableCell>
-                    <TableCell>Pending</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>#38594</TableCell>
-                    <TableCell>05/15/2021</TableCell>
-                    <TableCell>$29.99</TableCell>
-                    <TableCell>
-                      <Typography color="green">Paid</Typography>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>#38223</TableCell>
-                    <TableCell>04/15/2021</TableCell>
-                    <TableCell>$29.99</TableCell>
-                    <TableCell>
-                      <Typography color="green">Paid</Typography>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>#38125</TableCell>
-                    <TableCell>03/15/2021</TableCell>
-                    <TableCell>$29.99</TableCell>
-                    <TableCell>
-                      <Typography color="green">Paid</Typography>
-                    </TableCell>
-                  </TableRow>
+                  {(rowsPerPage > 0 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : rows).map(
+                    (row) => (
+                      <TableRow key={row.name}>
+                        <TableCell component="th" scope="row">
+                          {row.name}
+                        </TableCell>
+                        <TableCell style={{ width: 160 }} align="right">
+                          {row.calories}
+                        </TableCell>
+                        <TableCell style={{ width: 160 }} align="right">
+                          {row.fat}
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 53 * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
                 </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TablePagination
+                      rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                      colSpan={3}
+                      count={rows.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      slotProps={{
+                        select: {
+                          inputProps: {
+                            'aria-label': 'rows per page',
+                          },
+                          native: true,
+                        },
+                      }}
+                      sx={{
+                        '& .MuiTablePagination-selectLabel': {
+                          mb: 0,
+                        },
+                        '& .MuiTablePagination-displayedRows': {
+                          mb: 0,
+                        },
+                      }}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                      ActionsComponent={TablePaginationActions}
+                    />
+                  </TableRow>
+                </TableFooter>
               </Table>
             </TableContainer>
           </Paper>
