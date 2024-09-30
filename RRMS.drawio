@@ -7551,7 +7551,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="eIKzB03Q_CovQFGM6EUc" name="Sequence Diagram">
-    <mxGraphModel dx="11350" dy="5690" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="6100" dy="2845" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -8187,7 +8187,7 @@
           <mxGeometry x="2142.5" y="2540" width="235" height="30" as="geometry" />
         </mxCell>
         <mxCell id="jVwsJxY_iqvk81Ccruvd-174" value="Quản lý hóa đơn" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=78;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="1">
-          <mxGeometry x="1427.5" y="535" width="840" height="30" as="geometry" />
+          <mxGeometry x="1370" y="535" width="840" height="30" as="geometry" />
         </mxCell>
         <mxCell id="jVwsJxY_iqvk81Ccruvd-176" value="&lt;font style=&quot;font-size: 50px;&quot;&gt;Thêm&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=78;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="1">
           <mxGeometry x="-195" y="630" width="840" height="30" as="geometry" />
@@ -8833,7 +8833,7 @@
           <mxGeometry x="2142.5" y="5330" width="235" height="30" as="geometry" />
         </mxCell>
         <mxCell id="jVwsJxY_iqvk81Ccruvd-325" value="Quản lý hợp đồng" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=78;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="1">
-          <mxGeometry x="1427.5" y="3325" width="840" height="30" as="geometry" />
+          <mxGeometry x="1390" y="3325" width="840" height="30" as="geometry" />
         </mxCell>
         <mxCell id="jVwsJxY_iqvk81Ccruvd-326" value="&lt;font style=&quot;font-size: 50px;&quot;&gt;Thêm&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=78;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="1">
           <mxGeometry x="-195" y="3420" width="840" height="30" as="geometry" />
@@ -8846,6 +8846,9 @@
         </mxCell>
         <mxCell id="jVwsJxY_iqvk81Ccruvd-329" value="&lt;font style=&quot;font-size: 50px;&quot;&gt;Tìm kiếm&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=78;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="1">
           <mxGeometry x="1537.5" y="4580" width="840" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="jVwsJxY_iqvk81Ccruvd-330" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" edge="1" parent="1" source="jVwsJxY_iqvk81Ccruvd-325" target="jVwsJxY_iqvk81Ccruvd-325">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
