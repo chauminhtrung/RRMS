@@ -11,7 +11,6 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-
     "@mui/x-date-pickers": "7.18.0",
     "apexcharts": "^3.54.0",
     "axios": "1.7.7",
@@ -23,8 +22,6 @@
     "@mui/icons-material": "6.1.0",
     "@mui/material": "6.1.1",
     "dotenv": "16.4.5",
-    "@mui/lab": "6.0.0-beta.10",
-    "@mui/x-charts": "7.18.0",
     "firebase": "10.13.2",
     "i18next": "23.15.1",
     "react": "18.3.1",
