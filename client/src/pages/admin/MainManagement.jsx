@@ -1,14 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Box, Button, Checkbox } from '@mui/material'
 import { Grid } from '@mui/material'
-import Navbar from '~/layouts/admin/Navbar'
-import { Tabs, Tab } from '@mui/material'
+import Navbar from '~/layouts/Admin/Navbar'
 
 const MainManagement = ({ theme }) => {
-  const [select, setSelect] = useState(0)
-  const handleTabChange = (event, newValue) => {
-    setSelect(newValue)
-  }
   return (
     <Box
       sx={{
@@ -26,228 +21,6 @@ const MainManagement = ({ theme }) => {
         <Grid item xs={12} md={12} className="mb-3">
           <Navbar />
         </Grid>
-        <Grid item md={2} sm={2} xs={12}>
-          {' '}
-          <Button
-            variant="contained"
-            sx={{
-              bgcolor: (theme) => (theme.palette.mode === 'light' ? 'white' : '#4bcffa'),
-              width: '100%',
-              height: '100px',
-              color: 'black',
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              textTransform: 'none',
-            }}>
-            <i
-              style={{
-                background: '#5eb7ff',
-                borderRadius: '50%',
-                width: '50px',
-                height: '50px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginRight: '10px',
-              }}
-              className="bi bi-house-check fs-3"
-            />
-            <span style={{ textAlign: 'left' }}>
-              {' '}
-              Đang quản lý <br />
-              <b style={{ color: '#5eb7ff' }}> Nhà trọ RRMS</b>
-            </span>
-          </Button>
-        </Grid>
-        <Grid item md={10} sm={10} xs={12}>
-          {' '}
-          <Tabs
-            value={select}
-            onChange={handleTabChange}
-            variant="scrollable"
-            scrollButtons="auto"
-            allowScrollButtonsMobile>
-            <Tab
-              className="me-1"
-              sx={{
-                background: (theme) => (theme.palette.mode === 'light' ? '#fff' : '#abb2b9'),
-                border: '1px solid #34495e',
-                borderRadius: '15px',
-                width: '150px',
-                height: '100px',
-                color: 'black',
-                textTransform: 'none',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              label={
-                <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <i className="bi bi-journals fs-3" style={{ marginBottom: '8px' }}></i>
-                  Quản lí phòng
-                </span>
-              }
-            />
-
-            <Tab
-              className="mx-1"
-              sx={{
-                background: (theme) => (theme.palette.mode === 'light' ? '#fff' : '#abb2b9'),
-                border: '1px solid #34495e',
-                borderRadius: '15px',
-                width: '150px',
-                height: '100px',
-                color: 'black',
-                textTransform: 'none',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              label={
-                <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <i className="bi bi-journals fs-3" style={{ marginBottom: '8px' }}></i>
-                  Quản lí hóa đơn
-                </span>
-              }
-            />
-            <Tab
-              className="mx-1"
-              sx={{
-                background: (theme) => (theme.palette.mode === 'light' ? '#fff' : '#abb2b9'),
-                border: '1px solid #34495e',
-                borderRadius: '15px',
-                width: '150px',
-                height: '100px',
-                color: 'black',
-                textTransform: 'none',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              label={
-                <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <i className="bi bi-journal-medical fs-3" style={{ marginBottom: '8px' }}></i>
-                  Quản lí dịch vụ
-                </span>
-              }
-            />
-            <Tab
-              className="mx-1"
-              sx={{
-                background: (theme) => (theme.palette.mode === 'light' ? '#fff' : '#abb2b9'),
-                border: '1px solid #34495e',
-                borderRadius: '15px',
-                width: '150px',
-                height: '100px',
-                color: 'black',
-                textTransform: 'none',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              label={
-                <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <i className="bi bi-journal-medical fs-3" style={{ marginBottom: '8px' }}></i>
-                  Quản lí tài sản
-                </span>
-              }
-            />
-            <Tab
-              className="mx-1"
-              sx={{
-                background: (theme) => (theme.palette.mode === 'light' ? '#fff' : '#abb2b9'),
-                border: '1px solid #34495e',
-                borderRadius: '15px',
-                width: '150px',
-                height: '100px',
-                color: 'black',
-                textTransform: 'none',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              label={
-                <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <i className="bi bi-arrows-angle-contract fs-3" style={{ marginBottom: '8px' }}></i>
-                  Quản lí hợp đồng
-                </span>
-              }
-            />
-            <Tab
-              className="mx-1"
-              sx={{
-                background: (theme) => (theme.palette.mode === 'light' ? '#fff' : '#abb2b9'),
-                border: '1px solid #34495e',
-                borderRadius: '15px',
-                width: '160px',
-                height: '100px',
-                color: 'black',
-                textTransform: 'none',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              label={
-                <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <i className="bi bi-telephone fs-3" style={{ marginBottom: '8px' }}></i>
-                  Quản lí khách thuê
-                </span>
-              }
-            />
-            <Tab
-              className="mx-1"
-              sx={{
-                background: (theme) => (theme.palette.mode === 'light' ? '#fff' : '#abb2b9'),
-                border: '1px solid #34495e',
-                borderRadius: '15px',
-                width: '160px',
-                height: '100px',
-                color: 'black',
-                textTransform: 'none',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              label={
-                <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <i className="bi bi-bar-chart fs-3" style={{ marginBottom: '8px' }}></i>
-                  Thu/Chi - Tổng kết
-                </span>
-              }
-            />
-            <Tab
-              className="mx-1"
-              sx={{
-                background: (theme) => (theme.palette.mode === 'light' ? '#fff' : '#abb2b9'),
-                border: '1px solid #34495e',
-                borderRadius: '15px',
-                width: '150px',
-                height: '100px',
-                color: 'black',
-                textTransform: 'none',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              label={
-                <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <i className="bi bi-gear fs-3" style={{ marginBottom: '8px' }}></i>
-                  Cài đặt
-                </span>
-              }
-            />
-          </Tabs>
-        </Grid>
         <Grid container spacing={1} className="mt-3">
           <Grid item md={3} sm={3} xs={12}>
             <Button
@@ -258,9 +31,9 @@ const MainManagement = ({ theme }) => {
                 height: '80px',
                 textTransform: 'none',
                 color: 'black',
-                display: 'flex', // Sử dụng Flexbox
-                alignItems: 'center', // Căn giữa theo chiều dọc
-                justifyContent: 'space-between', // Tạo khoảng cách giữa icon và text
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
               }}>
               <i className="bi bi-bar-chart fs-3 text-danger me-2 fw-bold"></i>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
@@ -280,9 +53,9 @@ const MainManagement = ({ theme }) => {
                 height: '80px',
                 textTransform: 'none',
                 color: 'black',
-                display: 'flex', // Sử dụng Flexbox
-                alignItems: 'center', // Căn giữa theo chiều dọc
-                justifyContent: 'space-between', // Tạo khoảng cách giữa icon và text
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
               }}>
               <i className="bi bi-bar-chart fs-3 text-success me-2 fw-bold"></i>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
@@ -302,9 +75,9 @@ const MainManagement = ({ theme }) => {
                 height: '80px',
                 textTransform: 'none',
                 color: 'black',
-                display: 'flex', // Sử dụng Flexbox
-                alignItems: 'center', // Căn giữa theo chiều dọc
-                justifyContent: 'space-between', // Tạo khoảng cách giữa icon và text
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
               }}>
               <i className="bi bi-bar-chart fs-3 text-warning me-2 fw-bold"></i>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
@@ -324,9 +97,9 @@ const MainManagement = ({ theme }) => {
                 height: '80px',
                 textTransform: 'none',
                 color: 'black',
-                display: 'flex', // Sử dụng Flexbox
-                alignItems: 'center', // Căn giữa theo chiều dọc
-                justifyContent: 'space-between', // Tạo khoảng cách giữa icon và text
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
               }}>
               <i className="bi bi-exclamation-square fs-3 text-warning-emphasis me-2 fw-bold"></i>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
