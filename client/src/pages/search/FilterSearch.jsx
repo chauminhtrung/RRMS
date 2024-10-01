@@ -31,6 +31,7 @@ function FilterSearch() {
       <Button
         variant="contained"
         startIcon={<FilterListIcon />}
+        onClick={handleOpen}
         sx={{
           backgroundColor: '#f8f8f8',
           color: '#000',
