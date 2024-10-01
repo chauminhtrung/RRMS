@@ -99,31 +99,9 @@ const ItemSearch = () => {
       </Box>
 
       {/* DQ4T có gì */}
-      <Grid
-        container
-        sx={{
-          gap: 2,
-          justifyContent: 'center',
-          my: 2,
-          alignItems: 'center',
-          mt: 2,
-        }}>
-        <Grid
-          item
-          xs={5}
-          md={2.8}
-          sx={{
-            border: '1px solid black',
-            borderRadius: '5px',
-            p: '5px',
-            height: '130px',
-          }}>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
+      <Grid container sx={{ gap: 2, justifyContent: 'center', my: 2, alignItems: 'center', mt: 2 }}>
+        <Grid item xs={5} md={2.8} sx={{ border: '1px solid black', borderRadius: '5px', p: '5px', height: '130px' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Box
               sx={{
                 mx: 'auto',
@@ -132,42 +110,16 @@ const ItemSearch = () => {
                 justifyContent: 'center',
                 flexDirection: 'column',
               }}>
-              <Groups2RoundedIcon
-                sx={{
-                  fontSize: 50,
-                  color: '#00b894',
-                }}
-              />
+              <Groups2RoundedIcon sx={{ fontSize: 50, color: '#00b894' }} />
               <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
                 4,000+
               </Typography>
-              <Typography
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                Chủ nhà
-              </Typography>
+              <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Chủ nhà</Typography>
             </Box>
           </Box>
         </Grid>
-        <Grid
-          item
-          xs={5}
-          md={2.8}
-          sx={{
-            border: '1px solid black',
-            borderRadius: '5px',
-            p: '5px',
-            height: '130px',
-          }}>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
+        <Grid item xs={5} md={2.8} sx={{ border: '1px solid black', borderRadius: '5px', p: '5px', height: '130px' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Box
               sx={{
                 mx: 'auto',
@@ -185,33 +137,14 @@ const ItemSearch = () => {
               <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
                 10,000+
               </Typography>
-              <Typography
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
+              <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 Khách thuê
               </Typography>
             </Box>
           </Box>
         </Grid>
-        <Grid
-          item
-          xs={5}
-          md={2.8}
-          sx={{
-            border: '1px solid black',
-            borderRadius: '5px',
-            p: '5px',
-            height: '130px',
-          }}>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
+        <Grid item xs={5} md={2.8} sx={{ border: '1px solid black', borderRadius: '5px', p: '5px', height: '130px' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Box
               sx={{
                 mx: 'auto',
@@ -220,42 +153,16 @@ const ItemSearch = () => {
                 justifyContent: 'center',
                 flexDirection: 'column',
               }}>
-              <RecentActorsRoundedIcon
-                sx={{
-                  fontSize: 50,
-                  color: '#00b894',
-                }}
-              />
+              <RecentActorsRoundedIcon sx={{ fontSize: 50, color: '#00b894' }} />
               <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
                 10+
               </Typography>
-              <Typography
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                Môi giới
-              </Typography>
+              <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Môi giới</Typography>
             </Box>
           </Box>
         </Grid>
-        <Grid
-          item
-          xs={5}
-          md={2.8}
-          sx={{
-            border: '1px solid black',
-            borderRadius: '5px',
-            p: '5px',
-            height: '130px',
-          }}>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
+        <Grid item xs={5} md={2.8} sx={{ border: '1px solid black', borderRadius: '5px', p: '5px', height: '130px' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Box
               sx={{
                 mx: 'auto',
@@ -264,12 +171,7 @@ const ItemSearch = () => {
                 justifyContent: 'center',
                 flexDirection: 'column',
               }}>
-              <MailRoundedIcon
-                sx={{
-                  fontSize: 50,
-                  color: '#00b894',
-                }}
-              />
+              <MailRoundedIcon sx={{ fontSize: 50, color: '#00b894' }} />
               <Typography
                 variant="h5"
                 sx={{
@@ -280,12 +182,7 @@ const ItemSearch = () => {
                 }}>
                 3,000+
               </Typography>
-              <Typography
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
+              <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 Lượt truy cập
               </Typography>
             </Box>
