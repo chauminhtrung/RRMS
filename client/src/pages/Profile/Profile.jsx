@@ -6,9 +6,9 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import ShieldIcon from '@mui/icons-material/Shield'
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import ProfileTab from './ProfileTab'
-import BillingTab from './BillingTab'
-import SecurityTab from './SecurityTab'
-import NotificationTab from './NotificationTab'
+// import BillingTab from './BillingTab'
+// import SecurityTab from './SecurityTab'
+// import NotificationTab from './NotificationTab'
 
 const Profile = () => {
   const [tabIndex, setTabIndex] = useState('1')
@@ -32,15 +32,9 @@ const Profile = () => {
           <TabPanel value="1">
             <ProfileTab />
           </TabPanel>
-          <TabPanel value="2">
-            <BillingTab />
-          </TabPanel>
-          <TabPanel value="3">
-            <SecurityTab />
-          </TabPanel>
-          <TabPanel value="4">
-            <NotificationTab />
-          </TabPanel>
+          <TabPanel value="2">Coming Soon !{/* <BillingTab /> */}</TabPanel>
+          <TabPanel value="3">Coming Soon !{/* <SecurityTab /> */}</TabPanel>
+          <TabPanel value="4">Coming Soon !{/* <NotificationTab /> */}</TabPanel>
         </TabContext>
       </Box>
     </Container>
