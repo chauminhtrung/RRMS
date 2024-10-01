@@ -11,6 +11,8 @@ import Forgot_Password from "./pages/Forgot-Password/Forgot_Password";
 import AdminStatis from "./pages/admin/statistical";
 import { env } from './configs/environment'
 import MainManagement from './pages/admin/MainManagement'
+import Contact from "./pages/Contact/Contact";
+import Introduce from "./pages/Introduce/Introduce";
 // import TestPage from './pages/TestPage'
 // import ValidCaptcha from './components/ValidCaptcha'
 
@@ -31,6 +33,8 @@ function App() {
           <Route path="/detail" element={<Detail />} />
           <Route path="/AdminStatis" element={<AdminStatis />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/introduce" element={<Introduce />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<Forgot_Password />} />
 
