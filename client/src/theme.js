@@ -24,6 +24,16 @@ const theme = createTheme({
       },
     },
   },
+  components: {
+    MuiTabs: {
+      styleOverrides: {
+        root: {
+          height: '40px',
+          alignItems: 'center',
+        },
+      },
+    },
+  },
 })
 
 export default theme
