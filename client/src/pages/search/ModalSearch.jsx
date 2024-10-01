@@ -108,7 +108,7 @@ const ModalSearch = ({ open, handleClose }) => {
               variant="h6"
               fontWeight="bold"
               sx={{
-                backgroundColor: 'green',
+                backgroundColor: '#1e90ff',
                 color: 'white',
                 padding: 1,
                 textAlign: 'center',
@@ -235,14 +235,15 @@ const ModalSearch = ({ open, handleClose }) => {
                   width: isMobile ? '100%' : '48%',
                   textTransform: 'none',
                   marginBottom: isMobile ? 1 : 0,
-                  backgroundColor: 'lightgray',
+                  backgroundColor: '#1e90ff',
                   border: '1px solid gray',
+                  color: '#ffffff',
                 }}>
                 Đóng bộ lọc
               </Button>
               <Button
                 variant="contained"
-                sx={{ width: isMobile ? '100%' : '48%', textTransform: 'none', backgroundColor: 'green' }}>
+                sx={{ width: isMobile ? '100%' : '48%', textTransform: 'none', backgroundColor: '#1e90ff' }}>
                 Tìm kiếm ngay
               </Button>
             </Box>
