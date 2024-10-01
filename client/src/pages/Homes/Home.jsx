@@ -1,5 +1,5 @@
 import { Typography, Button, Box, Grid ,Container,Paper} from '@mui/material'; 
-
+import "./Home.css";
 // test
 export default function HomePage() {  
   return (  
@@ -60,7 +60,7 @@ export default function HomePage() {
                                 </div>  
                             </div>  
                         </Grid>  
-                        <Grid item xl={5} md={12} className="image-slider text-center">  
+                        {/* <Grid item xl={5} md={12} className="image-slider text-center">  
                             <img  
                                 className="custom-logo home-logo2"  
                                 style={{ width: '100%', height: 'auto', maxWidth: '526px' }}  
@@ -68,7 +68,7 @@ export default function HomePage() {
                                 alt="Phần mềm quản lý nhà trọ trên điện thoại - RRMS"  
                                 title="Phần mềm quản lý nhà trọ điện thoại"  
                             />  
-                        </Grid>  
+                        </Grid>   */}
                     </Grid>  
                 </div>  
             </Container>  
@@ -76,7 +76,7 @@ export default function HomePage() {
 
       {/* Highlights */}
       <section className="feature-home">  
-      <div className="container">  
+      <div className="container1">  
         <div className="text-center">  
         <Typography className="header-title" sx={{ fontSize: '40px', fontWeight: 'bold' }}>  
           Điểm nổi bật  
@@ -163,7 +163,7 @@ export default function HomePage() {
 
       {/*  */}
 
-      <section className="function" id="all-function">  
+      {/* <section className="function" id="all-function">  
             <Container>  
                 <header className="function-header text-center">  
                     <Typography marginBottom={3} sx={{ fontSize: '40px', fontWeight: 'bold' }}>  
@@ -198,7 +198,7 @@ export default function HomePage() {
                     </Grid>  
                 </div>  
             </Container>  
-        </section> 
+        </section>  */}
 
         {/*  */}
 
@@ -369,68 +369,7 @@ const features = [
     }  
   ];  
 
-  const features2 = [  
-    {  
-        title: 'Quản lý nhiều nhà trọ - chung cư - ktx, sleepbox, homestay',  
-        description: 'Có thể cùng một lúc quản lý nhiều nhà trọ - tòa nhà chung cư - ktx, đồng thời cũng có thể theo dõi tổng quan, chi tiết thông tin nhà cho thuê của mình với tính năng này.',  
-        icon: 'https://quanlytro.me/images/icons/functions/quan-ly-phong.webp?version=31231',  
-    },  
-    {  
-        title: 'Quản lý phòng trọ, căn hộ, giường - sleepbox',  
-        description: 'Các thông tin về phòng trọ như khách thuê phòng, số điện thoại, trạng thái phòng,... sẽ được cung cấp bởi tính năng này. Việc <b>quản lý phòng trọ</b> sẽ đơn giản hơn nhiều.',  
-        icon: 'https://quanlytro.me/images/icons/functions/quan-ly-phong.webp?version=31231',  
-    },  
-    {  
-        title: 'Quản lý cọc giữ chỗ và hợp đồng thuê nhà',  
-        description: 'Lưu giữ tất cả thông tin khách thuê, tiền cọc, ngày cọc,... với chức năng này bạn sẽ không cần phải ghi nhớ bất cứ thông tin đặt cọc nào, giảm thiểu rủi ro và tăng khả năng quản lý.',  
-        icon: 'https://quanlytro.me/images/icons/functions/quan-ly-phong.webp?version=31231',  
-    },  
-    {  
-        title: 'Hóa đơn tiền phòng, thu tiền',  
-        description: 'Chúng tôi giúp bạn theo dõi và tính toán tiền điện, nước, dịch vụ,... chốt tiền phòng hàng tháng một cách tự động, in hóa đơn cho khách thuê. Theo dõi thu tiền phòng hàng tháng cho bạn.',  
-        icon: 'https://quanlytro.me/images/icons/functions/quan-ly-phong.webp?version=31231',  
-    },  
-    {  
-        title: 'Quản lý xe, tài sản',  
-        description: 'Quản lý thông tin xe của khách & tài sản khách sử dụng trong quá trình thuê nhà, kiểm kệ tình trạng của tài sản',  
-        icon: 'https://quanlytro.me/images/icons/functions/ghi-chu.webp?version=31231',  
-    },  
-    {  
-        title: 'Đăng tin tìm khách thuê',  
-        description: 'LOZIDO hỗ trợ đăng tin lên các nền tản như: Website tìm trọ, nhà cho thuê, nền tảng mạng xã hội. Ngoài ra chúng tôi còn có đội ngủ sale phòng trọ chuyên nghiệp giúp bạn lấp phòng trống nhanh chóng',  
-        icon: 'https://quanlytro.me/images/icons/functions/thu-tien.webp?version=31231',  
-    },  
-    {  
-        title: 'Quản lý tài chính',  
-        description: 'Mọi thu, chi tổng kết kinh doanh sẽ được lưu trữ và tính toán tự động bạn sẽ không còn đau đầu với những con số.',  
-        icon: 'https://quanlytro.me/images/icons/functions/quan-ly-phong.webp?version=31231',  
-    },  
-    {  
-        title: 'Thống kê báo cáo',  
-        description: 'Bạn sẽ theo dõi được tổng quan hơn về tình hình hoạt động của nhà trọ, phòng trọ từ đó sắp xếp công việc hợp lý nhất.',  
-        icon: 'https://quanlytro.me/images/icons/functions/quan-ly-phong.webp?version=31231',  
-    },  
-    {  
-        title: 'Quản lý khách thuê',  
-        description: 'Quản lý các thông tin về khách thuê phòng, tình trạng giấy tờ tùy thân, tình trạng đăng ký tạm trú. Ngoài ra phần mềm còn hỗ trợ đăng ký tạm trú online trên dịch vụ công',  
-        icon: 'https://quanlytro.me/images/icons/functions/quan-ly-phong.webp?version=31231',  
-    },  
-    {  
-        title: 'Ghi chú việc cần làm',  
-        description: 'Bạn có thể ghi chú lại các công việc cần làm, báo cáo sự cố phát sinh của nhà trọ... Ứng dụng tự động nhắc nhở các công việc cần thực hiện.',  
-        icon: 'https://quanlytro.me/images/icons/functions/quan-ly-phong.webp?version=31231',  
-    },  
-    {  
-        title: 'Quản lý nhân viên',  
-        description: 'Phần mềm cung cấp tính năng phân quyền để bạn có thể tổ chức công ty hoặc đội nhóm cùng tham gia quản lý',  
-        icon: 'https://quanlytro.me/images/icons/functions/ghi-chu.webp?version=31231',  
-    },  
-    {  
-        title: 'Quản lý môi giới',  
-        description: 'Cung cấp tính năng quản lý môi giới, giúp bạn theo dõi, ghi nhận các hợp đồng, các khoản phí môi giới. Từ đó tăng cường việc lấp đầy các phòng trống.',  
-        icon: 'https://quanlytro.me/images/icons/functions/thu-tien.webp?version=31231',  
-    },  
-];
+
 
 const testimonials = [  
     {  
