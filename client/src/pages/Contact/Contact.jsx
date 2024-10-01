@@ -53,8 +53,8 @@ const Contact = () => {
                     </div>
                 </div>
             </div>
-            <div className="container bot">
-                <div className="flex row" style={{ marginBottom: '15px' }}>
+            <div className="container">
+                <div className="flex row" style={{ marginBottom: '15px', marginTop: '50px' }}>
                     <div className="col-md-6 mt-2">
                         <a href="/tro-thanh-moi-gioi-lozido.html">
                             <img src="https://lozido.com/images/banner/cong-tac-vien-kinh-doanh-lozido.png" className="w-full lg:rounded-md" alt="banner moi gioi lozido" width="100%" style={{ borderRadius: '5px' }} />
