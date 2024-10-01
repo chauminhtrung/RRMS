@@ -19,15 +19,7 @@
     "axios": "1.7.7",
     "bootstrap": "^5.3.3",
     "dotenv": "16.4.5",
-
-    "@emotion/react": "11.13.3",
-    "@emotion/styled": "11.13.0",
     "@marsidev/react-turnstile": "1.0.2",
-    "@mui/icons-material": "6.1.0",
-    "@mui/material": "6.1.0",
-    "@mui/x-charts": "^7.18.0",
-    "axios": "1.7.7",
-    "bootstrap": "5.3.3",
     "firebase": "10.13.2",
 
     "i18next": "23.15.1",
