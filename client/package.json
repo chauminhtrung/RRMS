@@ -19,9 +19,9 @@
     "axios": "1.7.7",
     "bootstrap": "^5.3.3",
     "dotenv": "16.4.5",
-    "@marsidev/react-turnstile": "1.0.2",
+    "@mui/lab": "6.0.0-beta.10",
+    "@mui/x-charts": "7.18.0",
     "firebase": "10.13.2",
-
     "i18next": "23.15.1",
     "react": "18.3.1",
     "react-bootstrap": "2.10.4",
