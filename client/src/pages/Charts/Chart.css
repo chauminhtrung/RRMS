@@ -1,0 +1,75 @@
+.banner-image {
+  width: 100%;
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+}
+.img-bannerChart{
+  border-radius: 10px;
+}
+.heading {
+  text-align: center;
+}
+
+.about {
+  display: flex;
+  justify-content: space-around;
+}
+
+.about-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.about-item img {
+  margin-bottom: 8px;
+}
+/* Chart */
+
+.WrapperDashBoardIndex {  
+  margin: 20px;  
+}  
+
+.cardWrapper {  
+  background-color: #f0f0f0;  
+  padding: 16px;  
+  border-radius: 8px;  
+  margin-bottom: 20px;  
+}  
+
+.DashBoardIndexTitle {  
+  font-weight: bold;  
+}  
+
+.DashBoardIndexCard__Text {  
+  margin: 8px 0;  
+}  
+
+.LoadDetail__Wrapper {  
+  display: flex;  
+  justify-content: flex-end;  
+}  
+
+.buttonDetail {  
+  text-transform: none; 
+}
+.btn-colo1{
+  background-color: #4bcffa;
+  border-radius: 10px;
+  padding: 10px;
+  padding-left: 20px;
+}
+.btn-colo2{
+  background-color: #fd7e14;
+  border-radius: 10px;
+  padding: 10px;
+  padding-left: 20px;
+}
+.btn-colo3{
+  background-color: #0062ff;
+  border-radius: 10px;
+  padding: 10px;
+  padding-left: 20px;
+}
