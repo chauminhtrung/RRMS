@@ -1,0 +1,43 @@
+.iContact {
+    background-color: rgb(242, 237, 233);
+    height: 100%;
+    border-radius: 5px;
+}
+
+.iconContact {
+    margin: 30px;
+    display: grid;
+    place-items: center;
+    height: 100%;
+}
+
+.icon-item {
+    background-color: rgb(82, 201, 238);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(255, 255, 255);
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    font-size: 17px;
+    font-weight: 600;
+
+}
+
+.underline-yellow {
+    text-decoration: underline;
+    /* Tạo đường gạch chân */
+    text-decoration-color: rgb(21, 200, 255);
+    /* Màu sắc của đường gạch chân */
+}
+
+.item-content {
+    border: 1px rgb(109, 108, 108) solid;
+    border-radius: 10px;
+    height: 50px;
+    flex-direction: column;
+    align-items: center;
+    padding-left: 10px;
+    justify-content: center;
+}

@@ -9,6 +9,8 @@ import Register from './pages/Register/Register'
 import Forgot_Password from './pages/Forgot-Password/Forgot_Password'
 import { env } from './configs/environment'
 import MainManagement from './pages/admin/MainManagement'
+import Contact from './pages/Contact/Contact'
+import Introduce from './pages/Introduce/Introduce'
 // import TestPage from './pages/TestPage'
 // import ValidCaptcha from './components/ValidCaptcha'
 
@@ -25,7 +27,8 @@ function App() {
           <Route path="/admin" element={<MainManagement />} />
           <Route path="/search" element={<Search />} />
           <Route path="/detail" element={<Detail />} />
-
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/introduce" element={<Introduce />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<Forgot_Password />} />

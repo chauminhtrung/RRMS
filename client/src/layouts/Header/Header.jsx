@@ -200,6 +200,12 @@ const Header = () => {
                       <li>
                         <a href="./contact.html">RRMS Plus+</a>
                       </li>
+                      <li>
+                        <a href="/introduce">Introduce</a>
+                      </li>
+                      <li>
+                        <a href="/contact">Contact</a>
+                      </li>
                     </ul>
                   </nav>
                   <div className="nav-right search-switch">
