@@ -10,16 +10,6 @@ import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Forgot_Password from "./pages/Forgot-Password/Forgot_Password";
 import AdminStatis from "./pages/admin/statistical";
-
-import Detail from './pages/Detail/Detail'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Home from './pages/Homes/Home'
-import Header from './layouts/Header/Header'
-import Search from './pages/search/Search'
-import Footer from './layouts/Footer/Footer'
-import Login from './pages/Login/Login'
-import Register from './pages/Register/Register'
-import Forgot_Password from './pages/Forgot-Password/Forgot_Password'
 import { env } from './configs/environment'
 import MainManagement from './pages/admin/MainManagement'
 import Profile from './pages/Profile/Profile'
