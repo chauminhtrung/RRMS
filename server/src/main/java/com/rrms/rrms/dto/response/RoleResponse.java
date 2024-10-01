@@ -1,2 +1,4 @@
-package com.rrms.rrms.dto.response;public class RoleResponse {
+package com.rrms.rrms.dto.response;
+
+public class RoleResponse {
 }

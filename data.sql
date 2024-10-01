@@ -17,7 +17,7 @@ CREATE TABLE Accounts (
     phone VARCHAR(20),
     email VARCHAR(255),
     birthday DATE,
-    gender ENUM('Male', 'Female'),
+    gender ENUM('MALE', 'FEMALE', 'OTHER'),
     cccd VARCHAR(15)
 );
 

@@ -1,2 +1,4 @@
-package com.rrms.rrms.dto.request;public class RoleRequest {
+package com.rrms.rrms.dto.request;
+
+public class RoleRequest {
 }
