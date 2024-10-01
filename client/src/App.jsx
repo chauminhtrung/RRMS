@@ -1,3 +1,5 @@
+
+
 import Detail from './pages/Detail/Detail'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Home from './pages/Homes/Home'
@@ -11,6 +13,8 @@ import { env } from './configs/environment'
 import MainManagement from './pages/admin/MainManagement'
 import Contact from './pages/Contact/Contact'
 import Introduce from './pages/Introduce/Introduce'
+import Profile from './pages/Profile/Profile'
+
 // import TestPage from './pages/TestPage'
 // import ValidCaptcha from './components/ValidCaptcha'
 
@@ -32,7 +36,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<Forgot_Password />} />
-
+          <Route path="/profile" element={<Profile />} />
           {/* <Route path="/test" element={<TestPage />} /> */}
         </Routes>
         <Footer />
