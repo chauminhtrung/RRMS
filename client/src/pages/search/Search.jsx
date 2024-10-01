@@ -1,28 +1,5 @@
 import { useEffect, useState } from 'react'
-import {
-  Box,
-  Container,
-  Grid,
-  TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Card,
-  CardContent,
-  Typography,
-  CardMedia,
-  IconButton,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  InputAdornment,
-  Slider,
-} from '@mui/material'
-import SearchIcon from '@mui/icons-material/Search'
-import CloseIcon from '@mui/icons-material/Close'
+import { Box, Container, Grid, Typography, FormControl, InputLabel, Select, MenuItem, Slider } from '@mui/material'
 import RoomList from './RoomList'
 import SearchList from './SearchList'
 import Name from './Name'
@@ -33,13 +10,12 @@ import Text from './Text'
 import ItemSearch from './ItemSearch'
 import { getTinhThanh } from '~/apis/apiClient'
 import LoadingPage from '~/components/LoadingPage'
+import FilterSearch from './FilterSearch'
 
 const Search = () => {
   const [provinces, setProvinces] = useState([])
-  const [open, setOpen] = useState(false)
   const [gia, setGia] = useState([0, 50])
   const [dienTich, setDienTich] = useState([0, 50])
-  const [loaiNha, setLoaiNha] = useState('')
 
   useEffect(() => {
     getTinhThanh()
@@ -53,22 +29,9 @@ const Search = () => {
       })
   }, [])
 
-  const handleLoaiNhaChange = (event) => {
-    setLoaiNha(event.target.value)
-  }
-
   const handleDienTichChange = (event, newValue) => {
     setDienTich(event.target.value)
     setDienTich(newValue)
-  }
-
-  const handleClose = () => {
-    setOpen(false)
-  }
-
-  const handleClickOpen = () => {
-    setOpen(true)
-    console.log(provinces[0])
   }
 
   const handleChange = (event, newValue) => {
@@ -93,49 +56,10 @@ const Search = () => {
           borderRadius: '6px',
           bgcolor: 'secondary.main',
         }}>
+        <FilterSearch />
         <Grid container justifyContent="center" spacing={2} sx={{ mb: 4 }}>
-          <Grid item xs={12} sm={10} md={10}>
-            <TextField
-              sx={{ mt: 3 }}
-              fullWidth
-              label="Tìm kiếm tỉnh thành..."
-              variant="outlined"
-              onClick={handleClickOpen}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton color="primary" onClick={handleClickOpen}>
-                      <SearchIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Grid>
-
-          {/* Select Loại Nhà */}
-          <Grid item xs={12} sm={6} md={4}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-helper-label">Loại Nhà</InputLabel>
-              <Select
-                labelId="demo-simple-select-helper-label"
-                id="demo-simple-select-helper"
-                value={loaiNha}
-                label="Loại Nhà"
-                onChange={handleLoaiNhaChange}>
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={10}>Tất cả</MenuItem>
-                <MenuItem value={20}>Căn hộ trung cư</MenuItem>
-                <MenuItem value={30}>Nhà riêng</MenuItem>
-                <MenuItem value={40}>Nhà mặt phố</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-
           {/* Select Giá */}
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} sm={6} md={5}>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-helper-label">Giá</InputLabel>
               <Select
@@ -171,7 +95,7 @@ const Search = () => {
           </Grid>
 
           {/* Select Diện Tích */}
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} sm={6} md={5}>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-helper-label">Diện Tích</InputLabel>
               <Select
@@ -208,74 +132,6 @@ const Search = () => {
         </Grid>
       </Container>
 
-      <Dialog open={open} maxWidth="lg" fullWidth>
-        <DialogTitle>
-          Top những tỉnh thành nổi bật
-          <IconButton aria-label="close" onClick={handleClose} sx={{ position: 'absolute', right: 8, top: 8 }}>
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-
-        <DialogContent dividers>
-          <Grid container spacing={2} textAlign="center">
-            {[
-              {
-                name: 'Hà Nội',
-                image: 'https://picsum.photos/500/1000?random=1',
-              },
-              {
-                name: 'Hồ Chí Minh',
-                image: 'https://picsum.photos/500/1000?random=6',
-              },
-              {
-                name: 'Đà Nẵng',
-                image: 'https://picsum.photos/500/1000?random=2',
-              },
-              {
-                name: 'Bình Dương',
-                image: 'https://picsum.photos/500/1000?random=3',
-              },
-              {
-                name: 'Đồng Nai',
-                image: 'https://picsum.photos/500/1000?random=4',
-              },
-              {
-                name: 'Khánh Hòa',
-                image: 'https://picsum.photos/500/1000?random=5',
-              },
-            ].map((city) => (
-              <Grid item xs={6} sm={4} md={2} key={city.name}>
-                <Card>
-                  <CardMedia component="img" height="140" image={city.image} alt={city.name} />
-                  <CardContent>
-                    <Typography variant="body2">{city.name}</Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-
-          <Typography variant="h5" sx={{ mt: 4 }}>
-            Tất cả tỉnh thành
-          </Typography>
-          <Grid container spacing={2} sx={{ mt: 2 }}>
-            {provinces.map((province, id) => (
-              <Grid item xs={12} sm={6} md={3} key={id}>
-                <Typography variant="body2">
-                  <Button variant="text" href="#" color="inherit">
-                    {province.name}
-                  </Button>
-                </Typography>
-              </Grid>
-            ))}
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button color="primary" onClick={handleClose}>
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
       <ListSearch />
       <SearchList />
       <Container>
