@@ -18,7 +18,6 @@
     "@mui/material": "^6.1.0",
     "@mui/x-charts": "7.18.0",
     "@mui/x-date-pickers": "7.18.0",
-    "apexcharts": "^3.54.0",
     "axios": "1.7.7",
     "bootstrap": "5.3.3",
     "dayjs": "1.11.13",
@@ -26,7 +25,6 @@
     "firebase": "10.13.2",
     "i18next": "23.15.1",
     "react": "18.3.1",
-    "react-apexcharts": "^1.4.1",
     "react-bootstrap": "2.10.4",
     "react-dom": "18.3.1",
     "react-i18next": "15.0.2",
@@ -45,7 +43,6 @@
     "eslint-plugin-react-hooks": "5.1.0-rc.0",
     "eslint-plugin-react-refresh": "0.4.9",
     "globals": "15.9.0",
-    "typescript": "^5.6.2",
     "vite": "5.4.1",
     "vite-plugin-pwa": "0.20.5"
   }
