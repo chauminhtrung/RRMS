@@ -9,7 +9,7 @@ import { useTheme } from '@mui/material/styles'
 function FilterSearch() {
   const [open, setOpen] = useState(false)
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm')) // Sử dụng useMediaQuery để kiểm tra kích thước màn hình
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
 
@@ -67,7 +67,7 @@ function FilterSearch() {
       {/* Ô nhập văn bản */}
       <TextField
         variant="outlined"
-        placeholder="Nhập trường học tập..."
+        placeholder="Nhập thông tin cần tìm kiếm ......"
         fullWidth={isMobile}
         sx={{
           flexGrow: isMobile ? 0 : 1,
