@@ -5,6 +5,7 @@ import java.util.UUID;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "rooms")
+@Builder
 public class Room {
 
     @Id
@@ -26,6 +28,9 @@ public class Room {
     @ManyToOne
     @JoinColumn(name = "typeRoomId")
     private TypeRoom typeRoom;
+
+    @Column(columnDefinition = "VARCHAR(255)")
+    private String nameRoom;
 
     @Column(columnDefinition = "DECIMAL(10, 2)")
     private long price;
