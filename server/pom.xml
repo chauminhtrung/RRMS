@@ -61,11 +61,11 @@
 		</dependency>
 
 		<!-- MySQL Connector: Kết nối ứng dụng Spring với cơ sở dữ liệu MySQL -->
-<!--		<dependency>-->
-<!--			<groupId>com.mysql</groupId>-->
-<!--			<artifactId>mysql-connector-j</artifactId>-->
-<!--			<scope>runtime</scope>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 
 		<!-- Jackson Datatype JSR310: Hỗ trợ xử lý kiểu dữ liệu ngày tháng (Java 8 Date/Time API) trong JSON -->
 		<dependency>

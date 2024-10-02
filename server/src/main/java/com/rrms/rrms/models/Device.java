@@ -12,16 +12,16 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "roles")
-public class Role {
+@Table(name = "devices")
+public class Device {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID roleId;
+    private UUID deviceId;
 
     @Column(columnDefinition = "VARCHAR(255)")
-    private String roleName;
+    private String deviceName;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    @Column(columnDefinition = "BOOLEAN")
+    private Boolean available;
 }

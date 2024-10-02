@@ -12,16 +12,17 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "roles")
-public class Role {
+@Table(name = "searchs")
+public class Search {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID roleId;
+    private UUID searchId;
 
-    @Column(columnDefinition = "VARCHAR(255)")
-    private String roleName;
+    @ManyToOne
+    @JoinColumn(name = "username")
+    private Account account;
 
     @Column(columnDefinition = "TEXT")
-    private String description;
+    private String content;
 }

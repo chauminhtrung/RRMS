@@ -12,16 +12,24 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "roles")
-public class Role {
+@Table(name = "room_reviews")
+public class RoomReview {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID roleId;
+    private UUID roomReviewId;
 
-    @Column(columnDefinition = "VARCHAR(255)")
-    private String roleName;
+    @ManyToOne
+    @JoinColumn(name = "username")
+    private Account account;
+
+    @ManyToOne
+    @JoinColumn(name = "roomId")
+    private Room room;
 
     @Column(columnDefinition = "TEXT")
-    private String description;
+    private String content;
+
+    @Column(columnDefinition = "INT")
+    private int rating;
 }

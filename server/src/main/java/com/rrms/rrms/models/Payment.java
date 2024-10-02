@@ -12,15 +12,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "roles")
-public class Role {
+@Table(name = "payments")
+public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID roleId;
+    private UUID paymentId;
 
     @Column(columnDefinition = "VARCHAR(255)")
-    private String roleName;
+    private String paymentName;
 
     @Column(columnDefinition = "TEXT")
     private String description;

@@ -12,16 +12,19 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "roles")
-public class Role {
+@Table(name = "services")
+public class Service {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID roleId;
+    private UUID serviceId;
 
     @Column(columnDefinition = "VARCHAR(255)")
-    private String roleName;
+    private String typeService;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    @Column(columnDefinition = "VARCHAR(255)")
+    private String nameService;
+
+    @Column(columnDefinition = "DECIMAL(10, 2)")
+    private long price;
 }

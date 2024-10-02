@@ -12,16 +12,23 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "roles")
-public class Role {
+@Table(name = "room_images")
+public class RoomImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID roleId;
+    private UUID roomImageId;
+
+    @ManyToOne
+    @JoinColumn(name = "roomId")
+    private Room room;
 
     @Column(columnDefinition = "VARCHAR(255)")
-    private String roleName;
+    private String fileName;
 
     @Column(columnDefinition = "TEXT")
-    private String description;
+    private String linkImg;
+
+    @Column(columnDefinition = "BOOLEAN")
+    private Boolean mainImg;
 }
