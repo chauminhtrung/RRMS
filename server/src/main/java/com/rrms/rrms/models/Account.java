@@ -1,12 +1,14 @@
 package com.rrms.rrms.models;
 
-import com.rrms.rrms.enums.Gender;
+import java.time.LocalDate;
+
 import jakarta.persistence.*;
+
+import com.rrms.rrms.enums.Gender;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Entity
 @Data

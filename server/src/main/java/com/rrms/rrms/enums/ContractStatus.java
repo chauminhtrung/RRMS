@@ -1,2 +1,6 @@
-package com.rrms.rrms.enums;public enum ContractStatus {
+package com.rrms.rrms.enums;
+
+public enum ContractStatus {
+    ACTIVE,
+    ENDED
 }

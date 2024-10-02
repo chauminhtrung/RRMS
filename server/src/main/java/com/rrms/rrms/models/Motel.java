@@ -1,2 +1,37 @@
-package com.rrms.rrms.models;public class Motel {
+package com.rrms.rrms.models;
+
+import java.util.UUID;
+
+import jakarta.persistence.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "motels")
+public class Motel {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID motelId;
+
+    @Column(columnDefinition = "VARCHAR(255)")
+    private String motelName;
+
+    @Column(columnDefinition = "DOUBLE")
+    private Double area;
+
+    @Column(columnDefinition = "DECIMAL(10, 2)")
+    private Long averagePrice;
+
+    @Column(columnDefinition = "NVARCHAR(255)")
+    private String address;
+
+    @ManyToOne
+    @JoinColumn(name = "username")
+    private Account account;
 }

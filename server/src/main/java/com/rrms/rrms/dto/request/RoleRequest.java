@@ -1,4 +1,3 @@
 package com.rrms.rrms.dto.request;
 
-public class RoleRequest {
-}
+public class RoleRequest {}
