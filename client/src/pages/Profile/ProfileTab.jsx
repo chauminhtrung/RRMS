@@ -1,5 +1,25 @@
-import { Avatar, Box, Button, Grid, Paper, styled, TextField, Typography } from '@mui/material'
+import {
+  Avatar,
+  Box,
+  Button,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  styled,
+  TextField,
+  Typography,
+} from '@mui/material'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+// import Profile from './Profile'
+import { useEffect, useState } from 'react'
+import { getProfile, updateProfile } from '~/apis/apiClient'
+import { v4 } from 'uuid'
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
+import { storage } from '~/configs/firebaseConfig'
+import { toast } from 'react-toastify'
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -13,28 +33,58 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 })
 const ProfileTab = () => {
+  const [profile, setProfile] = useState({})
+  const imageName = v4()
+  useEffect(() => {
+    getProfile('admin').then((res) => {
+      setProfile(res.data.result)
+    })
+  }, [])
+
+  const handleUpload = (image) => {
+    if (image) {
+      toast.info('Đang đổi ảnh đại diện')
+      const storageRef = ref(storage, `images/${imageName}`)
+      const uploadTask = uploadBytesResumable(storageRef, image)
+
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          console.log(snapshot)
+        },
+        (error) => {
+          console.log(error)
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+            toast.info('Đổi ảnh đại diện thành công')
+            setProfile((prevProfile) => ({ ...prevProfile, avatar: url }))
+          })
+        }
+      )
+    }
+  }
+  const updateProfileHadnler = async (data) => {
+    updateProfile(data)
+    toast.info('Thay đổi thông tin thành công')
+  }
+
   return (
     <Box sx={{ padding: '20px' }}>
       <Grid container spacing={4}>
         {/* Profile Picture Section */}
         <Grid item xs={12} md={4}>
-          <Paper elevation={3} sx={{ padding: '20px', textAlign: 'center' }}>
-            <Avatar
-              alt="Image"
-              src="https://mui.com/static/images/avatar/6.jpg"
-              sx={{ width: 100, height: 100, margin: 'auto' }}
-            />
-            <Typography variant="body1" sx={{ marginTop: '10px' }}>
-              Ảnh phải là định dạng PNG hoặc JPG và không được lớn hơn 5MB
-            </Typography>
+          <Paper elevation={3} sx={{ padding: '40px', textAlign: 'center' }}>
+            <Avatar alt="Image" src={profile.avatar} sx={{ width: 200, height: 200, margin: 'auto' }} />
             <Button
               component="label"
               role={undefined}
               variant="contained"
               tabIndex={-1}
+              sx={{ marginTop: '20px' }}
               startIcon={<CloudUploadIcon />}>
               Tải ảnh lên
-              <VisuallyHiddenInput type="file" onChange={(event) => console.log(event.target.files)} multiple />
+              <VisuallyHiddenInput type="file" onChange={(event) => handleUpload(event.target.files[0])} multiple />
             </Button>
           </Paper>
         </Grid>
@@ -47,19 +97,65 @@ const ProfileTab = () => {
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={12} md={6}>
-                <TextField label="Tên tài khoản" fullWidth />
+                <TextField
+                  label="Tên tài khoản"
+                  fullWidth
+                  required
+                  value={profile.username}
+                  onChange={(e) => setProfile({ ...profile, username: e.target.value })}
+                  InputLabelProps={{
+                    shrink: !!profile.username,
+                  }}
+                />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField label="Họ và tên" fullWidth />
+                <TextField
+                  label="Họ và tên"
+                  fullWidth
+                  value={profile.fullname}
+                  onChange={(e) => setProfile({ ...profile, fullname: e.target.value })}
+                  InputLabelProps={{
+                    shrink: !!profile.fullname,
+                  }}
+                />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField label="Địa chỉ" fullWidth />
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={profile.gender || ''}
+                    label="Gender"
+                    onChange={(e) => setProfile({ ...profile, gender: e.target.value })}>
+                    <MenuItem value={'MALE'}>Male</MenuItem>
+                    <MenuItem value={'FEMALE'}>Female</MenuItem>
+                    <MenuItem value={'OTHER'}>Other</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  label="Email"
+                  fullWidth
+                  value={profile.email}
+                  onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                  InputLabelProps={{
+                    shrink: !!profile.email,
+                  }}
+                />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField label="Email" fullWidth />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField label="Số điện thoại" fullWidth />
+                <TextField
+                  label="Số điện thoại"
+                  fullWidth
+                  value={profile.phone}
+                  onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+                  InputLabelProps={{
+                    shrink: !!profile.phone,
+                  }}
+                />
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
@@ -69,10 +165,24 @@ const ProfileTab = () => {
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  value={profile.birthday}
+                  onChange={(e) => setProfile({ ...profile, birthday: e.target.value })}
                 />
               </Grid>
               <Grid item xs={12}>
-                <Button variant="contained" color="primary" fullWidth>
+                <TextField
+                  label="CCCD"
+                  fullWidth
+                  value={profile.cccd}
+                  onChange={(e) => setProfile({ ...profile, cccd: e.target.value })}
+                  InputLabelProps={{
+                    shrink: !!profile.cccd,
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <Button variant="contained" color="primary" fullWidth onClick={() => updateProfileHadnler(profile)}>
                   Lưu thay đổi
                 </Button>
               </Grid>
