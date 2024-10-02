@@ -79,7 +79,7 @@ Chúng tôi xin gửi lời cảm ơn đến những cá nhân đã tham gia ph�
 - [Minh Trung](https://github.com/chauminhtrung) -
 - [Kiến Quốc](https://github.com/KienQuocVn) -
 - [Quốc Thuận](https://github.com/thuanquoctr) -
-- [Tấn Tài](https://github.com/tantai0118) -
+- [Tấn Tài](https://github.com/taitan0118) -
 
 ---
 
