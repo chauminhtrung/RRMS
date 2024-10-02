@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import com.rrms.rrms.enums.Gender;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "accounts")
 public class Account {
 
@@ -33,6 +35,9 @@ public class Account {
     @Column(columnDefinition = "VARCHAR(255)")
     private String email;
 
+    @Column(columnDefinition = "VARCHAR(255)")
+    private String avatar;
+    
     @Column(columnDefinition = "DATE")
     private LocalDate birthday;
 
