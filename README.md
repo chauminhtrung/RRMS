@@ -51,6 +51,9 @@ Hệ thống được xây dựng dựa trên các công nghệ hiện đại v�
   <a href="https://redis.io/" target="_blank" rel="noreferrer">
     <img src="https://www.vectorlogo.zone/logos/redis/redis-icon.svg" alt="Redis" width="40" height="40"/>
   </a>
+  <a href="https://www.docker.com/" target="_blank" rel="noreferrer">
+    <img src="https://www.vectorlogo.zone/logos/docker/docker-tile.svg" alt="Redis" width="40" height="40"/>
+  </a>
   <a href="https://www.mysql.com/" target="_blank" rel="noreferrer">
     <img src="https://www.vectorlogo.zone/logos/mysql/mysql-icon.svg" alt="MySQL" width="40" height="40"/>
   </a>
