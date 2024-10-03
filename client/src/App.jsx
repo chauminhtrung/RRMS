@@ -44,10 +44,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/forgot-password" element={<Forgot_Password />} />
           <Route path="/support" element={<Support />} />
-          {/* <Route path="/test" element={<TestPage />} /> */}
           <Route path="/AdminManagerBoard" element={<AdminManagerBoard />} />
-          {/* <Routes path="/test" element={<TestPage />} /> */}
-
         </Routes>
         <Footer />
       </Router>
