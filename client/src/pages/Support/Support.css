@@ -1,0 +1,92 @@
+.BodySupport {
+    font-family: 'Helvetica Neue',Arial,Helvetica,sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+    width: 100%;
+    margin: auto;
+    transition: background-color .2s;
+    background-color: #fff;
+    font-size: 16px;
+}
+
+.support-room {
+    width: 100%;
+    animation-name: slideup;
+    animation-delay: 1s;
+    animation-duration: 0.8s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-out;
+}
+
+.support-room .inner-container{
+    background: linear-gradient(#eef7ff 40%, rgb(238 247 255 / 35%) 50%);
+    background-size: cover;
+    padding: 15px 10px;
+    width: 100%;
+    align-self: center;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 15px;
+    border: 3px dashed #b7daff;
+}
+
+.support-room .inner-container select, .support-room .inner-container input{
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 10px;
+    border: 0.5px solid #9d9d9d;
+    height: auto;
+    margin-top: 3px;
+}
+
+.support-room .icon-left{
+    display: flex;
+    align-items: start;
+    border-radius: 100%;
+    margin-right: 10px;
+    padding: 8px;
+    background-color: #ddedff;
+    color: #fff;
+}
+
+.support-room .btn-support-room {
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: 0px solid #ffffff;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(to right, #4bcffa,#42c7f3);
+    font-weight: 700;
+    color: #fff;
+}
+
+
+.tag .arena{
+    padding: 5px;
+    padding-left: 30px;
+    margin: 4px 0;
+
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    color: #000;
+    font-size: 14px;
+    position: relative;
+    overflow: hidden;
+}
+.tag .arena:before{
+    width: 30px;
+    height: 100%;
+    left: 0;
+    top: 0;
+    content: "";
+    position: absolute;
+    background: url(./pin.png) no-repeat transparent center;
+    background-size: 16px;
+    
+}
+
+
+.tag .arena.before-background:before{
+    position: relative!important;
+}

@@ -34,8 +34,9 @@ const DistrictLinks = () => {
       <Box
         sx={{
           padding: '20px',
-          backgroundColor: '#f5f5f5',
           borderRadius: '8px',
+          bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542'),
+          color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894'),
         }}>
         <Typography variant="h6" sx={{ marginBottom: '15px' }}>
           Khu vực: Hồ Chí Minh

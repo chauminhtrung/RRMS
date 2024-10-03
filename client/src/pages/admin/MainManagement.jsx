@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Button, Checkbox } from '@mui/material'
 import { Grid } from '@mui/material'
-import Navbar from '~/layouts/Admin/Navbar'
+import Navbar from '~/layouts/admin/Navbar'
 
 const MainManagement = ({ theme }) => {
   return (

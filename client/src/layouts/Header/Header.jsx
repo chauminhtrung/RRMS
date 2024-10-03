@@ -1,6 +1,19 @@
+
+// import {
+//   AppBar,
+//   Avatar,
+//   Box,
+//   Button,
+//   IconButton,
+//   Toolbar,
+//   Tooltip,
+//   Typography,
+// } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu'
-import { Link } from 'react-router-dom'
+// import { Link } from "react-router-dom";
 import Option from './Options/Option'
+// import { useTranslation } from "react-i18next";
+import { Link } from 'react-router-dom'
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone'
 import EmailIcon from '@mui/icons-material/Email'
 import FacebookIcon from '@mui/icons-material/Facebook'
@@ -30,9 +43,14 @@ const Header = () => {
           <div className="header-configure-area">
             <div className="language-option">
               <Option />
+
+
+              <a href="/login" className="bk-btn"></a>
+
               <a href="#" className="bk-btn">
                 Đăng nhập
               </a>
+
             </div>
           </div>
 

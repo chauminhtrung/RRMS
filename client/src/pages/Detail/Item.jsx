@@ -1,5 +1,6 @@
 import { Box, Button, Typography, useMediaQuery } from '@mui/material'
 import FmdGoodIcon from '@mui/icons-material/FmdGood'
+import { GlassMagnifier } from '@datobs/react-image-magnifiers'
 
 const Item = ({ item, index, totalItems, addressDetail }) => {
   const openGoogleMap = () => {
@@ -10,14 +11,15 @@ const Item = ({ item, index, totalItems, addressDetail }) => {
 
   return (
     <Box sx={{ position: 'relative' }}>
-      <img
-        src={item.image}
-        alt={`Slide ${index + 1}`}
-        style={{
-          width: '100%',
-          height: isMobile ? '250px' : '500px',
-          objectFit: 'cover'
-        }}
+      <GlassMagnifier
+        imageSrc={item.image}
+        imageAlt="Example"
+        square={true}
+        // style={{
+        //   width: '100%',
+        //   height: isMobile ? '250px' : '500px',
+        //   objectFit: 'cover',
+        // }}
       />
       <Box
         sx={{
@@ -26,14 +28,14 @@ const Item = ({ item, index, totalItems, addressDetail }) => {
           left: 20,
           display: 'flex',
           justifyContent: 'space-between',
-          width: isMobile ? '90%' : '95%'
+          width: isMobile ? '90%' : '95%',
         }}>
         <Button
           sx={{
             bgcolor: 'primary.main',
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center'
+            alignItems: 'center',
           }}
           variant="contained"
           onClick={openGoogleMap}

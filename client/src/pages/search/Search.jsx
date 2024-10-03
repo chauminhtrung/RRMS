@@ -71,17 +71,26 @@ const Search = () => {
                 <Typography gutterBottom sx={{ mt: 2, mx: 1.5 }}>
                   Khoảng giá (Triệu)
                 </Typography>
-                <Box sx={{ width: 20 }}>
+
+                {/* Slider cho Giá */}
+                <Box sx={{ mx: 1.5, my: 2 }}>
                   <Slider
-                    sx={{ mx: 2, width: 320 }}
                     getAriaLabel={() => 'Temperature range'}
                     value={gia}
                     onChange={handleChange}
                     valueLabelDisplay="auto"
                     getAriaValueText={valuetext}
                     max={50}
+                    sx={{
+                      width: {
+                        xs: '100%', // Chiều rộng cho màn hình nhỏ (mobile)
+                        sm: '100%', // Chiều rộng cho màn hình trung bình (tablet)
+                        md: '100%', // Chiều rộng cho màn hình lớn hơn
+                      },
+                    }}
                   />
                 </Box>
+
                 <Typography sx={{ mx: 1.5 }}>{`Giá từ: ${gia[0]} triệu - ${gia[1]} triệu`}</Typography>
                 <MenuItem value="">
                   <em>None</em>
@@ -105,20 +114,29 @@ const Search = () => {
                 label="Diện Tích"
                 onChange={handleDienTichChange}>
                 <Typography gutterBottom sx={{ mt: 2, mx: 1.5 }}>
-                  Diện tích (m2)
+                  Diện tích (m²)
                 </Typography>
-                <Box sx={{ width: 300 }}>
+
+                {/* Slider cho Diện Tích */}
+                <Box sx={{ mx: 1.5, my: 2 }}>
                   <Slider
-                    sx={{ mx: 2, width: 320 }}
                     getAriaLabel={() => 'Temperature range'}
                     value={dienTich}
                     onChange={handleDienTichChange}
                     valueLabelDisplay="auto"
                     getAriaValueText={valuetext}
                     max={50}
+                    sx={{
+                      width: {
+                        xs: '100%', // Chiều rộng cho màn hình nhỏ (mobile)
+                        sm: '100%', // Chiều rộng cho màn hình trung bình (tablet)
+                        md: '100%', // Chiều rộng cho màn hình lớn hơn
+                      },
+                    }}
                   />
                 </Box>
-                <Typography sx={{ mx: 1.5 }}>{`Diện tích từ: ${dienTich[0]} m2 - ${dienTich[1]} m2`}</Typography>
+
+                <Typography sx={{ mx: 1.5 }}>{`Diện tích từ: ${dienTich[0]} m² - ${dienTich[1]} m²`}</Typography>
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>

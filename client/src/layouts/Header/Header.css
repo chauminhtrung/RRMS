@@ -214,7 +214,7 @@ ul, ol {
 	transition: all 0.3s;
 }
 .top-nav .tn-right .language-option .flag-dropdown ul li a:hover {
-	color: #dfa974;
+	color: #4bcffa;
 }
 .menu-item {
 	position: relative;
@@ -308,7 +308,7 @@ ul, ol {
 	transition: all 0.3s;
 }
 .menu-item .nav-menu .mainmenu li .dropdown li a:hover {
-	color: #dfa974;
+	color: #4bcffa;
 }
 .menu-item .nav-menu .mainmenu li .dropdown li a:after {
 	display: none;
@@ -442,7 +442,7 @@ ul, ol {
 	.offcanvas .offcanvas-body  .slicknav-menu ul li a:hover {
 		border-radius: 0;
 		background: transparent;
-		color: #dfa974;
+		color: #4bcffa;
 	}
 	.offcanvas .offcanvas-body  .slicknav-menu .slicknav-nav .slicknav-row a {
 		border-bottom: 0;
@@ -458,10 +458,10 @@ ul, ol {
 		transition: all 0.3s;
 	}
 	.offcanvas .offcanvas-body  .slicknav-menu .slicknav-nav .slicknav-row:hover a {
-		color: #dfa974;
+		color: #4bcffa;
 	}
 	.offcanvas .offcanvas-body  .slicknav-menu .slicknav-nav .slicknav-row:hover span {
-		color: #dfa974;
+		color: #4bcffa;
 	}
 	.offcanvas .offcanvas-body  .top-social {
 		display: inline-block;
@@ -478,7 +478,7 @@ ul, ol {
 	.offcanvas .offcanvas-body  .top-social a :hover{
 		-webkit-transition: all 0.3s;
 		-o-transition: all 0.3s;
-		color: #dfa974;
+		color: #4bcffa;
 
 	}
 
