@@ -6,8 +6,18 @@ const Text = () => {
   const [showMore, setShowMore] = useState(false)
 
   return (
-    <Box>
-      <Typography variant="h6" sx={{ textAlign: 'center', fontWeight: 'bold', mt: 3 }}>
+    <Box
+      sx={{
+        bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542'),
+        color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894'),
+      }}>
+      <Typography
+        variant="h6"
+        sx={{
+          textAlign: 'center',
+          fontWeight: 'bold',
+          mt: 3,
+        }}>
         Cho thuê phòng trọ TPHCM chất lượng, giá rẻ
       </Typography>
       <Typography variant="h6" sx={{ mt: 2 }}>
