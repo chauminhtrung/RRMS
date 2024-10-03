@@ -7,6 +7,7 @@ import Footer from './layouts/Footer/Footer'
 import Login from './pages/Login/Login'
 import Register from './pages/Register/Register'
 import Forgot_Password from './pages/Forgot-Password/Forgot_Password'
+import Support from './pages/Support/Support'
 import { env } from './configs/environment'
 import MainManagement from './pages/admin/MainManagement'
 // import TestPage from './pages/TestPage'
@@ -29,7 +30,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<Forgot_Password />} />
-
+          <Route path="/support" element={<Support />} />
           {/* <Route path="/test" element={<TestPage />} /> */}
         </Routes>
         <Footer />
