@@ -1,5 +1,5 @@
-
 import React from 'react'
+
 import FacebookIcon from '@mui/icons-material/Facebook'
 import GoogleIcon from '@mui/icons-material/Google'
 import TwitterIcon from '@mui/icons-material/Twitter'
@@ -48,8 +48,8 @@ const Login = () => {
               <div className="col-md-6 login-form-1" style={{ backgroundColor: '#fff' }}>
                 <h3>Đăng nhập tài khoản</h3>
 
+                <form method="POST" className="needs-validation" id="login-form">
                 <form method="POST" className="needs-validation" id="login-form" novalidate="">
-
                   <input type="hidden" name="_token" value="jkJEHM7McmP1rRwYRqXYkCRrsj0oZZEtjCSD9vlp" />{' '}
                   <div className="container-input">
                     <div className="form-group">
@@ -147,6 +147,15 @@ const Login = () => {
                       className="col-sm-12 col-md-6 text-center text-md-start aos-init aos-animate"
                       data-aos="fade-left"></div>
 
+                    <a href="https://play.google.com/store/apps/details?id=com.lozido_room_mobile" target="_blank">
+                      <img
+                        className="img-responsive image-dowload-app"
+                        width="160px"
+                        src="https://quanlytro.me/images/tai-ung-dung-tim-phong-tro-tren-android.png"
+                        alt="Tải ứng dụng trên Android"
+                        title="Tải ứng dụng trên Android"
+                      />
+                    </a>
                       <a href="https://play.google.com/store/apps/details?id=com.lozido_room_mobile" target="_blank">
                         <img
                           className="img-responsive image-dowload-app"
@@ -173,7 +182,6 @@ const Login = () => {
                     <p style={{ marginTop: '15px', fontSize: ' 13px' }} className="text-center">
                       * Để đăng nhập bạn phải có tài khoản. Vui lòng đăng ký tài khoản nếu chưa có
                     </p>
-
                   </div>
                   <div
                     className="col-sm-12 col-md-6 text-center text-md-start aos-init aos-animate"
