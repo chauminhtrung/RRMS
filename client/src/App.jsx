@@ -19,6 +19,7 @@ import Contact from './pages/Contact/Contact'
 import Introduce from './pages/Introduce/Introduce'
 import AdminManagerBoard from './pages/admin/AdminManageBoard'
 import Profile from './pages/Profile/Profile'
+import PaymentPage from './pages/cart/PaymentPage'
 // import TestPage from './pages/TestPage'
 // import ValidCaptcha from './components/ValidCaptcha'
 
@@ -44,10 +45,10 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/forgot-password" element={<Forgot_Password />} />
           <Route path="/support" element={<Support />} />
+          <Route path="/payment" element={<PaymentPage />} />
           {/* <Route path="/test" element={<TestPage />} /> */}
           <Route path="/AdminManagerBoard" element={<AdminManagerBoard />} />
           {/* <Routes path="/test" element={<TestPage />} /> */}
-
         </Routes>
         <Footer />
       </Router>
