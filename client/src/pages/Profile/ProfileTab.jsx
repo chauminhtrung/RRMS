@@ -50,9 +50,9 @@ const ProfileTab = () => {
       setProfile(res.data.result)
     })
   }, [])
-
   const handleUpload = () => {
     toast.info('Đang thay đổi thông tin!')
+
     if (selectedImage) {
       const imageName = v4()
       const storageRef = ref(storage, `images/account-avatar/${imageName}`)
@@ -63,18 +63,22 @@ const ProfileTab = () => {
         null,
         (error) => {
           console.log(error)
+          toast.error('Có lỗi xảy ra khi tải lên hình ảnh.')
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((url) => {
             setProfile((prevProfile) => {
               const updatedProfile = { ...prevProfile, avatar: url }
               updateProfile(updatedProfile)
-              toast.info('Thay đổi thông tin thành công!')
+              toast.success('Thay đổi thông tin thành công!')
               return updatedProfile
             })
           })
         }
       )
+    } else {
+      updateProfile(profile)
+      toast.success('Thay đổi thông tin thành công!')
     }
   }
 
