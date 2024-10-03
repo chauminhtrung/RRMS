@@ -22,11 +22,11 @@ public class Room {
     private UUID roomId;
 
     @ManyToOne
-    @JoinColumn(name = "motelId")
+    @JoinColumn(name = "motel_id")
     private Motel motel;
 
     @ManyToOne
-    @JoinColumn(name = "typeRoomId")
+    @JoinColumn(name = "type_room_id")
     private TypeRoom typeRoom;
 
     @Column(columnDefinition = "VARCHAR(255)")

@@ -20,11 +20,11 @@ public class RoomDevice {
     private UUID roomDeviceId;
 
     @ManyToOne
-    @JoinColumn(name = "roomId")
+    @JoinColumn(name = "room_id")
     private Room room;
 
     @ManyToOne
-    @JoinColumn(name = "deviceId")
+    @JoinColumn(name = "device_id")
     private Device device;
 
     @Column(columnDefinition = "INT")

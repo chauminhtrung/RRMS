@@ -20,7 +20,7 @@ public class RoomImage {
     private UUID roomImageId;
 
     @ManyToOne
-    @JoinColumn(name = "roomId")
+    @JoinColumn(name = "room_id")
     private Room room;
 
     @Column(columnDefinition = "VARCHAR(255)")

@@ -20,14 +20,15 @@ public class DetailInvoice {
     private UUID detailInvoiceId;
 
     @ManyToOne
-    @JoinColumn(name = "invoiceId")
+    @JoinColumn(name = "invoice_id")
     private Invoice invoice;
 
     @ManyToOne
-    @JoinColumn(name = "roomServiceId")
+    @JoinColumn(name = "room_service_id")
     private RoomService roomService;
 
     @ManyToOne
-    @JoinColumn(name = "roomDeviceId")
+    @JoinColumn(name = "room_device_id")
+
     private RoomDevice roomDevice;
 }
