@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Avatar,
   Box,
@@ -22,6 +22,8 @@ import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { storage } from '~/configs/firebaseConfig'
 import { toast } from 'react-toastify'
 import imageCompression from 'browser-image-compression'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -34,6 +36,11 @@ const VisuallyHiddenInput = styled('input')({
   whiteSpace: 'nowrap',
   width: 1,
 })
+
+const validationSchema = Yup.object({
+  email: Yup.string().email('Email không hợp lệ').required('Bắt buộc nhập email'),
+})
+
 const ProfileTab = () => {
   const [profile, setProfile] = useState({})
   const [selectedImage, setSelectedImage] = useState(null)
@@ -53,9 +60,7 @@ const ProfileTab = () => {
 
       uploadTask.on(
         'state_changed',
-        (snapshot) => {
-          // console.log(snapshot)
-        },
+        null,
         (error) => {
           console.log(error)
         },
@@ -98,6 +103,22 @@ const ProfileTab = () => {
       }
     }
   }
+
+  const formik = useFormik({
+    initialValues: {
+      email: profile.email,
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      console.log(values)
+    },
+  })
+
+  useEffect(() => {
+    formik.setValues({
+      email: profile.email,
+    })
+  }, [profile])
 
   return (
     <Box sx={{ padding: '20px' }}>
@@ -168,16 +189,22 @@ const ProfileTab = () => {
                   </Select>
                 </FormControl>
               </Grid>
-
               <Grid item xs={12} md={6}>
                 <TextField
                   label="Email"
                   fullWidth
-                  value={profile.email}
-                  onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                  name="email"
+                  value={formik.values.email}
+                  onChange={(e) => {
+                    formik.handleChange(e)
+                    setProfile({ ...profile, email: e.target.value })
+                  }}
+                  onBlur={formik.handleBlur}
                   InputLabelProps={{
                     shrink: !!profile.email,
                   }}
+                  error={formik.touched.email && Boolean(formik.errors.email)}
+                  helperText={formik.touched.email && formik.errors.email}
                 />
               </Grid>
               <Grid item xs={12} md={6}>

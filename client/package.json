@@ -15,9 +15,10 @@
     "@emotion/react": "11.13.3",
     "@emotion/styled": "11.13.0",
     "@marsidev/react-turnstile": "1.0.2",
-    "@mui/icons-material": "6.1.0",
+    "@mui/icons-material": "6.1.2",
     "@mui/lab": "6.0.0-beta.10",
-    "@mui/material": "6.1.1",
+    "@mui/material": "6.1.2",
+    "@mui/utils": "6.1.2",
     "@mui/x-charts": "7.18.0",
     "@mui/x-date-pickers": "7.18.0",
     "apexcharts": "^3.54.0",
@@ -27,6 +28,7 @@
     "dayjs": "1.11.13",
     "dotenv": "16.4.5",
     "firebase": "10.13.2",
+    "formik": "2.4.6",
     "i18next": "23.15.1",
     "react": "18.3.1",
     "react-bootstrap": "2.10.4",
@@ -37,7 +39,8 @@
     "react-slick": "0.30.2",
     "react-toastify": "10.0.5",
     "slick-carousel": "1.8.1",
-    "uuid": "10.0.0"
+    "uuid": "10.0.0",
+    "yup": "1.4.0"
   },
   "devDependencies": {
     "@eslint/js": "9.9.0",
