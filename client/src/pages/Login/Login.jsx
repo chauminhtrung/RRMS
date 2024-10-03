@@ -1,5 +1,3 @@
-import React from 'react'
-
 import FacebookIcon from '@mui/icons-material/Facebook'
 import GoogleIcon from '@mui/icons-material/Google'
 import TwitterIcon from '@mui/icons-material/Twitter'
@@ -49,7 +47,6 @@ const Login = () => {
                 <h3>Đăng nhập tài khoản</h3>
 
                 <form method="POST" className="needs-validation" id="login-form">
-                <form method="POST" className="needs-validation" id="login-form" novalidate="">
                   <input type="hidden" name="_token" value="jkJEHM7McmP1rRwYRqXYkCRrsj0oZZEtjCSD9vlp" />{' '}
                   <div className="container-input">
                     <div className="form-group">
@@ -156,32 +153,15 @@ const Login = () => {
                         title="Tải ứng dụng trên Android"
                       />
                     </a>
-                      <a href="https://play.google.com/store/apps/details?id=com.lozido_room_mobile" target="_blank">
-                        <img
-                          className="img-responsive image-dowload-app"
-                          width="160px"
-                          src="https://quanlytro.me/images/tai-ung-dung-tim-phong-tro-tren-android.png"
-                          alt="Tải ứng dụng trên Android"
-                          title="Tải ứng dụng trên Android"
-                        />
-                      </a>
-                    </div>
-                    <div
-                      className="col-sm-12 col-md-6 text-center text-md-start aos-init aos-animate"
-                      data-aos="fade-left">
-                      <a href="https://apps.apple.com/vn/app/id1560928216" target="_blank">
-                        <img
-                          className="img-responsive image-dowload-app"
-                          width="160px"
-                          src="https://quanlytro.me/images/tai-ung-dung-tim-phong-tro-tren-ios.png"
-                          alt="Tải ứng dụng trên iOS"
-                          title="Tải ứng dụng trên iOS"
-                        />
-                      </a>
-                    </div>
-                    <p style={{ marginTop: '15px', fontSize: ' 13px' }} className="text-center">
-                      * Để đăng nhập bạn phải có tài khoản. Vui lòng đăng ký tài khoản nếu chưa có
-                    </p>
+                    <a href="https://play.google.com/store/apps/details?id=com.lozido_room_mobile" target="_blank">
+                      <img
+                        className="img-responsive image-dowload-app"
+                        width="160px"
+                        src="https://quanlytro.me/images/tai-ung-dung-tim-phong-tro-tren-android.png"
+                        alt="Tải ứng dụng trên Android"
+                        title="Tải ứng dụng trên Android"
+                      />
+                    </a>
                   </div>
                   <div
                     className="col-sm-12 col-md-6 text-center text-md-start aos-init aos-animate"
@@ -200,22 +180,37 @@ const Login = () => {
                     * Để đăng nhập bạn phải có tài khoản. Vui lòng đăng ký tài khoản nếu chưa có
                   </p>
                 </div>
-                <div
-                  className="col-sm-12 col-md-6 text-center text-md-start aos-init aos-animate"
-                  data-aos="fade-left"></div>
-
+                <div className="col-sm-12 col-md-6 text-center text-md-start aos-init aos-animate" data-aos="fade-left">
+                  <a href="https://apps.apple.com/vn/app/id1560928216" target="_blank">
+                    <img
+                      className="img-responsive image-dowload-app"
+                      width="160px"
+                      src="https://quanlytro.me/images/tai-ung-dung-tim-phong-tro-tren-ios.png"
+                      alt="Tải ứng dụng trên iOS"
+                      title="Tải ứng dụng trên iOS"
+                    />
+                  </a>
+                </div>
                 <p style={{ marginTop: '15px', fontSize: ' 13px' }} className="text-center">
                   * Để đăng nhập bạn phải có tài khoản. Vui lòng đăng ký tài khoản nếu chưa có
                 </p>
               </div>
+              <div
+                className="col-sm-12 col-md-6 text-center text-md-start aos-init aos-animate"
+                data-aos="fade-left"></div>
+
+              <p style={{ marginTop: '15px', fontSize: ' 13px' }} className="text-center">
+                * Để đăng nhập bạn phải có tài khoản. Vui lòng đăng ký tài khoản nếu chưa có
+              </p>
             </div>
           </div>
-          <div className="text-center mt-5">
-            <p>
-              Copyright @ <strong>RRMS - Quản lý nhà cho thuê</strong>
-            </p>
-          </div>
         </div>
+        <div className="text-center mt-5">
+          <p>
+            Copyright @ <strong>RRMS - Quản lý nhà cho thuê</strong>
+          </p>
+        </div>
+      </div>
     </body>
   )
 }

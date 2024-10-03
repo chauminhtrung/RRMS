@@ -1,5 +1,18 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab'
-import { Avatar, Box, Container, Divider, Grid, IconButton, Paper, styled, Tab, Typography } from '@mui/material'
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  Divider,
+  Grid,
+  IconButton,
+  InputBase,
+  Paper,
+  styled,
+  Tab,
+  Typography,
+} from '@mui/material'
 import { useEffect, useState } from 'react'
 import ProfileTab from './ProfileTab'
 import imageCompression from 'browser-image-compression'
@@ -8,6 +21,7 @@ import { getProfile } from '~/apis/apiClient'
 import BillingTab from './BillingTab'
 import SecurityTab from './SecurityTab'
 import NotificationTab from './NotificationTab'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -65,7 +79,11 @@ const Profile = () => {
                 <Avatar
                   alt="User Avatar"
                   src={
-                    selectedImage ? URL.createObjectURL(selectedImage) : 'https://mui.com/static/images/avatar/2.jpg'
+                    selectedImage
+                      ? URL.createObjectURL(selectedImage)
+                      : profile.avatar
+                      ? profile.avatar
+                      : 'https://mui.com/static/images/avatar/2.jpg'
                   }
                   sx={{ width: 100, height: 100, margin: 'auto' }}
                 />
@@ -93,7 +111,7 @@ const Profile = () => {
               <Typography variant="subtitle1" color="textSecondary">
                 {profile.username ? profile.username : 'tridung778'}
               </Typography>
-              <Divider sx={{ bgcolor: 'black', mt: 1 }} />
+              <Divider sx={{ bgcolor: '#ced6e0', mt: 1 }} />
               <Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2 }}>
                   <Typography variant="body1">Opportunities applied</Typography>
@@ -101,19 +119,38 @@ const Profile = () => {
                     56
                   </Typography>
                 </Box>
-                <Divider sx={{ bgcolor: 'black' }} />
+                <Divider sx={{ bgcolor: '#ced6e0' }} />
                 <Box item sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2 }}>
                   <Typography variant="body1">Opportunities won</Typography>
                   <Typography variant="body1" color="green">
                     546
                   </Typography>
                 </Box>
-                <Divider sx={{ bgcolor: 'black' }} />
+                <Divider sx={{ bgcolor: '#ced6e0' }} />
                 <Box item sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2 }}>
                   <Typography variant="body1">Current opportunities</Typography>
                   <Typography variant="body1">5676</Typography>
                 </Box>
               </Box>
+              <Divider sx={{ bgcolor: '#ced6e0' }} />
+              <Button sx={{ mt: 5, width: '80%', height: 45 }} variant="outlined">
+                View Public Profile
+              </Button>
+              <Paper
+                variant="outlined"
+                color="primary"
+                sx={{ display: 'flex', alignItems: 'center', width: '80%', mx: 'auto', my: 2 }}>
+                <InputBase
+                  sx={{ ml: 1, flex: 1 }}
+                  placeholder="Link information"
+                  inputProps={{ 'aria-label': 'link information' }}
+                  value={'https://rrms.vercel.app/'}
+                />
+                <Divider sx={{ height: 28 }} orientation="vertical" />
+                <IconButton color="primary" sx={{ p: '10px' }} aria-label="directions">
+                  <ContentCopyIcon />
+                </IconButton>
+              </Paper>
             </Paper>
           </Grid>
           <Grid item xs={12} md={8}>
