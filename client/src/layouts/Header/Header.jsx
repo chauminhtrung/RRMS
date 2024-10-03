@@ -1,22 +1,3 @@
-
-// import {
-//   AppBar,
-//   Avatar,
-//   Box,
-//   Button,
-//   IconButton,
-//   Toolbar,
-//   Tooltip,
-//   Typography,
-// } from "@mui/material";
-import MenuIcon from '@mui/icons-material/Menu'
-// import { Link } from "react-router-dom";
-import Option from './Options/Option'
-// import { useTranslation } from "react-i18next";
-
-import { Link } from 'react-router-dom'
-
-
 import MenuIcon from '@mui/icons-material/Menu'
 import { Link } from 'react-router-dom'
 import Option from './Options/Option'
@@ -51,13 +32,11 @@ const Header = () => {
             <div className="language-option">
               <Option />
 
-
               <a href="/login" className="bk-btn"></a>
 
               <a href="#" className="bk-btn">
                 Đăng nhập
               </a>
-
             </div>
           </div>
 
