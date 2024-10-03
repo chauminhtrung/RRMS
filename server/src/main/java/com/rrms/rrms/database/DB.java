@@ -41,7 +41,7 @@ public class DB {
                         .phone("0333333333")
                         .cccd("admin")
                         .gender(Gender.MALE)
-                        .avatar("https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2FRose-8B1a.jpg?alt=media&token=e9a3460b-23f5-4fc9-97b0-081aabb67a8c")
+                        .avatar("https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
                         .birthday(LocalDate.now())
                         .build());
                 log.info("Admin user created");
@@ -63,7 +63,7 @@ public class DB {
                                 .description("như con cặc")
 
                         .build());
-                log.info("Admin user created");
+                log.info("Search room created");
             }
 
         };

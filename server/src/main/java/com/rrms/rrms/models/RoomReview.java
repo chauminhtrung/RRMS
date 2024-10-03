@@ -24,7 +24,7 @@ public class RoomReview {
     private Account account;
 
     @ManyToOne
-    @JoinColumn(name = "roomId")
+    @JoinColumn(name = "room_id")
     private Room room;
 
     @Column(columnDefinition = "TEXT")

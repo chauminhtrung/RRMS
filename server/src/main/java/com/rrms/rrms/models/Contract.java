@@ -24,15 +24,15 @@ public class Contract {
     private UUID contractId;
 
     @ManyToOne
-    @JoinColumn(name = "roomId")
+    @JoinColumn(name = "room_id")
     private Room room;
 
     @ManyToOne
-    @JoinColumn(name = "usernameTenant")
+    @JoinColumn(name = "username_tenant")
     private Account tenant;
 
     @ManyToOne
-    @JoinColumn(name = "usernameLandlord")
+    @JoinColumn(name = "username_landlord")
     private Account landlord;
 
     @Column(columnDefinition = "DATE")

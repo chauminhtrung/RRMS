@@ -63,7 +63,7 @@ const ItemSearch = () => {
       {/* Các bước đăng tin */}
       <Box sx={{ mt: 4 }}>
         <Typography variant="h5" sx={{ textAlign: 'center', fontWeight: 'bold', mt: 3 }}>
-          Các bước đăng tin LOZIDO
+          Các bước đăng tin DQ4T
         </Typography>
         <Typography variant="h6" sx={{ textAlign: 'center', mt: 3 }}>
           Tiếp cận khách thuê dễ dàng với tính năng đăng tin
@@ -91,7 +91,7 @@ const ItemSearch = () => {
       </Box>
       <Box sx={{ mt: 4, textAlign: 'center' }}>
         <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-          LOZIDO có gì?
+          DQ4T có gì?
         </Typography>
         <Typography variant="h6" sx={{ mt: 2 }}>
           Tại sao bạn phải chọn chúng tôi mà không phải một dịch vụ nào khác?

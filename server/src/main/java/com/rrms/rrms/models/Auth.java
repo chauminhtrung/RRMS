@@ -24,6 +24,6 @@ public class Auth {
     private Account account;
 
     @ManyToOne
-    @JoinColumn(name = "roleId")
+    @JoinColumn(name = "role_id")
     private Role role;
 }

@@ -20,10 +20,10 @@ public class MotelService {
     private UUID motelServiceId;
 
     @ManyToOne
-    @JoinColumn(name = "motelId")
+    @JoinColumn(name = "motel_id")
     private Motel motel;
 
     @ManyToOne
-    @JoinColumn(name = "nameMotelServiceId")
+    @JoinColumn(name = "name_motel_service_id")
     private NameMotelService nameMotelService;
 }
