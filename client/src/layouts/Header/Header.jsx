@@ -1,3 +1,4 @@
+
 // import {
 //   AppBar,
 //   Avatar,
@@ -15,6 +16,11 @@ import Option from './Options/Option'
 
 import { Link } from 'react-router-dom'
 
+
+import MenuIcon from '@mui/icons-material/Menu'
+import { Link } from 'react-router-dom'
+import Option from './Options/Option'
+
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone'
 import EmailIcon from '@mui/icons-material/Email'
 import FacebookIcon from '@mui/icons-material/Facebook'
@@ -27,7 +33,6 @@ import './Header.css'
 
 const Header = () => {
   // const { t } = useTranslation()
-
   return (
     <>
       {/* Offcanvas Menu Section Begin  */}
@@ -46,7 +51,13 @@ const Header = () => {
             <div className="language-option">
               <Option />
 
+
               <a href="/login" className="bk-btn"></a>
+
+              <a href="#" className="bk-btn">
+                Đăng nhập
+              </a>
+
             </div>
           </div>
 
@@ -213,6 +224,12 @@ const Header = () => {
                       </li>
                       <li>
                         <a href="./contact.html">RRMS Plus+</a>
+                      </li>
+                      <li>
+                        <a href="/introduce">Introduce</a>
+                      </li>
+                      <li>
+                        <a href="/contact">Contact</a>
                       </li>
                     </ul>
                   </nav>

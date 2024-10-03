@@ -9,6 +9,14 @@ export const getDetail = async () => {
   return await axios.get('https://dummyjson.com/c/1075-ae39-4e61-82cc')
 }
 
+export const getProfile = async (username) => {
+  return await axios.get(`http://localhost:8080/profile?username=${username}`)
+}
+
+export const updateProfile = async (data) => {
+  return await axios.put('http://localhost:8080/profile', data)
+}
+
 export const getImages = async () => {
   return await axios.get('http://localhost:8000/api/images')
 }
