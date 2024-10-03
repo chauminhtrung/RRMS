@@ -25,11 +25,11 @@ public class Invoice {
     private Account account;
 
     @ManyToOne
-    @JoinColumn(name = "roomId")
+    @JoinColumn(name = "room_id")
     private Room room;
 
     @ManyToOne
-    @JoinColumn(name = "paymentId")
+    @JoinColumn(name = "payment_id")
     private Payment payment;
 
     @Column(columnDefinition = "VARCHAR(50)")

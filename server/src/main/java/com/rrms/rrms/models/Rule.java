@@ -17,6 +17,7 @@ public class Rule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "rule_id")
     private UUID ruleId;
 
     @Column(columnDefinition = "NVARCHAR(255)")

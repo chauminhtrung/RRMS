@@ -21,7 +21,7 @@ public class BulletinBoard {
     private UUID bulletinBoardId;
 
     @ManyToOne
-    @JoinColumn(name = "roomId")
+    @JoinColumn(name = "room_id")
     private Room room;
 
     @ManyToOne
