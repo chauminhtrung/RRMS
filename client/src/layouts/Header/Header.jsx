@@ -1,4 +1,3 @@
-
 // import {
 //   AppBar,
 //   Avatar,
@@ -17,9 +16,6 @@ import Option from './Options/Option'
 import { Link } from 'react-router-dom'
 
 
-import MenuIcon from '@mui/icons-material/Menu'
-import { Link } from 'react-router-dom'
-import Option from './Options/Option'
 
 
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone'
@@ -53,6 +49,7 @@ const Header = () => {
               <Option />
 
               <a href="/login" className="bk-btn"></a>
+
 
               <a href="#" className="bk-btn">
                 Đăng nhập

@@ -1,4 +1,6 @@
+
 import React from 'react'
+
 
 import FacebookIcon from '@mui/icons-material/Facebook'
 import GoogleIcon from '@mui/icons-material/Google'
@@ -47,8 +49,6 @@ const Login = () => {
             <div className="row login-form-container">
               <div className="col-md-6 login-form-1" style={{ backgroundColor: '#fff' }}>
                 <h3>Đăng nhập tài khoản</h3>
-
-                <form method="POST" className="needs-validation" id="login-form">
                 <form method="POST" className="needs-validation" id="login-form" novalidate="">
                   <input type="hidden" name="_token" value="jkJEHM7McmP1rRwYRqXYkCRrsj0oZZEtjCSD9vlp" />{' '}
                   <div className="container-input">
@@ -156,6 +156,7 @@ const Login = () => {
                         title="Tải ứng dụng trên Android"
                       />
                     </a>
+
                       <a href="https://play.google.com/store/apps/details?id=com.lozido_room_mobile" target="_blank">
                         <img
                           className="img-responsive image-dowload-app"
