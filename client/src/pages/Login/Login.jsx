@@ -1,13 +1,9 @@
 
-import React from 'react'
-
 import FacebookIcon from '@mui/icons-material/Facebook'
 import GoogleIcon from '@mui/icons-material/Google'
 import TwitterIcon from '@mui/icons-material/Twitter'
 import InstagramIcon from '@mui/icons-material/Instagram'
 import './Login.css'
-
-import { Link } from 'react-router-dom'
 
 import { Link } from 'react-router-dom'
 
@@ -51,9 +47,7 @@ const Login = () => {
               <div className="col-md-6 login-form-1" style={{ backgroundColor: '#fff' }}>
                 <h3>Đăng nhập tài khoản</h3>
 
-                <form method="POST" className="needs-validation" id="login-form">
-
-                <form method="POST" className="needs-validation" id="login-form" novalidate="">
+                <form method="POST" className="needs-validation" id="login-form" >
 
                   <input type="hidden" name="_token" value="jkJEHM7McmP1rRwYRqXYkCRrsj0oZZEtjCSD9vlp" />{' '}
                   <div className="container-input">
@@ -153,7 +147,6 @@ const Login = () => {
                       className="col-sm-12 col-md-6 text-center text-md-start aos-init aos-animate"
                       data-aos="fade-left"></div>
 
-                      data-aos="fade-right">
                       <a href="https://play.google.com/store/apps/details?id=com.lozido_room_mobile" target="_blank">
                         <img
                           className="img-responsive image-dowload-app"
@@ -199,7 +192,6 @@ const Login = () => {
             </div>
           </div>
         </div>
-      </div>
     </body>
   )
 }
