@@ -41,7 +41,7 @@ public class DB {
                         .phone("0333333333")
                         .cccd("admin")
                         .gender(Gender.MALE)
-                        .avatar("https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2Fbc4d30b3-d825-4d1f-adb5-4303065605c1?alt=media&token=9f99edfc-a408-43af-8551-25e6dc945edd")
+                        .avatar("https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
                         .birthday(LocalDate.now())
                         .build());
                 log.info("Admin user created");
