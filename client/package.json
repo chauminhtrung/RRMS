@@ -23,6 +23,7 @@
     "apexcharts": "^3.54.0",
     "axios": "1.7.7",
     "bootstrap": "5.3.3",
+    "browser-image-compression": "2.0.2",
     "dayjs": "1.11.13",
     "dotenv": "16.4.5",
     "firebase": "10.13.2",
