@@ -21,6 +21,8 @@ import FirstPageIcon from '@mui/icons-material/FirstPage'
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
 import LastPageIcon from '@mui/icons-material/LastPage'
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 
 function TablePaginationActions(props) {
   const theme = useTheme()
@@ -109,13 +111,15 @@ const BillingTab = () => {
     setPage(0)
   }
   return (
-    <Box sx={{ padding: '20px' }}>
-      <Grid container spacing={4}>
+    <Box>
+      <Grid container spacing={4} sx={{ height: '100%' }}>
         {/* Billing Info Section */}
         <Grid item xs={12} md={4}>
-          <Paper elevation={3} sx={{ padding: '20px' }}>
-            <Typography variant="h6">Chi tiêu trong tháng</Typography>
-            <Typography variant="h4" sx={{ marginTop: '10px' }}>
+          <Paper
+            variant="outlined"
+            sx={{ p: 1, height: '100%', display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+            <Typography variant="subtitle1">Chi tiêu trong tháng</Typography>
+            <Typography variant="h6" color="warning" sx={{ marginTop: '10px' }}>
               {formatterAmount(1000000)}
             </Typography>
             <Button variant="text" sx={{ marginTop: '10px' }}>
@@ -125,10 +129,18 @@ const BillingTab = () => {
         </Grid>
 
         <Grid item xs={12} md={4}>
-          <Paper elevation={3} sx={{ padding: '20px' }}>
-            <Typography variant="h6">Chi tiêu so với tháng trước</Typography>
-            <Typography variant="h4" sx={{ marginTop: '10px' }}>
+          <Paper
+            variant="outlined"
+            sx={{ p: 1, height: '100%', display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+            <Typography variant="subtitle1">Chi tiêu so với tháng trước</Typography>
+            <Typography
+              variant="h6"
+              sx={{
+                marginTop: '10px',
+                color: formatterAmount(1300000) > formatterAmount(1000000) ? '#2ed573' : '#ff4757',
+              }}>
               {formatterAmount(1300000)}
+              {formatterAmount(1300000) > formatterAmount(1000000) ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
             </Typography>
             <Button variant="text" sx={{ marginTop: '10px' }}>
               Xem chi tiết
@@ -137,9 +149,11 @@ const BillingTab = () => {
         </Grid>
 
         <Grid item xs={12} md={4}>
-          <Paper elevation={3} sx={{ padding: '20px' }}>
-            <Typography variant="h6">Dư nợ phải trả</Typography>
-            <Typography variant="h4" sx={{ marginTop: '10px' }}>
+          <Paper
+            variant="outlined"
+            sx={{ p: 1, height: '100%', display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+            <Typography variant="subtitle1">Dư nợ phải trả</Typography>
+            <Typography variant="h6" sx={{ marginTop: '10px', color: '#ff4757' }}>
               {formatterAmount(0)}
             </Typography>
             <Button variant="text" sx={{ marginTop: '10px' }}>
@@ -150,7 +164,7 @@ const BillingTab = () => {
 
         {/* Billing History Section */}
         <Grid item xs={12}>
-          <Paper elevation={3} sx={{ padding: '20px' }}>
+          <Paper variant="outlined" sx={{ padding: '20px' }}>
             <Typography variant="h6" gutterBottom>
               Lịch sử chi tiêu
             </Typography>

@@ -1,5 +1,4 @@
 import { createTheme } from '@mui/material/styles'
-
 const theme = createTheme({
   colorSchemes: {
     light: {
@@ -27,9 +26,20 @@ const theme = createTheme({
   components: {
     MuiTabs: {
       styleOverrides: {
+        indicator: {
+          backgroundColor: 'primary.main',
+        },
         root: {
           height: '40px',
           alignItems: 'center',
+        },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          fontSize: '16px',
         },
       },
     },
