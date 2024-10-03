@@ -20,10 +20,10 @@ public class MotelRule {
     private UUID motelRuleId;
 
     @ManyToOne
-    @JoinColumn(name = "motelId")
+    @JoinColumn(name = "motel_id")
     private Motel motel;
 
     @ManyToOne
-    @JoinColumn(name = "ruleId")
+    @JoinColumn(name = "rule_id")
     private Rule rule;
 }

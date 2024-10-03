@@ -49,6 +49,7 @@ function App() {
           {/* <Route path="/test" element={<TestPage />} /> */}
           <Route path="/AdminManagerBoard" element={<AdminManagerBoard />} />
           {/* <Routes path="/test" element={<TestPage />} /> */}
+          <Route path="/AdminManagerBoard" element={<AdminManagerBoard />} />
         </Routes>
         <Footer />
       </Router>

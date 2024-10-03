@@ -20,11 +20,11 @@ public class Notification {
     private UUID notificationId;
 
     @ManyToOne
-    @JoinColumn(name = "usernameLandlord")
+    @JoinColumn(name = "username_landlord")
     private Account landlord;
 
     @ManyToOne
-    @JoinColumn(name = "usernameTenant")
+    @JoinColumn(name = "username_tenant")
     private Account tenant;
 
     @Column(columnDefinition = "VARCHAR(255)")
@@ -33,6 +33,6 @@ public class Notification {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @Column(columnDefinition = "INT")
+    @Column(columnDefinition = "INT", name = "number_of_recipients")
     private int numberOfRecipients;
 }

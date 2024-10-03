@@ -20,10 +20,10 @@ public class NotificationRoom {
     private UUID notificationRoomId;
 
     @ManyToOne
-    @JoinColumn(name = "roomId")
+    @JoinColumn(name = "room_id")
     private Room room;
 
     @ManyToOne
-    @JoinColumn(name = "notificationId")
+    @JoinColumn(name = "notification_id")
     private Notification notification;
 }

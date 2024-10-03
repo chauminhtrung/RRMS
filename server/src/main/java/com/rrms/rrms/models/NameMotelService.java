@@ -17,6 +17,7 @@ public class NameMotelService {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "name_motel_services_id")
     private UUID nameMotelServicesId;
 
     @Column(columnDefinition = "NVARCHAR(255)")

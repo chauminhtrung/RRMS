@@ -20,10 +20,10 @@ public class RoomService {
     private UUID roomServiceId;
 
     @ManyToOne
-    @JoinColumn(name = "roomId")
+    @JoinColumn(name = "room_id")
     private Room room;
 
     @ManyToOne
-    @JoinColumn(name = "serviceId")
+    @JoinColumn(name = "service_id")
     private Service service;
 }
