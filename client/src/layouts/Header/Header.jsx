@@ -12,6 +12,9 @@ import MenuIcon from '@mui/icons-material/Menu'
 // import { Link } from "react-router-dom";
 import Option from './Options/Option'
 // import { useTranslation } from "react-i18next";
+
+import { Link } from 'react-router-dom'
+
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone'
 import EmailIcon from '@mui/icons-material/Email'
 import FacebookIcon from '@mui/icons-material/Facebook'
@@ -23,7 +26,8 @@ import CloseIcon from '@mui/icons-material/Close'
 import './Header.css'
 
 const Header = () => {
-  // const { t } = useTranslation();
+  // const { t } = useTranslation()
+
   return (
     <>
       {/* Offcanvas Menu Section Begin  */}
@@ -41,10 +45,8 @@ const Header = () => {
           <div className="header-configure-area">
             <div className="language-option">
               <Option />
-              <a href="/login" className="bk-btn">
-                {' '}
-                Đăng nhập
-              </a>
+
+              <a href="/login" className="bk-btn"></a>
             </div>
           </div>
 
@@ -158,9 +160,9 @@ const Header = () => {
                       <LinkedInIcon />
                     </a>
                   </div>
-                  <a href="/login" className="bk-btn">
+                  <Link to="/login" className="bk-btn">
                     Đăng nhập
-                  </a>
+                  </Link>
                   <div className="language-option">
                     <Option />
                   </div>
@@ -174,8 +176,9 @@ const Header = () => {
             <div className="row">
               <div className="col-lg-2">
                 <div className="logo">
-                  <a href="./index.html"></a>
-                  <img src="./logo.png" alt="" className="ImageLogo" />
+                  <Link to="/">
+                    <img src="./logo.png" alt="" className="ImageLogo" />
+                  </Link>
                 </div>
               </div>
               <div className="col-lg-10">

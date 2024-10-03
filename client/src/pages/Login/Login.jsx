@@ -3,6 +3,9 @@ import GoogleIcon from '@mui/icons-material/Google'
 import TwitterIcon from '@mui/icons-material/Twitter'
 import InstagramIcon from '@mui/icons-material/Instagram'
 import './Login.css'
+
+import { Link } from 'react-router-dom'
+
 const Login = () => {
   return (
     <body
@@ -17,7 +20,7 @@ const Login = () => {
         <div className="login-container d-flex" id="login">
           <div className="login-content-container">
             <div className="col-md-12 text-center mt-5">
-              <a href="/" title="LOZIDO - Quản lý nhà cho thuê">
+              <Link to="/" title="LOZIDO - Quản lý nhà cho thuê">
                 <img
                   style={{
                     borderRadius: '100%',
@@ -31,7 +34,7 @@ const Login = () => {
                   alt="Logo LOZIDO - Quản lý nhà cho thuê"
                   title="LOZIDO - Quản lý nhà cho thuê"
                 />
-              </a>
+              </Link>
               <h2 className="mb-4 title">
                 <span className="title-feature">PHẦN MỀM QUẢN LÝ NHÀ TRỌ</span>
                 <br />
@@ -104,12 +107,12 @@ const Login = () => {
                     </a>
                   </div>
                   <div className="form-group d-flex justify-content-between">
-                    <a type="button" className="btn btn-link" href="/register">
+                    <Link type="button" className="btn btn-link" to="/register">
                       Tạo tài khoản
-                    </a>
-                    <a type="button" className="btn btn-link" href="/forgot-password">
+                    </Link>
+                    <Link type="button" className="btn btn-link" to="/forgot-password">
                       Quên mật khẩu
-                    </a>
+                    </Link>
                   </div>
                 </form>
               </div>
@@ -140,10 +143,14 @@ const Login = () => {
                     <div
                       className="col-sm-12 col-md-6 text-center text-md-start aos-init aos-animate"
                       data-aos="fade-left"></div>
-                    <p style={{ marginTop: '15px', fontSize: ' 13px' }} className="text-center">
-                      * Để đăng nhập bạn phải có tài khoản. Vui lòng đăng ký tài khoản nếu chưa có
-                    </p>
                   </div>
+                  <div
+                    className="col-sm-12 col-md-6 text-center text-md-start aos-init aos-animate"
+                    data-aos="fade-left"></div>
+
+                  <p style={{ marginTop: '15px', fontSize: ' 13px' }} className="text-center">
+                    * Để đăng nhập bạn phải có tài khoản. Vui lòng đăng ký tài khoản nếu chưa có
+                  </p>
                 </div>
               </div>
             </div>
