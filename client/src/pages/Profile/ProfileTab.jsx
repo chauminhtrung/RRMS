@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Avatar,
   Box,
@@ -20,6 +21,9 @@ import { v4 } from 'uuid'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { storage } from '~/configs/firebaseConfig'
 import { toast } from 'react-toastify'
+import imageCompression from 'browser-image-compression'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -32,42 +36,93 @@ const VisuallyHiddenInput = styled('input')({
   whiteSpace: 'nowrap',
   width: 1,
 })
+
+const validationSchema = Yup.object({
+  email: Yup.string().email('Email không hợp lệ').required('Bắt buộc nhập email'),
+})
+
 const ProfileTab = () => {
   const [profile, setProfile] = useState({})
-  const imageName = v4()
+  const [selectedImage, setSelectedImage] = useState(null)
+
   useEffect(() => {
     getProfile('admin').then((res) => {
       setProfile(res.data.result)
     })
   }, [])
+  const handleUpload = () => {
+    toast.info('Đang thay đổi thông tin!')
 
-  const handleUpload = (image) => {
-    if (image) {
-      toast.info('Đang đổi ảnh đại diện')
-      const storageRef = ref(storage, `images/${imageName}`)
-      const uploadTask = uploadBytesResumable(storageRef, image)
+    if (selectedImage) {
+      const imageName = v4()
+      const storageRef = ref(storage, `images/account-avatar/${imageName}`)
+      const uploadTask = uploadBytesResumable(storageRef, selectedImage)
 
       uploadTask.on(
         'state_changed',
-        (snapshot) => {
-          console.log(snapshot)
-        },
+        null,
         (error) => {
           console.log(error)
+          toast.error('Có lỗi xảy ra khi tải lên hình ảnh.')
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-            toast.info('Đổi ảnh đại diện thành công')
-            setProfile((prevProfile) => ({ ...prevProfile, avatar: url }))
+            setProfile((prevProfile) => {
+              const updatedProfile = { ...prevProfile, avatar: url }
+              updateProfile(updatedProfile)
+              toast.success('Thay đổi thông tin thành công!')
+              return updatedProfile
+            })
           })
         }
       )
+    } else {
+      updateProfile(profile)
+      toast.success('Thay đổi thông tin thành công!')
     }
   }
-  const updateProfileHadnler = async (data) => {
-    updateProfile(data)
-    toast.info('Thay đổi thông tin thành công')
+
+  useEffect(() => {
+    return () => {
+      if (selectedImage) {
+        URL.revokeObjectURL(selectedImage)
+      }
+    }
+  }, [selectedImage])
+
+  const handleImageChange = async (event) => {
+    const image = event.target.files[0]
+    if (image) {
+      try {
+        const options = {
+          maxSizeMB: 1,
+          maxWidthOrHeight: 800,
+          useWebWorker: true,
+        }
+
+        const compressedImage = await imageCompression(image, options)
+        setSelectedImage(compressedImage)
+      } catch (error) {
+        console.log('Lỗi khi nén ảnh:', error)
+      }
+    }
   }
+
+  const formik = useFormik({
+    initialValues: {
+      email: profile.email,
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      console.log(values)
+    },
+  })
+
+  useEffect(() => {
+    formik.setValues({
+      email: profile.email,
+    })
+  }, [profile])
 
   return (
     <Box sx={{ padding: '20px' }}>
@@ -75,7 +130,11 @@ const ProfileTab = () => {
         {/* Profile Picture Section */}
         <Grid item xs={12} md={4}>
           <Paper elevation={3} sx={{ padding: '40px', textAlign: 'center' }}>
-            <Avatar alt="Image" src={profile.avatar} sx={{ width: 200, height: 200, margin: 'auto' }} />
+            <Avatar
+              alt="Image"
+              src={selectedImage ? URL.createObjectURL(selectedImage) : profile.avatar}
+              sx={{ width: 200, height: 200, margin: 'auto' }}
+            />
             <Button
               component="label"
               role={undefined}
@@ -84,7 +143,7 @@ const ProfileTab = () => {
               sx={{ marginTop: '20px' }}
               startIcon={<CloudUploadIcon />}>
               Tải ảnh lên
-              <VisuallyHiddenInput type="file" onChange={(event) => handleUpload(event.target.files[0])} multiple />
+              <VisuallyHiddenInput type="file" accept="image/*" onChange={(event) => handleImageChange(event)} />
             </Button>
           </Paper>
         </Grid>
@@ -134,16 +193,22 @@ const ProfileTab = () => {
                   </Select>
                 </FormControl>
               </Grid>
-
               <Grid item xs={12} md={6}>
                 <TextField
                   label="Email"
                   fullWidth
-                  value={profile.email}
-                  onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                  name="email"
+                  value={formik.values.email}
+                  onChange={(e) => {
+                    formik.handleChange(e)
+                    setProfile({ ...profile, email: e.target.value })
+                  }}
+                  onBlur={formik.handleBlur}
                   InputLabelProps={{
                     shrink: !!profile.email,
                   }}
+                  error={formik.touched.email && Boolean(formik.errors.email)}
+                  helperText={formik.touched.email && formik.errors.email}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
@@ -182,7 +247,7 @@ const ProfileTab = () => {
               </Grid>
 
               <Grid item xs={12}>
-                <Button variant="contained" color="primary" fullWidth onClick={() => updateProfileHadnler(profile)}>
+                <Button variant="contained" color="primary" fullWidth onClick={handleUpload}>
                   Lưu thay đổi
                 </Button>
               </Grid>
