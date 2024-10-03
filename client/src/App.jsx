@@ -8,7 +8,11 @@ import Footer from './layouts/Footer/Footer'
 import Login from './pages/Login/Login'
 import Register from './pages/Register/Register'
 import Forgot_Password from './pages/Forgot-Password/Forgot_Password'
+
+import Support from './pages/Support/Support'
+
 import AdminStatis from './pages/admin/statistical'
+
 import { env } from './configs/environment'
 import MainManagement from './pages/admin/MainManagement'
 import Contact from './pages/Contact/Contact'
@@ -39,8 +43,11 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/forgot-password" element={<Forgot_Password />} />
+          <Route path="/support" element={<Support />} />
+          {/* <Route path="/test" element={<TestPage />} /> */}
           <Route path="/AdminManagerBoard" element={<AdminManagerBoard />} />
           {/* <Routes path="/test" element={<TestPage />} /> */}
+
         </Routes>
         <Footer />
       </Router>
