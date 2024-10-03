@@ -4,7 +4,12 @@ import RecentActorsRoundedIcon from '@mui/icons-material/RecentActorsRounded'
 import MailRoundedIcon from '@mui/icons-material/MailRounded'
 const ItemSearch = () => {
   return (
-    <Box sx={{ padding: 1 }}>
+    <Box
+      sx={{
+        padding: 1,
+        bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542'),
+        color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894'),
+      }}>
       <Typography variant="h6" sx={{ mt: 2 }}>
         Cho thuê phòng trọ:
       </Typography>

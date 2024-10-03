@@ -10,22 +10,93 @@ function FilterSearch() {
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
 
-  const [gia, setGia] = useState([0, 50])
-  const [dienTich, setDienTich] = useState([0, 50])
+  const [range, setRange] = useState([0, 50])
+  const [selectedValue, setSelectedValue] = useState('Dưới 50 triệu')
+  const [area, setArea] = useState([0, 50])
+  const [selectedValueArea, setSelectedValueArea] = useState('Dưới 50 m2')
 
-  const handleDienTichChange = (event, newValue) => {
-    setDienTich(event.target.value)
-    setDienTich(newValue)
+  const handleAreaChange = (event) => {
+    const selectedValueArea = event.target.value
+
+    // Cập nhật state cho Select và Slider dựa trên giá trị của MenuItem
+    switch (selectedValueArea) {
+      case '1-5':
+        setArea([1, 5])
+        break
+      case '5-10':
+        setArea([5, 10])
+        break
+      case '10-15':
+        setArea([10, 15])
+        break
+      case '0-50':
+        setArea([0, 50])
+        break
+      default:
+        setArea([0, 50])
+    }
+    setSelectedValueArea(event.target.value)
+  }
+  const handleSliderChangeArea = (event, newValue) => {
+    setArea(newValue) // Cập nhật khoảng giá theo Slider
+
+    // Chuyển đổi khoảng giá của Slider thành chuỗi tương ứng để hiển thị trong Select
+    const [min, max] = newValue
+    if (min === 0 && max === 50) {
+      setSelectedValueArea('Dưới 50 triệu')
+    } else if (min === 1 && max === 5) {
+      setSelectedValueArea('1-5')
+    } else if (min === 5 && max === 10) {
+      setSelectedValueArea('5-10')
+    } else if (min === 10 && max === 15) {
+      setSelectedValueArea('10-15')
+    } else {
+      setSelectedValueArea(`Giá từ ${min} m2 đến ${max} m2`) // Hiển thị giá trị tùy chỉnh khi di chuyển Slider
+    }
   }
 
-  const handleChange = (event, newValue) => {
-    setGia(event.target.value)
-    setGia(newValue)
-  }
+  const handleGiaChange = (event) => {
+    const selectedValue = event.target.value
 
-  const valuetext = (value) => {
-    return `${value}°C`
+    // Cập nhật state cho Select và Slider dựa trên giá trị của MenuItem
+    switch (selectedValue) {
+      case '1-5':
+        setRange([1, 5]) // Từ 1 triệu - 5 triệu
+        break
+      case '5-10':
+        setRange([5, 10]) // Từ 5 triệu - 10 triệu
+        break
+      case '10-15':
+        setRange([10, 15]) // Từ 10 triệu - 15 triệu
+        break
+      case '0-50':
+        setRange([0, 50]) // Dưới 50 triệu
+        break
+      default:
+        setRange([0, 50]) // Giá trị mặc định khi không khớp
+    }
+    setSelectedValue(event.target.value)
   }
+  const handleSliderChange = (event, newValue) => {
+    setRange(newValue) // Cập nhật khoảng giá theo Slider
+
+    // Chuyển đổi khoảng giá của Slider thành chuỗi tương ứng để hiển thị trong Select
+    const [min, max] = newValue
+    if (min === 0 && max === 50) {
+      setSelectedValue('Dưới 50 triệu')
+    } else if (min === 1 && max === 5) {
+      setSelectedValue('1-5')
+    } else if (min === 5 && max === 10) {
+      setSelectedValue('5-10')
+    } else if (min === 10 && max === 15) {
+      setSelectedValue('10-15')
+    } else {
+      setSelectedValue(`Giá từ ${min} triệu đến ${max} triệu`) // Hiển thị giá trị tùy chỉnh khi di chuyển Slider
+    }
+  }
+  // const valuetext = (value) => {
+  //   return `${value}°C`
+  // }
 
   return (
     <section id="search-home">
@@ -127,81 +198,57 @@ function FilterSearch() {
         <li className="price dropup">
           <Select
             style={{ height: '100%', backgroundColor: '#ffffff', width: '137px' }}
-            labelId="demo-simple-select-helper-label"
-            id="demo-simple-select-helper"
-            value={gia}
-            label="Giá"
-            onChange={handleChange}>
+            value={selectedValue} // Chuyển đổi state range sang dạng '1-5' để khớp với giá trị của MenuItem
+            onChange={handleGiaChange}
+            displayEmpty>
             <Typography gutterBottom sx={{ mt: 2, mx: 1.5 }}>
               Khoảng giá (Triệu)
             </Typography>
-            {/* Slider cho Giá */}
             <Box sx={{ mx: 1.5, my: 2 }}>
               <Slider
-                getAriaLabel={() => 'Temperature range'}
-                value={gia}
-                onChange={handleChange}
-                valueLabelDisplay="auto"
-                getAriaValueText={valuetext}
+                value={range} // Sử dụng state range để thiết lập giá trị của Slider
+                onChange={handleSliderChange}
                 max={50}
-                sx={{
-                  width: {
-                    xs: '100%', // Chiều rộng cho màn hình nhỏ (mobile)
-                    sm: '100%', // Chiều rộng cho màn hình trung bình (tablet)
-                    md: '100%', // Chiều rộng cho màn hình lớn hơn
-                  },
-                }}
+                sx={{ width: '100%' }}
+                valueLabelDisplay="auto"
               />
             </Box>
-            <Typography sx={{ mx: 1.5 }}>{`Giá từ: ${gia[0]} triệu - ${gia[1]} triệu`}</Typography>
+            <Typography sx={{ mx: 1.5 }}>{`Giá từ: ${range[0]} triệu đến ${range[1]} triệu`}</Typography>
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            <MenuItem value={10}>Dưới 1 triệu</MenuItem>
-            <MenuItem value={20}>Từ 1 triệu - 5 triệu</MenuItem>
-            <MenuItem value={30}>Từ 5 triệu - 10 triệu</MenuItem>
-            <MenuItem value={40}>Dưới 50 triệu</MenuItem>
+            <MenuItem value="1-5">Từ 1 - 5 triệu</MenuItem>
+            <MenuItem value="5-10">Từ 5 triệu - 10 triệu</MenuItem>
+            <MenuItem value="10-15">Từ 10 triệu - 15 triệu</MenuItem>
+            <MenuItem value="0-50">Dưới 50 triệu</MenuItem>
           </Select>
         </li>
         <li className="area dropup">
           <Select
             style={{ height: '100%', backgroundColor: '#ffffff', width: '137px' }}
-            labelId="demo-simple-select-helper-label"
-            id="demo-simple-select-helper"
-            value={dienTich}
-            label="Diện Tích"
-            onChange={handleDienTichChange}>
+            value={selectedValueArea} // Chuyển đổi state range sang dạng '1-5' để khớp với giá trị của MenuItem
+            onChange={handleAreaChange}
+            displayEmpty>
             <Typography gutterBottom sx={{ mt: 2, mx: 1.5 }}>
-              Diện tích (m²)
+              Khoảng giá (Triệu)
             </Typography>
-
-            {/* Slider cho Diện Tích */}
             <Box sx={{ mx: 1.5, my: 2 }}>
               <Slider
-                getAriaLabel={() => 'Temperature range'}
-                value={dienTich}
-                onChange={handleDienTichChange}
-                valueLabelDisplay="auto"
-                getAriaValueText={valuetext}
+                value={area} // Sử dụng state range để thiết lập giá trị của Slider
+                onChange={handleSliderChangeArea}
                 max={50}
-                sx={{
-                  width: {
-                    xs: '100%', // Chiều rộng cho màn hình nhỏ (mobile)
-                    sm: '100%', // Chiều rộng cho màn hình trung bình (tablet)
-                    md: '100%', // Chiều rộng cho màn hình lớn hơn
-                  },
-                }}
+                sx={{ width: '100%' }}
+                valueLabelDisplay="auto"
               />
             </Box>
-
-            <Typography sx={{ mx: 1.5 }}>{`Diện tích từ: ${dienTich[0]} m² - ${dienTich[1]} m²`}</Typography>
+            <Typography sx={{ mx: 1.5 }}>{`Giá từ: ${area[0]} m2 đến ${area[1]} m2`}</Typography>
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            <MenuItem value={10}>Dưới 50m²</MenuItem>
-            <MenuItem value={20}>50m² - 100m²</MenuItem>
-            <MenuItem value={30}>100m² - 200m²</MenuItem>
-            <MenuItem value={40}>Trên 200m²</MenuItem>
+            <MenuItem value="1-5">Từ 1 - 5 m2</MenuItem>
+            <MenuItem value="5-10">Từ 5 - 10 m2</MenuItem>
+            <MenuItem value="10-15">Từ 10 - 15 m2</MenuItem>
+            <MenuItem value="0-50">Dưới 50 m2</MenuItem>
           </Select>
         </li>
         <li className="btn-search">
