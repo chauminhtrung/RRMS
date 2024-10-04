@@ -7336,7 +7336,7 @@
         <mxCell id="pAbQ4odnhJDFXXQEGx0p-377" value="User&lt;span style=&quot;color: rgba(0, 0, 0, 0); font-family: monospace; font-size: 0px; font-weight: 400; text-align: start; text-wrap: nowrap;&quot;&gt;%3CmxGraphModel%3E%3Croot%3E%3CmxCell%20id%3D%220%22%2F%3E%3CmxCell%20id%3D%221%22%20parent%3D%220%22%2F%3E%3CmxCell%20id%3D%222%22%20value%3D%22Database%22%20style%3D%22swimlane%3BwhiteSpace%3Dwrap%3Bhtml%3D1%3B%22%20vertex%3D%221%22%20parent%3D%221%22%3E%3CmxGeometry%20x%3D%22690%22%20y%3D%22964%22%20width%3D%22293%22%20height%3D%22388%22%20as%3D%22geometry%22%2F%3E%3C%2FmxCell%3E%3CmxCell%20id%3D%223%22%20value%3D%22L%C6%B0u%20v%C3%A0o%20database%22%20style%3D%22rounded%3D1%3BwhiteSpace%3Dwrap%3Bhtml%3D1%3BfillColor%3D%23fff2cc%3BstrokeColor%3D%23000000%3BperimeterSpacing%3D0%3BstrokeWidth%3D1%3Bglass%3D0%3Bshadow%3D0%3B%22%20vertex%3D%221%22%20parent%3D%222%22%3E%3CmxGeometry%20x%3D%2281%22%20y%3D%22184%22%20width%3D%22139%22%20height%3D%2289%22%20as%3D%22geometry%22%2F%3E%3C%2FmxCell%3E%3C%2Froot%3E%3C%2FmxGraphModel%3E&lt;/span&gt;" style="swimlane;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1028" y="1473" width="319" height="388" as="geometry" />
         </mxCell>
-        <mxCell id="pAbQ4odnhJDFXXQEGx0p-378" value="Chọn trọ cần chỉnh sữa" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;perimeterSpacing=0;strokeWidth=1;glass=0;shadow=0;" parent="pAbQ4odnhJDFXXQEGx0p-377" vertex="1">
+        <mxCell id="pAbQ4odnhJDFXXQEGx0p-378" value="Chọn trọ chỉnh sữa trọ&amp;nbsp;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;perimeterSpacing=0;strokeWidth=1;glass=0;shadow=0;" parent="pAbQ4odnhJDFXXQEGx0p-377" vertex="1">
           <mxGeometry x="143" y="35.5" width="139" height="57" as="geometry" />
         </mxCell>
         <mxCell id="pAbQ4odnhJDFXXQEGx0p-379" value="Thay đổi những thông tin cần thay đổi" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;perimeterSpacing=0;strokeWidth=1;glass=0;shadow=0;" parent="pAbQ4odnhJDFXXQEGx0p-377" vertex="1">
@@ -7354,7 +7354,7 @@
         <mxCell id="pAbQ4odnhJDFXXQEGx0p-382" value="System" style="swimlane;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1347" y="1473" width="319" height="388" as="geometry" />
         </mxCell>
-        <mxCell id="pAbQ4odnhJDFXXQEGx0p-383" value="Hiển thị những thông tin của đối tượng trọ được chọn lên form" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;perimeterSpacing=0;strokeWidth=1;glass=0;shadow=0;" parent="pAbQ4odnhJDFXXQEGx0p-382" vertex="1">
+        <mxCell id="pAbQ4odnhJDFXXQEGx0p-383" value="Hiển thị những thông tin trọ được chọn" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;perimeterSpacing=0;strokeWidth=1;glass=0;shadow=0;" parent="pAbQ4odnhJDFXXQEGx0p-382" vertex="1">
           <mxGeometry x="77" y="35.5" width="139" height="57" as="geometry" />
         </mxCell>
         <mxCell id="pAbQ4odnhJDFXXQEGx0p-384" value="Kiểm tra&amp;nbsp; thông tin" style="rhombus;whiteSpace=wrap;html=1;fontColor=#000000;fillColor=#ffffc0;strokeColor=#ff0000;" parent="pAbQ4odnhJDFXXQEGx0p-382" vertex="1">
@@ -7366,7 +7366,7 @@
         <mxCell id="pAbQ4odnhJDFXXQEGx0p-386" value="Sai" style="text;strokeColor=none;align=center;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="pAbQ4odnhJDFXXQEGx0p-382" vertex="1">
           <mxGeometry x="77" y="209" width="60" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="pAbQ4odnhJDFXXQEGx0p-387" value="Chuyển về trang quản lý và hiện danh sách" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;perimeterSpacing=0;strokeWidth=1;glass=0;shadow=0;" parent="pAbQ4odnhJDFXXQEGx0p-382" vertex="1">
+        <mxCell id="pAbQ4odnhJDFXXQEGx0p-387" value="Thông báo thành công và huyển về trang quản lý trọ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;perimeterSpacing=0;strokeWidth=1;glass=0;shadow=0;" parent="pAbQ4odnhJDFXXQEGx0p-382" vertex="1">
           <mxGeometry x="103" y="324" width="139" height="57" as="geometry" />
         </mxCell>
         <mxCell id="pAbQ4odnhJDFXXQEGx0p-388" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#ff0000;" parent="pAbQ4odnhJDFXXQEGx0p-382" vertex="1">
@@ -7381,7 +7381,7 @@
         <mxCell id="pAbQ4odnhJDFXXQEGx0p-390" value="Database" style="swimlane;whiteSpace=wrap;html=1;fontStyle=0" parent="1" vertex="1">
           <mxGeometry x="1666" y="1473" width="278" height="390" as="geometry" />
         </mxCell>
-        <mxCell id="pAbQ4odnhJDFXXQEGx0p-391" value="Lưu vào database" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;perimeterSpacing=0;strokeWidth=1;glass=0;shadow=0;" parent="pAbQ4odnhJDFXXQEGx0p-390" vertex="1">
+        <mxCell id="pAbQ4odnhJDFXXQEGx0p-391" value="Cập nhật thông tin mới vào database" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;perimeterSpacing=0;strokeWidth=1;glass=0;shadow=0;" parent="pAbQ4odnhJDFXXQEGx0p-390" vertex="1">
           <mxGeometry x="62" y="55" width="139" height="57" as="geometry" />
         </mxCell>
         <mxCell id="pAbQ4odnhJDFXXQEGx0p-392" value="" style="edgeStyle=elbowEdgeStyle;elbow=horizontal;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="pAbQ4odnhJDFXXQEGx0p-376" target="pAbQ4odnhJDFXXQEGx0p-378" edge="1">
