@@ -20,6 +20,7 @@ import Introduce from './pages/Introduce/Introduce'
 import AdminManagerBoard from './pages/admin/AdminManageBoard'
 import Profile from './pages/Profile/Profile'
 import PaymentPage from './pages/cart/PaymentPage'
+import Heart from './pages/cart/Heart'
 // import TestPage from './pages/TestPage'
 // import ValidCaptcha from './components/ValidCaptcha'
 
@@ -46,6 +47,7 @@ function App() {
           <Route path="/forgot-password" element={<Forgot_Password />} />
           <Route path="/support" element={<Support />} />
           <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/heart" element={<Heart />} />
           {/* <Route path="/test" element={<TestPage />} /> */}
           <Route path="/AdminManagerBoard" element={<AdminManagerBoard />} />
           {/* <Routes path="/test" element={<TestPage />} /> */}
