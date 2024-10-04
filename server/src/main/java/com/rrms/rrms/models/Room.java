@@ -1,5 +1,7 @@
 package com.rrms.rrms.models;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import jakarta.persistence.*;
@@ -20,7 +22,7 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID roomId;
-
+    
     @ManyToOne
     @JoinColumn(name = "motel_id")
     private Motel motel;
@@ -43,4 +45,14 @@ public class Room {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @OneToMany
+    @JoinColumn(name = "room_id") 
+    private List<RoomImage> roomImages;
+    
+    @OneToMany
+    @JoinColumn(name = "room_id") 
+    private Set<RoomReview> roomReviews;
+    
 }
+
