@@ -18,9 +18,9 @@ const MainManagement = ({ theme }) => {
         top: 20,
       }}>
       <Grid container spacing={0}>
-        <Grid item xs={12} md={12} className="mb-3">
+        {/* <Grid item xs={12} md={12} className="mb-3">
           <Navbar />
-        </Grid>
+        </Grid> */}
         <Grid container spacing={1} className="mt-3">
           <Grid item md={3} sm={3} xs={12}>
             <Button
