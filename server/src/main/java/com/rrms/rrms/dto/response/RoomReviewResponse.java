@@ -14,4 +14,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoomReviewResponse {
     UUID roomReviewId;
+    Integer rating;
+    String comment;
+    AccountResponse account;
 }

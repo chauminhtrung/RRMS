@@ -23,7 +23,7 @@ public class AccountService {
     AccountRepository accountRepository;
     AccountMapper accountMapper;
 
-    @Cacheable(value = "account", key = "#username")
+//    @Cacheable(value = "account", key = "#username")
     public AccountResponse findByUsername(String username) {
         Account account = accountRepository
                 .findByUsername(username)

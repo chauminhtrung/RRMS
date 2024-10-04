@@ -1,5 +1,6 @@
 package com.rrms.rrms.models;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -22,7 +23,7 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID roomId;
-    
+
     @ManyToOne
     @JoinColumn(name = "motel_id")
     private Motel motel;
@@ -35,24 +36,39 @@ public class Room {
     private String nameRoom;
 
     @Column(columnDefinition = "DECIMAL(10, 2)")
-    private long price;
+    private Double price;
 
     @Column(columnDefinition = "DECIMAL(10, 2)")
-    private long roomArea;
+    private Double deposit;
+
+    @Column(columnDefinition = "INT")
+    private Integer roomArea;
+
+    @Column(columnDefinition = "INT")
+    private Integer maxPerson;
+
+    @Column(columnDefinition = "DATE")
+    private LocalDate rentalStartTime;
 
     @Column(columnDefinition = "BOOLEAN")
     private Boolean available;
+
+    @Column(columnDefinition = "NVARCHAR(255)")
+    private String hours;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
     @OneToMany
-    @JoinColumn(name = "room_id") 
-    private List<RoomImage> roomImages;
-    
+    @JoinColumn(name = "room_id")
+    private List<RoomService> roomServices;
+
     @OneToMany
-    @JoinColumn(name = "room_id") 
-    private Set<RoomReview> roomReviews;
-    
+    @JoinColumn(name = "room_id")
+    private List<RoomImage> roomImages;
+
+    @OneToMany()
+    @JoinColumn(name = "room_id")
+    private List<RoomReview> roomReviews;
 }
 
