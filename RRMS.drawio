@@ -7454,7 +7454,7 @@
         <mxCell id="pAbQ4odnhJDFXXQEGx0p-402" value="Kiểm tra những thông tin đảm bảo không ảnh hưởng đến những dữ liệu khác" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;perimeterSpacing=0;strokeWidth=1;glass=0;shadow=0;" parent="pAbQ4odnhJDFXXQEGx0p-401" vertex="1">
           <mxGeometry x="67" y="44.5" width="139" height="57" as="geometry" />
         </mxCell>
-        <mxCell id="pAbQ4odnhJDFXXQEGx0p-403" value="Trở về trang quản lý trọ và hiển thị danh sách phòng trọ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;perimeterSpacing=0;strokeWidth=1;glass=0;shadow=0;" parent="pAbQ4odnhJDFXXQEGx0p-401" vertex="1">
+        <mxCell id="pAbQ4odnhJDFXXQEGx0p-403" value="Trở về trang quản lý trọ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;perimeterSpacing=0;strokeWidth=1;glass=0;shadow=0;" parent="pAbQ4odnhJDFXXQEGx0p-401" vertex="1">
           <mxGeometry x="64" y="237.5" width="139" height="57" as="geometry" />
         </mxCell>
         <mxCell id="pAbQ4odnhJDFXXQEGx0p-404" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#ff0000;" parent="pAbQ4odnhJDFXXQEGx0p-401" vertex="1">
