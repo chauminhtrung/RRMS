@@ -45,8 +45,6 @@ const Header = () => {
             <div className="language-option">
               <Option />
 
-              <a href="/login" className="bk-btn"></a>
-
               <a href="#" className="bk-btn">
                 Đăng nhập
               </a>
