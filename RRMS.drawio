@@ -3258,7 +3258,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="KO5N4lZRbTm_Ett8uHkw" name="Activity diagram">
-    <mxGraphModel dx="8049" dy="638" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="7845" dy="547" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -6199,7 +6199,7 @@
         <mxCell id="UGhVeWYUM5x4Kvu-GSHk-95" value="Sai" style="text;strokeColor=none;align=center;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="UGhVeWYUM5x4Kvu-GSHk-74" vertex="1">
           <mxGeometry x="77" y="209" width="60" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="UGhVeWYUM5x4Kvu-GSHk-97" value="Chuyển về trang quản lý và hiện danh sách" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;perimeterSpacing=0;strokeWidth=1;glass=0;shadow=0;" parent="UGhVeWYUM5x4Kvu-GSHk-74" vertex="1">
+        <mxCell id="UGhVeWYUM5x4Kvu-GSHk-97" value="Hiển thị thông báo thành công và chuyển về trang quản lý và hiện danh sách phòng" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;perimeterSpacing=0;strokeWidth=1;glass=0;shadow=0;" parent="UGhVeWYUM5x4Kvu-GSHk-74" vertex="1">
           <mxGeometry x="103" y="324" width="139" height="57" as="geometry" />
         </mxCell>
         <mxCell id="UGhVeWYUM5x4Kvu-GSHk-103" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#ff0000;" parent="UGhVeWYUM5x4Kvu-GSHk-74" vertex="1">
@@ -6214,7 +6214,7 @@
         <mxCell id="UGhVeWYUM5x4Kvu-GSHk-75" value="Database" style="swimlane;whiteSpace=wrap;html=1;fontStyle=0" parent="1" vertex="1">
           <mxGeometry x="1666" y="963" width="278" height="390" as="geometry" />
         </mxCell>
-        <mxCell id="UGhVeWYUM5x4Kvu-GSHk-83" value="Lưu vào database" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;perimeterSpacing=0;strokeWidth=1;glass=0;shadow=0;" parent="UGhVeWYUM5x4Kvu-GSHk-75" vertex="1">
+        <mxCell id="UGhVeWYUM5x4Kvu-GSHk-83" value="Lưu thông tin mới vào database" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;perimeterSpacing=0;strokeWidth=1;glass=0;shadow=0;" parent="UGhVeWYUM5x4Kvu-GSHk-75" vertex="1">
           <mxGeometry x="62" y="55" width="139" height="57" as="geometry" />
         </mxCell>
         <mxCell id="UGhVeWYUM5x4Kvu-GSHk-87" value="" style="edgeStyle=elbowEdgeStyle;elbow=horizontal;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="UGhVeWYUM5x4Kvu-GSHk-72" target="UGhVeWYUM5x4Kvu-GSHk-76" edge="1">
@@ -7542,7 +7542,7 @@
         <mxCell id="pAbQ4odnhJDFXXQEGx0p-421" value="User" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" parent="1" vertex="1">
           <mxGeometry x="2862" y="1474" width="278" height="390" as="geometry" />
         </mxCell>
-        <mxCell id="pAbQ4odnhJDFXXQEGx0p-422" value="Nhập số phòng trọ hoặc lướt tìm trọ cần tra cứu" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;perimeterSpacing=0;strokeWidth=1;glass=0;shadow=0;" parent="pAbQ4odnhJDFXXQEGx0p-421" vertex="1">
+        <mxCell id="pAbQ4odnhJDFXXQEGx0p-422" value="Nhập thông tin trọ hoặc lướt tìm trọ cần tra cứu" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;perimeterSpacing=0;strokeWidth=1;glass=0;shadow=0;" parent="pAbQ4odnhJDFXXQEGx0p-421" vertex="1">
           <mxGeometry x="62" y="55" width="139" height="57" as="geometry" />
         </mxCell>
         <mxCell id="pAbQ4odnhJDFXXQEGx0p-423" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#ff0000;" parent="pAbQ4odnhJDFXXQEGx0p-421" vertex="1">
