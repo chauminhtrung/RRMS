@@ -1,34 +1,24 @@
 import { BarChart } from '@mui/x-charts'
 
-const dataset = [
-  {
-    rating: 50,
-    start: '1',
-  },
-  {
-    rating: 50,
-    start: '2',
-  },
-  {
-    rating: 100,
-    start: '3',
-  },
-  {
-    rating: 100,
-    start: '4',
-  },
-  {
-    rating: 200,
-    start: '5',
-  },
-]
+const ChartRaiting = ({ reviews }) => {
+  const ratingCounts = [0, 0, 0, 0, 0]
 
-const chartSetting = {
-  xAxis: [],
-  height: 200,
-}
+  reviews.forEach((review) => {
+    const rating = review.rating
+    if (rating >= 1 && rating <= 5) {
+      ratingCounts[rating - 1]++
+    }
+  })
 
-const ChartRaiting = () => {
+  const dataset = ratingCounts.map((count, index) => ({
+    rating: count,
+    start: (index + 1).toString(),
+  }))
+
+  const chartSetting = {
+    xAxis: [],
+    height: 200,
+  }
   function valueFormatter(value) {
     return `${value} đánh giá`
   }
@@ -36,7 +26,7 @@ const ChartRaiting = () => {
     <BarChart
       dataset={dataset}
       yAxis={[{ scaleType: 'band', dataKey: 'start' }]}
-      series={[{ dataKey: 'rating', color: '#7bed9f', valueFormatter }]}
+      series={[{ dataKey: 'rating', color: '#5eb7ff', valueFormatter }]}
       layout="horizontal"
       {...chartSetting}
     />
