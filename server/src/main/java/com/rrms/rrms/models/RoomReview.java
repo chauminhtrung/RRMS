@@ -19,12 +19,20 @@ public class RoomReview {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID roomReviewId;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "room_id")
+    private Room room;
+
+    @ManyToOne
     @JoinColumn(name = "username")
     private Account account;
 
-    @ManyToOne
-    @JoinColumn(name = "room_id") 
-    private Room room;
+    @Column(columnDefinition = "INT")
+    private Integer rating;
+    
+    @Column(columnDefinition = "TEXT")
+    private String comment;
+
+
     
 }

@@ -3,7 +3,9 @@ package com.rrms.rrms.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -12,15 +14,19 @@ import java.util.UUID;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoomDetailResponse {
-
     UUID roomId;
     String nameRoom;
+    Double deposit;
     Double price;
-    Double roomArea;
+    Integer roomArea;
     Boolean available;
     String description;
-    List<RoomImageResponse> roomImages;
-    List<RoomReviewResponse> roomReviews;
+    Integer maxPerson;
+    LocalDate rentalStartTime;
+    String hours;
     TypeRoomResponse typeRoom;
     MotelResponse motel;
+    List<RoomServiceResponse> roomServices;
+    List<RoomReviewResponse> roomReviews;
+    List<RoomImageResponse> roomImages;
 }

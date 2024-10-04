@@ -1,6 +1,8 @@
 package com.rrms.rrms.services;
 
 import com.rrms.rrms.dto.response.RoomDetailResponse;
+import com.rrms.rrms.enums.ErrorCode;
+import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.mapper.RoomMapper;
 import com.rrms.rrms.models.Room;
 import com.rrms.rrms.repositories.RoomRepository;
@@ -21,7 +23,7 @@ public class RoomService {
     
     
     public RoomDetailResponse getRoomById(UUID id) {
-        Room room = roomRepository.findById(id).get();
+        Room room = roomRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ROOM_DETAIL_NOT_FOUND));
         return roomMapper.toRoomDetailResponse(room);
     }
 }

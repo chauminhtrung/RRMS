@@ -5,8 +5,8 @@ import axios from 'axios'
 //   timeout: 5000, // Thời gian chờ
 // });
 
-export const getDetail = async () => {
-  return await axios.get('https://dummyjson.com/c/1075-ae39-4e61-82cc')
+export const getDetail = async (roomId) => {
+  return await axios.get(`http://localhost:8080/room/${roomId}`)
 }
 
 export const getProfile = async (username) => {

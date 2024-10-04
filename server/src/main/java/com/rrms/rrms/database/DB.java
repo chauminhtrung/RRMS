@@ -23,7 +23,10 @@ public class DB {
             RoomRepository roomRepository,
             MotelRepository motelRepository,
             TypeRoomRepository typeRoomRepository,
-            RoomImageRepository roomImageRepository) {
+            RoomImageRepository roomImageRepository,
+            RoomReviewRepository roomReviewRepository,
+            ServiceRepository serviceRepository,
+    RoomServiceRepository roomServiceRepository) {
         return args -> {
             if (accountRepository.findByUsername("admin").isEmpty()) {
                 // create admin account
@@ -62,21 +65,47 @@ public class DB {
                 
                 Motel motel = new Motel();
                 motel.setAccount(accountRepository.findByUsername("admin").get());
+                motel.setMotelName("Hà nội");
                 motelRepository.save(motel);
                 
                 TypeRoom typeRoom = new TypeRoom();
+                typeRoom.setName("Tình yêu");
                 typeRoomRepository.save(typeRoom);
                 
                 Room room = new Room();
+                room.setDeposit(500000.0);
+                room.setHours("Tự do");
+                room.setRentalStartTime(LocalDate.now());
                 room.setMotel(motel);
                 room.setTypeRoom(typeRoom);
                 room.setNameRoom("room1");
                 room.setDescription("room1");
                 room.setAvailable(true);
                 room.setRoomArea(100);
-                room.setPrice(1000);
+                room.setPrice(1000000.0);
+                room.setMaxPerson(2);
                 roomRepository.save(room);
                 log.info("Search room created");
+                
+                RoomReview roomReview = new RoomReview();
+                roomReview.setAccount(accountRepository.findByUsername("admin").get());
+                roomReview.setComment("Phòng này đẹp ghê");
+                roomReview.setRating(3);
+                roomReview.setRoom(room);
+                roomReviewRepository.save(roomReview);
+                log.info("Room review created");
+                
+                Service service = new Service();
+                service.setNameService("Có chuồng chó");
+                service.setTypeService("Dịch vụ");
+                serviceRepository.save(service);
+                log.info("Service created");
+                
+                RoomService roomService = new RoomService();    
+                roomService.setRoom(room);
+                roomService.setService(service);
+                roomServiceRepository.save(roomService);
+                log.info("Room service created");
 
                 RoomImage roomImage1 = new RoomImage(UUID.randomUUID(), room, "https://picsum.photos/1000/700?random=1");
                 RoomImage roomImage2 = new RoomImage(UUID.randomUUID(), room, "https://picsum.photos/1000/700?random=2");
