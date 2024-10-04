@@ -106,6 +106,12 @@
 			<optional>true</optional>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+
 		<!-- MapStruct Processor: Thư viện tự động mapping giữa các đối tượng (DTO và Entity) -->
 		<dependency>
 			<groupId>org.mapstruct</groupId>

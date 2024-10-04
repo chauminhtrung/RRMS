@@ -1,9 +1,9 @@
 package com.rrms.rrms.controllers;
 
-import com.rrms.rrms.dto.request.AccountRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.request.ApiResponse;
 import com.rrms.rrms.dto.response.AccountResponse;
 import com.rrms.rrms.services.AccountService;
@@ -39,7 +39,7 @@ public class ProfileController {
                 .result(accountResponse)
                 .build();
     }
-    
+
     @PutMapping()
     public ApiResponse<AccountResponse> updateProfile(@RequestBody AccountRequest accountRequest) {
         AccountResponse accountResponse = accountService.update(accountRequest);
