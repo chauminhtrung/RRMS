@@ -3258,7 +3258,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="KO5N4lZRbTm_Ett8uHkw" name="Activity diagram">
-    <mxGraphModel dx="7845" dy="547" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="8134" dy="675" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -6057,7 +6057,7 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="UGhVeWYUM5x4Kvu-GSHk-1" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Thêm nhà trọ&lt;/font&gt;" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;align=left;" parent="1" vertex="1">
+        <mxCell id="UGhVeWYUM5x4Kvu-GSHk-1" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Thêm phòng trọ&lt;/font&gt;" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;align=left;" parent="1" vertex="1">
           <mxGeometry x="67" y="923" width="917" height="429" as="geometry" />
         </mxCell>
         <mxCell id="UGhVeWYUM5x4Kvu-GSHk-2" value="Quản lý phòng trọ" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1" parent="1" vertex="1">
@@ -6154,7 +6154,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="UGhVeWYUM5x4Kvu-GSHk-57" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Sửa nhà trọ&lt;/font&gt;" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;align=left;" parent="1" vertex="1">
+        <mxCell id="UGhVeWYUM5x4Kvu-GSHk-57" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Sửa phòng trọ&lt;/font&gt;" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;align=left;" parent="1" vertex="1">
           <mxGeometry x="1028" y="923" width="917" height="429" as="geometry" />
         </mxCell>
         <mxCell id="UGhVeWYUM5x4Kvu-GSHk-60" value="" style="edgeStyle=elbowEdgeStyle;elbow=horizontal;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" target="UGhVeWYUM5x4Kvu-GSHk-17" edge="1">
@@ -6278,7 +6278,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="UGhVeWYUM5x4Kvu-GSHk-105" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Xóa nhà trọ&lt;/font&gt;" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;align=left;" parent="1" vertex="1">
+        <mxCell id="UGhVeWYUM5x4Kvu-GSHk-105" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Xóa phòng trọ&lt;/font&gt;" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;align=left;" parent="1" vertex="1">
           <mxGeometry x="1995" y="923" width="838" height="429" as="geometry" />
         </mxCell>
         <mxCell id="UGhVeWYUM5x4Kvu-GSHk-106" value="System" style="swimlane;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -6369,7 +6369,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="UGhVeWYUM5x4Kvu-GSHk-127" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Tra cứu trọ&lt;/font&gt;" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;align=left;" parent="1" vertex="1">
+        <mxCell id="UGhVeWYUM5x4Kvu-GSHk-127" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Tra cứu phòng trọ&lt;/font&gt;" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;align=left;" parent="1" vertex="1">
           <mxGeometry x="2862" y="924" width="556" height="429" as="geometry" />
         </mxCell>
         <mxCell id="UGhVeWYUM5x4Kvu-GSHk-128" value="User" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" parent="1" vertex="1">
