@@ -1,3 +1,6 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 section {
   padding: 10px 0px;
 }
@@ -238,12 +241,13 @@ section.header-home:after {
 }
 
 #search-home li.keyword {
-  width: 60%;
+  width: 100%;
 }
 
 #search-home li.keyword input {
   padding-left: 35px;
   border: 1.5px solid #006396;
+  width: 100%;
 }
 
 .list-val-search a {
@@ -269,7 +273,7 @@ section.header-home:after {
 }
 
 .location-home {
-  width: 280px;
+  width: 100%;
   cursor: pointer;
   color: #000;
   font-size: 14px;
@@ -712,7 +716,7 @@ div#sugget-special {
 #search-bar .keyword,
 .dropup {
   position: relative;
-  margin-left: 7px;
+
 }
 
 #search-bar .del-val {
@@ -733,13 +737,11 @@ div#sugget-special {
 ul#search-bar {
   list-style-type: none;
   margin: 0px;
-  padding: 7px;
-  background-color: #dfeaf3;
   display: flex;
   justify-content: space-between;
   flex-direction: row;
   border-radius: 5px;
-  height: 52px;
+  height: 45px;
 }
 
 #search-bar > li .fa {
@@ -747,7 +749,7 @@ ul#search-bar {
   font-weight: normal;
 }
 
-#search-bar button#btn-s-h {
+ button#btn-s-h {
   vertical-align: middle;
   text-align: center;
   touch-action: manipulation;
@@ -765,14 +767,15 @@ ul#search-bar {
   border: 0px solid #33acd4;
   border-radius: 5px;
   padding: 10px;
-
   padding-right: 10px;
   margin: 0;
-  height: 100%;
+  height: 43px;
   line-height: 100%;
+  width: 100%;
+
 }
 
-#search-bar button#btn-s-h:before {
+ button#btn-s-h:before {
   top: 4px;
   left: 1px;
   background-position: -339px -613px;
@@ -780,13 +783,14 @@ ul#search-bar {
   height: 30px;
 }
 
-#search-bar input[type='text'] {
+ input[type='text'] {
   border: 0.5px solid #dcdcdc;
   font-size: 13px;
   background-color: #ffffff;
   border-radius: 5px;
   height: 100%;
   font-weight: bold;
+
 }
 
 #search-bar li.keyword:before {
@@ -802,6 +806,7 @@ ul#search-bar {
 
 #search-bar li.keyword input {
   padding-left: 35px;
+  border-radius: 5px;
 }
 
 #menu-home {
@@ -1320,7 +1325,7 @@ section.list-img > div {
 }
 
 /* ------------------------------------------------ */
-.card-benefit .item .inner {
+.card-benefit .item .innerRRMS {
   display: flex;
   border-radius: 5px;
   background-color: #fff;
@@ -1349,28 +1354,28 @@ section.list-img > div {
   width: 5px;
 }
 
-.card-benefit .item.green .inner {
+.card-benefit .item.green .innerRRMS {
   border: 1px solid #d47474;
 }
 .card-benefit .item.green .content-item {
   background: linear-gradient(to right bottom, #ca5663, #c84a5d);
 }
 
-.card-benefit .item.yellow .inner {
+.card-benefit .item.yellow .innerRRMS {
   border: 1px solid #ff9d26;
 }
 .card-benefit .item.yellow .content-item {
   background: linear-gradient(to right bottom, #ff7200, #ffa600);
 }
 
-.card-benefit .item.blue .inner {
+.card-benefit .item.blue .innerRRMS {
   border: 1px solid #2196f3;
 }
 .card-benefit .item.blue .content-item {
   background: linear-gradient(to right bottom, #008eff, #20a9e7);
 }
 
-.card-benefit .item .icon-item {
+.card-benefit .item .icon-itemRRMS {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1378,7 +1383,7 @@ section.list-img > div {
   flex: 0;
 }
 
-.card-benefit .item .icon-item span {
+.card-benefit .item .icon-itemRRMS span {
   width: 45px;
   height: 45px;
   border-radius: 50px;
@@ -1392,13 +1397,13 @@ section.list-img > div {
   color: #fff;
 }
 
-.card-benefit .item.blue .icon-item span {
+.card-benefit .item.blue .icon-itemRRMS span {
   background-color: #2196f3;
 }
-.card-benefit .item.yellow .icon-item span {
+.card-benefit .item.yellow .icon-itemRRMS span {
   background-color: #ff9d26;
 }
-.card-benefit .item.green .icon-item span {
+.card-benefit .item.green .icon-itemRRMS span {
   background-color: #b5596e;
 }
 
