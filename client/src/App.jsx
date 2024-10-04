@@ -21,6 +21,7 @@ import AdminManagerBoard from './pages/admin/AdminManageBoard'
 import Profile from './pages/Profile/Profile'
 import PaymentPage from './pages/cart/PaymentPage'
 import RRMS from './pages/RRMS/RRMS'
+import AdminManageBoker from './pages/admin/AdminManageBoker/AdminManageBoker'
 
 // import TestPage from './pages/TestPage'
 // import ValidCaptcha from './components/ValidCaptcha'
@@ -37,6 +38,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/chart" element={<Chart />} />
           <Route path="/admin" element={<MainManagement />} />
+          <Route path="/adminBoker" element={<AdminManageBoker />} />
           <Route path="/search" element={<Search />} />
           <Route path="/detail" element={<Detail />} />
           <Route path="/AdminStatis" element={<AdminStatis />} />
