@@ -1,5 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Divider,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from '@mui/material'
 import { useEffect } from 'react'
 import { updateProfile } from '~/apis/apiClient'
 import { v4 } from 'uuid'
@@ -81,9 +92,8 @@ const ProfileTab = ({ profile, setProfile, selectedImage }) => {
             <TextField
               label="Tên tài khoản"
               fullWidth
-              required
+              disabled
               value={profile.username}
-              onChange={(e) => setProfile({ ...profile, username: e.target.value })}
               InputLabelProps={{
                 shrink: !!profile.username,
               }}
@@ -169,12 +179,18 @@ const ProfileTab = ({ profile, setProfile, selectedImage }) => {
           </Grid>
 
           <Grid item xs={12}>
-            <Button variant="contained" color="primary" fullWidth onClick={handleUpload}>
-              Lưu thay đổi
-            </Button>
+            <Divider sx={{ bgcolor: '#ced6e0' }} />
           </Grid>
         </Grid>
       </Grid>
+      <Button
+        sx={{ width: '9%', bottom: 5, position: 'absolute' }}
+        variant="contained"
+        color="primary"
+        fullWidth
+        onClick={handleUpload}>
+        Lưu thay đổi
+      </Button>
     </Box>
   )
 }

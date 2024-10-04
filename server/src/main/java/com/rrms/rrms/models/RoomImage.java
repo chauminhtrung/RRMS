@@ -1,5 +1,6 @@
 package com.rrms.rrms.models;
 
+import java.util.Set;
 import java.util.UUID;
 
 import jakarta.persistence.*;
@@ -20,15 +21,10 @@ public class RoomImage {
     private UUID roomImageId;
 
     @ManyToOne
-    @JoinColumn(name = "room_id")
+    @JoinColumn(name = "room_id") 
     private Room room;
 
     @Column(columnDefinition = "VARCHAR(255)")
-    private String fileName;
-
-    @Column(columnDefinition = "TEXT")
-    private String linkImg;
-
-    @Column(columnDefinition = "BOOLEAN")
-    private Boolean mainImg;
+    private String image;
+    
 }

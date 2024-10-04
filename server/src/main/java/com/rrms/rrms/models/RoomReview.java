@@ -20,16 +20,19 @@ public class RoomReview {
     private UUID roomReviewId;
 
     @ManyToOne
-    @JoinColumn(name = "username")
-    private Account account;
-
-    @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @Column(columnDefinition = "TEXT")
-    private String content;
+    @ManyToOne
+    @JoinColumn(name = "username")
+    private Account account;
 
     @Column(columnDefinition = "INT")
-    private int rating;
+    private Integer rating;
+    
+    @Column(columnDefinition = "TEXT")
+    private String comment;
+
+
+    
 }
