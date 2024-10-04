@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
   Breadcrumbs,
@@ -45,12 +46,30 @@ const Detail = () => {
   const [detail, setDetail] = useState(null)
   const [raiting, setRaiting] = useState(0)
   const [showArrows, setShowArrows] = useState(false)
+  const [roomRating, setRoomRating] = useState(0)
+
+  const calculateAvgRaiting = () => {
+    if (detail && detail.roomReviews && detail.roomReviews.length > 0) {
+      let sum = 0
+      detail.roomReviews.forEach((item) => {
+        sum += item.rating
+      })
+      setRoomRating(sum / detail.roomReviews.length)
+    } else {
+      setRoomRating(0)
+    }
+    console.log(roomRating)
+  }
 
   useEffect(() => {
     getDetail('09176759-1660-4581-bd47-1a46f876a6a6').then((res) => {
       setDetail(res.data.result)
     })
   }, [])
+
+  useEffect(() => {
+    calculateAvgRaiting()
+  }, [detail])
 
   const share = async () => {
     try {
@@ -138,8 +157,8 @@ const Detail = () => {
                 key={i}
                 index={i}
                 item={item}
-                addressDetail={detail.address}
-                totalItems={detail.roomReviews.length}
+                addressDetail={detail.motel.address}
+                totalItems={detail.roomImages.length}
               />
             ))}
           </Slider>
@@ -156,11 +175,11 @@ const Detail = () => {
               <Rating
                 sx={{ alignItems: 'center', my: 0.5 }}
                 name="simple-controlled"
-                value={5}
+                value={roomRating}
                 size="medium"
                 readOnly
               />
-              <Typography>{'(5)'}</Typography>
+              <Typography>{`(${roomRating})`}</Typography>
             </Box>
           </Box>
 
@@ -174,7 +193,7 @@ const Detail = () => {
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <LanguageIcon sx={{ mr: 0.5 }} />
                 <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>Tình trạng: </Typography>
-                {detail.available}
+                {detail.available ? 'Đang cho thuê' : 'Đã có người thuê'}
               </Typography>
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <CalendarMonthIcon sx={{ mr: 0.5 }} />
@@ -311,10 +330,10 @@ const Detail = () => {
             </Grid>
           </Grid>
           <BannerHorizontal />
-          <RaitingAvg />
-          <Comment />
-          <Comment />
-          <Comment />
+          <RaitingAvg reviews={detail.roomReviews} rating={roomRating} />
+          {detail.roomReviews.map((item, i) => (
+            <Comment key={i} item={item} />
+          ))}
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Pagination count={10} color="primary.main" size="medium" />
           </Box>
