@@ -1,6 +1,5 @@
 .banner {
-  padding-top: 70px;
-  height: 650px;
+  height: 570px;
   background-image: url(https://quanlytro.me/images/backgrounds/bg-banner.webp);
 }
 
@@ -17,15 +16,17 @@
 }
 
 .btn-media {
+  padding: 15px !important;
+  font-size: 20px !important;
   background: #faca4b !important;
   color: black !important;
-  border-radius: 50px !important;
+  border-radius: 10px !important;
 }
 
 .btn-registry {
   background-color: #5eb7ff !important;
   color: white !important;
-  border-radius: 50px !important;
+  border-radius: 10px !important;
 }
 
 .shadow {
@@ -134,6 +135,10 @@
   }
 }
 
+/*  */
+
+
+
 /* Quản lý trên đa nền tảng */
 .inner {
   border: 1px solid #e0e0e0;
@@ -222,7 +227,10 @@
 }
 
 /* Đồng hành cùng chúng tôi */
-
+/* .bg-customer{
+  background-color: #000000;
+  background-image: url(https://smartos.space/wp-content/uploads/2022/05/map-base-1.png);
+} */
 .col-inner {
   padding: 10px;
   height: 120px;
