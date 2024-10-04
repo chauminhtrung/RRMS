@@ -1,9 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Box, Button, Checkbox } from '@mui/material'
 import { Grid } from '@mui/material'
 import Navbar from '~/layouts/admin/Navbar'
+import { Tooltip, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material'
+import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory'
+import AddIcon from '@mui/icons-material/Add'
 
 const MainManagement = ({ theme }) => {
+  const [open, setOpen] = useState(false)
+  const handleClickOpen = () => {
+    setOpen(true)
+  }
+  const handleClose = () => {
+    setOpen(false)
+  }
   return (
     <Box
       sx={{
@@ -122,27 +132,52 @@ const MainManagement = ({ theme }) => {
                 </p>
               </div>
               <div>
-                <Button
-                  variant="contained"
-                  sx={{
-                    background: 'red',
-                    width: '50px',
-                    height: '62px',
-                    borderRadius: '50%',
-                  }}>
-                  <i className="bi bi-caret-right-fill fs-3"></i>
-                </Button>
-                <Button
-                  className="mx-2"
-                  variant="contained"
-                  sx={{
-                    background: '#28a745',
-                    width: '50px',
-                    height: '62px',
-                    borderRadius: '50%',
-                  }}>
-                  <i className="bi bi-plus-lg fs-3"></i>
-                </Button>
+                <Tooltip title="Xem">
+                  <IconButton
+                    sx={{
+                      backgroundColor: 'red',
+                      marginRight: '5px',
+                      '&:hover': {
+                        backgroundColor: 'darkred',
+                      },
+                      color: 'white',
+                      padding: '12px',
+                    }}>
+                    <ChangeHistoryIcon sx={{ fontSize: 30 }} />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Thêm">
+                  <IconButton
+                    onClick={handleClickOpen}
+                    sx={{
+                      backgroundColor: 'green',
+                      marginRight: '5px',
+                      '&:hover': {
+                        backgroundColor: 'darkgreen',
+                      },
+                      color: 'white',
+                      padding: '12px',
+                    }}>
+                    <AddIcon sx={{ fontSize: 30 }} />
+                  </IconButton>
+                </Tooltip>
+
+                <Dialog open={open} onClose={handleClose}>
+                  <DialogTitle>Thêm</DialogTitle>
+                  <DialogContent>
+                    <TextField autoFocus margin="dense" label="Tên môi giới" fullWidth variant="standard" />
+                    <TextField margin="dense" label="Email" fullWidth variant="standard" />
+                    <TextField margin="dense" label="Số điện thoại" fullWidth variant="standard" />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                      Hủy
+                    </Button>
+                    <Button onClick={handleClose} color="primary">
+                      Lưu
+                    </Button>
+                  </DialogActions>
+                </Dialog>
                 <Button className="me-2" variant="contained">
                   <i className="bi bi-journal-text fs-3 me-2"></i> Ẩn/hiện cột
                 </Button>
