@@ -19,12 +19,15 @@ import ShowChartIcon from '@mui/icons-material/ShowChart'
 import HomeIcon from '@mui/icons-material/Home'
 import DesignServicesIcon from '@mui/icons-material/DesignServices'
 import AutorenewIcon from '@mui/icons-material/Autorenew'
+import NextArrow from '../Detail/NextArrow'
+import PrevArrow from '../Detail/PrevArrow'
 
 const Heart = () => {
   const [age, setAge] = useState(10)
   const [isFavorited, setIsFavorited] = useState(false)
   const [showPhoneNumber, setShowPhoneNumber] = useState(false)
   const [totalPosts, setTotalPosts] = useState(1)
+  const [showArrows, setShowArrows] = useState(false)
 
   const handleChange = (event) => {
     setAge(event.target.value)
@@ -49,6 +52,8 @@ const Heart = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    nextArrow: <NextArrow visible={showArrows} />,
+    prevArrow: <PrevArrow visible={showArrows} />,
   }
   const slides = [
     { id: 1, src: 'https://picsum.photos/1000/580?random=20' },
@@ -85,6 +90,8 @@ const Heart = () => {
                   <img
                     src={slide.src}
                     alt={`Slide ${slide.id}`}
+                    onMouseEnter={() => setShowArrows(true)}
+                    onMouseLeave={() => setShowArrows(false)}
                     style={{ width: '100%', maxHeight: '380px', objectFit: 'cover' }}
                   />
                 </Box>

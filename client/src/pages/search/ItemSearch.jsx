@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, Paper } from '@mui/material'
+import { Box, Grid, Typography } from '@mui/material'
 import Groups2RoundedIcon from '@mui/icons-material/Groups2Rounded'
 import RecentActorsRoundedIcon from '@mui/icons-material/RecentActorsRounded'
 import MailRoundedIcon from '@mui/icons-material/MailRounded'
