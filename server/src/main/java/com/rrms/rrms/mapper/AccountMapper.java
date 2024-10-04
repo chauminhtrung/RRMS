@@ -1,12 +1,12 @@
 package com.rrms.rrms.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.response.AccountResponse;
 import com.rrms.rrms.models.Account;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface AccountMapper {

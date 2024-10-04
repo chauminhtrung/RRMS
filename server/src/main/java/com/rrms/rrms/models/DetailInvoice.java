@@ -29,6 +29,5 @@ public class DetailInvoice {
 
     @ManyToOne
     @JoinColumn(name = "room_device_id")
-
     private RoomDevice roomDevice;
 }

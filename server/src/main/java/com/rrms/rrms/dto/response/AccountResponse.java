@@ -1,10 +1,11 @@
 package com.rrms.rrms.dto.response;
 
-import com.rrms.rrms.enums.Gender;
-import lombok.*;
-
 import java.io.Serializable;
 import java.time.LocalDate;
+
+import com.rrms.rrms.enums.Gender;
+
+import lombok.*;
 
 @Data
 @NoArgsConstructor

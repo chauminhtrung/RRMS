@@ -18,7 +18,7 @@ import org.springframework.web.client.RestTemplate;
 @CrossOrigin("*")
 public class CaptchaController {
 
-    @Value("${SECRET_KEY_CAPTCHA}")
+    @Value("${cloud-flare.captcha.secret}")
     private String SECRET_KEY;
 
     @PostMapping("/verify-captcha")

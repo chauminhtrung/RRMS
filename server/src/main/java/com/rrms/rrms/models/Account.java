@@ -37,7 +37,7 @@ public class Account {
 
     @Column(columnDefinition = "VARCHAR(255)")
     private String avatar;
-    
+
     @Column(columnDefinition = "DATE")
     private LocalDate birthday;
 

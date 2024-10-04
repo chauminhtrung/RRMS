@@ -1,11 +1,12 @@
 package com.rrms.rrms.dto.request;
 
-import com.rrms.rrms.enums.Gender;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.io.Serializable;
 import java.time.LocalDate;
+
+import com.rrms.rrms.enums.Gender;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
@@ -21,6 +22,4 @@ public class AccountRequest implements Serializable {
     Gender gender;
     String cccd;
     String avatar;
-
-
 }
