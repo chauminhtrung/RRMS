@@ -1,6 +1,7 @@
 package com.rrms.rrms.models;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -47,4 +48,7 @@ public class Account {
 
     @Column(columnDefinition = "VARCHAR(15)")
     private String cccd;
+
+    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
+    List<Auth> authorities;
 }

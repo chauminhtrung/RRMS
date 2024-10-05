@@ -19,6 +19,5 @@ public interface AccountSer {
     List<Account> findListAccountsByUsername(String username);
 
     List<Account> findAllByRole(String role);
-
     //  void loginOAuth2(OAuth2AuthenticationToken oAuth2Token);
 }

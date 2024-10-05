@@ -20,6 +20,9 @@ public class AccountAPI {
     @Autowired
     AccountSer accountService;
 
+    //    @Autowired
+    //    private PasswordEncoder passwordEncoder;
+
     @GetMapping("/get-all-account")
     public ResponseEntity<?> getAllAccount() {
         Map<String, Object> rs = new HashMap<>();
@@ -121,4 +124,53 @@ public class AccountAPI {
         }
         return ResponseEntity.ok(rs);
     }
+
+    //    @PostMapping("/login")
+    //    public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
+    //        Map<String, Object> response = new HashMap<>();
+    //        String username = loginRequest.get("username");
+    //        String password = loginRequest.get("password");
+    //
+    //        // Kiểm tra đầu vào
+    //        if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
+    //            response.put("status", false);
+    //            response.put("message", "Username và password không được để trống");
+    //            return ResponseEntity.badRequest().body(response);
+    //        }
+    //
+    //        try {
+    //            // Tìm tài khoản theo username
+    //            Optional<Account> accountOptional = accountService.findAccountsByUsername(username);
+    //
+    //            if (accountOptional.isPresent()) {
+    //                Account account = accountOptional.get();
+    //                // Kiểm tra mật khẩu
+    //                if (passwordEncoder.matches(password, account.getPassword())) {
+    //                    // Tạo token JWT
+    //                    //                    String token = jwtTokenProvider.generateToken(account); // Giả sử bạn đã
+    // có
+    //                    // một JwtTokenProvider
+    //
+    //                    response.put("status", true);
+    //                    response.put("message", "Đăng nhập thành công");
+    //                    response.put("data", account);
+    //                    //                    response.put("token", token);
+    //
+    //                    return ResponseEntity.ok(response);
+    //                } else {
+    //                    response.put("status", false);
+    //                    response.put("message", "Tài khoản hoặc mật khẩu không đúng");
+    //                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    //                }
+    //            } else {
+    //                response.put("status", false);
+    //                response.put("message", "Tài khoản không tồn tại");
+    //                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    //            }
+    //        } catch (Exception e) {
+    //            response.put("status", false);
+    //            response.put("message", "Lỗi hệ thống: " + e.getMessage());
+    //            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    //        }
+    //    }
 }
