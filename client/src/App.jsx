@@ -20,6 +20,10 @@ import AdminManagerBoard from './pages/admin/AdminManageBoard'
 import Profile from './pages/Profile/Profile'
 import PaymentPage from './pages/cart/PaymentPage'
 import { useState } from 'react'
+import Heart from './pages/cart/Heart'
+import RRMS from './pages/RRMS/RRMS'
+import AdminManageBoker from './pages/admin/AdminManageBoker/AdminManageBoker'
+
 // import TestPage from './pages/TestPage'
 // import ValidCaptcha from './components/ValidCaptcha'
 
@@ -35,6 +39,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/chart" element={<Chart />} />
           <Route path="/admin" element={<MainManagement setIsAdmin={setIsAdmin} />} />
+          <Route path="/admin" element={<MainManagement />} />
+          <Route path="/adminBoker" element={<AdminManageBoker />} />
           <Route path="/search" element={<Search />} />
           <Route path="/detail" element={<Detail />} />
           <Route path="/AdminStatis" element={<AdminStatis />} />
@@ -46,6 +52,8 @@ function App() {
           <Route path="/forgot-password" element={<Forgot_Password />} />
           <Route path="/support" element={<Support />} />
           <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/heart" element={<Heart />} />
+          <Route path="/RRMS" element={<RRMS />} />
           {/* <Route path="/test" element={<TestPage />} /> */}
           <Route path="/AdminManagerBoard" element={<AdminManagerBoard />} />
           {/* <Routes path="/test" element={<TestPage />} /> */}

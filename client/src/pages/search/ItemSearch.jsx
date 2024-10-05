@@ -1,10 +1,15 @@
-import { Box, Grid, Typography, Paper } from '@mui/material'
+import { Box, Grid, Typography } from '@mui/material'
 import Groups2RoundedIcon from '@mui/icons-material/Groups2Rounded'
 import RecentActorsRoundedIcon from '@mui/icons-material/RecentActorsRounded'
 import MailRoundedIcon from '@mui/icons-material/MailRounded'
 const ItemSearch = () => {
   return (
-    <Box sx={{ padding: 1 }}>
+    <Box
+      sx={{
+        padding: 1,
+        bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542'),
+        color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894'),
+      }}>
       <Typography variant="h6" sx={{ mt: 2 }}>
         Cho thuê phòng trọ:
       </Typography>
@@ -61,42 +66,47 @@ const ItemSearch = () => {
       </Grid>
 
       {/* Các bước đăng tin */}
-      <Box sx={{ mt: 4 }}>
-        <Typography variant="h5" sx={{ textAlign: 'center', fontWeight: 'bold', mt: 3 }}>
-          Các bước đăng tin DQ4T
-        </Typography>
-        <Typography variant="h6" sx={{ textAlign: 'center', mt: 3 }}>
-          Tiếp cận khách thuê dễ dàng với tính năng đăng tin
-        </Typography>
-        <Grid container spacing={2} sx={{ mt: 2 }}>
-          <Grid item xs={12} md={4}>
-            <Paper sx={{ padding: 2, backgroundColor: '#00b894' }}>
-              <Typography color="white">1. Đăng nhập/Đăng ký</Typography>
-              <Typography color="white">Tải app và đăng ký sau đó đăng nhập</Typography>
-            </Paper>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Paper sx={{ padding: 2, backgroundColor: '#0984e3' }}>
-              <Typography color="white">2. Đăng tin</Typography>
-              <Typography color="white">Đăng tin trong tài khoản cá nhân</Typography>
-            </Paper>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Paper sx={{ padding: 2, backgroundColor: '#fdcb6e' }}>
-              <Typography color="white">3. Xét duyệt & Tiếp cận khách thuê</Typography>
-              <Typography color="white">Chuyên viên sẵn sàng xét duyệt 24/7</Typography>
-            </Paper>
-          </Grid>
-        </Grid>
-      </Box>
-      <Box sx={{ mt: 4, textAlign: 'center' }}>
-        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-          DQ4T có gì?
-        </Typography>
-        <Typography variant="h6" sx={{ mt: 2 }}>
-          Tại sao bạn phải chọn chúng tôi mà không phải một dịch vụ nào khác?
-        </Typography>
-      </Box>
+      <div className="text-center HTPost mt-3">
+        <h3>Các bước đăng tin bài RRMS</h3>
+        <p className="text-center description">Tiếp cận khách thuê dễ dàng với tính năng đăng tin</p>
+      </div>
+      <div className="container mb-4 mt-3">
+        <div className="row feature card-benefit">
+          <div className="col-md-4 item green">
+            <div className="innerRRMS mb-2">
+              <div className="icon-itemRRMS">
+                <span>1</span>
+              </div>
+              <div className="content-item">
+                <b>Đăng nhập/Đăng ký</b>
+                <div>đăng ký sau đó đăng nhập</div>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-4 item blue">
+            <div className="innerRRMS mb-2">
+              <div className="icon-itemRRMS ">
+                <span>2</span>
+              </div>
+              <div className="content-item">
+                <b>Đăng tin</b>
+                <div>Đăng tin trong tài khoản cá nhân</div>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-4 item yellow">
+            <div className="innerRRMS mb-2">
+              <div className="icon-itemRRMS ">
+                <span>3</span>
+              </div>
+              <div className="content-item">
+                <b>Xét duyệt &amp; tiếp cận khách thuê</b>
+                <div>Chuyên viên sẵn sàng xét duyệt 24/7</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* DQ4T có gì */}
       <Grid container sx={{ gap: 2, justifyContent: 'center', my: 2, alignItems: 'center', mt: 2 }}>
