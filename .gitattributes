@@ -1,2 +1,6 @@
 *.sql linguist-detectable=true
 *.sql linguist-language=SQL
+*.html linguist-detectable=true
+*.html linguist-language=HTML
+Dockerfile linguist-detectable=true
+Dockerfile linguist-language=Dockerfile
