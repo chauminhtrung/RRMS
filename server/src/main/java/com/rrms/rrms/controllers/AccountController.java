@@ -2,6 +2,9 @@ package com.rrms.rrms.controllers;
 
 import java.util.Optional;
 
+import com.rrms.rrms.services.IAccountService;
+import com.rrms.rrms.services.IAuthorityService;
+import com.rrms.rrms.services.IRoleService;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,20 +19,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Auth;
 import com.rrms.rrms.models.Role;
-import com.rrms.rrms.services.AccountSer;
-import com.rrms.rrms.services.AuthorityService;
-import com.rrms.rrms.services.RoleService;
+
 
 @Controller
 public class AccountController {
     @Autowired
-    AccountSer accountService;
+    IAccountService accountService;
 
     @Autowired
-    AuthorityService authorityService;
+    IAuthorityService authorityService;
 
     @Autowired
-    RoleService roleService;
+    IRoleService roleService;
 
     @RequestMapping("/login")
     public String loginform() {
