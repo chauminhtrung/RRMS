@@ -54,12 +54,8 @@ function App() {
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/heart" element={<Heart />} />
           <Route path="/RRMS" element={<RRMS />} />
-          {/* <Route path="/test" element={<TestPage />} /> */}
-          <Route path="/AdminManagerBoard" element={<AdminManagerBoard />} />
-          {/* <Routes path="/test" element={<TestPage />} /> */}
           <Route path="/AdminManagerBoard" element={<AdminManagerBoard />} />
         </Routes>
-
         {!isAdmin ? <Footer /> : <></>}
       </Router>
     </>
