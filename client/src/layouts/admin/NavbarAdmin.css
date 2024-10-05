@@ -22,9 +22,7 @@ a {
     color: #000000;
 }
 
-a:hover {
-    color: #3c9e47;
-}
+
 
 .card-feature {
     background-color: #fff;
@@ -198,16 +196,6 @@ a:hover {
     color: #71767a;
 }
 
-/* Button */
-.btn.btn-primary {
-    border: 0px solid #3c9e47;
-    padding: 7px 20px;
-    font-weight: bold;
-    background-color: #3c9e47;
-    color: white;
-    background-image: linear-gradient(to right, #7dc242, #3b9d46);
-    position: relative;
-}
 
 .btn-white{
     font-weight: bold;
