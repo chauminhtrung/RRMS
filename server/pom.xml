@@ -43,10 +43,10 @@
 		</dependency>
 
 		<!-- Spring Boot Starter WebSocket: Hỗ trợ cho các ứng dụng WebSocket -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-websocket</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-websocket</artifactId>-->
+<!--		</dependency>-->
 
 		<!-- Spring Boot Starter OAuth2 Resource Server: Cung cấp OAuth2 Resource Server cho bảo mật API -->
 <!--		<dependency>-->
@@ -216,9 +216,9 @@
 				</executions>
 				<configuration>
 					<excludes>
-						<exclude>com/example/identity_services</exclude>
-						<exclude>com/example/identity_services/mapper/**</exclude>
-						<exclude>com/example/identity_services/configuration/**</exclude>
+						<exclude>com/rrms/rrms</exclude>
+						<exclude>com/rrms/rrms/mapper/**</exclude>
+						<exclude>com/rrms/rrms/configs/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
