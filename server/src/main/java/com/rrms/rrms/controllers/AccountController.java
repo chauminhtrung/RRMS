@@ -15,19 +15,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.rrms.rrms.enums.Roles;
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Auth;
 import com.rrms.rrms.models.Role;
-import com.rrms.rrms.services.AccountSer;
-import com.rrms.rrms.services.AuthorityService;
+import com.rrms.rrms.services.IAccountService;
+import com.rrms.rrms.services.IAuthorityService;
 
 @Controller
 public class AccountController {
     @Autowired
-    AccountSer accountService;
+    IAccountService accountService;
 
     @Autowired
-    AuthorityService authorityService;
+    IAuthorityService authorityService;
 
     @RequestMapping("/login")
     public String loginform() {
@@ -76,7 +77,7 @@ public class AccountController {
             Auth authority = new Auth();
             Role role = new Role();
             role.setRoleId(UUID.randomUUID());
-            role.setRoleName("Customers");
+            role.setRoleName(Roles.CUSTOMER);
             authority.setAccount(newAccount);
             authority.setRole(role);
             authorityService.save(authority);

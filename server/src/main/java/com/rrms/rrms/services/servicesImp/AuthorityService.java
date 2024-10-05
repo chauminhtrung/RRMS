@@ -1,4 +1,4 @@
-package com.rrms.rrms.servicesImp;
+package com.rrms.rrms.services.servicesImp;
 
 import java.util.List;
 
@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.models.Auth;
 import com.rrms.rrms.repositories.AuthRepository;
-import com.rrms.rrms.services.AuthorityService;
+import com.rrms.rrms.services.IAuthorityService;
 
 @Service
-public class AuthorityServiceImp implements AuthorityService {
+public class AuthorityService implements IAuthorityService {
 
     @Autowired
     AuthRepository authRepository;
