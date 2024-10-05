@@ -39,7 +39,6 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/chart" element={<Chart />} />
           <Route path="/admin" element={<MainManagement setIsAdmin={setIsAdmin} />} />
-          <Route path="/admin" element={<MainManagement />} />
           <Route path="/adminBoker" element={<AdminManageBoker />} />
           <Route path="/search" element={<Search />} />
           <Route path="/detail" element={<Detail />} />
