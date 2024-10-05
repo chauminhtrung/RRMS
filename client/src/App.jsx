@@ -13,28 +13,28 @@ import Support from './pages/Support/Support'
 
 import AdminStatis from './pages/admin/statistical'
 
-import { env } from './configs/environment'
 import MainManagement from './pages/admin/MainManagement'
 import Contact from './pages/Contact/Contact'
 import Introduce from './pages/Introduce/Introduce'
 import AdminManagerBoard from './pages/admin/AdminManageBoard'
 import Profile from './pages/Profile/Profile'
 import PaymentPage from './pages/cart/PaymentPage'
+import { useState } from 'react'
 // import TestPage from './pages/TestPage'
 // import ValidCaptcha from './components/ValidCaptcha'
 
 function App() {
-  console.log(env.API_URL)
+  const [isAdmin, setIsAdmin] = useState(false)
 
   return (
     <>
       <Router>
         {/* <ValidCaptcha /> */}
-        <Header />
+        {!isAdmin ? <Header /> : <></>}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/chart" element={<Chart />} />
-          <Route path="/admin" element={<MainManagement />} />
+          <Route path="/admin" element={<MainManagement setIsAdmin={setIsAdmin} />} />
           <Route path="/search" element={<Search />} />
           <Route path="/detail" element={<Detail />} />
           <Route path="/AdminStatis" element={<AdminStatis />} />
@@ -51,7 +51,8 @@ function App() {
           {/* <Routes path="/test" element={<TestPage />} /> */}
           <Route path="/AdminManagerBoard" element={<AdminManagerBoard />} />
         </Routes>
-        <Footer />
+
+        {!isAdmin ? <Footer /> : <></>}
       </Router>
     </>
   )

@@ -1,9 +1,14 @@
-import React from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from 'react'
 import { Box, Button, Checkbox } from '@mui/material'
 import { Grid } from '@mui/material'
 import Navbar from '~/layouts/admin/Navbar'
 
-const MainManagement = ({ theme }) => {
+const MainManagement = ({ theme, setIsAdmin }) => {
+  useEffect(() => {
+    setIsAdmin(true)
+  }, [])
+
   return (
     <Box
       sx={{
