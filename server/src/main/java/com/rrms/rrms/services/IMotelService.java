@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public interface MotelService {
+public interface IMotelService {
         public MotelResponse insert(Motel motel);
         public MotelResponse findById(UUID id);
         public List<MotelResponse> findAll();
