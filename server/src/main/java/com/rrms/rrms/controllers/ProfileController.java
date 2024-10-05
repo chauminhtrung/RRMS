@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.request.ApiResponse;
 import com.rrms.rrms.dto.response.AccountResponse;
-import com.rrms.rrms.services.AccountService;
+import com.rrms.rrms.services.IAccountService;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -21,18 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class ProfileController {
 
-    AccountService accountService;
+    IAccountService accountService;
 
     @GetMapping()
     public ApiResponse<AccountResponse> getProfile(@RequestParam("username") String username) {
         AccountResponse accountResponse = accountService.findByUsername(username);
-        if (accountResponse == null) {
-            return ApiResponse.<AccountResponse>builder()
-                    .code(HttpStatus.NOT_FOUND.value())
-                    .message("Account not found")
-                    .result(null)
-                    .build();
-        }
         return ApiResponse.<AccountResponse>builder()
                 .code(HttpStatus.OK.value())
                 .message("Get profile successfully")

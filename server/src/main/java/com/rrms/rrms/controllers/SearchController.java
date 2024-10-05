@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rrms.rrms.dto.request.ApiResponse;
 import com.rrms.rrms.models.Room;
-import com.rrms.rrms.services.SearchService;
+import com.rrms.rrms.services.ISearchService;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SearchController {
 
-    SearchService searchService;
+    ISearchService searchService;
 
     @RequestMapping("/name")
     public ApiResponse<List<Room>> searchName(@RequestParam("name") String name) {

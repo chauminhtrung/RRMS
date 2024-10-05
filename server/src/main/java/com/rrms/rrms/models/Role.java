@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import jakarta.persistence.*;
 
+import com.rrms.rrms.enums.Roles;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,8 +21,8 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID roleId;
 
-    @Column(columnDefinition = "VARCHAR(255)")
-    private String roleName;
+    @Enumerated(EnumType.STRING)
+    private Roles roleName;
 
     @Column(columnDefinition = "TEXT")
     private String description;

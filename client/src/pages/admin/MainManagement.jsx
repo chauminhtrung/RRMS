@@ -1,10 +1,28 @@
-import React from 'react'
-import { Box, Button, Checkbox } from '@mui/material'
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from 'react'
+import { Box, Button } from '@mui/material'
 import { Grid } from '@mui/material'
+
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
 
-const MainManagement = ({ theme }) => {
+// import Navbar from '~/layouts/admin/Navbar'
+import { Tooltip, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material'
+import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory'
+import AddIcon from '@mui/icons-material/Add'
+
+const MainManagement = ({ setIsAdmin }) => {
+  useEffect(() => {
+    setIsAdmin(true)
+  }, [])
+  const [open, setOpen] = useState(false)
+  const handleClickOpen = () => {
+    setOpen(true)
+  }
+  const handleClose = () => {
+    setOpen(false)
+  }
   return (
+
     <NavAdmin />
 
     // <Box
@@ -195,6 +213,7 @@ const MainManagement = ({ theme }) => {
     //     </Grid>
     //   </Grid>
     // </Box>
+
   )
 }
 

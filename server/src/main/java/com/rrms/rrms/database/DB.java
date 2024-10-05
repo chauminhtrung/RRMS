@@ -1,20 +1,16 @@
 package com.rrms.rrms.database;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.rrms.rrms.enums.Gender;
-import com.rrms.rrms.models.Account;
-import com.rrms.rrms.models.Motel;
-import com.rrms.rrms.models.Room;
-import com.rrms.rrms.models.TypeRoom;
-import com.rrms.rrms.repositories.AccountRepository;
-import com.rrms.rrms.repositories.MotelRepository;
-import com.rrms.rrms.repositories.RoomRepository;
-import com.rrms.rrms.repositories.TypeRoomRepository;
+import com.rrms.rrms.models.*;
+import com.rrms.rrms.repositories.*;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,7 +22,11 @@ public class DB {
             AccountRepository accountRepository,
             RoomRepository roomRepository,
             MotelRepository motelRepository,
-            TypeRoomRepository typeRoomRepository) {
+            TypeRoomRepository typeRoomRepository,
+            RoomImageRepository roomImageRepository,
+            RoomReviewRepository roomReviewRepository,
+            ServiceRepository serviceRepository,
+            RoomServiceRepository roomServiceRepository) {
         return args -> {
             if (accountRepository.findByUsername("admin").isEmpty()) {
                 // create admin account
@@ -60,21 +60,65 @@ public class DB {
                         .build());
                 log.info("User1 created");
             }
-            if (roomRepository.findAllByNameRoom("Gò Vấp").isEmpty()) {
+            if (roomRepository.findAll().isEmpty()) {
                 // create admin account
+
                 Motel motel = new Motel();
                 motel.setAccount(accountRepository.findByUsername("admin").get());
+                motel.setMotelName("Hà nội");
                 motelRepository.save(motel);
+
                 TypeRoom typeRoom = new TypeRoom();
+                typeRoom.setName("Tình yêu");
                 typeRoomRepository.save(typeRoom);
-                roomRepository.save(Room.builder()
-                        .motel(motel)
-                        .price(1111)
-                        .nameRoom("Hà đặc")
-                        .typeRoom(typeRoom)
-                        .description("như con cặc")
-                        .build());
+
+                Room room = new Room();
+                room.setDeposit(500000.0);
+                room.setHours("Tự do");
+                room.setRentalStartTime(LocalDate.now());
+                room.setMotel(motel);
+                room.setTypeRoom(typeRoom);
+                room.setNameRoom("room1");
+                room.setDescription("room1");
+                room.setAvailable(true);
+                room.setRoomArea(100);
+                room.setPrice(1000000.0);
+                room.setMaxPerson(2);
+                roomRepository.save(room);
                 log.info("Search room created");
+
+                RoomReview roomReview = new RoomReview();
+                roomReview.setAccount(accountRepository.findByUsername("admin").get());
+                roomReview.setComment("Phòng này đẹp ghê");
+                roomReview.setRating(3);
+                roomReview.setRoom(room);
+                roomReviewRepository.save(roomReview);
+                log.info("Room review created");
+
+                Service service = new Service();
+                service.setNameService("Có chuồng chó");
+                service.setTypeService("Dịch vụ");
+                serviceRepository.save(service);
+                log.info("Service created");
+
+                RoomService roomService = new RoomService();
+                roomService.setRoom(room);
+                roomService.setService(service);
+                roomServiceRepository.save(roomService);
+                log.info("Room service created");
+
+                RoomImage roomImage1 =
+                        new RoomImage(UUID.randomUUID(), room, "https://picsum.photos/1000/700?random=1");
+                RoomImage roomImage2 =
+                        new RoomImage(UUID.randomUUID(), room, "https://picsum.photos/1000/700?random=2");
+                RoomImage roomImage3 =
+                        new RoomImage(UUID.randomUUID(), room, "https://picsum.photos/1000/700?random=3");
+                RoomImage roomImage4 =
+                        new RoomImage(UUID.randomUUID(), room, "https://picsum.photos/1000/700?random=4");
+                RoomImage roomImage5 =
+                        new RoomImage(UUID.randomUUID(), room, "https://picsum.photos/1000/700?random=5");
+                roomImageRepository.saveAll(List.of(roomImage1, roomImage2, roomImage3, roomImage4, roomImage5));
+                log.info("Room image created");
             }
         };
     }

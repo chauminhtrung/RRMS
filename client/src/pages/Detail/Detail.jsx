@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
   Breadcrumbs,
@@ -45,12 +46,30 @@ const Detail = () => {
   const [detail, setDetail] = useState(null)
   const [raiting, setRaiting] = useState(0)
   const [showArrows, setShowArrows] = useState(false)
+  const [roomRating, setRoomRating] = useState(0)
+
+  const calculateAvgRaiting = () => {
+    if (detail && detail.roomReviews && detail.roomReviews.length > 0) {
+      let sum = 0
+      detail.roomReviews.forEach((item) => {
+        sum += item.rating
+      })
+      setRoomRating(sum / detail.roomReviews.length)
+    } else {
+      setRoomRating(0)
+    }
+    console.log(roomRating)
+  }
 
   useEffect(() => {
-    getDetail().then((res) => {
-      setDetail(res.data)
+    getDetail('09176759-1660-4581-bd47-1a46f876a6a6').then((res) => {
+      setDetail(res.data.result)
     })
   }, [])
+
+  useEffect(() => {
+    calculateAvgRaiting()
+  }, [detail])
 
   const share = async () => {
     try {
@@ -88,7 +107,7 @@ const Detail = () => {
       if (isMobile) return <Box sx={{ display: 'none' }}></Box>
       return (
         <a>
-          <img className="image-paging" src={detail.images[i].image}></img>
+          <img className="image-paging" src={detail.roomImages[i].image}></img>
         </a>
       )
     },
@@ -101,12 +120,12 @@ const Detail = () => {
           Trang chủ
         </Link>
         <Link color="inherit" to="/">
-          {detail.address}
+          {detail.motel.motelName}
         </Link>
         <Link color="inherit" to="/">
-          {detail.type}
+          {detail.typeRoom.name}
         </Link>
-        <Typography sx={{ color: 'text.primary' }}>{detail.name}</Typography>
+        <Typography sx={{ color: 'text.primary' }}>{detail.nameRoom}</Typography>
       </Breadcrumbs>
       <Grid container spacing={2}>
         <Grid
@@ -133,21 +152,21 @@ const Detail = () => {
             },
           }}>
           <Slider {...settings} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {detail.images.map((item, i) => (
+            {detail.roomImages.map((item, i) => (
               <Item
                 key={i}
                 index={i}
                 item={item}
-                addressDetail={detail.addressDetail}
-                totalItems={detail.images.length}
+                addressDetail={detail.motel.address}
+                totalItems={detail.roomImages.length}
               />
             ))}
           </Slider>
 
           <Typography variant="h5" sx={{ mt: 8 }}>
-            {detail.name}
+            {detail.nameRoom}
           </Typography>
-          <Typography variant="h6">{detail.addressDetail}</Typography>
+          <Typography variant="h6">{detail.motel.address}</Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography variant="h5" sx={{ my: 2, color: 'red' }}>
               {formatterAmount(detail.price)}/tháng
@@ -156,11 +175,11 @@ const Detail = () => {
               <Rating
                 sx={{ alignItems: 'center', my: 0.5 }}
                 name="simple-controlled"
-                value={5}
+                value={roomRating}
                 size="medium"
                 readOnly
               />
-              <Typography>{'(5)'}</Typography>
+              <Typography>{`(${roomRating})`}</Typography>
             </Box>
           </Box>
 
@@ -169,12 +188,12 @@ const Detail = () => {
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <TagIcon sx={{ mr: 0.5 }} />
                 <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>Chuyên mục: </Typography>
-                {detail.type}
+                {detail.typeRoom.name}
               </Typography>
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <LanguageIcon sx={{ mr: 0.5 }} />
                 <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>Tình trạng: </Typography>
-                {detail.status}
+                {detail.available ? 'Đang cho thuê' : 'Đã có người thuê'}
               </Typography>
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <CalendarMonthIcon sx={{ mr: 0.5 }} />
@@ -191,12 +210,12 @@ const Detail = () => {
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <ShieldOutlinedIcon sx={{ mr: 0.5 }} />
                 <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>Kiểm duyệt: </Typography>
-                {detail.censor}
+                {detail.motel.account.fullname}
               </Typography>
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <GroupIcon sx={{ mr: 0.5 }} />
                 <Typography sx={{ display: isMobile ? 'none' : 'block', mr: 0.5 }}>Tối đa người ở: </Typography>
-                {detail.maximum}
+                {detail.maxPerson}
               </Typography>
             </Grid>
           </Grid>
@@ -215,7 +234,7 @@ const Detail = () => {
                 <CropIcon />
                 <Box>
                   <Typography>Diện tích</Typography>
-                  <Typography>{detail.area} m2</Typography>
+                  <Typography>{detail.roomArea} m2</Typography>
                 </Box>
               </Box>
             </Grid>
@@ -224,7 +243,7 @@ const Detail = () => {
                 <ElectricBoltIcon />
                 <Box>
                   <Typography>Tiền điện</Typography>
-                  <Typography>{formatterAmount(detail.priceElectric)}/Kw</Typography>
+                  <Typography>{formatterAmount(100000)}/Kw</Typography>
                 </Box>
               </Box>
             </Grid>
@@ -233,17 +252,17 @@ const Detail = () => {
                 <WaterDropOutlinedIcon />
                 <Box>
                   <Typography>Tiền nước</Typography>
-                  <Typography>{formatterAmount(detail.priceWater)}/Khối</Typography>
+                  <Typography>{formatterAmount(100000)}/Khối</Typography>
                 </Box>
               </Box>
             </Grid>
           </Grid>
           <Typography variant="h5">Điểm (+)</Typography>
           <Grid container sx={{ gap: 2, justifyContent: isMobile ? 'center' : 'start', my: 2 }}>
-            {detail.plusPoint.map((item, i) => (
+            {detail.roomServices.map((item, i) => (
               <Grid item md={3.8} xs={5} key={i}>
                 <Box sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', borderRadius: '5px', p: '10px' }}>
-                  {item}
+                  {item.service.nameService}
                 </Box>
               </Grid>
             ))}
@@ -311,10 +330,10 @@ const Detail = () => {
             </Grid>
           </Grid>
           <BannerHorizontal />
-          <RaitingAvg />
-          <Comment />
-          <Comment />
-          <Comment />
+          <RaitingAvg reviews={detail.roomReviews} rating={roomRating} />
+          {detail.roomReviews.map((item, i) => (
+            <Comment key={i} item={item} />
+          ))}
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Pagination count={10} color="primary.main" size="medium" />
           </Box>
@@ -341,7 +360,7 @@ const Detail = () => {
                 }}>
                 <Typography variant="h5">Phòng trọ, nhà trọ cùng địa chỉ</Typography>
                 <Typography variant="subtitle1">
-                  Xem thêm {detail.type}, nhà trọ tại {detail.address}
+                  Xem thêm {detail.typeRoom.name}, nhà trọ tại {detail.motelName}
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>

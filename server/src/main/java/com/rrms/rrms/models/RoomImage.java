@@ -24,11 +24,5 @@ public class RoomImage {
     private Room room;
 
     @Column(columnDefinition = "VARCHAR(255)")
-    private String fileName;
-
-    @Column(columnDefinition = "TEXT")
-    private String linkImg;
-
-    @Column(columnDefinition = "BOOLEAN")
-    private Boolean mainImg;
+    private String image;
 }
