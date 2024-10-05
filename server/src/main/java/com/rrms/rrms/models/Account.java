@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 
 import com.rrms.rrms.enums.Gender;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -47,4 +48,7 @@ public class Account {
 
     @Column(columnDefinition = "VARCHAR(15)")
     private String cccd;
+
+    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
+    List<Auth> authorities;
 }

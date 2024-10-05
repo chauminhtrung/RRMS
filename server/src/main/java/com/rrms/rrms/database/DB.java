@@ -44,13 +44,13 @@ public class DB {
                         .build());
                 log.info("Admin user created");
             }
-            if (accountRepository.findByUsername("user1").isEmpty()) {
+            if (accountRepository.findByUsername("user5").isEmpty()) {
                 // create admin account
                 accountRepository.save(Account.builder()
-                        .username("user1")
-                        .password("user1")
-                        .fullname("Tri Dung")
-                        .email("tridung@gmail.com")
+                        .username("user5")
+                        .password("user5")
+                        .fullname("Minh Trung")
+                        .email("minhtrung@gmail.com")
                         .phone("03333345553")
                         .cccd("012345678900")
                         .gender(Gender.OTHER)
@@ -64,10 +64,10 @@ public class DB {
                 // create admin account
 
                 Motel motel = new Motel();
+                System.out.println("--------------day la id truoc khi tao -------------: "+motel.getMotelId());
                 motel.setAccount(accountRepository.findByUsername("admin").get());
                 motel.setMotelName("Hà nội");
                 motelRepository.save(motel);
-
                 TypeRoom typeRoom = new TypeRoom();
                 typeRoom.setName("Tình yêu");
                 typeRoomRepository.save(typeRoom);
