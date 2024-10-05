@@ -12,13 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.rrms.rrms.models.Account;
-import com.rrms.rrms.services.AccountSer;
+import com.rrms.rrms.services.IAccountService;
 
 @RestController
 @RequestMapping("/api-accounts")
 public class AccountAPI {
     @Autowired
-    AccountSer accountService;
+    IAccountService accountService;
 
     @GetMapping("/get-all-account")
     public ResponseEntity<?> getAllAccount() {

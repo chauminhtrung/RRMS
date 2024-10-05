@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 import com.rrms.rrms.enums.Gender;
-
 import com.rrms.rrms.enums.Roles;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

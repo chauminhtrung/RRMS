@@ -3,9 +3,11 @@ package com.rrms.rrms.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.rrms.rrms.dto.request.AccountRequest;
+import com.rrms.rrms.dto.response.AccountResponse;
 import com.rrms.rrms.models.Account;
 
-public interface AccountSer {
+public interface IAccountService {
     List<Account> findAll();
 
     Optional<Account> findAccountsByUsername(String username);
@@ -19,6 +21,12 @@ public interface AccountSer {
     List<Account> findListAccountsByUsername(String username);
 
     List<Account> findAllByRole(String role);
+
+    AccountResponse findByUsername(String username);
+
+    AccountResponse save(AccountRequest accountRequest);
+
+    AccountResponse update(AccountRequest accountRequest);
 
     //  void loginOAuth2(OAuth2AuthenticationToken oAuth2Token);
 }

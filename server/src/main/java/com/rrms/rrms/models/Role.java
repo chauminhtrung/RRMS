@@ -2,8 +2,9 @@ package com.rrms.rrms.models;
 
 import java.util.UUID;
 
-import com.rrms.rrms.enums.Roles;
 import jakarta.persistence.*;
+
+import com.rrms.rrms.enums.Roles;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +20,7 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID roleId;
-    
+
     @Enumerated(EnumType.STRING)
     private Roles roleName;
 

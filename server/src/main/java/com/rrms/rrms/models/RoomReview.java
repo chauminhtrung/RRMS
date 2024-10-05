@@ -29,10 +29,7 @@ public class RoomReview {
 
     @Column(columnDefinition = "INT")
     private Integer rating;
-    
+
     @Column(columnDefinition = "TEXT")
     private String comment;
-
-
-    
 }

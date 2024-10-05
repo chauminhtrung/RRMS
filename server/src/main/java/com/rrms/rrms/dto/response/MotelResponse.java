@@ -1,14 +1,13 @@
 package com.rrms.rrms.dto.response;
 
-import com.rrms.rrms.models.Account;
+import java.util.UUID;
+import javax.swing.*;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import javax.swing.*;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor

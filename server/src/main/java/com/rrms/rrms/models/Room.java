@@ -2,7 +2,6 @@ package com.rrms.rrms.models;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import jakarta.persistence.*;
@@ -71,4 +70,3 @@ public class Room {
     @JoinColumn(name = "room_id")
     private List<RoomReview> roomReviews;
 }
-
