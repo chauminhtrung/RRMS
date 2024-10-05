@@ -1,6 +1,41 @@
-import { Link } from 'react-router-dom'
+import { useState } from 'react';  
+import { Link } from 'react-router-dom';  
+import axios from 'axios';  
 
-const Register = () => {
+const Register = () => {  
+  const [username, setUsername] = useState('');  
+  const [phone, setPhone] = useState('');  
+  const [password, setPassword] = useState('');  
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');  
+  const [errorMessage, setErrorMessage] = useState('');  
+
+  const handleRegister = async (event) => {  
+    event.preventDefault();  
+  
+    if (password !== passwordConfirmation) {  
+      setErrorMessage("Mật khẩu và xác nhận mật khẩu không khớp.");  
+      return;  
+    }  
+  
+    const account = {  
+      username,  
+      phone,  
+      password,  
+    };  
+  
+    try {  
+      const response = await axios.post('http://localhost:8080/register', account);  
+      alert(response.data); // Thông báo thành công  
+    } catch (error) {  
+      console.log(error.response); // Ghi lại thông tin lỗi  
+      if (error.response) {  
+        setErrorMessage(error.response.data); // Nhận thông báo lỗi từ backend  
+      } else {  
+        setErrorMessage("Có lỗi xảy ra, vui lòng thử lại.");  
+      }  
+    }  
+  };  
+  
   return (
     <body
       style={{
@@ -43,7 +78,7 @@ const Register = () => {
 
             <div className="row login-form-container">
               <div className="col-12 login-form-1" style={{ backgroundColor: '#fff' }}>
-                <form method="POST" className="needs-validation" id="login-form" noValidate="">
+                <form onSubmit={handleRegister} method="POST" className="needs-validation" id="login-form" noValidate="">
                   <input type="hidden" name="_token" value="5BJeOPDNyeTzDZjmxeICdcC1ZbEiQS4PdhfCFOol" />{' '}
                   <div className="row g-2">
                     <div className="col-6">
@@ -56,7 +91,8 @@ const Register = () => {
                           className="form-control"
                           name="name"
                           placeholder="Nhập tên người dùng"
-                          required=""
+                          required
+                          onChange={(e) => setUsername(e.target.value)}
                         />
                       </div>
                     </div>
@@ -70,8 +106,9 @@ const Register = () => {
                           className="form-control"
                           name="phone"
                           placeholder="Nhập số điện thoại"
-                          required=""
                           data-format="stringNumber"
+                          required  
+                          onChange={(e) => setPhone(e.target.value)}
                         />
                       </div>
                     </div>
@@ -85,7 +122,8 @@ const Register = () => {
                           className="form-control"
                           name="password"
                           placeholder="Nhập nhập khẩu"
-                          required=""
+                          required  
+                          onChange={(e) => setPassword(e.target.value)}
                         />
                       </div>
                     </div>
@@ -99,11 +137,13 @@ const Register = () => {
                           className="form-control"
                           name="password_confirmation"
                           placeholder="Nhập lại mật khẩu"
-                          required=""
+                          required  
+                          onChange={(e) => setPasswordConfirmation(e.target.value)}
                         />
                       </div>
                     </div>
                   </div>
+                  {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
                   <div className="form-group mb-2">
                     <button type="button" id="submit-login" className="btnSubmit btn btn-primary">
                       Đăng ký

@@ -3,6 +3,7 @@ package com.rrms.rrms.services.servicesImp;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.request.AccountRequest;
@@ -25,8 +26,13 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 public class AccountService implements IAccountService {
 
+    @Autowired
     AccountRepository accountRepository;
+
+    @Autowired
     AuthRepository authRepository;
+
+    @Autowired
     AccountMapper accountMapper;
 
     @Override

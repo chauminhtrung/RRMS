@@ -1,10 +1,12 @@
 package com.rrms.rrms.controllers;
 
-import java.util.Optional;
-
 import com.rrms.rrms.services.IAccountService;
 import com.rrms.rrms.services.IAuthorityService;
 import com.rrms.rrms.services.IRoleService;
+import com.rrms.rrms.services.servicesImp.AccountService;
+import com.rrms.rrms.services.servicesImp.AuthorityService;
+import java.util.Optional;
+
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Auth;
 import com.rrms.rrms.models.Role;
-
 
 @Controller
 public class AccountController {
@@ -50,7 +51,7 @@ public class AccountController {
 
         // Kiểm tra nếu tài khoản đã tồn tại
         if (existingAccount.isPresent()) {
-            return ResponseEntity.badRequest().body("Username is already in use");
+            return ResponseEntity.badRequest().body("Tên người dùng đã được sử dụng");
         }
 
         // Kiểm tra lỗi nếu có
@@ -67,7 +68,7 @@ public class AccountController {
             accountService.save(newAccount);
 
             // Tìm vai trò từ bảng Roles
-            Optional<Role> existingRole = roleService.findRoleByName("User");
+            Optional<Role> existingRole = roleService.findRoleByName("CUSTOMER");
 
             if (!existingRole.isPresent()) {
                 return ResponseEntity.badRequest().body("Role does not exist.");
