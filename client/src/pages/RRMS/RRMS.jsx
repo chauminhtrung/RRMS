@@ -1,11 +1,10 @@
 import { Swiper, SwiperSlide, useSwiper } from 'swiper/react'
-import 'swiper/css'
-import data from '../../Utils/slider.json'
-import wards_list from '../../Utils/wards_list.json'
-import Rooms from '../../Utils/Rooms.json'
-import Pkeyw from '../../Utils/PoKey.json'
-import { sliderSettings } from '../../utils/common'
+import Rooms from '~/utils/Rooms'
+import Pkeyw from '~/utils/PoKey'
 import FilterSearch from '../search/FilterSearch'
+import { data } from '~/utils/slider'
+import { sliderSettings } from '~/utils/common.js'
+import { wards_list } from '~/utils/wards_list'
 
 const RRMS = () => {
   const renderList = (card, start, end) => {
