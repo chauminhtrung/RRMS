@@ -1,5 +1,6 @@
 package com.rrms.rrms.services.servicesImp;
 
+import com.rrms.rrms.enums.Roles;
 import com.rrms.rrms.models.Role;
 import com.rrms.rrms.repositories.RoleRepository;
 import com.rrms.rrms.services.IRoleService;
@@ -23,7 +24,7 @@ public class RoleServiceImp implements IRoleService {
     }
 
     @Override
-    public Optional<Role> findRoleByName(String name) {
-        return roleRepository.findByRoleName(name);
+    public Optional<Role> findRoleByName(Roles roleName) {
+        return roleRepository.findByRoleName(roleName);
     }
 }

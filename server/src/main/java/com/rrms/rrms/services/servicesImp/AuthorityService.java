@@ -16,12 +16,7 @@ public class AuthorityService implements IAuthorityService {
     AuthRepository authRepository;
 
     @Override
-    public void save(Auth authority) {
-        authRepository.save(authority);
-    }
-
-    @Override
-    public Auth saveA(Auth authority) {
+    public Auth save(Auth authority) {
         return authRepository.save(authority);
     }
 

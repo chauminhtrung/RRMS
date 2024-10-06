@@ -1,15 +1,14 @@
 package com.rrms.rrms.controllers;
 
+import com.rrms.rrms.dto.request.LoginRequest;
+import com.rrms.rrms.enums.Roles;
 import com.rrms.rrms.services.IAccountService;
 import com.rrms.rrms.services.IAuthorityService;
 import com.rrms.rrms.services.IRoleService;
-import com.rrms.rrms.services.servicesImp.AccountService;
-import com.rrms.rrms.services.servicesImp.AuthorityService;
 import java.util.Optional;
-
 import jakarta.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,9 +32,18 @@ public class AccountController {
     @Autowired
     IRoleService roleService;
 
-    @RequestMapping("/login")
-    public String loginform() {
-        return "form/login";
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+        System.out.println("Login request received for phone: " + loginRequest.getPhone());
+
+        Optional<Account> accountOptional = accountService.login(loginRequest.getPhone(), loginRequest.getPassword());
+
+        if (accountOptional.isPresent()) {
+            return ResponseEntity.ok("Login successful for user: " + accountOptional.get().getUsername());
+        }
+
+        System.out.println("Login failed for phone: " + loginRequest.getPhone());
+        return ResponseEntity.status(401).body("Invalid username or password");
     }
 
     @RequestMapping("/security/login/error")
@@ -49,27 +57,34 @@ public class AccountController {
     public ResponseEntity<?> register(@Valid @RequestBody Account account, BindingResult bindingResult) {
         Optional<Account> existingAccount = accountService.findAccountsByUsername(account.getUsername());
 
-        // Kiểm tra nếu tài khoản đã tồn tại
+        // Check if the account already exists
         if (existingAccount.isPresent()) {
             return ResponseEntity.badRequest().body("Tên người dùng đã được sử dụng");
         }
 
-        // Kiểm tra lỗi nếu có
+        // Check for validation errors
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
 
         try {
-            // Tạo tài khoản mới
+            // Create a new account
             Account newAccount = new Account();
             newAccount.setUsername(account.getUsername());
             newAccount.setPassword(account.getPassword());
             newAccount.setPhone(account.getPhone());
+            newAccount.setFullname(account.getFullname());
+            newAccount.setEmail(account.getEmail());
+            newAccount.setBirthday(account.getBirthday());
+            newAccount.setGender(account.getGender());
+            newAccount.setCccd(account.getCccd());
             accountService.save(newAccount);
 
-            // Tìm vai trò từ bảng Roles
-            Optional<Role> existingRole = roleService.findRoleByName("CUSTOMER");
+            // Convert string to enum
+            Roles roleEnum = Roles.valueOf("CUSTOMER"); // Chuyển đổi "CUSTOMER" thành enum Roles.CUSTOMER
 
+            // Find role and create auth
+            Optional<Role> existingRole = roleService.findRoleByName(roleEnum);
             if (!existingRole.isPresent()) {
                 return ResponseEntity.badRequest().body("Role does not exist.");
             }
@@ -80,6 +95,8 @@ public class AccountController {
             authorityService.save(authority);
 
             return ResponseEntity.ok().body("Register successful");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid role name provided: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

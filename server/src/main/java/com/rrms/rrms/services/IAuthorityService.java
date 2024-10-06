@@ -5,9 +5,8 @@ import java.util.List;
 import com.rrms.rrms.models.Auth;
 
 public interface IAuthorityService {
-    public void save(Auth authority);
 
-    public Auth saveA(Auth authority);
+    public Auth save(Auth authority);
 
     public List<Auth> findAll();
 
