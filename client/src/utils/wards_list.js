@@ -1,0 +1,15 @@
+export const wards_list = [
+  { name: 'Tân Định' },
+  { name: 'Đa Kao' },
+  { name: 'Bến Nghé' },
+  { name: 'Bến Thành' },
+  { name: 'Nguyễn Thái Bình' },
+  { name: 'Phạm Ngũ Lão' },
+  { name: 'Cầu Ông Lãnh' },
+  { name: 'Cô Giang' },
+  { name: 'Nguyễn Cư Trinh' },
+  { name: 'Cầu Kho' },
+  { name: 'Thu Dau 1' },
+  { name: 'Dong An Ba' },
+  { name: 'Ngoc To' },
+]
