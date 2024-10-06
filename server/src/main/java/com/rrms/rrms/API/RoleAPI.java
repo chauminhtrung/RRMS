@@ -53,7 +53,7 @@ public class RoleAPI {
 
   @PostMapping("/rest/authorities")
   public Auth createAuthoritrie(@RequestBody Auth authortie) {
-    return authorityService.saveA(authortie);
+    return authorityService.save(authortie);
   }
 
   @DeleteMapping("/rest/authorities/{id}")

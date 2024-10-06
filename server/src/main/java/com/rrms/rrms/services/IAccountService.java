@@ -12,6 +12,8 @@ public interface IAccountService {
 
     Optional<Account> findAccountsByUsername(String username);
 
+    Optional<Account> login(String phone, String password);
+
     void save(Account acc);
 
     void deleteAcc(String username);

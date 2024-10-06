@@ -21,9 +21,6 @@ public class AccountAPI {
     @Autowired
     IAccountService accountService;
 
-    //    @Autowired
-    //    private PasswordEncoder passwordEncoder;
-
     @GetMapping("/get-all-account")
     public ResponseEntity<?> getAllAccount() {
         Map<String, Object> rs = new HashMap<>();
@@ -43,11 +40,9 @@ public class AccountAPI {
     @GetMapping("/get-account/{username}")
     public ResponseEntity<?> getAccount(@PathVariable String username) {
         Optional<Account> ac = accountService.findAccountsByUsername(username);
-        // Lấy danh sách giỏ hàng theo tên người dùng
         if (ac.isPresent()) {
             return ResponseEntity.ok(ac);
         }
-        // Trả về mã trạng thái HTTP 404 (Not Found) và thông báo lỗi tương ứng
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Call api failed");
     }
 
@@ -85,14 +80,12 @@ public class AccountAPI {
             rs.put("data", null);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(rs); // Trả về mã 500 nếu có lỗi
         }
-        return ResponseEntity.ok(rs); // Trả về mã 200 cho thành công
+        return ResponseEntity.ok(rs);
     }
 
     @PutMapping("/update-acc")
     public ResponseEntity<?> updateProduct(@RequestParam("username") String username, @RequestBody Account account) {
         Map<String, Object> rs = new HashMap<>();
-        //    var bCrypt = new BCryptPasswordEncoder();
-        //    account.setPassword(bCrypt.encode(account.getPassword()));
         try {
             Account updateAcc = accountService.updateAcc(username, account);
             rs.put("status", true);
@@ -107,7 +100,7 @@ public class AccountAPI {
             rs.put("status", false);
             rs.put("message", "Update Account failed: " + ex.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(rs); // Trả về mã trạng thái 500 Internal Server Error
+                .body(rs);
         }
     }
 
@@ -125,53 +118,4 @@ public class AccountAPI {
         }
         return ResponseEntity.ok(rs);
     }
-
-    //    @PostMapping("/login")
-    //    public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
-    //        Map<String, Object> response = new HashMap<>();
-    //        String username = loginRequest.get("username");
-    //        String password = loginRequest.get("password");
-    //
-    //        // Kiểm tra đầu vào
-    //        if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
-    //            response.put("status", false);
-    //            response.put("message", "Username và password không được để trống");
-    //            return ResponseEntity.badRequest().body(response);
-    //        }
-    //
-    //        try {
-    //            // Tìm tài khoản theo username
-    //            Optional<Account> accountOptional = accountService.findAccountsByUsername(username);
-    //
-    //            if (accountOptional.isPresent()) {
-    //                Account account = accountOptional.get();
-    //                // Kiểm tra mật khẩu
-    //                if (passwordEncoder.matches(password, account.getPassword())) {
-    //                    // Tạo token JWT
-    //                    //                    String token = jwtTokenProvider.generateToken(account); // Giả sử bạn đã
-    // có
-    //                    // một JwtTokenProvider
-    //
-    //                    response.put("status", true);
-    //                    response.put("message", "Đăng nhập thành công");
-    //                    response.put("data", account);
-    //                    //                    response.put("token", token);
-    //
-    //                    return ResponseEntity.ok(response);
-    //                } else {
-    //                    response.put("status", false);
-    //                    response.put("message", "Tài khoản hoặc mật khẩu không đúng");
-    //                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-    //                }
-    //            } else {
-    //                response.put("status", false);
-    //                response.put("message", "Tài khoản không tồn tại");
-    //                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-    //            }
-    //        } catch (Exception e) {
-    //            response.put("status", false);
-    //            response.put("message", "Lỗi hệ thống: " + e.getMessage());
-    //            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-    //        }
-    //    }
 }
