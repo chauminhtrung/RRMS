@@ -785,12 +785,9 @@ ul#search-bar {
 
  input[type='text'] {
   border: 0.5px solid #dcdcdc;
-  font-size: 13px;
   background-color: #ffffff;
   border-radius: 5px;
   height: 100%;
-  font-weight: bold;
-
 }
 
 #search-bar li.keyword:before {
