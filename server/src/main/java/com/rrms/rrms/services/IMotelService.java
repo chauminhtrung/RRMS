@@ -9,8 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
-@Service
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+
 public interface IMotelService {
         public MotelResponse insert(Motel motel);
         public MotelResponse findById(UUID id);
