@@ -27,7 +27,7 @@ public class RoleAPI {
   @GetMapping("/rest/authorities")
   public Map<String, Object> getAllAuthoritries(Model model) {
     Map<String, Object> data = new HashMap<>();
-    data.put("authorities", authorityService.findAll());
+//    data.put("authorities", authorityService.findAll());
     data.put("roles", roleService.findAll());
     data.put("accounts", accountService.findAll());
     return data;
@@ -36,7 +36,7 @@ public class RoleAPI {
   @GetMapping("/rest/authoritiesbyR")
   public Map<String, Object> getAllAuthoritriesWRole(@RequestParam("role") String role, Model model) {
     Map<String, Object> data = new HashMap<>();
-    data.put("authorities", authorityService.findAll());
+//    data.put("authorities", authorityService.findAll());
     data.put("roles", roleService.findAll());
     data.put("accounts", accountService.findAllByRole(role));
     return data;
@@ -45,7 +45,7 @@ public class RoleAPI {
   @GetMapping("/rest/authoritiesbyU")
   public Map<String, Object> getAllAuthoritriesWUs(@RequestParam("username") String username, Model model) {
     Map<String, Object> data = new HashMap<>();
-    data.put("authorities", authorityService.findAll());
+//    data.put("authorities", authorityService.findAll());
     data.put("roles", roleService.findAll());
     data.put("accounts", accountService.findListAccountsByUsername(username));
     return data;
@@ -53,11 +53,11 @@ public class RoleAPI {
 
   @PostMapping("/rest/authorities")
   public Auth createAuthoritrie(@RequestBody Auth authortie) {
-    return authorityService.save(authortie);
+    return  null;
   }
 
   @DeleteMapping("/rest/authorities/{id}")
   public void deleteAuthoritrie(@PathVariable int id) {
-    authorityService.deleteById(id);
+//    authorityService.deleteById(id);
   }
 }
