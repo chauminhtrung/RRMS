@@ -92,7 +92,7 @@ public class AccountController {
             Auth authority = new Auth();
             authority.setAccount(newAccount);
             authority.setRole(existingRole.get());
-            authorityService.save(authority);
+//            authorityService.save(authority);
 
             return ResponseEntity.ok().body("Register successful");
         } catch (IllegalArgumentException e) {
