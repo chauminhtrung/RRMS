@@ -2,8 +2,10 @@ package com.rrms.rrms.database;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
+import net.datafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +30,9 @@ public class DB {
             ServiceRepository serviceRepository,
             RoomServiceRepository roomServiceRepository) {
         return args -> {
+
+            int roomsLength = 20;
+
             if (accountRepository.findByUsername("admin").isEmpty()) {
                 // create admin account
                 accountRepository.save(Account.builder()
@@ -64,7 +69,7 @@ public class DB {
                 // create admin account
 
                 Motel motel = new Motel();
-                System.out.println("--------------day la id truoc khi tao -------------: "+motel.getMotelId());
+                System.out.println("--------------day la id truoc khi tao -------------: " + motel.getMotelId());
                 motel.setAccount(accountRepository.findByUsername("admin").get());
                 motel.setMotelName("Hà nội");
                 motelRepository.save(motel);
@@ -72,20 +77,24 @@ public class DB {
                 typeRoom.setName("Tình yêu");
                 typeRoomRepository.save(typeRoom);
 
-                Room room = new Room();
-                room.setDeposit(500000.0);
-                room.setHours("Tự do");
-                room.setRentalStartTime(LocalDate.now());
-                room.setMotel(motel);
-                room.setTypeRoom(typeRoom);
-                room.setNameRoom("room1");
-                room.setDescription("room1");
-                room.setAvailable(true);
-                room.setRoomArea(100);
-                room.setPrice(1000000.0);
-                room.setMaxPerson(2);
-                roomRepository.save(room);
-                log.info("Search room created");
+                Room room = null;
+                for (int i = 0; i < roomsLength; i++) {
+                    Faker faker = new Faker(new Locale("vi"));
+                    room = new Room();
+                    room.setDeposit(faker.number().randomDouble(2, 500000, 5000000));
+                    room.setHours(faker.options().option("Tự do", "6:00 AM - 12:00 PM", "1:00 PM - 6:00 PM"));
+                    room.setRentalStartTime(LocalDate.now());
+                    room.setMotel(motel);
+                    room.setTypeRoom(typeRoom);
+                    room.setNameRoom(faker.address().city());
+                    room.setDescription(faker.lorem().paragraph());
+                    room.setAvailable(faker.bool().bool());
+                    room.setRoomArea(faker.number().numberBetween(50, 200));
+                    room.setPrice(faker.number().randomDouble(2, 500000, 5000000));
+                    room.setMaxPerson(faker.number().numberBetween(1, 5));
+                    roomRepository.save(room);
+                    log.info("Search room created");
+                }
 
                 RoomReview roomReview = new RoomReview();
                 roomReview.setAccount(accountRepository.findByUsername("admin").get());
