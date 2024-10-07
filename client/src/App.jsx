@@ -14,6 +14,8 @@ import Support from './pages/Support/Support'
 import AdminStatis from './pages/admin/statistical'
 
 import MainManagement from './pages/admin/MainManagement'
+
+import AdminManagerGroup from "./pages/admin/AdminManagerGroup";
 import Contact from './pages/Contact/Contact'
 import Introduce from './pages/Introduce/Introduce'
 import AdminManagerBoard from './pages/admin/AdminManageBoard'
@@ -54,6 +56,9 @@ function App() {
           <Route path="/heart" element={<Heart />} />
           <Route path="/RRMS" element={<RRMS />} />
           <Route path="/AdminManagerBoard" element={<AdminManagerBoard />} />
+          <Route path="/AdminManagerGroup" element={<AdminManagerGroup />} />
+          {/* <Route path="/test" element={<TestPage />} /> */}
+
         </Routes>
         {!isAdmin ? <Footer /> : <></>}
       </Router>

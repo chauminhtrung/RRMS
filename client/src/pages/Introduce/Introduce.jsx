@@ -43,7 +43,7 @@ const Introduce = () => {
                         <div className="wrap-gallery-container" style={{ margin: '0px 70px' }}>
                             <div className="wrap-gallery-infor row">
                                 <div className="row mt-4">
-                                    <div className="col-md-6 col-md-push-6 col-sm-6 col-sm-push-6 col-xs-12" style={{ textAlign: 'right' }}>
+                                    <div className="col-md-6 col-md-push-6 col-sm-12 col-sm-push-6 col-xs-12" style={{ textAlign: 'right' }}>
                                         <Typography sx={{ fontSize: '20px' }}>Sứ mệnh</Typography>
                                         <p className="mt-3">
                                             Cung cấp giải pháp thông minh tạo tiền đề cải thiện chất lượng cuộc sống trọ cho sinh viên xa nhà
@@ -61,7 +61,7 @@ const Introduce = () => {
                                             thông minh cho bất động sản cho thuê &amp; phát triển bền vững
                                         </p>
                                     </div>
-                                    <div className="col-md-6 col-md-pull-6 col-sm-6 col-sm-pull-6 col-xs-12 colmn-left">
+                                    <div className="col-md-6 col-md-pull-6 col-sm-12 col-sm-pull-6 col-xs-12 colmn-left">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 214.12">
                                             <g>
                                                 <g>
@@ -96,10 +96,10 @@ const Introduce = () => {
                         <h2 className="underline-yellow">Giá trị cốt lõi</h2>
                         <p></p>
                         <div className="row mt-4">
-                            <figure className="col-md-6 col-sm-6 col-xs-12 text-center" style={{ margin: '0px' }}>
+                            <figure className="col-lg-6 col-md-12 col-sm-12 col-xs-12 text-center" style={{ margin: '0px' }}>
                                 <img style={{ margin: 'auto' }} className="lazy img-responsive" src="https://lozido.com/images/pages/about/gia-tri-cot-loi.webp" alt="giá trị cốt lõi của LOZIDO - Tìm trọ, căn hộ, việc làm" loading="lazy" />
                             </figure>
-                            <div className="col-md-6 col-sm-6 col-xs-12 " style={{ textAlign: 'left' }}>
+                            <div className="col-lg-6 col-md-12 col-sm-12 col-xs-12 " style={{ textAlign: 'left' }}>
                                 <p><img src="https://lozido.com/images/icons/check.svg" alt="checking" /> Đột phá - Sáng tạo</p>
                                 <p><img src="https://lozido.com/images/icons/check.svg" /> Mang lại giá trị thật cho cộng đồng</p>
                                 <p><img src="https://lozido.com/images/icons/check.svg" /> Hoàn thành trọn vẹn &amp; mang lại giá trị</p>
@@ -158,16 +158,28 @@ const Introduce = () => {
                     </section>
                 </div>
             </div>
-            <div className="container bot">
-                <div className="flex row" style={{ marginBottom: '15px' }}>
+            <div className="container">
+                <div className="flex row" style={{ marginBlock: '35px' }}>
                     <div className="col-md-6 mt-2">
-                        <a href="/tro-thanh-moi-gioi-lozido.html">
-                            <img src="https://lozido.com/images/banner/cong-tac-vien-kinh-doanh-lozido.png" className="w-full lg:rounded-md" alt="banner moi gioi lozido" width="100%" style={{ borderRadius: '5px' }} />
+                        <a href="#">
+                            <img
+                                src="./banner1.png"
+                                className="w-full lg:rounded-md"
+                                alt="banner moi gioi lozido"
+                                width="100%"
+                                style={{ borderRadius: '5px' }}
+                            />
                         </a>
                     </div>
                     <div className="col-md-6 mt-2">
-                        <a href="/ho-tro-tim-phong.html">
-                            <img src="https://lozido.com/images/banner/ho-tro-tim-nha-cho-thue.png" className="lg:rounded-md cursor-pointer" alt="banner-pc" width="100%" style={{ borderRadius: '5px' }} />
+                        <a href="#">
+                            <img
+                                src="./banner2.png"
+                                className="lg:rounded-md cursor-pointer"
+                                alt="banner-pc"
+                                width="100%"
+                                style={{ borderRadius: '5px' }}
+                            />
                         </a>
                     </div>
                 </div>
@@ -177,37 +189,37 @@ const Introduce = () => {
                     <Typography sx={{ fontSize: '28px' }}>Các bước đăng bài</Typography>
                     <p className="text-center footer-description">Tiếp cận khách thuê dễ dàng với tính năng đăng tin</p>
                 </div>
-                <div className="container">
+                <div className="container mb-4">
                     <div className="row feature card-benefit">
-                        <div className="col-md-4 item green">
-                            <div className="inner row">
-                                <div className="icon-item col-3">
+                        <div className="col-md-4 item green mt-2">
+                            <div className="innerRRMS">
+                                <div className="icon-itemRRMS">
                                     <span>1</span>
                                 </div>
-                                <div className="content-item col-9" >
-                                    <Typography sx={{ fontSize: '15px', fontWeight: 'Bold' }}>Đăng ký/Đăng nhập</Typography>
-                                    <div>Tải app và đăng ký sau đó đăng nhập</div>
+                                <div className="content-item">
+                                    <b>Đăng nhập/Đăng ký</b>
+                                    <div>đăng ký sau đó đăng nhập</div>
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-4 item blue">
-                            <div className="inner row" >
-                                <div className="icon-item col-3">
+                        <div className="col-md-4 item blue mt-2">
+                            <div className="innerRRMS">
+                                <div className="icon-itemRRMS">
                                     <span>2</span>
                                 </div>
-                                <div className="content-item col-9">
-                                    <Typography sx={{ fontSize: '15px', fontWeight: 'Bold' }}>Đăng tin</Typography>
+                                <div className="content-item">
+                                    <b>Đăng tin</b>
                                     <div>Đăng tin trong tài khoản cá nhân</div>
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-4 item yellow">
-                            <div className="inner row">
-                                <div className="icon-item col-3">
+                        <div className="col-md-4 item yellow mt-2">
+                            <div className="innerRRMS">
+                                <div className="icon-itemRRMS">
                                     <span>3</span>
                                 </div>
-                                <div className="content-item col-9">
-                                    <Typography sx={{ fontSize: '15px', fontWeight: 'Bold' }}>Xét duyệt</Typography>
+                                <div className="content-item">
+                                    <b>Xét duyệt &amp; tiếp cận khách thuê</b>
                                     <div>Chuyên viên sẵn sàng xét duyệt 24/7</div>
                                 </div>
                             </div>
@@ -219,47 +231,74 @@ const Introduce = () => {
                     <div className="text-center footer-title">
                         <Typography sx={{ fontSize: '28px' }}>RRMS có gì?</Typography>
                     </div>
-                    <p className="text-center footer-description">Tại sao bạn phải chọn chúng tôi<br /> mà không phải một dịch vụ nào khác?</p>
+                    <p className="text-center footer-description">
+                        Tại sao bạn phải chọn chúng tôi
+                        <br /> mà không phải một dịch vụ nào khác?
+                    </p>
                     <div className="row footer-report">
                         <div className="report col-md-3 text-center mt-2">
                             <div className="report-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="70px" height="70px" fill="currentColor"
-                                    className="bi bi-people" viewBox="0 0 16 16" style={{ color: 'green' }}>
-                                    <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="70px"
+                                    height="70px"
+                                    fill="currentColor"
+                                    className="bi bi-people"
+                                    viewBox="0 0 16 16"
+                                    style={{ color: 'green' }}>
+                                    <path
+                                        d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 
                                     12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 
                                     0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11
                                     7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 
                                     1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 
                                     5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 
-                                    0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4" />
+                                    0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4"
+                                    />
                                 </svg>
                                 <Typography sx={{ fontSize: '20px', fontWeight: 'bold' }}>4.000+</Typography>
                                 <Typography sx={{ fontSize: '14px' }}>Chủ nhà</Typography>
                             </div>
                         </div>
-                        <div className="report col-md-3 text-center mt-2" >
+                        <div className="report col-md-3 text-center mt-2">
                             <div className="report-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="70px" height="70px" fill="currentColor"
-                                    className="bi bi-people" viewBox="0 0 16 16" style={{ color: 'green' }}>
-                                    <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="70px"
+                                    height="70px"
+                                    fill="currentColor"
+                                    className="bi bi-people"
+                                    viewBox="0 0 16 16"
+                                    style={{ color: 'green' }}>
+                                    <path
+                                        d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 
                                     12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 
                                     0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11
                                     7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 
                                     1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 
                                     5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 
-                                    0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4" />
+                                    0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4"
+                                    />
                                 </svg>
                                 <Typography sx={{ fontSize: '20px', fontWeight: 'bold' }}>10.000+</Typography>
                                 <Typography sx={{ fontSize: '14px' }}>Khách thuê</Typography>
                             </div>
                         </div>
-                        <div className="report col-md-3 text-center mt-2" >
+                        <div className="report col-md-3 text-center mt-2">
                             <div className="report-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="70px" height="70px" fill="currentColor"
-                                    className="bi bi-people" viewBox="0 0 16 16" style={{ color: 'green' }}>
-                                    <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="70px"
+                                    height="70px"
+                                    fill="currentColor"
+                                    className="bi bi-people"
+                                    viewBox="0 0 16 16"
+                                    style={{ color: 'green' }}>
+                                    <path
+                                        d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 
                                     .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 
-                                    0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z" />
+                                    0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"
+                                    />
                                 </svg>
                                 <Typography sx={{ fontSize: '20px', fontWeight: 'bold' }}>10+</Typography>
                                 <Typography sx={{ fontSize: '14px' }}>Môi giới</Typography>
@@ -267,14 +306,23 @@ const Introduce = () => {
                         </div>
                         <div className="report col-md-3 text-center mt-2">
                             <div className="report-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="70px" height="70px" fill="currentColor"
-                                    className="bi bi-people" viewBox="0 0 16 16" style={{ color: 'green' }}>
-                                    <path fillRule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="70px"
+                                    height="70px"
+                                    fill="currentColor"
+                                    className="bi bi-people"
+                                    viewBox="0 0 16 16"
+                                    style={{ color: 'green' }}>
+                                    <path
+                                        fillRule="evenodd"
+                                        d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5
                                     0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 
                                     0 1-.5-.5M3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 
                                     3.293l1.146-1.147a.5.5 0 0 1 .708 0m0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 
                                     0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0m0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 
-                                    1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0"/>
+                                    1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0"
+                                    />
                                 </svg>
                                 <Typography sx={{ fontSize: '20px', fontWeight: 'bold' }}>3.000+</Typography>
                                 <Typography sx={{ fontSize: '14px' }}>Lượt truy cập/tháng</Typography>
@@ -282,9 +330,11 @@ const Introduce = () => {
                         </div>
                     </div>
                 </div>
-                <p className="text-center footer-content mt-4">Chúng tôi tự hào là một trong những dịch vụ tìm kiếm phòng trọ đứng đầu Việt Nam,
-                    với phương châm tìm là có chúng tôi luôn cập nhật phòng nhanh nhất, chính xác nhất và ưu tiên sự tiện lợi
-                    cho người tìm trọ lên hàng đầu.</p>
+                <p className="text-center footer-content mt-4">
+                    Chúng tôi tự hào là một trong những dịch vụ tìm kiếm phòng trọ đứng đầu Việt Nam, với phương châm tìm là có
+                    chúng tôi luôn cập nhật phòng nhanh nhất, chính xác nhất và ưu tiên sự tiện lợi cho người tìm trọ lên hàng
+                    đầu.
+                </p>
             </div>
         </div >
     )
