@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import Detail from './pages/Detail/Detail'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Home from './pages/Homes/Home'
@@ -15,12 +14,14 @@ import Support from './pages/Support/Support'
 import AdminStatis from './pages/admin/statistical'
 
 import MainManagement from './pages/admin/MainManagement'
+
+import AdminManagerGroup from './pages/admin/AdminManagerGroup'
 import Contact from './pages/Contact/Contact'
 import Introduce from './pages/Introduce/Introduce'
 import AdminManagerBoard from './pages/admin/AdminManageBoard'
 import Profile from './pages/Profile/Profile'
 import PaymentPage from './pages/cart/PaymentPage'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Heart from './pages/cart/Heart'
 import RRMS from './pages/RRMS/RRMS'
 import AdminManageBoker from './pages/admin/AdminManageBoker/AdminManageBoker'
@@ -61,6 +62,7 @@ function App() {
           <Route path="/RRMS" element={<RRMS />} />
           <Route path="/AdminManagerBoard" element={<AdminManagerBoard />} />
           <Route path="/dang-tin" element={<PostRooms />} />
+          <Route path="/AdminManagerGroup" element={<AdminManagerGroup />} />
         </Routes>
         {!isAdmin ? <Footer /> : <></>}
       </Router>
