@@ -1,209 +1,216 @@
-import React from 'react'
-import { Typography, Button, Box, Grid, Container, Paper ,Tab, Tabs, CardContent, Card } from '@mui/material'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from 'react'
+import { Typography, Button, Box, Grid, Container, Paper, Tab, Tabs, CardContent, Card } from '@mui/material'
 import './Home.css'
 
-
-// Define the tab components with unique content  
-const Tab1 = () => {  
-  return (  
-    <div className="row d-flex">  
+// Define the tab components with unique content
+const Tab1 = () => {
+  return (
+    <div className="row d-flex">
       <Container>
-        <Grid container spacing={2} alignItems="center" justifyContent="center">  
-          <Grid item xs={12} md={6}>  
-            <img  
-              className="custom-logo home-logo2"  
-              style={{ width: '100%', height: 'auto', maxWidth: '526px' }}  
-              src="https://quanlytro.me/images/quan-ly-tro-smart-7-2022.png?version=244342"  
-              alt="Phần mềm quản lý nhà trọ trên điện thoại - RRMS"  
-              title="Phần mềm quản lý nhà trọ điện thoại"  
-            />  
-          </Grid>  
-          <Grid item xs={12} md={6}>  
-            <div className="inner-slider align-self-center align-baseline">  
-              <article>  
-                <Typography variant="h4" className="fw-bold fs-2">  
-                  <span className="wrap">Hệ thống quản lý vận hành thông minh</span>  
-                </Typography>  
-                <Typography variant="h4" className="fs-5 mt-2">  
-                  Smartos OMS dành cho dịch vụ cho thuê phòng trọ, giúp chủ đầu tư GIẢM 72% PHÍ TỔN - TĂNG 85% HIỆU SUẤT QUẢN LÝ.  
-                </Typography>  
-              </article>  
+        <Grid container spacing={2} alignItems="center" justifyContent="center">
+          <Grid item xs={12} md={6}>
+            <img
+              className="custom-logo home-logo2"
+              style={{ width: '100%', height: 'auto', maxWidth: '526px' }}
+              src="https://quanlytro.me/images/quan-ly-tro-smart-7-2022.png?version=244342"
+              alt="Phần mềm quản lý nhà trọ trên điện thoại - RRMS"
+              title="Phần mềm quản lý nhà trọ điện thoại"
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <div className="inner-slider align-self-center align-baseline">
+              <article>
+                <Typography variant="h4" className="fw-bold fs-2">
+                  <span className="wrap">Hệ thống quản lý vận hành thông minh</span>
+                </Typography>
+                <Typography variant="h4" className="fs-5 mt-2">
+                  Smartos OMS dành cho dịch vụ cho thuê phòng trọ, giúp chủ đầu tư GIẢM 72% PHÍ TỔN - TĂNG 85% HIỆU SUẤT
+                  QUẢN LÝ.
+                </Typography>
+              </article>
 
-              <div>  
-                <Typography variant="h5" className="fs-2 mt-4 mb-3">  
-                  <i className="bi bi-graph-up p-1 rounded" style={{color:'#5eb7ff'}}></i>  
-                  <span className="wrap"> Nền tảng thông minh</span>  
-                </Typography>  
-                <Typography className="fs-5 ms-5">  
-                  Tích hợp quy trình quản lý tòa nhà đa chi nhánh trên một hệ thống duy nhất.  
-                </Typography>  
-              </div>  
-              <div>  
-                <Typography variant="h5" className="fs-2 mt-3 mb-3">  
-                  <i className="bi bi-clock p-1 rounded" style={{color:'#5eb7ff'}}></i> 
-                  <span className="wrap mt-5"> Tiết kiệm thời gian</span>  
-                </Typography>  
-                <Typography className="fs-5 ms-5">  
-                  Hệ thống tự động hóa & loại bỏ các tác vụ thủ công.  
-                </Typography>  
-              </div>  
-              <div>  
-                <Typography variant="h5" className="fs-2 mt-3 mb-3">  
-                  <i className="bi bi-check-circle p-1 rounded" style={{color:'#5eb7ff'}}></i> 
-                  <span className="wrap"> Dễ dàng sử dụng</span>  
-                </Typography>  
-                <Typography className="fs-5 ms-5">  
-                  Nhanh chóng xử lý các công việc hằng ngày chỉ với một màn hình.  
-                </Typography>  
-              </div>  
-              <div>  
-                <Typography variant="h5" className="fs-2 mt-3 mb-3">  
-                  <Button variant="contained" className='fs-5 rounded-2'>Xem thêm<i className="bi bi-arrow-right-short ms-2"></i></Button>  
-                </Typography>  
-              </div> 
-            </div>  
-          </Grid>  
-        </Grid>  
-      </Container>  
-    </div>  
-  );  
-};  
+              <div>
+                <Typography variant="h5" className="fs-2 mt-4 mb-3">
+                  <i className="bi bi-graph-up p-1 rounded" style={{ color: '#5eb7ff' }}></i>
+                  <span className="wrap"> Nền tảng thông minh</span>
+                </Typography>
+                <Typography className="fs-5 ms-5">
+                  Tích hợp quy trình quản lý tòa nhà đa chi nhánh trên một hệ thống duy nhất.
+                </Typography>
+              </div>
+              <div>
+                <Typography variant="h5" className="fs-2 mt-3 mb-3">
+                  <i className="bi bi-clock p-1 rounded" style={{ color: '#5eb7ff' }}></i>
+                  <span className="wrap mt-5"> Tiết kiệm thời gian</span>
+                </Typography>
+                <Typography className="fs-5 ms-5">Hệ thống tự động hóa & loại bỏ các tác vụ thủ công.</Typography>
+              </div>
+              <div>
+                <Typography variant="h5" className="fs-2 mt-3 mb-3">
+                  <i className="bi bi-check-circle p-1 rounded" style={{ color: '#5eb7ff' }}></i>
+                  <span className="wrap"> Dễ dàng sử dụng</span>
+                </Typography>
+                <Typography className="fs-5 ms-5">
+                  Nhanh chóng xử lý các công việc hằng ngày chỉ với một màn hình.
+                </Typography>
+              </div>
+              <div>
+                <Typography variant="h5" className="fs-2 mt-3 mb-3">
+                  <Button variant="contained" className="fs-5 rounded-2">
+                    Xem thêm<i className="bi bi-arrow-right-short ms-2"></i>
+                  </Button>
+                </Typography>
+              </div>
+            </div>
+          </Grid>
+        </Grid>
+      </Container>
+    </div>
+  )
+}
 
-const Tab2 = () => {  
-  return (  
-    <div className="row d-flex">  
+const Tab2 = () => {
+  return (
+    <div className="row d-flex">
       <Container>
-        <Grid container spacing={2} alignItems="center" justifyContent="center">  
-          <Grid item xs={12} md={6}>  
-            <img  
-              className="custom-logo home-logo2"  
-              style={{ width: '100%', height: 'auto', maxWidth: '526px' }}  
-              src="https://quanlytro.me/images/quan-ly-tro-smart-7-2022.png?version=244342"  
-              alt="Phần mềm quản lý nhà trọ trên điện thoại - RRMS"  
-              title="Phần mềm quản lý nhà trọ điện thoại"  
-            />  
-          </Grid>  
-          <Grid item xs={12} md={6}>  
-            <div className="inner-slider align-self-center align-baseline">  
-              <article>  
-                <Typography variant="h4" className="fw-bold fs-2">  
-                  <span className="wrap">Giải pháp Thương hiệu – Bespoke Solution</span>  
-                </Typography>  
-                <Typography variant="h4" className="fs-5 mt-2">  
-                Giải pháp tích hợp với Smartos OMS (nền tảng Web & App) giúp Doanh nghiệp kết nối trực tiếp đến khách hàng.  
-                </Typography>  
-              </article>  
+        <Grid container spacing={2} alignItems="center" justifyContent="center">
+          <Grid item xs={12} md={6}>
+            <img
+              className="custom-logo home-logo2"
+              style={{ width: '100%', height: 'auto', maxWidth: '526px' }}
+              src="https://quanlytro.me/images/quan-ly-tro-smart-7-2022.png?version=244342"
+              alt="Phần mềm quản lý nhà trọ trên điện thoại - RRMS"
+              title="Phần mềm quản lý nhà trọ điện thoại"
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <div className="inner-slider align-self-center align-baseline">
+              <article>
+                <Typography variant="h4" className="fw-bold fs-2">
+                  <span className="wrap">Giải pháp Thương hiệu – Bespoke Solution</span>
+                </Typography>
+                <Typography variant="h4" className="fs-5 mt-2">
+                  Giải pháp tích hợp với Smartos OMS (nền tảng Web & App) giúp Doanh nghiệp kết nối trực tiếp đến khách
+                  hàng.
+                </Typography>
+              </article>
 
-              <div>  
-                <Typography variant="h5" className="fs-2 mt-4 mb-3">  
-                  <i className="bi bi-clock-fill p-1 rounded" style={{color:'#5eb7ff'}}></i>  
-                  <span className="wrap"> Tiết kiệm thời gian & chi phí</span>  
-                </Typography>  
-                <Typography className="fs-5 ms-5">  
-                  Tiết kiệm 2/3 thời gian & giảm 70% chi phí so với xây dựng một ứng dụng/ trang web hoàn toàn mới.  
-                </Typography>  
-              </div>  
-              <div>  
-                <Typography variant="h5" className="fs-2 mt-3 mb-3">  
-                  <i className="bi bi-bar-chart-fill p-1 rounded" style={{color:'#5eb7ff'}}></i> 
-                  <span className="wrap mt-5"> Tăng nhận diện thương hiệu</span>  
-                </Typography>  
-                <Typography className="fs-5 ms-5">  
-                  Xây dựng một ứng dụng/ trang web mang nhận diện riêng theo mô hình tòa nhà cho thuê của bạn.  
-                </Typography>  
-              </div>  
-              <div>  
-                <Typography variant="h5" className="fs-2 mt-3 mb-3">  
-                  <i className="bi bi-currency-exchange p-1 rounded" style={{color:'#5eb7ff'}}></i> 
-                  <span className="wrap"> Nuôi dưỡng khách hàng thân thiết</span>  
-                </Typography>  
-                <Typography className="fs-5 ms-5">  
-                  Kết nối & chăm sóc khách hàng trực tiếp trên trang web/ ứng dụng riêng của tòa nhà.  
-                </Typography>  
-              </div>  
-              <div>  
-                <Typography variant="h5" className="fs-2 mt-3 mb-3">  
-                  <Button variant="contained" className='fs-5 rounded-2'>Xem thêm<i className="bi bi-arrow-right-short ms-2"></i></Button>  
-                </Typography>  
-              </div> 
-            </div>  
-          </Grid>  
-        </Grid>  
-      </Container>  
-    </div>  
-  );  
-};  
+              <div>
+                <Typography variant="h5" className="fs-2 mt-4 mb-3">
+                  <i className="bi bi-clock-fill p-1 rounded" style={{ color: '#5eb7ff' }}></i>
+                  <span className="wrap"> Tiết kiệm thời gian & chi phí</span>
+                </Typography>
+                <Typography className="fs-5 ms-5">
+                  Tiết kiệm 2/3 thời gian & giảm 70% chi phí so với xây dựng một ứng dụng/ trang web hoàn toàn mới.
+                </Typography>
+              </div>
+              <div>
+                <Typography variant="h5" className="fs-2 mt-3 mb-3">
+                  <i className="bi bi-bar-chart-fill p-1 rounded" style={{ color: '#5eb7ff' }}></i>
+                  <span className="wrap mt-5"> Tăng nhận diện thương hiệu</span>
+                </Typography>
+                <Typography className="fs-5 ms-5">
+                  Xây dựng một ứng dụng/ trang web mang nhận diện riêng theo mô hình tòa nhà cho thuê của bạn.
+                </Typography>
+              </div>
+              <div>
+                <Typography variant="h5" className="fs-2 mt-3 mb-3">
+                  <i className="bi bi-currency-exchange p-1 rounded" style={{ color: '#5eb7ff' }}></i>
+                  <span className="wrap"> Nuôi dưỡng khách hàng thân thiết</span>
+                </Typography>
+                <Typography className="fs-5 ms-5">
+                  Kết nối & chăm sóc khách hàng trực tiếp trên trang web/ ứng dụng riêng của tòa nhà.
+                </Typography>
+              </div>
+              <div>
+                <Typography variant="h5" className="fs-2 mt-3 mb-3">
+                  <Button variant="contained" className="fs-5 rounded-2">
+                    Xem thêm<i className="bi bi-arrow-right-short ms-2"></i>
+                  </Button>
+                </Typography>
+              </div>
+            </div>
+          </Grid>
+        </Grid>
+      </Container>
+    </div>
+  )
+}
 
-const Tab3 = () => {  
-  return (  
-    <div className="row d-flex">  
+const Tab3 = () => {
+  return (
+    <div className="row d-flex">
       <Container>
-        <Grid container spacing={2} alignItems="center" justifyContent="center">  
-          <Grid item xs={12} md={6}>  
-            <img  
-              className="custom-logo home-logo2"  
-              style={{ width: '100%', height: 'auto', maxWidth: '526px' }}  
-              src="https://quanlytro.me/images/quan-ly-tro-smart-7-2022.png?version=244342"  
-              alt="Phần mềm quản lý nhà trọ trên điện thoại - RRMS"  
-              title="Phần mềm quản lý nhà trọ điện thoại"  
-            />  
-          </Grid>  
-          <Grid item xs={12} md={6}>  
-            <div className="inner-slider align-self-center align-baseline">  
-              <article>  
-                <Typography variant="h4" className="fw-bold fs-2">  
-                  <span className="wrap">Giải pháp Thị trường – Smartos On-Demand Booking</span>  
-                </Typography>  
-                <Typography variant="h4" className="fs-5 mt-2">  
-                  Ứng dụng đặt chỗ và quản lý, kết nối Nhà cung cấp và người thuê toà nhà.  
-                </Typography>  
-              </article>  
+        <Grid container spacing={2} alignItems="center" justifyContent="center">
+          <Grid item xs={12} md={6}>
+            <img
+              className="custom-logo home-logo2"
+              style={{ width: '100%', height: 'auto', maxWidth: '526px' }}
+              src="https://quanlytro.me/images/quan-ly-tro-smart-7-2022.png?version=244342"
+              alt="Phần mềm quản lý nhà trọ trên điện thoại - RRMS"
+              title="Phần mềm quản lý nhà trọ điện thoại"
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <div className="inner-slider align-self-center align-baseline">
+              <article>
+                <Typography variant="h4" className="fw-bold fs-2">
+                  <span className="wrap">Giải pháp Thị trường – Smartos On-Demand Booking</span>
+                </Typography>
+                <Typography variant="h4" className="fs-5 mt-2">
+                  Ứng dụng đặt chỗ và quản lý, kết nối Nhà cung cấp và người thuê toà nhà.
+                </Typography>
+              </article>
 
-              <div>  
-                <Typography variant="h5" className="fs-2 mt-4 mb-3">  
-                  <i className="bi bi-flag-fill p-1 rounded" style={{color:'#5eb7ff'}}></i>  
-                  <span className="wrap"> Mở rộng thị trường</span>  
-                </Typography>  
-                <Typography className="fs-5 ms-5">  
-                  Kênh tiếp cận khách hàng tiềm năng hoàn toàn MIỄN PHÍ.  
-                </Typography>  
-              </div>  
-              <div>  
-                <Typography variant="h5" className="fs-2 mt-3 mb-3">  
-                  <i className="bi bi-person-fill p-1 rounded" style={{color:'#5eb7ff'}}></i> 
-                  <span className="wrap mt-5"> Kênh giao tiếp chuyên nghiệp</span>  
-                </Typography>  
-                <Typography className="fs-5 ms-5">  
-                  Dễ dàng liên hệ và giao tiếp với khách hàng tiềm năng.  
-                </Typography>  
-              </div>  
-              <div>  
-                <Typography variant="h5" className="fs-2 mt-3 mb-3">  
-                  <i className="bi bi-box-fill p-1 rounded" style={{color:'#5eb7ff'}}></i> 
-                  <span className="wrap"> Tối ưu hóa vận hành</span>  
-                </Typography>  
-                <Typography className="fs-5 ms-5">  
-                  Cùng với Smartos PMS, thông tin booking được quản lý chính xác. 
-                </Typography>  
-              </div>  
-              <div>  
-                <Typography variant="h5" className="fs-2 mt-3 mb-3">  
-                  <Button variant="contained" className='fs-5 rounded-2'>Xem thêm<i className="bi bi-arrow-right-short ms-2"></i></Button>  
-                </Typography>  
-              </div> 
-            </div>  
-          </Grid>  
-        </Grid>  
-      </Container>  
-    </div>  
-  );  
-};  
-export default function HomePage() {
+              <div>
+                <Typography variant="h5" className="fs-2 mt-4 mb-3">
+                  <i className="bi bi-flag-fill p-1 rounded" style={{ color: '#5eb7ff' }}></i>
+                  <span className="wrap"> Mở rộng thị trường</span>
+                </Typography>
+                <Typography className="fs-5 ms-5">Kênh tiếp cận khách hàng tiềm năng hoàn toàn MIỄN PHÍ.</Typography>
+              </div>
+              <div>
+                <Typography variant="h5" className="fs-2 mt-3 mb-3">
+                  <i className="bi bi-person-fill p-1 rounded" style={{ color: '#5eb7ff' }}></i>
+                  <span className="wrap mt-5"> Kênh giao tiếp chuyên nghiệp</span>
+                </Typography>
+                <Typography className="fs-5 ms-5">Dễ dàng liên hệ và giao tiếp với khách hàng tiềm năng.</Typography>
+              </div>
+              <div>
+                <Typography variant="h5" className="fs-2 mt-3 mb-3">
+                  <i className="bi bi-box-fill p-1 rounded" style={{ color: '#5eb7ff' }}></i>
+                  <span className="wrap"> Tối ưu hóa vận hành</span>
+                </Typography>
+                <Typography className="fs-5 ms-5">
+                  Cùng với Smartos PMS, thông tin booking được quản lý chính xác.
+                </Typography>
+              </div>
+              <div>
+                <Typography variant="h5" className="fs-2 mt-3 mb-3">
+                  <Button variant="contained" className="fs-5 rounded-2">
+                    Xem thêm<i className="bi bi-arrow-right-short ms-2"></i>
+                  </Button>
+                </Typography>
+              </div>
+            </div>
+          </Grid>
+        </Grid>
+      </Container>
+    </div>
+  )
+}
+export default function HomePage({ setIsAdmin }) {
   const [value, setValue] = React.useState(0)
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
+
+  useEffect(() => {
+    setIsAdmin(false)
+  }, [])
+
   return (
     <div>
       <section className="banner">
@@ -223,7 +230,8 @@ export default function HomePage() {
                       <span className="wrap">Quản lý nhẹ nhàng như chiếc smartphone trong tay của bạn!</span>
                     </Typography>
                     <Typography>
-                      Sử dụng đơn giản, chi phí tối ưu, hỗ trợ sâu sát & phù hợp với tất cả <br/> loại hình tòa nhà cho thuê như văn phòng, nhà trọ – căn hộ, coworking space,…
+                      Sử dụng đơn giản, chi phí tối ưu, hỗ trợ sâu sát & phù hợp với tất cả <br /> loại hình tòa nhà cho
+                      thuê như văn phòng, nhà trọ – căn hộ, coworking space,…
                     </Typography>
                   </article>
                   <div className="d-flex justify-content-center mt-3 button1">
@@ -233,7 +241,7 @@ export default function HomePage() {
                         className="btn-media shadow"
                         data-toggle="modal"
                         data-target="#modalVideoIntroduce">
-                          Dùng thử miễn phí 
+                        Dùng thử miễn phí
                       </Button>
                     </div>
                     <div className="text-start mt-2 ms-5">
@@ -243,7 +251,8 @@ export default function HomePage() {
                         data-toggle="modal"
                         data-target="#registerModal">
                         <span className="icon-btn-media me-3">
-                          <img width={50}
+                          <img
+                            width={50}
                             src="https://quanlytro.me/images/icons/button_media.svg?version=244342"
                             alt="play video"
                           />
@@ -254,15 +263,15 @@ export default function HomePage() {
                   </div>
                 </div>
               </Grid>
-              <Grid item xl={5} md={12} className="image-slider text-center">  
-                <img  
-                    className="custom-logo home-logo2"  
-                    style={{ width: '100%', height: 'auto', maxWidth: '526px' }}  
-                    src="https://quanlytro.me/images/quan-ly-tro-smart-7-2022.png?version=244342"  
-                    alt="Phần mềm quản lý nhà trọ trên điện thoại - RRMS"  
-                    title="Phần mềm quản lý nhà trọ điện thoại"  
-                />  
-              </Grid>  
+              <Grid item xl={5} md={12} className="image-slider text-center">
+                <img
+                  className="custom-logo home-logo2"
+                  style={{ width: '100%', height: 'auto', maxWidth: '526px' }}
+                  src="https://quanlytro.me/images/quan-ly-tro-smart-7-2022.png?version=244342"
+                  alt="Phần mềm quản lý nhà trọ trên điện thoại - RRMS"
+                  title="Phần mềm quản lý nhà trọ điện thoại"
+                />
+              </Grid>
             </Grid>
           </div>
         </Container>
@@ -368,133 +377,126 @@ export default function HomePage() {
         </Container>
       </section>
 
-      <section className="platform-app has-bg-white">  
-          <div className="item-inner inner-platform-app">  
-            <div className="text-center">  
-              <Typography color="#5eb7ff" sx={{ fontSize: '40px', fontWeight: 'bold' }}>  
-                Giải pháp toàn diện – Hỗ trợ xuyên suốt  
-              </Typography>  
-            </div>  
+      <section className="platform-app has-bg-white">
+        <div className="item-inner inner-platform-app">
+          <div className="text-center">
+            <Typography color="#5eb7ff" sx={{ fontSize: '40px', fontWeight: 'bold' }}>
+              Giải pháp toàn diện – Hỗ trợ xuyên suốt
+            </Typography>
+          </div>
 
-            <Box sx={{ width: '100%'}}>  
-            <Tabs value={value} onChange={handleChange} centered>  
-              <Tab style={{marginRight:'290px'}} 
-                label={  
-                  <span style={{ fontSize: '20px' }}>  
-                    Smartos OMS  
-                  </span>  
-                }  
-              />  
-              <Tab  style={{marginRight:'290px'}} 
-                label={  
-                  <span style={{ fontSize: '20px' }}>  
-                    Bespoke Solution  
-                  </span>  
-                }  
-              />  
-              <Tab  
-                label={  
-                  <span style={{ fontSize: '20px' }}>  
-                    On-Demand Booking  
-                  </span>  
-                }  
-              />  
-            </Tabs> 
-              <Box p={3}>  
-                {value === 0 && <Tab1 />}  
-                {value === 1 && <Tab2 />}  
-                {value === 2 && <Tab3 />}  
-              </Box>  
-            </Box>  
-          </div>  
+          <Box sx={{ width: '100%' }}>
+            <Tabs value={value} onChange={handleChange} centered>
+              <Tab style={{ marginRight: '290px' }} label={<span style={{ fontSize: '20px' }}>Smartos OMS</span>} />
+              <Tab
+                style={{ marginRight: '290px' }}
+                label={<span style={{ fontSize: '20px' }}>Bespoke Solution</span>}
+              />
+              <Tab label={<span style={{ fontSize: '20px' }}>On-Demand Booking</span>} />
+            </Tabs>
+            <Box p={3}>
+              {value === 0 && <Tab1 />}
+              {value === 1 && <Tab2 />}
+              {value === 2 && <Tab3 />}
+            </Box>
+          </Box>
+        </div>
       </section>
 
       <section className="testimonial has-bg-white">
         <Container>
           <div className="item-inner inner-testimonial">
             <article className="text-center">
-              <Typography color="#5eb7ff" sx={{ fontSize: '40px', fontWeight: 'bold' }}>  
-                Giải pháp chuyển đổi số tích hợp 
+              <Typography color="#5eb7ff" sx={{ fontSize: '40px', fontWeight: 'bold' }}>
+                Giải pháp chuyển đổi số tích hợp
               </Typography>
               <Typography className="section-description mt-3">
-                Chúng tôi đang trên đà hiện thực hóa tầm nhìn của mình với những giải pháp hỗ trợ cho sự phát triển<br/>
-                tương lai của ngành Bất động sản cho thuê. Giải pháp của RRMS giúp doanh nghiệp thúc đẩy doanh số,<br/>
-                giảm rủi ro và phí tổn, tăng hiệu quả vận hành với mức phí thấp hơn trong khi khả năng tùy chỉnh cao hơn.
+                Chúng tôi đang trên đà hiện thực hóa tầm nhìn của mình với những giải pháp hỗ trợ cho sự phát triển
+                <br />
+                tương lai của ngành Bất động sản cho thuê. Giải pháp của RRMS giúp doanh nghiệp thúc đẩy doanh số,
+                <br />
+                giảm rủi ro và phí tổn, tăng hiệu quả vận hành với mức phí thấp hơn trong khi khả năng tùy chỉnh cao
+                hơn.
               </Typography>
             </article>
-            <div className="grid-row mt-4">  
-              <Grid container spacing={2}>  
-                <Grid item xs={12} md={4}>  
-                  <Card className="imagebox-card">  
-                    <a className="perlink">  
-                      <div className="image">  
-                        <img   
-                          decoding="async"   
-                          src="https://images.pexels.com/photos/3184306/pexels-photo-3184306.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"   
-                          alt="Đội ngũ tận tâm"  
-                          className="image"  
-                        />  
-                      </div>  
-                      <CardContent>  
-                        <Typography variant="h5">Đội ngũ tận tâm</Typography>  
-                        <Typography className="description mt-3">  
-                          Đội ngũ tư vấn của Smartos không chỉ am hiểu về công nghệ mà còn có khả năng thấu hiểu nhu cầu của khách hàng, từ đó đưa ra những tư vấn phù hợp.  
-                        </Typography>  
-                      </CardContent>  
-                    </a>  
-                  </Card>  
-                </Grid>  
-                <Grid item xs={12} md={4}>  
-                  <Card className="imagebox-card">  
-                    <a className="perlink">  
-                      <div className="image">  
-                        <img   
-                          decoding="async"   
-                          src="https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"   
-                          alt="Kinh nghiệm thực tiễn"  
-                          className="image"  
-                        />  
-                      </div>  
-                      <CardContent>  
-                        <Typography variant="h5">Kinh nghiệm thực tiễn</Typography>  
-                        <Typography className="description mt-3">  
-                          Chúng tôi tư vấn cho khách hàng bằng kinh nghiệm vận hành thực tiễn tại <strong>  
-                          <a href="#" target="_blank" rel="noopener noreferrer">  
-                            FPT SOFTWARE  
-                          </a>   
-                        </strong> và công nghệ từ đội ngũ phát triển   
-                        <a href="#" target="_blank" rel="noopener noreferrer"><strong>RRMS GROUP</strong>.</a>  
-                        </Typography>  
-                      </CardContent>  
-                    </a>  
-                  </Card>  
-                </Grid>  
-                <Grid item xs={12} md={4}>  
-                  <Card className="imagebox-card">  
-                    <a className="perlink">  
-                      <div className="image">  
-                        <img   
-                          decoding="async"   
-                          src="https://images.pexels.com/photos/3184296/pexels-photo-3184296.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"   
-                          alt="Quy trình chuyên nghiệp"  
-                          className="image"  
-                        />  
-                      </div>  
-                      <CardContent>  
-                        <Typography variant="h5">Quy trình chuyên nghiệp</Typography>  
-                        <Typography className="description mt-3">  
-                          Với quy trình CSKH 1-1, chủ tòa nhà cùng nhân viên vận hành sẽ được đội ngũ Smartos hướng dẫn tiếp nhận và sử dụng phần mềm Smartos một cách dễ hiểu và hiệu quả nhất.  
-                        </Typography>  
-                      </CardContent>  
-                    </a>  
-                  </Card>  
-                </Grid>  
-              </Grid>  
-            </div>       
-            
+            <div className="grid-row mt-4">
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={4}>
+                  <Card className="imagebox-card">
+                    <a className="perlink">
+                      <div className="image">
+                        <img
+                          decoding="async"
+                          src="https://images.pexels.com/photos/3184306/pexels-photo-3184306.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                          alt="Đội ngũ tận tâm"
+                          className="image"
+                        />
+                      </div>
+                      <CardContent>
+                        <Typography variant="h5">Đội ngũ tận tâm</Typography>
+                        <Typography className="description mt-3">
+                          Đội ngũ tư vấn của Smartos không chỉ am hiểu về công nghệ mà còn có khả năng thấu hiểu nhu cầu
+                          của khách hàng, từ đó đưa ra những tư vấn phù hợp.
+                        </Typography>
+                      </CardContent>
+                    </a>
+                  </Card>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Card className="imagebox-card">
+                    <a className="perlink">
+                      <div className="image">
+                        <img
+                          decoding="async"
+                          src="https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                          alt="Kinh nghiệm thực tiễn"
+                          className="image"
+                        />
+                      </div>
+                      <CardContent>
+                        <Typography variant="h5">Kinh nghiệm thực tiễn</Typography>
+                        <Typography className="description mt-3">
+                          Chúng tôi tư vấn cho khách hàng bằng kinh nghiệm vận hành thực tiễn tại{' '}
+                          <strong>
+                            <a href="#" target="_blank" rel="noopener noreferrer">
+                              FPT SOFTWARE
+                            </a>
+                          </strong>{' '}
+                          và công nghệ từ đội ngũ phát triển
+                          <a href="#" target="_blank" rel="noopener noreferrer">
+                            <strong>RRMS GROUP</strong>.
+                          </a>
+                        </Typography>
+                      </CardContent>
+                    </a>
+                  </Card>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Card className="imagebox-card">
+                    <a className="perlink">
+                      <div className="image">
+                        <img
+                          decoding="async"
+                          src="https://images.pexels.com/photos/3184296/pexels-photo-3184296.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                          alt="Quy trình chuyên nghiệp"
+                          className="image"
+                        />
+                      </div>
+                      <CardContent>
+                        <Typography variant="h5">Quy trình chuyên nghiệp</Typography>
+                        <Typography className="description mt-3">
+                          Với quy trình CSKH 1-1, chủ tòa nhà cùng nhân viên vận hành sẽ được đội ngũ Smartos hướng dẫn
+                          tiếp nhận và sử dụng phần mềm Smartos một cách dễ hiểu và hiệu quả nhất.
+                        </Typography>
+                      </CardContent>
+                    </a>
+                  </Card>
+                </Grid>
+              </Grid>
+            </div>
           </div>
         </Container>
-      </section>          
+      </section>
 
       <section className="testimonial has-bg-white">
         <Container>
@@ -698,6 +700,3 @@ const logos = [
   'https://quanlytro.me/images/logo-customer/logo-11.png',
   'https://quanlytro.me/images/logo-customer/logo-12.png',
 ]
-
-
-

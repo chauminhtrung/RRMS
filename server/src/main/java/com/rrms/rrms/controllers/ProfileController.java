@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import com.rrms.rrms.dto.request.AccountRequest;
-import com.rrms.rrms.dto.request.ApiResponse;
+import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.dto.response.AccountResponse;
 import com.rrms.rrms.services.IAccountService;
 

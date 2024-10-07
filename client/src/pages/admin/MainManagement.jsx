@@ -22,8 +22,7 @@ const MainManagement = ({ setIsAdmin }) => {
     setOpen(false)
   }
   return (
-
-    <NavAdmin />
+    <NavAdmin setIsAdmin={setIsAdmin} />
 
     // <Box
     //   sx={{
@@ -213,7 +212,6 @@ const MainManagement = ({ setIsAdmin }) => {
     //     </Grid>
     //   </Grid>
     // </Box>
-
   )
 }
 

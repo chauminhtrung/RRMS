@@ -1,7 +1,7 @@
 package com.rrms.rrms.controllers;
 
 
-import com.rrms.rrms.dto.request.ApiResponse;
+import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.dto.response.MotelResponse;
 import com.rrms.rrms.services.IMotelService;
 import org.springframework.beans.factory.annotation.Autowired;

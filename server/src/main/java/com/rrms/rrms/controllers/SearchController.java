@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rrms.rrms.dto.request.ApiResponse;
+import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.models.Room;
 import com.rrms.rrms.services.ISearchService;
 
