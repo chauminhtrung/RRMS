@@ -1,17 +1,22 @@
 package com.rrms.rrms.models;
 
-import com.rrms.rrms.enums.Gender;
+import java.time.LocalDate;
+
 import jakarta.persistence.*;
+
+import com.rrms.rrms.enums.Gender;
+
+import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "accounts")
 public class Account {
 
@@ -31,6 +36,9 @@ public class Account {
     @Column(columnDefinition = "VARCHAR(255)")
     private String email;
 
+    @Column(columnDefinition = "VARCHAR(255)")
+    private String avatar;
+
     @Column(columnDefinition = "DATE")
     private LocalDate birthday;
 
@@ -40,4 +48,7 @@ public class Account {
 
     @Column(columnDefinition = "VARCHAR(15)")
     private String cccd;
+
+    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
+    List<Auth> authorities;
 }

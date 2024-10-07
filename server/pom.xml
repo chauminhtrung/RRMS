@@ -43,10 +43,10 @@
 		</dependency>
 
 		<!-- Spring Boot Starter WebSocket: Hỗ trợ cho các ứng dụng WebSocket -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-websocket</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-websocket</artifactId>-->
+<!--		</dependency>-->
 
 		<!-- Spring Boot Starter OAuth2 Resource Server: Cung cấp OAuth2 Resource Server cho bảo mật API -->
 <!--		<dependency>-->
@@ -61,11 +61,21 @@
 		</dependency>
 
 		<!-- MySQL Connector: Kết nối ứng dụng Spring với cơ sở dữ liệu MySQL -->
-<!--		<dependency>-->
-<!--			<groupId>com.mysql</groupId>-->
-<!--			<artifactId>mysql-connector-j</artifactId>-->
-<!--			<scope>runtime</scope>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
 
 		<!-- Jackson Datatype JSR310: Hỗ trợ xử lý kiểu dữ liệu ngày tháng (Java 8 Date/Time API) trong JSON -->
 		<dependency>
@@ -94,6 +104,12 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.2.0</version>
 		</dependency>
 
 		<!-- MapStruct Processor: Thư viện tự động mapping giữa các đối tượng (DTO và Entity) -->
@@ -133,6 +149,32 @@
 			<scope>test</scope>
 		</dependency>
 
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-security</artifactId>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-oauth2-client</artifactId>-->
+<!--		</dependency>-->
+
+
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.security</groupId>-->
+<!--			<artifactId>spring-security-core</artifactId>-->
+<!--		</dependency>-->
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>net.datafaker</groupId>
+			<artifactId>datafaker</artifactId>
+			<version>1.9.0</version>
+		</dependency>
 
 	</dependencies>
 
@@ -200,9 +242,9 @@
 				</executions>
 				<configuration>
 					<excludes>
-						<exclude>com/example/identity_services</exclude>
-						<exclude>com/example/identity_services/mapper/**</exclude>
-						<exclude>com/example/identity_services/configuration/**</exclude>
+						<exclude>com/rrms/rrms</exclude>
+						<exclude>com/rrms/rrms/mapper/**</exclude>
+						<exclude>com/rrms/rrms/configs/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>

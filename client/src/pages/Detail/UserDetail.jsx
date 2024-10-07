@@ -28,7 +28,7 @@ const UserDetail = ({ item }) => {
         top: 20,
       }}>
       <Avatar alt="Remy Sharp" sx={{ height: '75px', width: '75px' }} src="https://picsum.photos/500/500?random=5" />
-      <Typography variant="subtitle1">Chủ nhà: {item.owner}</Typography>
+      <Typography variant="subtitle1">Chủ nhà: {item.motel.account.fullname}</Typography>
       <Typography sx={{ color: 'lime' }} variant="overline">
         Đã được chứng thực
       </Typography>
@@ -58,7 +58,7 @@ const UserDetail = ({ item }) => {
               width: '100%',
             }}
             onClick={togleShowPhone}>
-            {showPhone ? item.phone : 'Lấy số điện thoại'}
+            {showPhone ? item.motel.account.phone : 'Lấy số điện thoại'}
           </Button>
         </Grid>
       </Grid>

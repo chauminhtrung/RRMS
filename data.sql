@@ -17,8 +17,16 @@ CREATE TABLE Accounts (
     phone VARCHAR(20),
     email VARCHAR(255),
     birthday DATE,
-    gender ENUM('MALE', 'FEMALE', 'OTHER'),
+    gender ENUM('Male', 'Female'),
     cccd VARCHAR(15)
+);
+
+CREATE TABLE Auths (
+    authId BINARY(16) PRIMARY KEY,
+    username VARCHAR(50),
+    roleId BINARY(16),
+    FOREIGN KEY (username) REFERENCES Accounts (username),
+    FOREIGN KEY (roleId) REFERENCES Roles (roleId)
 );
 
 CREATE TABLE Motels (
@@ -44,13 +52,7 @@ CREATE TABLE NameMotelServices (
     price DECIMAL(10, 2)
 );
 
-CREATE TABLE Auths (
-    authId BINARY(16) PRIMARY KEY,
-    username VARCHAR(50),
-    roleId BINARY(16),
-    FOREIGN KEY (username) REFERENCES Accounts (username),
-    FOREIGN KEY (roleId) REFERENCES Roles (roleId)
-);
+
 
 CREATE TABLE Searchs (
     searchId BINARY(16) PRIMARY KEY,
@@ -221,11 +223,12 @@ CREATE TABLE Contracts (
     FOREIGN KEY (roomId) REFERENCES Rooms (roomId)
 );
 
-INSERT INTO Roles (roleId, roleName, description) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), 'Admin', 'Administrator role'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'User', 'Regular user role'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Landlord', 'Landlord role'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Tenant', 'Tenant role');
+INSERT INTO Roles (roleId, roleName, description) VALUES   
+(UNHEX(REPLACE(UUID(), '-', '')), 'ADMIN', 'ADMIN role'),   
+(UNHEX(REPLACE(UUID(), '-', '')), 'CUSTOMER', 'CUSTOMER role'),   
+(UNHEX(REPLACE(UUID(), '-', '')), 'EMPLOYEE', 'EMPLOYEE role'),   
+(UNHEX(REPLACE(UUID(), '-', '')), 'GUEST', 'GUEST role'),
+(UNHEX(REPLACE(UUID(), '-', '')), 'HOST', 'HOST role');
 
 INSERT INTO Accounts (username, password, fullname, phone, email, birthday, gender, cccd) VALUES
 ('user1', 'password1', 'User One', '1234567890', 'user1@example.com', '1990-01-01', 'Male', '123456789'),
@@ -233,6 +236,14 @@ INSERT INTO Accounts (username, password, fullname, phone, email, birthday, gend
 ('landlord1', 'password3', 'Landlord One', '1112223333', 'landlord1@example.com', '1985-03-03', 'Male', '123123123'),
 ('tenant1', 'password4', 'Tenant One', '4445556666', 'tenant1@example.com', '1995-04-04', 'Female', '321321321'),
 ('user3', 'password5', 'User Three', '7778889999', 'user3@example.com', '1988-05-05', 'Male', '456456456');
+
+INSERT INTO Auths (authId, username, roleId) VALUES  
+(UNHEX(REPLACE(UUID(), '-', '')), 'user1', (SELECT roleId FROM Roles WHERE roleName = 'ADMIN')),  
+(UNHEX(REPLACE(UUID(), '-', '')), 'user2', (SELECT roleId FROM Roles WHERE roleName = 'CUSTOMER')),  
+(UNHEX(REPLACE(UUID(), '-', '')), 'landlord1', (SELECT roleId FROM Roles WHERE roleName = 'EMPLOYEE')),  
+(UNHEX(REPLACE(UUID(), '-', '')), 'tenant1', (SELECT roleId FROM Roles WHERE roleName = 'GUEST')),  
+(UNHEX(REPLACE(UUID(), '-', '')), 'user3', (SELECT roleId FROM Roles WHERE roleName = 'HOST'));
+
 
 INSERT INTO Motels (motelId, motelName, area, averagePrice, address, username) VALUES
 (UNHEX(REPLACE(UUID(), '-', '')), 'Motel A', 150.0, 100.00, 'Address A', 'landlord1'),

@@ -51,6 +51,9 @@ Hệ thống được xây dựng dựa trên các công nghệ hiện đại v�
   <a href="https://redis.io/" target="_blank" rel="noreferrer">
     <img src="https://www.vectorlogo.zone/logos/redis/redis-icon.svg" alt="Redis" width="40" height="40"/>
   </a>
+  <a href="https://www.docker.com/" target="_blank" rel="noreferrer">
+    <img src="https://www.vectorlogo.zone/logos/docker/docker-tile.svg" alt="Redis" width="40" height="40"/>
+  </a>
   <a href="https://www.mysql.com/" target="_blank" rel="noreferrer">
     <img src="https://www.vectorlogo.zone/logos/mysql/mysql-icon.svg" alt="MySQL" width="40" height="40"/>
   </a>
@@ -79,7 +82,7 @@ Chúng tôi xin gửi lời cảm ơn đến những cá nhân đã tham gia ph�
 - [Minh Trung](https://github.com/chauminhtrung) -
 - [Kiến Quốc](https://github.com/KienQuocVn) -
 - [Quốc Thuận](https://github.com/thuanquoctr) -
-- [Tấn Tài](https://github.com/tantai0118) -
+- [Tấn Tài](https://github.com/taitan0118) -
 
 ---
 
