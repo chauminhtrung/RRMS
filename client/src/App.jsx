@@ -14,6 +14,7 @@ import MainManagement from './pages/admin/MainManagement'
 import Contact from "./pages/Contact/Contact";
 import Introduce from "./pages/Introduce/Introduce";
 import AdminManagerBoard from "./pages/admin/AdminManageBoard";
+import AdminManagerGroup from "./pages/admin/AdminManagerGroup";
 // import TestPage from './pages/TestPage'
 // import ValidCaptcha from './components/ValidCaptcha'
 
@@ -39,6 +40,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<Forgot_Password />} />
           <Route path="/AdminManagerBoard" element={<AdminManagerBoard />} />
+          <Route path="/AdminManagerGroup" element={<AdminManagerGroup />} />
           {/* <Route path="/test" element={<TestPage />} /> */}
 
         </Routes>
