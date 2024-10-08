@@ -1,8 +1,33 @@
 import { Box, Grid, Typography, Card, CardMedia, CardContent, Button, Avatar, Pagination } from '@mui/material'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 import { search } from '~/apis/mock-data-search'
 import { formatterAmount } from '~/utils/formatterAmount'
 
 const RoomList = () => {
+  const [searchData, setSearchData] = useState([])
+  useEffect(() => {
+    loadStudent()
+  }, [])
+
+  const loadStudent = async () => {
+    try {
+      const result = await axios.get('http://localhost:8080/search', {
+        validateStatus: () => {
+          return true
+        },
+      })
+      console.log(result)
+
+      if (result.status === 404) {
+        setSearchData(result.data)
+      } else {
+        console.log('Error: Status', result.status)
+      }
+    } catch (error) {
+      console.error('Error fetching students:', error)
+    }
+  }
   return (
     <Box>
       <Box sx={{ width: '100%', overflow: 'hidden', mt: 2 }}>

@@ -2,11 +2,10 @@ package com.rrms.rrms.controllers;
 
 import java.util.List;
 
+import com.rrms.rrms.services.IRoomService;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.models.Room;
@@ -19,13 +18,20 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-@CrossOrigin("*")
 @RequestMapping("/searchs")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class SearchController {
 
     ISearchService searchService;
+
+    private final IRoomService roomService;
+
+    @GetMapping
+    public ResponseEntity<List<Room>> getRoom() {
+        List<Room> rooms = roomService.getRooms();
+        return new ResponseEntity<>(rooms, HttpStatus.OK);
+    }
 
     @RequestMapping("/name")
     public ApiResponse<List<Room>> searchName(@RequestParam("name") String name) {
