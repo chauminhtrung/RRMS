@@ -1,6 +1,7 @@
+import { Link } from 'react-router-dom'
 import './NavbarAdmin.css'
 import { Tooltip } from 'react-tooltip'
-const NavAdmin = () => {
+const NavAdmin = ({ setIsAdmin }) => {
   return (
     <header>
       <div className="header-inner">
@@ -27,7 +28,7 @@ const NavAdmin = () => {
               <nav className="collapse navbar-collapse lozido-main-menu">
                 <ul className="navbar-nav main-menu-left  me-auto mb-2 mb-lg-0">
                   <li className="nav-item menu-item active">
-                    <a href="/" className="nav-link ">
+                    <Link to="/" className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -38,12 +39,13 @@ const NavAdmin = () => {
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="feather feather-arrow-left">
+                        className="feather feather-arrow-left"
+                        onClick={() => setIsAdmin(false)}>
                         <line x1="19" y1="12" x2="5" y2="12"></line>
                         <polyline points="12 19 5 12 12 5"></polyline>
                       </svg>
                       <img width="110px" height="54px" src="./bg2.png" />
-                    </a>
+                    </Link>
                   </li>
                 </ul>
                 <ul className="topbar-items main-menu-right navbar-nav">
@@ -90,7 +92,7 @@ const NavAdmin = () => {
                     </a>
                   </li>
                   <li className="nav-item menu-item ">
-                    <a href="/dang-tin" className="nav-link ">
+                    <Link to="/dang-tin" className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -108,7 +110,7 @@ const NavAdmin = () => {
                       <span style={{ marginTop: '5px' }} className="text">
                         Đăng tin
                       </span>
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item menu-item ">
                     <a href="/mo-gioi" className="nav-link ">

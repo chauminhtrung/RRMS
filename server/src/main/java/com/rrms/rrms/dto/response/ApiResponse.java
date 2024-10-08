@@ -1,4 +1,4 @@
-package com.rrms.rrms.dto.request;
+package com.rrms.rrms.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

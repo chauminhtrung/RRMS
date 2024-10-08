@@ -3,10 +3,10 @@ package com.rrms.rrms.services.servicesImp;
 import java.util.List;
 import java.util.Optional;
 
-import java.util.stream.Collectors;
+//import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.response.AccountResponse;
@@ -36,7 +36,7 @@ public class AccountService implements IAccountService{
     @Autowired
     AccountMapper accountMapper;
 
-    private final PasswordEncoder passwordEncoder;
+//    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<Account> findAll() {
@@ -48,13 +48,11 @@ public class AccountService implements IAccountService{
         return accountRepository.findByUsername(username);
     }
 
+
     @Override
     public Optional<Account> login(String phone, String password) {
-        Optional<Account> accountOptional = accountRepository.findByUsername(phone);
-        if (accountOptional.isPresent() && passwordEncoder.matches(password, accountOptional.get().getPassword())) {
-            return accountOptional;
-        }
-        return Optional.empty();
+        Optional<Account> accountOptional = accountRepository.findByPhoneAndPassword(phone,password);
+        return accountOptional;
     }
 
     @Override

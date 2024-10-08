@@ -14,6 +14,8 @@ import Support from './pages/Support/Support'
 import AdminStatis from './pages/admin/statistical'
 
 import MainManagement from './pages/admin/MainManagement'
+
+import AdminManagerGroup from './pages/admin/AdminManagerGroup'
 import Contact from './pages/Contact/Contact'
 import Introduce from './pages/Introduce/Introduce'
 import AdminManagerBoard from './pages/admin/AdminManageBoard'
@@ -23,11 +25,16 @@ import { useState } from 'react'
 import Heart from './pages/cart/Heart'
 import RRMS from './pages/RRMS/RRMS'
 import AdminManageBoker from './pages/admin/AdminManageBoker/AdminManageBoker'
+import PostRooms from './pages/PostRooms/PostRooms'
 
 // import TestPage from './pages/TestPage'
 // import ValidCaptcha from './components/ValidCaptcha'
 
 function App() {
+  //Muốn mất header thì thêm props setIsAdmin={setIsAdmin}
+  // useEffect(() => {
+  //   setIsAdmin(true)
+  // }, [])
   const [isAdmin, setIsAdmin] = useState(false)
 
   return (
@@ -36,7 +43,7 @@ function App() {
         {/* <ValidCaptcha /> */}
         {!isAdmin ? <Header /> : <></>}
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home setIsAdmin={setIsAdmin} />} />
           <Route path="/chart" element={<Chart />} />
           <Route path="/admin" element={<MainManagement setIsAdmin={setIsAdmin} />} />
           <Route path="/adminBoker" element={<AdminManageBoker />} />
@@ -54,6 +61,8 @@ function App() {
           <Route path="/heart" element={<Heart />} />
           <Route path="/RRMS" element={<RRMS />} />
           <Route path="/AdminManagerBoard" element={<AdminManagerBoard />} />
+          <Route path="/dang-tin" element={<PostRooms />} />
+          <Route path="/AdminManagerGroup" element={<AdminManagerGroup />} />
         </Routes>
         {!isAdmin ? <Footer /> : <></>}
       </Router>

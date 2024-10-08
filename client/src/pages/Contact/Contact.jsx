@@ -67,11 +67,11 @@ const Contact = () => {
         </div>
       </div>
       <div className="container">
-        <div className="flex row" style={{ marginBottom: '15px', marginTop: '50px' }}>
+        <div className="flex row" style={{ marginBlock: '35px' }}>
           <div className="col-md-6 mt-2">
-            <a href="/tro-thanh-moi-gioi-lozido.html">
+            <a href="#">
               <img
-                src="https://lozido.com/images/banner/cong-tac-vien-kinh-doanh-lozido.png"
+                src="./banner1.png"
                 className="w-full lg:rounded-md"
                 alt="banner moi gioi lozido"
                 width="100%"
@@ -80,9 +80,9 @@ const Contact = () => {
             </a>
           </div>
           <div className="col-md-6 mt-2">
-            <a href="/ho-tro-tim-phong.html">
+            <a href="#">
               <img
-                src="https://lozido.com/images/banner/ho-tro-tim-nha-cho-thue.png"
+                src="./banner2.png"
                 className="lg:rounded-md cursor-pointer"
                 alt="banner-pc"
                 width="100%"
@@ -96,37 +96,37 @@ const Contact = () => {
           <Typography sx={{ fontSize: '28px' }}>Các bước đăng bài</Typography>
           <p className="text-center footer-description">Tiếp cận khách thuê dễ dàng với tính năng đăng tin</p>
         </div>
-        <div className="container">
+        <div className="container mb-4">
           <div className="row feature card-benefit">
-            <div className="col-md-4 item green">
-              <div className="inner row">
-                <div className="icon-item col-3">
+            <div className="col-md-4 item green mt-2">
+              <div className="innerRRMS">
+                <div className="icon-itemRRMS">
                   <span>1</span>
                 </div>
-                <div className="content-item col-9">
-                  <Typography sx={{ fontSize: '15px', fontWeight: 'Bold' }}>Đăng ký/Đăng nhập</Typography>
-                  <div>Tải app và đăng ký sau đó đăng nhập</div>
+                <div className="content-item">
+                  <b>Đăng nhập/Đăng ký</b>
+                  <div>đăng ký sau đó đăng nhập</div>
                 </div>
               </div>
             </div>
-            <div className="col-md-4 item blue">
-              <div className="inner row">
-                <div className="icon-item col-3">
+            <div className="col-md-4 item blue mt-2">
+              <div className="innerRRMS">
+                <div className="icon-itemRRMS">
                   <span>2</span>
                 </div>
-                <div className="content-item col-9">
-                  <Typography sx={{ fontSize: '15px', fontWeight: 'Bold' }}>Đăng tin</Typography>
+                <div className="content-item">
+                  <b>Đăng tin</b>
                   <div>Đăng tin trong tài khoản cá nhân</div>
                 </div>
               </div>
             </div>
-            <div className="col-md-4 item yellow">
-              <div className="inner row">
-                <div className="icon-item col-3">
+            <div className="col-md-4 item yellow mt-2">
+              <div className="innerRRMS">
+                <div className="icon-itemRRMS">
                   <span>3</span>
                 </div>
-                <div className="content-item col-9">
-                  <Typography sx={{ fontSize: '15px', fontWeight: 'Bold' }}>Xét duyệt</Typography>
+                <div className="content-item">
+                  <b>Xét duyệt &amp; tiếp cận khách thuê</b>
                   <div>Chuyên viên sẵn sàng xét duyệt 24/7</div>
                 </div>
               </div>
