@@ -12,15 +12,15 @@ const RoomList = () => {
 
   const loadStudent = async () => {
     try {
-      const result = await axios.get('http://localhost:8080/search', {
+      const result = await axios.get('http://localhost:8080/searchs', {
         validateStatus: () => {
           return true
         },
       })
       console.log(result)
-
+      setSearchData(result.data.result)
       if (result.status === 404) {
-        setSearchData(result.data)
+        setSearchData(result.data.result)
       } else {
         console.log('Error: Status', result.status)
       }
@@ -33,8 +33,8 @@ const RoomList = () => {
       <Box sx={{ width: '100%', overflow: 'hidden', mt: 2 }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            {search.images.length > 0 ? (
-              search.images.map((item, i) => (
+            {searchData?.roomImages?.length > 0 ? (
+              searchData?.roomImages?.map((item, i) => (
                 <Card
                   key={i}
                   sx={{
@@ -92,7 +92,7 @@ const RoomList = () => {
                           color: 'primary.main',
                         },
                       }}>
-                      {search.address}
+                      {searchData.address}
                     </Typography>
 
                     <Typography
@@ -108,7 +108,7 @@ const RoomList = () => {
                           fontWeight: 500,
                         },
                       }}>
-                      {search.addressDetail}
+                      {searchData.addressDetail}
                     </Typography>
 
                     <Typography
@@ -127,15 +127,15 @@ const RoomList = () => {
 
                     <Typography variant="body2" sx={{ mt: 1 }}>
                       <Box component="span" sx={{ mr: 2 }}>
-                        {search.acreage} m²
+                        {searchData.acreage} m²
                       </Box>
                       <Box component="span" sx={{ mr: 2 }}>
-                        {formatterAmount(search.water)}/khối
+                        {formatterAmount(searchData.water)}/khối
                       </Box>
-                      <Box component="span">{formatterAmount(search.electricity)}/Kw</Box>
+                      <Box component="span">{formatterAmount(searchData?.electricity)}/Kw</Box>
                     </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                      <Avatar src={item.avata} sx={{ mr: 1 }} />
+                      <Avatar src={searchData.avatar} sx={{ mr: 1 }} />
                       <Typography variant="caption" color="textSecondary" noWrap>
                         Trinh, 2 ngày trước
                       </Typography>

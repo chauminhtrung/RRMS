@@ -28,12 +28,15 @@ public class SearchController {
     private final IRoomService roomService;
 
     @GetMapping
-    public ResponseEntity<List<Room>> getRoom() {
+    public ApiResponse<List<Room>> getRoom() {
+        ApiResponse<List<Room>> apiResponse = new ApiResponse<>();
         List<Room> rooms = roomService.getRooms();
-        return new ResponseEntity<>(rooms, HttpStatus.OK);
+        apiResponse.setCode(HttpStatus.OK.value());
+        apiResponse.setMessage("Tìm kiếm thành công");
+        apiResponse.setResult(rooms);
+        return apiResponse;
     }
 
-    @RequestMapping("/name")
     @GetMapping("/name")
     public ApiResponse<List<Room>> searchName(@RequestParam("name") String name) {
         ApiResponse<List<Room>> apiResponse = new ApiResponse<>();
