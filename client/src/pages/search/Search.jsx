@@ -12,8 +12,12 @@ import { getTinhThanh } from '~/apis/apiClient'
 import LoadingPage from '~/components/LoadingPage'
 import FilterSearch from './FilterSearch'
 
-const Search = () => {
+const Search = ({ setIsAdmin }) => {
   const [provinces, setProvinces] = useState([])
+  useEffect(() => {
+    setIsAdmin(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     getTinhThanh()

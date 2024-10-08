@@ -5,8 +5,13 @@ import FilterSearch from '../search/FilterSearch'
 import { data } from '~/utils/slider'
 import { sliderSettings } from '~/utils/common.js'
 import { wards_list } from '~/utils/wards_list'
+import { useEffect } from 'react'
 
-const RRMS = () => {
+const RRMS = ({ setIsAdmin }) => {
+  useEffect(() => {
+    setIsAdmin(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   const renderList = (card, start, end) => {
     const listItems = []
     for (let i = start; i < end; i++) {

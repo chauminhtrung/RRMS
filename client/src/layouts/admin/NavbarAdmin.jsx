@@ -50,7 +50,7 @@ const NavAdmin = ({ setIsAdmin }) => {
                 </ul>
                 <ul className="topbar-items main-menu-right navbar-nav">
                   <li className="nav-item menu-item active">
-                    <a href="#" className="nav-link ">
+                    <Link to="#" className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -68,7 +68,7 @@ const NavAdmin = ({ setIsAdmin }) => {
                       <span style={{ marginTop: '5px' }} className="text">
                         Quản lý nhà
                       </span>
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item menu-item ">
                     <a href="#" className="nav-link ">
@@ -113,7 +113,7 @@ const NavAdmin = ({ setIsAdmin }) => {
                     </Link>
                   </li>
                   <li className="nav-item menu-item ">
-                    <a href="/mo-gioi" className="nav-link ">
+                    <Link to="/mo-gioi" className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -133,10 +133,10 @@ const NavAdmin = ({ setIsAdmin }) => {
                       <span style={{ marginTop: '5px' }} className="text">
                         Môi giới
                       </span>
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item menu-item ">
-                    <a href="/phan-quyen" className="nav-link ">
+                    <Link to="/phan-quyen" className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -155,10 +155,10 @@ const NavAdmin = ({ setIsAdmin }) => {
                       <span style={{ marginTop: '5px' }} className="text">
                         Công ty/nhóm
                       </span>
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item menu-item ">
-                    <a href="/cai-dat" className="nav-link ">
+                    <Link to="/cai-dat" className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -176,10 +176,10 @@ const NavAdmin = ({ setIsAdmin }) => {
                       <span style={{ marginTop: '5px' }} className="text">
                         Cài đặt chung
                       </span>
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item btn-group menu-item ">
-                    <a href="javascript:;" className="nav-link" data-bs-toggle="dropdown" aria-expanded="false">
+                    <Link to="javascript:;" className="nav-link" data-bs-toggle="dropdown" aria-expanded="false">
                       <span className="count-notification badge">0</span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -198,7 +198,7 @@ const NavAdmin = ({ setIsAdmin }) => {
                       <span style={{ marginTop: '5px' }} className="text">
                         Thông báo
                       </span>
-                    </a>
+                    </Link>
                     <ul className="dropdown-menu notication-dropdown dropdown-menu-lg-end">
                       <div className="text-center" style={{ padding: '20px' }}>
                         <img
@@ -216,7 +216,7 @@ const NavAdmin = ({ setIsAdmin }) => {
                     </ul>
                   </li>
                   <li className="nav-item menu-item ">
-                    <a href="/tai-khoan" className="nav-link ">
+                    <Link to="/tai-khoan" className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -234,10 +234,10 @@ const NavAdmin = ({ setIsAdmin }) => {
                       <span style={{ marginTop: '5px' }} className="text">
                         Tài khoản
                       </span>
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item menu-item ">
-                    <a href="/dang-xuat" className="nav-link ">
+                    <Link to="/dang-xuat" className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -256,7 +256,7 @@ const NavAdmin = ({ setIsAdmin }) => {
                       <span style={{ marginTop: '5px' }} className="text">
                         Đăng xuất
                       </span>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </nav>
@@ -385,7 +385,7 @@ const NavAdmin = ({ setIsAdmin }) => {
                     overflowX: 'auto',
                     position: 'relative',
                   }}>
-                  <a href="/quan-ly" className="item-menu active">
+                  <Link to="/quan-ly" className="item-menu active">
                     <div className="icon text-center">
                       <img width="47px" className="mb-2" src="./billicon.png" />
                     </div>
@@ -394,8 +394,8 @@ const NavAdmin = ({ setIsAdmin }) => {
                         <b>Quản lý phòng</b>
                       </span>
                     </div>
-                  </a>
-                  <a href="/quan-ly/6891/lap-phieu-thu" className="item-menu">
+                  </Link>
+                  <Link to="/quan-ly/6891/lap-phieu-thu" className="item-menu">
                     <div className="icon text-center">
                       <img width="47px" className="mb-2" src="./billicon.png" />
                     </div>
@@ -404,8 +404,8 @@ const NavAdmin = ({ setIsAdmin }) => {
                         <b>Quản lý hóa đơn</b>
                       </span>
                     </div>
-                  </a>
-                  <a href="/quan-ly/6891/quan-ly-dich-vu" className="item-menu">
+                  </Link>
+                  <Link to="/quan-ly/6891/quan-ly-dich-vu" className="item-menu">
                     <div className="icon text-center">
                       <img width="47px" className="mb-2" src="./billpen.png" />
                     </div>
@@ -414,8 +414,8 @@ const NavAdmin = ({ setIsAdmin }) => {
                         <b>Quản lý dịch vụ</b>
                       </span>
                     </div>
-                  </a>
-                  <a href="/quan-ly/6891/quan-ly-tai-san" className="item-menu">
+                  </Link>
+                  <Link to="/quan-ly/6891/quan-ly-tai-san" className="item-menu">
                     <div className="icon text-center">
                       <img width="47px" className="mb-2" src="./billpen.png" />
                     </div>
@@ -424,8 +424,8 @@ const NavAdmin = ({ setIsAdmin }) => {
                         <b>Quản lý tài sản</b>
                       </span>
                     </div>
-                  </a>
-                  <a href="/quan-ly/6891/tat-ca-hop-dong" className="item-menu">
+                  </Link>
+                  <Link to="/quan-ly/6891/tat-ca-hop-dong" className="item-menu">
                     <div className="icon text-center">
                       <img width="47px" className="mb-2" src="./contractbill.png" />
                     </div>
@@ -434,8 +434,8 @@ const NavAdmin = ({ setIsAdmin }) => {
                         <b>Quản lý hợp đồng</b>
                       </span>
                     </div>
-                  </a>
-                  <a href="/quan-ly/6891/tat-ca-khach-thue" className="item-menu">
+                  </Link>
+                  <Link to="/quan-ly/6891/tat-ca-khach-thue" className="item-menu">
                     <div className="icon text-center">
                       <img width="47px" className="mb-2" src="./phonebill.png" />
                     </div>
@@ -444,8 +444,8 @@ const NavAdmin = ({ setIsAdmin }) => {
                         <b>Quản lý khách thuê</b>
                       </span>
                     </div>
-                  </a>
-                  <a href="/quan-ly/6891/thu-chi-tong-ket" className="item-menu">
+                  </Link>
+                  <Link to="/quan-ly/6891/thu-chi-tong-ket" className="item-menu">
                     <div className="icon text-center">
                       <img width="47px" className="mb-2" src="./billicon.png" />
                     </div>
@@ -454,8 +454,8 @@ const NavAdmin = ({ setIsAdmin }) => {
                         <b>Thu/Chi - Tổng kết</b>
                       </span>
                     </div>
-                  </a>
-                  <a href="/quan-ly/6891/cai-dat-nha-tro" className="item-menu">
+                  </Link>
+                  <Link to="/quan-ly/6891/cai-dat-nha-tro" className="item-menu">
                     <div className="icon text-center">
                       <img width="47px" className="mb-2" src="./setting.png" />
                     </div>
@@ -464,8 +464,8 @@ const NavAdmin = ({ setIsAdmin }) => {
                         <b>Cài đặt</b>
                       </span>
                     </div>
-                  </a>
-                  <a href="/quan-ly/6891/lich-su-gui-zalo" className="item-menu">
+                  </Link>
+                  <Link to="/quan-ly/6891/lich-su-gui-zalo" className="item-menu">
                     <div className="icon text-center">
                       <img width="47px" className="mb-2" src="./icon-zalo.png" />
                     </div>
@@ -474,8 +474,8 @@ const NavAdmin = ({ setIsAdmin }) => {
                         <b>Lịch sử gửi zalo</b>
                       </span>
                     </div>
-                  </a>
-                  <a href="/quan-ly/6891/import-data-from-file" className="item-menu">
+                  </Link>
+                  <Link to="/quan-ly/6891/import-data-from-file" className="item-menu">
                     <div className="icon text-center">
                       <img width="47px" className="mb-2" src="./setting.png" />
                     </div>
@@ -484,7 +484,7 @@ const NavAdmin = ({ setIsAdmin }) => {
                         <b>Nhập liệu từ file</b>
                       </span>
                     </div>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

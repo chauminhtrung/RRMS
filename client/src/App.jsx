@@ -44,25 +44,26 @@ function App() {
         {!isAdmin ? <Header /> : <></>}
         <Routes>
           <Route path="/" element={<Home setIsAdmin={setIsAdmin} />} />
-          <Route path="/chart" element={<Chart />} />
+          <Route path="/chart" element={<Chart setIsAdmin={setIsAdmin} />} />
+          <Route path="/search" element={<Search setIsAdmin={setIsAdmin} />} />
+          <Route path="/detail" element={<Detail setIsAdmin={setIsAdmin} />} />
+          <Route path="/forgot-password" element={<Forgot_Password setIsAdmin={setIsAdmin} />} />
+          <Route path="/login" element={<Login setIsAdmin={setIsAdmin} />} />
+          <Route path="/contact" element={<Contact setIsAdmin={setIsAdmin} />} />
+          <Route path="/introduce" element={<Introduce setIsAdmin={setIsAdmin} />} />
+          <Route path="/register" element={<Register setIsAdmin={setIsAdmin} />} />
+          <Route path="/profile" element={<Profile setIsAdmin={setIsAdmin} />} />
+          <Route path="/payment" element={<PaymentPage setIsAdmin={setIsAdmin} />} />
+          <Route path="/support" element={<Support setIsAdmin={setIsAdmin} />} />
+          <Route path="/heart" element={<Heart setIsAdmin={setIsAdmin} />} />
+          <Route path="/RRMS" element={<RRMS setIsAdmin={setIsAdmin} />} />
+          {/* Admin page */}
           <Route path="/admin" element={<MainManagement setIsAdmin={setIsAdmin} />} />
-          <Route path="/adminBoker" element={<AdminManageBoker />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/detail" element={<Detail />} />
-          <Route path="/AdminStatis" element={<AdminStatis />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/introduce" element={<Introduce />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/forgot-password" element={<Forgot_Password />} />
-          <Route path="/support" element={<Support />} />
-          <Route path="/payment" element={<PaymentPage />} />
-          <Route path="/heart" element={<Heart />} />
-          <Route path="/RRMS" element={<RRMS />} />
-          <Route path="/AdminManagerBoard" element={<AdminManagerBoard />} />
-          <Route path="/dang-tin" element={<PostRooms />} />
-          <Route path="/AdminManagerGroup" element={<AdminManagerGroup />} />
+          <Route path="/adminBoker" element={<AdminManageBoker setIsAdmin={setIsAdmin} />} />
+          <Route path="/AdminStatis" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
+          <Route path="/AdminManagerBoard" element={<AdminManagerBoard setIsAdmin={setIsAdmin} />} />
+          <Route path="/AdminManagerGroup" element={<AdminManagerGroup setIsAdmin={setIsAdmin} />} />
+          <Route path="/dang-tin" element={<PostRooms setIsAdmin={setIsAdmin} />} />
         </Routes>
         {!isAdmin ? <Footer /> : <></>}
       </Router>

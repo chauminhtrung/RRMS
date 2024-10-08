@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Slider from 'react-slick'
 import {
   Box,
@@ -22,12 +22,17 @@ import AutorenewIcon from '@mui/icons-material/Autorenew'
 import NextArrow from '../Detail/NextArrow'
 import PrevArrow from '../Detail/PrevArrow'
 
-const Heart = () => {
+const Heart = ({setIsAdmin}) => {
   const [age, setAge] = useState(10)
   const [isFavorited, setIsFavorited] = useState(false)
   const [showPhoneNumber, setShowPhoneNumber] = useState(false)
   const [totalPosts, setTotalPosts] = useState(1)
   const [showArrows, setShowArrows] = useState(false)
+
+  useEffect(() => {
+    setIsAdmin(false)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleChange = (event) => {
     setAge(event.target.value)
