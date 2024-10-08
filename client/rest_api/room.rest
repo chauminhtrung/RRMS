@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:8080
-@roomId = 14306be9-3814-4862-9429-a57ade4c867e
+@roomId = 4a30c5bd-f1ba-42f5-8b94-60ebeacdc05d
 
 GET {{baseUrl}}/room/{{roomId}}
 
