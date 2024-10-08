@@ -34,6 +34,7 @@ public class SearchController {
     }
 
     @RequestMapping("/name")
+    @GetMapping("/name")
     public ApiResponse<List<Room>> searchName(@RequestParam("name") String name) {
         ApiResponse<List<Room>> apiResponse = new ApiResponse<>();
         apiResponse.setCode(HttpStatus.OK.value());
@@ -42,7 +43,7 @@ public class SearchController {
         return apiResponse;
     }
 
-    @RequestMapping("/price")
+    @GetMapping("/price")
     public ApiResponse<List<Room>> searchPrice(
             @RequestParam("startPrice") Double startPrice, @RequestParam("endPrice") Double endPrice) {
         ApiResponse<List<Room>> apiResponse = new ApiResponse<>();
