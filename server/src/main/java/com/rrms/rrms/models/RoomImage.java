@@ -25,4 +25,5 @@ public class RoomImage {
 
     @Column(columnDefinition = "VARCHAR(255)")
     private String image;
+
 }

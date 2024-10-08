@@ -1,7 +1,10 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.response.RoomDetailResponse;
@@ -20,7 +23,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class RoomService implements IRoomService {
-
+    @Autowired
     RoomRepository roomRepository;
     RoomMapper roomMapper;
 
@@ -28,5 +31,9 @@ public class RoomService implements IRoomService {
     public RoomDetailResponse getRoomById(UUID id) {
         Room room = roomRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ROOM_DETAIL_NOT_FOUND));
         return roomMapper.toRoomDetailResponse(room);
+    }
+    @Override
+    public List<RoomDetailResponse> getRooms() {
+        return roomRepository.findAll().stream().map(roomMapper::toRoomDetailResponse).toList();
     }
 }
