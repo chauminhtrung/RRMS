@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-import net.datafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +14,7 @@ import com.rrms.rrms.models.*;
 import com.rrms.rrms.repositories.*;
 
 import lombok.extern.slf4j.Slf4j;
+import net.datafaker.Faker;
 
 @Configuration
 @Slf4j
@@ -30,7 +30,6 @@ public class DB {
             ServiceRepository serviceRepository,
             RoomServiceRepository roomServiceRepository) {
         return args -> {
-
             int roomsLength = 20;
 
             if (accountRepository.findByUsername("admin").isEmpty()) {
