@@ -1,10 +1,10 @@
 package com.rrms.rrms.services;
 
-import com.rrms.rrms.enums.Roles;
-import com.rrms.rrms.models.Role;
-
 import java.util.List;
 import java.util.Optional;
+
+import com.rrms.rrms.enums.Roles;
+import com.rrms.rrms.models.Role;
 
 public interface IRoleService {
 

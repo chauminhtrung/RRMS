@@ -1,7 +1,5 @@
 package com.rrms.rrms.API;
 
-import com.rrms.rrms.services.IAccountService;
-import com.rrms.rrms.services.servicesImp.AccountService;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -14,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.rrms.rrms.models.Account;
+import com.rrms.rrms.services.IAccountService;
 
 @RestController
 @RequestMapping("/api-accounts")
@@ -99,8 +98,7 @@ public class AccountAPI {
         } catch (Exception ex) {
             rs.put("status", false);
             rs.put("message", "Update Account failed: " + ex.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(rs);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(rs);
         }
     }
 
