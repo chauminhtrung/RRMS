@@ -1,5 +1,6 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,7 +33,7 @@ public class RoomService implements IRoomService {
         return roomMapper.toRoomDetailResponse(room);
     }
     @Override
-    public List<Room> getRooms() {
-        return roomRepository.findAll();
+    public List<RoomDetailResponse> getRooms() {
+        return roomRepository.findAll().stream().map(roomMapper::toRoomDetailResponse).toList();
     }
 }

@@ -2,6 +2,7 @@ package com.rrms.rrms.controllers;
 
 import java.util.List;
 
+import com.rrms.rrms.dto.response.RoomDetailResponse;
 import com.rrms.rrms.services.IRoomService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +29,9 @@ public class SearchController {
     private final IRoomService roomService;
 
     @GetMapping
-    public ApiResponse<List<Room>> getRoom() {
-        ApiResponse<List<Room>> apiResponse = new ApiResponse<>();
-        List<Room> rooms = roomService.getRooms();
+    public ApiResponse<List<RoomDetailResponse>> getRoom() {
+        ApiResponse<List<RoomDetailResponse>> apiResponse = new ApiResponse<>();
+        List<RoomDetailResponse> rooms = roomService.getRooms();
         apiResponse.setCode(HttpStatus.OK.value());
         apiResponse.setMessage("Tìm kiếm thành công");
         apiResponse.setResult(rooms);

@@ -1,15 +1,16 @@
 package com.rrms.rrms.models;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.rrms.rrms.models.*;
 import jakarta.persistence.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -24,14 +25,14 @@ public class Room {
     private UUID roomId;
 
     @ManyToOne
-    @JoinColumn(name = "motel_id")
+    @JoinColumn(name = "motel_id", nullable = false)
     private Motel motel;
 
     @ManyToOne
-    @JoinColumn(name = "type_room_id")
+    @JoinColumn(name = "type_room_id", nullable = false)
     private TypeRoom typeRoom;
 
-    @Column(columnDefinition = "VARCHAR(255)")
+    @Column(name = "name_room", columnDefinition = "VARCHAR(255)", nullable = false)
     private String nameRoom;
 
     @Column(columnDefinition = "DECIMAL(10, 2)")
@@ -40,33 +41,33 @@ public class Room {
     @Column(columnDefinition = "DECIMAL(10, 2)")
     private Double deposit;
 
-    @Column(columnDefinition = "INT")
+    @Column(name = "room_area", columnDefinition = "INT")
     private Integer roomArea;
 
-    @Column(columnDefinition = "INT")
+    @Column(name = "max_person", columnDefinition = "INT")
     private Integer maxPerson;
 
-    @Column(columnDefinition = "DATE")
+    @Column(name = "rental_start_time", columnDefinition = "DATE")
     private LocalDate rentalStartTime;
 
-    @Column(columnDefinition = "BOOLEAN")
+    @Column(name = "available", columnDefinition = "BOOLEAN")
     private Boolean available;
 
-    @Column(columnDefinition = "NVARCHAR(255)")
+    @Column(name = "hours", columnDefinition = "NVARCHAR(255)")
     private String hours;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @OneToMany
-    @JoinColumn(name = "room_id")
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore // Thêm @JsonIgnore để bỏ qua ánh xạ này khi tuần tự hóa
     private List<RoomService> roomServices;
 
-    @OneToMany
-    @JoinColumn(name = "room_id")
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore // Thêm @JsonIgnore để bỏ qua ánh xạ này khi tuần tự hóa
     private List<RoomImage> roomImages;
 
-    @OneToMany()
-    @JoinColumn(name = "room_id")
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore // Thêm @JsonIgnore để bỏ qua ánh xạ này khi tuần tự hóa
     private List<RoomReview> roomReviews;
 }

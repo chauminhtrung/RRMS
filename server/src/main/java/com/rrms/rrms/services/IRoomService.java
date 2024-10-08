@@ -11,5 +11,5 @@ public interface IRoomService {
 
     RoomDetailResponse getRoomById(UUID id);
 
-    List<Room> getRooms();
+    List<RoomDetailResponse> getRooms();
 }

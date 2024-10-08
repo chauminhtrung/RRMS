@@ -2,6 +2,7 @@ package com.rrms.rrms.models;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -20,7 +21,8 @@ public class RoomService {
     private UUID roomServiceId;
 
     @ManyToOne
-    @JoinColumn(name = "room_id")
+    @JoinColumn(name = "room_id", nullable = false)
+    @JsonBackReference
     private Room room;
 
     @ManyToOne
