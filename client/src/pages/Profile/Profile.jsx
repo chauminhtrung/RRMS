@@ -34,11 +34,15 @@ const VisuallyHiddenInput = styled('input')({
   whiteSpace: 'nowrap',
   width: 1,
 })
-const Profile = () => {
+const Profile = ({ setIsAdmin }) => {
   const [tabIndex, setTabIndex] = useState('1')
   const [selectedImage, setSelectedImage] = useState(null)
 
   const [profile, setProfile] = useState({})
+  useEffect(() => {
+    setIsAdmin(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleChange = (event, newValue) => {
     setTabIndex(newValue)

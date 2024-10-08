@@ -14,8 +14,13 @@ import {
 } from '@mui/material'
 import './Chart.css'
 import { BarChart } from '@mui/x-charts/BarChart'
+import { useEffect } from 'react'
 //test
-const RealEstateBanner = () => {
+const RealEstateBanner = ({ setIsAdmin }) => {
+  useEffect(() => {
+    setIsAdmin(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
     <div>
       <Container>

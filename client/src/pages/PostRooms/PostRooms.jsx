@@ -1,14 +1,18 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab'
 import { Box, Container, Paper, Tab, Typography } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted'
 import PersonIcon from '@mui/icons-material/Person'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
 import Post from './Post'
 import Customer from './Customer'
 
-const PostRooms = () => {
+const PostRooms = ({ setIsAdmin }) => {
   const [tabIndex, setTabIndex] = useState('1')
+  useEffect(() => {
+    setIsAdmin(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   const handleChange = (event, newValue) => {
     setTabIndex(newValue)
   }

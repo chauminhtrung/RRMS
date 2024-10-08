@@ -42,11 +42,14 @@ import { formatterAmount } from '~/utils/formatterAmount'
 import { useEffect, useState } from 'react'
 import UserRaiting from './UserRaiting'
 
-const Detail = () => {
+const Detail = ({ setIsAdmin }) => {
   const [detail, setDetail] = useState(null)
   const [raiting, setRaiting] = useState(0)
   const [showArrows, setShowArrows] = useState(false)
   const [roomRating, setRoomRating] = useState(0)
+  useEffect(() => {
+    setIsAdmin(false)
+  }, [])
 
   const calculateAvgRaiting = () => {
     if (detail && detail.roomReviews && detail.roomReviews.length > 0) {

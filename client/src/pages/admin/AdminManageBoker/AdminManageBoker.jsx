@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Tooltip,
   IconButton,
@@ -11,8 +11,13 @@ import {
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 
-const AdminManageBoker = () => {
+const AdminManageBoker = ({ setIsAdmin }) => {
   const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    setIsAdmin(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   const handleClickOpen = () => {
     setOpen(true)
   }

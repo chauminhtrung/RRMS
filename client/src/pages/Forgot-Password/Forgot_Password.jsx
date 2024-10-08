@@ -1,6 +1,11 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
-const Forgot_Password = () => {
+const Forgot_Password = ({ setIsAdmin }) => {
+  useEffect(() => {
+    setIsAdmin(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
     <body
       style={{

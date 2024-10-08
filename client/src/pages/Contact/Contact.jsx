@@ -1,7 +1,11 @@
-import React from 'react'
+import { useEffect } from 'react'
 import { Typography } from '@mui/material'
 import './Contact.css'
-const Contact = () => {
+const Contact = ({ setIsAdmin }) => {
+  useEffect(() => {
+    setIsAdmin(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
     <div className="container">
       <div className="text-center">
