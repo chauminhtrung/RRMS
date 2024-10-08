@@ -3,10 +3,7 @@ package com.rrms.rrms.controllers;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.models.Room;
@@ -19,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-@CrossOrigin("*")
 @RequestMapping("/searchs")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -27,7 +23,7 @@ public class SearchController {
 
     ISearchService searchService;
 
-    @RequestMapping("/name")
+    @GetMapping("/name")
     public ApiResponse<List<Room>> searchName(@RequestParam("name") String name) {
         ApiResponse<List<Room>> apiResponse = new ApiResponse<>();
         apiResponse.setCode(HttpStatus.OK.value());
@@ -36,7 +32,7 @@ public class SearchController {
         return apiResponse;
     }
 
-    @RequestMapping("/price")
+    @GetMapping("/price")
     public ApiResponse<List<Room>> searchPrice(
             @RequestParam("startPrice") Double startPrice, @RequestParam("endPrice") Double endPrice) {
         ApiResponse<List<Room>> apiResponse = new ApiResponse<>();
