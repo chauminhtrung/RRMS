@@ -25,7 +25,7 @@ import lombok.experimental.FieldDefaults;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public class AccountService implements IAccountService{
+public class AccountService implements IAccountService {
 
     @Autowired
     AccountRepository accountRepository;
@@ -51,7 +51,7 @@ public class AccountService implements IAccountService{
 
     @Override
     public Optional<Account> login(String phone, String password) {
-        Optional<Account> accountOptional = accountRepository.findByPhoneAndPassword(phone,password);
+        Optional<Account> accountOptional = accountRepository.findByPhoneAndPassword(phone, password);
         return accountOptional;
     }
 

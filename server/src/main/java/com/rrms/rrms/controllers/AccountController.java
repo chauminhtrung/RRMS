@@ -1,14 +1,10 @@
 package com.rrms.rrms.controllers;
 
-import com.rrms.rrms.dto.request.LoginRequest;
-import com.rrms.rrms.enums.Roles;
-import com.rrms.rrms.services.IAccountService;
-import com.rrms.rrms.services.IAuthorityService;
-import com.rrms.rrms.services.IRoleService;
 import java.util.Optional;
+
 import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,9 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.rrms.rrms.dto.request.LoginRequest;
+import com.rrms.rrms.enums.Roles;
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Auth;
 import com.rrms.rrms.models.Role;
+import com.rrms.rrms.services.IAccountService;
+import com.rrms.rrms.services.IAuthorityService;
+import com.rrms.rrms.services.IRoleService;
 
 @Controller
 public class AccountController {
@@ -39,7 +40,8 @@ public class AccountController {
         Optional<Account> accountOptional = accountService.login(loginRequest.getPhone(), loginRequest.getPassword());
 
         if (accountOptional.isPresent()) {
-            return ResponseEntity.ok("Login successful for user: " + accountOptional.get().getUsername());
+            return ResponseEntity.ok(
+                    "Login successful for user: " + accountOptional.get().getUsername());
         }
 
         System.out.println("Login failed for phone: " + loginRequest.getPhone());
@@ -92,7 +94,7 @@ public class AccountController {
             Auth authority = new Auth();
             authority.setAccount(newAccount);
             authority.setRole(existingRole.get());
-//            authorityService.save(authority);
+            //            authorityService.save(authority);
 
             return ResponseEntity.ok().body("Register successful");
         } catch (IllegalArgumentException e) {

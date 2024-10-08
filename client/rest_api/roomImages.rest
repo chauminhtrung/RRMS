@@ -1,0 +1,12 @@
+@baseUrl = http://localhost:8080
+@contentType = application/json
+@roomId = df672c9f-988c-46f5-883f-85b77c48802b
+
+POST {{baseUrl}}/roomImage
+Content-Type: {{contentType}}
+Accept: {{contentType}} 
+
+{
+    "roomId": "{{roomId}}",
+    "image": "https://picsum.photos/1000/700?random=5"
+}

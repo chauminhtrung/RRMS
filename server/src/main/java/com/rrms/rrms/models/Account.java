@@ -1,12 +1,12 @@
 package com.rrms.rrms.models;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.persistence.*;
 
 import com.rrms.rrms.enums.Gender;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
