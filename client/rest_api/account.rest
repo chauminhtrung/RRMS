@@ -1,0 +1,24 @@
+@baseUrl = http://localhost:8080
+@contentType = application/json
+
+# Yêu cầu GET để lấy thông tin profile
+### @name getProfile
+GET {{baseUrl}}/profile?username=admin
+Accept: {{contentType}}
+
+# Yêu cầu PUT để cập nhật thông tin profile
+### @name postProfile
+PUT {{baseUrl}}/profile
+Content-Type: {{contentType}}
+Accept: {{contentType}} 
+
+{
+    "username": "admin",
+    "fullname": "adminawdawd",
+    "phone": "0333333333",
+    "email": "admin@gmail.com",
+    "birthday": "2024-10-02",
+    "gender": "MALE",
+    "cccd": "admin",
+    "avatar": "https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2FRose-8B1a.jpg?alt=media&token=e9a3460b-23f5-4fc9-97b0-081aabb67a8c"
+}
