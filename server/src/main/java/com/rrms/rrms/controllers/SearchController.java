@@ -2,14 +2,13 @@ package com.rrms.rrms.controllers;
 
 import java.util.List;
 
-import com.rrms.rrms.dto.response.RoomDetailResponse;
-import com.rrms.rrms.services.IRoomService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.rrms.rrms.dto.response.ApiResponse;
+import com.rrms.rrms.dto.response.RoomDetailResponse;
 import com.rrms.rrms.models.Room;
+import com.rrms.rrms.services.IRoomService;
 import com.rrms.rrms.services.ISearchService;
 
 import lombok.AccessLevel;

@@ -5,10 +5,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.rrms.rrms.models.Room;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import com.rrms.rrms.models.Room;
 
 public interface RoomRepository extends JpaRepository<Room, UUID> {
 
