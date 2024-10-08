@@ -126,10 +126,22 @@ const RoomList = () => {
                       <Box component="span" sx={{ mr: 2 }}>
                         {item.roomArea} m²
                       </Box>
-                      <Box component="span" sx={{ mr: 2 }}>
-                        {formatterAmount(item.water)}/khối
-                      </Box>
-                      <Box component="span">{formatterAmount(item.electricity)}/Kw</Box>
+                      {item.roomServices.map((service, index) => (
+                        <Box key={index}>
+                          {service.service.typeService === 'Điện nước' ? (
+                            <Box>
+                              {service.service.nameService === 'Nước' && (
+                                <Box component="span" sx={{ mr: 2 }}>
+                                  {formatterAmount(service.service.price)}/khối
+                                </Box>
+                              )}
+                              {service.service.nameService === 'Điện' && (
+                                <Box component="span">{formatterAmount(service.service.price)}/Kw</Box>
+                              )}
+                            </Box>
+                          ) : null}
+                        </Box>
+                      ))}
                     </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
                       <Avatar src={item.motel.avatar} sx={{ mr: 1 }} />
