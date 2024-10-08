@@ -1,0 +1,16 @@
+@baseUrl = http://localhost:8080
+
+@contentType = application/json
+
+@roomId = 1678583e-96bb-4d62-af21-9d02133282e7
+
+POST {{baseUrl}}/room-reviews
+Content-Type: {{contentType}}
+Accept: {{contentType}}
+
+{
+    "username": "admin",
+    "roomId": "{{roomId}}",
+    "comment": "test",
+    "rating": 5
+}

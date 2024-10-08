@@ -2,7 +2,7 @@
 @contentType = application/json
 @roomId = e7850b23-beba-48d8-8b95-8d76adf2482c
 
-POST {{baseUrl}}/roomImage
+POST {{baseUrl}}/rooms-images
 Content-Type: {{contentType}}
 Accept: {{contentType}} 
 

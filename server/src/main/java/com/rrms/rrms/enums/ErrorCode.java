@@ -10,7 +10,10 @@ public enum ErrorCode {
     MOTEL_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Motel not found", HttpStatus.NOT_FOUND),
     ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Account not found", HttpStatus.NOT_FOUND),
     ROOM_DETAIL_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Room detail not found", HttpStatus.NOT_FOUND),
-    SEARCH_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Search not found", HttpStatus.NOT_FOUND);
+    SEARCH_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Search not found", HttpStatus.NOT_FOUND),
+    ROOM_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Room not found", HttpStatus.NOT_FOUND),
+    SERVICE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Service not found", HttpStatus.NOT_FOUND),
+    TYPE_ROOM_EXIST(HttpStatus.BAD_REQUEST.value(), "Type room exist", HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

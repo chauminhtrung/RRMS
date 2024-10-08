@@ -30,7 +30,7 @@ public class Account {
     @Column(columnDefinition = "VARCHAR(255)")
     private String fullname;
 
-    @Column(columnDefinition = "VARCHAR(20)")
+    @Column(columnDefinition = "VARCHAR(20)", unique = true)
     private String phone;
 
     @Column(columnDefinition = "VARCHAR(255)")

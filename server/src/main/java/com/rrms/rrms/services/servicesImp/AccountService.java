@@ -3,11 +3,9 @@ package com.rrms.rrms.services.servicesImp;
 import java.util.List;
 import java.util.Optional;
 
-//import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.response.AccountResponse;
 import com.rrms.rrms.enums.ErrorCode;
@@ -18,6 +16,7 @@ import com.rrms.rrms.models.Auth;
 import com.rrms.rrms.repositories.AccountRepository;
 import com.rrms.rrms.repositories.AuthRepository;
 import com.rrms.rrms.services.IAccountService;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -36,7 +35,7 @@ public class AccountService implements IAccountService {
     @Autowired
     AccountMapper accountMapper;
 
-//    private final PasswordEncoder passwordEncoder;
+    //    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<Account> findAll() {
@@ -47,7 +46,6 @@ public class AccountService implements IAccountService {
     public Optional<Account> findAccountsByUsername(String username) {
         return accountRepository.findByUsername(username);
     }
-
 
     @Override
     public Optional<Account> login(String phone, String password) {
