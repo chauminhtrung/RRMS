@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/motels")
+@CrossOrigin("*")
 public class MotelController {
     @Autowired
     private IMotelService motelService;
