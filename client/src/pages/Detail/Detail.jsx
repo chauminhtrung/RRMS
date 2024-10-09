@@ -44,9 +44,9 @@ import UserRaiting from './UserRaiting'
 
 const Detail = ({ setIsAdmin }) => {
   const [detail, setDetail] = useState(null)
-  const [raiting, setRaiting] = useState(0)
   const [showArrows, setShowArrows] = useState(false)
   const [roomRating, setRoomRating] = useState(0)
+  const [updateFlag, setUpdateFlag] = useState(false)
   const { roomId } = useParams()
   useEffect(() => {
     setIsAdmin(false)
@@ -70,7 +70,7 @@ const Detail = ({ setIsAdmin }) => {
     getDetail(roomId).then((res) => {
       setDetail(res.data.result)
     })
-  }, [])
+  }, [roomId, updateFlag])
 
   useEffect(() => {
     calculateAvgRaiting()
@@ -212,10 +212,16 @@ const Detail = ({ setIsAdmin }) => {
                 <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>Ngày bắt đầu cho thuê:</Typography>
                 {detail.rentalStartTime}
               </Typography>
-              <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
-                <ShieldOutlinedIcon sx={{ mr: 0.5 }} />
+              <Typography
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
+                  color: detail.censor ? 'lime' : 'red',
+                }}>
+                <ShieldOutlinedIcon sx={{ mr: 0.5, color: '#6B6B6B' }} />
                 <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>Kiểm duyệt: </Typography>
-                {detail.motel.account.fullname}
+                {detail.censor ? 'Đã kiểm duyệt' : 'Chưa kiểm duyệt'}
               </Typography>
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <GroupIcon sx={{ mr: 0.5 }} />
@@ -248,7 +254,10 @@ const Detail = ({ setIsAdmin }) => {
                 <ElectricBoltIcon />
                 <Box>
                   <Typography>Tiền điện</Typography>
-                  <Typography>{formatterAmount(100000)}/Kw</Typography>
+                  {detail.roomServices.map(
+                    (item, i) =>
+                      item.nameService === 'Điện' && <Typography key={i}>{formatterAmount(item.price)}/Kw</Typography>
+                  )}
                 </Box>
               </Box>
             </Grid>
@@ -257,7 +266,10 @@ const Detail = ({ setIsAdmin }) => {
                 <WaterDropOutlinedIcon />
                 <Box>
                   <Typography>Tiền nước</Typography>
-                  <Typography>{formatterAmount(100000)}/Khối</Typography>
+                  {detail.roomServices.map(
+                    (item, i) =>
+                      item.nameService === 'Nước' && <Typography key={i}>{formatterAmount(item.price)}/Khối</Typography>
+                  )}
                 </Box>
               </Box>
             </Grid>
@@ -337,12 +349,12 @@ const Detail = ({ setIsAdmin }) => {
           <BannerHorizontal />
           <RaitingAvg reviews={detail.roomReviews} rating={roomRating} />
           {detail.roomReviews.map((item, i) => (
-            <Comment key={i} item={item} />
+            <Comment key={i} item={item} roomId={detail.roomId} setUpdateFlag={setUpdateFlag} />
           ))}
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Pagination count={10} color="primary.main" size="medium" />
           </Box>
-          <UserRaiting raiting={raiting} setRaiting={setRaiting} />
+          <UserRaiting roomId={detail.roomId} />
           {/* Giới thiệu trọ khác */}
           <Box
             sx={{

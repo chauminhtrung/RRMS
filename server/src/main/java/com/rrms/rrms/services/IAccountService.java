@@ -32,6 +32,6 @@ public interface IAccountService {
     AccountResponse update(AccountRequest accountRequest);
 
     //  void loginOAuth2(OAuth2AuthenticationToken oAuth2Token);
-    
-    String  changePassword(ChangePasswordRequest changePasswordRequest);
+
+    String changePassword(ChangePasswordRequest changePasswordRequest);
 }

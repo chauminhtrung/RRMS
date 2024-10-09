@@ -14,6 +14,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoomDetailResponse {
     UUID roomId;
+    String censor;
+    String owner;
+    String phone;
     String nameRoom;
     Double deposit;
     Double price;

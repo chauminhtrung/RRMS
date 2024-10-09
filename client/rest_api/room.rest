@@ -1,5 +1,6 @@
 @baseUrl = http://localhost:8080
-@roomId = 1678583e-96bb-4d62-af21-9d02133282e7
+@roomId = 7d9c1cb7-fd8b-414b-897c-457dd4ab7960
+@motelId = 043d0cfa-1978-41ce-8f55-dcfb4efa1a46
 
 GET {{baseUrl}}/room/{{roomId}}
 
@@ -18,17 +19,18 @@ Accept: application/json
     "price": 3300000,
     "deposit": 2500000,
     "roomArea": 15,
-    "priceElectric": 3500,
+    "censor": true,
+    "priceElectric": 3800,
     "priceWater": 35000,
     "maxPerson": 2,
     "rentalStartTime": "2024-03-01",
     "hours": "Tự do",
-    "modelId": "03dad3d0-24dc-4831-9c8e-9285a84e4027",
+    "modelId": "{{motelId}}",
     "roomServices": ["Wifi miễn phí", "Hồ bơi"],
     "roomImages": [
         "https://picsum.photos/1000/700?random=1",
-        "https://picsum.photos/1000/700?random=2",
-        "https://picsum.photos/1000/700?random=3"
+        "https://picsum.photos/300/200?random=2",
+        "https://picsum.photos/700/700?random=3"
     ],
     "rules": [
         "No Pets",

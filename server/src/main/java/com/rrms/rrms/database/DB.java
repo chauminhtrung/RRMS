@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.rrms.rrms.enums.Gender;
 import com.rrms.rrms.models.*;
@@ -15,7 +16,6 @@ import com.rrms.rrms.repositories.*;
 
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @Slf4j
