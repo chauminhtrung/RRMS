@@ -10,6 +10,10 @@ export const getDetail = async (roomId) => {
   return await axios.get(`${env.API_URL}/room/${roomId}`)
 }
 
+export const postReview = async (data) => {
+  return await axios.post(`${env.API_URL}/room-reviews`, data)
+}
+
 export const getProfile = async (username) => {
   return await axios.get(`${env.API_URL}/profile?username=${username}`)
 }

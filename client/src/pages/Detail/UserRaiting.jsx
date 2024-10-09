@@ -1,6 +1,21 @@
 import { Avatar, Box, Button, Rating, TextareaAutosize, Typography } from '@mui/material'
+import { useState } from 'react'
+import { postReview } from '~/apis/apiClient'
 
-const UserRaiting = ({ raiting, setRaiting }) => {
+const UserRaiting = ({ roomId, setUpdateFlag }) => {
+  const [review, setReview] = useState({
+    username: 'dung',
+    roomId: roomId,
+    comment: '',
+    rating: 1,
+  })
+
+  const handleComment = () => {
+    postReview(review).then(() => {
+      setUpdateFlag((prev) => !prev)
+      setReview({ username: 'dung', roomId: roomId, comment: '', rating: 1 })
+    })
+  }
   return (
     <>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -15,10 +30,10 @@ const UserRaiting = ({ raiting, setRaiting }) => {
                 my: 'auto',
               }}
               name="simple-controlled"
-              value={raiting}
+              value={review.rating}
               size="medium"
-              onChange={(event, newValue) => {
-                setRaiting(newValue)
+              onChange={(event) => {
+                setReview({ ...review, rating: event.target.value })
               }}
             />
             <TextareaAutosize
@@ -31,12 +46,13 @@ const UserRaiting = ({ raiting, setRaiting }) => {
                 resize: 'none',
                 width: '715px',
               }}
+              value={review.comment}
               placeholder="Vui lòng đánh giá: "
+              onChange={(e) => setReview({ ...review, comment: e.target.value })}
             />
           </Box>
         </Box>
-
-        <Button variant="contained" sx={{ mt: 2, right: 1, ml: 'auto' }}>
+        <Button variant="contained" sx={{ mt: 2, right: 1, ml: 'auto' }} onClick={handleComment}>
           Đánh giá
         </Button>
       </Box>

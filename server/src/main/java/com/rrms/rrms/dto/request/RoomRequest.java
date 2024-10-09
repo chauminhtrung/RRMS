@@ -15,14 +15,15 @@ import lombok.experimental.FieldDefaults;
 public class RoomRequest {
     UUID modelId;
     String typeRoomName;
-    List<String> roomServices;
     List<String> roomImages;
     long priceElectric;
     long priceWater;
-    String owner;
-    String phone;
     List<String> rules;
     String address;
+    String owner;
+    String phone;
+    List<String> roomServices;
+    Boolean censor;
     String nameRoom;
     Double price;
     Double deposit;

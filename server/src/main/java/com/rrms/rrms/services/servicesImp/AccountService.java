@@ -3,13 +3,12 @@ package com.rrms.rrms.services.servicesImp;
 import java.util.List;
 import java.util.Optional;
 
-import com.rrms.rrms.dto.request.ChangePasswordRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.request.AccountRequest;
+import com.rrms.rrms.dto.request.ChangePasswordRequest;
 import com.rrms.rrms.dto.response.AccountResponse;
 import com.rrms.rrms.enums.ErrorCode;
 import com.rrms.rrms.exceptions.AppException;
@@ -113,27 +112,27 @@ public class AccountService implements IAccountService {
 
     @Override
     public String changePassword(ChangePasswordRequest changePasswordRequest) {
-        Account account = accountRepository.findByUsername(changePasswordRequest.getUsername())
+        Account account = accountRepository
+                .findByUsername(changePasswordRequest.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
-        
+
         BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
-        
-        // Nếu password cũ không khớp với password trong database 
+
+        // Nếu password cũ không khớp với password trong database
         if (!pe.matches(changePasswordRequest.getOldPassword(), account.getPassword())) {
             return "Old password is not correct";
         }
-        
+
         // Nếu password mới trùng với password cũ
         if (pe.matches(changePasswordRequest.getNewPassword(), account.getPassword())) {
             return "New password cannot be the same as the old password";
         }
-        
+
         String hashedNewPassword = pe.encode(changePasswordRequest.getNewPassword());
-        
+
         account.setPassword(hashedNewPassword);
         accountRepository.save(account);
 
         return "Password changed successfully";
     }
-
 }

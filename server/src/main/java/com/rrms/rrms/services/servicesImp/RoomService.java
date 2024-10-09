@@ -1,8 +1,11 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.request.RoomRequest;
@@ -25,6 +28,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class RoomService implements IRoomService {
+    private static final Logger log = LoggerFactory.getLogger(RoomService.class);
     RoomRepository roomRepository;
     MotelRepository motelRepository;
     TypeRoomRepository typeRoomRepository;
@@ -55,7 +59,32 @@ public class RoomService implements IRoomService {
         room.setMotel(motel);
         room.setTypeRoom(typeRoom);
 
-        List<com.rrms.rrms.models.RoomService> roomServices = roomMapper.mapRoomServices(roomRequest.getRoomServices());
+        List<com.rrms.rrms.models.RoomService> roomServices =
+                new ArrayList<>(roomMapper.mapRoomServices(roomRequest.getRoomServices()));
+
+        if (roomRequest.getPriceElectric() != 0) {
+            com.rrms.rrms.models.Service newService = new com.rrms.rrms.models.Service();
+            //            log.info("Price electric: {}", roomRequest.getPriceElectric());
+            newService.setPrice(roomRequest.getPriceElectric());
+            newService.setNameService("Điện");
+            serviceRepository.save(newService);
+            roomServices.add(com.rrms.rrms.models.RoomService.builder()
+                    .room(room)
+                    .service(newService)
+                    .build());
+        }
+
+        if (roomRequest.getPriceWater() != 0) {
+            com.rrms.rrms.models.Service newService = new com.rrms.rrms.models.Service();
+            //            log.info("Price water: {}", roomRequest.getPriceWater());
+            newService.setPrice(roomRequest.getPriceWater());
+            newService.setNameService("Nước");
+            serviceRepository.save(newService);
+            roomServices.add(com.rrms.rrms.models.RoomService.builder()
+                    .room(room)
+                    .service(newService)
+                    .build());
+        }
 
         Room finalRoom1 = room;
         roomServices.forEach(roomService -> {

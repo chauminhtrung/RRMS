@@ -12,6 +12,7 @@ const Item = ({ item, index, totalItems, addressDetail }) => {
   return (
     <Box sx={{ position: 'relative' }}>
       <GlassMagnifier
+        style={{ width: '1000px', height: '500px' }}
         imageSrc={item.image}
         imageAlt="Example"
         square={true}
