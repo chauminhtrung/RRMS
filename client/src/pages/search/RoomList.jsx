@@ -1,14 +1,20 @@
 import { Box, Grid, Typography, Card, CardMedia, CardContent, Button, Avatar, Pagination } from '@mui/material'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { formatterAmount } from '~/utils/formatterAmount'
 
 const RoomList = () => {
   const [searchData, setSearchData] = useState([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     loadData()
   }, [])
+
+  const handlePageChange = (roomId) => {
+    navigate(`/detail/${roomId}`)
+  }
 
   const loadData = async () => {
     try {
@@ -56,6 +62,7 @@ const RoomList = () => {
                     component="img"
                     image={item.roomImages[0].image}
                     alt="Chung cư"
+                    onClick={() => handlePageChange(item.roomId)}
                     sx={{
                       width: { xs: '100%', sm: 200 },
                       height: { xs: 200, sm: 150 },
