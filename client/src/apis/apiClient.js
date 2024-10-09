@@ -18,6 +18,10 @@ export const updateProfile = async (data) => {
   return await axios.put(`${env.API_URL}/profile`, data)
 }
 
+export const changePassword = async (data) => {
+  return await axios.put(`${env.API_URL}/profile/change-password`, data)
+}
+
 export const getImages = async () => {
   return await axios.get(`${env.API_URL}/api/images`)
 }
