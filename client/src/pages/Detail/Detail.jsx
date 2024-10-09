@@ -11,7 +11,7 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import Item from './Item'
 import UserDetail from './UserDetail'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
@@ -47,8 +47,10 @@ const Detail = ({ setIsAdmin }) => {
   const [raiting, setRaiting] = useState(0)
   const [showArrows, setShowArrows] = useState(false)
   const [roomRating, setRoomRating] = useState(0)
+  const { roomId } = useParams()
   useEffect(() => {
     setIsAdmin(false)
+    window.scrollTo(0, 0)
   }, [])
 
   const calculateAvgRaiting = () => {
@@ -65,7 +67,7 @@ const Detail = ({ setIsAdmin }) => {
   }
 
   useEffect(() => {
-    getDetail('09176759-1660-4581-bd47-1a46f876a6a6').then((res) => {
+    getDetail(roomId).then((res) => {
       setDetail(res.data.result)
     })
   }, [])
