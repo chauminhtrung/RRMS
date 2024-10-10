@@ -104,8 +104,8 @@ function FilterSearch() {
         <div className="block-32 aos-init aos-animate" data-aos="fade-up" data-aos-offset="-200">
           <form action="#">
             <div className="row" style={{ backgroundColor: '#ffffff1f' }}>
-              <div className="col-md-2 mb-3 mb-lg-0 col-lg-1 mt-2">
-                <ul id="search-bar">
+              <div className="col-md-2 mb-3 mb-lg-0 col-lg-1 mt-2 d-none d-md-block">
+                <ul id="search-bar" className="BoLoc">
                   <li
                     className="small"
                     data-toggle="modal"

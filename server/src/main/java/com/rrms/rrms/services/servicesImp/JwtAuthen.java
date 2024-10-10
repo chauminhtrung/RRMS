@@ -1,16 +1,16 @@
-//package com.rrms.rrms.services.servicesImp;
+// package com.rrms.rrms.services.servicesImp;
 //
-//import java.io.IOException;
+// import java.io.IOException;
 //
-//import jakarta.servlet.ServletException;
-//import jakarta.servlet.http.HttpServletRequest;
-//import jakarta.servlet.http.HttpServletResponse;
+// import jakarta.servlet.ServletException;
+// import jakarta.servlet.http.HttpServletRequest;
+// import jakarta.servlet.http.HttpServletResponse;
 //
-//import org.springframework.http.HttpHeaders;
-//import org.springframework.security.core.AuthenticationException;
-//import org.springframework.security.web.AuthenticationEntryPoint;
+// import org.springframework.http.HttpHeaders;
+// import org.springframework.security.core.AuthenticationException;
+// import org.springframework.security.web.AuthenticationEntryPoint;
 //
-//public class JwtAuthen implements AuthenticationEntryPoint {
+// public class JwtAuthen implements AuthenticationEntryPoint {
 //
 //  @Override
 //  public void commence(
@@ -20,4 +20,4 @@
 //
 //    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
 //  }
-//}
+// }

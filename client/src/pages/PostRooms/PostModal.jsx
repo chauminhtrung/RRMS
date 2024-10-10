@@ -19,8 +19,9 @@ import {
 } from '@mui/material'
 import ViewInArIcon from '@mui/icons-material/ViewInAr'
 import { useState } from 'react'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import LocationSelect from '~/components/ProvinceSelect'
-import CameraAltIcon from '@mui/icons-material/CameraAlt'
+import RoomRule from './RoomRule'
 
 const style = {
   position: 'absolute',
@@ -115,9 +116,9 @@ const PostModal = ({ open, handleClose }) => {
         </Box>
         <Grid container>
           <Grid item xs={12} sx={{ my: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <TextField variant="filled" id="outlined-basic" label="filled" sx={{ minWidth: 350 }} />
-            <FormControl variant="filled" sx={{ minWidth: 350 }}>
-              <InputLabel id="demo-simple-select-filled-label">Age</InputLabel>
+            <TextField required variant="filled" id="outlined-basic" label="Tiêu đề" sx={{ minWidth: 350 }} />
+            <FormControl required variant="filled" sx={{ minWidth: 350 }}>
+              <InputLabel id="demo-simple-select-filled-label">Danh mục thuê</InputLabel>
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
@@ -133,8 +134,8 @@ const PostModal = ({ open, handleClose }) => {
             </FormControl>
           </Grid>
           <Grid item xs={12} sx={{ my: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <TextField id="outlined-basic" label="Outlined" variant="filled" sx={{ minWidth: 350 }} />
-            <TextField id="outlined-basic" label="Outlined" variant="filled" sx={{ minWidth: 350 }} />
+            <TextField required id="outlined-basic" label="Tên người liên hệ" variant="filled" sx={{ minWidth: 350 }} />
+            <TextField required id="outlined-basic" label="SĐT" variant="filled" sx={{ minWidth: 350 }} />
           </Grid>
         </Grid>
         <Box>
@@ -163,26 +164,32 @@ const PostModal = ({ open, handleClose }) => {
         </Box>
         <Grid container spacing={1} sx={{ my: 1 }}>
           <Grid item xs={4}>
-            <TextField required id="outlined-basic" label="Outlined" variant="filled" sx={{ width: '100%' }} />
+            <TextField required id="outlined-basic" label="Giá thuê" variant="filled" sx={{ width: '100%' }} />
           </Grid>
           <Grid item xs={4}>
-            <TextField required id="outlined-basic" label="Outlined" variant="filled" sx={{ width: '100%' }} />
+            <TextField
+              required
+              id="outlined-basic"
+              label="Giá thuê khuyến mãi"
+              variant="filled"
+              sx={{ width: '100%' }}
+            />
           </Grid>
           <Grid item xs={4}>
-            <TextField required id="outlined-basic" label="Outlined" variant="filled" sx={{ width: '100%' }} />
+            <TextField required id="outlined-basic" label="Tiền cọc" variant="filled" sx={{ width: '100%' }} />
           </Grid>
           <Grid item xs={4}>
-            <TextField required id="outlined-basic" label="Outlined" variant="filled" sx={{ width: '100%' }} />
+            <TextField required id="outlined-basic" label="Diện tích" variant="filled" sx={{ width: '100%' }} />
           </Grid>
           <Grid item xs={4}>
-            <TextField required id="outlined-basic" label="Outlined" variant="filled" sx={{ width: '100%' }} />
+            <TextField required id="outlined-basic" label="Giá điện" variant="filled" sx={{ width: '100%' }} />
           </Grid>
           <Grid item xs={4}>
-            <TextField required id="outlined-basic" label="Outlined" variant="filled" sx={{ width: '100%' }} />
+            <TextField required id="outlined-basic" label="Giá nước" variant="filled" sx={{ width: '100%' }} />
           </Grid>
           <Grid item xs={6}>
             <FormControl required variant="filled" sx={{ minWidth: 350 }}>
-              <InputLabel id="demo-simple-select-filled-label">Age</InputLabel>
+              <InputLabel id="demo-simple-select-filled-label">Tối đa người ở / phòng</InputLabel>
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
@@ -201,7 +208,7 @@ const PostModal = ({ open, handleClose }) => {
             <TextField
               required
               variant="filled"
-              label="Ngày tháng năm sinh"
+              label="Ngày có thể vào ở"
               fullWidth
               type="date"
               InputLabelProps={{
@@ -218,31 +225,31 @@ const PostModal = ({ open, handleClose }) => {
         </Box>
         <Grid container>
           <Grid item xs={4}>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
+            <FormControlLabel control={<Checkbox defaultChecked />} label="Có gác lửng" />
           </Grid>
           <Grid item xs={4}>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
+            <FormControlLabel control={<Checkbox defaultChecked />} label="Có chỗ giữ xe" />
           </Grid>
           <Grid item xs={4}>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
+            <FormControlLabel control={<Checkbox defaultChecked />} label="Toilet riêng" />
           </Grid>
           <Grid item xs={4}>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
+            <FormControlLabel control={<Checkbox defaultChecked />} label="Riêng với chủ" />
           </Grid>
           <Grid item xs={4}>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
+            <FormControlLabel control={<Checkbox defaultChecked />} label="Có wifi" />
           </Grid>
           <Grid item xs={4}>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
+            <FormControlLabel control={<Checkbox defaultChecked />} label="Có camera an ninh" />
           </Grid>
           <Grid item xs={4}>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
+            <FormControlLabel control={<Checkbox defaultChecked />} label="Được nuôi thú cưng" />
           </Grid>
           <Grid item xs={4}>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
+            <FormControlLabel control={<Checkbox defaultChecked />} label="Có ban công" />
           </Grid>
           <Grid item xs={4}>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
+            <FormControlLabel control={<Checkbox defaultChecked />} label="Có nơi sinh hoạt" />
           </Grid>
         </Grid>
         <Box>
@@ -253,7 +260,7 @@ const PostModal = ({ open, handleClose }) => {
         </Box>
         <Box sx={{ my: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <FormControl variant="filled" sx={{ minWidth: 350 }}>
-            <InputLabel id="demo-simple-select-filled-label">Age</InputLabel>
+            <InputLabel id="demo-simple-select-filled-label">Giở mở cửa</InputLabel>
             <Select
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
@@ -262,13 +269,13 @@ const PostModal = ({ open, handleClose }) => {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              <MenuItem value={10}>4 SA</MenuItem>
+              <MenuItem value={20}>5 SA</MenuItem>
+              <MenuItem value={30}>6 SA</MenuItem>
             </Select>
           </FormControl>
           <FormControl variant="filled" sx={{ minWidth: 350 }}>
-            <InputLabel id="demo-simple-select-filled-label">Age</InputLabel>
+            <InputLabel id="demo-simple-select-filled-label">Giờ đóng cửa</InputLabel>
             <Select
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
@@ -277,9 +284,9 @@ const PostModal = ({ open, handleClose }) => {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              <MenuItem value={10}>22 CH</MenuItem>
+              <MenuItem value={20}>23 CH</MenuItem>
+              <MenuItem value={30}>00 SA</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -291,22 +298,36 @@ const PostModal = ({ open, handleClose }) => {
         </Box>
         <Grid container>
           <Grid item xs={6}>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
+            <RoomRule title={'Nhà trọ có giờ giấc không về quá khuya'} desciption={'Không về sau 12h tối'} />
           </Grid>
           <Grid item xs={6}>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
+            <RoomRule title={'Đóng tiền trọ đúng ngày'} desciption={'Đóng tiền trọ đúng ngày'} />
           </Grid>
           <Grid item xs={6}>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
+            <RoomRule
+              title={'Không hút thuốc, say xỉn'}
+              desciption={'Không tụ tập nhậu nhặt hát hò làm ảnh hưởng phòng xung quanh'}
+            />
           </Grid>
           <Grid item xs={6}>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
+            <RoomRule
+              title={'Không chứa chấp tội phạm'}
+              desciption={'Không che dấu và chứa chấp tội phạm trong phòng'}
+            />
           </Grid>
           <Grid item xs={6}>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
+            <RoomRule
+              title={'Không hát karaoke, nhậu nhặt ảnh hưởng tới phòng kế bên'}
+              desciption={'Không gây ồn ào, mất trật tự, nhậu nhặt, say xỉn...'}
+            />
           </Grid>
           <Grid item xs={6}>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
+            <RoomRule
+              title={'Cư xử văn hóa'}
+              desciption={
+                'Không gây gỗ chữi thề, gây hiềm khích với mọi người, tạo văn hóa phòng trọ yên bình hòa đồng.'
+              }
+            />
           </Grid>
         </Grid>
         <Box>
@@ -321,7 +342,13 @@ const PostModal = ({ open, handleClose }) => {
             onChangeDistrict={handleDistrictChange}
             onChangeWard={handleWardChange}
           />
-          <TextField required id="outlined-basic" label="Outlined" variant="filled" sx={{ width: '100%', mt: -2 }} />
+          <TextField
+            required
+            id="outlined-basic"
+            label="Địa chỉ chi tiết"
+            variant="filled"
+            sx={{ width: '100%', mt: -2 }}
+          />
         </Box>
         <Box>
           <Typography variant="inherit" component="h2">
@@ -350,8 +377,8 @@ const PostModal = ({ open, handleClose }) => {
                 padding: 0,
                 '&:hover': { backgroundColor: '#f0f0f0' },
               }}>
-              <CameraAltIcon fontSize="small" />
-              <VisuallyHiddenInput type="file" accept="image/*" />
+              <CloudUploadIcon fontSize="medium" />
+              <VisuallyHiddenInput type="file" accept="image/*" multiple />
             </IconButton>
             <Typography>Chọn tối đa 5 ảnh</Typography>
           </Box>

@@ -1,6 +1,55 @@
-import { Box, Button, FormControlLabel, Grid, Paper, Radio, RadioGroup, TextField, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  IconButton,
+  InputLabel,
+  OutlinedInput,
+  Paper,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography,
+} from '@mui/material'
+import { useState } from 'react'
+import { toast } from 'react-toastify'
+import InputAdornment from '@mui/material/InputAdornment'
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
+import { changePassword } from '~/apis/apiClient'
 
 const SecurityTab = () => {
+  const [passwordData, setPasswordData] = useState({
+    oldPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  })
+
+  const handleChange = (e) => {
+    setPasswordData({ ...passwordData, [e.target.name]: e.target.value })
+  }
+
+  const handleChangePassword = async () => {
+    const { oldPassword, newPassword, confirmPassword } = passwordData
+    console.log(oldPassword, newPassword, confirmPassword)
+    setPasswordData({ ...passwordData, username: 'dung' })
+
+    if (newPassword !== confirmPassword) {
+      toast.info('Mật khẩu xác nhận không khớp với mật khẩu mới!')
+      return
+    }
+
+    await changePassword(passwordData)
+
+    toast.success('Thay đổi mật khẩu thành công!')
+  }
+
+  const [showPassword, setShowPassword] = useState(false)
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show)
+
   return (
     <Box sx={{ padding: '20px' }}>
       <Grid container spacing={4}>
@@ -8,24 +57,92 @@ const SecurityTab = () => {
         <Grid item xs={12} md={8}>
           <Paper elevation={3} sx={{ padding: '20px' }}>
             <Typography variant="h6" gutterBottom>
-              Change Password
+              Thay đổi mật khẩu
             </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField label="Current Password" fullWidth type="password" />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField label="New Password" fullWidth type="password" />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField label="Confirm Password" fullWidth type="password" />
-              </Grid>
-              <Grid item xs={12}>
-                <Button variant="contained" color="primary" fullWidth>
-                  Save
-                </Button>
-              </Grid>
-            </Grid>
+            <Box>
+              <FormControl
+                sx={{
+                  width: '100%',
+                  '.MuiInputBase-input': {
+                    border: 'none',
+                    height: 'auto',
+                  },
+                }}
+                variant="outlined">
+                <InputLabel htmlFor="outlined-adornment-password">Mật khẩu hiện tại</InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  type={showPassword ? 'text' : 'password'}
+                  name="oldPassword"
+                  onChange={handleChange}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword} edge="end">
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Password"
+                />
+              </FormControl>
+              <FormControl
+                sx={{
+                  width: '100%',
+                  my: 3,
+                  '.MuiInputBase-input': {
+                    border: 'none',
+                    height: 'auto',
+                  },
+                }}
+                variant="outlined">
+                <InputLabel htmlFor="outlined-adornment-password">Mật khẩu mới</InputLabel>
+                <OutlinedInput
+                  name="newPassword"
+                  onChange={handleChange}
+                  id="outlined-adornment-password"
+                  type={showPassword ? 'text' : 'password'}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword} edge="end">
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Mật khẩu mới"
+                />
+              </FormControl>
+
+              <FormControl
+                sx={{
+                  width: '100%',
+                  mb: 3,
+                  '.MuiInputBase-input': {
+                    border: 'none',
+                    height: 'auto',
+                  },
+                }}
+                variant="outlined">
+                <InputLabel htmlFor="outlined-adornment-password">Nhập lại mật khẩu</InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  type={showPassword ? 'text' : 'password'}
+                  name="confirmPassword"
+                  onChange={handleChange}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword} edge="end">
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Password"
+                />
+              </FormControl>
+
+              <Button variant="contained" color="primary" fullWidth onClick={handleChangePassword}>
+                Đổi mật khẩu
+              </Button>
+            </Box>
           </Paper>
         </Grid>
 

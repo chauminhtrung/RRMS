@@ -3,13 +3,12 @@ package com.rrms.rrms.controllers;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.rrms.rrms.dto.response.ApiResponse;
+import com.rrms.rrms.dto.response.RoomDetailResponse;
 import com.rrms.rrms.models.Room;
+import com.rrms.rrms.services.IRoomService;
 import com.rrms.rrms.services.ISearchService;
 
 import lombok.AccessLevel;
@@ -19,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-@CrossOrigin("*")
 @RequestMapping("/searchs")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -27,7 +25,19 @@ public class SearchController {
 
     ISearchService searchService;
 
-    @RequestMapping("/name")
+    private final IRoomService roomService;
+
+    @GetMapping
+    public ApiResponse<List<RoomDetailResponse>> getRoom() {
+        ApiResponse<List<RoomDetailResponse>> apiResponse = new ApiResponse<>();
+        List<RoomDetailResponse> rooms = roomService.getRooms();
+        apiResponse.setCode(HttpStatus.OK.value());
+        apiResponse.setMessage("Tìm kiếm thành công");
+        apiResponse.setResult(rooms);
+        return apiResponse;
+    }
+
+    @GetMapping("/name")
     public ApiResponse<List<Room>> searchName(@RequestParam("name") String name) {
         ApiResponse<List<Room>> apiResponse = new ApiResponse<>();
         apiResponse.setCode(HttpStatus.OK.value());
@@ -36,7 +46,7 @@ public class SearchController {
         return apiResponse;
     }
 
-    @RequestMapping("/price")
+    @GetMapping("/price")
     public ApiResponse<List<Room>> searchPrice(
             @RequestParam("startPrice") Double startPrice, @RequestParam("endPrice") Double endPrice) {
         ApiResponse<List<Room>> apiResponse = new ApiResponse<>();

@@ -1,15 +1,47 @@
 import { Box, Grid, Typography, Card, CardMedia, CardContent, Button, Avatar, Pagination } from '@mui/material'
-import { search } from '~/apis/mock-data-search'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { formatterAmount } from '~/utils/formatterAmount'
 
 const RoomList = () => {
+  const [searchData, setSearchData] = useState([])
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    loadData()
+  }, [])
+
+  const handlePageChange = (roomId) => {
+    navigate(`/detail/${roomId}`)
+  }
+
+  const loadData = async () => {
+    try {
+      const result = await axios.get('http://localhost:8080/searchs', {
+        validateStatus: () => true,
+      })
+
+      console.log(result.data) // Kiểm tra cấu trúc dữ liệu
+
+      if (result.status === 200) {
+        // Kiểm tra nếu status là 200
+        setSearchData(result.data.result || []) // Gán dữ liệu vào state, đảm bảo là mảng
+      } else {
+        console.log('Error: Status', result.status)
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
+
   return (
     <Box>
       <Box sx={{ width: '100%', overflow: 'hidden', mt: 2 }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            {search.images.length > 0 ? (
-              search.images.map((item, i) => (
+            {searchData.length > 0 ? (
+              searchData.map((item, i) => (
                 <Card
                   key={i}
                   sx={{
@@ -25,15 +57,12 @@ const RoomList = () => {
                     borderRadius: '8px',
                     mt: 1,
                     transition: 'transform 0.3s, box-shadow 0.3s',
-                    // '&:hover': {
-                    //   transform: 'translateY(-5px)',
-                    //   boxShadow: '0 8px 16px rgba(0,0,0,0.2)',
-                    // },
                   }}>
                   <CardMedia
                     component="img"
-                    image={item.image}
+                    image={item.roomImages[0].image}
                     alt="Chung cư"
+                    onClick={() => handlePageChange(item.roomId)}
                     sx={{
                       width: { xs: '100%', sm: 200 },
                       height: { xs: 200, sm: 150 },
@@ -67,7 +96,7 @@ const RoomList = () => {
                           color: 'primary.main',
                         },
                       }}>
-                      {search.address}
+                      {item.nameRoom}
                     </Typography>
 
                     <Typography
@@ -83,7 +112,7 @@ const RoomList = () => {
                           fontWeight: 500,
                         },
                       }}>
-                      {search.addressDetail}
+                      {item.addressDetail}
                     </Typography>
 
                     <Typography
@@ -97,20 +126,32 @@ const RoomList = () => {
                           transform: 'scale(1.05)',
                         },
                       }}>
-                      {formatterAmount(search.price)} /Tháng
+                      {formatterAmount(item.price)} /Tháng
                     </Typography>
 
                     <Typography variant="body2" sx={{ mt: 1 }}>
                       <Box component="span" sx={{ mr: 2 }}>
-                        {search.acreage} m²
+                        {item.roomArea} m²
                       </Box>
-                      <Box component="span" sx={{ mr: 2 }}>
-                        {formatterAmount(search.water)}/khối
-                      </Box>
-                      <Box component="span">{formatterAmount(search.electricity)}/Kw</Box>
+                      {item.roomServices.map((service, index) => (
+                        <Box key={index}>
+                          {service.service.typeService === 'Điện nước' ? (
+                            <Box>
+                              {service.service.nameService === 'Nước' && (
+                                <Box component="span" sx={{ mr: 2 }}>
+                                  {formatterAmount(service.service.price)}/khối
+                                </Box>
+                              )}
+                              {service.service.nameService === 'Điện' && (
+                                <Box component="span">{formatterAmount(service.service.price)}/Kw</Box>
+                              )}
+                            </Box>
+                          ) : null}
+                        </Box>
+                      ))}
                     </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                      <Avatar src={item.avata} sx={{ mr: 1 }} />
+                      <Avatar src={item.motel.avatar} sx={{ mr: 1 }} />
                       <Typography variant="caption" color="textSecondary" noWrap>
                         Trinh, 2 ngày trước
                       </Typography>
@@ -166,7 +207,9 @@ const RoomList = () => {
         </Grid>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-        <Pagination count={20} color="primary.main" size="medium" />
+        <Pagination count={10} />
+        {/* <Pagination count={Math.ceil(searchData.length / 10)} color="primary" size="medium" />{' '} */}
+        {/* Giả sử hiển thị 10 item mỗi trang */}
       </Box>
     </Box>
   )

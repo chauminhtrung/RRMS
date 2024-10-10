@@ -3,12 +3,12 @@ package com.rrms.rrms.services.servicesImp;
 import java.util.List;
 import java.util.Optional;
 
-//import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import com.rrms.rrms.dto.request.AccountRequest;
+import com.rrms.rrms.dto.request.ChangePasswordRequest;
 import com.rrms.rrms.dto.response.AccountResponse;
 import com.rrms.rrms.enums.ErrorCode;
 import com.rrms.rrms.exceptions.AppException;
@@ -18,6 +18,7 @@ import com.rrms.rrms.models.Auth;
 import com.rrms.rrms.repositories.AccountRepository;
 import com.rrms.rrms.repositories.AuthRepository;
 import com.rrms.rrms.services.IAccountService;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -25,7 +26,7 @@ import lombok.experimental.FieldDefaults;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public class AccountService implements IAccountService{
+public class AccountService implements IAccountService {
 
     @Autowired
     AccountRepository accountRepository;
@@ -36,7 +37,7 @@ public class AccountService implements IAccountService{
     @Autowired
     AccountMapper accountMapper;
 
-//    private final PasswordEncoder passwordEncoder;
+    //    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<Account> findAll() {
@@ -48,10 +49,9 @@ public class AccountService implements IAccountService{
         return accountRepository.findByUsername(username);
     }
 
-
     @Override
     public Optional<Account> login(String phone, String password) {
-        Optional<Account> accountOptional = accountRepository.findByPhoneAndPassword(phone,password);
+        Optional<Account> accountOptional = accountRepository.findByPhoneAndPassword(phone, password);
         return accountOptional;
     }
 
@@ -108,5 +108,31 @@ public class AccountService implements IAccountService{
         accountMapper.updateAccount(account, accountRequest);
         account = accountRepository.save(account);
         return accountMapper.toAccountResponse(account);
+    }
+
+    @Override
+    public String changePassword(ChangePasswordRequest changePasswordRequest) {
+        Account account = accountRepository
+                .findByUsername(changePasswordRequest.getUsername())
+                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+
+        BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
+
+        // Nếu password cũ không khớp với password trong database
+        if (!pe.matches(changePasswordRequest.getOldPassword(), account.getPassword())) {
+            return "Old password is not correct";
+        }
+
+        // Nếu password mới trùng với password cũ
+        if (pe.matches(changePasswordRequest.getNewPassword(), account.getPassword())) {
+            return "New password cannot be the same as the old password";
+        }
+
+        String hashedNewPassword = pe.encode(changePasswordRequest.getNewPassword());
+
+        account.setPassword(hashedNewPassword);
+        accountRepository.save(account);
+
+        return "Password changed successfully";
     }
 }

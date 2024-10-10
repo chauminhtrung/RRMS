@@ -69,12 +69,10 @@ public class DB {
                 // create admin account
 
                 Motel motel = new Motel();
-//                motel.setMotelId(UUID.randomUUID());
-                System.out.println("--------------day la id truoc khi tao  -------------: " + motel.getMotelId());
+                System.out.println("--------------day la id truoc khi tao -------------: " + motel.getMotelId());
                 motel.setAccount(accountRepository.findByUsername("admin").get());
                 motel.setMotelName("Hà nội");
                 motelRepository.save(motel);
-                System.out.println("-------------- Đây là ID sau khi tạo -------------: " + motel.getMotelId());
                 TypeRoom typeRoom = new TypeRoom();
                 typeRoom.setName("Tình yêu");
                 typeRoomRepository.save(typeRoom);

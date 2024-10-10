@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Box,
   Tabs,
@@ -22,8 +22,13 @@ import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-const RentalStatus = () => {
+const RentalStatus = ({ setIsAdmin }) => {
   const [value, setValue] = React.useState(0)
+
+  useEffect(() => {
+    setIsAdmin(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleChange = (event, newValue) => {
     setValue(newValue)

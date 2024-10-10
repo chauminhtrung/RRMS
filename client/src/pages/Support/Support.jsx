@@ -1,5 +1,10 @@
+import { useEffect } from 'react'
 import './Support.css'
-const Support = () => {
+const Support = ({ setIsAdmin }) => {
+  useEffect(() => {
+    setIsAdmin(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
     <body className="BodySupport">
       <div className="text-center" style={{ marginTop: '10px' }}>

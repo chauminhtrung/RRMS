@@ -15,7 +15,6 @@ import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin("*")
 public class CaptchaController {
 
     @Value("${cloud-flare.captcha.secret}")
