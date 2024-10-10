@@ -17,7 +17,6 @@ public class Motel {
 
     @Id
     @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID motelId;
 
     @Column(columnDefinition = "VARCHAR(255)")
