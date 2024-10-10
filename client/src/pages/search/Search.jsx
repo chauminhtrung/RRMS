@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Box, Container, Grid } from '@mui/material'
 import RoomList from './RoomList'
-import SearchList from './SearchList'
 import Name from './Name'
 import ListSearch from './ListSearch'
 import DistrictList from './DistrictList'
@@ -46,13 +45,12 @@ const Search = ({ setIsAdmin }) => {
       </Container>
 
       <ListSearch />
-      <SearchList />
       <Container>
         <Grid container>
-          <Grid item md={9} sx={{ mb: 3 }}>
+          <Grid item md={9} sx={{ mb: 4 }}>
             <RoomList />
           </Grid>
-          <Grid item md={3} sx={{ mt: { xs: 2, md: 4 } }}>
+          <Grid item md={3}>
             <Name />
             <DistrictList />
           </Grid>

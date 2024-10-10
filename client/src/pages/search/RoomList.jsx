@@ -1,11 +1,81 @@
-import { Box, Grid, Typography, Card, CardMedia, CardContent, Button, Avatar, Pagination } from '@mui/material'
+import {
+  Box,
+  Grid,
+  Typography,
+  Card,
+  CardMedia,
+  CardContent,
+  Button,
+  Avatar,
+  Pagination,
+  IconButton,
+  Snackbar,
+} from '@mui/material'
+import FavoriteIcon from '@mui/icons-material/Favorite'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { formatterAmount } from '~/utils/formatterAmount'
+import MuiAlert from '@mui/material/Alert'
+import SearchList from './SearchList'
+import FilterSearch from './FilterSearch'
 
 const RoomList = () => {
   const [searchData, setSearchData] = useState([])
+  const [favorites, setFavorites] = useState({})
+  const [visiblePhoneNumbers, setVisiblePhoneNumbers] = useState({})
+  const [open, setOpen] = useState(false)
+  const [linkCopied, setLinkCopied] = useState(false)
+  const [totalRooms, setTotalRooms] = useState(0)
+  const [searchValue, setSearchValue] = useState('')
+
+  // Thêm trạng thái cho trang hiện tại
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 7 // Số lượng item hiển thị mỗi trang
+
+  const handleToggle = (id) => {
+    setVisiblePhoneNumbers((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }))
+  }
+
+  const handleClick = () => {
+    const linkToCopy = 'https://www.youtube.com/watch?v=sshkYoROZrI'
+
+    navigator.clipboard
+      .writeText(linkToCopy)
+      .then(() => {
+        setLinkCopied(true)
+        setOpen(true)
+      })
+      .catch((err) => {
+        console.error('Failed to copy: ', err)
+      })
+  }
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+    setOpen(false)
+  }
+
+  const handleHeartClick = (cardId) => {
+    setFavorites((prevFavorites) => {
+      const newFavorites = {
+        ...prevFavorites,
+        [cardId]: !prevFavorites[cardId],
+      }
+      console.log('Updated favorites:', newFavorites)
+      return newFavorites
+    })
+  }
+
+  // Hàm xử lý sự kiện thay đổi trang
+  const handlePageChangeNumber = (event, value) => {
+    setCurrentPage(value)
+  }
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -16,17 +86,15 @@ const RoomList = () => {
     navigate(`/detail/${roomId}`)
   }
 
-  const loadData = async () => {
+  const loadData = async (search = '') => {
     try {
-      const result = await axios.get('http://localhost:8080/searchs', {
+      const result = await axios.get(`http://localhost:8080/searchs?name=${search}`, {
         validateStatus: () => true,
       })
 
-      console.log(result.data) // Kiểm tra cấu trúc dữ liệu
-
       if (result.status === 200) {
-        // Kiểm tra nếu status là 200
-        setSearchData(result.data.result || []) // Gán dữ liệu vào state, đảm bảo là mảng
+        setSearchData(result.data.result || [])
+        setTotalRooms(result.data.result.length || 0)
       } else {
         console.log('Error: Status', result.status)
       }
@@ -34,14 +102,28 @@ const RoomList = () => {
       console.error('Error fetching data:', error)
     }
   }
+  const handleSearchResult = (search) => {
+    setSearchValue(search) // Cập nhật giá trị tìm kiếm
+    loadData(search) // Gọi hàm loadData để tải dữ liệu theo giá trị tìm kiếm mới
+  }
+  useEffect(() => {
+    loadData()
+  }, [searchValue])
+
+  // Tính toán các item hiển thị trên trang hiện tại
+  const indexOfLastItem = currentPage * itemsPerPage // Vị trí item cuối trên trang hiện tại
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage // Vị trí item đầu trên trang hiện tại
+  const currentItems = searchData.slice(indexOfFirstItem, indexOfLastItem) // Các item cần hiển thị
 
   return (
     <Box>
+      {/* <FilterSearch onSearch={handleSearchResult} /> */}
+      <SearchList totalRooms={totalRooms} />
       <Box sx={{ width: '100%', overflow: 'hidden', mt: 2 }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            {searchData.length > 0 ? (
-              searchData.map((item, i) => (
+            {currentItems.length > 0 ? (
+              currentItems.map((item, i) => (
                 <Card
                   key={i}
                   sx={{
@@ -60,7 +142,7 @@ const RoomList = () => {
                   }}>
                   <CardMedia
                     component="img"
-                    image={item.roomImages[0].image}
+                    image={item.roomImages[0]?.image}
                     alt="Chung cư"
                     onClick={() => handlePageChange(item.roomId)}
                     sx={{
@@ -88,10 +170,11 @@ const RoomList = () => {
                       },
                     }}>
                     <Typography
-                      variant="h6"
+                      variant="h5"
                       noWrap
                       sx={{
                         transition: 'color 0.3s',
+                        fontWeight: 'bold',
                         '&:hover': {
                           color: 'primary.main',
                         },
@@ -112,7 +195,7 @@ const RoomList = () => {
                           fontWeight: 500,
                         },
                       }}>
-                      {item.addressDetail}
+                      {item.motel.address}
                     </Typography>
 
                     <Typography
@@ -129,40 +212,63 @@ const RoomList = () => {
                       {formatterAmount(item.price)} /Tháng
                     </Typography>
 
-                    <Typography variant="body2" sx={{ mt: 1 }}>
+                    <Typography
+                      variant="body2"
+                      sx={{ mt: 1, display: 'flex', alignItems: 'center', flexWrap: 'nowrap' }}>
                       <Box component="span" sx={{ mr: 2 }}>
                         {item.roomArea} m²
                       </Box>
-                      {item.roomServices.map((service, index) => (
-                        <Box key={index}>
-                          {service.service.typeService === 'Điện nước' ? (
-                            <Box>
-                              {service.service.nameService === 'Nước' && (
-                                <Box component="span" sx={{ mr: 2 }}>
-                                  {formatterAmount(service.service.price)}/khối
-                                </Box>
-                              )}
-                              {service.service.nameService === 'Điện' && (
-                                <Box component="span">{formatterAmount(service.service.price)}/Kw</Box>
-                              )}
-                            </Box>
-                          ) : null}
-                        </Box>
-                      ))}
+                      <Box sx={{ display: 'flex', flexWrap: 'nowrap', alignItems: 'center' }}>
+                        {item.roomServices.map((service, index) => (
+                          <Box key={index} sx={{ display: 'flex', alignItems: 'center', mr: 2, mx: 1 }}>
+                            {service.service.typeService === 'Điện nước' && (
+                              <>
+                                {service.service.nameService === 'Nước' && (
+                                  <Box component="span">{formatterAmount(service.service.price)}/khối</Box>
+                                )}
+                                {service.service.nameService === 'Điện' && (
+                                  <Box component="span">{formatterAmount(service.service.price)}/Kw</Box>
+                                )}
+                              </>
+                            )}
+                          </Box>
+                        ))}
+                      </Box>
                     </Typography>
+
                     <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                      <Avatar src={item.motel.avatar} sx={{ mr: 1 }} />
+                      <Avatar src={item.motel.account.avatar} sx={{ mr: 1 }} />
                       <Typography variant="caption" color="textSecondary" noWrap>
-                        Trinh, 2 ngày trước
+                        {item.motel.account.username}, 2 ngày trước
                       </Typography>
+                      <IconButton
+                        onClick={() => handleHeartClick(item.roomId)}
+                        sx={{
+                          ml: 'auto',
+                          color: favorites[item.roomId] ? 'red' : 'gray',
+                          transition: 'color 0.3s ease, border 0.3s ease',
+                          border: favorites[item.roomId] ? '2px solid red' : '1px solid transparent',
+                          borderRadius: '50%',
+                          padding: '5px',
+                          mx: 3,
+                          marginLeft: 8,
+                          width: '40px',
+                          height: '40px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                        <FavoriteIcon sx={{ fontSize: '35px' }} />
+                      </IconButton>
                     </Box>
                   </CardContent>
+
                   <Box
                     sx={{
                       display: 'flex',
                       flexDirection: { xs: 'row', sm: 'column' },
                       alignItems: { xs: 'center', sm: 'flex-end' },
-                      gap: 1,
+                      gap: 1.75,
                       width: { xs: '100%', sm: 'auto' },
                       mt: { xs: 2, sm: 0 },
                     }}>
@@ -170,20 +276,19 @@ const RoomList = () => {
                       variant="outlined"
                       color="primary"
                       fullWidth
+                      onClick={handleClick} // Gọi hàm khi click vào nút
                       sx={{
                         textTransform: 'none',
-                        transition: 'background-color 0.3s, color 0.3s',
-                        '&:hover': {
-                          backgroundColor: 'primary.main',
-                          color: '#fff',
-                        },
+                        padding: '8px 16px',
                       }}>
                       Zalo
                     </Button>
+
                     <Button
                       variant="outlined"
                       color="primary"
                       fullWidth
+                      onClick={() => handleToggle(item.roomId)}
                       sx={{
                         textTransform: 'none',
                         ml: { xs: 2, sm: 0 },
@@ -193,24 +298,34 @@ const RoomList = () => {
                           color: '#fff',
                         },
                       }}>
-                      Xem SĐT
+                      {visiblePhoneNumbers[item.roomId] ? item.motel.account.phone : 'Xem SĐT'}
                     </Button>
                   </Box>
                 </Card>
               ))
             ) : (
-              <Typography variant="h6" color="textSecondary">
-                Không có dữ liệu để hiển thị.
-              </Typography>
+              <Typography variant="h6">Không có kết quả nào!</Typography>
             )}
           </Grid>
         </Grid>
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-        <Pagination count={10} />
-        {/* <Pagination count={Math.ceil(searchData.length / 10)} color="primary" size="medium" />{' '} */}
-        {/* Giả sử hiển thị 10 item mỗi trang */}
-      </Box>
+
+      {/* Component Pagination */}
+      <Pagination
+        count={Math.ceil(searchData.length / itemsPerPage)} // Tổng số trang
+        page={currentPage} // Trang hiện tại
+        onChange={handlePageChangeNumber} // Hàm xử lý khi thay đổi trang
+        variant="outlined"
+        color="primary"
+        sx={{ mt: 4, display: 'flex', justifyContent: 'center' }} // Đặt margin-top và căn giữa
+      />
+
+      {/* Snackbar thông báo */}
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <MuiAlert elevation={6} severity="success" onClose={handleClose}>
+          Sao chép liên kết thành công!
+        </MuiAlert>
+      </Snackbar>
     </Box>
   )
 }
