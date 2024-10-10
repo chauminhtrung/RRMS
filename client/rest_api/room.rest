@@ -22,7 +22,7 @@ Accept: application/json
     "censor": true,
     "priceElectric": 3800,
     "priceWater": 35000,
-    "maxPersion": 2,
+    "maxPerson": 2,
     "rentalStartTime": "2024-03-01",
     "hours": "Tự do",
     "roomServices": ["Wifi miễn phí", "Hồ bơi"],
