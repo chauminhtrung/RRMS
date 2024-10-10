@@ -4,7 +4,8 @@ import { Box, Typography, Select, MenuItem, Slider } from '@mui/material'
 import ModalSearch from './ModalSearch'
 
 import './SearchWHome.css'
-function FilterSearch() {
+import { searchByName } from '~/apis/apiClient'
+function FilterSearch({ setSearchData }) {
   const [open, setOpen] = useState(false)
 
   const handleOpen = () => setOpen(true)
@@ -13,15 +14,21 @@ function FilterSearch() {
   const [range, setRange] = useState([0, 50])
   const [selectedValue, setSelectedValue] = useState('Dưới 50 triệu')
   const [area, setArea] = useState([0, 50])
+  const [keyword, setKeyword] = useState('')
 
   const [selectedValueArea, setSelectedValueArea] = useState('Dưới 50 m2')
   // const handleInputChange = (event) => {
   //   setSearchValue(event.target.value)
   // }
 
-  // const handleSearch = () => {
-  //   onSearch(setSearchValue)
-  // }
+  const handleSearch = (e) => {
+    setKeyword(e.target.value)
+    searchByName(keyword).then((res) => {
+      console.log(res.data.result)
+
+      setSearchData(res.data.result)
+    })
+  }
   const handleAreaChange = (event) => {
     const selectedValueArea = event.target.value
 
@@ -202,14 +209,13 @@ function FilterSearch() {
                 <ul id="search-bar">
                   <li className="keyword" style={{ position: 'relative' }}>
                     <input
-                      id="search-map-input"
                       type="text"
-                      name="search-map-input"
                       className="form-control w-100 "
                       data-type='["Nhập nơi học tập &amp; làm việc...", "Nhập công ty làm việc...", "Nhập trường học tập...", "Nhập địa điểm nổi tiếng..."]'
                       data-period="400"
                       placeholder="Nhập nơi học tập &amp; làm việc..."
                       autoComplete="off"
+                      onChange={handleSearch}
                       // onChange={handleInputChange}
                     />
                     <div className="guid-search id-1727803392186 dropdown" style={{ display: 'none' }}>
@@ -314,8 +320,7 @@ function FilterSearch() {
                   className="before-background"
                   aria-label="Tìm kiếm"
                   title="Tìm kiếm"
-                  // onClick={handleSearch}
-                >
+                  onClick={handleSearch}>
                   Tìm kiếm
                 </button>
               </div>

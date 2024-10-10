@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Grid,
@@ -20,14 +21,11 @@ import MuiAlert from '@mui/material/Alert'
 import SearchList from './SearchList'
 import FilterSearch from './FilterSearch'
 
-const RoomList = () => {
-  const [searchData, setSearchData] = useState([])
+const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
   const [favorites, setFavorites] = useState({})
   const [visiblePhoneNumbers, setVisiblePhoneNumbers] = useState({})
   const [open, setOpen] = useState(false)
   const [linkCopied, setLinkCopied] = useState(false)
-  const [totalRooms, setTotalRooms] = useState(0)
-  const [searchValue, setSearchValue] = useState('')
 
   // Thêm trạng thái cho trang hiện tại
   const [currentPage, setCurrentPage] = useState(1)
@@ -81,45 +79,9 @@ const RoomList = () => {
     navigate(`/detail/${roomId}`)
   }
 
-  useEffect(() => {
-    setSearchValue('Phú Thọ') // Thiết lập giá trị mặc định
-  }, [])
+  useEffect(() => {}, [])
 
   // Gọi loadData khi searchValue thay đổi
-  useEffect(() => {
-    if (searchValue) {
-      console.log('Searching for:', searchValue) // Ghi log giá trị tìm kiếm
-      loadData(searchValue)
-    }
-  }, [searchValue])
-  // /name?name=${searchValue}
-  // Hàm để tải dữ liệu
-  const loadData = async (searchValue) => {
-    try {
-      const result = await axios.get(`http://localhost:8080/searchs`, {
-        validateStatus: () => true,
-      })
-
-      // Kiểm tra trạng thái phản hồi
-      if (result.status === 200) {
-        const fetchedData = result.data.result
-
-        if (Array.isArray(fetchedData) && fetchedData.length > 0) {
-          console.log('Data fetched:', fetchedData)
-          setSearchData(fetchedData)
-          setTotalRooms(fetchedData.length)
-        } else {
-          console.log('No results found or data is null')
-          setSearchData([])
-          setTotalRooms(0)
-        }
-      } else {
-        console.log('Error: Status', result.status)
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error)
-    }
-  }
 
   // const handleSearchResult = (search) => {
   //   setSearchValue(search)

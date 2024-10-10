@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react'
 import { Box, Container, Grid } from '@mui/material'
 import RoomList from './RoomList'
@@ -10,12 +12,21 @@ import ItemSearch from './ItemSearch'
 import { getTinhThanh } from '~/apis/apiClient'
 import LoadingPage from '~/components/LoadingPage'
 import FilterSearch from './FilterSearch'
+import axios from 'axios'
 
 const Search = ({ setIsAdmin }) => {
   const [provinces, setProvinces] = useState([])
+  const [searchData, setSearchData] = useState([])
+  const [totalRooms, setTotalRooms] = useState(0)
+  const [searchValue, setSearchValue] = useState('')
   useEffect(() => {
     setIsAdmin(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    console.log('Searching for:', searchValue) // Ghi log giá trị tìm kiếm
+    loadData(searchValue)
   }, [])
 
   useEffect(() => {
@@ -30,6 +41,35 @@ const Search = ({ setIsAdmin }) => {
       })
   }, [])
 
+  // /name?name=${searchValue}
+  // Hàm để tải dữ liệu
+  const loadData = async (searchValue) => {
+    try {
+      const result = await axios.get(`http://localhost:8080/searchs`, {
+        validateStatus: () => true,
+      })
+
+      // Kiểm tra trạng thái phản hồi
+      if (result.status === 200) {
+        const fetchedData = result.data.result
+
+        if (Array.isArray(fetchedData) && fetchedData.length > 0) {
+          console.log('Data fetched:', fetchedData)
+          setSearchData(fetchedData)
+          setTotalRooms(fetchedData.length)
+        } else {
+          console.log('No results found or data is null')
+          setSearchData([])
+          setTotalRooms(0)
+        }
+      } else {
+        console.log('Error: Status', result.status)
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
+
   if (!provinces) {
     return <LoadingPage />
   }
@@ -41,14 +81,14 @@ const Search = ({ setIsAdmin }) => {
           mt: 5,
           borderRadius: '6px',
         }}>
-        <FilterSearch />
+        <FilterSearch setSearchData={setSearchData} />
       </Container>
 
       <ListSearch />
       <Container>
         <Grid container>
           <Grid item md={9} sx={{ mb: 4 }}>
-            <RoomList />
+            <RoomList setSearchValue={setSearchValue} searchData={searchData} totalRooms={totalRooms} />
           </Grid>
           <Grid item md={3}>
             <Name />
