@@ -4,7 +4,7 @@ const Comment = ({ item }) => {
   return (
     <Card variant="outlined" sx={{ borderRadius: 3, '--Card-radius': 0, mb: 1 }}>
       <CardContent orientation="horizontal">
-        <Avatar src={item.account.avatar} variant="rectangular" width={44} height={44} />
+        <Avatar src={item.account.avatar} alt={item.account.fullname} variant="rectangular" width={44} height={44} />
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Typography variant="text" width={100}>
             {item.account.fullname}

@@ -45,15 +45,20 @@ public class RoomService implements IRoomService {
     @Override
     public RoomDetailResponse createRoom(RoomRequest roomRequest) {
 
-        Motel motel = motelRepository
-                .findById(roomRequest.getModelId())
-                .orElseThrow(() -> new AppException(ErrorCode.MOTEL_NOT_FOUND));
+        Motel motel = motelRepository.save(Motel.builder()
+                .motelName(roomRequest.getNameRoom())
+                .address(roomRequest.getAddress())
+                .build());
 
         List<TypeRoom> typeRooms = typeRoomRepository.findAllByName(roomRequest.getTypeRoomName());
+        TypeRoom typeRoom;
         if (typeRooms.isEmpty()) {
-            throw new AppException(ErrorCode.TYPE_ROOM_NOT_FOUND);
+            typeRoom = typeRoomRepository.save(TypeRoom.builder()
+                    .name(roomRequest.getTypeRoomName())
+                    .build());
+        } else {
+            typeRoom = typeRooms.get(0);
         }
-        TypeRoom typeRoom = typeRooms.get(0);
 
         Room room = roomMapper.toRoom(roomRequest);
         room.setMotel(motel);
