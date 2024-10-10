@@ -83,7 +83,7 @@ a {
 }
 
 .title-item::before, .title-item-small::before {
-    border-left: 4px solid #3c9e47;
+    border-left: 4px solid #4bcffa;
     border-radius: 10px;
     position: absolute;
     left: 0px;
