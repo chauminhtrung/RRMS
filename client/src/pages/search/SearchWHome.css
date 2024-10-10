@@ -783,12 +783,7 @@ ul#search-bar {
   height: 30px;
 }
 
- input[type='text'] {
-  border: 0.5px solid #dcdcdc;
-  background-color: #ffffff;
-  border-radius: 5px;
-  height: 100%;
-}
+
 
 #search-bar li.keyword:before {
   top: 0px;
@@ -1430,3 +1425,12 @@ section.list-img > div {
   color: black;
   font-size: 14px;
 }
+
+@media (max-width: 498px) {
+  #search-home #search-bar #small {
+    display: none;
+  }
+
+}
+
+

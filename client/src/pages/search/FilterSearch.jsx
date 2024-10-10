@@ -4,7 +4,7 @@ import { Box, Typography, Select, MenuItem, Slider } from '@mui/material'
 import ModalSearch from './ModalSearch'
 
 import './SearchWHome.css'
-function FilterSearch() {
+function FilterSearch({ onSearch }) {
   const [open, setOpen] = useState(false)
 
   const handleOpen = () => setOpen(true)
@@ -13,8 +13,17 @@ function FilterSearch() {
   const [range, setRange] = useState([0, 50])
   const [selectedValue, setSelectedValue] = useState('Dưới 50 triệu')
   const [area, setArea] = useState([0, 50])
-  const [selectedValueArea, setSelectedValueArea] = useState('Dưới 50 m2')
+  const [search, setSearch] = useState('')
 
+  const [selectedValueArea, setSelectedValueArea] = useState('Dưới 50 m2')
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value)
+  }
+  const handleInputChange = (e) => {
+    setSearch(e.target.value)
+    // Gọi hàm onSearch để đẩy giá trị tìm kiếm lên component cha
+    onSearch(e.target.value)
+  }
   const handleAreaChange = (event) => {
     const selectedValueArea = event.target.value
 
@@ -104,8 +113,8 @@ function FilterSearch() {
         <div className="block-32 aos-init aos-animate" data-aos="fade-up" data-aos-offset="-200">
           <form action="#">
             <div className="row" style={{ backgroundColor: '#ffffff1f' }}>
-              <div className="col-md-2 mb-3 mb-lg-0 col-lg-1 mt-2">
-                <ul id="search-bar">
+              <div className="col-md-2 mb-3 mb-lg-0 col-lg-1 mt-2 d-none d-md-block">
+                <ul id="search-bar" className="BoLoc">
                   <li
                     className="small"
                     data-toggle="modal"
@@ -207,6 +216,7 @@ function FilterSearch() {
                       data-period="400"
                       placeholder="Nhập nơi học tập &amp; làm việc..."
                       autoComplete="off"
+                      onChange={handleInputChange}
                     />
                     <div className="guid-search id-1727803392186 dropdown" style={{ display: 'none' }}>
                       Suggest search...

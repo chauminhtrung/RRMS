@@ -14,8 +14,11 @@ import {
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { formatterAmount } from '~/utils/formatterAmount'
 import MuiAlert from '@mui/material/Alert'
+import SearchList from './SearchList'
+import FilterSearch from './FilterSearch'
 
 const RoomList = () => {
   const [searchData, setSearchData] = useState([])
@@ -23,6 +26,8 @@ const RoomList = () => {
   const [visiblePhoneNumbers, setVisiblePhoneNumbers] = useState({})
   const [open, setOpen] = useState(false)
   const [linkCopied, setLinkCopied] = useState(false)
+  const [totalRooms, setTotalRooms] = useState(0)
+  const [searchValue, setSearchValue] = useState('')
 
   // Thêm trạng thái cho trang hiện tại
   const [currentPage, setCurrentPage] = useState(1)
@@ -68,24 +73,28 @@ const RoomList = () => {
   }
 
   // Hàm xử lý sự kiện thay đổi trang
-  const handlePageChange = (event, value) => {
+  const handlePageChangeNumber = (event, value) => {
     setCurrentPage(value)
   }
+  const navigate = useNavigate()
 
   useEffect(() => {
     loadData()
   }, [])
 
-  const loadData = async () => {
+  const handlePageChange = (roomId) => {
+    navigate(`/detail/${roomId}`)
+  }
+
+  const loadData = async (search = '') => {
     try {
-      const result = await axios.get('http://localhost:8080/searchs', {
+      const result = await axios.get(`http://localhost:8080/searchs?name=${search}`, {
         validateStatus: () => true,
       })
 
-      console.log(result.data)
-
       if (result.status === 200) {
         setSearchData(result.data.result || [])
+        setTotalRooms(result.data.result.length || 0)
       } else {
         console.log('Error: Status', result.status)
       }
@@ -93,6 +102,13 @@ const RoomList = () => {
       console.error('Error fetching data:', error)
     }
   }
+  const handleSearchResult = (search) => {
+    setSearchValue(search) // Cập nhật giá trị tìm kiếm
+    loadData(search) // Gọi hàm loadData để tải dữ liệu theo giá trị tìm kiếm mới
+  }
+  useEffect(() => {
+    loadData()
+  }, [searchValue])
 
   // Tính toán các item hiển thị trên trang hiện tại
   const indexOfLastItem = currentPage * itemsPerPage // Vị trí item cuối trên trang hiện tại
@@ -101,6 +117,8 @@ const RoomList = () => {
 
   return (
     <Box>
+      {/* <FilterSearch onSearch={handleSearchResult} /> */}
+      <SearchList totalRooms={totalRooms} />
       <Box sx={{ width: '100%', overflow: 'hidden', mt: 2 }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -126,6 +144,7 @@ const RoomList = () => {
                     component="img"
                     image={item.roomImages[0]?.image}
                     alt="Chung cư"
+                    onClick={() => handlePageChange(item.roomId)}
                     sx={{
                       width: { xs: '100%', sm: 200 },
                       height: { xs: 200, sm: 150 },
@@ -295,7 +314,7 @@ const RoomList = () => {
       <Pagination
         count={Math.ceil(searchData.length / itemsPerPage)} // Tổng số trang
         page={currentPage} // Trang hiện tại
-        onChange={handlePageChange} // Hàm xử lý khi thay đổi trang
+        onChange={handlePageChangeNumber} // Hàm xử lý khi thay đổi trang
         variant="outlined"
         color="primary"
         sx={{ mt: 4, display: 'flex', justifyContent: 'center' }} // Đặt margin-top và căn giữa

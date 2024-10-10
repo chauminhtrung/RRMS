@@ -46,7 +46,7 @@ function App() {
           <Route path="/" element={<Home setIsAdmin={setIsAdmin} />} />
           <Route path="/chart" element={<Chart setIsAdmin={setIsAdmin} />} />
           <Route path="/search" element={<Search setIsAdmin={setIsAdmin} />} />
-          <Route path="/detail" element={<Detail setIsAdmin={setIsAdmin} />} />
+          <Route path="/detail/:roomId" element={<Detail setIsAdmin={setIsAdmin} />} />
           <Route path="/forgot-password" element={<Forgot_Password setIsAdmin={setIsAdmin} />} />
           <Route path="/login" element={<Login setIsAdmin={setIsAdmin} />} />
           <Route path="/contact" element={<Contact setIsAdmin={setIsAdmin} />} />
