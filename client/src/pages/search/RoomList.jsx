@@ -71,30 +71,48 @@ const RoomList = () => {
       return newFavorites
     })
   }
-
   // Hàm xử lý sự kiện thay đổi trang
   const handlePageChangeNumber = (event, value) => {
     setCurrentPage(value)
   }
   const navigate = useNavigate()
 
-  useEffect(() => {
-    loadData()
-  }, [])
-
   const handlePageChange = (roomId) => {
     navigate(`/detail/${roomId}`)
   }
 
-  const loadData = async (search = '') => {
+  useEffect(() => {
+    setSearchValue('Phú Thọ') // Thiết lập giá trị mặc định
+  }, [])
+
+  // Gọi loadData khi searchValue thay đổi
+  useEffect(() => {
+    if (searchValue) {
+      console.log('Searching for:', searchValue) // Ghi log giá trị tìm kiếm
+      loadData(searchValue)
+    }
+  }, [searchValue])
+  // /name?name=${searchValue}
+  // Hàm để tải dữ liệu
+  const loadData = async (searchValue) => {
     try {
-      const result = await axios.get(`http://localhost:8080/searchs?name=${search}`, {
+      const result = await axios.get(`http://localhost:8080/searchs`, {
         validateStatus: () => true,
       })
 
+      // Kiểm tra trạng thái phản hồi
       if (result.status === 200) {
-        setSearchData(result.data.result || [])
-        setTotalRooms(result.data.result.length || 0)
+        const fetchedData = result.data.result
+
+        if (Array.isArray(fetchedData) && fetchedData.length > 0) {
+          console.log('Data fetched:', fetchedData)
+          setSearchData(fetchedData)
+          setTotalRooms(fetchedData.length)
+        } else {
+          console.log('No results found or data is null')
+          setSearchData([])
+          setTotalRooms(0)
+        }
       } else {
         console.log('Error: Status', result.status)
       }
@@ -102,13 +120,11 @@ const RoomList = () => {
       console.error('Error fetching data:', error)
     }
   }
-  const handleSearchResult = (search) => {
-    setSearchValue(search) // Cập nhật giá trị tìm kiếm
-    loadData(search) // Gọi hàm loadData để tải dữ liệu theo giá trị tìm kiếm mới
-  }
-  useEffect(() => {
-    loadData()
-  }, [searchValue])
+
+  // const handleSearchResult = (search) => {
+  //   setSearchValue(search)
+  //   loadData(search)
+  // }
 
   // Tính toán các item hiển thị trên trang hiện tại
   const indexOfLastItem = currentPage * itemsPerPage // Vị trí item cuối trên trang hiện tại
@@ -142,7 +158,7 @@ const RoomList = () => {
                   }}>
                   <CardMedia
                     component="img"
-                    image={item.roomImages[0]?.image}
+                    image={item.roomImages[0].image}
                     alt="Chung cư"
                     onClick={() => handlePageChange(item.roomId)}
                     sx={{

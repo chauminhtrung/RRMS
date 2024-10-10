@@ -16,6 +16,7 @@ public enum ErrorCode {
     TYPE_ROOM_EXIST(HttpStatus.BAD_REQUEST.value(), "Type room exist", HttpStatus.BAD_REQUEST),
     TYPE_ROOM_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Type room not found", HttpStatus.NOT_FOUND),
     SERVICE_ID_REQUIRED(HttpStatus.BAD_REQUEST.value(), "Service id required", HttpStatus.BAD_REQUEST),
+    INVALID_SEARCH_PARAMETER(HttpStatus.BAD_REQUEST.value(), "INVALID_SEARCH_PARAMETER", HttpStatus.BAD_REQUEST),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
@@ -23,7 +24,6 @@ public enum ErrorCode {
         this.message = message;
         this.statusCode = statusCode;
     }
-
     private final int code;
     private final String message;
     private final HttpStatusCode statusCode;
