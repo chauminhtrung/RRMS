@@ -5,17 +5,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import net.datafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.rrms.rrms.enums.Gender;
 import com.rrms.rrms.models.*;
 import com.rrms.rrms.repositories.*;
 
 import lombok.extern.slf4j.Slf4j;
-import net.datafaker.Faker;
 
 @Configuration
 @Slf4j
@@ -31,8 +30,8 @@ public class DB {
             ServiceRepository serviceRepository,
             RoomServiceRepository roomServiceRepository) {
         return args -> {
+
             int roomsLength = 20;
-            BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
 
             if (accountRepository.findByUsername("admin").isEmpty()) {
                 // create admin account
@@ -49,22 +48,6 @@ public class DB {
                         .birthday(LocalDate.now())
                         .build());
                 log.info("Admin user created");
-            }
-            if (accountRepository.findByUsername("dung").isEmpty()) {
-                // create admin account
-                accountRepository.save(Account.builder()
-                        .username("dung")
-                        .password(pe.encode("123"))
-                        .fullname("Tri Dung")
-                        .email("tridung@gmail.com")
-                        .phone("0333334")
-                        .cccd("012345678900")
-                        .gender(Gender.OTHER)
-                        .avatar(
-                                "https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
-                        .birthday(LocalDate.now())
-                        .build());
-                log.info("dung created");
             }
             if (accountRepository.findByUsername("user5").isEmpty()) {
                 // create admin account
@@ -83,34 +66,20 @@ public class DB {
                 log.info("User1 created");
             }
             if (roomRepository.findAll().isEmpty()) {
-                String[] typeRoomNames = {
-                    "Phòng đơn",
-                    "Phòng đôi",
-                    "Phòng gia đình",
-                    "Phòng tập thể",
-                    "Phòng VIP",
-                    "Phòng Superior",
-                    "Phòng Deluxe",
-                    "Phòng Suite"
-                };
+                // create admin account
 
-                Motel motel;
-                TypeRoom typeRoom;
+                Motel motel = new Motel();
+                System.out.println("--------------day la id truoc khi tao -------------: " + motel.getMotelId());
+                motel.setAccount(accountRepository.findByUsername("admin").get());
+                motel.setMotelName("Hà nội");
+                motelRepository.save(motel);
+                TypeRoom typeRoom = new TypeRoom();
+                typeRoom.setName("Tình yêu");
+                typeRoomRepository.save(typeRoom);
+
                 Room room = null;
-
                 for (int i = 0; i < roomsLength; i++) {
                     Faker faker = new Faker(new Locale("vi"));
-
-                    motel = new Motel();
-                    motel.setAccount(accountRepository.findByUsername("admin").get());
-                    motel.setMotelName(faker.address().cityName());
-                    motel.setAddress(faker.address().fullAddress());
-                    motel.setArea((double) faker.number().numberBetween(50, 200));
-                    motel.setAveragePrice((long) faker.number().numberBetween(500000, 5000000));
-
-                    typeRoom = new TypeRoom();
-                    typeRoom.setName(faker.options().option(typeRoomNames));
-
                     room = new Room();
                     room.setDeposit(faker.number().randomDouble(2, 500000, 5000000));
                     room.setHours(faker.options().option("Tự do", "6:00 AM - 12:00 PM", "1:00 PM - 6:00 PM"));
@@ -123,59 +92,42 @@ public class DB {
                     room.setRoomArea(faker.number().numberBetween(50, 200));
                     room.setPrice(faker.number().randomDouble(2, 500000, 5000000));
                     room.setMaxPerson(faker.number().numberBetween(1, 5));
-
-                    typeRoomRepository.save(typeRoom);
-                    motelRepository.save(motel);
                     roomRepository.save(room);
-                    log.info("Room created");
-
-                    RoomReview roomReview = new RoomReview();
-                    roomReview.setAccount(
-                            accountRepository.findByUsername("admin").get());
-                    roomReview.setComment(faker.lorem().sentence());
-                    roomReview.setRating(faker.number().numberBetween(1, 5));
-                    roomReview.setRoom(room);
-                    roomReviewRepository.save(roomReview);
-                    log.info("Room review created");
-
-                    Service service1 = serviceRepository.save(Service.builder()
-                            .typeService("Tiện nghi")
-                            .nameService(faker.options().option("Có chuồng chó", "Wifi miễn phí", "Hồ bơi", "Gym"))
-                            .build());
-                    Service service2 = serviceRepository.save(Service.builder()
-                            .typeService("Điện nước")
-                            .nameService(faker.options().option("Điện"))
-                            .price((long) faker.number().randomDouble(2, 50000, 100000))
-                            .build());
-                    Service service3 = serviceRepository.save(Service.builder()
-                            .typeService("Điện nước")
-                            .nameService(faker.options().option("Nước"))
-                            .price((long) faker.number().randomDouble(2, 50000, 100000))
-                            .build());
-                    log.info("Service created");
-
-                    roomServiceRepository.save(
-                            RoomService.builder().room(room).service(service1).build());
-                    roomServiceRepository.save(
-                            RoomService.builder().room(room).service(service2).build());
-                    roomServiceRepository.save(
-                            RoomService.builder().room(room).service(service3).build());
-                    log.info("Room service created");
-
-                    RoomImage roomImage1 = new RoomImage(
-                            UUID.randomUUID(), room, faker.internet().image());
-                    RoomImage roomImage2 = new RoomImage(
-                            UUID.randomUUID(), room, faker.internet().image());
-                    RoomImage roomImage3 = new RoomImage(
-                            UUID.randomUUID(), room, faker.internet().image());
-                    RoomImage roomImage4 = new RoomImage(
-                            UUID.randomUUID(), room, faker.internet().image());
-                    RoomImage roomImage5 = new RoomImage(
-                            UUID.randomUUID(), room, faker.internet().image());
-
-                    roomImageRepository.saveAll(List.of(roomImage1, roomImage2, roomImage3, roomImage4, roomImage5));
-                    log.info("Room images created");
+                    log.info("Search room created");
                 }
+
+                RoomReview roomReview = new RoomReview();
+                roomReview.setAccount(accountRepository.findByUsername("admin").get());
+                roomReview.setComment("Phòng này đẹp ghê");
+                roomReview.setRating(3);
+                roomReview.setRoom(room);
+                roomReviewRepository.save(roomReview);
+                log.info("Room review created");
+
+                Service service = new Service();
+                service.setNameService("Có chuồng chó");
+                service.setTypeService("Dịch vụ");
+                serviceRepository.save(service);
+                log.info("Service created");
+
+                RoomService roomService = new RoomService();
+                roomService.setRoom(room);
+                roomService.setService(service);
+                roomServiceRepository.save(roomService);
+                log.info("Room service created");
+
+                RoomImage roomImage1 =
+                        new RoomImage(UUID.randomUUID(), room, "https://picsum.photos/1000/700?random=1");
+                RoomImage roomImage2 =
+                        new RoomImage(UUID.randomUUID(), room, "https://picsum.photos/1000/700?random=2");
+                RoomImage roomImage3 =
+                        new RoomImage(UUID.randomUUID(), room, "https://picsum.photos/1000/700?random=3");
+                RoomImage roomImage4 =
+                        new RoomImage(UUID.randomUUID(), room, "https://picsum.photos/1000/700?random=4");
+                RoomImage roomImage5 =
+                        new RoomImage(UUID.randomUUID(), room, "https://picsum.photos/1000/700?random=5");
+                roomImageRepository.saveAll(List.of(roomImage1, roomImage2, roomImage3, roomImage4, roomImage5));
+                log.info("Room image created");
             }
         };
     }
