@@ -1,11 +1,13 @@
 @baseUrl = http://localhost:8080
-@roomId = 21419639-aed3-43a7-8e13-087705d5c57f
+@roomId = 06d5fefb-ea1a-4b6b-b6ac-1b23f39b31fb
 
 
 GET {{baseUrl}}/searchs/price?startPrice=1255565.31&endPrice=4229298.69
 
 ###
 
-GET {{baseUrl}}/searchs/name?name=Hà Giang
+GET {{baseUrl}}/searchs/name?name=Vinh
+
+###
 
 GET {{baseUrl}}/searchs

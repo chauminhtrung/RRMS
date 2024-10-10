@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Grid,
@@ -20,14 +21,11 @@ import MuiAlert from '@mui/material/Alert'
 import SearchList from './SearchList'
 import FilterSearch from './FilterSearch'
 
-const RoomList = () => {
-  const [searchData, setSearchData] = useState([])
+const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
   const [favorites, setFavorites] = useState({})
   const [visiblePhoneNumbers, setVisiblePhoneNumbers] = useState({})
   const [open, setOpen] = useState(false)
   const [linkCopied, setLinkCopied] = useState(false)
-  const [totalRooms, setTotalRooms] = useState(0)
-  const [searchValue, setSearchValue] = useState('')
 
   // Thêm trạng thái cho trang hiện tại
   const [currentPage, setCurrentPage] = useState(1)
@@ -71,44 +69,24 @@ const RoomList = () => {
       return newFavorites
     })
   }
-
   // Hàm xử lý sự kiện thay đổi trang
   const handlePageChangeNumber = (event, value) => {
     setCurrentPage(value)
   }
   const navigate = useNavigate()
 
-  useEffect(() => {
-    loadData()
-  }, [])
-
   const handlePageChange = (roomId) => {
     navigate(`/detail/${roomId}`)
   }
 
-  const loadData = async (search = '') => {
-    try {
-      const result = await axios.get(`http://localhost:8080/searchs?name=${search}`, {
-        validateStatus: () => true,
-      })
+  useEffect(() => {}, [])
 
-      if (result.status === 200) {
-        setSearchData(result.data.result || [])
-        setTotalRooms(result.data.result.length || 0)
-      } else {
-        console.log('Error: Status', result.status)
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error)
-    }
-  }
-  const handleSearchResult = (search) => {
-    setSearchValue(search) // Cập nhật giá trị tìm kiếm
-    loadData(search) // Gọi hàm loadData để tải dữ liệu theo giá trị tìm kiếm mới
-  }
-  useEffect(() => {
-    loadData()
-  }, [searchValue])
+  // Gọi loadData khi searchValue thay đổi
+
+  // const handleSearchResult = (search) => {
+  //   setSearchValue(search)
+  //   loadData(search)
+  // }
 
   // Tính toán các item hiển thị trên trang hiện tại
   const indexOfLastItem = currentPage * itemsPerPage // Vị trí item cuối trên trang hiện tại
@@ -142,7 +120,7 @@ const RoomList = () => {
                   }}>
                   <CardMedia
                     component="img"
-                    image={item.roomImages[0]?.image}
+                    image={item.roomImages[0].image}
                     alt="Chung cư"
                     onClick={() => handlePageChange(item.roomId)}
                     sx={{
