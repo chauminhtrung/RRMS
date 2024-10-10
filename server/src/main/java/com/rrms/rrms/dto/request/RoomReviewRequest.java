@@ -12,6 +12,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoomReviewRequest {
     String username;
+    String fullname;
+    String avatar;
     String comment;
     int rating;
     UUID roomId;

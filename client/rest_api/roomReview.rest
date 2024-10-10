@@ -2,7 +2,7 @@
 
 @contentType = application/json
 
-@roomId = 1678583e-96bb-4d62-af21-9d02133282e7
+@roomId = 7d9c1cb7-fd8b-414b-897c-457dd4ab7960
 
 POST {{baseUrl}}/room-reviews
 Content-Type: {{contentType}}
@@ -10,6 +10,8 @@ Accept: {{contentType}}
 
 {
     "username": "admin",
+    "fullname": "admin",
+    "avatar": "https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2FRose-8B1a.jpg?alt=media&token=e9a3460b-23f5-4fc9-97b0-081aabb67a8c",
     "roomId": "{{roomId}}",
     "comment": "test",
     "rating": 5
