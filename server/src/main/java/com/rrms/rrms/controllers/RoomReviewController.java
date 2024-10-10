@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import com.corundumstudio.socketio.SocketIOServer;
 
 @RestController
 @Slf4j
@@ -20,16 +19,9 @@ import com.corundumstudio.socketio.SocketIOServer;
 @RequiredArgsConstructor
 public class RoomReviewController {
     IRoomReview roomReviewService;
-    SocketIOServer socketIOServer;  // For broadcasting events to clients
-
     @PostMapping
     public ApiResponse<RoomReviewResponse> createRoomReview(@RequestBody RoomReviewRequest roomReviewRequest) {
-        // Save the review to the database
         RoomReviewResponse response = roomReviewService.createRoomReview(roomReviewRequest);
-
-        // Broadcast the new review to all connected clients via socket.io
-        socketIOServer.getBroadcastOperations().sendEvent("newReview", response);
-
         return ApiResponse.<RoomReviewResponse>builder()
                 .message("Create Room Review successfully")
                 .code(HttpStatus.OK.value())
