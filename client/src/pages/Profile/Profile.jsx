@@ -49,7 +49,7 @@ const Profile = ({ setIsAdmin }) => {
   }
 
   useEffect(() => {
-    getProfile('admin').then((res) => {
+    getProfile('dung').then((res) => {
       setProfile(res.data.result)
     })
   }, [])
@@ -81,14 +81,8 @@ const Profile = ({ setIsAdmin }) => {
             <Paper variant="outlined" sx={{ textAlign: 'center', position: 'relative' }}>
               <Box sx={{ position: 'relative', display: 'inline-block', mt: 3 }}>
                 <Avatar
-                  alt="User Avatar"
-                  src={
-                    selectedImage
-                      ? URL.createObjectURL(selectedImage)
-                      : profile.avatar
-                      ? profile.avatar
-                      : 'https://mui.com/static/images/avatar/2.jpg'
-                  }
+                  alt={profile.fullname}
+                  src={selectedImage ? URL.createObjectURL(selectedImage) : profile.avatar}
                   sx={{ width: 100, height: 100, margin: 'auto' }}
                 />
                 <IconButton

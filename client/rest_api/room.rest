@@ -22,10 +22,9 @@ Accept: application/json
     "censor": true,
     "priceElectric": 3800,
     "priceWater": 35000,
-    "maxPerson": 2,
+    "maxPersion": 2,
     "rentalStartTime": "2024-03-01",
     "hours": "Tự do",
-    "modelId": "{{motelId}}",
     "roomServices": ["Wifi miễn phí", "Hồ bơi"],
     "roomImages": [
         "https://picsum.photos/1000/700?random=1",
