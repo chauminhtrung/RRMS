@@ -287,7 +287,7 @@ const Detail = ({ setIsAdmin }) => {
                   <Typography>Tiền nước</Typography>
                   {detail.roomServices.map(
                     (item, i) =>
-                      item.service.nameService === 'Nước' && (
+                      item.service.nameService === 'Nước' && (
                         <Typography key={i}>{formatterAmount(item.service.price)}/Khối</Typography>
                       )
                   )}
@@ -300,7 +300,7 @@ const Detail = ({ setIsAdmin }) => {
             {detail.roomServices.map(
               (item, i) =>
                 item.service.nameService !== 'Điện' &&
-                item.service.nameService !== 'Nước' && (
+                item.service.nameService !== 'Nước' && (
                   <Grid item md={3.8} xs={5} key={i}>
                     <Box
                       sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', borderRadius: '5px', p: '10px' }}>
@@ -386,15 +386,7 @@ const Detail = ({ setIsAdmin }) => {
           {currentComments.map((item, i) => (
             <Comment key={i} item={item} roomId={detail.roomId} />
           ))}
-          <UserRaiting
-            roomId={detail.roomId}
-            setReviews={setReviews}
-            username={'dung'}
-            fullname={'Trí Dũng'}
-            avatar={
-              'https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9'
-            }
-          />
+          <UserRaiting roomId={detail.roomId} setReviews={setReviews} username={'dung'} fullname={'Trí Dũng'} />
           {/* Giới thiệu trọ khác */}
           <Box
             sx={{

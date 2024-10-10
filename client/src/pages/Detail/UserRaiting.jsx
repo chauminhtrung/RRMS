@@ -31,7 +31,9 @@ const UserRating = ({ roomId, setReviews, username, fullname, avatar }) => {
         Đánh giá của bạn:
       </Typography>
       <Box sx={{ display: 'flex' }}>
-        <Avatar sx={{ mr: 1 }} src={avatar} />
+        <Avatar sx={{ mr: 1 }} src={avatar}>
+          {fullname[0]}
+        </Avatar>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Rating
             sx={{ my: 'auto' }}

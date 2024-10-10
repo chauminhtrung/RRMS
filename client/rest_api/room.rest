@@ -25,7 +25,6 @@ Accept: application/json
     "maxPerson": 2,
     "rentalStartTime": "2024-03-01",
     "hours": "Tự do",
-    "modelId": "{{motelId}}",
     "roomServices": ["Wifi miễn phí", "Hồ bơi"],
     "roomImages": [
         "https://picsum.photos/1000/700?random=1",

@@ -27,7 +27,9 @@ const UserDetail = ({ item }) => {
         position: 'sticky',
         top: 20,
       }}>
-      <Avatar alt="Remy Sharp" sx={{ height: '75px', width: '75px' }} src="https://picsum.photos/500/500?random=5" />
+      <Avatar sx={{ height: '75px', width: '75px' }} src={item.avatar}>
+        {item?.owner[0]}
+      </Avatar>
       <Typography variant="subtitle1">Chủ nhà: {item.owner}</Typography>
       <Typography sx={{ color: item.censor ? 'lime' : 'red' }} variant="overline">
         {item.censor ? 'Đã được chứng thực' : 'Chưa chứng thực'}
