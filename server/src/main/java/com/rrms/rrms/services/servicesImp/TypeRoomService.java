@@ -28,7 +28,11 @@ public class TypeRoomService implements ITypeRoom {
         if (typeRoomRepository.findByName(typeRoomRequest.getName()).isPresent()) {
             throw new AppException(ErrorCode.TYPE_ROOM_EXIST);
         }
-        TypeRoom typeRoom = typeRoomRepository.save(typeRoomMapper.toTypeRoom(typeRoomRequest));
+
+        TypeRoom typeRoom = typeRoomMapper.toTypeRoom(typeRoomRequest);
+
+        typeRoom = typeRoomRepository.save(typeRoom);
+
         return typeRoomMapper.toTypeRoomResponse(typeRoom);
     }
 }

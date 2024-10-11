@@ -94,29 +94,30 @@ public class DB {
                     "Phòng Suite"
                 };
 
-                Motel motel;
-                TypeRoom typeRoom;
-                Room room = null;
-
                 for (int i = 0; i < roomsLength; i++) {
                     Faker faker = new Faker(new Locale("vi"));
 
-                    motel = new Motel();
+                    // Create and save the motel
+                    Motel motel = new Motel();
                     motel.setAccount(accountRepository.findByUsername("admin").get());
                     motel.setMotelName(faker.address().cityName());
                     motel.setAddress(faker.address().fullAddress());
                     motel.setArea((double) faker.number().numberBetween(50, 200));
                     motel.setAveragePrice((long) faker.number().numberBetween(500000, 5000000));
+                    motelRepository.save(motel); // Save motel first
 
-                    typeRoom = new TypeRoom();
+                    // Create and save the TypeRoom
+                    TypeRoom typeRoom = new TypeRoom();
                     typeRoom.setName(faker.options().option(typeRoomNames));
+                    typeRoomRepository.save(typeRoom); // Save TypeRoom first
 
-                    room = new Room();
+                    // Create and save the Room
+                    Room room = new Room();
                     room.setDeposit(faker.number().randomDouble(2, 500000, 5000000));
                     room.setHours(faker.options().option("Tự do", "6:00 AM - 12:00 PM", "1:00 PM - 6:00 PM"));
                     room.setRentalStartTime(LocalDate.now());
                     room.setMotel(motel);
-                    room.setTypeRoom(typeRoom);
+                    room.setTypeRoom(typeRoom); // Now typeRoom is saved
                     room.setNameRoom(faker.address().city());
                     room.setDescription(faker.lorem().paragraph());
                     room.setAvailable(faker.bool().bool());
@@ -124,19 +125,8 @@ public class DB {
                     room.setPrice(faker.number().randomDouble(2, 500000, 5000000));
                     room.setMaxPerson(faker.number().numberBetween(1, 5));
 
-                    typeRoomRepository.save(typeRoom);
-                    motelRepository.save(motel);
-                    roomRepository.save(room);
+                    roomRepository.save(room); // Now it's safe to save Room
                     log.info("Room created");
-
-                    RoomReview roomReview = new RoomReview();
-                    roomReview.setAccount(
-                            accountRepository.findByUsername("admin").get());
-                    roomReview.setComment(faker.lorem().sentence());
-                    roomReview.setRating(faker.number().numberBetween(1, 5));
-                    roomReview.setRoom(room);
-                    roomReviewRepository.save(roomReview);
-                    log.info("Room review created");
 
                     Service service1 = serviceRepository.save(Service.builder()
                             .typeService("Tiện nghi")

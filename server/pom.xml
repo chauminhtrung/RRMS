@@ -61,17 +61,12 @@
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
-
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-        </dependency>
-
+        
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
-
+        
         <!-- Jackson Datatype JSR310: Hỗ trợ xử lý kiểu dữ liệu ngày tháng (Java 8 Date/Time API) trong JSON -->
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
@@ -240,6 +235,10 @@
                         <exclude>com/rrms/rrms</exclude>
                         <exclude>com/rrms/rrms/mapper/**</exclude>
                         <exclude>com/rrms/rrms/configs/**</exclude>
+                        <exclude>com/rrms/rrms/dto/**</exclude>
+                        <exclude>com/rrms/rrms/runner/**</exclude>
+                        <exclude>com/rrms/rrms/database/**</exclude>
+                        <exclude>com/rrms/rrms/exceptions/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>

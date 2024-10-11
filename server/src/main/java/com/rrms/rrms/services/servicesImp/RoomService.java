@@ -53,9 +53,8 @@ public class RoomService implements IRoomService {
         List<TypeRoom> typeRooms = typeRoomRepository.findAllByName(roomRequest.getTypeRoomName());
         TypeRoom typeRoom;
         if (typeRooms.isEmpty()) {
-            typeRoom = typeRoomRepository.save(TypeRoom.builder()
-                    .name(roomRequest.getTypeRoomName())
-                    .build());
+            typeRoom = typeRoomRepository.save(
+                    TypeRoom.builder().name(roomRequest.getTypeRoomName()).build());
         } else {
             typeRoom = typeRooms.get(0);
         }
