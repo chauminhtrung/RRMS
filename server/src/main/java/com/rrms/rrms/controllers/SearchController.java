@@ -38,23 +38,24 @@ public class SearchController {
     }
 
     @GetMapping("/name")
-    public ApiResponse<List<Room>> searchName(@RequestParam("name") String name) {
-        ApiResponse<List<Room>> apiResponse = new ApiResponse<>();
+    public ApiResponse<List<RoomDetailResponse>> searchName(@RequestParam("name") String name) {
+        ApiResponse<List<RoomDetailResponse>> apiResponse = new ApiResponse<>();
+        List<RoomDetailResponse> rooms = searchService.listRoomByName(name);
         apiResponse.setCode(HttpStatus.OK.value());
         apiResponse.setMessage("Tìm kiếm thành công");
-        apiResponse.setResult(searchService.listRoomByName(name));
+        apiResponse.setResult(rooms);
         return apiResponse;
     }
 
-    @GetMapping("/price")
-    public ApiResponse<List<Room>> searchPrice(
-            @RequestParam("startPrice") Double startPrice, @RequestParam("endPrice") Double endPrice) {
-        ApiResponse<List<Room>> apiResponse = new ApiResponse<>();
-        List<Room> list = searchService.listRoomPrice(startPrice, endPrice);
-        apiResponse.setCode(HttpStatus.OK.value());
-        apiResponse.setMessage("Tìm kiếm thành công");
-        apiResponse.setResult(list);
-
-        return apiResponse;
-    }
+//    @GetMapping("/price")
+//    public ApiResponse<List<Room>> searchPrice(
+//            @RequestParam("startPrice") Double startPrice, @RequestParam("endPrice") Double endPrice) {
+//        ApiResponse<List<Room>> apiResponse = new ApiResponse<>();
+//        List<Room> list = searchService.listRoomPrice(startPrice, endPrice);
+//        apiResponse.setCode(HttpStatus.OK.value());
+//        apiResponse.setMessage("Tìm kiếm thành công");
+//        apiResponse.setResult(list);
+//
+//        return apiResponse;
+//    }
 }

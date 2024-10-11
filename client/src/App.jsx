@@ -26,6 +26,7 @@ import Heart from './pages/cart/Heart'
 import RRMS from './pages/RRMS/RRMS'
 import AdminManageBoker from './pages/admin/AdminManageBoker/AdminManageBoker'
 import PostRooms from './pages/PostRooms/PostRooms'
+import AdminManage from './pages/admin/AdminManage/AdminManage'
 
 // import TestPage from './pages/TestPage'
 // import ValidCaptcha from './components/ValidCaptcha'
@@ -60,6 +61,7 @@ function App() {
           {/* Admin page */}
           <Route path="/admin" element={<MainManagement setIsAdmin={setIsAdmin} />} />
           <Route path="/adminBoker" element={<AdminManageBoker setIsAdmin={setIsAdmin} />} />
+          <Route path="/adminManage" element={<AdminManage setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminStatis" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminManagerBoard" element={<AdminManagerBoard setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminManagerGroup" element={<AdminManagerGroup setIsAdmin={setIsAdmin} />} />

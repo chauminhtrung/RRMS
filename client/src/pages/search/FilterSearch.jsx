@@ -4,7 +4,8 @@ import { Box, Typography, Select, MenuItem, Slider } from '@mui/material'
 import ModalSearch from './ModalSearch'
 
 import './SearchWHome.css'
-function FilterSearch() {
+import { searchByName } from '~/apis/apiClient'
+function FilterSearch({ setSearchData }) {
   const [open, setOpen] = useState(false)
 
   const handleOpen = () => setOpen(true)
@@ -13,12 +14,24 @@ function FilterSearch() {
   const [range, setRange] = useState([0, 50])
   const [selectedValue, setSelectedValue] = useState('Dưới 50 triệu')
   const [area, setArea] = useState([0, 50])
-  const [selectedValueArea, setSelectedValueArea] = useState('Dưới 50 m2')
+  const [keyword, setKeyword] = useState('')
 
+  const [selectedValueArea, setSelectedValueArea] = useState('Dưới 50 m2')
+  // const handleInputChange = (event) => {
+  //   setSearchValue(event.target.value)
+  // }
+
+  const handleSearch = (e) => {
+    setKeyword(e.target.value)
+    searchByName(keyword).then((res) => {
+      console.log(res.data.result)
+
+      setSearchData(res.data.result)
+    })
+  }
   const handleAreaChange = (event) => {
     const selectedValueArea = event.target.value
 
-    // Cập nhật state cho Select và Slider dựa trên giá trị của MenuItem
     switch (selectedValueArea) {
       case '1-5':
         setArea([1, 5])
@@ -38,12 +51,11 @@ function FilterSearch() {
     setSelectedValueArea(event.target.value)
   }
   const handleSliderChangeArea = (event, newValue) => {
-    setArea(newValue) // Cập nhật khoảng giá theo Slider
+    setArea(newValue)
 
-    // Chuyển đổi khoảng giá của Slider thành chuỗi tương ứng để hiển thị trong Select
     const [min, max] = newValue
     if (min === 0 && max === 50) {
-      setSelectedValueArea('Dưới 50 triệu')
+      setSelectedValueArea('Dưới 50 m2')
     } else if (min === 1 && max === 5) {
       setSelectedValueArea('1-5')
     } else if (min === 5 && max === 10) {
@@ -51,36 +63,34 @@ function FilterSearch() {
     } else if (min === 10 && max === 15) {
       setSelectedValueArea('10-15')
     } else {
-      setSelectedValueArea(`Giá từ ${min} m2 đến ${max} m2`) // Hiển thị giá trị tùy chỉnh khi di chuyển Slider
+      setSelectedValueArea(`Giá từ ${min} m2 đến ${max} m2`)
     }
   }
 
   const handleGiaChange = (event) => {
     const selectedValue = event.target.value
 
-    // Cập nhật state cho Select và Slider dựa trên giá trị của MenuItem
     switch (selectedValue) {
       case '1-5':
-        setRange([1, 5]) // Từ 1 triệu - 5 triệu
+        setRange([1, 5])
         break
       case '5-10':
-        setRange([5, 10]) // Từ 5 triệu - 10 triệu
+        setRange([5, 10])
         break
       case '10-15':
-        setRange([10, 15]) // Từ 10 triệu - 15 triệu
+        setRange([10, 15])
         break
       case '0-50':
-        setRange([0, 50]) // Dưới 50 triệu
+        setRange([0, 50])
         break
       default:
-        setRange([0, 50]) // Giá trị mặc định khi không khớp
+        setRange([0, 50])
     }
     setSelectedValue(event.target.value)
   }
   const handleSliderChange = (event, newValue) => {
-    setRange(newValue) // Cập nhật khoảng giá theo Slider
+    setRange(newValue)
 
-    // Chuyển đổi khoảng giá của Slider thành chuỗi tương ứng để hiển thị trong Select
     const [min, max] = newValue
     if (min === 0 && max === 50) {
       setSelectedValue('Dưới 50 triệu')
@@ -91,7 +101,7 @@ function FilterSearch() {
     } else if (min === 10 && max === 15) {
       setSelectedValue('10-15')
     } else {
-      setSelectedValue(`Giá từ ${min} triệu đến ${max} triệu`) // Hiển thị giá trị tùy chỉnh khi di chuyển Slider
+      setSelectedValue(`Giá từ ${min} triệu đến ${max} triệu`)
     }
   }
   // const valuetext = (value) => {
@@ -199,14 +209,14 @@ function FilterSearch() {
                 <ul id="search-bar">
                   <li className="keyword" style={{ position: 'relative' }}>
                     <input
-                      id="search-map-input"
                       type="text"
-                      name="search-map-input"
                       className="form-control w-100 "
                       data-type='["Nhập nơi học tập &amp; làm việc...", "Nhập công ty làm việc...", "Nhập trường học tập...", "Nhập địa điểm nổi tiếng..."]'
                       data-period="400"
                       placeholder="Nhập nơi học tập &amp; làm việc..."
                       autoComplete="off"
+                      onChange={handleSearch}
+                      // onChange={handleInputChange}
                     />
                     <div className="guid-search id-1727803392186 dropdown" style={{ display: 'none' }}>
                       Suggest search...
@@ -305,7 +315,12 @@ function FilterSearch() {
                 </div>
               </div>
               <div className="col-md-6 col-lg-1 align-self-end mt-2  mb-3">
-                <button id="btn-s-h" className="before-background" aria-label="Tìm kiếm" title="Tìm kiếm">
+                <button
+                  id="btn-s-h"
+                  className="before-background"
+                  aria-label="Tìm kiếm"
+                  title="Tìm kiếm"
+                  onClick={handleSearch}>
                   Tìm kiếm
                 </button>
               </div>

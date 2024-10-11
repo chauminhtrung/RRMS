@@ -50,7 +50,7 @@ const NavAdmin = ({ setIsAdmin }) => {
                 </ul>
                 <ul className="topbar-items main-menu-right navbar-nav">
                   <li className="nav-item menu-item active">
-                    <Link to="#" className="nav-link ">
+                    <Link to="/admin" className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -113,7 +113,7 @@ const NavAdmin = ({ setIsAdmin }) => {
                     </Link>
                   </li>
                   <li className="nav-item menu-item ">
-                    <Link to="/mo-gioi" className="nav-link ">
+                    <Link to="/adminBoker" className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"

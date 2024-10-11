@@ -12,6 +12,7 @@ import com.rrms.rrms.services.IMotelService;
 
 @RestController
 @RequestMapping("/motels")
+@CrossOrigin("*")
 public class MotelController {
     @Autowired
     private IMotelService motelService;
