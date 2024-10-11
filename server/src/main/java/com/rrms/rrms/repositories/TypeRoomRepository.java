@@ -13,5 +13,4 @@ public interface TypeRoomRepository extends JpaRepository<TypeRoom, UUID> {
 
     List<TypeRoom> findAllByName(String name);
 
-    TypeRoom merge(TypeRoom typeRoom);
 }

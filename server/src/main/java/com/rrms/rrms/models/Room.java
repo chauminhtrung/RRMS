@@ -29,7 +29,7 @@ public class Room {
     @JoinColumn(name = "motel_id", nullable = false)
     private Motel motel;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "type_room_id", nullable = false)
     private TypeRoom typeRoom;
 
