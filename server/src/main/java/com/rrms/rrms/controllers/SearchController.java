@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.dto.response.RoomDetailResponse;
 import com.rrms.rrms.models.Room;
-import com.rrms.rrms.services.IRoomService;
+import com.rrms.rrms.services.IRoom;
 import com.rrms.rrms.services.ISearchService;
 
 import lombok.AccessLevel;
@@ -25,7 +25,7 @@ public class SearchController {
 
     ISearchService searchService;
 
-    private final IRoomService roomService;
+    private final IRoom roomService;
 
     @GetMapping
     public ApiResponse<List<RoomDetailResponse>> getRoom() {

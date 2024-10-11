@@ -25,14 +25,15 @@ public class TypeRoomService implements ITypeRoom {
 
     @Override
     public TypeRoomResponse createTypeRoom(TypeRoomRequest typeRoomRequest) {
-        if (typeRoomRepository.findByName(typeRoomRequest.getName()).isPresent()) {
-            throw new AppException(ErrorCode.TYPE_ROOM_EXIST);
-        }
-
+        typeRoomRepository.findByName(typeRoomRequest.getName())
+                .ifPresent(existingTypeRoom -> {
+                    throw new AppException(ErrorCode.TYPE_ROOM_EXIST);
+                });
+        
         TypeRoom typeRoom = typeRoomMapper.toTypeRoom(typeRoomRequest);
-
         typeRoom = typeRoomRepository.save(typeRoom);
-
+        
         return typeRoomMapper.toTypeRoomResponse(typeRoom);
     }
+
 }
