@@ -21,6 +21,6 @@ public class TypeRoom {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID typeRoomId;
 
-    @Column(columnDefinition = "VARCHAR(50)")
+    @Column(columnDefinition = "VARCHAR(50)", unique = true)
     private String name;
 }

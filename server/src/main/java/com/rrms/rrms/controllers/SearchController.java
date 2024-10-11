@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.dto.response.RoomDetailResponse;
-import com.rrms.rrms.models.Room;
-import com.rrms.rrms.services.IRoomService;
+import com.rrms.rrms.services.IRoom;
 import com.rrms.rrms.services.ISearchService;
 
 import lombok.AccessLevel;
@@ -25,7 +24,7 @@ public class SearchController {
 
     ISearchService searchService;
 
-    private final IRoomService roomService;
+    private final IRoom roomService;
 
     @GetMapping
     public ApiResponse<List<RoomDetailResponse>> getRoom() {
@@ -47,15 +46,15 @@ public class SearchController {
         return apiResponse;
     }
 
-//    @GetMapping("/price")
-//    public ApiResponse<List<Room>> searchPrice(
-//            @RequestParam("startPrice") Double startPrice, @RequestParam("endPrice") Double endPrice) {
-//        ApiResponse<List<Room>> apiResponse = new ApiResponse<>();
-//        List<Room> list = searchService.listRoomPrice(startPrice, endPrice);
-//        apiResponse.setCode(HttpStatus.OK.value());
-//        apiResponse.setMessage("Tìm kiếm thành công");
-//        apiResponse.setResult(list);
-//
-//        return apiResponse;
-//    }
+    //    @GetMapping("/price")
+    //    public ApiResponse<List<Room>> searchPrice(
+    //            @RequestParam("startPrice") Double startPrice, @RequestParam("endPrice") Double endPrice) {
+    //        ApiResponse<List<Room>> apiResponse = new ApiResponse<>();
+    //        List<Room> list = searchService.listRoomPrice(startPrice, endPrice);
+    //        apiResponse.setCode(HttpStatus.OK.value());
+    //        apiResponse.setMessage("Tìm kiếm thành công");
+    //        apiResponse.setResult(list);
+    //
+    //        return apiResponse;
+    //    }
 }

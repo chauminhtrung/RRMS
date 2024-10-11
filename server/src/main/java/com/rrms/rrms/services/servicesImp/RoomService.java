@@ -18,7 +18,7 @@ import com.rrms.rrms.models.Room;
 import com.rrms.rrms.models.RoomImage;
 import com.rrms.rrms.models.TypeRoom;
 import com.rrms.rrms.repositories.*;
-import com.rrms.rrms.services.IRoomService;
+import com.rrms.rrms.services.IRoom;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ import lombok.experimental.FieldDefaults;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public class RoomService implements IRoomService {
+public class RoomService implements IRoom {
     private static final Logger log = LoggerFactory.getLogger(RoomService.class);
     RoomRepository roomRepository;
     MotelRepository motelRepository;

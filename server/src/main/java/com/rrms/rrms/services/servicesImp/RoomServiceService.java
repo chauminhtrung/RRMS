@@ -12,7 +12,7 @@ import com.rrms.rrms.models.RoomService;
 import com.rrms.rrms.repositories.RoomRepository;
 import com.rrms.rrms.repositories.RoomServiceRepository;
 import com.rrms.rrms.repositories.ServiceRepository;
-import com.rrms.rrms.services.IRoomServiceService;
+import com.rrms.rrms.services.IRoomService;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import lombok.experimental.FieldDefaults;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public class RoomServiceService implements IRoomServiceService {
+public class RoomServiceService implements IRoomService {
 
     RoomServiceRepository roomServiceRepository;
     RoomRepository roomRepository;

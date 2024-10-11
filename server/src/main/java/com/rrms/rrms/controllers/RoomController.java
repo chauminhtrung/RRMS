@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.rrms.rrms.dto.request.RoomRequest;
 import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.dto.response.RoomDetailResponse;
-import com.rrms.rrms.services.IRoomService;
+import com.rrms.rrms.services.IRoom;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class RoomController {
 
-    IRoomService roomService;
+    IRoom roomService;
 
     @GetMapping("/{roomId}")
     public ApiResponse<RoomDetailResponse> getRoom(@PathVariable("roomId") UUID roomId) {
