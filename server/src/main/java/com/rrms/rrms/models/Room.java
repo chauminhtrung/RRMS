@@ -29,8 +29,8 @@ public class Room {
     @JoinColumn(name = "motel_id", nullable = false)
     private Motel motel;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "type_room_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "type_room_id")
     private TypeRoom typeRoom;
 
     @Column(name = "name_room", columnDefinition = "VARCHAR(255)", nullable = false)
@@ -76,7 +76,6 @@ public class Room {
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore // Thêm @JsonIgnore để bỏ qua ánh xạ này khi tuần tự hóa
     private List<RoomImage> roomImages;
-
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore // Thêm @JsonIgnore để bỏ qua ánh xạ này khi tuần tự hóa

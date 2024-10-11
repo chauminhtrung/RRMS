@@ -2,7 +2,6 @@ package com.rrms.rrms.controllers;
 
 import static org.mockito.Mockito.when;
 
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -16,7 +15,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -24,22 +22,13 @@ import com.rrms.rrms.dto.request.TypeRoomRequest;
 import com.rrms.rrms.dto.response.TypeRoomResponse;
 import com.rrms.rrms.services.ITypeRoom;
 
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
-
 @SpringBootTest
-@Slf4j
 @AutoConfigureMockMvc
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @TestPropertySource("/test.properties")
 public class TypeRoomControllerTest {
 
     @Autowired
     MockMvc mockMvc;
-
-    @Autowired
-    EntityManager entityManager;
 
     @MockBean
     ITypeRoom typeRoomService;

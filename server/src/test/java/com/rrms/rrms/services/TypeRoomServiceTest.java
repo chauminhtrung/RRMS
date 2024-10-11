@@ -7,14 +7,12 @@ import static org.mockito.Mockito.*;
 
 import java.util.Optional;
 
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.TestPropertySource;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.rrms.rrms.dto.request.TypeRoomRequest;
 import com.rrms.rrms.dto.response.TypeRoomResponse;
@@ -23,26 +21,18 @@ import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.mapper.TypeRoomMapper;
 import com.rrms.rrms.models.TypeRoom;
 import com.rrms.rrms.repositories.TypeRoomRepository;
+import com.rrms.rrms.services.servicesImp.TypeRoomService;
 
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.annotation.Transactional;
-
-@SpringBootTest
-@Slf4j
-@AutoConfigureMockMvc
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@TestPropertySource("/test.properties")
+@ExtendWith(MockitoExtension.class)
 public class TypeRoomServiceTest {
 
-    @Autowired
-    ITypeRoom typeRoomService;
+    @InjectMocks
+    TypeRoomService typeRoomService;
 
-    @MockBean
+    @Mock
     TypeRoomRepository typeRoomRepository;
 
-    @MockBean
+    @Mock
     TypeRoomMapper typeRoomMapper;
 
     TypeRoomRequest typeRoomRequest;
@@ -64,11 +54,11 @@ public class TypeRoomServiceTest {
         when(typeRoomMapper.toTypeRoom(typeRoomRequest)).thenReturn(typeRoom);
         when(typeRoomRepository.save(typeRoom)).thenReturn(typeRoom);
         when(typeRoomMapper.toTypeRoomResponse(typeRoom)).thenReturn(typeRoomResponse);
-
+        
         var response = typeRoomService.createTypeRoom(typeRoomRequest);
-
+        
         assertEquals(typeRoomResponse.getName(), response.getName());
-
+        
         verify(typeRoomRepository).findByName(typeRoomRequest.getName());
         verify(typeRoomMapper).toTypeRoom(typeRoomRequest);
         verify(typeRoomRepository).save(typeRoom);

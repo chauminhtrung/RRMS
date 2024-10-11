@@ -87,7 +87,7 @@ public class DB {
                 TypeRoom typeRoom = new TypeRoom();
                 typeRoom.setName("Trọ");
                 typeRoomRepository.save(typeRoom);
-                
+
                 for (int i = 0; i < roomsLength; i++) {
                     Faker faker = new Faker(new Locale("vi"));
 
