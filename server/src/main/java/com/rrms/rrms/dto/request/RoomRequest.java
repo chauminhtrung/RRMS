@@ -2,7 +2,6 @@ package com.rrms.rrms.dto.request;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

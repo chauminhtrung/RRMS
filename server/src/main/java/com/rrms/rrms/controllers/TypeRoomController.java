@@ -29,7 +29,7 @@ public class TypeRoomController {
 
         log.info("Create type room: {}", typeRoomRequest);
         return ApiResponse.<TypeRoomResponse>builder()
-                .code(HttpStatus.OK.value())
+                .code(HttpStatus.CREATED.value())
                 .message("Create type room successfully")
                 .result(typeRoomService.createTypeRoom(typeRoomRequest))
                 .build();
