@@ -11,7 +11,7 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import Item from './Item'
 import UserDetail from './UserDetail'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
@@ -44,34 +44,53 @@ import UserRaiting from './UserRaiting'
 
 const Detail = ({ setIsAdmin }) => {
   const [detail, setDetail] = useState(null)
-  const [raiting, setRaiting] = useState(0)
   const [showArrows, setShowArrows] = useState(false)
   const [roomRating, setRoomRating] = useState(0)
+  const { roomId } = useParams()
+  const [currentPage, setCurrentPage] = useState(1)
+  const [commentsPerPage] = useState(5)
+
   useEffect(() => {
     setIsAdmin(false)
+    window.scrollTo(0, 0)
   }, [])
 
-  const calculateAvgRaiting = () => {
+  const calculateAvgRating = () => {
     if (detail && detail.roomReviews && detail.roomReviews.length > 0) {
       let sum = 0
       detail.roomReviews.forEach((item) => {
         sum += item.rating
       })
-      setRoomRating(sum / detail.roomReviews.length)
+      const avgRating = (sum / detail.roomReviews.length).toFixed(2)
+      setRoomRating(Number(avgRating))
     } else {
       setRoomRating(0)
     }
-    console.log(roomRating)
   }
 
   useEffect(() => {
-    getDetail('09176759-1660-4581-bd47-1a46f876a6a6').then((res) => {
+    getDetail(roomId).then((res) => {
       setDetail(res.data.result)
     })
-  }, [])
+  }, [roomId])
+
+  const indexOfLastComment = currentPage * commentsPerPage
+  const indexOfFirstComment = indexOfLastComment - commentsPerPage
+  const currentComments = detail?.roomReviews.slice(indexOfFirstComment, indexOfLastComment)
+
+  const paginate = (event, value) => {
+    setCurrentPage(value)
+  }
+
+  const setReviews = (newReview) => {
+    setDetail((prevDetail) => ({
+      ...prevDetail,
+      roomReviews: [...prevDetail.roomReviews, newReview], // Thêm bình luận mới
+    }))
+  }
 
   useEffect(() => {
-    calculateAvgRaiting()
+    calculateAvgRating()
   }, [detail])
 
   const share = async () => {
@@ -210,10 +229,16 @@ const Detail = ({ setIsAdmin }) => {
                 <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>Ngày bắt đầu cho thuê:</Typography>
                 {detail.rentalStartTime}
               </Typography>
-              <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
-                <ShieldOutlinedIcon sx={{ mr: 0.5 }} />
+              <Typography
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
+                  color: detail.censor ? 'lime' : 'red',
+                }}>
+                <ShieldOutlinedIcon sx={{ mr: 0.5, color: '#6B6B6B' }} />
                 <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>Kiểm duyệt: </Typography>
-                {detail.motel.account.fullname}
+                {detail.censor ? 'Đã kiểm duyệt' : 'Chưa kiểm duyệt'}
               </Typography>
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <GroupIcon sx={{ mr: 0.5 }} />
@@ -246,7 +271,12 @@ const Detail = ({ setIsAdmin }) => {
                 <ElectricBoltIcon />
                 <Box>
                   <Typography>Tiền điện</Typography>
-                  <Typography>{formatterAmount(100000)}/Kw</Typography>
+                  {detail.roomServices.map(
+                    (item, i) =>
+                      item.service.nameService === 'Điện' && (
+                        <Typography key={i}>{formatterAmount(item.service.price)}/Kw</Typography>
+                      )
+                  )}
                 </Box>
               </Box>
             </Grid>
@@ -255,20 +285,30 @@ const Detail = ({ setIsAdmin }) => {
                 <WaterDropOutlinedIcon />
                 <Box>
                   <Typography>Tiền nước</Typography>
-                  <Typography>{formatterAmount(100000)}/Khối</Typography>
+                  {detail.roomServices.map(
+                    (item, i) =>
+                      item.service.nameService === 'Nước' && (
+                        <Typography key={i}>{formatterAmount(item.service.price)}/Khối</Typography>
+                      )
+                  )}
                 </Box>
               </Box>
             </Grid>
           </Grid>
           <Typography variant="h5">Điểm (+)</Typography>
           <Grid container sx={{ gap: 2, justifyContent: isMobile ? 'center' : 'start', my: 2 }}>
-            {detail.roomServices.map((item, i) => (
-              <Grid item md={3.8} xs={5} key={i}>
-                <Box sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', borderRadius: '5px', p: '10px' }}>
-                  {item.service.nameService}
-                </Box>
-              </Grid>
-            ))}
+            {detail.roomServices.map(
+              (item, i) =>
+                item.service.nameService !== 'Điện' &&
+                item.service.nameService !== 'Nước' && (
+                  <Grid item md={3.8} xs={5} key={i}>
+                    <Box
+                      sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', borderRadius: '5px', p: '10px' }}>
+                      {item.service.nameService}
+                    </Box>
+                  </Grid>
+                )
+            )}
           </Grid>
           <Box sx={{ mb: 2, display: isMobile ? 'block' : 'none' }}>
             <UserDetail item={detail} />
@@ -334,13 +374,19 @@ const Detail = ({ setIsAdmin }) => {
           </Grid>
           <BannerHorizontal />
           <RaitingAvg reviews={detail.roomReviews} rating={roomRating} />
-          {detail.roomReviews.map((item, i) => (
-            <Comment key={i} item={item} />
-          ))}
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Pagination count={10} color="primary.main" size="medium" />
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+            <Pagination
+              count={Math.ceil(detail.roomReviews.length / commentsPerPage)} // Tổng số trang
+              page={currentPage} // Trang hiện tại
+              onChange={paginate} // Hàm xử lý sự kiện khi chuyển trang
+              color="primary.main"
+              size="medium"
+            />
           </Box>
-          <UserRaiting raiting={raiting} setRaiting={setRaiting} />
+          {currentComments.map((item, i) => (
+            <Comment key={i} item={item} roomId={detail.roomId} />
+          ))}
+          <UserRaiting roomId={detail.roomId} setReviews={setReviews} username={'dung'} fullname={'Trí Dũng'} />
           {/* Giới thiệu trọ khác */}
           <Box
             sx={{

@@ -30,7 +30,7 @@ public class Room {
     private Motel motel;
 
     @ManyToOne
-    @JoinColumn(name = "type_room_id", nullable = false)
+    @JoinColumn(name = "type_room_id")
     private TypeRoom typeRoom;
 
     @Column(name = "name_room", columnDefinition = "VARCHAR(255)", nullable = false)
@@ -53,6 +53,15 @@ public class Room {
 
     @Column(name = "available", columnDefinition = "BOOLEAN")
     private Boolean available;
+
+    @Column(name = "censor", columnDefinition = "BOOLEAN")
+    private Boolean censor;
+
+    @Column(name = "owner", columnDefinition = "NVARCHAR(255)")
+    private String owner;
+
+    @Column(name = "phone", columnDefinition = "VARCHAR(12)")
+    private String phone;
 
     @Column(name = "hours", columnDefinition = "NVARCHAR(255)")
     private String hours;

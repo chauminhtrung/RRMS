@@ -26,6 +26,7 @@ import Heart from './pages/cart/Heart'
 import RRMS from './pages/RRMS/RRMS'
 import AdminManageBoker from './pages/admin/AdminManageBoker/AdminManageBoker'
 import PostRooms from './pages/PostRooms/PostRooms'
+import AdminManage from './pages/admin/AdminManage/AdminManage'
 
 // import TestPage from './pages/TestPage'
 // import ValidCaptcha from './components/ValidCaptcha'
@@ -46,7 +47,7 @@ function App() {
           <Route path="/" element={<Home setIsAdmin={setIsAdmin} />} />
           <Route path="/chart" element={<Chart setIsAdmin={setIsAdmin} />} />
           <Route path="/search" element={<Search setIsAdmin={setIsAdmin} />} />
-          <Route path="/detail" element={<Detail setIsAdmin={setIsAdmin} />} />
+          <Route path="/detail/:roomId" element={<Detail setIsAdmin={setIsAdmin} />} />
           <Route path="/forgot-password" element={<Forgot_Password setIsAdmin={setIsAdmin} />} />
           <Route path="/login" element={<Login setIsAdmin={setIsAdmin} />} />
           <Route path="/contact" element={<Contact setIsAdmin={setIsAdmin} />} />
@@ -60,6 +61,7 @@ function App() {
           {/* Admin page */}
           <Route path="/admin" element={<MainManagement setIsAdmin={setIsAdmin} />} />
           <Route path="/adminBoker" element={<AdminManageBoker setIsAdmin={setIsAdmin} />} />
+          <Route path="/adminManage" element={<AdminManage setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminStatis" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminManagerBoard" element={<AdminManagerBoard setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminManagerGroup" element={<AdminManagerGroup setIsAdmin={setIsAdmin} />} />

@@ -1,7 +1,5 @@
 package com.rrms.rrms.dto.request;
 
-import java.util.UUID;
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -10,11 +8,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RoomReviewRequest {
+public class ChangePasswordRequest {
     String username;
-    String fullname;
-    String avatar;
-    String comment;
-    int rating;
-    UUID roomId;
+    String oldPassword;
+    String newPassword;
 }

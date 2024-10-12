@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import com.rrms.rrms.dto.request.RoomServiceRequest;
 import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.dto.response.RoomServiceResponse;
-import com.rrms.rrms.services.IRoomServiceService;
+import com.rrms.rrms.services.IRoomService;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class RoomServiceController {
-    IRoomServiceService roomServiceService;
+    IRoomService roomServiceService;
 
     @PostMapping
     public ApiResponse<RoomServiceResponse> createRoomService(@RequestBody RoomServiceRequest roomServiceRequest) {

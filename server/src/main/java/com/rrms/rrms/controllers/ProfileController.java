@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import com.rrms.rrms.dto.request.AccountRequest;
+import com.rrms.rrms.dto.request.ChangePasswordRequest;
 import com.rrms.rrms.dto.response.AccountResponse;
 import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.services.IAccountService;
@@ -39,6 +40,16 @@ public class ProfileController {
                 .code(HttpStatus.OK.value())
                 .message("Update profile successfully")
                 .result(accountResponse)
+                .build();
+    }
+
+    @PutMapping("/change-password")
+    public ApiResponse<String> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
+        String changePassword = accountService.changePassword(changePasswordRequest);
+        return ApiResponse.<String>builder()
+                .code(HttpStatus.OK.value())
+                .message("Change password successfully")
+                .result(changePassword)
                 .build();
     }
 }

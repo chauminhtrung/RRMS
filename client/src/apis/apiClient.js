@@ -10,6 +10,10 @@ export const getDetail = async (roomId) => {
   return await axios.get(`${env.API_URL}/room/${roomId}`)
 }
 
+export const postReview = async (data) => {
+  return await axios.post(`${env.API_URL}/room-reviews`, data)
+}
+
 export const getProfile = async (username) => {
   return await axios.get(`${env.API_URL}/profile?username=${username}`)
 }
@@ -18,12 +22,24 @@ export const updateProfile = async (data) => {
   return await axios.put(`${env.API_URL}/profile`, data)
 }
 
+export const changePassword = async (data) => {
+  return await axios.put(`${env.API_URL}/profile/change-password`, data)
+}
+
+export const searchByName = async (keyword) => {
+  return await axios.get(`${env.API_URL}/searchs/name?name=${keyword}`)
+}
+
 export const getImages = async () => {
   return await axios.get(`${env.API_URL}/api/images`)
 }
 
 export const uploadImage = async (imageName, url) => {
   return await axios.post(`${env.API_URL}/api/images`, JSON.stringify({ name: imageName, url: url }))
+}
+
+export const postRoom = async (data) => {
+  return await axios.post(`${env.API_URL}/room`, data)
 }
 
 export const getTinhThanh = async () => {
