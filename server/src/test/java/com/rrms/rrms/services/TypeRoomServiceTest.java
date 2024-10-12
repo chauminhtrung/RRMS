@@ -54,11 +54,11 @@ public class TypeRoomServiceTest {
         when(typeRoomMapper.toTypeRoom(typeRoomRequest)).thenReturn(typeRoom);
         when(typeRoomRepository.save(typeRoom)).thenReturn(typeRoom);
         when(typeRoomMapper.toTypeRoomResponse(typeRoom)).thenReturn(typeRoomResponse);
-        
+
         var response = typeRoomService.createTypeRoom(typeRoomRequest);
-        
+
         assertEquals(typeRoomResponse.getName(), response.getName());
-        
+
         verify(typeRoomRepository).findByName(typeRoomRequest.getName());
         verify(typeRoomMapper).toTypeRoom(typeRoomRequest);
         verify(typeRoomRepository).save(typeRoom);

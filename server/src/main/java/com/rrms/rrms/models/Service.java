@@ -1,5 +1,7 @@
 package com.rrms.rrms.models;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.UUID;
 
 import jakarta.persistence.*;
@@ -15,7 +17,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Table(name = "services")
-public class Service {
+public class Service implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

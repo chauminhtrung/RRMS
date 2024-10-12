@@ -1,5 +1,7 @@
 package com.rrms.rrms.dto.response;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.UUID;
 
 import com.rrms.rrms.models.Service;
@@ -14,7 +16,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RoomServiceResponse {
+public class RoomServiceResponse implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     UUID roomServiceId;
     Service service;
