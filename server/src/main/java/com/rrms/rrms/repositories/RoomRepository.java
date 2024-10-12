@@ -1,14 +1,14 @@
 package com.rrms.rrms.repositories;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
+import com.rrms.rrms.models.Account;
+import com.rrms.rrms.models.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.rrms.rrms.models.Room;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public interface RoomRepository extends JpaRepository<Room, UUID> {
 
@@ -17,4 +17,6 @@ public interface RoomRepository extends JpaRepository<Room, UUID> {
     //    List<Room> findAllByNameRoom( String name);
 
     Optional<List<Room>> findAllByPriceBetween(Double startPrice, Double endPrice);
+
+    List<Room> findAllByMotel_Account(Account account);
 }

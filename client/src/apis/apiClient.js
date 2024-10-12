@@ -42,6 +42,10 @@ export const postRoom = async (data) => {
   return await axios.post(`${env.API_URL}/room`, data)
 }
 
+export const getPostRoomTable = async (username) => {
+  return await axios.get(`${env.API_URL}/room/post-room-table?username=${username}`)
+}
+
 export const getTinhThanh = async () => {
   return await axios.get('https://esgoo.net/api-tinhthanh/1/0.htm')
 }

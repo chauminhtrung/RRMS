@@ -34,6 +34,7 @@ import { storage } from '~/configs/firebaseConfig'
 import { v4 } from 'uuid'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
+import TitleAttribute from './TitleAttribute'
 
 const style = {
   position: 'absolute',
@@ -71,45 +72,32 @@ const validationSchema = Yup.object({
     .required('Tiêu đề là bắt buộc.')
     .min(2, 'Tiêu đề phải có ít nhất 2 ký tự.')
     .max(50, 'Tiêu đề không được quá 50 ký tự.'),
-
   typeRoomName: Yup.string().required('Loại phòng là bắt buộc.'),
-
-  owner: Yup.string().required('Tên chủ phòng là bắt buộc.'),
-
-  phone: Yup.string()
-    .required('Số điện thoại là bắt buộc.')
-    .matches(/^[0-9]+$/, 'Số điện thoại chỉ chứa số.')
-    .min(10, 'Số điện thoại phải có ít nhất 10 ký tự.')
-    .max(15, 'Số điện thoại không được quá 15 ký tự.'),
-
+  // owner: Yup.string().required('Tên chủ phòng là bắt buộc.'),
+  // phone: Yup.string()
+  //   .required('Số điện thoại là bắt buộc.')
+  //   .matches(/^[0-9]+$/, 'Số điện thoại chỉ chứa số.')
+  //   .min(10, 'Số điện thoại phải có ít nhất 10 ký tự.')
+  //   .max(15, 'Số điện thoại không được quá 15 ký tự.'),
   description: Yup.string().required('Mô tả là bắt buộc.').max(500, 'Mô tả không được quá 500 ký tự.'),
-
   price: Yup.number().required('Giá phòng là bắt buộc.').min(0, 'Giá phòng phải lớn hơn hoặc bằng 0.'),
-
   deposit: Yup.number().required('Tiền đặt cọc là bắt buộc.').min(0, 'Tiền đặt cọc phải lớn hơn hoặc bằng 0.'),
-
   roomArea: Yup.number()
     .required('Diện tích phòng là bắt buộc.')
     .min(0, 'Diện tích phòng phải lớn hơn hoặc bằng 0.')
     .max(100, 'Diện tích phần phải lớn hơn hoặc bằng 100.'),
-
   maxPerson: Yup.number().required('Số người tối đa là bắt buộc.').min(1, 'Số người tối đa phải lớn hơn hoặc bằng 1.'),
-
   rentalStartTime: Yup.date()
     .required('Thời gian bắt đầu cho thuê là bắt buộc.')
     .min(new Date(), 'Thời gian bắt đầu không được là trong quá khứ.'),
-
   roomServices: Yup.array()
     .of(Yup.string())
     .min(1, 'Ít nhất một dịch vụ phải được chọn.')
     .required('Dịch vụ là bắt buộc.'),
-
   roomImages: Yup.array().of(Yup.string().url('Hình ảnh phải là một URL hợp lệ.')).min(1, 'Cần ít nhất một hình ảnh.'),
-
   rules: Yup.array()
     .of(Yup.string().required('Quy định là bắt buộc.'))
     .required('Ít nhất một quy định phải được cung cấp.'),
-
   address: Yup.string().required('Địa chỉ là bắt buộc.'),
 })
 const PostModal = ({ open, handleClose }) => {
@@ -125,10 +113,9 @@ const PostModal = ({ open, handleClose }) => {
     available: false,
     nameRoom: '',
     typeRoomName: '',
-    owner: '',
-    phone: '',
     description: '',
     price: 0,
+    username: 'dung',
     deposit: 0,
     roomArea: 0,
     censor: false,
@@ -147,13 +134,12 @@ const PostModal = ({ open, handleClose }) => {
     initialValues: {
       nameRoom: room.nameRoom,
       typeRoomName: room.typeRoomName,
-      owner: room.owner,
-      phone: room.phone,
       description: room.description,
       price: room.price,
       deposit: room.deposit,
       roomArea: room.roomArea,
       censor: room.censor,
+      username: 'dung',
       priceElectric: room.priceElectric,
       priceWater: room.priceWater,
       maxPerson: room.maxPerson,
@@ -173,8 +159,6 @@ const PostModal = ({ open, handleClose }) => {
     formik.setValues({
       nameRoom: room.nameRoom,
       typeRoomName: room.typeRoomName,
-      owner: room.owner,
-      phone: room.phone,
       description: room.description,
       price: room.price,
       deposit: room.deposit,
@@ -307,8 +291,6 @@ const PostModal = ({ open, handleClose }) => {
   }
 
   const handlePost = () => {
-    console.log('Room:', room)
-
     if (selectedImages && selectedImages.length > 0) {
       const uploadPromises = selectedImages.map((image) => {
         const imageName = v4()
@@ -350,14 +332,19 @@ const PostModal = ({ open, handleClose }) => {
       Promise.all(uploadPromises)
         .then((downloadURLs) => {
           const updatedRoom = { ...room, roomImages: downloadURLs }
-          postRoom(updatedRoom)
+          postRoom(updatedRoom).then((res) => {
+            if (res.data.code === 400) {
+              toast.error(res.data.message)
+            } else if (res.data.code === 201) {
+              toast.success('Đăng tin thành công!')
+            }
+          })
           toast.success('Đăng tin thành công!')
+          handleClose(true)
           setRoom({
             available: false,
             nameRoom: '',
             typeRoomName: '',
-            owner: '',
-            phone: '',
             description: '',
             price: 0,
             deposit: 0,
@@ -380,8 +367,14 @@ const PostModal = ({ open, handleClose }) => {
         })
     } else {
       console.log('Room without images:', room)
-      postRoom(room)
-      toast.success('Đăng tin thành công!')
+      postRoom(room).then((res) => {
+        if (res.data.code === 400) {
+          toast.error(res.data.message)
+        } else if (res.data.code === 201) {
+          toast.success('Đăng tin thành công!')
+        }
+      })
+      handleClose(true)
     }
   }
 
@@ -419,10 +412,7 @@ const PostModal = ({ open, handleClose }) => {
           </Box>
         </Box>
         <Box sx={{ fontStyle: 'italic' }}>
-          <Typography component={'h3'} sx={{ fontStyle: 'normal' }}>
-            Thông tin chủ nhà
-          </Typography>
-          <Typography>Nhập các thông tin về người cho thuê</Typography>
+          <TitleAttribute title="Thông tin chủ nhà" description="Nhập các thông tin về người cho thuê" />
           <Typography>
             *Tiêu đề tốt:{' '}
             <Typography component={'span'} sx={{ fontWeight: 'bold' }}>
@@ -435,7 +425,10 @@ const PostModal = ({ open, handleClose }) => {
         <Grid container>
           <Grid item xs={12} sx={{ my: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <TextField
-              onChange={formik.handleChange}
+              onChange={(event) => {
+                setRoom({ ...room, nameRoom: event.target.value })
+                formik.handleChange
+              }}
               onBlur={formik.handleBlur}
               name="nameRoom"
               required
@@ -457,7 +450,10 @@ const PostModal = ({ open, handleClose }) => {
                 id="demo-simple-select-filled"
                 name="typeRoomName"
                 value={formik.values.typeRoomName}
-                onChange={formik.handleChange}
+                onChange={(event) => {
+                  setRoom({ ...room, typeRoomName: event.target.value })
+                  formik.handleChange
+                }}
                 onBlur={formik.handleBlur}>
                 <MenuItem value="">
                   <em>None</em>
@@ -476,7 +472,7 @@ const PostModal = ({ open, handleClose }) => {
               <FormHelperText>{formik.touched.typeRoomName && formik.errors.typeRoomName}</FormHelperText>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sx={{ my: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          {/* <Grid item xs={12} sx={{ my: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <TextField
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -506,18 +502,16 @@ const PostModal = ({ open, handleClose }) => {
               helperText={formik.touched.phone && formik.errors.phone}
               sx={{ minWidth: 350 }}
             />
-          </Grid>
+          </Grid> */}
         </Grid>
-        <Box>
-          <Typography variant="inherit" component="h2">
-            Mô tả
-          </Typography>
-          <Typography>Nhập mô tả về nhà cho thuê</Typography>
-        </Box>
+        <TitleAttribute title="Mô tả" description="Nhập mô tả về nhà cho thuê" />
         <TextareaAutosize
           required
           minRows={4}
-          onChange={formik.handleChange}
+          onChange={(event) => {
+            setRoom({ ...room, description: event.target.value })
+            formik.handleChange
+          }}
           onBlur={formik.handleBlur}
           name="description"
           style={{
@@ -533,16 +527,14 @@ const PostModal = ({ open, handleClose }) => {
         {formik.touched.description && formik.errors.description && (
           <div style={{ color: 'red', marginTop: '5px' }}>{formik.errors.description}</div>
         )}
-        <Box>
-          <Typography variant="inherit" component="h2">
-            Thông tin cơ bản & giá
-          </Typography>
-          <Typography>Nhập các thông tin về phòng cho thuê</Typography>
-        </Box>
+        <TitleAttribute title="Thông tin cơ bản & giá" description="Nhập các thông tin về phòng cho thuê" />
         <Grid container spacing={1} sx={{ my: 1 }}>
           <Grid item xs={4}>
             <TextField
-              onChange={formik.handleChange}
+              onChange={(event) => {
+                setRoom({ ...room, price: event.target.value })
+                formik.handleChange
+              }}
               onBlur={formik.handleBlur}
               name="price"
               required
@@ -558,7 +550,10 @@ const PostModal = ({ open, handleClose }) => {
           <Grid item xs={4}>
             <TextField
               required
-              onChange={formik.handleChange}
+              onChange={(event) => {
+                setRoom({ ...room, promotionalPrice: event.target.value })
+                formik.handleChange
+              }}
               onBlur={formik.handleBlur}
               name="promotionalPrice"
               id="outlined-basic"
@@ -572,7 +567,10 @@ const PostModal = ({ open, handleClose }) => {
           </Grid>
           <Grid item xs={4}>
             <TextField
-              onChange={formik.handleChange}
+              onChange={(event) => {
+                setRoom({ ...room, deposit: event.target.value })
+                formik.handleChange
+              }}
               onBlur={formik.handleBlur}
               name="deposit"
               required
@@ -587,7 +585,10 @@ const PostModal = ({ open, handleClose }) => {
           </Grid>
           <Grid item xs={4}>
             <TextField
-              onChange={formik.handleChange}
+              onChange={(event) => {
+                setRoom({ ...room, roomArea: event.target.value })
+                formik.handleChange
+              }}
               onBlur={formik.handleBlur}
               name="roomArea"
               required
@@ -602,7 +603,10 @@ const PostModal = ({ open, handleClose }) => {
           </Grid>
           <Grid item xs={4}>
             <TextField
-              onChange={formik.handleChange}
+              onChange={(event) => {
+                setRoom({ ...room, priceElectric: event.target.value })
+                formik.handleChange
+              }}
               onBlur={formik.handleBlur}
               name="priceElectric"
               required
@@ -617,7 +621,10 @@ const PostModal = ({ open, handleClose }) => {
           </Grid>
           <Grid item xs={4}>
             <TextField
-              onChange={formik.handleChange}
+              onChange={(event) => {
+                setRoom({ ...room, priceWater: event.target.value })
+                formik.handleChange
+              }}
               onBlur={formik.handleBlur}
               name="priceWater"
               required
@@ -642,7 +649,10 @@ const PostModal = ({ open, handleClose }) => {
                 id="demo-simple-select-filled"
                 name="maxPerson"
                 value={formik.values.maxPerson}
-                onChange={formik.handleChange}
+                onChange={(event) => {
+                  setRoom({ ...room, maxPerson: event.target.value })
+                  formik.handleChange
+                }}
                 onBlur={formik.handleBlur}>
                 <MenuItem value="">
                   <em>None</em>
@@ -662,7 +672,10 @@ const PostModal = ({ open, handleClose }) => {
           </Grid>
           <Grid item xs={6}>
             <TextField
-              onChange={formik.handleChange}
+              onChange={(event) => {
+                setRoom({ ...room, rentalStartTime: event.target.value })
+                formik.handleChange
+              }}
               onBlur={formik.handleBlur}
               name="rentalStartTime"
               required
@@ -679,10 +692,7 @@ const PostModal = ({ open, handleClose }) => {
           </Grid>
         </Grid>
         <Box>
-          <Typography variant="inherit" component="h2">
-            Tiện ích cho thuê
-          </Typography>
-          <Typography>Tùy chọn tiện ích của nhà cho thuê</Typography>
+          <TitleAttribute title="Tiện ích cho thuê" description="Tùy chọn tiện ích của nhà cho thuê" />
         </Box>
         <Grid container>
           {[
@@ -701,10 +711,10 @@ const PostModal = ({ open, handleClose }) => {
                 checked={room.roomServices.includes(service)}
                 onChange={() => {
                   const newServices = room.roomServices.includes(service)
-                    ? room.roomServices.filter((s) => s !== service) // Loại bỏ dịch vụ nếu đã chọn
-                    : [...room.roomServices, service] // Thêm dịch vụ nếu chưa chọn
-                  setRoom({ ...room, roomServices: newServices }) // Cập nhật giá trị trong room
-                  formik.setFieldValue('roomServices', newServices) // Cập nhật giá trị trong Formik
+                    ? room.roomServices.filter((s) => s !== service)
+                    : [...room.roomServices, service]
+                  setRoom({ ...room, roomServices: newServices })
+                  formik.setFieldValue('roomServices', newServices)
                 }}
                 control={<Checkbox checked={room.roomServices.includes(service)} />}
                 label={service}
@@ -712,16 +722,12 @@ const PostModal = ({ open, handleClose }) => {
             </Grid>
           ))}
         </Grid>
-
-        <Box>
-          <Typography variant="inherit" component="h2">
-            Quy định giờ giấc
-          </Typography>
-          <Typography>Tùy chọn thời gian hoạt động của nhà cho thuê</Typography>
-        </Box>
+        <TitleAttribute title=" Quy định giờ giấc" description="Tùy chọn thời gian hoạt động của nhà cho thuê" />
         <Box sx={{ my: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <FormControl
             variant="filled"
+            value={openHour}
+            onChange={handleChangeOpenHour}
             sx={{ minWidth: 350 }}
             error={formik.touched.openHour && Boolean(formik.errors.openHour)}>
             <InputLabel id="demo-simple-select-filled-label">Giờ mở cửa</InputLabel>
@@ -737,6 +743,8 @@ const PostModal = ({ open, handleClose }) => {
           </FormControl>
           <FormControl
             variant="filled"
+            value={closeHour}
+            onChange={handleChangeCloseHour}
             sx={{ minWidth: 350 }}
             error={formik.touched.closeHour && Boolean(formik.errors.closeHour)}>
             <InputLabel id="demo-simple-select-filled-label">Giờ đóng cửa</InputLabel>
@@ -751,7 +759,7 @@ const PostModal = ({ open, handleClose }) => {
             <FormHelperText>{formik.touched.closeHour && formik.errors.closeHour}</FormHelperText>
           </FormControl>
         </Box>
-        <Box>
+        {/* <Box>
           <Typography variant="inherit" component="h2">
             Nội quy
           </Typography>
@@ -790,12 +798,12 @@ const PostModal = ({ open, handleClose }) => {
               }
             />
           </Grid>
-        </Grid>
+        </Grid> */}
         <Box>
-          <Typography variant="inherit" component="h2">
-            Địa chỉ
-          </Typography>
-          <Typography>Vui lòng nhập địa chỉ chính xác để có thể tìm đến nhà cho thuê của bạn</Typography>
+          <TitleAttribute
+            title="Địa chỉ"
+            description="Vui lòng nhập địa chỉ chính xác để có thể tìm đến nhà cho thuê của bạn"
+          />
         </Box>
         <Box>
           <LocationSelect
@@ -805,7 +813,10 @@ const PostModal = ({ open, handleClose }) => {
             onChange={(province, district, ward) => handleLocationChange(province, district, ward)}
           />
           <TextField
-            onChange={formik.handleChange}
+            onChange={(event) => {
+              handleDetailAddressChange(event)
+              formik.handleChange
+            }}
             onBlur={formik.handleBlur}
             name="address"
             required
@@ -818,10 +829,7 @@ const PostModal = ({ open, handleClose }) => {
           />
         </Box>
         <Box>
-          <Typography variant="inherit" component="h2">
-            Hình ảnh
-          </Typography>
-          <Typography>Hình ảnh về phòng cho thuê</Typography>
+          <TitleAttribute title="Hình ảnh" description="Hình ảnh về phòng cho thuê" />
           <Box
             sx={{
               bgcolor: '#eeeeee',
@@ -855,7 +863,13 @@ const PostModal = ({ open, handleClose }) => {
                 }}
               />
             </IconButton>
-            <Typography>Chọn tối đa 5 ảnh</Typography>
+            <Box sx={{ display: selectedImages.length > 0 ? 'none' : 'block', textAlign: 'center' }}>
+              <Typography>Chọn tối đa 5 ảnh</Typography>
+              <Typography variant="body2">
+                Lưu ý ảnh sẽ được cắt theo tỉ lệ 16:9 để phù hợp với trang web, vui lòng chọn ảnh có tỉ lệ gần giống để
+                không làm mất thông tin quan trọng !
+              </Typography>
+            </Box>
             <Box
               sx={{
                 display: 'flex',
