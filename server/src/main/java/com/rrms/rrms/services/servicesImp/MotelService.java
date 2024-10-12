@@ -25,10 +25,12 @@ public class MotelService implements IMotelService {
     public MotelResponse insert(MotelRequest motel) {
         return motelMapper.motelToMotelResponse(motelRepository.save(motelMapper.motelRequestToMotel(motel)));
     }
-//    @Override
-//    public List<MotelResponse> findByMotelName(String motelName) {
-//        return motelMapper.motelToMotelResponse(motelRepository.findMotelByMotelName(motelName));
-//    }
+
+    @Override
+    public List<MotelResponse> findAllByMotelName(String motelName) {
+        return motelRepository.findAllByMotelName(motelName).stream().map(motelMapper::motelToMotelResponse).collect(Collectors.toList());
+    }
+
 
     @Override
     public List<MotelResponse> findAll() {

@@ -10,7 +10,7 @@ import com.rrms.rrms.models.Motel;
 public interface IMotelService {
     public MotelResponse insert(MotelRequest motel);
 
-//    public List<MotelResponse> findByMotelName(String motelName);
+    public List<MotelResponse> findAllByMotelName(String motelName);
 
     public List<MotelResponse> findAll();
 
