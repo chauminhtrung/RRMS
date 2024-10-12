@@ -1,7 +1,8 @@
 package com.rrms.rrms.dto.response;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.UUID;
-import javax.swing.*;
 
 import jakarta.persistence.Column;
 import lombok.AccessLevel;
