@@ -18,14 +18,12 @@ import com.rrms.rrms.services.IMotelService;
 public class MotelController {
     @Autowired
     private IMotelService motelService;
-//
-//    @GetMapping("/{name}")
-//    public ApiResponse<MotelResponse> getMotel(@PathVariable String name) {
-//        List<MotelResponse> motelResponses = motelService.findByMotelName(name);
-//            return ApiResponse.<MotelResponse>builder().code(HttpStatus.OK.value()).message("success").result(motelResponse).build();
-//    }
 
-
+    @GetMapping("/{name}")
+    public ApiResponse<List<MotelResponse>> getMotel(@PathVariable String name) {
+        List<MotelResponse> motelResponses = motelService.findAllByMotelName(name);
+            return ApiResponse.<List<MotelResponse>>builder().code(HttpStatus.OK.value()).message("success").result(motelResponses).build();
+    }
     @PostMapping()
     public ApiResponse<MotelResponse> insertMotel(@RequestBody MotelRequest motelRequest) {
            MotelResponse motelResponse = motelService.insert(motelRequest);
