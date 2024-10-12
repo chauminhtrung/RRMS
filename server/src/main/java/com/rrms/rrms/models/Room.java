@@ -1,17 +1,15 @@
 package com.rrms.rrms.models;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
-
-import jakarta.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -56,12 +54,6 @@ public class Room {
 
     @Column(name = "censor", columnDefinition = "BOOLEAN")
     private Boolean censor;
-
-    @Column(name = "owner", columnDefinition = "NVARCHAR(255)")
-    private String owner;
-
-    @Column(name = "phone", columnDefinition = "VARCHAR(12)")
-    private String phone;
 
     @Column(name = "hours", columnDefinition = "NVARCHAR(255)")
     private String hours;

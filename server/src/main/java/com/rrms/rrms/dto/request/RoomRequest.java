@@ -1,10 +1,10 @@
 package com.rrms.rrms.dto.request;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -18,8 +18,7 @@ public class RoomRequest {
     long priceWater;
     List<String> rules;
     String address;
-    String owner;
-    String phone;
+    String username;
     List<String> roomServices;
     Boolean censor;
     String nameRoom;

@@ -1,38 +1,32 @@
 package com.rrms.rrms.services.servicesImp;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
 import com.rrms.rrms.dto.request.RoomRequest;
+import com.rrms.rrms.dto.response.PostRoomTableResponse;
 import com.rrms.rrms.dto.response.RoomDetailResponse;
 import com.rrms.rrms.enums.ErrorCode;
 import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.mapper.RoomMapper;
-import com.rrms.rrms.models.Motel;
-import com.rrms.rrms.models.Room;
-import com.rrms.rrms.models.RoomImage;
-import com.rrms.rrms.models.TypeRoom;
+import com.rrms.rrms.models.*;
 import com.rrms.rrms.repositories.*;
 import com.rrms.rrms.services.IRoom;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class RoomService implements IRoom {
-    private static final Logger log = LoggerFactory.getLogger(RoomService.class);
     RoomRepository roomRepository;
     MotelRepository motelRepository;
     TypeRoomRepository typeRoomRepository;
     ServiceRepository serviceRepository;
+    AccountRepository accountRepository;
 
     RoomMapper roomMapper;
 
@@ -45,13 +39,17 @@ public class RoomService implements IRoom {
     @Override
     public RoomDetailResponse createRoom(RoomRequest roomRequest) {
 
+        Account account = accountRepository.findByUsername(roomRequest.getUsername()).orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+
         Motel motel = motelRepository.save(Motel.builder()
+                .account(account)
                 .motelName(roomRequest.getNameRoom())
                 .address(roomRequest.getAddress())
                 .build());
 
         List<TypeRoom> typeRooms = typeRoomRepository.findAllByName(roomRequest.getTypeRoomName());
         TypeRoom typeRoom;
+
         if (typeRooms.isEmpty()) {
             typeRoom = typeRoomRepository.save(
                     TypeRoom.builder().name(roomRequest.getTypeRoomName()).build());
@@ -128,4 +126,14 @@ public class RoomService implements IRoom {
                 .map(roomMapper::toRoomDetailResponse)
                 .toList();
     }
+
+    @Override
+    public List<PostRoomTableResponse> getPostRoomTable(String username) {
+        Account account = accountRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+
+        return roomRepository.findAllByMotel_Account(account).stream()
+                .map(roomMapper::toPostRoomTableResponse)
+                .toList();
+    }
+
 }
