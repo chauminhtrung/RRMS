@@ -3,6 +3,7 @@ package com.rrms.rrms.dto.response;
 import java.util.UUID;
 import javax.swing.*;
 
+import jakarta.persistence.Column;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,9 +15,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MotelResponse {
-    UUID motelId;
-    String address;
-    String description;
     String motelName;
+    Double area;
+    Long averagePrice;
+    String address;
     AccountResponse account;
 }

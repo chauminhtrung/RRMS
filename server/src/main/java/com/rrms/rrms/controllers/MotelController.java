@@ -1,9 +1,12 @@
 package com.rrms.rrms.controllers;
 
+import java.util.List;
 import java.util.UUID;
 
+import com.rrms.rrms.dto.request.MotelRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.rrms.rrms.dto.response.ApiResponse;
@@ -12,26 +15,20 @@ import com.rrms.rrms.services.IMotelService;
 
 @RestController
 @RequestMapping("/motels")
-@CrossOrigin("*")
 public class MotelController {
     @Autowired
     private IMotelService motelService;
+//
+//    @GetMapping("/{name}")
+//    public ApiResponse<MotelResponse> getMotel(@PathVariable String name) {
+//        List<MotelResponse> motelResponses = motelService.findByMotelName(name);
+//            return ApiResponse.<MotelResponse>builder().code(HttpStatus.OK.value()).message("success").result(motelResponse).build();
+//    }
 
-    @GetMapping("/{id}")
-    public ApiResponse<MotelResponse> getMotel(@PathVariable("id") UUID id) {
-        MotelResponse motel = motelService.findById(id);
-        return ApiResponse.<MotelResponse>builder()
-                .code(HttpStatus.OK.value())
-                .message("success")
-                .result(motel)
-                .build();
-    }
 
     @PostMapping()
-    public ApiResponse<MotelResponse> insertMotel() {
-        //        MotelResponse motel = motelService.findById(id);
-        //        return
-        // ApiResponse.<MotelResponse>builder().code(HttpStatus.OK.value()).message("success").result(motel).build();
-        return null;
+    public ApiResponse<MotelResponse> insertMotel(@RequestBody MotelRequest motelRequest) {
+           MotelResponse motelResponse = motelService.insert(motelRequest);
+           return ApiResponse.<MotelResponse>builder().code(HttpStatus.CREATED.value()).message("success").result(motelResponse).build();
     }
 }
