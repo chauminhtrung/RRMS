@@ -154,13 +154,7 @@ a {
     align-self: center;
 }
 
-.form-floating>.form-control:required~label::after {
-    position: absolute;
-    content: "*";
-    color: red;
-    right: 3px;
-    font-weight: bold;
-}
+
 
 .form-floating>.form-control:focus~label::after,
 .form-floating>.form-control:not(:placeholder-shown)~label::after,
@@ -245,13 +239,13 @@ a {
 
 .loz-alert {
     display: flex;
-    border: 1px solid #4caf50;
+    border: 1px solid #20a9e7;
     border-radius: 5px;
 }
 
 .loz-alert.info{
-    border: 1px solid #4caf50;
-    background-color: #efffef;
+    border: 1px solid #20a9e7;
+    background-color: #cde5ef;
 }
 
 .loz-alert.warning{
@@ -260,7 +254,7 @@ a {
 }
 
 .loz-alert .icon{
-    margin-right: 10px;
+
     padding: 10px;
 }
 
@@ -269,7 +263,7 @@ a {
 }
 
 .loz-alert.info .icon{
-    background-color: #4caf50;
+    background-color: #20a9e7;
     color: #fff;
 }
 

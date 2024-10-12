@@ -13,7 +13,7 @@ import Support from './pages/Support/Support'
 
 import AdminStatis from './pages/admin/statistical'
 
-import MainManagement from './pages/admin/MainManagement'
+import MainManagement from './pages/admin/ManagerHome/MainManagement'
 
 import AdminManagerGroup from './pages/admin/AdminManagerGroup'
 import Contact from './pages/Contact/Contact'
