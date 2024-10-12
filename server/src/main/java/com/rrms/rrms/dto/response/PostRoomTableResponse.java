@@ -2,6 +2,7 @@ package com.rrms.rrms.dto.response;
 
 import com.rrms.rrms.models.Motel;
 import com.rrms.rrms.models.TypeRoom;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

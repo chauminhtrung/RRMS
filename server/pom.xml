@@ -41,8 +41,8 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-        
-        
+
+
         <!-- Spring Boot Starter OAuth2 Resource Server: Cung cấp OAuth2 Resource Server cho bảo mật API -->
         <!--		<dependency>-->
         <!--			<groupId>org.springframework.boot</groupId>-->
@@ -61,12 +61,18 @@
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
-        
+
+        <dependency>
+            <groupId>me.paulschwarz</groupId>
+            <artifactId>spring-dotenv</artifactId>
+            <version>2.5.4</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
-        
+
         <!-- Jackson Datatype JSR310: Hỗ trợ xử lý kiểu dữ liệu ngày tháng (Java 8 Date/Time API) trong JSON -->
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>

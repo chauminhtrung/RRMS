@@ -1,5 +1,11 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+
 import com.rrms.rrms.dto.request.RoomRequest;
 import com.rrms.rrms.dto.response.PostRoomTableResponse;
 import com.rrms.rrms.dto.response.RoomDetailResponse;
@@ -9,14 +15,10 @@ import com.rrms.rrms.mapper.RoomMapper;
 import com.rrms.rrms.models.*;
 import com.rrms.rrms.repositories.*;
 import com.rrms.rrms.services.IRoom;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -39,7 +41,9 @@ public class RoomService implements IRoom {
     @Override
     public RoomDetailResponse createRoom(RoomRequest roomRequest) {
 
-        Account account = accountRepository.findByUsername(roomRequest.getUsername()).orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+        Account account = accountRepository
+                .findByUsername(roomRequest.getUsername())
+                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
 
         Motel motel = motelRepository.save(Motel.builder()
                 .account(account)
@@ -129,11 +133,12 @@ public class RoomService implements IRoom {
 
     @Override
     public List<PostRoomTableResponse> getPostRoomTable(String username) {
-        Account account = accountRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+        Account account = accountRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
 
         return roomRepository.findAllByMotel_Account(account).stream()
                 .map(roomMapper::toPostRoomTableResponse)
                 .toList();
     }
-
 }
