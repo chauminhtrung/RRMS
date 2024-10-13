@@ -28,7 +28,7 @@ public class Room {
     private Motel motel;
 
     @ManyToOne
-    @JoinColumn(name = "type_room_id")
+    @JoinColumn(name = "type_room_id", nullable = false)
     private TypeRoom typeRoom;
 
     @Column(name = "name_room", columnDefinition = "VARCHAR(255)", nullable = false)
