@@ -1,19 +1,21 @@
 package com.rrms.rrms.controllers;
 
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
 import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.dto.response.RoomDetailResponse;
+import com.rrms.rrms.dto.response.RoomSearchResponse;
 import com.rrms.rrms.services.IRoom;
 import com.rrms.rrms.services.ISearchService;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -57,4 +59,24 @@ public class SearchController {
     //
     //        return apiResponse;
     //    }
+
+    @GetMapping("/address")
+    public ApiResponse<List<RoomSearchResponse>> findByAddress(@RequestParam("address") String address) {
+        List<RoomSearchResponse> roomSearchResponseList = searchService.findByAddress(address);
+        return ApiResponse.<List<RoomSearchResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .message("success")
+                .result(roomSearchResponseList)
+                .build();
+    }
+
+    @GetMapping("/addressFuzzy")
+    public ApiResponse<List<RoomSearchResponse>> findByAddressFuzzy(@RequestParam("address") String address) {
+        List<RoomSearchResponse> roomSearchResponseList = searchService.findByAddressFuzzy(address);
+        return ApiResponse.<List<RoomSearchResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .message("success")
+                .result(roomSearchResponseList)
+                .build();
+    }
 }

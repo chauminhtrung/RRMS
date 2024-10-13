@@ -1,22 +1,22 @@
 package com.rrms.rrms.services.servicesImp;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-
 import com.rrms.rrms.dto.response.RoomDetailResponse;
+import com.rrms.rrms.dto.response.RoomSearchResponse;
 import com.rrms.rrms.enums.ErrorCode;
 import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.mapper.RoomMapper;
 import com.rrms.rrms.models.Room;
 import com.rrms.rrms.repositories.RoomRepository;
+import com.rrms.rrms.repositories.RoomRepositoryElasticsearch;
 import com.rrms.rrms.services.ISearchService;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -24,6 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SearchService implements ISearchService {
     RoomRepository roomRepository;
+    RoomRepositoryElasticsearch roomRepositoryElasticsearch;
+
     RoomMapper roomMapper;
 
     @Override
@@ -63,4 +65,32 @@ public class SearchService implements ISearchService {
     //        // Thêm các thuộc tính khác tùy theo yêu cầu
     //        return response;
     //    }
+
+    @Override
+    public String syncRoom(List<Room> rooms) {
+        String message = "Error synchronize data";
+        List<RoomSearchResponse> roomSearchResponsesList = rooms.stream()
+                .map(roomMapper::toRoomSearchResponse)
+                .collect(Collectors.toList());
+        try {
+            roomRepositoryElasticsearch.saveAll(roomSearchResponsesList);
+            message = "Synchronized data Mysql and Elasticsearch";
+            log.info(message);
+        } catch (Exception e) {
+            log.error(message);
+        }
+        return message;
+    }
+
+    @Override
+    public List<RoomSearchResponse> findByAddress(String keyword) {
+        log.info("Normal search room by address: {}", keyword);
+        return roomRepositoryElasticsearch.findByAddress(keyword);
+    }
+
+    @Override
+    public List<RoomSearchResponse> findByAddressFuzzy(String keyword) {
+        log.info("Fuzzy search address: {}", keyword);
+        return roomRepositoryElasticsearch.findByAddressFuzzy(keyword);
+    }
 }

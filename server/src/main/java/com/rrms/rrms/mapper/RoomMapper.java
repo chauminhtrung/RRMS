@@ -1,17 +1,13 @@
 package com.rrms.rrms.mapper;
 
-import java.util.List;
-
+import com.rrms.rrms.dto.request.RoomImageRequest;
+import com.rrms.rrms.dto.request.RoomRequest;
+import com.rrms.rrms.dto.response.*;
+import com.rrms.rrms.models.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-import com.rrms.rrms.dto.request.RoomImageRequest;
-import com.rrms.rrms.dto.request.RoomRequest;
-import com.rrms.rrms.dto.response.PostRoomTableResponse;
-import com.rrms.rrms.dto.response.RoomDetailResponse;
-import com.rrms.rrms.dto.response.RoomImageResponse;
-import com.rrms.rrms.dto.response.RoomReviewResponse;
-import com.rrms.rrms.models.*;
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface RoomMapper {
@@ -52,4 +48,6 @@ public interface RoomMapper {
     }
 
     PostRoomTableResponse toPostRoomTableResponse(Room room);
+
+    RoomSearchResponse toRoomSearchResponse(Room room);
 }

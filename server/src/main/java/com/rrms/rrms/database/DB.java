@@ -1,21 +1,20 @@
 package com.rrms.rrms.database;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
-
+import com.rrms.rrms.enums.Gender;
+import com.rrms.rrms.models.*;
+import com.rrms.rrms.repositories.*;
+import com.rrms.rrms.services.ISearchService;
+import lombok.extern.slf4j.Slf4j;
+import net.datafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.rrms.rrms.enums.Gender;
-import com.rrms.rrms.models.*;
-import com.rrms.rrms.repositories.*;
-
-import lombok.extern.slf4j.Slf4j;
-import net.datafaker.Faker;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 
 @Configuration
 @Slf4j
@@ -29,7 +28,8 @@ public class DB {
             RoomImageRepository roomImageRepository,
             RoomReviewRepository roomReviewRepository,
             ServiceRepository serviceRepository,
-            RoomServiceRepository roomServiceRepository) {
+            RoomServiceRepository roomServiceRepository,
+            ISearchService searchService) {
         return args -> {
             int roomsLength = 20;
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
@@ -155,6 +155,8 @@ public class DB {
                     roomImageRepository.saveAll(List.of(roomImage1, roomImage2, roomImage3, roomImage4, roomImage5));
                     log.info("Room images created");
                 }
+                
+                log.info(searchService.syncRoom(roomRepository.findAll()));
             }
         };
     }
