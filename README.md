@@ -69,6 +69,15 @@ Hệ thống được xây dựng dựa trên các công nghệ hiện đại v�
   <a href="https://www.jetbrains.com/idea/" target="_blank" rel="noreferrer">
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/IntelliJ_IDEA_Icon.svg/768px-IntelliJ_IDEA_Icon.svg.png" alt="IntelliJ IDEA" width="40" height="40"/>
   </a>
+    <a href="https://www.elastic.co/" target="_blank" rel="noreferrer">
+    <img src="https://www.vectorlogo.zone/logos/elastic/elastic-icon.svg" alt="IntelliJ IDEA" width="40" height="40"/>
+  </a>
+    <a href="https://www.elastic.co/logstash" target="_blank" rel="noreferrer">
+    <img src="https://www.vectorlogo.zone/logos/elasticco_logstash/elasticco_logstash-icon.svg" alt="IntelliJ IDEA" width="40" height="40"/>
+  </a>
+    <a href="https://www.elastic.co/kibana" target="_blank" rel="noreferrer">
+    <img src="https://www.vectorlogo.zone/logos/elasticco_kibana/elasticco_kibana-icon.svg" alt="IntelliJ IDEA" width="40" height="40"/>
+  </a>
 </p>
 
 ---
