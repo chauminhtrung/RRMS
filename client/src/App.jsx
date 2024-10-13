@@ -27,6 +27,8 @@ import RRMS from './pages/RRMS/RRMS'
 import AdminManageBoker from './pages/admin/AdminManageBoker/AdminManageBoker'
 import PostRooms from './pages/PostRooms/PostRooms'
 import AdminManage from './pages/admin/AdminManage/AdminManage'
+import ChatAI from './pages/AI/ChatAI'
+import Audio from './pages/AI/Audio'
 
 // import TestPage from './pages/TestPage'
 // import ValidCaptcha from './components/ValidCaptcha'
@@ -41,11 +43,13 @@ function App() {
   return (
     <>
       <Router>
+        <ChatAI />
         {/* <ValidCaptcha /> */}
         {!isAdmin ? <Header /> : <></>}
         <Routes>
           <Route path="/" element={<Home setIsAdmin={setIsAdmin} />} />
           <Route path="/chart" element={<Chart setIsAdmin={setIsAdmin} />} />
+          <Route path="/audio" element={<Audio setIsAdmin={setIsAdmin} />} />
           <Route path="/search" element={<Search setIsAdmin={setIsAdmin} />} />
           <Route path="/detail/:roomId" element={<Detail setIsAdmin={setIsAdmin} />} />
           <Route path="/forgot-password" element={<Forgot_Password setIsAdmin={setIsAdmin} />} />

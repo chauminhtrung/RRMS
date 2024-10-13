@@ -1,6 +1,6 @@
 @baseUrl = http://localhost:8080
 @contentType = application/json
-@roomId = 026d509d-eeb5-49ce-a517-c7695f20d14e
+@roomId = 052516ce-c8af-412b-a1cc-b5a52f558ccf
 
 POST {{baseUrl}}/roomImage
 Content-Type: {{contentType}}

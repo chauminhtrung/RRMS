@@ -83,16 +83,10 @@ public class DB {
                 log.info("User1 created");
             }
             if (roomRepository.findAll().isEmpty()) {
-                String[] typeRoomNames = {
-                        "Phòng đơn",
-                        "Phòng đôi",
-                        "Phòng gia đình",
-                        "Phòng tập thể",
-                        "Phòng VIP",
-                        "Phòng Superior",
-                        "Phòng Deluxe",
-                        "Phòng Suite"
-                };
+
+                TypeRoom typeRoom = new TypeRoom();
+                typeRoom.setName("Trọ");
+                typeRoomRepository.save(typeRoom);
 
                 for (int i = 0; i < roomsLength; i++) {
                     Faker faker = new Faker(new Locale("vi"));
@@ -105,11 +99,6 @@ public class DB {
                     motel.setArea((double) faker.number().numberBetween(50, 200));
                     motel.setAveragePrice((long) faker.number().numberBetween(500000, 5000000));
                     motelRepository.save(motel); // Save motel first
-
-                    // Create and save the TypeRoom
-                    TypeRoom typeRoom = new TypeRoom();
-                    typeRoom.setName(faker.options().option(typeRoomNames));
-                    typeRoomRepository.save(typeRoom); // Save TypeRoom first
 
                     // Create and save the Room
                     Room room = new Room();

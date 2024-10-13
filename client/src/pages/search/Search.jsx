@@ -13,6 +13,7 @@ import { getTinhThanh } from '~/apis/apiClient'
 import LoadingPage from '~/components/LoadingPage'
 import FilterSearch from './FilterSearch'
 import axios from 'axios'
+import ChatAI from '../AI/ChatAI'
 
 const Search = ({ setIsAdmin }) => {
   const [provinces, setProvinces] = useState([])
@@ -83,7 +84,6 @@ const Search = ({ setIsAdmin }) => {
         }}>
         <FilterSearch setSearchData={setSearchData} />
       </Container>
-
       <ListSearch />
       <Container>
         <Grid container>
