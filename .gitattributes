@@ -4,3 +4,5 @@
 *.html linguist-language=HTML
 Dockerfile linguist-detectable=true
 Dockerfile linguist-language=Dockerfile
+docker-compose.yml linguist-language=Dockerfile
+.dockerignore linguist-language=Dockerfile
