@@ -69,6 +69,9 @@ Hệ thống được xây dựng dựa trên các công nghệ hiện đại v�
   <a href="https://www.jetbrains.com/idea/" target="_blank" rel="noreferrer">
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/IntelliJ_IDEA_Icon.svg/768px-IntelliJ_IDEA_Icon.svg.png" alt="IntelliJ IDEA" width="40" height="40"/>
   </a>
+    <a href="https://www.jetbrains.com/idea/" target="_blank" rel="noreferrer">
+    <img src="https://cdn.worldvectorlogo.com/logos/websocket.svg" alt="IntelliJ IDEA" width="40" height="40"/>
+  </a>
     <a href="https://www.elastic.co/" target="_blank" rel="noreferrer">
     <img src="https://static-00.iconduck.com/assets.00/elasticsearch-icon-460x512-cz6ajtti.png" alt="IntelliJ IDEA" width="40" height="40"/>
   </a>
