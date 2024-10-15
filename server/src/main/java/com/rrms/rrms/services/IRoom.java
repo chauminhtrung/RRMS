@@ -17,4 +17,5 @@ public interface IRoom {
 
     List<PostRoomTableResponse> getPostRoomTable(String username);
 
+    String deleteRoom(UUID id);
 }

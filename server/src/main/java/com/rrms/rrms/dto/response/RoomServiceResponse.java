@@ -19,7 +19,6 @@ import lombok.experimental.FieldDefaults;
 public class RoomServiceResponse implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-
     UUID roomServiceId;
     Service service;
 }
