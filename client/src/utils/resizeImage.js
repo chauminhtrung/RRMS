@@ -1,4 +1,4 @@
-export const resizeAndCrop = (file, radWidth, radHeight) => {
+export const resizeAndCrop = (file, aspectRatio) => {
   return new Promise((resolve, reject) => {
     const img = new Image()
     const reader = new FileReader()
@@ -11,7 +11,6 @@ export const resizeAndCrop = (file, radWidth, radHeight) => {
       const canvas = document.createElement('canvas')
       const ctx = canvas.getContext('2d')
 
-      const aspectRatio = radWidth / radHeight
       let width = img.width
       let height = img.height
 
@@ -33,7 +32,7 @@ export const resizeAndCrop = (file, radWidth, radHeight) => {
         (blob) => {
           resolve(blob)
         },
-        'image/jpeg',
+        'image/webp',
         1
       )
     }
