@@ -1,10 +1,12 @@
 package com.rrms.rrms.services.servicesImp;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.rrms.rrms.dto.request.MotelRequest;
+import com.rrms.rrms.mapper.AccountMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +22,17 @@ public class MotelService implements IMotelService {
     private MotelRepository motelRepository;
     @Autowired
     private MotelMapper motelMapper;
+    @Autowired
+    private AccountMapper accountMapper;
 
     @Override
     public MotelResponse insert(MotelRequest motel) {
         return motelMapper.motelToMotelResponse(motelRepository.save(motelMapper.motelRequestToMotel(motel)));
+    }
+
+    @Override
+    public MotelResponse findById(UUID id) {
+        return motelRepository.findById(id).map(motelMapper::motelToMotelResponse).orElse(null);
     }
 
     @Override
@@ -34,16 +43,28 @@ public class MotelService implements IMotelService {
 
     @Override
     public List<MotelResponse> findAll() {
-        return List.of();
+        return motelRepository.findAll().stream().map(motelMapper::motelToMotelResponse).collect(Collectors.toList());
     }
 
     @Override
     public MotelResponse update(UUID id, MotelRequest motel) {
+        Optional<Motel> motelfind = motelRepository.findById(id);
+        if (motelfind.isPresent()) {
+            motelfind.get().setMotelName(motel.getMotelName());
+            motelfind.get().setArea(motel.getArea());
+            motelfind.get().setAveragePrice(motel.getAveragePrice());
+            motelfind.get().setAddress(motel.getAddress());
+            motelfind.get().setAccount(accountMapper.toAccount(motel.getAccount()));
+            return motelMapper.motelToMotelResponse(motelRepository.save(motelfind.get()));
+        }
         return null;
     }
 
     @Override
     public void delete(UUID id) {
-
+        Optional<Motel> motelfind = motelRepository.findById(id);
+        if (motelfind.isPresent()) {
+            motelRepository.deleteById(id);
+        }
     }
 }
