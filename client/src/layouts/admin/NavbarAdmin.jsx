@@ -51,7 +51,7 @@ const NavAdmin = ({ setIsAdmin }) => {
                 </ul>
                 <ul className="topbar-items main-menu-right navbar-nav">
                   <li className="nav-item menu-item active">
-                    <Link to="/admin" className="nav-link ">
+                    <Link to="/quanlytro" className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -72,7 +72,7 @@ const NavAdmin = ({ setIsAdmin }) => {
                     </Link>
                   </li>
                   <li className="nav-item menu-item ">
-                    <a href="#" className="nav-link ">
+                    <Link to="/bao-cao" className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -90,7 +90,7 @@ const NavAdmin = ({ setIsAdmin }) => {
                       <span style={{ marginTop: '5px' }} className="text">
                         Tổng báo cáo
                       </span>
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item menu-item ">
                     <Link to="/dang-tin" className="nav-link ">
@@ -114,7 +114,7 @@ const NavAdmin = ({ setIsAdmin }) => {
                     </Link>
                   </li>
                   <li className="nav-item menu-item ">
-                    <Link to="/adminBoker" className="nav-link ">
+                    <Link to="/moi-gioi" className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -202,12 +202,7 @@ const NavAdmin = ({ setIsAdmin }) => {
                     </Link>
                     <ul className="dropdown-menu notication-dropdown dropdown-menu-lg-end">
                       <div className="text-center" style={{ padding: '20px' }}>
-                        <img
-                          style={{ margin: 'auto' }}
-                          src="https://quanlytro.me/images/icons/loading.gif"
-                          alt="Đang tải..."
-                          width="50px"
-                        />
+                        <img style={{ margin: 'auto' }} src="./Loading.gif" alt="Đang tải..." width="50px" />
                         <div>
                           <i className="loading_text" style={{ marginTop: '-10px', fontSize: '13px' }}>
                             Đang tải thông báo...

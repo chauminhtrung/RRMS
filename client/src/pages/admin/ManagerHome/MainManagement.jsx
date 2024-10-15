@@ -1,10 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react'
-
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
 import ModalCreateHome from './ModelCreateHome'
 import './Admin.css'
-
 const MainManagement = ({ setIsAdmin }) => {
   useEffect(() => {
     setIsAdmin(true)
