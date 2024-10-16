@@ -223,7 +223,7 @@ a {
 }
 
 .add-round {
-    background-color: #15a05c;
+    background-color: #20a9e7;
     width: 50px;
     border: 0;
     height: 50px;
@@ -631,7 +631,7 @@ div.navbar-brand {
 }
 
 .setting-tabs a.nav-link.active, .setting-tabs-horizontal a.nav-link.active {
-    background-color: #15a05c;
+    background-color: #20a9e7;
     color: #fff;
 }
 
