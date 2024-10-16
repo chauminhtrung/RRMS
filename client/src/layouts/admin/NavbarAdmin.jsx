@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
 import './NavbarAdmin.css'
+import NavWData from './NavWData'
 // import NavWData from './NavWData'
 
-const NavAdmin = ({ setIsAdmin }) => {
+const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin }) => {
   return (
     <header>
       <div className="header-inner">
@@ -93,7 +94,7 @@ const NavAdmin = ({ setIsAdmin }) => {
                     </Link>
                   </li>
                   <li className="nav-item menu-item ">
-                    <Link to="/dang-tin" className="nav-link ">
+                    <Link to="/dang-tin" className="nav-link " setIsNavAdmin={setIsNavAdmin}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -262,7 +263,7 @@ const NavAdmin = ({ setIsAdmin }) => {
       </div>
 
       {/* neu co du lieu moi co cai nay */}
-      {/* <NavWData /> */}
+      {isNavAdmin ? <NavWData /> : <></>}
     </header>
   )
 }
