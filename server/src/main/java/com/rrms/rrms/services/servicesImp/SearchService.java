@@ -83,6 +83,13 @@ public class SearchService implements ISearchService {
     }
 
     @Override
+    public List<RoomSearchResponse> findByAddressNoElastic(String keyword) {
+        log.info("Normal search no elasticsearch room by address: {}", keyword);
+        List<Room> rooms = roomRepository.findByAddress(keyword);
+        return rooms.stream().map(roomMapper::toRoomSearchResponse).collect(Collectors.toList());
+    }
+
+    @Override
     public List<RoomSearchResponse> findByAddress(String keyword) {
         log.info("Normal search room by address: {}", keyword);
         return roomRepositoryElasticsearch.findByAddress(keyword);

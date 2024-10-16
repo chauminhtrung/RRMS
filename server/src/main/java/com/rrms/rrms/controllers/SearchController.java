@@ -9,7 +9,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,12 +61,22 @@ public class SearchController {
     //        return apiResponse;
     //    }
 
+    @GetMapping("/addressNoElastic")
+    public ApiResponse<List<RoomSearchResponse>> findByAddressNoElastic(@RequestParam("address") String address) {
+        List<RoomSearchResponse> roomSearchResponseList = searchService.findByAddressNoElastic(address);
+        return ApiResponse.<List<RoomSearchResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .message("success " + roomSearchResponseList.size())
+                .result(roomSearchResponseList)
+                .build();
+    }
+
     @GetMapping("/address")
     public ApiResponse<List<RoomSearchResponse>> findByAddress(@RequestParam("address") String address) {
         List<RoomSearchResponse> roomSearchResponseList = searchService.findByAddress(address);
         return ApiResponse.<List<RoomSearchResponse>>builder()
                 .code(HttpStatus.OK.value())
-                .message("success")
+                .message("success " + roomSearchResponseList.size())
                 .result(roomSearchResponseList)
                 .build();
     }
