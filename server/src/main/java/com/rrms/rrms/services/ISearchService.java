@@ -13,6 +13,8 @@ public interface ISearchService {
 
     String syncRoom(List<Room> rooms);
 
+    List<RoomSearchResponse> findByAddressNoElastic(String keyword);
+
     List<RoomSearchResponse> findByAddress(String keyword);
 
     List<RoomSearchResponse> findByAddressFuzzy(String keyword);
