@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.request.MotelRequest;
 import com.rrms.rrms.mapper.AccountMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,11 @@ public class MotelService implements IMotelService {
     @Override
     public List<MotelResponse> findAllByMotelName(String motelName) {
         return motelRepository.findAllByMotelName(motelName).stream().map(motelMapper::motelToMotelResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MotelResponse> findMotelByAccount_Username(String username) {
+        return motelRepository.findMotelByAccount_Username(username).stream().map(motelMapper::motelToMotelResponse).collect(Collectors.toList());
     }
 
 

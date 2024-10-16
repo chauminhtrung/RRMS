@@ -25,7 +25,7 @@ const ManagerSettings = ({ setIsAdmin }) => {
             <div className="d-flex">
               <div className="col-md-3" style={{ borderRight: '1px solid #eee', padding: '0' }}>
                 {/* Nav tabs  */}
-                <ul className="nav setting-tabs" role="tablist">
+                <ul className="nav setting-tabs" role="tablist" style={{ display: 'unset' }}>
                   <li className="nav-item">
                     <a className="nav-link active" data-bs-toggle="tab" href="#info">
                       <svg
