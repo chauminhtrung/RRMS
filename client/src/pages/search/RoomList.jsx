@@ -91,7 +91,13 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
   // Tính toán các item hiển thị trên trang hiện tại
   const indexOfLastItem = currentPage * itemsPerPage // Vị trí item cuối trên trang hiện tại
   const indexOfFirstItem = indexOfLastItem - itemsPerPage // Vị trí item đầu trên trang hiện tại
-  const currentItems = searchData.slice(indexOfFirstItem, indexOfLastItem) // Các item cần hiển thị
+  let currentItems = []
+  if (Array.isArray(searchData)) {
+    currentItems = searchData.slice(indexOfFirstItem, indexOfLastItem)
+    console.log(currentItems) // Hiển thị các phần tử hiện tại
+  } else {
+    currentItems = []
+  }
 
   return (
     <Box>
