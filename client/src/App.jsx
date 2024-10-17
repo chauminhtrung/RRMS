@@ -40,10 +40,17 @@ import FaceMatch from './pages/AI/FaceMatch'
 // import ValidCaptcha from './components/ValidCaptcha'
 
 function App() {
+   const [username, setUsername] = useState(''); 
+  const [avatar, setAvatar] = useState('');
   //Muốn mất header thì thêm props setIsAdmin={setIsAdmin}
-  // useEffect(() => {
-  //   setIsAdmin(true)
-  // }, [])
+  useEffect(() => {  
+    //   setIsAdmin(true)
+    const user = JSON.parse(sessionStorage.getItem('user'));  
+    if (user) {  
+      setUsername(user.username); 
+      setAvatar(user.avatar);
+    }  
+  }, []); 
   const [isAdmin, setIsAdmin] = useState(false)
   const [isNavAdmin, setIsNavAdmin] = useState(false)
   return (
@@ -51,7 +58,7 @@ function App() {
       <Router>
         {/* <ChatAI /> */}
         {/* <ValidCaptcha /> */}
-        {!isAdmin ? <Header /> : <></>}
+        {!isAdmin ? <Header username={username} avatar={avatar} /> : <></>}
         <Routes>
           <Route path="/" element={<Home setIsAdmin={setIsAdmin} />} />
           <Route path="/chart" element={<Chart setIsAdmin={setIsAdmin} />} />
@@ -61,7 +68,7 @@ function App() {
           <Route path="/search" element={<Search setIsAdmin={setIsAdmin} />} />
           <Route path="/detail/:roomId" element={<Detail setIsAdmin={setIsAdmin} />} />
           <Route path="/forgot-password" element={<Forgot_Password setIsAdmin={setIsAdmin} />} />
-          <Route path="/login" element={<Login setIsAdmin={setIsAdmin} />} />
+          <Route path="/login" element={<Login setUsername={setUsername} setAvatar={setAvatar} setIsAdmin={setIsAdmin} />} />
           <Route path="/contact" element={<Contact setIsAdmin={setIsAdmin} />} />
           <Route path="/introduce" element={<Introduce setIsAdmin={setIsAdmin} />} />
           <Route path="/register" element={<Register setIsAdmin={setIsAdmin} />} />
