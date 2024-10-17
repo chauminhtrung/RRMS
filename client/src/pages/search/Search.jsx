@@ -20,6 +20,7 @@ const Search = ({ setIsAdmin }) => {
   const [searchData, setSearchData] = useState([])
   const [totalRooms, setTotalRooms] = useState(0)
   const [searchValue, setSearchValue] = useState('')
+  const [recordedText, setRecordedText] = useState('')
   useEffect(() => {
     setIsAdmin(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,7 +83,7 @@ const Search = ({ setIsAdmin }) => {
           mt: 5,
           borderRadius: '6px',
         }}>
-        <FilterSearch setSearchData={setSearchData} />
+        <FilterSearch setSearchData={setSearchData} recordedText={recordedText} />
       </Container>
       <ListSearch />
       <Container>

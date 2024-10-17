@@ -32,6 +32,9 @@ import PostRooms from './pages/PostRooms/PostRooms'
 import AdminManage from './pages/admin/AdminManage/AdminManage'
 import ChatAI from './pages/AI/ChatAI'
 import Audio from './pages/AI/Audio'
+import RoomManagement from './pages/admin/AdminManage/RoomManagement'
+import Recognition from './pages/AI/Recognition'
+import FaceMatch from './pages/AI/FaceMatch'
 
 // import TestPage from './pages/TestPage'
 // import ValidCaptcha from './components/ValidCaptcha'
@@ -53,6 +56,8 @@ function App() {
           <Route path="/" element={<Home setIsAdmin={setIsAdmin} />} />
           <Route path="/chart" element={<Chart setIsAdmin={setIsAdmin} />} />
           <Route path="/audio" element={<Audio setIsAdmin={setIsAdmin} />} />
+          <Route path="/recognition" element={<Recognition setIsAdmin={setIsAdmin} />} />
+          <Route path="/facematch" element={<FaceMatch setIsAdmin={setIsAdmin} />} />
           <Route path="/search" element={<Search setIsAdmin={setIsAdmin} />} />
           <Route path="/detail/:roomId" element={<Detail setIsAdmin={setIsAdmin} />} />
           <Route path="/forgot-password" element={<Forgot_Password setIsAdmin={setIsAdmin} />} />
@@ -72,6 +77,8 @@ function App() {
           />
           <Route path="/moi-gioi" element={<AdminManageBoker setIsAdmin={setIsAdmin} />} />
           <Route path="/adminManage" element={<AdminManage setIsAdmin={setIsAdmin} />} />
+          <Route path="/roomManagement" element={<RoomManagement setIsAdmin={setIsAdmin} />} />
+          <Route path="/AdminStatis" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
           <Route path="/bao-cao" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminManagerBoard" element={<AdminManagerBoard setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminManagerGroup" element={<AdminManagerGroup setIsAdmin={setIsAdmin} />} />
