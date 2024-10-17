@@ -117,6 +117,21 @@ public class DB {
                     .birthday(LocalDate.now())
                     .build());
         }
+        if (accountRepository.findByUsername("quoc").isEmpty()) {
+                // create admin account
+                accountRepository.save(Account.builder()
+                    .username("quoc")
+                    .password("123")
+                    .fullname("Kiến Quốc")
+                    .email("kieukienquocvn@gmail.com")
+                    .phone("0919925302")
+                    .cccd("012345678900")
+                    .gender(Gender.MALE)
+                    .avatar("AVT_KQ.jpg")
+                    .birthday(LocalDate.now())
+                    .build());
+                log.info("User1 created");
+            }
         if (accountRepository.findByUsername("user5").isEmpty()) {
             accountRepository.save(Account.builder()
                     .username("user5")
