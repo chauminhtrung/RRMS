@@ -79,6 +79,7 @@ services:
       - ./logstash/pipeline:/usr/share/logstash/pipeline:rw
     ports:
       - "5044:5044"
+      - "5000:5000"
       - "9600:9600"
     depends_on:
       - elasticsearch
