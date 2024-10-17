@@ -1,11 +1,12 @@
 package com.rrms.rrms.repositories;
 
-import com.rrms.rrms.dto.response.RoomSearchResponse;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
-import java.util.List;
-import java.util.UUID;
+import com.rrms.rrms.dto.response.RoomSearchResponse;
 
 public interface RoomRepositoryElasticsearch extends ElasticsearchRepository<RoomSearchResponse, UUID> {
 
@@ -14,5 +15,4 @@ public interface RoomRepositoryElasticsearch extends ElasticsearchRepository<Roo
 
     @Query("{\"fuzzy\": {\"motel.address\": {\"value\": \"?0\", \"fuzziness\": \"auto\"}}}")
     List<RoomSearchResponse> findByAddressFuzzy(String address);
-
 }
