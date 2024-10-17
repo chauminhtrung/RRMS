@@ -28,6 +28,7 @@
     "dayjs": "1.11.13",
     "diacritics": "^1.3.0",
     "firebase": "10.13.2",
+    "flatpickr": "^4.6.13",
     "formik": "2.4.6",
     "i18next": "23.15.1",
     "react": "18.3.1",

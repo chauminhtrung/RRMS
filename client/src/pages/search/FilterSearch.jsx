@@ -1,25 +1,33 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Box, Typography, Select, MenuItem, Slider } from '@mui/material'
 
 import ModalSearch from './ModalSearch'
-
+import MicIcon from '@mui/icons-material/Mic'
 import './SearchWHome.css'
 import { searchByName } from '~/apis/apiClient'
+import AudioRecorderModal from '../AI/Audio'
+
 function FilterSearch({ setSearchData }) {
   const [open, setOpen] = useState(false)
-
+  const [openAudio, setOpenAudio] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
-
+  const handleOpenAudio = () => setOpenAudio(true)
+  const handleCloseAudio = () => setOpenAudio(false)
   const [range, setRange] = useState([0, 50])
   const [selectedValue, setSelectedValue] = useState('Dưới 50 triệu')
   const [area, setArea] = useState([0, 50])
   const [keyword, setKeyword] = useState('')
+  const [isRecording, setIsRecording] = useState(false)
 
   const [selectedValueArea, setSelectedValueArea] = useState('Dưới 50 m2')
   // const handleInputChange = (event) => {
   //   setSearchValue(event.target.value)
   // }
+
+  useEffect(() => {
+    handleSearch
+  }, [keyword])
 
   const handleSearch = (e) => {
     setKeyword(e.target.value)
@@ -29,6 +37,7 @@ function FilterSearch({ setSearchData }) {
       setSearchData(res.data.result)
     })
   }
+
   const handleAreaChange = (event) => {
     const selectedValueArea = event.target.value
 
@@ -210,13 +219,15 @@ function FilterSearch({ setSearchData }) {
                   <li className="keyword" style={{ position: 'relative' }}>
                     <input
                       type="text"
-                      className="form-control w-100 "
-                      data-type='["Nhập nơi học tập &amp; làm việc...", "Nhập công ty làm việc...", "Nhập trường học tập...", "Nhập địa điểm nổi tiếng..."]'
-                      data-period="400"
-                      placeholder="Nhập nơi học tập &amp; làm việc..."
+                      className="form-control w-100"
+                      placeholder="Nhập nơi học tập & làm việc..."
                       autoComplete="off"
-                      onChange={handleSearch}
-                      // onChange={handleInputChange}
+                      value={keyword} // Hiển thị dữ liệu ghi âm
+                      onChange={(e) => setKeyword(e.target.value)}
+                    />
+                    <MicIcon
+                      onClick={handleOpenAudio}
+                      style={{ cursor: 'pointer', marginRight: '10px', fontSize: '32px', color: '#555' }}
                     />
                     <div className="guid-search id-1727803392186 dropdown" style={{ display: 'none' }}>
                       Suggest search...
@@ -224,6 +235,7 @@ function FilterSearch({ setSearchData }) {
                   </li>
                 </ul>
               </div>
+
               <div className="col-md-12 mb-3 mb-md-0 col-lg-3">
                 <div className="row">
                   <div className="col-md-6 mb-3 mb-md-0 mt-2">
@@ -330,6 +342,15 @@ function FilterSearch({ setSearchData }) {
       </div>
 
       <ModalSearch open={open} handleClose={handleClose} />
+
+      <AudioRecorderModal
+        open={openAudio}
+        setRecordedText={setKeyword}
+        handleClose={handleCloseAudio}
+        setIsRecording={setIsRecording}
+        isRecording={isRecording}
+        handleSearch={handleSearch}
+      />
       <hr />
     </section>
   )
