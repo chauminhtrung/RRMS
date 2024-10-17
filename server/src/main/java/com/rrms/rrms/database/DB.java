@@ -36,7 +36,7 @@ public class DB {
             RoomServiceRepository roomServiceRepository,
             ISearchService searchService) {
         return args -> {
-            int roomsLength = 200;
+            int roomsLength = 2000;
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
 
             // Tạo tài khoản admin nếu chưa tồn tại

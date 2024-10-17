@@ -30,7 +30,6 @@ import RRMS from './pages/RRMS/RRMS'
 import AdminManageBoker from './pages/admin/AdminManageBoker/AdminManageBoker'
 import PostRooms from './pages/PostRooms/PostRooms'
 import AdminManage from './pages/admin/AdminManage/AdminManage'
-import ChatAI from './pages/AI/ChatAI'
 import Audio from './pages/AI/Audio'
 import RoomManagement from './pages/admin/AdminManage/RoomManagement'
 import Recognition from './pages/AI/Recognition'
@@ -49,7 +48,6 @@ function App() {
   return (
     <>
       <Router>
-        {/* <ChatAI /> */}
         {/* <ValidCaptcha /> */}
         {!isAdmin ? <Header /> : <></>}
         <Routes>
