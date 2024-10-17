@@ -75,9 +75,11 @@ services:
       - xpack.monitoring.enabled=false
       - ELASTICSEARCH_HOST=http://elasticsearch:9200
     volumes:
-      - ./logstash/pipeline:/usr/share/docker/logstash/pipeline
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:rw
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:rw
     ports:
       - "5044:5044"
+      - "5000:5000"
       - "9600:9600"
     depends_on:
       - elasticsearch

@@ -14,6 +14,9 @@ import Support from './pages/Support/Support'
 import AdminStatis from './pages/admin/statistical'
 
 import MainManagement from './pages/admin/ManagerHome/MainManagement'
+import ManagerMyAccount from './pages/admin/ManagerMyAccount/ManagerMyAccount'
+import ManagerCompanyAT from './pages/admin/ManagerCompanyAT/ManagerCompanyAT'
+import ManagerSettings from './pages/admin/ManagerSettings/ManagerSettings'
 
 import AdminManagerGroup from './pages/admin/AdminManagerGroup'
 import Contact from './pages/Contact/Contact'
@@ -42,7 +45,7 @@ function App() {
   //   setIsAdmin(true)
   // }, [])
   const [isAdmin, setIsAdmin] = useState(false)
-
+  const [isNavAdmin, setIsNavAdmin] = useState(false)
   return (
     <>
       <Router>
@@ -68,14 +71,24 @@ function App() {
           <Route path="/heart" element={<Heart setIsAdmin={setIsAdmin} />} />
           <Route path="/RRMS" element={<RRMS setIsAdmin={setIsAdmin} />} />
           {/* Admin page */}
-          <Route path="/admin" element={<MainManagement setIsAdmin={setIsAdmin} />} />
-          <Route path="/adminBoker" element={<AdminManageBoker setIsAdmin={setIsAdmin} />} />
+          <Route
+            path="/quanlytro"
+            element={<MainManagement setIsAdmin={setIsAdmin} isNavAdmin={isNavAdmin} setIsNavAdmin={setIsNavAdmin} />}
+          />
+          <Route path="/moi-gioi" element={<AdminManageBoker setIsAdmin={setIsAdmin} />} />
           <Route path="/adminManage" element={<AdminManage setIsAdmin={setIsAdmin} />} />
           <Route path="/roomManagement" element={<RoomManagement setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminStatis" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
+          <Route path="/bao-cao" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminManagerBoard" element={<AdminManagerBoard setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminManagerGroup" element={<AdminManagerGroup setIsAdmin={setIsAdmin} />} />
-          <Route path="/dang-tin" element={<PostRooms setIsAdmin={setIsAdmin} />} />
+          <Route
+            path="/dang-tin"
+            element={<PostRooms setIsAdmin={setIsAdmin} isNavAdmin={isNavAdmin} setIsNavAdmin={setIsNavAdmin} />}
+          />
+          <Route path="/tai-khoan" element={<ManagerMyAccount setIsAdmin={setIsAdmin} />} />
+          <Route path="/phan-quyen" element={<ManagerCompanyAT setIsAdmin={setIsAdmin} />} />
+          <Route path="/cai-dat" element={<ManagerSettings setIsAdmin={setIsAdmin} />} />
         </Routes>
         {!isAdmin ? <Footer /> : <></>}
       </Router>

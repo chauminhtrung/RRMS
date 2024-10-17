@@ -51,4 +51,8 @@ public class Account {
 
     @OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
     List<Auth> authorities;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "heart_id")
+    private Heart heart;
 }

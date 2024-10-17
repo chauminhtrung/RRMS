@@ -43,3 +43,7 @@ Accept: application/json
     ],
     "address": "Bắc Từ Liên"
 }
+
+###
+
+DELETE {{baseUrl}}/room/{{roomId}}

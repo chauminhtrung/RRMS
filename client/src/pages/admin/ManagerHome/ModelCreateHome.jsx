@@ -1,7 +1,52 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { getPhuongXa, getQuanHuyen, getTinhThanh } from '~/apis/apiClient'
+
 const ModelCreateHome = () => {
   const [selectedOption, setSelectedOption] = useState('')
   const [FileName, setFileName] = useState('')
+  const [provinces, setProvinces] = useState([])
+  const [districts, setDistricts] = useState([])
+  const [wards, setWards] = useState([])
+  const [selectedProvince, setSelectedProvince] = useState('')
+  const [selectedDistrict, setSelectedDistrict] = useState('')
+  const [selectedWard, setSelectedWard] = useState('')
+
+  // lấy danh sách tỉnh/thành từ API
+  useEffect(() => {
+    getTinhThanh()
+      .then((response) => {
+        if (response.data.error === 0) {
+          setProvinces(response.data.data)
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching provinces:', error)
+      })
+  }, [])
+  // Hàm để lấy danh sách quận/huyện theo tỉnh/thành từ API
+  const fetchDistricts = async (provinceId) => {
+    getQuanHuyen(provinceId)
+      .then((response) => {
+        if (response.data.error === 0) {
+          setDistricts(response.data.data)
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching wards:', error)
+      })
+  }
+  // Hàm để lấy danh sách xa/phuong theo quận/huyện từ API
+  const fetchWards = async (districId) => {
+    getPhuongXa(districId)
+      .then((response) => {
+        if (response.data.error === 0) {
+          setWards(response.data.data)
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching wards:', error)
+      })
+  }
 
   function handleChangeFileName(event) {
     setFileName(event.target.files[0].name)
@@ -9,6 +54,26 @@ const ModelCreateHome = () => {
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value)
+  }
+
+  // Hàm xử lý khi chọn tỉnh/thành
+  const handleProvinceChange = (event) => {
+    const provinceId = event.target.value
+    setSelectedProvince(provinceId)
+    fetchDistricts(provinceId)
+  }
+
+  // Hàm xử lý khi chọn quận/huyện
+  const handleDistrictChange = (event) => {
+    const districtId = event.target.value
+    setSelectedDistrict(districtId)
+    console.log(districtId)
+    fetchWards(districtId)
+  }
+
+  // Hàm xử lý khi chọn xa/phuong
+  const handleWardChange = (event) => {
+    setSelectedWard(event.target.value)
   }
 
   return (
@@ -433,8 +498,15 @@ const ModelCreateHome = () => {
                           data-format="numeric"
                           name="address_component[province_id]"
                           className="form-select form-control province"
+                          value={selectedProvince}
+                          onChange={handleProvinceChange}
                           required>
                           <option value="">Chọn Tỉnh/Thành phố</option>
+                          {provinces.map((province, index) => (
+                            <option key={index} value={province.id}>
+                              {province.full_name}
+                            </option>
+                          ))}
                         </select>
                         <label htmlFor="province">
                           Chọn Tỉnh/Thành phố <span style={{ color: 'red' }}>*</span>
@@ -449,7 +521,16 @@ const ModelCreateHome = () => {
                           data-format="numeric"
                           name="address_component[district_id]"
                           className="form-select form-control district"
-                          required=""></select>
+                          value={selectedDistrict}
+                          onChange={handleDistrictChange}
+                          required="">
+                          <option value="">Chọn quận/huyện</option>
+                          {districts.map((district, index) => (
+                            <option key={index} value={district.id}>
+                              {district.full_name}
+                            </option>
+                          ))}
+                        </select>
                         <label htmlFor="district">
                           Chọn Quận/Huyện <span style={{ color: 'red' }}>*</span>
                         </label>
@@ -463,7 +544,16 @@ const ModelCreateHome = () => {
                           data-format="numeric"
                           name="address_component[ward_id]"
                           className="form-select form-control ward"
-                          required=""></select>
+                          value={selectedWard}
+                          onChange={handleWardChange}
+                          required="">
+                          <option value="">Chọn Phường/Xã</option>
+                          {wards.map((ward, index) => (
+                            <option key={index} value={ward.id}>
+                              {ward.full_name}
+                            </option>
+                          ))}
+                        </select>
                         <label htmlFor="ward">
                           Chọn Phường/Xã <span style={{ color: 'red' }}>*</span>
                         </label>

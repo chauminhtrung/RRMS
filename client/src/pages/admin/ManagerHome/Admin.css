@@ -94,3 +94,84 @@
     border-radius: 50%;
     background-color: #FFF;
 }
+
+
+
+.account-payment{
+    border-radius: 10px;
+    border: 1px solid #68c3ed;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #e1f6ff;
+    margin-top: 10px;
+}
+
+.account-payment .item{
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    width: 33.33333%;
+}
+
+.account-payment .item .icon{
+    margin-right: 15px;
+}
+.info-account {
+    margin-top: 15px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+}
+
+.info-account .item {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.info-account .item.no-border{
+    border-bottom: 0px;
+}
+
+
+.card-feature2 {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  
+  .icon-collapse{
+    display: flex;
+    justify-content: flex-end;
+    padding: 0px
+}
+.icon-collapse button{
+    border: none;
+    background: none;
+}
+.tox .tox-tbtn{
+    background-color: #fffce5;
+    border: 1px solid #000;
+    margin-right: 5px;
+}
+.mce-content-body{
+    margin: 1rem auto 1rem auto!important;
+}
+
+
+.toolbar-container-sticky {
+    width: 30%;
+    position: fixed!important;
+    left: 50%;
+    bottom: 30px!important;
+    z-index: 1000!important; /* Ensure it's above other content */
+    background-color: white; /* Match the background color to your needs */
+    transform: translateX(-50%);
+}
+.tox:not(.tox-tinymce-inline).tox-tinymce--toolbar-bottom .tox-editor-header {
+    border: 1px solid #d5d5d5;
+    box-shadow: none;
+    padding: 8px 0;
+}
+
+.tox .tox-statusbar__branding svg {display: none;}

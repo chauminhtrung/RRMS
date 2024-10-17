@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Box, Typography, Select, MenuItem, Slider } from '@mui/material'
+import { useDebounce } from '@uidotdev/usehooks'
 
 import ModalSearch from './ModalSearch'
 import MicIcon from '@mui/icons-material/Mic'
@@ -21,6 +22,8 @@ function FilterSearch({ setSearchData }) {
   const [isRecording, setIsRecording] = useState(false)
 
   const [selectedValueArea, setSelectedValueArea] = useState('Dưới 50 m2')
+
+  const debouncedKeyword = useDebounce(keyword, 300)
   // const handleInputChange = (event) => {
   //   setSearchValue(event.target.value)
   // }
@@ -28,14 +31,15 @@ function FilterSearch({ setSearchData }) {
   useEffect(() => {
     handleSearch
   }, [keyword])
+    if (debouncedKeyword) {
+      searchByName(debouncedKeyword).then((searchResult) => {
+        setSearchData(searchResult)
+      })
+    }
+  }, [debouncedKeyword, setSearchData])
 
   const handleSearch = (e) => {
     setKeyword(e.target.value)
-    searchByName(keyword).then((res) => {
-      console.log(res.data.result)
-
-      setSearchData(res.data.result)
-    })
   }
 
   const handleAreaChange = (event) => {

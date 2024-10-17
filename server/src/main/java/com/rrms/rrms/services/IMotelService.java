@@ -5,16 +5,17 @@ import java.util.UUID;
 
 import com.rrms.rrms.dto.request.MotelRequest;
 import com.rrms.rrms.dto.response.MotelResponse;
-import com.rrms.rrms.models.Motel;
 
 public interface IMotelService {
-    public MotelResponse insert(MotelRequest motel);
+    MotelResponse insert(MotelRequest motel);
 
-    public List<MotelResponse> findAllByMotelName(String motelName);
+    MotelResponse findById(UUID id);
 
-    public List<MotelResponse> findAll();
+    List<MotelResponse> findAllByMotelName(String motelName);
 
-    public MotelResponse update(UUID id, MotelRequest motel);
+    List<MotelResponse> findAll();
 
-    public void delete(UUID id);
+    MotelResponse update(UUID id, MotelRequest motel);
+
+    void delete(UUID id);
 }

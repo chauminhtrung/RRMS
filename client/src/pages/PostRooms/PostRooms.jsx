@@ -6,11 +6,13 @@ import PersonIcon from '@mui/icons-material/Person'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
 import Post from './Post'
 import Customer from './Customer'
+import NavWData from '~/layouts/admin/NavWData'
 
-const PostRooms = ({ setIsAdmin }) => {
+const PostRooms = ({ setIsAdmin, setIsNavAdmin, isNavAdmin }) => {
   const [tabIndex, setTabIndex] = useState('1')
   useEffect(() => {
     setIsAdmin(true)
+    setIsNavAdmin(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const handleChange = (event, newValue) => {
@@ -19,6 +21,7 @@ const PostRooms = ({ setIsAdmin }) => {
   return (
     <Box>
       <NavAdmin />
+      {isNavAdmin ? <NavWData /> : <></>}
       <Container sx={{ my: 2 }}>
         <Box sx={{ my: 2 }}>
           <Typography variant="h5">Tin đăng & khách tiềm năng</Typography>
