@@ -25,7 +25,6 @@ function ChatAI() {
       prefixOptions: ['Anh', 'Chị'],
       floatButtonTooltipEnable: true,
       prefixPlaceholder: 'Danh xưng',
-      css: '',
     }
 
     const FptLiveChatConfigs = {
@@ -57,7 +56,7 @@ function ChatAI() {
     }
   }, [])
 
-  return <div className="App"></div>
+  return <div></div>
 }
 
 export default ChatAI
