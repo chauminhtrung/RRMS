@@ -1,22 +1,24 @@
 package com.rrms.rrms.database;
 
-import com.rrms.rrms.enums.Gender;
-import com.rrms.rrms.models.*;
-import com.rrms.rrms.repositories.*;
-import com.rrms.rrms.services.ISearchService;
-import lombok.extern.slf4j.Slf4j;
-import net.datafaker.Faker;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
+import com.rrms.rrms.enums.Gender;
+import com.rrms.rrms.models.*;
+import com.rrms.rrms.repositories.*;
+import com.rrms.rrms.services.ISearchService;
+
+import lombok.extern.slf4j.Slf4j;
+import net.datafaker.Faker;
 
 @Configuration
 @Slf4j
@@ -93,7 +95,8 @@ public class DB {
                     .phone("0333333333")
                     .cccd("admin")
                     .gender(Gender.MALE)
-                    .avatar("https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
+                    .avatar(
+                            "https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
                     .birthday(LocalDate.now())
                     .build());
         }
@@ -109,7 +112,8 @@ public class DB {
                     .phone("0333334")
                     .cccd("012345678900")
                     .gender(Gender.OTHER)
-                    .avatar("https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
+                    .avatar(
+                            "https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
                     .birthday(LocalDate.now())
                     .build());
         }
@@ -122,7 +126,8 @@ public class DB {
                     .phone("03333345553")
                     .cccd("012345678900")
                     .gender(Gender.OTHER)
-                    .avatar("https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
+                    .avatar(
+                            "https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
                     .birthday(LocalDate.now())
                     .build());
         }
@@ -154,7 +159,8 @@ public class DB {
         return room;
     }
 
-    private void createServices(Faker faker, List<RoomService> roomServices, Room room, ServiceRepository serviceRepository) {
+    private void createServices(
+            Faker faker, List<RoomService> roomServices, Room room, ServiceRepository serviceRepository) {
         Service service1 = Service.builder()
                 .typeService("Tiện nghi")
                 .nameService(faker.options().option("Có chuồng chó", "Wifi miễn phí", "Hồ bơi", "Gym"))
@@ -179,10 +185,10 @@ public class DB {
         roomServices.add(RoomService.builder().room(room).service(service3).build());
     }
 
-
     private void createRoomImages(Faker faker, List<RoomImage> roomImages, Room room) {
         for (int j = 0; j < 5; j++) {
-            roomImages.add(new RoomImage(UUID.randomUUID(), room, faker.internet().image()));
+            roomImages.add(
+                    new RoomImage(UUID.randomUUID(), room, faker.internet().image()));
         }
     }
 }
