@@ -46,7 +46,7 @@ function App() {
   return (
     <>
       <Router>
-        <ChatAI />
+        {/* <ChatAI /> */}
         {/* <ValidCaptcha /> */}
         {!isAdmin ? <Header /> : <></>}
         <Routes>
