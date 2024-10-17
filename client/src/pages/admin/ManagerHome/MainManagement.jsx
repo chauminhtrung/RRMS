@@ -1,18 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react'
-
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
 import ModalCreateHome from './ModelCreateHome'
 import './Admin.css'
-
-const MainManagement = ({ setIsAdmin }) => {
+const MainManagement = ({ setIsAdmin, setIsNavAdmin, isNavAdmin }) => {
   useEffect(() => {
     setIsAdmin(true)
   }, [])
 
   return (
     <div style={{ backgroundColor: ' #e4eef5' }}>
-      <NavAdmin setIsAdmin={setIsAdmin} />
+      <NavAdmin setIsAdmin={setIsAdmin} setIsNavAdmin={setIsNavAdmin} isNavAdmin={isNavAdmin} />
       <div style={{ backgroundColor: '#fff', borderRadius: '10px', margin: '10px' }}>
         <div style={{ height: '100vh', padding: '15px' }}>
           <div style={{ borderRadius: '10px' }}>

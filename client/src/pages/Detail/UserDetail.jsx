@@ -28,9 +28,9 @@ const UserDetail = ({ item }) => {
         top: 20,
       }}>
       <Avatar sx={{ height: '75px', width: '75px' }} src={item.avatar}>
-        {item?.owner[0]}
+        {item?.motel.account.fullname}
       </Avatar>
-      <Typography variant="subtitle1">Chủ nhà: {item.owner}</Typography>
+      <Typography variant="subtitle1">Chủ nhà: {item.motel.account.fullname}</Typography>
       <Typography sx={{ color: item.censor ? 'lime' : 'red' }} variant="overline">
         {item.censor ? 'Đã được chứng thực' : 'Chưa chứng thực'}
       </Typography>

@@ -11,3 +11,11 @@ GET {{baseUrl}}/searchs/name?name=Vinh
 ###
 
 GET {{baseUrl}}/searchs
+
+# Search danh sách phòng theo địa chỉ bằng Elastic Search
+###
+GET {{baseUrl}}/searchs/address?address=Bình Định
+
+# Search mở danh sách phòng theo địa chỉ bằng Elastic Search
+###
+GET {{baseUrl}}/searchs/addressFuzzy?address=Bình Định

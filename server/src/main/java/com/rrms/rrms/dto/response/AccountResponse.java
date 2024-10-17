@@ -1,12 +1,13 @@
 package com.rrms.rrms.dto.response;
 
-import com.rrms.rrms.enums.Gender;
-import com.rrms.rrms.enums.Roles;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.io.Serializable;
 import java.util.Date;
+
+import com.rrms.rrms.enums.Gender;
+import com.rrms.rrms.enums.Roles;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
