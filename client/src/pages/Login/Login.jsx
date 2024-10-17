@@ -1,45 +1,92 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import FacebookIcon from '@mui/icons-material/Facebook'
 import GoogleIcon from '@mui/icons-material/Google'
 import TwitterIcon from '@mui/icons-material/Twitter'
 import InstagramIcon from '@mui/icons-material/Instagram'
 import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2';
 import './Login.css'
+import { env } from '~/configs/environment';
 
-const Login = ({ setIsAdmin }) => {
-  const [phone, setPhone] = useState('')
-  const [password, setPassword] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
-  const navigate = useNavigate()
-  useEffect(() => {
-    setIsAdmin(false)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+const Login = ({ setUsername, setAvatar}) => {  
+  const [phone, setPhone] = useState('');  
+  const [password, setPassword] = useState('');  
+  const navigate = useNavigate();  
 
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-
-    if (!phone || !password) {
-      setErrorMessage('Vui lòng nhập đầy đủ thông tin.')
-      return
-    }
-
-    const account = { phone, password }
-
-    try {
-      const response = await axios.post('http://localhost:8080/login', account)
-      alert(response.data)
-
-      navigate('/')
-    } catch (error) {
-      if (error.response) {
-        setErrorMessage(error.response.data)
-      } else {
-        setErrorMessage('Có lỗi xảy ra, vui lòng thử lại.')
-      }
-    }
-  }
+  const handleSubmit = async (event) => {  
+    event.preventDefault();  
+    if (!phone || !password) {  
+      Swal.fire({  
+        icon: 'warning',  
+        title: 'Thông báo',  
+        text: 'Vui lòng nhập đầy đủ thông tin.',  
+      });  
+      return;  
+    }  
+  
+    const account = { phone, password };  
+    try {  
+      const response = await axios.post(`${env.API_URL}/login`, account);  
+      if (response.status === 200) {  
+        Swal.fire({  
+          icon: 'success',  
+          title: 'Đăng nhập thành công!',  
+          text: 'Chào mừng bạn quay trở lại!',  
+        });  
+  
+        const usernameFromResponse = response.data.data.username;  
+        const avtFromResponse = response.data.data.avatar;  
+  
+        if (!usernameFromResponse) {  
+          throw new Error("Username không tồn tại trong phản hồi từ server");  
+        }  
+  
+        const userData = {  
+          phone: phone,  
+          avatar: avtFromResponse,  
+          username: usernameFromResponse,  
+        };  
+        sessionStorage.setItem('user', JSON.stringify(userData));  
+        
+        // Cập nhật trạng thái trong App  
+        setUsername(usernameFromResponse);  
+        setAvatar(avtFromResponse);  
+        
+        navigate('/'); // Điều hướng về trang chính  
+      }  
+    } catch (error) {  
+      if (error.response) {  
+        console.log("Error response status:", error.response.status);  
+        if (error.response.status === 401) {  
+          Swal.fire({  
+            icon: 'error',  
+            title: 'Sai mật khẩu',  
+            text: 'Vui lòng kiểm tra lại mật khẩu của bạn.',  
+          });  
+        } else if (error.response.status === 404) {  
+          Swal.fire({  
+            icon: 'error',  
+            title: 'Tài khoản không tồn tại',  
+            text: 'Vui lòng kiểm tra lại số điện thoại của bạn.',  
+          });  
+        } else {  
+          Swal.fire({  
+            icon: 'error',  
+            title: 'Lỗi 1',  
+            text: 'Đã xảy ra lỗi. Vui lòng thử lại sau.',  
+          });  
+        }  
+      } else {  
+        console.log("No response from server:", error);  
+        Swal.fire({  
+          icon: 'error',  
+          title: 'Lỗi 2',  
+          text: 'Đã xảy ra lỗi. Vui lòng thử lại sau.',  
+        });  
+      }  
+    }  
+  };
 
   return (
     <div
@@ -78,9 +125,6 @@ const Login = ({ setIsAdmin }) => {
               <div className="col-md-6 login-form-1" style={{ backgroundColor: '#fff' }}>
                 <h3>Đăng nhập tài khoản</h3>
 
-                {/* Add error message display */}
-                {errorMessage && <div className="error-message">{errorMessage}</div>}
-
                 <form onSubmit={handleSubmit} className="needs-validation" id="login-form">
                   <div className="container-input">
                     <div className="form-group">
@@ -92,7 +136,6 @@ const Login = ({ setIsAdmin }) => {
                         placeholder="Số điện thoại *"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        required
                       />
                       <div className="invalid-feedback">Vui lòng nhập số điện thoại</div>
                     </div>
@@ -103,7 +146,6 @@ const Login = ({ setIsAdmin }) => {
                         placeholder="Mật khẩu *"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        required
                       />
                       <div className="invalid-feedback">Vui lòng nhập mật khẩu</div>
                     </div>
