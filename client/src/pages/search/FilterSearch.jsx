@@ -29,11 +29,9 @@ function FilterSearch({ setSearchData }) {
   // }
 
   useEffect(() => {
-    handleSearch
-  }, [keyword])
     if (debouncedKeyword) {
       searchByName(debouncedKeyword).then((searchResult) => {
-        setSearchData(searchResult)
+        setSearchData(searchResult.data.result)
       })
     }
   }, [debouncedKeyword, setSearchData])
