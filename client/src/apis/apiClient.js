@@ -15,15 +15,15 @@ export const postReview = async (data) => {
 }
 
 export const getProfile = async (username) => {
-  return await axios.get(`${env.API_URL}/profile?username=${username}`)
+  return await axios.get(`${env.API_URL}/api-accounts/profile?username=${username}`)
 }
 
 export const updateProfile = async (data) => {
-  return await axios.put(`${env.API_URL}/profile`, data)
+  return await axios.put(`${env.API_URL}/api-accounts/profile`, data)
 }
 
 export const changePassword = async (data) => {
-  return await axios.put(`${env.API_URL}/profile/change-password`, data)
+  return await axios.put(`${env.API_URL}/api-accounts/profile/change-password`, data)
 }
 
 export const searchByName = async (keyword) => {

@@ -12,5 +12,4 @@ public interface TypeRoomRepository extends JpaRepository<TypeRoom, UUID> {
     Optional<TypeRoom> findByName(String name);
 
     List<TypeRoom> findAllByName(String name);
-
 }

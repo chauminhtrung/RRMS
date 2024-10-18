@@ -37,8 +37,6 @@ public class AccountService implements IAccountService {
     @Autowired
     AccountMapper accountMapper;
 
-    //    private final PasswordEncoder passwordEncoder;
-
     @Override
     public List<Account> findAll() {
         return List.of();
@@ -47,6 +45,11 @@ public class AccountService implements IAccountService {
     @Override
     public Optional<Account> findAccountsByUsername(String username) {
         return accountRepository.findByUsername(username);
+    }
+
+    @Override
+    public Optional<Account> findByPhone(String phone) {
+        return accountRepository.findByPhone(phone);
     }
 
     @Override

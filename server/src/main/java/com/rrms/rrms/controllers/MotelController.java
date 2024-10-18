@@ -3,7 +3,6 @@ package com.rrms.rrms.controllers;
 import java.util.List;
 import java.util.UUID;
 
-import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.request.MotelRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,12 +22,6 @@ public class MotelController {
     @GetMapping("/{name}")
     public ApiResponse<List<MotelResponse>> getMotel(@PathVariable String name) {
         List<MotelResponse> motelResponses = motelService.findAllByMotelName(name);
-        return ApiResponse.<List<MotelResponse>>builder().code(HttpStatus.OK.value()).message("success").result(motelResponses).build();
-    }
-
-    @GetMapping("/get-motel-account")
-    public ApiResponse<List<MotelResponse>> getMotelbyaccount(@RequestParam String username) {
-        List<MotelResponse> motelResponses = motelService.findMotelByAccount_Username(username);
         return ApiResponse.<List<MotelResponse>>builder().code(HttpStatus.OK.value()).message("success").result(motelResponses).build();
     }
 
