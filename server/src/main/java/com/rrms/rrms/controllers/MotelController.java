@@ -25,6 +25,12 @@ public class MotelController {
         return ApiResponse.<List<MotelResponse>>builder().code(HttpStatus.OK.value()).message("success").result(motelResponses).build();
     }
 
+    @GetMapping("/get-motel-account")
+    public ApiResponse<List<MotelResponse>> getMotelbyaccount(@RequestParam String username) {
+        List<MotelResponse> motelResponses = motelService.findMotelByAccount_Username(username);
+        return ApiResponse.<List<MotelResponse>>builder().code(HttpStatus.OK.value()).message("success").result(motelResponses).build();
+    }
+
     @GetMapping()
     public ApiResponse<List<MotelResponse>> getMotels() {
         List<MotelResponse> motelResponses = motelService.findAll();

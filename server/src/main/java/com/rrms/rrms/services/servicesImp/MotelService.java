@@ -40,6 +40,11 @@ public class MotelService implements IMotelService {
         return motelRepository.findAllByMotelName(motelName).stream().map(motelMapper::motelToMotelResponse).collect(Collectors.toList());
     }
 
+    @Override
+    public List<MotelResponse> findMotelByAccount_Username(String username) {
+        return motelRepository.findMotelByAccount_Username(username).stream().map(motelMapper::motelToMotelResponse).collect(Collectors.toList());
+    }
+
 
     @Override
     public List<MotelResponse> findAll() {

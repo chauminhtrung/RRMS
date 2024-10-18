@@ -14,6 +14,7 @@ public interface IMotelService {
 
     List<MotelResponse> findAllByMotelName(String motelName);
 
+    List<MotelResponse> findMotelByAccount_Username(String username);
 
     List<MotelResponse> findAll();
 
