@@ -12,7 +12,7 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
 
-const AdminManageBoker = ({ setIsAdmin }) => {
+const AdminManageBoker = ({ setIsAdmin, motels, setmotels }) => {
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const AdminManageBoker = ({ setIsAdmin }) => {
 
   return (
     <>
-      <NavAdmin />
+      <NavAdmin setmotels={setmotels} motels={motels} />
       <div style={{ backgroundColor: '#c2c5aa' }}>
         <div className="row justify-content-center">
           <div className="col-md-8 col-sm-8 col-xs-12 mt-3">

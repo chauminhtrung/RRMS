@@ -1,5 +1,11 @@
 package com.rrms.rrms.controllers;
 
+
+import java.util.List;
+import java.util.UUID;
+
+import com.rrms.rrms.dto.request.AccountRequest;
+
 import com.rrms.rrms.dto.request.MotelRequest;
 import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.dto.response.MotelResponse;
@@ -38,7 +44,16 @@ public class MotelController {
                 .build();
     }
 
+
+    @GetMapping("/get-motel-account")
+    public ApiResponse<List<MotelResponse>> getMotelbyaccount(@RequestParam String username) {
+        List<MotelResponse> motelResponses = motelService.findMotelByAccount_Username(username);
+        return ApiResponse.<List<MotelResponse>>builder().code(HttpStatus.OK.value()).message("success").result(motelResponses).build();
+    }
+
+
     @Operation(summary = "Get all motels")
+
     @GetMapping()
     public ApiResponse<List<MotelResponse>> getMotels() {
         List<MotelResponse> motelResponses = motelService.findAll();

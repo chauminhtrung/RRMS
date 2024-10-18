@@ -1,13 +1,13 @@
 import { useEffect } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
-const ManagerMyAccount = ({ setIsAdmin }) => {
+const ManagerMyAccount = ({ setIsAdmin, motels, setmotels }) => {
   useEffect(() => {
     setIsAdmin(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   return (
     <div>
-      <NavAdmin setIsAdmin={setIsAdmin} />
+      <NavAdmin setIsAdmin={setIsAdmin} setmotels={setmotels} motels={motels} />
       <div className="page-setting mb-4">
         <div className="container">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -20,7 +20,7 @@ const ManagerMyAccount = ({ setIsAdmin }) => {
             <div className="d-flex">
               <div className="col-md-3" style={{ borderRight: '1px solid #eee', padding: '0' }}>
                 {/* Nav tabs  */}
-                <ul className="nav setting-tabs" role="tablist">
+                <ul className="nav setting-tabs" role="tablist" style={{ display: 'unset' }}>
                   <li className="nav-item">
                     <a className="nav-link active" data-bs-toggle="tab" href="#home">
                       <svg
@@ -86,7 +86,7 @@ const ManagerMyAccount = ({ setIsAdmin }) => {
                           <img src="https://quanlytro.me/./images/avatar.png" width="100%" alt="avatar" />
                         </div>
                         <div className="text-center">
-                          <h3 className="mt-0">
+                          <h3 className="mt-0 text-black">
                             <span>
                               <b>chauminhtrung</b>
                             </span>
