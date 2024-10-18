@@ -1,9 +1,32 @@
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import './NavbarAdmin.css'
+import { useEffect, useState } from 'react'
 import NavWData from './NavWData'
-// import NavWData from './NavWData'
+import { getMotelByname } from '~/apis/apiClient'
+const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) => {
+  const { motelName } = useParams() // Lấy tham số motelName từ URL
+  const [motel, setmotel] = useState(null)
 
-const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin }) => {
+  useEffect(() => {
+    // Nếu có danh sách nhà trọ và không có tên cụ thể từ URL
+    if (motels && motels.length > 0 && !motelName) {
+      setmotel(motels[0]) // Cập nhật phòng trọ đầu tiên nếu tồn tại dữ liệu
+    } else {
+      // Nếu có tên nhà trọ từ URL, lấy dữ liệu bằng API
+      getMotelByname(motelName).then((res) => {
+        setmotel(res.data.result[0])
+      })
+    }
+  }, [motels, motelName, getMotelByname]) // Thêm các dependencies cần thiết vào mảng dependencies
+
+  // Theo dõi khi motel thay đổi để kiểm tra giá trị
+  useEffect(() => {
+    if (motel) {
+      console.log('Motel đã được cập nhật:')
+      console.log(motel)
+    }
+  }, [motel]) // Chỉ chạy khi motel thay đổi
+
   return (
     <header>
       <div className="header-inner">
@@ -46,13 +69,17 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin }) => {
                         <line x1="19" y1="12" x2="5" y2="12"></line>
                         <polyline points="12 19 5 12 12 5"></polyline>
                       </svg>
-                      <img width="110px" height="54px" src="./bg2.png" />
+                      <img
+                        width="110px"
+                        height="54px"
+                        src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Fbg2.png?alt=media&token=568627e1-bedb-4239-84f7-a67076d52af4"
+                      />
                     </Link>
                   </li>
                 </ul>
                 <ul className="topbar-items main-menu-right navbar-nav">
                   <li className="nav-item menu-item active">
-                    <Link to="/quanlytro" className="nav-link ">
+                    <Link to={motel ? `/quanlytro/${motel.motelName}` : '#'} className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -68,12 +95,12 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin }) => {
                         <polyline points="9 22 9 12 15 12 15 22"></polyline>
                       </svg>
                       <span style={{ marginTop: '5px' }} className="text">
-                        Quản lý nhà
+                        {motel ? 'quản lý trọ' : 'Đang tải...'}
                       </span>
                     </Link>
                   </li>
                   <li className="nav-item menu-item ">
-                    <Link to="/bao-cao" className="nav-link ">
+                    <Link to={motel ? `/bao-cao/${motel.motelName}` : '#'} className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -94,7 +121,10 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin }) => {
                     </Link>
                   </li>
                   <li className="nav-item menu-item ">
-                    <Link to="/dang-tin" className="nav-link " setIsNavAdmin={setIsNavAdmin}>
+                    <Link
+                      to={motel ? `/dang-tin/${motel.motelName}` : '#'}
+                      className="nav-link "
+                      setIsNavAdmin={setIsNavAdmin}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -115,7 +145,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin }) => {
                     </Link>
                   </li>
                   <li className="nav-item menu-item ">
-                    <Link to="/moi-gioi" className="nav-link ">
+                    <Link to={motel ? `/moi-gioi/${motel.motelName}` : '#'} className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -138,7 +168,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin }) => {
                     </Link>
                   </li>
                   <li className="nav-item menu-item ">
-                    <Link to="/phan-quyen" className="nav-link ">
+                    <Link to={motel ? `/phan-quyen/${motel.motelName}` : '#'} className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -160,7 +190,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin }) => {
                     </Link>
                   </li>
                   <li className="nav-item menu-item ">
-                    <Link to="/cai-dat" className="nav-link ">
+                    <Link to={motel ? `/cai-dat/${motel.motelName}` : '#'} className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -213,7 +243,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin }) => {
                     </ul>
                   </li>
                   <li className="nav-item menu-item ">
-                    <Link to="/tai-khoan" className="nav-link ">
+                    <Link to={motel ? `/tai-khoan/${motel.motelName}` : '#'} className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -263,7 +293,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin }) => {
       </div>
 
       {/* neu co du lieu moi co cai nay */}
-      {isNavAdmin ? <NavWData /> : <></>}
+      {isNavAdmin && motels.length > 0 ? <NavWData motels={motels} setmotels={setmotels} /> : null}
     </header>
   )
 }
