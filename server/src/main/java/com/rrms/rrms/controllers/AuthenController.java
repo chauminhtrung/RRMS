@@ -17,7 +17,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +33,7 @@ public class AuthenController {
 
   @Autowired
   private IRoleService roleService;
+  private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
@@ -52,7 +53,7 @@ public class AuthenController {
       Optional<Account> passwordMatchingAccount = accountService.login(loginRequest.getPhone(), loginRequest.getPassword());
 
       if (passwordMatchingAccount.isPresent()) {
-        LoginResponse loginResponse = new LoginResponse(account.getUsername(),account.getFullname(),account.getPhone(),account.getEmail(),account.getAvatar(),account.getBirthday(),account.getGender(),account.getCccd());
+        LoginResponse loginResponse = new LoginResponse(account.getUsername(), account.getFullname(), account.getPhone(), account.getEmail(), account.getAvatar(), account.getBirthday(), account.getGender(), account.getCccd());
         response.put("status", true);
         response.put("message", "Đăng nhập thành công.");
         response.put("data", loginResponse);
@@ -100,7 +101,8 @@ public class AuthenController {
     try {
       Account newAccount = new Account();
       newAccount.setUsername(account.getUsername());
-      newAccount.setPassword(account.getPassword());
+      String encodedPassword = passwordEncoder.encode(account.getPassword());
+      newAccount.setPassword(encodedPassword);
       newAccount.setPhone(account.getPhone());
       newAccount.setFullname(account.getFullname());
       newAccount.setEmail(account.getEmail());
@@ -109,10 +111,8 @@ public class AuthenController {
       newAccount.setCccd(account.getCccd());
       accountService.save(newAccount);
 
-      // Convert string to enum
       Roles roleEnum = Roles.valueOf("CUSTOMER");
 
-      // Find role and create auth
       Optional<Role> existingRole = roleService.findRoleByName(roleEnum);
       if (!existingRole.isPresent()) {
         return ResponseEntity.badRequest().body("Role does not exist.");
@@ -121,7 +121,7 @@ public class AuthenController {
       Auth authority = new Auth();
       authority.setAccount(newAccount);
       authority.setRole(existingRole.get());
-      //            authorityService.save(authority);
+      //authorityService.save(authority);
 
       return ResponseEntity.ok().body("Register successful");
     } catch (IllegalArgumentException e) {

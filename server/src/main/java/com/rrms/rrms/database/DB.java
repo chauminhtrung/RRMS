@@ -121,7 +121,7 @@ public class DB {
                 // create admin account
                 accountRepository.save(Account.builder()
                     .username("quoc")
-                    .password("123")
+                    .password(pe.encode("123"))
                     .fullname("Kiến Quốc")
                     .email("kieukienquocvn@gmail.com")
                     .phone("0919925302")
