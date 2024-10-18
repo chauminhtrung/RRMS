@@ -56,6 +56,10 @@ function App() {
 
   const [username, setUsername] = useState('')
   const [avatar, setAvatar] = useState('')
+
+  const [username, setUsername] = useState('')
+  const [avatar, setAvatar] = useState('')
+
   //Muốn mất header thì thêm props setIsAdmin={setIsAdmin}
   useEffect(() => {
     //   setIsAdmin(true)
@@ -152,9 +156,14 @@ function App() {
               />
             }
           />
+
           <Route path="/roomManagement" element={<RoomManagement setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminStatis" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
           <Route path="/bao-cao" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
+
+          <Route path="/roomManagement" element={<RoomManagement setIsAdmin={setIsAdmin} />} />
+          <Route path="/AdminStatis" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
+
           <Route path="/AdminManagerBoard" element={<AdminManagerBoard setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminManagerGroup" element={<AdminManagerGroup setIsAdmin={setIsAdmin} />} />
           <Route path="/dang-tin" element={<PostRooms setIsAdmin={setIsAdmin} />} />

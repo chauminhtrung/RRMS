@@ -5,8 +5,12 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+<<<<<<<<< Temporary merge branch 1
+=========
+import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.request.MotelRequest;
 import com.rrms.rrms.mapper.AccountMapper;
+>>>>>>>>> Temporary merge branch 2
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,12 +44,15 @@ public class MotelService implements IMotelService {
         return motelRepository.findAllByMotelName(motelName).stream().map(motelMapper::motelToMotelResponse).collect(Collectors.toList());
     }
 
+<<<<<<<<< Temporary merge branch 1
+=========
     @Override
     public List<MotelResponse> findMotelByAccount_Username(String username) {
         return motelRepository.findMotelByAccount_Username(username).stream().map(motelMapper::motelToMotelResponse).collect(Collectors.toList());
     }
 
 
+>>>>>>>>> Temporary merge branch 2
     @Override
     public List<MotelResponse> findAll() {
         return motelRepository.findAll().stream().map(motelMapper::motelToMotelResponse).collect(Collectors.toList());
