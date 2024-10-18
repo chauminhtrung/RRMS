@@ -1,71 +1,118 @@
-import { useState } from 'react'
-import { ReactMic } from 'react-mic' // Thư viện thu âm
-import axios from 'axios'
+import { useState, useEffect, useRef } from 'react'
+import MicIcon from '@mui/icons-material/Mic'
+import IconButton from '@mui/material/IconButton'
+import { Backdrop, Box, Fade, Modal, Typography } from '@mui/material'
 
-const Audio = () => {
-  const [isRecording, setIsRecording] = useState(false)
-  const [audioBlob, setAudioBlob] = useState(null)
-  const [resultText, setResultText] = useState('')
+const AudioRecorder = ({ setRecordedText, open, handleClose, setIsRecording, isRecording }) => {
+  const [transcript, setTranscript] = useState('')
+  const recognitionRef = useRef(null)
 
-  // Bắt đầu hoặc dừng ghi âm
-  const handleStartStop = () => {
-    setIsRecording((prev) => !prev)
-  }
-
-  // Xử lý dữ liệu audio sau khi dừng ghi âm
-  const onStop = (recordedBlob) => {
-    console.log('Recorded Blob:', recordedBlob)
-    setAudioBlob(recordedBlob.blob)
-  }
-
-  // Gửi audio lên FPT.AI để chuyển đổi thành văn bản
-  const handleUpload = async () => {
-    if (!audioBlob) {
-      alert('Vui lòng ghi âm trước!')
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+    if (!SpeechRecognition) {
+      alert('Trình duyệt của bạn không hỗ trợ Web Speech API!')
       return
     }
 
-    const formData = new FormData()
-    formData.append('file', audioBlob)
+    const recognition = new SpeechRecognition()
+    recognition.lang = 'vi-VN'
+    recognition.continuous = true
+    recognition.interimResults = true
 
-    try {
-      const response = await axios.post('https://api.fpt.ai/hmi/asr/general', formData, {
-        headers: {
-          'api-key': 'https://api.fpt.ai/nlp', // Thay bằng API Key của bạn
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-
-      setResultText(response.data.hypotheses[0].utterance) // Hiển thị kết quả
-    } catch (error) {
-      console.error('Lỗi:', error)
-      alert('Có lỗi xảy ra khi gọi API!')
+    recognition.onresult = (event) => {
+      let interimTranscript = ''
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcriptSegment = event.results[i][0].transcript
+        if (event.results[i].isFinal) {
+          const finalTranscript = transcriptSegment + ' '
+          setTranscript((prev) => prev + finalTranscript)
+          setRecordedText((prev) => prev + finalTranscript)
+          setRecordedText(finalTranscript)
+        } else {
+          // eslint-disable-next-line no-unused-vars
+          interimTranscript += transcriptSegment
+        }
+      }
     }
+
+    recognitionRef.current = recognition
+
+    return () => {
+      recognition.stop()
+    }
+  }, [setRecordedText])
+
+  const handleStart = () => {
+    setTranscript('')
+    recognitionRef.current.start()
+    setIsRecording(true)
   }
 
+  const handleStop = () => {
+    recognitionRef.current.stop()
+    setIsRecording(false)
+  }
+
+  const handleStartStop = () => {
+    isRecording ? handleStop() : handleStart()
+  }
+
+  const micButtonStyle = {
+    backgroundColor: isRecording ? 'red' : '#f5f5f5',
+    borderRadius: '50%',
+    padding: '20px',
+    transition: 'background-color 0.3s ease, transform 0.3s ease',
+    transform: isRecording ? 'scale(1.2)' : 'scale(1)',
+    color: isRecording ? 'white' : 'black',
+  }
+
+  const modalBoxStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 600,
+    height: 380,
+    bgcolor: 'background.paper',
+    borderRadius: '10px',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+    p: 4,
+    textAlign: 'center',
+    padding: 5,
+  }
+  const modalBackdropStyle = {
+    backdropFilter: 'blur(5px)', // Nền mờ
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Hiệu ứng overlay
+  }
   return (
-    <div style={{ padding: '20px', textAlign: 'center' }}>
-      <h1>Thu âm và chuyển đổi giọng nói với FPT.AI</h1>
+    <div>
+      {/* Modal với nền mờ và hiệu ứng chuyển động */}
+      <Modal
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          style: modalBackdropStyle,
+        }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description">
+        <Fade in={open}>
+          <Box sx={modalBoxStyle}>
+            <Typography variant="h6" component="h2" sx={{ mt: 2 }}>
+              {isRecording ? 'Đang nghe...' : 'Nhấn vào mic để bắt đầu ghi âm'}
+            </Typography>
 
-      <ReactMic
-        record={isRecording}
-        className="sound-wave"
-        onStop={onStop}
-        strokeColor="#000000"
-        backgroundColor="#FF4081"
-      />
-      <button onClick={handleStartStop}>{isRecording ? 'Dừng ghi âm' : 'Bắt đầu ghi âm'}</button>
+            <Typography sx={{ mt: 3 }}>{transcript || '...Không có dữ liệu'}</Typography>
 
-      <button onClick={handleUpload} style={{ marginLeft: '10px' }}>
-        Chuyển Đổi
-      </button>
-
-      <div>
-        <h2>Kết quả:</h2>
-        <p>{resultText}</p>
-      </div>
+            <IconButton onClick={handleStartStop} style={micButtonStyle} sx={{ mt: 3 }}>
+              <MicIcon style={{ fontSize: '80px', mt: 4 }} />
+            </IconButton>
+          </Box>
+        </Fade>
+      </Modal>
     </div>
   )
 }
 
-export default Audio
+export default AudioRecorder

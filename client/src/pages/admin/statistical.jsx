@@ -22,6 +22,7 @@ import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import NavAdmin from '~/layouts/admin/NavbarAdmin'
 const RentalStatus = ({ setIsAdmin }) => {
   const [value, setValue] = React.useState(0)
 
@@ -35,7 +36,8 @@ const RentalStatus = ({ setIsAdmin }) => {
   }
 
   return (
-    <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
+    <Box>
+      <NavAdmin setIsAdmin={setIsAdmin} />
       <Tabs value={value} onChange={handleChange} centered>
         <Tab
           label={

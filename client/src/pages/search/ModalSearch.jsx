@@ -183,14 +183,15 @@ const ModalSearch = ({ open, handleClose }) => {
                 {propertyTypes.map((type) => (
                   <Grid item xs={6} key={type}>
                     <Button
-                      variant={propertyType === type ? 'contained' : 'outlined'}
+                      variant={propertyType === type ? 'black' : 'outlined'}
                       onClick={() => setPropertyType(type)}
-                      startIcon={propertyType === type ? <CheckCircleIcon sx={{ color: '#0984e3', ml: -1 }} /> : <></>}
+                      startIcon={propertyType === type ? <CheckCircleIcon sx={{ color: '#ffffff', ml: -1 }} /> : <></>}
                       sx={{
                         width: '100%',
                         textTransform: 'none',
                         justifyContent: 'flex-start', // Đẩy nội dung của Button ra sát lề trái
-                        backgroundColor: propertyType === type ? 'lightgreen' : 'white',
+                        backgroundColor: propertyType === type ? '#1e90ff' : 'white',
+                        color: propertyType === type ? 'white' : 'black',
                         fontSize: isMobile ? '0.75rem' : '1rem', // Điều chỉnh font cho mobile
                       }}>
                       {type}
@@ -209,14 +210,15 @@ const ModalSearch = ({ open, handleClose }) => {
                 {occupations.map((occ) => (
                   <Grid item xs={6} key={occ}>
                     <Button
-                      variant={occupation === occ ? 'contained' : 'outlined'}
+                      variant={occupation === occ ? 'black' : 'outlined'}
                       onClick={() => setOccupation(occ)}
-                      startIcon={occupation === occ ? <CheckCircleIcon sx={{ color: '#0984e3', ml: -1 }} /> : <></>}
+                      startIcon={occupation === occ ? <CheckCircleIcon sx={{ color: '#ffffff', ml: -1 }} /> : <></>}
                       sx={{
                         width: '100%',
                         textTransform: 'none',
                         justifyContent: 'flex-start',
-                        backgroundColor: occupation === occ ? 'lightgreen' : 'white',
+                        backgroundColor: occupation === occ ? '#1e90ff' : 'white',
+                        color: occupation === occ ? 'white' : 'black',
                         fontSize: isMobile ? '0.75rem' : '1rem',
                       }}>
                       {occ}
