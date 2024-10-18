@@ -4,7 +4,7 @@ import Flatpickr from 'react-flatpickr'
 import 'flatpickr/dist/themes/material_blue.css'
 
 import ModelDeposit from './ModelDeposit'
-const ManagerSettings = ({ setIsAdmin }) => {
+const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
   useEffect(() => {
     setIsAdmin(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -12,7 +12,7 @@ const ManagerSettings = ({ setIsAdmin }) => {
 
   return (
     <div>
-      <NavAdmin setIsAdmin={setIsAdmin} />
+      <NavAdmin setIsAdmin={setIsAdmin} setmotels={setmotels} motels={motels} />
       <div className="page-setting mb-4">
         <div className="container">
           <div className="header-item">

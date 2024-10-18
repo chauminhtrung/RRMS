@@ -24,7 +24,7 @@ import Introduce from './pages/Introduce/Introduce'
 import AdminManagerBoard from './pages/admin/AdminManageBoard'
 import Profile from './pages/Profile/Profile'
 import PaymentPage from './pages/cart/PaymentPage'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Heart from './pages/cart/Heart'
 import RRMS from './pages/RRMS/RRMS'
 import AdminManageBoker from './pages/admin/AdminManageBoker/AdminManageBoker'
@@ -32,17 +32,31 @@ import PostRooms from './pages/PostRooms/PostRooms'
 import AdminManage from './pages/admin/AdminManage/AdminManage'
 import ChatAI from './pages/AI/ChatAI'
 import Audio from './pages/AI/Audio'
+import { getMotelByUsername } from '~/apis/apiClient'
 
 // import TestPage from './pages/TestPage'
 // import ValidCaptcha from './components/ValidCaptcha'
 
 function App() {
+  //lay thong tin tro cua tk account truyen xuong cho trang chu tro
+
+  useEffect(() => {
+    fetchMotelsByUsername('admin')
+  }, [])
+
+  const fetchMotelsByUsername = async (username) => {
+    getMotelByUsername(username).then((res) => {
+      setmotels(res.data.result)
+    })
+  }
+
   //Muốn mất header thì thêm props setIsAdmin={setIsAdmin}
   // useEffect(() => {
   //   setIsAdmin(true)
   // }, [])
   const [isAdmin, setIsAdmin] = useState(false)
-  const [isNavAdmin, setIsNavAdmin] = useState(false)
+  const [isNavAdmin, setIsNavAdmin] = useState(true)
+  const [motels, setmotels] = useState([])
   return (
     <>
       <Router>
@@ -66,22 +80,81 @@ function App() {
           <Route path="/heart" element={<Heart setIsAdmin={setIsAdmin} />} />
           <Route path="/RRMS" element={<RRMS setIsAdmin={setIsAdmin} />} />
           {/* Admin page */}
+          {/* route du lieu mac dinh khi ko nhan vao  */}
           <Route
             path="/quanlytro"
-            element={<MainManagement setIsAdmin={setIsAdmin} isNavAdmin={isNavAdmin} setIsNavAdmin={setIsNavAdmin} />}
+            element={
+              <MainManagement
+                motels={motels}
+                setmotels={setmotels}
+                setIsAdmin={setIsAdmin}
+                isNavAdmin={isNavAdmin}
+                setIsNavAdmin={setIsNavAdmin}
+              />
+            }
+          />
+          {/* route co du lieu khi nhan vao nha tro  */}
+          <Route
+            path="/quanlytro/:motelName"
+            element={
+              <MainManagement
+                motels={motels}
+                setmotels={setmotels}
+                setIsAdmin={setIsAdmin}
+                isNavAdmin={isNavAdmin}
+                setIsNavAdmin={setIsNavAdmin}
+              />
+            }
           />
           <Route path="/moi-gioi" element={<AdminManageBoker setIsAdmin={setIsAdmin} />} />
+          <Route
+            path="/moi-gioi/:motelName"
+            element={<AdminManageBoker setIsAdmin={setIsAdmin} motels={motels} setmotels={setmotels} />}
+          />
           <Route path="/adminManage" element={<AdminManage setIsAdmin={setIsAdmin} />} />
-          <Route path="/bao-cao" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
+          <Route
+            path="/bao-cao"
+            element={
+              <AdminStatis
+                motels={motels}
+                setmotels={setmotels}
+                setIsAdmin={setIsAdmin}
+                isNavAdmin={isNavAdmin}
+                setIsNavAdmin={setIsNavAdmin}
+              />
+            }
+          />
+          <Route
+            path="/bao-cao/:motelName"
+            element={
+              <AdminStatis
+                motels={motels}
+                setmotels={setmotels}
+                setIsAdmin={setIsAdmin}
+                isNavAdmin={isNavAdmin}
+                setIsNavAdmin={setIsNavAdmin}
+              />
+            }
+          />
           <Route path="/AdminManagerBoard" element={<AdminManagerBoard setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminManagerGroup" element={<AdminManagerGroup setIsAdmin={setIsAdmin} />} />
-          <Route
-            path="/dang-tin"
-            element={<PostRooms setIsAdmin={setIsAdmin} isNavAdmin={isNavAdmin} setIsNavAdmin={setIsNavAdmin} />}
-          />
+          <Route path="/dang-tin" element={<PostRooms setIsAdmin={setIsAdmin} />} />
+          <Route path="/dang-tin/:motelName" element={<PostRooms setIsAdmin={setIsAdmin} />} />
           <Route path="/tai-khoan" element={<ManagerMyAccount setIsAdmin={setIsAdmin} />} />
+          <Route
+            path="/tai-khoan/:motelName"
+            element={<ManagerMyAccount setIsAdmin={setIsAdmin} motels={motels} setmotels={setmotels} />}
+          />
           <Route path="/phan-quyen" element={<ManagerCompanyAT setIsAdmin={setIsAdmin} />} />
+          <Route
+            path="/phan-quyen/:motelName"
+            element={<ManagerCompanyAT setIsAdmin={setIsAdmin} motels={motels} setmotels={setmotels} />}
+          />
           <Route path="/cai-dat" element={<ManagerSettings setIsAdmin={setIsAdmin} />} />
+          <Route
+            path="/cai-dat/:motelName"
+            element={<ManagerSettings setIsAdmin={setIsAdmin} motels={motels} setmotels={setmotels} />}
+          />
         </Routes>
         {!isAdmin ? <Footer /> : <></>}
       </Router>
