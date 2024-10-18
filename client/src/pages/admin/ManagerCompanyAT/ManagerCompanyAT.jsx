@@ -1,13 +1,13 @@
 import { useEffect } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
-const ManagerCompanyAT = ({ setIsAdmin }) => {
+const ManagerCompanyAT = ({ setIsAdmin, motels, setmotels }) => {
   useEffect(() => {
     setIsAdmin(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   return (
     <div>
-      <NavAdmin setIsAdmin={setIsAdmin} />
+      <NavAdmin setIsAdmin={setIsAdmin} setmotels={setmotels} motels={motels} />
       <div className="page-permission mb-4" id="permission">
         <div className="container">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -22,7 +22,7 @@ const ManagerCompanyAT = ({ setIsAdmin }) => {
             <div className="d-flex">
               <div className="col-md-3" style={{ borderRight: '1px solid #eee', padding: '0' }}>
                 {/* Nav tabs  */}
-                <ul className="nav setting-tabs permission-tabs" role="tablist">
+                <ul className="nav setting-tabs permission-tabs" role="tablist" style={{ display: 'unset' }}>
                   <li className="nav-item active">
                     <a className="nav-link active " data-bs-toggle="tab" href="#company">
                       <svg
