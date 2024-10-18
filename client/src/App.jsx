@@ -42,7 +42,7 @@ function App() {
   //   setIsAdmin(true)
   // }, [])
   const [isAdmin, setIsAdmin] = useState(false)
-
+  const [isNavAdmin, setIsNavAdmin] = useState(false)
   return (
     <>
       <Router>
@@ -66,13 +66,19 @@ function App() {
           <Route path="/heart" element={<Heart setIsAdmin={setIsAdmin} />} />
           <Route path="/RRMS" element={<RRMS setIsAdmin={setIsAdmin} />} />
           {/* Admin page */}
-          <Route path="/quanlytro" element={<MainManagement setIsAdmin={setIsAdmin} />} />
+          <Route
+            path="/quanlytro"
+            element={<MainManagement setIsAdmin={setIsAdmin} isNavAdmin={isNavAdmin} setIsNavAdmin={setIsNavAdmin} />}
+          />
           <Route path="/moi-gioi" element={<AdminManageBoker setIsAdmin={setIsAdmin} />} />
           <Route path="/adminManage" element={<AdminManage setIsAdmin={setIsAdmin} />} />
           <Route path="/bao-cao" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminManagerBoard" element={<AdminManagerBoard setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminManagerGroup" element={<AdminManagerGroup setIsAdmin={setIsAdmin} />} />
-          <Route path="/dang-tin" element={<PostRooms setIsAdmin={setIsAdmin} />} />
+          <Route
+            path="/dang-tin"
+            element={<PostRooms setIsAdmin={setIsAdmin} isNavAdmin={isNavAdmin} setIsNavAdmin={setIsNavAdmin} />}
+          />
           <Route path="/tai-khoan" element={<ManagerMyAccount setIsAdmin={setIsAdmin} />} />
           <Route path="/phan-quyen" element={<ManagerCompanyAT setIsAdmin={setIsAdmin} />} />
           <Route path="/cai-dat" element={<ManagerSettings setIsAdmin={setIsAdmin} />} />

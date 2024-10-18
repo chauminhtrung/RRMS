@@ -143,5 +143,18 @@ public class RoomService implements IRoom {
                 .toList();
     }
 
+    @Override
+    public String deleteRoom(UUID id) {
+        String result;
+        if (roomRepository.existsById(id)) {
+            roomRepository.deleteById(id);
+            result = "Delete room successful at roomI: " + id;
+        } else {
+            throw new AppException(ErrorCode.ROOM_NOT_FOUND);
+        }
+
+        return result;
+    }
+
 
 }

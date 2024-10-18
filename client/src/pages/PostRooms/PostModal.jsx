@@ -24,10 +24,7 @@ import ViewInArIcon from '@mui/icons-material/ViewInAr'
 import { useEffect, useState } from 'react'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import LocationSelect from '~/components/ProvinceSelect'
-import RoomRule from './RoomRule'
 import { postRoom } from '~/apis/apiClient'
-import imageCompression from 'browser-image-compression'
-import { resizeAndCrop } from '~/utils/resizeImage'
 import { toast } from 'react-toastify'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { storage } from '~/configs/firebaseConfig'
@@ -35,6 +32,7 @@ import { v4 } from 'uuid'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import TitleAttribute from './TitleAttribute'
+import { processImage } from '~/utils/processImage'
 
 const style = {
   position: 'absolute',
@@ -269,25 +267,20 @@ const PostModal = ({ open, handleClose }) => {
       return
     }
 
-    for (const image of images) {
+    const processedImagesPromises = images.map(async (image) => {
       if (image) {
         try {
-          const croppedImage = await resizeAndCrop(image, 16, 9)
-
-          const options = {
-            maxSizeMB: 1,
-            useWebWorker: true,
-          }
-
-          const compressedImage = await imageCompression(croppedImage, options)
-
-          setSelectedImages((prevImages) => [...prevImages, compressedImage])
-          console.log('Compressed Image:', compressedImage)
+          return await processImage(image, 16 / 9, 1)
         } catch (error) {
           console.log('Error processing image:', error)
+          return null
         }
       }
-    }
+      return null
+    })
+
+    const processedImages = await Promise.all(processedImagesPromises)
+    setSelectedImages((prevImages) => [...prevImages, ...processedImages.filter((img) => img !== null)])
   }
 
   const handlePost = () => {
@@ -335,8 +328,6 @@ const PostModal = ({ open, handleClose }) => {
           postRoom(updatedRoom).then((res) => {
             if (res.data.code === 400) {
               toast.error(res.data.message)
-            } else if (res.data.code === 201) {
-              toast.success('Đăng tin thành công!')
             }
           })
           toast.success('Đăng tin thành công!')
@@ -370,8 +361,6 @@ const PostModal = ({ open, handleClose }) => {
       postRoom(room).then((res) => {
         if (res.data.code === 400) {
           toast.error(res.data.message)
-        } else if (res.data.code === 201) {
-          toast.success('Đăng tin thành công!')
         }
       })
       handleClose(true)
