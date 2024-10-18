@@ -9,6 +9,7 @@ import com.rrms.rrms.models.Role;
 import com.rrms.rrms.services.IAccountService;
 import com.rrms.rrms.services.IAuthorityService;
 import com.rrms.rrms.services.IRoleService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -72,28 +73,18 @@ public class AuthenController {
   }
 
   @PostMapping("/logout")
-  public ResponseEntity<?> logout() {
+  public ResponseEntity<?> logout(HttpServletRequest request) {
     Map<String, Object> response = new HashMap<>();
-
     try {
-      // Xóa session hoặc token nếu cần thiết
-      // Nếu bạn sử dụng session:
-      // HttpSession session = request.getSession(false);
-      // if (session != null) {
-      //     session.invalidate();
-      // }
+      request.getSession().invalidate(); // Xóa phiên làm việc
 
-      // Nếu bạn sử dụng JWT, bạn có thể không cần làm gì ở đây
-      // Chỉ cần thông báo rằng người dùng đã đăng xuất thành công
-
+      // sử dụng JWT, bạn không cần làm gì ở đây, chỉ cần client không gửi token đó nữa.
       response.put("status", true);
       response.put("message", "Đăng xuất thành công.");
-      response.put("data", null);
       return ResponseEntity.ok(response);
     } catch (Exception ex) {
       response.put("status", false);
       response.put("message", "Đã xảy ra lỗi khi thực hiện đăng xuất.");
-      response.put("data", null);
       ex.printStackTrace();
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
