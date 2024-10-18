@@ -27,7 +27,7 @@ const Login = ({ setUsername, setAvatar}) => {
   
     const account = { phone, password };  
     try {  
-      const response = await axios.post(`${env.API_URL}/login`, account);  
+      const response = await axios.post(`${env.API_URL}/authen/login`, account);  
       if (response.status === 200) {  
         Swal.fire({  
           icon: 'success',  
