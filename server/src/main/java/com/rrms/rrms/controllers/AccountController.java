@@ -33,7 +33,30 @@ import com.rrms.rrms.services.IRoleService;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
+@RequestMapping("/api-accounts")
 public class AccountController {
+  @Autowired
+  private IAccountService accountService;
+  @Autowired
+  private IAuthorityService authorityService;
+
+  @Autowired
+  private IRoleService roleService;
+
+  @GetMapping("/get-ListaccountByUsername")
+  public ResponseEntity<?> getListaccountByUsername(@RequestParam("username") String username) {
+    Map<String, Object> rs = new HashMap<>();
+    try {
+      rs.put("status", true);
+      rs.put("message", "Call api success");
+      rs.put("data", accountService.findListAccountsByUsername(username));
+    } catch (Exception ex) {
+      rs.put("status", false);
+      rs.put("message", "Call api failed");
+      rs.put("data", null);
+    }
+    return ResponseEntity.ok(rs);
+  }
 //    @GetMapping("/get-all-account")
 //    public ResponseEntity<?> getAllAccount() {
 //        Map<String, Object> rs = new HashMap<>();
