@@ -102,18 +102,28 @@ a {
 .label-feature{
     width: 100%;
     border-radius: 5px;
-    background-color: #8bc34a26;
+    background-color: #20a9e7;
     padding: 10px;
-    border: 1px solid #88c0464f;
+    border: 1px solid #20a9e7;
     position: relative;
     margin-top: 10px;
     display: inline-grid;
-    border-left: 5px solid #88c046a6;
+    border-left: 5px solid #20a9e7;
 }
 
 .item-feature.active{
-    background-color: #15A05C;
+    background-color: #20a9e7;
     color: #fff;
+}
+.btn-round:hover {
+    color: #20a9e7;
+}
+
+
+.btn-secondary.disabled, .btn-secondary:disabled {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
 }
 
 .text-flow {
@@ -664,7 +674,7 @@ div.navbar-brand {
     height: 20px;
     border-radius: 5px;
     color: #fff;
-    background-color: #8bc34a;
+    background-color: rgb(32, 169, 231);
     text-align: center;
     display: flex;
     align-items: center;

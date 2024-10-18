@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Box,
   Tabs,
@@ -23,8 +23,11 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
-const RentalStatus = ({ setIsAdmin }) => {
+import { useParams } from 'react-router-dom'
+const RentalStatus = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
   const [value, setValue] = React.useState(0)
+  const { motelName } = useParams() // Lấy tham số motelName từ URL
+  const [motel, setmotel] = useState(null)
 
   useEffect(() => {
     setIsAdmin(true)
@@ -37,7 +40,13 @@ const RentalStatus = ({ setIsAdmin }) => {
 
   return (
     <Box>
-      <NavAdmin setIsAdmin={setIsAdmin} />
+      <NavAdmin
+        setmotels={setmotels}
+        motels={motels}
+        setIsAdmin={setIsAdmin}
+        setIsNavAdmin={setIsNavAdmin}
+        isNavAdmin={isNavAdmin}
+      />
       <Tabs value={value} onChange={handleChange} centered>
         <Tab
           label={
