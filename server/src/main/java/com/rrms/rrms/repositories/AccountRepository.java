@@ -11,7 +11,9 @@ import com.rrms.rrms.models.Account;
 public interface AccountRepository extends JpaRepository<Account, String> {
     Optional<Account> findByUsername(String username);
 
-    Optional<Account> findByPhoneAndPassword(String Phone, String password);
+    Optional<Account> findByPhone(String phone);
+
+    Optional<Account> findByPhoneAndPassword(String phone, String password);
 
     @Query("SELECT a FROM Account a WHERE a.username like %:username%")
     List<Account> findAccountsByUsername(String username);

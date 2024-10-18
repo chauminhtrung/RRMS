@@ -19,5 +19,10 @@ public interface RoomRepository extends JpaRepository<Room, UUID> {
 
     Optional<List<Room>> findAllByPriceBetween(Double startPrice, Double endPrice);
 
+    List<Room> findAllByMotel_Address(String account);
+
+    @Query("SELECT r FROM Room r JOIN r.motel m WHERE m.address like %:address%")
+    List<Room> findByAddress(String address);
+
     List<Room> findAllByMotel_Account(Account account);
 }

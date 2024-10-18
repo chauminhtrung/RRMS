@@ -6,7 +6,6 @@ import java.util.UUID;
 import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.request.MotelRequest;
 import com.rrms.rrms.dto.response.MotelResponse;
-import com.rrms.rrms.models.Motel;
 
 public interface IMotelService {
     MotelResponse insert(MotelRequest motel);
@@ -16,6 +15,7 @@ public interface IMotelService {
     List<MotelResponse> findAllByMotelName(String motelName);
 
     List<MotelResponse> findMotelByAccount_Username(String username);
+
 
     List<MotelResponse> findAll();
 
