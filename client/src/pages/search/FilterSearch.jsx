@@ -229,7 +229,15 @@ function FilterSearch({ setSearchData }) {
                     />
                     <MicIcon
                       onClick={handleOpenAudio}
-                      style={{ cursor: 'pointer', marginRight: '10px', fontSize: '32px', color: '#555' }}
+                      style={{
+                        position: 'absolute',
+                        cursor: 'pointer',
+                        marginRight: '10px',
+                        fontSize: '28px',
+                        color: '#555',
+                        top: '9',
+                        right: '0',
+                      }}
                     />
                     <div className="guid-search id-1727803392186 dropdown" style={{ display: 'none' }}>
                       Suggest search...
