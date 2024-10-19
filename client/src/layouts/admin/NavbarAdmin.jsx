@@ -79,7 +79,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) 
                 </ul>
                 <ul className="topbar-items main-menu-right navbar-nav">
                   <li className="nav-item menu-item active">
-                    <Link to={motel ? `/quanlytro/${motel.motelName}` : '#'} className="nav-link ">
+                    <Link to={motel ? `/quanlytro/${motel.motelName}` : '/quanlytro'} className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -95,7 +95,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) 
                         <polyline points="9 22 9 12 15 12 15 22"></polyline>
                       </svg>
                       <span style={{ marginTop: '5px' }} className="text">
-                        {motel ? 'quản lý trọ' : 'Đang tải...'}
+                        {motel ? 'quản lý trọ' : 'quản lý trọ'}
                       </span>
                     </Link>
                   </li>
@@ -233,7 +233,12 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) 
                     </Link>
                     <ul className="dropdown-menu notication-dropdown dropdown-menu-lg-end">
                       <div className="text-center" style={{ padding: '20px' }}>
-                        <img style={{ margin: 'auto' }} src="./Loading.gif" alt="Đang tải..." width="50px" />
+                        <img
+                          style={{ margin: 'auto' }}
+                          src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2FLoading.gif?alt=media&token=644068ee-9eb8-4f35-928f-cd348bbe8658"
+                          alt="Đang tải..."
+                          width="50px"
+                        />
                         <div>
                           <i className="loading_text" style={{ marginTop: '-10px', fontSize: '13px' }}>
                             Đang tải thông báo...
@@ -243,7 +248,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) 
                     </ul>
                   </li>
                   <li className="nav-item menu-item ">
-                    <Link to={motel ? `/tai-khoan/${motel.motelName}` : '#'} className="nav-link ">
+                    <Link to={`/tai-khoan`} className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
