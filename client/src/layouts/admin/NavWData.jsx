@@ -152,7 +152,7 @@ const NavWData = ({ motels, setmotels }) => {
                   overflowX: 'auto',
                   position: 'relative',
                 }}>
-                <Link to="/quan-ly" className="item-menu active">
+                <a href="/quanlytro" className="item-menu active">
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -165,8 +165,8 @@ const NavWData = ({ motels, setmotels }) => {
                       <b>Quản lý phòng</b>
                     </span>
                   </div>
-                </Link>
-                <Link to="/quan-ly/6891/lap-phieu-thu" className="item-menu">
+                </a>
+                <Link to="/quanlytro/quan-ly-hoa-don" className="item-menu">
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -180,7 +180,7 @@ const NavWData = ({ motels, setmotels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to="/quan-ly/6891/quan-ly-dich-vu" className="item-menu">
+                <Link to="/quanlytro/quan-ly-dich-vu" className="item-menu">
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -194,7 +194,7 @@ const NavWData = ({ motels, setmotels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to="/quan-ly/6891/quan-ly-tai-san" className="item-menu">
+                <Link to="/quanlytro/quan-ly-tai-san" className="item-menu">
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -208,7 +208,7 @@ const NavWData = ({ motels, setmotels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to="/quan-ly/6891/tat-ca-hop-dong" className="item-menu">
+                <Link to="/quanlytro/tat-ca-hop-dong" className="item-menu">
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -222,7 +222,7 @@ const NavWData = ({ motels, setmotels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to="/quan-ly/6891/tat-ca-khach-thue" className="item-menu">
+                <Link to="/quanlytro/tat-ca-khach-thue" className="item-menu">
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -236,7 +236,7 @@ const NavWData = ({ motels, setmotels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to="/quan-ly/6891/thu-chi-tong-ket" className="item-menu">
+                <Link to="/quanlytro/thu-chi-tong-ket" className="item-menu">
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -250,7 +250,7 @@ const NavWData = ({ motels, setmotels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to="/quan-ly/6891/cai-dat-nha-tro" className="item-menu">
+                <Link to="/quanlytro/cai-dat-nha-tro" className="item-menu">
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -264,7 +264,7 @@ const NavWData = ({ motels, setmotels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to="/quan-ly/6891/lich-su-gui-zalo" className="item-menu">
+                <Link to="/quanlytro/lich-su-gui-zalo" className="item-menu">
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -278,7 +278,7 @@ const NavWData = ({ motels, setmotels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to="/quan-ly/6891/import-data-from-file" className="item-menu">
+                <Link to="/quanlytro/import-data-from-file" className="item-menu">
                   <div className="icon text-center">
                     <img
                       width="47px"

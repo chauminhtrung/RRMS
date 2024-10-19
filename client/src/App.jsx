@@ -38,15 +38,21 @@ import RoomManagement from './pages/admin/AdminManage/RoomManagement'
 import Recognition from './pages/AI/Recognition'
 import FaceMatch from './pages/AI/FaceMatch'
 
+//nav 2 cac tab o ben admin
+import AssetManager from './pages/admin/NavContentAdmin/AssetManager'
+import ContractManager from './pages/admin/NavContentAdmin/ContractManager'
+import ImportFileExcel from './pages/admin/NavContentAdmin/ImportFileExcel'
+import Income_summary from './pages/admin/NavContentAdmin/Income_summary'
+import InvoiceManager from './pages/admin/NavContentAdmin/InvoiceManager'
+import ServiceManager from './pages/admin/NavContentAdmin/ServiceManager'
+import TenantManager from './pages/admin/NavContentAdmin/TenantManager'
+import Zalo_history from './pages/admin/NavContentAdmin/Zalo_history'
+import SettingMotel from './pages/admin/NavContentAdmin/SettingMotel'
 // import TestPage from './pages/TestPage'
 // import ValidCaptcha from './components/ValidCaptcha'
 
 function App() {
   //lay thong tin tro cua tk account truyen xuong cho trang chu tro
-
-  useEffect(() => {
-    fetchMotelsByUsername('admin')
-  }, [])
 
   const fetchMotelsByUsername = async (username) => {
     getMotelByUsername(username).then((res) => {
@@ -64,8 +70,10 @@ function App() {
     if (user) {
       setUsername(user.username)
       setAvatar(user.avatar)
+      fetchMotelsByUsername(user.username)
     }
   }, [])
+
   const [isAdmin, setIsAdmin] = useState(false)
   const [isNavAdmin, setIsNavAdmin] = useState(true)
   const [motels, setmotels] = useState([])
@@ -166,10 +174,6 @@ function App() {
           <Route path="/dang-tin" element={<PostRooms setIsAdmin={setIsAdmin} />} />
           <Route path="/dang-tin/:motelName" element={<PostRooms setIsAdmin={setIsAdmin} />} />
           <Route path="/tai-khoan" element={<ManagerMyAccount setIsAdmin={setIsAdmin} />} />
-          <Route
-            path="/tai-khoan/:motelName"
-            element={<ManagerMyAccount setIsAdmin={setIsAdmin} motels={motels} setmotels={setmotels} />}
-          />
           <Route path="/phan-quyen" element={<ManagerCompanyAT setIsAdmin={setIsAdmin} />} />
           <Route
             path="/phan-quyen/:motelName"
@@ -179,6 +183,117 @@ function App() {
           <Route
             path="/cai-dat/:motelName"
             element={<ManagerSettings setIsAdmin={setIsAdmin} motels={motels} setmotels={setmotels} />}
+          />
+
+          {/* nav 2 cac tab o ben admin */}
+
+          <Route
+            path="/quanlytro/quan-ly-hoa-don"
+            element={
+              <InvoiceManager
+                motels={motels}
+                setmotels={setmotels}
+                setIsAdmin={setIsAdmin}
+                isNavAdmin={isNavAdmin}
+                setIsNavAdmin={setIsNavAdmin}
+              />
+            }
+          />
+          <Route
+            path="/quanlytro/quan-ly-dich-vu"
+            element={
+              <ServiceManager
+                motels={motels}
+                setmotels={setmotels}
+                setIsAdmin={setIsAdmin}
+                isNavAdmin={isNavAdmin}
+                setIsNavAdmin={setIsNavAdmin}
+              />
+            }
+          />
+          <Route
+            path="/quanlytro/quan-ly-tai-san"
+            element={
+              <AssetManager
+                motels={motels}
+                setmotels={setmotels}
+                setIsAdmin={setIsAdmin}
+                isNavAdmin={isNavAdmin}
+                setIsNavAdmin={setIsNavAdmin}
+              />
+            }
+          />
+          <Route
+            path="/quanlytro/tat-ca-hop-dong"
+            element={
+              <ContractManager
+                motels={motels}
+                setmotels={setmotels}
+                setIsAdmin={setIsAdmin}
+                isNavAdmin={isNavAdmin}
+                setIsNavAdmin={setIsNavAdmin}
+              />
+            }
+          />
+          <Route
+            path="/quanlytro/tat-ca-khach-thue"
+            element={
+              <TenantManager
+                motels={motels}
+                setmotels={setmotels}
+                setIsAdmin={setIsAdmin}
+                isNavAdmin={isNavAdmin}
+                setIsNavAdmin={setIsNavAdmin}
+              />
+            }
+          />
+          <Route
+            path="/quanlytro/thu-chi-tong-ket"
+            element={
+              <Income_summary
+                motels={motels}
+                setmotels={setmotels}
+                setIsAdmin={setIsAdmin}
+                isNavAdmin={isNavAdmin}
+                setIsNavAdmin={setIsNavAdmin}
+              />
+            }
+          />
+          <Route
+            path="/quanlytro/cai-dat-nha-tro"
+            element={
+              <SettingMotel
+                motels={motels}
+                setmotels={setmotels}
+                setIsAdmin={setIsAdmin}
+                isNavAdmin={isNavAdmin}
+                setIsNavAdmin={setIsNavAdmin}
+              />
+            }
+          />
+          <Route
+            path="/quanlytro/lich-su-gui-zalo"
+            element={
+              <Zalo_history
+                motels={motels}
+                setmotels={setmotels}
+                setIsAdmin={setIsAdmin}
+                isNavAdmin={isNavAdmin}
+                setIsNavAdmin={setIsNavAdmin}
+              />
+            }
+          />
+          <Route
+            path="/quanlytro/import-data-from-file"
+            element={
+              <ImportFileExcel
+                motels={motels}
+                setmotels={setmotels}
+                setIsAdmin={setIsAdmin}
+                isNavAdmin={isNavAdmin}
+                setIsNavAdmin={setIsNavAdmin}
+              />
+            }
           />
         </Routes>
         {!isAdmin ? <Footer /> : <></>}
