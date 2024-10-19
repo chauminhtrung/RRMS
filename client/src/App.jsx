@@ -24,7 +24,7 @@ import Introduce from './pages/Introduce/Introduce'
 import AdminManagerBoard from './pages/admin/AdminManageBoard'
 import Profile from './pages/Profile/Profile'
 import PaymentPage from './pages/cart/PaymentPage'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Heart from './pages/cart/Heart'
 import RRMS from './pages/RRMS/RRMS'
 import AdminManageBoker from './pages/admin/AdminManageBoker/AdminManageBoker'
@@ -42,8 +42,21 @@ import FaceMatch from './pages/AI/FaceMatch'
 // import ValidCaptcha from './components/ValidCaptcha'
 
 function App() {
+  //lay thong tin tro cua tk account truyen xuong cho trang chu tro
+
+  useEffect(() => {
+    fetchMotelsByUsername('admin')
+  }, [])
+
+  const fetchMotelsByUsername = async (username) => {
+    getMotelByUsername(username).then((res) => {
+      setmotels(res.data.result)
+    })
+  }
+
   const [username, setUsername] = useState('')
   const [avatar, setAvatar] = useState('')
+
   //Muốn mất header thì thêm props setIsAdmin={setIsAdmin}
   useEffect(() => {
     //   setIsAdmin(true)
