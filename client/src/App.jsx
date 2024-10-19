@@ -43,11 +43,21 @@ import FaceMatch from './pages/AI/FaceMatch'
 // import ValidCaptcha from './components/ValidCaptcha'
 
 function App() {
-
+  const [username, setUsername] = useState(''); 
+  const [avatar, setAvatar] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [isNavAdmin, setIsNavAdmin] = useState(true)
+  const [motels, setmotels] = useState([])
   //lay thong tin tro cua tk account truyen xuong cho trang chu tro
-
+    //Muốn mất header thì thêm props setIsAdmin={setIsAdmin}
   useEffect(() => {
     fetchMotelsByUsername('admin')
+    //   setIsAdmin(true)
+    const user = JSON.parse(sessionStorage.getItem('user'));  
+    if (user) {  
+      setUsername(user.username); 
+      setAvatar(user.avatar);
+    }  
   }, [])
 
   const fetchMotelsByUsername = async (username) => {
@@ -55,38 +65,21 @@ function App() {
       setmotels(res.data.result)
     })
   }
-
-
-   const [username, setUsername] = useState(''); 
-  const [avatar, setAvatar] = useState('');
-
-  //Muốn mất header thì thêm props setIsAdmin={setIsAdmin}
-  useEffect(() => {  
-    //   setIsAdmin(true)
-    const user = JSON.parse(sessionStorage.getItem('user'));  
-    if (user) {  
-      setUsername(user.username); 
-      setAvatar(user.avatar);
-    }  
-  }, []); 
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [isNavAdmin, setIsNavAdmin] = useState(true)
-  const [motels, setmotels] = useState([])
   return (
     <>
       <Router>
         {/* <ValidCaptcha /> */}
-        {!isAdmin ? <Header username={username} avatar={avatar} /> : <></>}
+        {!isAdmin ? <Header username={username} avatar={avatar} setUsername={setUsername} setAvatar={setAvatar}/> : <></>}
         <Routes>
           <Route path="/" element={<Home setIsAdmin={setIsAdmin} />} />
+          <Route path="/login" element={<Login setUsername={setUsername} setAvatar={setAvatar} setIsAdmin={setIsAdmin} />} />
+          <Route path="/forgot-password" element={<Forgot_Password setIsAdmin={setIsAdmin} />} />
           <Route path="/chart" element={<Chart setIsAdmin={setIsAdmin} />} />
           <Route path="/audio" element={<Audio setIsAdmin={setIsAdmin} />} />
           <Route path="/recognition" element={<Recognition setIsAdmin={setIsAdmin} />} />
           <Route path="/facematch" element={<FaceMatch setIsAdmin={setIsAdmin} />} />
           <Route path="/search" element={<Search setIsAdmin={setIsAdmin} />} />
           <Route path="/detail/:roomId" element={<Detail setIsAdmin={setIsAdmin} />} />
-          <Route path="/forgot-password" element={<Forgot_Password setIsAdmin={setIsAdmin} />} />
-          <Route path="/login" element={<Login setUsername={setUsername} setAvatar={setAvatar} setIsAdmin={setIsAdmin} />} />
           <Route path="/contact" element={<Contact setIsAdmin={setIsAdmin} />} />
           <Route path="/introduce" element={<Introduce setIsAdmin={setIsAdmin} />} />
           <Route path="/register" element={<Register setIsAdmin={setIsAdmin} />} />

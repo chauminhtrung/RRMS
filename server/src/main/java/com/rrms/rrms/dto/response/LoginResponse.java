@@ -15,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LoginResponse {
+//  private String token;
   private String username;
   private String fullname;
   private String phone;
