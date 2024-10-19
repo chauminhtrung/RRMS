@@ -57,9 +57,6 @@ function App() {
   const [username, setUsername] = useState('')
   const [avatar, setAvatar] = useState('')
 
-  const [username, setUsername] = useState('')
-  const [avatar, setAvatar] = useState('')
-
   //Muốn mất header thì thêm props setIsAdmin={setIsAdmin}
   useEffect(() => {
     //   setIsAdmin(true)

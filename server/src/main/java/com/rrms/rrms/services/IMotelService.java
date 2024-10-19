@@ -16,7 +16,7 @@ public interface IMotelService {
 
     List<MotelResponse> findMotelByAccount_Username(String username);
 
->>>>>>>>> Temporary merge branch 2
+
     List<MotelResponse> findAll();
 
     MotelResponse update(UUID id, MotelRequest motel);

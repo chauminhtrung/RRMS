@@ -1,5 +1,11 @@
 package com.rrms.rrms.controllers;
 
+
+import java.util.List;
+import java.util.UUID;
+
+import com.rrms.rrms.dto.request.AccountRequest;
+
 import com.rrms.rrms.dto.request.MotelRequest;
 import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.dto.response.MotelResponse;
@@ -16,74 +22,99 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-<<<<<<<<< Temporary merge branch 1
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @Tag(name = "Motel Controller", description = "Controller for Motel")
-=========
-import com.rrms.rrms.dto.request.AccountRequest;
-import com.rrms.rrms.dto.request.MotelRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import com.rrms.rrms.dto.response.ApiResponse;
-import com.rrms.rrms.dto.response.MotelResponse;
-import com.rrms.rrms.services.IMotelService;
-
->>>>>>>>> Temporary merge branch 2
 @RestController
 @RequestMapping("/motels")
 public class MotelController {
-    @Autowired
-    private IMotelService motelService;
 
+    IMotelService motelService;
+
+    @Operation(summary = "Get motel by name")
     @GetMapping("/{name}")
     public ApiResponse<List<MotelResponse>> getMotel(@PathVariable String name) {
         List<MotelResponse> motelResponses = motelService.findAllByMotelName(name);
-        return ApiResponse.<List<MotelResponse>>builder().code(HttpStatus.OK.value()).message("success").result(motelResponses).build();
+        log.info("Get motel successfully: {}", name);
+        return ApiResponse.<List<MotelResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .message("success")
+                .result(motelResponses)
+                .build();
     }
 
-<<<<<<<<< Temporary merge branch 1
-    @Operation(summary = "Get all motels")
-=========
+
     @GetMapping("/get-motel-account")
     public ApiResponse<List<MotelResponse>> getMotelbyaccount(@RequestParam String username) {
         List<MotelResponse> motelResponses = motelService.findMotelByAccount_Username(username);
         return ApiResponse.<List<MotelResponse>>builder().code(HttpStatus.OK.value()).message("success").result(motelResponses).build();
     }
 
->>>>>>>>> Temporary merge branch 2
+
+    @Operation(summary = "Get all motels")
+
     @GetMapping()
     public ApiResponse<List<MotelResponse>> getMotels() {
         List<MotelResponse> motelResponses = motelService.findAll();
-        return ApiResponse.<List<MotelResponse>>builder().code(HttpStatus.OK.value()).message("success").result(motelResponses).build();
+        log.info("Get all motels successfully");
+        return ApiResponse.<List<MotelResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .message("success")
+                .result(motelResponses)
+                .build();
     }
 
+    @Operation(summary = "Get motel by id")
     @PostMapping()
     public ApiResponse<MotelResponse> insertMotel(@RequestBody MotelRequest motelRequest) {
         MotelResponse motelResponse = motelService.insert(motelRequest);
-        return ApiResponse.<MotelResponse>builder().code(HttpStatus.CREATED.value()).message("success").result(motelResponse).build();
+        log.info("Insert motel successfully");
+        return ApiResponse.<MotelResponse>builder()
+                .code(HttpStatus.CREATED.value())
+                .message("success")
+                .result(motelResponse)
+                .build();
     }
 
+    @Operation(summary = "Update motel by id")
     @PutMapping("/{id}")
     public ApiResponse<MotelResponse> updateMotel(@PathVariable("id") UUID id, @RequestBody MotelRequest motelRequest) {
         if (!id.equals(null) && !motelRequest.equals(null)) {
             MotelResponse motelResponse = motelService.update(id, motelRequest);
-            return ApiResponse.<MotelResponse>builder().code(HttpStatus.OK.value()).message("success").result(motelResponse).build();
+            log.info("Update motel successfully");
+            return ApiResponse.<MotelResponse>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("success")
+                    .result(motelResponse)
+                    .build();
         }
-        return ApiResponse.<MotelResponse>builder().code(HttpStatus.BAD_REQUEST.value()).message("error").result(null).build();
+        log.error("Update motel failed");
+        return ApiResponse.<MotelResponse>builder()
+                .code(HttpStatus.BAD_REQUEST.value())
+                .message("error")
+                .result(null)
+                .build();
     }
 
+    @Operation(summary = "Delete motel by id")
     @DeleteMapping()
     public ApiResponse<Boolean> deleteMotel(@PathVariable("id") UUID id) {
         try {
             motelService.delete(id);
-            return ApiResponse.<Boolean>builder().code(HttpStatus.BAD_REQUEST.value()).message("success").result(true).build();
+            log.info("Delete motel successfully");
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("success")
+                    .result(true)
+                    .build();
         } catch (Exception e) {
-            return ApiResponse.<Boolean>builder().code(HttpStatus.BAD_REQUEST.value()).message("error").result(false).build();
+            log.error("Delete motel failed", e);
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("error")
+                    .result(false)
+                    .build();
         }
     }
 }

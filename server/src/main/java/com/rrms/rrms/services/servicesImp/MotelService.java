@@ -5,16 +5,17 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-<<<<<<<<< Temporary merge branch 1
-=========
+
 import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.request.MotelRequest;
 import com.rrms.rrms.mapper.AccountMapper;
->>>>>>>>> Temporary merge branch 2
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.rrms.rrms.dto.request.MotelRequest;
 import com.rrms.rrms.dto.response.MotelResponse;
+import com.rrms.rrms.mapper.AccountMapper;
 import com.rrms.rrms.mapper.MotelMapper;
 import com.rrms.rrms.models.Motel;
 import com.rrms.rrms.repositories.MotelRepository;
@@ -24,8 +25,10 @@ import com.rrms.rrms.services.IMotelService;
 public class MotelService implements IMotelService {
     @Autowired
     private MotelRepository motelRepository;
+
     @Autowired
     private MotelMapper motelMapper;
+
     @Autowired
     private AccountMapper accountMapper;
 
@@ -36,26 +39,32 @@ public class MotelService implements IMotelService {
 
     @Override
     public MotelResponse findById(UUID id) {
-        return motelRepository.findById(id).map(motelMapper::motelToMotelResponse).orElse(null);
+        return motelRepository
+                .findById(id)
+                .map(motelMapper::motelToMotelResponse)
+                .orElse(null);
     }
 
     @Override
     public List<MotelResponse> findAllByMotelName(String motelName) {
-        return motelRepository.findAllByMotelName(motelName).stream().map(motelMapper::motelToMotelResponse).collect(Collectors.toList());
+        return motelRepository.findAllByMotelName(motelName).stream()
+                .map(motelMapper::motelToMotelResponse)
+                .collect(Collectors.toList());
     }
 
-<<<<<<<<< Temporary merge branch 1
-=========
+
     @Override
     public List<MotelResponse> findMotelByAccount_Username(String username) {
         return motelRepository.findMotelByAccount_Username(username).stream().map(motelMapper::motelToMotelResponse).collect(Collectors.toList());
     }
 
 
->>>>>>>>> Temporary merge branch 2
+
     @Override
     public List<MotelResponse> findAll() {
-        return motelRepository.findAll().stream().map(motelMapper::motelToMotelResponse).collect(Collectors.toList());
+        return motelRepository.findAll().stream()
+                .map(motelMapper::motelToMotelResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
