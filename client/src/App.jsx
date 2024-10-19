@@ -52,17 +52,18 @@ import SettingMotel from './pages/admin/NavContentAdmin/SettingMotel'
 // import ValidCaptcha from './components/ValidCaptcha'
 
 function App() {
-  //lay thong tin tro cua tk account truyen xuong cho trang chu tro
+  const [username, setUsername] = useState(''); 
+  const [avatar, setAvatar] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [isNavAdmin, setIsNavAdmin] = useState(true)
+  const [motels, setmotels] = useState([])
+
 
   const fetchMotelsByUsername = async (username) => {
     getMotelByUsername(username).then((res) => {
       setmotels(res.data.result)
     })
   }
-
-  const [username, setUsername] = useState('')
-  const [avatar, setAvatar] = useState('')
-
   //Muốn mất header thì thêm props setIsAdmin={setIsAdmin}
   useEffect(() => {
     //   setIsAdmin(true)
@@ -73,17 +74,15 @@ function App() {
       fetchMotelsByUsername(user.username)
     }
   }, [])
-
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [isNavAdmin, setIsNavAdmin] = useState(true)
-  const [motels, setmotels] = useState([])
   return (
     <>
       <Router>
         {/* <ValidCaptcha /> */}
-        {!isAdmin ? <Header username={username} avatar={avatar} /> : <></>}
+        {!isAdmin ? <Header username={username} avatar={avatar} setUsername={setUsername} setAvatar={setAvatar}/> : <></>}
         <Routes>
           <Route path="/" element={<Home setIsAdmin={setIsAdmin} />} />
+          <Route path="/login" element={<Login setUsername={setUsername} setAvatar={setAvatar} setIsAdmin={setIsAdmin} />} />
+          <Route path="/forgot-password" element={<Forgot_Password setIsAdmin={setIsAdmin} />} />
           <Route path="/chart" element={<Chart setIsAdmin={setIsAdmin} />} />
           <Route path="/audio" element={<Audio setIsAdmin={setIsAdmin} />} />
           <Route path="/recognition" element={<Recognition setIsAdmin={setIsAdmin} />} />

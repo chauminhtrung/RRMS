@@ -1,5 +1,55 @@
 import './Header.css'
 import { useState } from 'react'
+import axios from 'axios';  
+import Swal from 'sweetalert2';  
+import { useNavigate } from 'react-router-dom';  
+import { env } from '~/configs/environment';  
+const Header = ({ username, avatar, setUsername, setAvatar }) => {  
+  const [IsDanhmuc, setIsDanhmuc] = useState(false);  
+  const [IsMuaban, setIsMuaban] = useState(false);  
+  const [IsTaikhoan, setIsTaikhoan] = useState(false);  
+  const [IsThongbao, setIsThongbao] = useState(false);  
+  const [IsMobileTaikhoan, setIsMobileTaikhoan] = useState(false);  
+  
+  const navigate = useNavigate();  
+
+  const handleLogout = async () => {  
+    try {  
+      const response = await axios.post(`${env.API_URL}/authen/logout`);  
+      console.log('Response:', response); // In ra phản hồi từ API  
+      
+      if (response.status === 200) {  
+        Swal.fire({  
+          icon: 'success',  
+          title: 'Đăng xuất thành công!',  
+          text: 'Bạn đã đăng xuất khỏi tài khoản.',  
+        });  
+        
+        // Xóa thông tin người dùng khỏi sessionStorage  
+        sessionStorage.removeItem('user');  
+
+        // Cập nhật trạng thái trong App  
+        setUsername(''); // Đặt lại username  
+        setAvatar(''); // Đặt lại avatar  
+
+        navigate('/login'); // Điều hướng về trang đăng nhập  
+      } else {  
+        console.error('Error response:', response.data); // In ra lỗi  
+        Swal.fire({  
+          icon: 'error',  
+          title: 'Lỗi',  
+          text: response.data.message || 'Đã xảy ra lỗi khi đăng xuất.',  
+        });  
+      }  
+    } catch (error) {  
+      console.error('Logout error:', error); // In ra lỗi  
+      Swal.fire({  
+        icon: 'error',  
+        title: 'Lỗi',  
+        text: 'Đã xảy ra lỗi khi đăng xuất, vui lòng thử lại.',  
+      });  
+    }  
+  };
 const Header = ({ username, avatar }) => {
   const [IsDanhmuc, setIsDanhmuc] = useState(false)
   const [IsMuaban, setIsMuaban] = useState(false)
@@ -57,6 +107,7 @@ const Header = ({ username, avatar }) => {
                 Trợ giúp
               </span>
             </a>
+           
           </span>
         </div>
 
@@ -639,6 +690,15 @@ const Header = ({ username, avatar }) => {
                               <img className="aw__i1x7vrum" src="./setting.svg" alt="Đơn bán" />
                             </div>
                             <div className="aw__r1o9ejq6">Trợ giúp</div>
+                            <div className="clearfix"></div>
+                          </a>
+                        </div>
+                        <div className="aw__l1txzw95" onClick={handleLogout}>
+                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                            <div className="aw__l1uq3g0v">
+                              <img className="aw__i1x7vrum" src="./setting.svg" alt="Đơn bán" />
+                            </div>
+                            <div className="aw__r1o9ejq6">Đăng xuất</div>
                             <div className="clearfix"></div>
                           </a>
                         </div>
