@@ -1,56 +1,6 @@
 import './Header.css'
 import { useState } from 'react'
-import axios from 'axios';  
-import Swal from 'sweetalert2';  
-import { useNavigate } from 'react-router-dom';  
-import { env } from '~/configs/environment';  
-const Header = ({ username, avatar, setUsername, setAvatar }) => {  
-  const [IsDanhmuc, setIsDanhmuc] = useState(false);  
-  const [IsMuaban, setIsMuaban] = useState(false);  
-  const [IsTaikhoan, setIsTaikhoan] = useState(false);  
-  const [IsThongbao, setIsThongbao] = useState(false);  
-  const [IsMobileTaikhoan, setIsMobileTaikhoan] = useState(false);  
-  
-  const navigate = useNavigate();  
-
-  const handleLogout = async () => {  
-    try {  
-      const response = await axios.post(`${env.API_URL}/authen/logout`);  
-      console.log('Response:', response); // In ra phản hồi từ API  
-      
-      if (response.status === 200) {  
-        Swal.fire({  
-          icon: 'success',  
-          title: 'Đăng xuất thành công!',  
-          text: 'Bạn đã đăng xuất khỏi tài khoản.',  
-        });  
-        
-        // Xóa thông tin người dùng khỏi sessionStorage  
-        sessionStorage.removeItem('user');  
-
-        // Cập nhật trạng thái trong App  
-        setUsername(''); // Đặt lại username  
-        setAvatar(''); // Đặt lại avatar  
-
-        navigate('/login'); // Điều hướng về trang đăng nhập  
-      } else {  
-        console.error('Error response:', response.data); // In ra lỗi  
-        Swal.fire({  
-          icon: 'error',  
-          title: 'Lỗi',  
-          text: response.data.message || 'Đã xảy ra lỗi khi đăng xuất.',  
-        });  
-      }  
-    } catch (error) {  
-      console.error('Logout error:', error); // In ra lỗi  
-      Swal.fire({  
-        icon: 'error',  
-        title: 'Lỗi',  
-        text: 'Đã xảy ra lỗi khi đăng xuất, vui lòng thử lại.',  
-      });  
-    }  
-  };
-const Header = ({ username, avatar }) => {
+const Header = ({username,avatar  }) => {
   const [IsDanhmuc, setIsDanhmuc] = useState(false)
   const [IsMuaban, setIsMuaban] = useState(false)
   const [IsTaikhoan, setIsTaikhoan] = useState(false)
@@ -107,7 +57,6 @@ const Header = ({ username, avatar }) => {
                 Trợ giúp
               </span>
             </a>
-           
           </span>
         </div>
 
@@ -424,8 +373,8 @@ const Header = ({ username, avatar }) => {
                       <div
                         id="btnundefinedundefined"
                         className="aw__i8z877t"
-                        onClick={() => {
-                          !IsTaikhoan ? setIsTaikhoan(true) : setIsTaikhoan(false)
+                        onClick={() => {  
+                          !IsTaikhoan ? setIsTaikhoan(true) : setIsTaikhoan(false)  
                         }}
                         style={{
                           '--i8z877t-0': '#8C8C8C',
@@ -454,7 +403,9 @@ const Header = ({ username, avatar }) => {
                             d="M12.0001 16.2008C10.8829 16.2008 9.78747 16.5102 8.83528 17.0946C7.88309 17.6791 7.11134 18.5158 6.60557 19.512C6.43056 19.8567 6.00923 19.9943 5.66452 19.8193C5.3198 19.6443 5.18222 19.2229 5.35723 18.8782C5.98004 17.6515 6.93038 16.6211 8.10291 15.9014C9.27544 15.1817 10.6244 14.8008 12.0001 14.8008C13.3759 14.8008 14.7249 15.1817 15.8974 15.9014C17.0699 16.6211 18.0203 17.6515 18.6431 18.8782C18.8181 19.2229 18.6805 19.6443 18.3358 19.8193C17.9911 19.9943 17.5697 19.8567 17.3947 19.512C16.889 18.5158 16.1172 17.6791 15.165 17.0946C14.2128 16.5102 13.1174 16.2008 12.0001 16.2008Z"
                             fill="curentColor"></path>
                         </svg>
-                        <span className="show-desktop aw__szp9uz0">{username || 'Tài khoản'}</span>
+                        <span className="show-desktop aw__szp9uz0">  
+                          {username || 'Tài khoản'}   
+                        </span>
                         <svg
                           width="1rem"
                           height="1rem"
@@ -473,15 +424,16 @@ const Header = ({ username, avatar }) => {
                     <div>
                       <div className="aw__m1n72bce">
                         <div className="aw__ntc1674" style={{ '--ntc1674-2': '124px' }}>
-                          <a href={username ? '/edit-profile' : 'login'} rel="nofollow">
-                            <span
-                              className="aw__nrouw61"
-                              style={{
-                                '--nrouw61-3': '48px',
-                                backgroundImage: `url(${avatar || './default_user.png'})`, // Sử dụng avatar hoặc ảnh mặc định
-                              }}></span>
+                          <a href="/login" rel="nofollow">
+                          <span   
+                          className="aw__nrouw61"   
+                          style={{   
+                            '--nrouw61-3': '48px',  
+                            backgroundImage: `url(${avatar || './default_user.png'})`,  // Sử dụng avatar hoặc ảnh mặc định  
+                          }}   
+                          ></span>
                             <span className="aw__n171wcvy" style={{ '--n171wcvy-0': '8px', '--n171wcvy-1': '14px' }}>
-                              {username || 'Đăng nhập / Đăng ký'}
+                            {username || 'Đăng nhập / Đăng ký'}
                             </span>
                           </a>
                           <div className="aw__v14qmieq">
@@ -690,15 +642,6 @@ const Header = ({ username, avatar }) => {
                               <img className="aw__i1x7vrum" src="./setting.svg" alt="Đơn bán" />
                             </div>
                             <div className="aw__r1o9ejq6">Trợ giúp</div>
-                            <div className="clearfix"></div>
-                          </a>
-                        </div>
-                        <div className="aw__l1txzw95" onClick={handleLogout}>
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
-                            <div className="aw__l1uq3g0v">
-                              <img className="aw__i1x7vrum" src="./setting.svg" alt="Đơn bán" />
-                            </div>
-                            <div className="aw__r1o9ejq6">Đăng xuất</div>
                             <div className="clearfix"></div>
                           </a>
                         </div>
