@@ -6,6 +6,10 @@ import { env } from '~/configs/environment'
 //   timeout: 5000, // Thời gian chờ
 // });
 
+export const ValidCaptchaAPI = async (token) => {
+  return await axios.post(`${env.API_URL}/api/verify-captcha`, { token })
+}
+
 export const getDetail = async (roomId) => {
   return await axios.get(`${env.API_URL}/room/${roomId}`)
 }

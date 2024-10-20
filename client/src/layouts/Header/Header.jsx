@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import './Header.css'
 import { useState } from 'react'
-const Header = ({username,avatar  }) => {
+const Header = ({ username, avatar }) => {
   const [IsDanhmuc, setIsDanhmuc] = useState(false)
   const [IsMuaban, setIsMuaban] = useState(false)
   const [IsTaikhoan, setIsTaikhoan] = useState(false)
@@ -374,8 +374,8 @@ const Header = ({username,avatar  }) => {
                       <div
                         id="btnundefinedundefined"
                         className="aw__i8z877t"
-                        onClick={() => {  
-                          !IsTaikhoan ? setIsTaikhoan(true) : setIsTaikhoan(false)  
+                        onClick={() => {
+                          !IsTaikhoan ? setIsTaikhoan(true) : setIsTaikhoan(false)
                         }}
                         style={{
                           '--i8z877t-0': '#8C8C8C',
@@ -404,9 +404,7 @@ const Header = ({username,avatar  }) => {
                             d="M12.0001 16.2008C10.8829 16.2008 9.78747 16.5102 8.83528 17.0946C7.88309 17.6791 7.11134 18.5158 6.60557 19.512C6.43056 19.8567 6.00923 19.9943 5.66452 19.8193C5.3198 19.6443 5.18222 19.2229 5.35723 18.8782C5.98004 17.6515 6.93038 16.6211 8.10291 15.9014C9.27544 15.1817 10.6244 14.8008 12.0001 14.8008C13.3759 14.8008 14.7249 15.1817 15.8974 15.9014C17.0699 16.6211 18.0203 17.6515 18.6431 18.8782C18.8181 19.2229 18.6805 19.6443 18.3358 19.8193C17.9911 19.9943 17.5697 19.8567 17.3947 19.512C16.889 18.5158 16.1172 17.6791 15.165 17.0946C14.2128 16.5102 13.1174 16.2008 12.0001 16.2008Z"
                             fill="curentColor"></path>
                         </svg>
-                        <span className="show-desktop aw__szp9uz0">  
-                          {username || 'Tài khoản'}   
-                        </span>
+                        <span className="show-desktop aw__szp9uz0">{username || 'Tài khoản'}</span>
                         <svg
                           width="1rem"
                           height="1rem"
@@ -425,18 +423,31 @@ const Header = ({username,avatar  }) => {
                     <div>
                       <div className="aw__m1n72bce">
                         <div className="aw__ntc1674" style={{ '--ntc1674-2': '124px' }}>
-                          <Link to="/profile" rel="nofollow">
-                          <span   
-                          className="aw__nrouw61"   
-                          style={{   
-                            '--nrouw61-3': '48px',  
-                            backgroundImage: `url(${avatar || './default_user.png'})`,  // Sử dụng avatar hoặc ảnh mặc định  
-                          }}   
-                          ></span>
-                            <span className="aw__n171wcvy" style={{ '--n171wcvy-0': '8px', '--n171wcvy-1': '14px' }}>
-                            {username || 'Đăng nhập / Đăng ký'}
-                            </span>
-                          </Link>
+                          {username ? (
+                            <Link to="/profile" rel="nofollow">
+                              <span
+                                className="aw__nrouw61"
+                                style={{
+                                  '--nrouw61-3': '48px',
+                                  backgroundImage: `url(${avatar || './default_user.png'})`, // Sử dụng avatar hoặc ảnh mặc định
+                                }}></span>
+                              <span className="aw__n171wcvy" style={{ '--n171wcvy-0': '8px', '--n171wcvy-1': '14px' }}>
+                                {username || 'Đăng nhập / Đăng ký'}
+                              </span>
+                            </Link>
+                          ) : (
+                            <Link to="/login" rel="nofollow">
+                              <span
+                                className="aw__nrouw61"
+                                style={{
+                                  '--nrouw61-3': '48px',
+                                  backgroundImage: `url(${avatar || './default_user.png'})`, // Sử dụng avatar hoặc ảnh mặc định
+                                }}></span>
+                              <span className="aw__n171wcvy" style={{ '--n171wcvy-0': '8px', '--n171wcvy-1': '14px' }}>
+                                {username || 'Đăng nhập / Đăng ký'}
+                              </span>
+                            </Link>
+                          )}
                           <div className="aw__v14qmieq">
                             <div className="vaBanner" role="button">
                               <div>

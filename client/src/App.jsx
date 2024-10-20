@@ -1,5 +1,7 @@
-import Detail from './pages/Detail/Detail'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { getMotelByUsername } from '~/apis/apiClient'
+import Detail from './pages/Detail/Detail'
 import Home from './pages/Homes/Home'
 import Chart from './pages/Charts/Chart'
 import Header from './layouts/Header/Header'
@@ -8,32 +10,24 @@ import Footer from './layouts/Footer/Footer'
 import Login from './pages/Login/Login'
 import Register from './pages/Register/Register'
 import Forgot_Password from './pages/Forgot-Password/Forgot_Password'
-
 import Support from './pages/Support/Support'
-
 import AdminStatis from './pages/admin/statistical'
-
 import MainManagement from './pages/admin/ManagerHome/MainManagement'
 import ManagerMyAccount from './pages/admin/ManagerMyAccount/ManagerMyAccount'
 import ManagerCompanyAT from './pages/admin/ManagerCompanyAT/ManagerCompanyAT'
 import ManagerSettings from './pages/admin/ManagerSettings/ManagerSettings'
-
 import AdminManagerGroup from './pages/admin/AdminManagerGroup'
 import Contact from './pages/Contact/Contact'
 import Introduce from './pages/Introduce/Introduce'
 import AdminManagerBoard from './pages/admin/AdminManageBoard'
 import Profile from './pages/Profile/Profile'
 import PaymentPage from './pages/cart/PaymentPage'
-import { useState, useEffect } from 'react'
 import Heart from './pages/cart/Heart'
 import RRMS from './pages/RRMS/RRMS'
 import AdminManageBoker from './pages/admin/AdminManageBoker/AdminManageBoker'
 import PostRooms from './pages/PostRooms/PostRooms'
 import AdminManage from './pages/admin/AdminManage/AdminManage'
 import Audio from './pages/AI/Audio'
-
-import { getMotelByUsername } from '~/apis/apiClient'
-
 import RoomManagement from './pages/admin/AdminManage/RoomManagement'
 import Recognition from './pages/AI/Recognition'
 import FaceMatch from './pages/AI/FaceMatch'
@@ -47,11 +41,13 @@ import Zalo_history from './pages/admin/NavContentAdmin/Zalo_history'
 import SettingMotel from './pages/admin/NavContentAdmin/SettingMotel'
 import ImportFileExcel from './pages/admin/NavContentAdmin/ImportFileExcel'
 
-// import TestPage from './pages/TestPage'
-// import ValidCaptcha from './components/ValidCaptcha'
-
 function App() {
   //lay thong tin tro cua tk account truyen xuong cho trang chu tro
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [isNavAdmin, setIsNavAdmin] = useState(true)
+  const [motels, setmotels] = useState([])
+  const [username, setUsername] = useState('')
+  const [avatar, setAvatar] = useState('')
 
   useEffect(() => {
     fetchMotelsByUsername('admin')
@@ -63,9 +59,6 @@ function App() {
     })
   }
 
-  const [username, setUsername] = useState('')
-  const [avatar, setAvatar] = useState('')
-
   //Muốn mất header thì thêm props setIsAdmin={setIsAdmin}
   useEffect(() => {
     //   setIsAdmin(true)
@@ -75,13 +68,10 @@ function App() {
       setAvatar(user.avatar)
     }
   }, [])
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [isNavAdmin, setIsNavAdmin] = useState(true)
-  const [motels, setmotels] = useState([])
+
   return (
     <>
       <Router>
-        {/* <ValidCaptcha /> */}
         {!isAdmin ? (
           <Header username={username} avatar={avatar} setUsername={setUsername} setAvatar={setAvatar} />
         ) : (
