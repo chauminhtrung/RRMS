@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import './Header.css'
 import { useState } from 'react'
 const Header = ({username,avatar  }) => {
@@ -424,7 +425,7 @@ const Header = ({username,avatar  }) => {
                     <div>
                       <div className="aw__m1n72bce">
                         <div className="aw__ntc1674" style={{ '--ntc1674-2': '124px' }}>
-                          <a href="/login" rel="nofollow">
+                          <Link to="/profile" rel="nofollow">
                           <span   
                           className="aw__nrouw61"   
                           style={{   
@@ -435,7 +436,7 @@ const Header = ({username,avatar  }) => {
                             <span className="aw__n171wcvy" style={{ '--n171wcvy-0': '8px', '--n171wcvy-1': '14px' }}>
                             {username || 'Đăng nhập / Đăng ký'}
                             </span>
-                          </a>
+                          </Link>
                           <div className="aw__v14qmieq">
                             <div className="vaBanner" role="button">
                               <div>
@@ -927,14 +928,14 @@ const Header = ({username,avatar  }) => {
                     <div className="tab-pane" id="hoatdong">
                       <div className="aw__t1ockekz">
                         <div>Vui lòng đăng nhập để xem danh sách hoạt động.</div>
-                        <a
+                        <Link
                           className="aw__b1lvk31j button r-normal medium w-bold"
-                          href="/login"
+                          to="/login"
                           target=""
                           color="accent"
                           rel="nofollow">
                           Đăng ký / Đăng nhập
-                        </a>
+                        </Link>
                       </div>
                     </div>
                     <div className="tab-pane" id="tinmoi">
@@ -959,12 +960,12 @@ const Header = ({username,avatar  }) => {
             style={{ '--mos124i-6': 'calc(100px + var(--app-wrapper-extra-height,   0px))' }}>
             <div className="more-content">
               <div className="aw__ntc1674" style={{ '--ntc1674-2': '140px' }}>
-                <a href="/login" rel="nofollow">
+                <Link to="/login" rel="nofollow">
                   <span className="aw__nrouw61" style={{ '--nrouw61-3': '64px' }}></span>
                   <span className="aw__n171wcvy" style={{ '--n171wcvy-0': '12px', '--n171wcvy-1': '24px' }}>
                     Đăng nhập / Đăng ký
                   </span>
-                </a>
+                </Link>
                 <div className="aw__v14qmieq">
                   <div className="vaBanner" role="button">
                     <div>

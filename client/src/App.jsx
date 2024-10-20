@@ -38,12 +38,10 @@ import RoomManagement from './pages/admin/AdminManage/RoomManagement'
 import Recognition from './pages/AI/Recognition'
 import FaceMatch from './pages/AI/FaceMatch'
 
-
 // import TestPage from './pages/TestPage'
 // import ValidCaptcha from './components/ValidCaptcha'
 
 function App() {
-
   //lay thong tin tro cua tk account truyen xuong cho trang chu tro
 
   useEffect(() => {
@@ -56,19 +54,18 @@ function App() {
     })
   }
 
-
-   const [username, setUsername] = useState(''); 
-  const [avatar, setAvatar] = useState('');
+  const [username, setUsername] = useState('')
+  const [avatar, setAvatar] = useState('')
 
   //Muốn mất header thì thêm props setIsAdmin={setIsAdmin}
-  useEffect(() => {  
+  useEffect(() => {
     //   setIsAdmin(true)
-    const user = JSON.parse(sessionStorage.getItem('user'));  
-    if (user) {  
-      setUsername(user.username); 
-      setAvatar(user.avatar);
-    }  
-  }, []); 
+    const user = JSON.parse(sessionStorage.getItem('user'))
+    if (user) {
+      setUsername(user.username)
+      setAvatar(user.avatar)
+    }
+  }, [])
   const [isAdmin, setIsAdmin] = useState(false)
   const [isNavAdmin, setIsNavAdmin] = useState(true)
   const [motels, setmotels] = useState([])
@@ -86,11 +83,14 @@ function App() {
           <Route path="/search" element={<Search setIsAdmin={setIsAdmin} />} />
           <Route path="/detail/:roomId" element={<Detail setIsAdmin={setIsAdmin} />} />
           <Route path="/forgot-password" element={<Forgot_Password setIsAdmin={setIsAdmin} />} />
-          <Route path="/login" element={<Login setUsername={setUsername} setAvatar={setAvatar} setIsAdmin={setIsAdmin} />} />
+          <Route
+            path="/login"
+            element={<Login setUsername={setUsername} setAvatar={setAvatar} setIsAdmin={setIsAdmin} />}
+          />
           <Route path="/contact" element={<Contact setIsAdmin={setIsAdmin} />} />
           <Route path="/introduce" element={<Introduce setIsAdmin={setIsAdmin} />} />
           <Route path="/register" element={<Register setIsAdmin={setIsAdmin} />} />
-          <Route path="/profile" element={<Profile setIsAdmin={setIsAdmin} />} />
+          <Route path="/profile" element={<Profile setIsAdmin={setIsAdmin} username={username} />} />
           <Route path="/payment" element={<PaymentPage setIsAdmin={setIsAdmin} />} />
           <Route path="/support" element={<Support setIsAdmin={setIsAdmin} />} />
           <Route path="/heart" element={<Heart setIsAdmin={setIsAdmin} />} />
