@@ -37,6 +37,8 @@ public class AccountService implements IAccountService {
     @Autowired
     AccountMapper accountMapper;
 
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @Override
     public List<Account> findAll() {
         return List.of();
@@ -54,8 +56,15 @@ public class AccountService implements IAccountService {
 
     @Override
     public Optional<Account> login(String phone, String password) {
-        Optional<Account> accountOptional = accountRepository.findByPhoneAndPassword(phone, password);
-        return accountOptional;
+        Optional<Account> accountOptional = accountRepository.findByPhone(phone);
+
+        if (accountOptional.isPresent()) {
+            Account account = accountOptional.get();
+            if (passwordEncoder.matches(password, account.getPassword())) {
+                return Optional.of(account);
+            }
+        }
+        return Optional.empty();
     }
 
     @Override

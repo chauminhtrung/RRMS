@@ -52,7 +52,11 @@ const ManagerCompanyAT = ({ setIsAdmin, motels, setmotels }) => {
                       <div
                         className="text-center"
                         style={{ backgroundColor: '#cbf6fb', borderRadius: '15px', overflow: 'hidden' }}>
-                        <img src="./groups_baner.png" height="200px" style={{ maxWidth: '100%' }} />
+                        <img
+                          src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Fgroups_baner.png?alt=media&token=0b881302-f4f9-4d2d-bb05-e34514a39f69"
+                          height="200px"
+                          style={{ maxWidth: '100%' }}
+                        />
                         <div className="mt-5">
                           <h3>Thiết lập công ty hoặc nhóm của bạn</h3>
                           <p>

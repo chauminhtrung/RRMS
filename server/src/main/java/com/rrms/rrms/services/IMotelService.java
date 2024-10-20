@@ -3,9 +3,9 @@ package com.rrms.rrms.services;
 import java.util.List;
 import java.util.UUID;
 
-import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.request.MotelRequest;
 import com.rrms.rrms.dto.response.MotelResponse;
+import com.rrms.rrms.models.Motel;
 
 public interface IMotelService {
     MotelResponse insert(MotelRequest motel);

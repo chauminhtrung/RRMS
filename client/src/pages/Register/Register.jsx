@@ -36,7 +36,7 @@ const Register = ({ setIsAdmin }) => {
     }
 
     try {
-      const response = await axios.post('http://localhost:8080/register', account)
+      const response = await axios.post('http://localhost:8080/authen/register', account)
       alert(response.data) // Thông báo thành công
       // Chuyển hướng người dùng đến trang đăng nhập hoặc trang khác nếu cần
     } catch (error) {
