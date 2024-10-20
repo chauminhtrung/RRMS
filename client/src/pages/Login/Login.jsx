@@ -5,89 +5,98 @@ import TwitterIcon from '@mui/icons-material/Twitter'
 import InstagramIcon from '@mui/icons-material/Instagram'
 import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2'
 import './Login.css'
-import { env } from '~/configs/environment';
+import { env } from '~/configs/environment'
+import ValidCaptcha from '~/components/ValidCaptcha'
+import { toast } from 'react-toastify'
 
 //test
-const Login = ({ setUsername, setAvatar}) => {  
-  const [phone, setPhone] = useState('');  
-  const [password, setPassword] = useState('');  
-  const navigate = useNavigate();  
+const Login = ({ setUsername, setAvatar }) => {
+  const [phone, setPhone] = useState('')
+  const [password, setPassword] = useState('')
+  const [validCaptcha, setValidCaptcha] = useState(false)
+  const navigate = useNavigate()
 
-  const handleSubmit = async (event) => {  
-    event.preventDefault();  
-    if (!phone || !password) {  
-      Swal.fire({  
-        icon: 'warning',  
-        title: 'Thông báo',  
-        text: 'Vui lòng nhập đầy đủ thông tin.',  
-      });  
-      return;  
-    }  
-  
-    const account = { phone, password };  
-    try {  
-      const response = await axios.post(`${env.API_URL}/authen/login`, account);  
-      if (response.status === 200) {  
-        Swal.fire({  
-          icon: 'success',  
-          title: 'Đăng nhập thành công!',  
-          text: 'Chào mừng bạn quay trở lại!',  
-        });  
-  
-        const usernameFromResponse = response.data.data.username;  
-        const avtFromResponse = response.data.data.avatar;  
-  
-        if (!usernameFromResponse) {  
-          throw new Error("Username không tồn tại trong phản hồi từ server");  
-        }  
-  
-        const userData = {  
-          phone: phone,  
-          avatar: avtFromResponse,  
-          username: usernameFromResponse,  
-        };  
-        sessionStorage.setItem('user', JSON.stringify(userData));  
-        
-        // Cập nhật trạng thái trong App  
-        setUsername(usernameFromResponse);  
-        setAvatar(avtFromResponse);  
-        
-        navigate('/'); // Điều hướng về trang chính  
-      }  
-    } catch (error) {  
-      if (error.response) {  
-        console.log("Error response status:", error.response.status);  
-        if (error.response.status === 401) {  
-          Swal.fire({  
-            icon: 'error',  
-            title: 'Sai mật khẩu',  
-            text: 'Vui lòng kiểm tra lại mật khẩu của bạn.',  
-          });  
-        } else if (error.response.status === 404) {  
-          Swal.fire({  
-            icon: 'error',  
-            title: 'Tài khoản không tồn tại',  
-            text: 'Vui lòng kiểm tra lại số điện thoại của bạn.',  
-          });  
-        } else {  
-          Swal.fire({  
-            icon: 'error',  
-            title: 'Lỗi 1',  
-            text: 'Đã xảy ra lỗi. Vui lòng thử lại sau.',  
-          });  
-        }  
-      } else {  
-        console.log("No response from server:", error);  
-        Swal.fire({  
-          icon: 'error',  
-          title: 'Lỗi 2',  
-          text: 'Đã xảy ra lỗi. Vui lòng thử lại sau.',  
-        });  
-      }  
-    }  
-  };
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    if (!validCaptcha) {
+      toast.error('Captcha xác thực không thành công!')
+      return
+    }
+
+    event.preventDefault()
+    if (!phone || !password) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Thông báo',
+        text: 'Vui lòng nhập đầy đủ thông tin.',
+      })
+      return
+    }
+
+    const account = { phone, password }
+    try {
+      const response = await axios.post(`${env.API_URL}/authen/login`, account)
+      if (response.status === 200) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Đăng nhập thành công!',
+          text: 'Chào mừng bạn quay trở lại!',
+        })
+
+        const usernameFromResponse = response.data.data.username
+        const avtFromResponse = response.data.data.avatar
+
+        if (!usernameFromResponse) {
+          throw new Error('Username không tồn tại trong phản hồi từ server')
+        }
+
+        const userData = {
+          phone: phone,
+          avatar: avtFromResponse,
+          username: usernameFromResponse,
+        }
+        sessionStorage.setItem('user', JSON.stringify(userData))
+
+        // Cập nhật trạng thái trong App
+        setUsername(usernameFromResponse)
+        setAvatar(avtFromResponse)
+
+        navigate('/') // Điều hướng về trang chính
+      }
+    } catch (error) {
+      if (error.response) {
+        console.log('Error response status:', error.response.status)
+        if (error.response.status === 401) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Sai mật khẩu',
+            text: 'Vui lòng kiểm tra lại mật khẩu của bạn.',
+          })
+        } else if (error.response.status === 404) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Tài khoản không tồn tại',
+            text: 'Vui lòng kiểm tra lại số điện thoại của bạn.',
+          })
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Lỗi 1',
+            text: 'Đã xảy ra lỗi. Vui lòng thử lại sau.',
+          })
+        }
+      } else {
+        console.log('No response from server:', error)
+        Swal.fire({
+          icon: 'error',
+          title: 'Lỗi 2',
+          text: 'Đã xảy ra lỗi. Vui lòng thử lại sau.',
+        })
+      }
+    }
+  }
 
   return (
     <div
@@ -151,6 +160,7 @@ const Login = ({ setUsername, setAvatar}) => {
                       <div className="invalid-feedback">Vui lòng nhập mật khẩu</div>
                     </div>
                   </div>
+                  <ValidCaptcha setValidCaptcha={setValidCaptcha} />
                   <div className="form-group">
                     <button type="submit" id="submit-login" className="btnSubmit">
                       Đăng nhập
