@@ -1,41 +1,38 @@
 /* eslint-disable no-unused-vars */
-/* eslint-disable react-hooks/rules-of-hooks */
-import { Turnstile } from "@marsidev/react-turnstile";
-import axios from "axios";
-import { useState } from "react";
-import { env } from "~/configs/environment";
+import { Turnstile } from '@marsidev/react-turnstile'
+import axios from 'axios'
+import { useState } from 'react'
+import { ValidCaptchaAPI } from '~/apis/apiClient'
+import { env } from '~/configs/environment'
 
-const validCaptcha = () => {
-  const [captchaToken, setCaptchaToken] = useState();
+const ValidCaptcha = ({ setValidCaptcha }) => {
+  const [captchaToken, setCaptchaToken] = useState()
   const handleTokenReceived = async (token) => {
+    setCaptchaToken(token)
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/verify-captcha",
-        {
-          token: token,
+      ValidCaptchaAPI(token).then((response) => {
+        setValidCaptcha(response.data.success)
+        if (response.data.success) {
+          console.log('CAPTCHA passed!')
+        } else {
+          console.log('CAPTCHA failed. Try again.')
         }
-      );
-
-      if (response.data.success) {
-        console.log("CAPTCHA passed!");
-      } else {
-        console.log("CAPTCHA failed. Try again.");
-      }
+      })
     } catch (error) {
-      console.error("Error verifying CAPTCHA:", error);
+      console.error('Error verifying CAPTCHA:', error)
     }
-  };
+  }
 
   return (
     <div>
       <Turnstile
         siteKey={env.SITE_KEY}
-        options={{ theme: "light", action: "login", execution: "render" }}
+        options={{ theme: 'light', action: 'login', execution: 'render' }}
         onSuccess={(token) => handleTokenReceived(token)}
         onError={() => setCaptchaToken(null)}
       />
     </div>
-  );
-};
+  )
+}
 
-export default validCaptcha;
+export default ValidCaptcha
