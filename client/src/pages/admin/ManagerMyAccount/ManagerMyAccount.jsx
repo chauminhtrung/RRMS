@@ -1,13 +1,13 @@
 import { useEffect } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
-const ManagerMyAccount = ({ setIsAdmin, motels, setmotels }) => {
+const ManagerMyAccount = ({ setIsAdmin }) => {
   useEffect(() => {
     setIsAdmin(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   return (
     <div>
-      <NavAdmin setIsAdmin={setIsAdmin} setmotels={setmotels} motels={motels} />
+      <NavAdmin setIsAdmin={setIsAdmin} />
       <div className="page-setting mb-4">
         <div className="container">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

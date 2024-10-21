@@ -106,7 +106,7 @@ public class DB {
         if (accountRepository.findByUsername("dung").isEmpty()) {
             accountRepository.save(Account.builder()
                     .username("dung")
-                    .password(pe.encode("123")) // Mã hóa mật khẩu
+                    .password(pe.encode("123"))
                     .fullname("Tri Dung")
                     .email("tridung@gmail.com")
                     .phone("0333334")
@@ -118,10 +118,9 @@ public class DB {
                     .build());
         }
         if (accountRepository.findByUsername("quoc").isEmpty()) {
-                // create admin account
-                accountRepository.save(Account.builder()
+            accountRepository.save(Account.builder()
                     .username("quoc")
-                    .password("123")
+                    .password(pe.encode("123"))
                     .fullname("Kiến Quốc")
                     .email("kieukienquocvn@gmail.com")
                     .phone("0919925302")
@@ -130,7 +129,6 @@ public class DB {
                     .avatar("AVT_KQ.jpg")
                     .birthday(LocalDate.now())
                     .build());
-                log.info("User1 created");
             }
         if (accountRepository.findByUsername("user5").isEmpty()) {
             accountRepository.save(Account.builder()
