@@ -8,6 +8,8 @@ const AudioRecorder = ({ setRecordedText, open, handleClose, setIsRecording, isR
   const recognitionRef = useRef(null)
 
   useEffect(() => {
+    //Đoạn mã sử dụng SpeechRecognition để xử lý việc ghi âm và chuyển đổi giọng nói thành văn bản.
+    //Đây là một API tích hợp sẵn trong trình duyệt, không phải là API bên ngoài.
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
     if (!SpeechRecognition) {
       alert('Trình duyệt của bạn không hỗ trợ Web Speech API!')
@@ -18,7 +20,8 @@ const AudioRecorder = ({ setRecordedText, open, handleClose, setIsRecording, isR
     recognition.lang = 'vi-VN'
     recognition.continuous = true
     recognition.interimResults = true
-
+    //đoạn mã lấy kết quả từ SpeechRecognition và cập nhật transcript.
+    // Tuy nhiên, không có bất kỳ gọi nào đến một API bên ngoài để lưu hoặc xử lý dữ liệu này.
     recognition.onresult = (event) => {
       let interimTranscript = ''
       for (let i = event.resultIndex; i < event.results.length; i++) {

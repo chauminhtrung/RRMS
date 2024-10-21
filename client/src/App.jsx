@@ -22,6 +22,7 @@ import Introduce from './pages/Introduce/Introduce'
 import AdminManagerBoard from './pages/admin/AdminManageBoard'
 import Profile from './pages/Profile/Profile'
 import PaymentPage from './pages/cart/PaymentPage'
+import { useEffect, useState } from 'react'
 import Heart from './pages/cart/Heart'
 import RRMS from './pages/RRMS/RRMS'
 import AdminManageBoker from './pages/admin/AdminManageBoker/AdminManageBoker'
@@ -42,6 +43,8 @@ import SettingMotel from './pages/admin/NavContentAdmin/SettingMotel'
 import ImportFileExcel from './pages/admin/NavContentAdmin/ImportFileExcel'
 
 function App() {
+  const [username, setUsername] = useState('')
+  const [avatar, setAvatar] = useState('')
   //lay thong tin tro cua tk account truyen xuong cho trang chu tro
   const [isAdmin, setIsAdmin] = useState(false)
   const [isNavAdmin, setIsNavAdmin] = useState(true)
@@ -52,7 +55,6 @@ function App() {
   useEffect(() => {
     fetchMotelsByUsername('admin')
   }, [])
-
   const fetchMotelsByUsername = async (username) => {
     getMotelByUsername(username).then((res) => {
       setmotels(res.data.result)
@@ -72,6 +74,7 @@ function App() {
   return (
     <>
       <Router>
+        {/* <ValidCaptcha /> */}
         {!isAdmin ? (
           <Header username={username} avatar={avatar} setUsername={setUsername} setAvatar={setAvatar} />
         ) : (
