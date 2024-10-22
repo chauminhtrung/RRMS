@@ -1,26 +1,23 @@
 package com.rrms.rrms.database;
 
+import com.rrms.rrms.enums.Gender;
 import com.rrms.rrms.enums.Roles;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
-
+import com.rrms.rrms.models.*;
+import com.rrms.rrms.repositories.*;
+import com.rrms.rrms.services.ISearchService;
+import lombok.extern.slf4j.Slf4j;
+import net.datafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rrms.rrms.enums.Gender;
-import com.rrms.rrms.models.*;
-import com.rrms.rrms.repositories.*;
-import com.rrms.rrms.services.ISearchService;
-
-import lombok.extern.slf4j.Slf4j;
-import net.datafaker.Faker;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 
 @Configuration
 @Slf4j
@@ -40,7 +37,7 @@ public class DB {
             ISearchService searchService,
             RoleRepository roleRepository) {
         return args -> {
-            int roomsLength = 5;
+            int roomsLength = 10000;
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
 
             // Tạo dữ liệu mẫu cho các vai trò
