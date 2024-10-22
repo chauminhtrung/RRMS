@@ -114,6 +114,7 @@ public class AuthenController {
 
     try {
       Account newAccount = new Account();
+      Heart heart = new Heart();
       newAccount.setUsername(account.getUsername());
       String encodedPassword = passwordEncoder.encode(account.getPassword());
       newAccount.setPassword(encodedPassword);
@@ -123,6 +124,8 @@ public class AuthenController {
       newAccount.setBirthday(account.getBirthday());
       newAccount.setGender(account.getGender());
       newAccount.setCccd(account.getCccd());
+      newAccount.setHeart(heart);
+      heart.setAccount(newAccount);
       accountService.save(newAccount);
 
       Roles roleEnum = Roles.valueOf("CUSTOMER");
