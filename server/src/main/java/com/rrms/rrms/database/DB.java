@@ -23,6 +23,7 @@ import java.util.UUID;
 @Slf4j
 @Transactional
 public class DB {
+    int imageIndex = 0;
 
     @Bean
     CommandLineRunner initDatabase(
@@ -37,7 +38,8 @@ public class DB {
             ISearchService searchService,
             RoleRepository roleRepository) {
         return args -> {
-            int roomsLength = 10000;
+            int roomsLength = 100000;
+
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
 
             // Tạo dữ liệu mẫu cho các vai trò
@@ -207,7 +209,9 @@ public class DB {
 
     private void createRoomImages(Faker faker, List<RoomImage> roomImages, Room room) {
         for (int j = 0; j < 5; j++) {
-            roomImages.add(new RoomImage(UUID.randomUUID(), room, faker.internet().image()));
+            imageIndex++;
+            String imageUrl = "https://picsum.photos/1280/720?random=" + imageIndex;
+            roomImages.add(new RoomImage(UUID.randomUUID(), room, imageUrl));
         }
     }
 }

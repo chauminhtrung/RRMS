@@ -8,4 +8,6 @@ export const env = {
   FIREBASE_STORAGE_BUCKET: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
   FIREBASE_MESSAGING_SENDER_ID: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   FIREBASE_APP_ID: import.meta.env.VITE_FIREBASE_APP_ID,
+  FPT_AI_KEY: import.meta.env.VITE_FPT_AI_KEY,
+  FPT_APP_CODE: import.meta.env.VITE_FPT_APP_CODE,
 }
