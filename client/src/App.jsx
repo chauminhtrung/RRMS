@@ -22,7 +22,6 @@ import Introduce from './pages/Introduce/Introduce'
 import AdminManagerBoard from './pages/admin/AdminManageBoard'
 import Profile from './pages/Profile/Profile'
 import PaymentPage from './pages/cart/PaymentPage'
-import { useEffect, useState } from 'react'
 import Heart from './pages/cart/Heart'
 import RRMS from './pages/RRMS/RRMS'
 import AdminManageBoker from './pages/admin/AdminManageBoker/AdminManageBoker'
@@ -37,7 +36,7 @@ import ServiceManager from './pages/admin/NavContentAdmin/ServiceManager'
 import AssetManager from './pages/admin/NavContentAdmin/AssetManager'
 import ContractManager from './pages/admin/NavContentAdmin/ContractManager'
 import TenantManager from './pages/admin/NavContentAdmin/TenantManager'
-import Income_summary from './pages/admin/NavContentAdmin/Income_summary'
+import IncomeSummary from './pages/admin/NavContentAdmin/IncomeSummary/IncomeSummary'
 import Zalo_history from './pages/admin/NavContentAdmin/Zalo_history'
 import SettingMotel from './pages/admin/NavContentAdmin/SettingMotel'
 import ImportFileExcel from './pages/admin/NavContentAdmin/ImportFileExcel'
@@ -49,8 +48,6 @@ function App() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [isNavAdmin, setIsNavAdmin] = useState(true)
   const [motels, setmotels] = useState([])
-  const [username, setUsername] = useState('')
-  const [avatar, setAvatar] = useState('')
 
   useEffect(() => {
     fetchMotelsByUsername('admin')
@@ -253,7 +250,7 @@ function App() {
           <Route
             path="/quanlytro/thu-chi-tong-ket"
             element={
-              <Income_summary
+              <IncomeSummary
                 motels={motels}
                 setmotels={setmotels}
                 setIsAdmin={setIsAdmin}

@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -76,7 +77,19 @@ public class SearchController {
                 .build();
     }
 
+    @Operation(summary = "Search room by address use elastic search without cache")
+    @GetMapping("/nocache/address")
+    public ApiResponse<List<RoomSearchResponse>> findByAddressNoCache(@RequestParam("address") String address) {
+        List<RoomSearchResponse> roomSearchResponseList = searchService.findByAddress(address);
+        return ApiResponse.<List<RoomSearchResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .message("success " + roomSearchResponseList.size())
+                .result(roomSearchResponseList)
+                .build();
+    }
+
     @Operation(summary = "Search room by address use elastic search")
+    @Cacheable(value = "room", key = "#address")
     @GetMapping("/address")
     public ApiResponse<List<RoomSearchResponse>> findByAddress(@RequestParam("address") String address) {
         List<RoomSearchResponse> roomSearchResponseList = searchService.findByAddress(address);
