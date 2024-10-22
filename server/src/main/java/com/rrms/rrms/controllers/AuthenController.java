@@ -1,8 +1,12 @@
 package com.rrms.rrms.controllers;
 
+import com.nimbusds.jose.JOSEException;
+import com.rrms.rrms.dto.request.IntrospecTokenRequest;
 import com.rrms.rrms.dto.request.LoginRequest;
 import com.rrms.rrms.dto.response.LoginResponse;
+import com.rrms.rrms.dto.response.MessageTokenResponse;
 import com.rrms.rrms.enums.Roles;
+import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Auth;
 import com.rrms.rrms.models.Role;
@@ -11,6 +15,7 @@ import com.rrms.rrms.services.IAuthorityService;
 import com.rrms.rrms.services.IRoleService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -28,20 +33,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenController {
   @Autowired
   private IAccountService accountService;
+
   @Autowired
   private IAuthorityService authorityService;
 
   @Autowired
   private IRoleService roleService;
+
   private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
     Map<String, Object> response = new HashMap<>();
-
     try {
       Optional<Account> accountOptional = accountService.findByPhone(loginRequest.getPhone());
-
       if (accountOptional.isEmpty()) {
         response.put("status", false);
         response.put("message", "Tài khoản không tồn tại.");
@@ -49,27 +54,36 @@ public class AuthenController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
       }
 
-      Account account = accountOptional.get();
-      Optional<Account> passwordMatchingAccount = accountService.login(loginRequest.getPhone(), loginRequest.getPassword());
+      LoginResponse loginResponse = authorityService.loginResponse(loginRequest);
+      response.put("status", true);
+      response.put("message", "Đăng nhập thành công.");
+      response.put("data", loginResponse);
+      return ResponseEntity.ok(response);
 
-      if (passwordMatchingAccount.isPresent()) {
-        LoginResponse loginResponse = new LoginResponse(account.getUsername(), account.getFullname(), account.getPhone(), account.getEmail(), account.getAvatar(), account.getBirthday(), account.getGender(), account.getCccd());
-        response.put("status", true);
-        response.put("message", "Đăng nhập thành công.");
-        response.put("data", loginResponse);
-        return ResponseEntity.ok(response);
-      } else {
-        response.put("status", false);
-        response.put("message", "Sai mật khẩu.");
-        response.put("data", null);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-      }
+    } catch (AppException ex) {
+      response.put("status", false);
+      response.put("message", "Sai mật khẩu");
+      response.put("data", null);
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     } catch (Exception ex) {
       response.put("status", false);
       response.put("message", "Đã xảy ra lỗi khi thực hiện đăng nhập.");
       response.put("data", null);
-      ex.printStackTrace();
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    }
+  }
+
+  @PostMapping("/introspect")
+  public ResponseEntity<?> introspect(@RequestBody IntrospecTokenRequest request) {
+    try {
+      var result = authorityService.introspect(request);
+      return ResponseEntity.ok(result);
+    } catch (ParseException e) {
+      return ResponseEntity.badRequest().body(new MessageTokenResponse("Invalid token format"));
+    } catch (JOSEException e) {
+      return ResponseEntity.badRequest().body(new MessageTokenResponse("Error verifying token"));
+    } catch (Exception e) {
+      return ResponseEntity.internalServerError().body(new MessageTokenResponse("Internal server error"));
     }
   }
 
