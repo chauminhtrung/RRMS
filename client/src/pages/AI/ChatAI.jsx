@@ -1,11 +1,12 @@
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
+import { env } from '~/configs/environment'
 
 function ChatAI() {
   useEffect(() => {
     const liveChatBaseUrl = `${document.location.protocol}//livechat.fpt.ai/v36/src`
     const LiveChatSocketUrl = 'livechat.fpt.ai:443'
-    const FptAppCode = '1a40e2d67746d857acee70edb4d7c9b7'
+    const FptAppCode = env.FPT_APP_CODE
     const FptAppName = 'rrms3'
 
     const CustomStyles = {

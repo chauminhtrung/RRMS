@@ -20,6 +20,7 @@ import { formatterAmount } from '~/utils/formatterAmount'
 import MuiAlert from '@mui/material/Alert'
 import SearchList from './SearchList'
 import FilterSearch from './FilterSearch'
+import LoadingPage from '~/components/LoadingPage'
 
 const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
   const [favorites, setFavorites] = useState({})
@@ -288,7 +289,7 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
                 </Card>
               ))
             ) : (
-              <Typography variant="h6">Không có kết quả nào!</Typography>
+              <LoadingPage />
             )}
           </Grid>
         </Grid>

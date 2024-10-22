@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import axios from 'axios'
+import { env } from '~/configs/environment'
 
 const Recognition = () => {
   const [image, setImage] = useState(null)
@@ -24,7 +25,7 @@ const Recognition = () => {
     try {
       const response = await axios.post('https://api.fpt.ai/vision/idr/vnm', formData, {
         headers: {
-          'api-key': 'xTtzg5z0B00SFvfwRcmlnZkDgnnw4Vda',
+          'api-key': env.FPT_AI_KEY,
         },
       })
 

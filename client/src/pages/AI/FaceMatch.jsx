@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import axios from 'axios'
+import { env } from '~/configs/environment'
 
 const FaceMatch = () => {
   const [image1, setImage1] = useState(null)
@@ -36,7 +37,7 @@ const FaceMatch = () => {
     try {
       const response = await axios.post('https://api.fpt.ai/dmp/checkface/v1', formData, {
         headers: {
-          'api-key': 'xTtzg5z0B00SFvfwRcmlnZkDgnnw4Vda', // Thay bằng API Key của bạn
+          'api-key': env.FPT_AI_KEY, // Thay bằng API Key của bạn
         },
       })
 
