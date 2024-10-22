@@ -12,8 +12,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,7 +42,7 @@ public class RoomController {
     }
 
     @Operation(summary = "Get room by roomId")
-    @Cacheable(value = "room", key = "#roomId")
+//    @Cacheable(value = "room", key = "#roomId")
     @GetMapping("/{roomId}")
     public ApiResponse<RoomDetailResponse> getRoom(@PathVariable("roomId") UUID roomId) {
         RoomDetailResponse room = roomService.getRoomById(roomId);
@@ -59,17 +57,17 @@ public class RoomController {
                 .build();
     }
 
-    @Operation(summary = "Get room by roomId without cache")
-    @GetMapping("/nocache/{roomId}")
-    public ApiResponse<RoomDetailResponse> getRoomNoCache(@PathVariable("roomId") UUID roomId) {
-        RoomDetailResponse room = roomService.getRoomById(roomId);
-        log.info("Get room no cache at roomId: {}", room.getRoomId());
-        return ApiResponse.<RoomDetailResponse>builder()
-                .code(HttpStatus.OK.value())
-                .message("success")
-                .result(room)
-                .build();
-    }
+//    @Operation(summary = "Get room by roomId without cache")
+//    @GetMapping("/nocache/{roomId}")
+//    public ApiResponse<RoomDetailResponse> getRoomNoCache(@PathVariable("roomId") UUID roomId) {
+//        RoomDetailResponse room = roomService.getRoomById(roomId);
+//        log.info("Get room no cache at roomId: {}", room.getRoomId());
+//        return ApiResponse.<RoomDetailResponse>builder()
+//                .code(HttpStatus.OK.value())
+//                .message("success")
+//                .result(room)
+//                .build();
+//    }
 
     @Operation(summary = "Get post room table")
     @GetMapping("/post-room-table")
@@ -84,7 +82,7 @@ public class RoomController {
     }
 
     @Operation(summary = "Delete room")
-    @CacheEvict(value = "room", key = "#roomId")
+//    @CacheEvict(value = "room", key = "#roomId")
     @DeleteMapping("/{roomId}")
     public ApiResponse<String> deleteRoom(@PathVariable("roomId") UUID roomId) {
         String result = "";

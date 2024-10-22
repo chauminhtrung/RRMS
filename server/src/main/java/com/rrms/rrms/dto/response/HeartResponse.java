@@ -1,26 +1,24 @@
 package com.rrms.rrms.dto.response;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.UUID;
-
+import com.rrms.rrms.models.Account;
+import com.rrms.rrms.models.Room;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MotelResponse implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
-    UUID motelId;
-    String motelName;
-    Double area;
-    Long averagePrice;
-    String address;
+public class HeartResponse {
+    UUID heartId;
     AccountResponse account;
+    List<RoomDetailResponse> rooms;
 }
