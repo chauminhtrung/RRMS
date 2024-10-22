@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "install": "npm install --force",
-    "build": "npm install --force && vite build",
+    "build": "npm install --legacy-peer-deps && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write ."
