@@ -8,5 +8,6 @@ import com.rrms.rrms.models.Heart;
 import java.util.List;
 
 public interface IHeartService {
+
     HeartResponse getHeartByAccount(AccountRequest accountRequest);
 }
