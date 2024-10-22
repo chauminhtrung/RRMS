@@ -36,23 +36,22 @@ import ServiceManager from './pages/admin/NavContentAdmin/ServiceManager'
 import AssetManager from './pages/admin/NavContentAdmin/AssetManager'
 import ContractManager from './pages/admin/NavContentAdmin/ContractManager'
 import TenantManager from './pages/admin/NavContentAdmin/TenantManager'
-import Income_summary from './pages/admin/NavContentAdmin/Income_summary'
+import IncomeSummary from './pages/admin/NavContentAdmin/IncomeSummary/IncomeSummary'
 import Zalo_history from './pages/admin/NavContentAdmin/Zalo_history'
 import SettingMotel from './pages/admin/NavContentAdmin/SettingMotel'
 import ImportFileExcel from './pages/admin/NavContentAdmin/ImportFileExcel'
 
 function App() {
+  const [username, setUsername] = useState('')
+  const [avatar, setAvatar] = useState('')
   //lay thong tin tro cua tk account truyen xuong cho trang chu tro
   const [isAdmin, setIsAdmin] = useState(false)
   const [isNavAdmin, setIsNavAdmin] = useState(true)
   const [motels, setmotels] = useState([])
-  const [username, setUsername] = useState('')
-  const [avatar, setAvatar] = useState('')
 
   useEffect(() => {
     fetchMotelsByUsername('admin')
   }, [])
-
   const fetchMotelsByUsername = async (username) => {
     getMotelByUsername(username).then((res) => {
       setmotels(res.data.result)
@@ -72,6 +71,7 @@ function App() {
   return (
     <>
       <Router>
+        {/* <ValidCaptcha /> */}
         {!isAdmin ? (
           <Header username={username} avatar={avatar} setUsername={setUsername} setAvatar={setAvatar} />
         ) : (
@@ -250,7 +250,7 @@ function App() {
           <Route
             path="/quanlytro/thu-chi-tong-ket"
             element={
-              <Income_summary
+              <IncomeSummary
                 motels={motels}
                 setmotels={setmotels}
                 setIsAdmin={setIsAdmin}

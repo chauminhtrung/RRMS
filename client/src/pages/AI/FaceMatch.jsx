@@ -37,11 +37,9 @@ const FaceMatch = () => {
       const response = await axios.post('https://api.fpt.ai/dmp/checkface/v1', formData, {
         headers: {
           'api-key': 'xTtzg5z0B00SFvfwRcmlnZkDgnnw4Vda', // Thay bằng API Key của bạn
-          // Không cần thiết phải chỉ định Content-Type, axios sẽ tự động làm điều đó
         },
       })
 
-      // Kiểm tra và xử lý phản hồi từ API
       if (response.data) {
         setResult(response.data)
       } else {
