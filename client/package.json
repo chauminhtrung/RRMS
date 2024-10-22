@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
+    "install": "npm install --legacy-peer-deps",
     "build": "npm install --legacy-peer-deps && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
