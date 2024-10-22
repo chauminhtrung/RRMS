@@ -9,6 +9,7 @@ import com.rrms.rrms.enums.Roles;
 import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Auth;
+import com.rrms.rrms.models.Heart;
 import com.rrms.rrms.models.Role;
 import com.rrms.rrms.services.IAccountService;
 import com.rrms.rrms.services.IAuthorityService;
@@ -114,6 +115,7 @@ public class AuthenController {
 
     try {
       Account newAccount = new Account();
+      Heart heart = new Heart();
       newAccount.setUsername(account.getUsername());
       String encodedPassword = passwordEncoder.encode(account.getPassword());
       newAccount.setPassword(encodedPassword);
@@ -123,6 +125,8 @@ public class AuthenController {
       newAccount.setBirthday(account.getBirthday());
       newAccount.setGender(account.getGender());
       newAccount.setCccd(account.getCccd());
+      newAccount.setHeart(heart);
+      heart.setAccount(newAccount);
       accountService.save(newAccount);
 
       Roles roleEnum = Roles.valueOf("CUSTOMER");
