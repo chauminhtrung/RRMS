@@ -114,6 +114,7 @@ public class AuthenController {
             newAccount.setGender(account.getGender());
             newAccount.setCccd(account.getCccd());
             newAccount.setHeart(heart);
+            heart.setAccount(newAccount);
             accountService.save(newAccount);
 
             Roles roleEnum = Roles.valueOf("CUSTOMER");
