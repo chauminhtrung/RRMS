@@ -45,6 +45,14 @@ public class MotelController {
     }
 
 
+    @Operation(summary = "Get motel by id")
+    @GetMapping("/get-motel-id")
+    public ApiResponse<List<MotelResponse>> getMotelbyid(@RequestParam UUID id) {
+        List<MotelResponse> motelResponses = motelService.findById(id);
+        return ApiResponse.<List<MotelResponse>>builder().code(HttpStatus.OK.value()).message("success").result(motelResponses).build();
+    }
+
+
     @GetMapping("/get-motel-account")
     public ApiResponse<List<MotelResponse>> getMotelbyaccount(@RequestParam String username) {
         List<MotelResponse> motelResponses = motelService.findMotelByAccount_Username(username);
