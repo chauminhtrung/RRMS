@@ -270,7 +270,7 @@ function FilterSearch({ setSearchData }) {
                       onChange={handleAreaChange}
                       displayEmpty>
                       <Typography gutterBottom sx={{ mt: 2, mx: 1.5 }}>
-                        Khoảng giá (Triệu)
+                        Khoảng diện tích (Diện tích)
                       </Typography>
                       <Box sx={{ mx: 1.5, my: 2 }}>
                         <Slider
