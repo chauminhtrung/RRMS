@@ -31,8 +31,8 @@ import Audio from './pages/AI/Audio'
 import RoomManagement from './pages/admin/AdminManage/RoomManagement'
 import Recognition from './pages/AI/Recognition'
 import FaceMatch from './pages/AI/FaceMatch'
-import InvoiceManager from './pages/admin/NavContentAdmin/InvoiceManager'
-import ServiceManager from './pages/admin/NavContentAdmin/ServiceManager'
+import InvoiceManager from './pages/admin/NavContentAdmin/InvoiceManager/InvoiceManager'
+import ServiceManager from './pages/admin/NavContentAdmin/ServiceManager/ServiceManager'
 import AssetManager from './pages/admin/NavContentAdmin/AssetManager'
 import ContractManager from './pages/admin/NavContentAdmin/ContractManager'
 import TenantManager from './pages/admin/NavContentAdmin/TenantManager'
@@ -52,9 +52,6 @@ function App() {
   const [isNavAdmin, setIsNavAdmin] = useState(true)
   const [motels, setmotels] = useState([])
 
-  useEffect(() => {
-    fetchMotelsByUsername('admin')
-  }, [])
   const fetchMotelsByUsername = async (username) => {
     getMotelByUsername(username).then((res) => {
       setmotels(res.data.result)
@@ -68,6 +65,7 @@ function App() {
     if (user) {
       setUsername(user.username)
       setAvatar(user.avatar)
+      fetchMotelsByUsername(user.username)
     }
   }, [])
 
@@ -123,7 +121,7 @@ function App() {
           />
           {/* route co du lieu khi nhan vao nha tro  */}
           <Route
-            path="/quanlytro/:motelName"
+            path="/quanlytro/:motelId"
             element={
               <MainManagement
                 motels={motels}
@@ -136,7 +134,7 @@ function App() {
           />
           <Route path="/moi-gioi" element={<AdminManageBoker setIsAdmin={setIsAdmin} />} />
           <Route
-            path="/moi-gioi/:motelName"
+            path="/moi-gioi/:motelId"
             element={<AdminManageBoker setIsAdmin={setIsAdmin} motels={motels} setmotels={setmotels} />}
           />
           <Route path="/adminManage" element={<AdminManage setIsAdmin={setIsAdmin} />} />
@@ -154,7 +152,7 @@ function App() {
             }
           />
           <Route
-            path="/bao-cao/:motelName"
+            path="/bao-cao/:motelId"
             element={
               <AdminStatis
                 motels={motels}
@@ -176,23 +174,23 @@ function App() {
           <Route path="/AdminManagerBoard" element={<AdminManagerBoard setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminManagerGroup" element={<AdminManagerGroup setIsAdmin={setIsAdmin} />} />
           <Route path="/dang-tin" element={<PostRooms setIsAdmin={setIsAdmin} />} />
-          <Route path="/dang-tin/:motelName" element={<PostRooms setIsAdmin={setIsAdmin} />} />
-          <Route path="/tai-khoan" element={<ManagerMyAccount setIsAdmin={setIsAdmin} />} />
+          <Route path="/dang-tin/:motelId" element={<PostRooms setIsAdmin={setIsAdmin} />} />
+          <Route path="/tai-khoan" element={<ManagerMyAccount TaiKhoan={username} setIsAdmin={setIsAdmin} />} />
           <Route path="/phan-quyen" element={<ManagerCompanyAT setIsAdmin={setIsAdmin} />} />
           <Route
-            path="/phan-quyen/:motelName"
+            path="/phan-quyen/:motelId"
             element={<ManagerCompanyAT setIsAdmin={setIsAdmin} motels={motels} setmotels={setmotels} />}
           />
           <Route path="/cai-dat" element={<ManagerSettings setIsAdmin={setIsAdmin} />} />
           <Route
-            path="/cai-dat/:motelName"
+            path="/cai-dat/:motelId"
             element={<ManagerSettings setIsAdmin={setIsAdmin} motels={motels} setmotels={setmotels} />}
           />
 
           {/* nav 2 cac tab o ben admin */}
 
           <Route
-            path="/quanlytro/quan-ly-hoa-don"
+            path="/quanlytro/:motelId/quan-ly-hoa-don"
             element={
               <InvoiceManager
                 motels={motels}
@@ -204,7 +202,7 @@ function App() {
             }
           />
           <Route
-            path="/quanlytro/quan-ly-dich-vu"
+            path="/quanlytro/:motelId/quan-ly-dich-vu"
             element={
               <ServiceManager
                 motels={motels}
@@ -216,7 +214,7 @@ function App() {
             }
           />
           <Route
-            path="/quanlytro/quan-ly-tai-san"
+            path="/quanlytro/:motelId/quan-ly-tai-san"
             element={
               <AssetManager
                 motels={motels}
@@ -228,7 +226,7 @@ function App() {
             }
           />
           <Route
-            path="/quanlytro/tat-ca-hop-dong"
+            path="/quanlytro/:motelId/tat-ca-hop-dong"
             element={
               <ContractManager
                 motels={motels}
@@ -240,7 +238,7 @@ function App() {
             }
           />
           <Route
-            path="/quanlytro/tat-ca-khach-thue"
+            path="/quanlytro/:motelId/tat-ca-khach-thue"
             element={
               <TenantManager
                 motels={motels}
@@ -252,7 +250,7 @@ function App() {
             }
           />
           <Route
-            path="/quanlytro/thu-chi-tong-ket"
+            path="/quanlytro/:motelId/thu-chi-tong-ket"
             element={
               <IncomeSummary
                 motels={motels}
@@ -264,7 +262,7 @@ function App() {
             }
           />
           <Route
-            path="/quanlytro/cai-dat-nha-tro"
+            path="/quanlytro/:motelId/cai-dat-nha-tro"
             element={
               <SettingMotel
                 motels={motels}
@@ -276,7 +274,7 @@ function App() {
             }
           />
           <Route
-            path="/quanlytro/lich-su-gui-zalo"
+            path="/quanlytro/:motelId/lich-su-gui-zalo"
             element={
               <Zalo_history
                 motels={motels}
@@ -288,7 +286,7 @@ function App() {
             }
           />
           <Route
-            path="/quanlytro/import-data-from-file"
+            path="/quanlytro/:motelId/import-data-from-file"
             element={
               <ImportFileExcel
                 motels={motels}

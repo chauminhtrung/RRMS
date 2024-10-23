@@ -55,9 +55,6 @@ const HomeWData = () => {
     },
   }
 
-  // Tùy chọn để hiển thị thông báo không có dữ liệu với hình ảnh
-  // Tùy chọn để hiển thị thông báo không có dữ liệu với hình ảnh
-
   return (
     <div
       style={{

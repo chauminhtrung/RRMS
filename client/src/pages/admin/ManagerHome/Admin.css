@@ -455,3 +455,164 @@
     text-align: center; /* Căn giữa */
     font-weight: 600;
   }
+
+
+  /* ben in hoa don admin */
+  .nav-tabs.progressbar{
+    border-bottom: 0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    width: 50%;
+}
+
+.progressbar {
+    counter-reset: step;
+    width: 100%
+}
+.progressbar li{
+    width: 50%;
+}
+.progressbar li a{
+    list-style: none;
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    text-align: center;
+    cursor: pointer;
+    color: #000;
+}
+.progressbar li a::before {
+    content: counter(step);
+    counter-increment: step;
+    width: 30px;
+    height: 30px;
+    line-height : 30px;
+    border: 1px solid #ddd;
+    border-radius: 100%;
+    display: block;
+    text-align: center;
+    margin: 0 auto 10px auto;
+    background-color: #fff;
+    position: relative;
+    z-index : 2;
+}
+
+.progressbar a:after{
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: #ddd;
+    top: 15px;
+    left: -50%;
+    z-index: 1;
+}
+.progressbar li:first-child a::after {
+    content: none;
+}
+.progressbar li a.active {
+    color: rgb(111, 171, 232);
+    font-weight: 700
+}
+.progressbar li a.active:before {
+    border-color: rgb(111, 171, 232);
+    border-color: rgb(111, 171, 232);
+    border-width: 2px;
+    width: 32px;
+    height: 32px;
+} 
+.progressbar a.active + a:after {
+    background-color: rgb(111, 171, 232);
+}
+.buttom-list {
+    display: flex;
+    position: absolute;
+    right: 20px;
+    top: 35%;
+}
+.room-item .buttom-list .deal-price-item{
+    display: block;
+}
+
+.room-item.is_lock .buttom-list .deal-price-item{
+    display: none;
+}
+
+.room-item .buttom-list .cancel-price-item, .room-item .buttom-list .view-price-item{
+    display: none;
+}
+
+.room-item.is_lock .buttom-list .cancel-price-item, .room-item.is_lock .buttom-list .view-price-item{
+    display: block;
+}
+
+.is-deal {
+    position: absolute;
+    top: 5px;
+    right: 20px;
+}
+
+.room-list .room-item.is_lock .room-item-inner {
+    border: 1px solid rgb(111, 171, 232);
+}
+
+.room-list .room-item.is_lock .icon-room {
+    background-color: rgb(111, 171, 232);
+}
+
+.room-item.col-12 {
+    border: 1px solid #eee;
+    background-color: #eee;
+    border-radius: 10px;
+}
+.price-items-checkout-layout .item{
+    background-color: #fff;
+}
+
+.room-list .room-item.active .room-item-inner {
+    border: 1px solid rgb(111, 171, 232);
+    background-color: #ebffec;
+}
+
+
+
+#addition-item .item{
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+}
+#addition-item .form-control{
+    border:0px;
+    border-radius: 0;
+}
+#addition-item .middle-item, .addition-suggestion-layout .middle-item{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#addition-item .center-item{
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+}
+#addition-item .border-top{
+    border-top: 1px solid #ced4da;
+}
+#addition-item .border-bottom{
+    border-bottom: 1px solid #ced4da;
+}
+#addition-item .border-left{
+    border-left: 1px solid #ced4da;
+}
+#addition-item .border-right{
+    border-right: 1px solid #ced4da;
+}
+#addition-item .full{
+    height: 100%;width: 100%;
+}
+
+
+.total-price{
+    font-size: 18px;
+}
