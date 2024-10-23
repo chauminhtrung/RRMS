@@ -38,7 +38,7 @@ public class DB {
             ISearchService searchService,
             RoleRepository roleRepository) {
         return args -> {
-            int roomsLength = 10;
+            int roomsLength = 20;
 
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
 
