@@ -41,8 +41,10 @@ import LoadingPage from '~/components/LoadingPage'
 import { formatterAmount } from '~/utils/formatterAmount'
 import { useEffect, useState } from 'react'
 import UserRaiting from './UserRaiting'
+import { useTranslation } from 'react-i18next'
 
 const Detail = ({ setIsAdmin }) => {
+  const { t } = useTranslation()
   const [detail, setDetail] = useState(null)
   const [showArrows, setShowArrows] = useState(false)
   const [roomRating, setRoomRating] = useState(0)
@@ -139,7 +141,7 @@ const Detail = ({ setIsAdmin }) => {
     <Container>
       <Breadcrumbs aria-label="breadcrumb" sx={{ my: 2 }}>
         <Link color="inherit" to="/">
-          Trang chủ
+          {t('trang-chu')}
         </Link>
         <Link color="inherit" to="/">
           {detail.motel.motelName}
@@ -191,7 +193,7 @@ const Detail = ({ setIsAdmin }) => {
           <Typography variant="h6">{detail.motel.address}</Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography variant="h5" sx={{ my: 2, color: 'red' }}>
-              {formatterAmount(detail.price)}/tháng
+              {formatterAmount(detail.price)}/{t('thang')}
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', ml: 0 }}>
               <Rating
@@ -209,24 +211,26 @@ const Detail = ({ setIsAdmin }) => {
             <Grid item xs={6}>
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <TagIcon sx={{ mr: 0.5 }} />
-                <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>Chuyên mục: </Typography>
+                <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>{t('chuyen-muc')}: </Typography>
                 {detail.typeRoom.name}
               </Typography>
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <LanguageIcon sx={{ mr: 0.5 }} />
-                <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>Tình trạng: </Typography>
+                <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>{t('tinh-trang')}: </Typography>
                 {detail.available ? 'Đang cho thuê' : 'Đã có người thuê'}
               </Typography>
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <CalendarMonthIcon sx={{ mr: 0.5 }} />
-                <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>Giờ giấc: </Typography>
+                <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>{t('gio-giac')}: </Typography>
                 {detail.hours}
               </Typography>
             </Grid>
             <Grid item xs={6}>
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <AccessTimeIcon sx={{ mr: 0.5 }} />
-                <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>Ngày bắt đầu cho thuê:</Typography>
+                <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>
+                  {t('ngay-bat-dau-cho-thue')}:
+                </Typography>
                 {detail.rentalStartTime}
               </Typography>
               <Typography
@@ -237,12 +241,12 @@ const Detail = ({ setIsAdmin }) => {
                   color: detail.censor ? 'lime' : 'red',
                 }}>
                 <ShieldOutlinedIcon sx={{ mr: 0.5, color: '#6B6B6B' }} />
-                <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>Kiểm duyệt: </Typography>
+                <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>{t('kiem-duyet')}: </Typography>
                 {detail.censor ? 'Đã kiểm duyệt' : 'Chưa kiểm duyệt'}
               </Typography>
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <GroupIcon sx={{ mr: 0.5 }} />
-                <Typography sx={{ display: isMobile ? 'none' : 'block', mr: 0.5 }}>Tối đa người ở: </Typography>
+                <Typography sx={{ display: isMobile ? 'none' : 'block', mr: 0.5 }}>{t('toi-da-nguoi-o')}: </Typography>
                 {detail.maxPerson}
               </Typography>
             </Grid>
@@ -252,7 +256,7 @@ const Detail = ({ setIsAdmin }) => {
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <AttachMoneyIcon />
                 <Box>
-                  <Typography>Tiền cọc</Typography>
+                  <Typography>{t('tien-coc')}</Typography>
                   <Typography sx={{ color: '#2ed573' }}>{formatterAmount(detail.deposit)}</Typography>
                 </Box>
               </Box>
@@ -261,7 +265,7 @@ const Detail = ({ setIsAdmin }) => {
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <CropIcon />
                 <Box>
-                  <Typography>Diện tích</Typography>
+                  <Typography>{t('dien-tich')}</Typography>
                   <Typography>{detail.roomArea} m2</Typography>
                 </Box>
               </Box>
@@ -270,7 +274,7 @@ const Detail = ({ setIsAdmin }) => {
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <ElectricBoltIcon />
                 <Box>
-                  <Typography>Tiền điện</Typography>
+                  <Typography>{t('tien-dien')}</Typography>
                   {detail.roomServices.map(
                     (item, i) =>
                       item.service.nameService === 'Điện' && (
@@ -284,7 +288,7 @@ const Detail = ({ setIsAdmin }) => {
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <WaterDropOutlinedIcon />
                 <Box>
-                  <Typography>Tiền nước</Typography>
+                  <Typography>{t('tien-nuoc')}</Typography>
                   {detail.roomServices.map(
                     (item, i) =>
                       item.service.nameService === 'Nước' && (
@@ -295,7 +299,7 @@ const Detail = ({ setIsAdmin }) => {
               </Box>
             </Grid>
           </Grid>
-          <Typography variant="h5">Điểm (+)</Typography>
+          <Typography variant="h5">{t('diem')} (+)</Typography>
           <Grid container sx={{ gap: 2, justifyContent: isMobile ? 'center' : 'start', my: 2 }}>
             {detail.roomServices.map(
               (item, i) =>
@@ -320,7 +324,7 @@ const Detail = ({ setIsAdmin }) => {
               sx={{ borderRadius: '25px' }}
               startIcon={<ContentCopyIcon />}
               onClick={() => getDescription(detail.description)}>
-              Copy
+              {t('sao-chep')}
             </Button>
           </Box>
           <TextField
@@ -345,7 +349,7 @@ const Detail = ({ setIsAdmin }) => {
                   bgcolor: (theme) => (theme.palette.mode === 'light' ? '#2ed573' : '#7bed9f'),
                 }}
                 startIcon={<BookmarkIcon />}>
-                Lưu xem sau
+                {t('luu-xem-sau')}
               </Button>
             </Grid>
             <Grid item md={3.8} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -356,7 +360,7 @@ const Detail = ({ setIsAdmin }) => {
                   bgcolor: (theme) => (theme.palette.mode === 'light' ? '#1e90ff' : '#70a1ff'),
                 }}
                 startIcon={<FacebookIcon />}>
-                Chia sẻ facebook
+                {t('chia-se')} facebook
               </Button>
             </Grid>
             <Grid item md={3.8} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -368,7 +372,7 @@ const Detail = ({ setIsAdmin }) => {
                 }}
                 startIcon={<SendIcon />}
                 onClick={share}>
-                Chia sẻ
+                {t('chia-se')}
               </Button>
             </Grid>
           </Grid>
@@ -407,9 +411,9 @@ const Detail = ({ setIsAdmin }) => {
                   justifyContent: 'space-between',
                   flexWrap: 'wrap',
                 }}>
-                <Typography variant="h5">Phòng trọ, nhà trọ cùng địa chỉ</Typography>
+                <Typography variant="h5">{t('phong-tro-cung-dia-chi')}</Typography>
                 <Typography variant="subtitle1">
-                  Xem thêm {detail.typeRoom.name}, nhà trọ tại {detail.motelName}
+                  {t('xem-them')} {detail.typeRoom.name}, {t('nha-tro-tai')} {detail.motelName}
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
