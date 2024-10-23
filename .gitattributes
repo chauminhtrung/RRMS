@@ -6,4 +6,4 @@ Dockerfile linguist-detectable=true
 Dockerfile linguist-language=Dockerfile
 docker-compose.yml linguist-language=Dockerfile
 .dockerignore linguist-language=Dockerfile
-RRMS.drawio linguist-language=Dockerfile
+DFD.drawio linguist-language=Dockerfile
