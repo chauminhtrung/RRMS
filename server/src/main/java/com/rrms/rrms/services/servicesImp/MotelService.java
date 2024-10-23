@@ -2,6 +2,7 @@ package com.rrms.rrms.services.servicesImp;
 
 import com.rrms.rrms.dto.response.MotelResponse;
 import com.rrms.rrms.mapper.MotelMapper;
+import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Motel;
 import com.rrms.rrms.repositories.MotelRepository;
 import com.rrms.rrms.services.IMotelService;
@@ -52,5 +53,10 @@ public class MotelService implements IMotelService {
     @Override
     public void delete(UUID id) {
         motelRepository.deleteById(id);
+    }
+
+    @Override
+    public Integer getTotalAreaByUsername(Account username) {
+        return motelRepository.findTotalAreaByUsername(username);
     }
 }

@@ -1,6 +1,7 @@
 package com.rrms.rrms.services;
 
 import com.rrms.rrms.dto.response.MotelResponse;
+import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Motel;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -16,4 +17,5 @@ public interface IMotelService {
         public List<MotelResponse> findAll();
         public MotelResponse update(UUID id,Motel motel);
         public void delete(UUID id);
+        Integer getTotalAreaByUsername(Account username);
 }

@@ -1,2 +1,4 @@
-package com.rrms.rrms.API;public class ContractAPI {
+package com.rrms.rrms.API;
+
+public class ContractAPI {
 }
