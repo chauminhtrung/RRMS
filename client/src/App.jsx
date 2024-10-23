@@ -48,6 +48,7 @@ import ServiceManager from './pages/admin/NavContentAdmin/ServiceManager'
 import TenantManager from './pages/admin/NavContentAdmin/TenantManager'
 import Zalo_history from './pages/admin/NavContentAdmin/Zalo_history'
 import SettingMotel from './pages/admin/NavContentAdmin/SettingMotel'
+import ImageComparison from './pages/AI/ImageComparison'
 // import TestPage from './pages/TestPage'
 // import ValidCaptcha from './components/ValidCaptcha'
 
@@ -91,6 +92,7 @@ function App() {
           <Route path="/forgot-password" element={<Forgot_Password setIsAdmin={setIsAdmin} />} />
           <Route path="/chart" element={<Chart setIsAdmin={setIsAdmin} />} />
           <Route path="/audio" element={<Audio setIsAdmin={setIsAdmin} />} />
+          <Route path="/image" element={<ImageComparison setIsAdmin={setIsAdmin} />} />
           <Route path="/recognition" element={<Recognition setIsAdmin={setIsAdmin} />} />
           <Route path="/facematch" element={<FaceMatch setIsAdmin={setIsAdmin} />} />
           <Route path="/search" element={<Search setIsAdmin={setIsAdmin} />} />
