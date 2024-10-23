@@ -34,7 +34,7 @@ const VisuallyHiddenInput = styled('input')({
   whiteSpace: 'nowrap',
   width: 1,
 })
-const Profile = ({ setIsAdmin }) => {
+const Profile = ({ setIsAdmin, username }) => {
   const [tabIndex, setTabIndex] = useState('1')
   const [selectedImage, setSelectedImage] = useState(null)
 
@@ -49,10 +49,10 @@ const Profile = ({ setIsAdmin }) => {
   }
 
   useEffect(() => {
-    getProfile('dung').then((res) => {
+    getProfile(username).then((res) => {
       setProfile(res.data.result)
     })
-  }, [])
+  }, [username])
 
   const handleImageChange = async (event) => {
     const image = event.target.files[0]

@@ -26,9 +26,7 @@ public class Heart {
     @JoinColumn(name = "username")
     private Account account;
 
-    @ManyToMany(
-            fetch = FetchType.LAZY,
-            cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "heart_room",
             joinColumns = @JoinColumn(name = "heart_id"),

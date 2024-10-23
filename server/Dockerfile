@@ -11,13 +11,13 @@ COPY mvnw pom.xml ./
 RUN chmod +x mvnw
 
 # Download dependencies
-RUN ./mvnw dependency:go-offline
+RUN mvn dependency:go-offline
 
 # Copy the source code
 COPY src ./src
 
 # Build the application
-RUN ./mvnw package -DskipTests
+RUN mvn package -DskipTests
 
 # Use a smaller base image for the runtime
 FROM openjdk:17-jdk-slim

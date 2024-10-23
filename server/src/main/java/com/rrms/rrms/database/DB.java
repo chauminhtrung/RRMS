@@ -1,29 +1,30 @@
 package com.rrms.rrms.database;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
-
+import com.rrms.rrms.enums.Gender;
+import com.rrms.rrms.enums.Roles;
+import com.rrms.rrms.models.*;
+import com.rrms.rrms.repositories.*;
+import com.rrms.rrms.services.ISearchService;
+import lombok.extern.slf4j.Slf4j;
+import net.datafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rrms.rrms.enums.Gender;
-import com.rrms.rrms.models.*;
-import com.rrms.rrms.repositories.*;
-import com.rrms.rrms.services.ISearchService;
-
-import lombok.extern.slf4j.Slf4j;
-import net.datafaker.Faker;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 
 @Configuration
 @Slf4j
 @Transactional
 public class DB {
+    int imageIndex = 0;
+
     @Bean
     CommandLineRunner initDatabase(
             AccountRepository accountRepository,
@@ -34,10 +35,15 @@ public class DB {
             RoomReviewRepository roomReviewRepository,
             ServiceRepository serviceRepository,
             RoomServiceRepository roomServiceRepository,
-            ISearchService searchService) {
+            ISearchService searchService,
+            RoleRepository roleRepository) {
         return args -> {
-            int roomsLength = 2000;
+            int roomsLength = 10;
+
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
+
+            // Tạo dữ liệu mẫu cho các vai trò
+            createSampleRoles(roleRepository);
 
             // Tạo tài khoản admin nếu chưa tồn tại
             createAdminAccount(accountRepository, pe);
@@ -85,51 +91,56 @@ public class DB {
         };
     }
 
+    // Phương thức để tạo dữ liệu mẫu cho roles
+    private void createSampleRoles(RoleRepository roleRepository) {
+        if (roleRepository.count() == 0) { // Kiểm tra nếu chưa có vai trò nào trong cơ sở dữ liệu
+            log.info("Creating sample roles...");
+            Role adminRole = new Role();
+            adminRole.setRoleName(Roles.ADMIN);
+            adminRole.setDescription("Administrator with full access.");
+            roleRepository.save(adminRole);
+
+            Role customerRole = new Role();
+            customerRole.setRoleName(Roles.CUSTOMER);
+            customerRole.setDescription("Regular customer role.");
+            roleRepository.save(customerRole);
+
+            Role employeeRole = new Role();
+            employeeRole.setRoleName(Roles.EMPLOYEE);
+            employeeRole.setDescription("Employee role with limited access.");
+            roleRepository.save(employeeRole);
+
+            Role guestRole = new Role();
+            guestRole.setRoleName(Roles.GUEST);
+            guestRole.setDescription("Guest user without account.");
+            roleRepository.save(guestRole);
+
+            Role hostRole = new Role();
+            hostRole.setRoleName(Roles.HOST);
+            hostRole.setDescription("Host for organizing events.");
+            roleRepository.save(hostRole);
+
+            log.info("Sample roles created.");
+        }
+    }
+
     private void createAdminAccount(AccountRepository accountRepository, BCryptPasswordEncoder pe) {
         if (accountRepository.findByUsername("admin").isEmpty()) {
             accountRepository.save(Account.builder()
                     .username("admin")
-                    .password(pe.encode("admin")) // Mã hóa mật khẩu
-                    .fullname("admin")
-                    .email("admin@gmail.com")
-                    .phone("0333333333")
-                    .cccd("admin")
+                    .password(pe.encode("adminPassword"))
+                    .fullname("Administrator")
+                    .email("admin@example.com")
+                    .phone("0123456789")
+                    .cccd("012345678901")
                     .gender(Gender.MALE)
-                    .avatar(
-                            "https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
+                    .avatar("AVT_ADMIN.jpg")
                     .birthday(LocalDate.now())
                     .build());
         }
     }
 
     private void createUserAccount(AccountRepository accountRepository, BCryptPasswordEncoder pe) {
-        if (accountRepository.findByUsername("dung").isEmpty()) {
-            accountRepository.save(Account.builder()
-                    .username("dung")
-                    .password(pe.encode("123"))
-                    .fullname("Tri Dung")
-                    .email("tridung@gmail.com")
-                    .phone("0333334")
-                    .cccd("012345678900")
-                    .gender(Gender.OTHER)
-                    .avatar(
-                            "https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
-                    .birthday(LocalDate.now())
-                    .build());
-        }
-        if (accountRepository.findByUsername("quoc").isEmpty()) {
-            accountRepository.save(Account.builder()
-                    .username("quoc")
-                    .password(pe.encode("123"))
-                    .fullname("Kiến Quốc")
-                    .email("kieukienquocvn@gmail.com")
-                    .phone("0919925302")
-                    .cccd("012345678900")
-                    .gender(Gender.MALE)
-                    .avatar("AVT_KQ.jpg")
-                    .birthday(LocalDate.now())
-                    .build());
-            }
         if (accountRepository.findByUsername("user5").isEmpty()) {
             accountRepository.save(Account.builder()
                     .username("user5")
@@ -139,8 +150,7 @@ public class DB {
                     .phone("03333345553")
                     .cccd("012345678900")
                     .gender(Gender.OTHER)
-                    .avatar(
-                            "https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
+                    .avatar("https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
                     .birthday(LocalDate.now())
                     .build());
         }
@@ -172,8 +182,7 @@ public class DB {
         return room;
     }
 
-    private void createServices(
-            Faker faker, List<RoomService> roomServices, Room room, ServiceRepository serviceRepository) {
+    private void createServices(Faker faker, List<RoomService> roomServices, Room room, ServiceRepository serviceRepository) {
         Service service1 = Service.builder()
                 .typeService("Tiện nghi")
                 .nameService(faker.options().option("Có chuồng chó", "Wifi miễn phí", "Hồ bơi", "Gym"))
@@ -200,8 +209,9 @@ public class DB {
 
     private void createRoomImages(Faker faker, List<RoomImage> roomImages, Room room) {
         for (int j = 0; j < 5; j++) {
-            roomImages.add(
-                    new RoomImage(UUID.randomUUID(), room, faker.internet().image()));
+            imageIndex++;
+            String imageUrl = "https://picsum.photos/1280/720?random=" + imageIndex;
+            roomImages.add(new RoomImage(UUID.randomUUID(), room, imageUrl));
         }
     }
 }

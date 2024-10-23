@@ -1,5 +1,7 @@
-import Detail from './pages/Detail/Detail'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { getMotelByUsername } from '~/apis/apiClient'
+import Detail from './pages/Detail/Detail'
 import Home from './pages/Homes/Home'
 import Chart from './pages/Charts/Chart'
 import Header from './layouts/Header/Header'
@@ -8,62 +10,57 @@ import Footer from './layouts/Footer/Footer'
 import Login from './pages/Login/Login'
 import Register from './pages/Register/Register'
 import Forgot_Password from './pages/Forgot-Password/Forgot_Password'
-
 import Support from './pages/Support/Support'
-
 import AdminStatis from './pages/admin/statistical'
-
 import MainManagement from './pages/admin/ManagerHome/MainManagement'
 import ManagerMyAccount from './pages/admin/ManagerMyAccount/ManagerMyAccount'
 import ManagerCompanyAT from './pages/admin/ManagerCompanyAT/ManagerCompanyAT'
 import ManagerSettings from './pages/admin/ManagerSettings/ManagerSettings'
-
 import AdminManagerGroup from './pages/admin/AdminManagerGroup'
 import Contact from './pages/Contact/Contact'
 import Introduce from './pages/Introduce/Introduce'
 import AdminManagerBoard from './pages/admin/AdminManageBoard'
 import Profile from './pages/Profile/Profile'
 import PaymentPage from './pages/cart/PaymentPage'
-import { useEffect, useState } from 'react'
 import Heart from './pages/cart/Heart'
 import RRMS from './pages/RRMS/RRMS'
 import AdminManageBoker from './pages/admin/AdminManageBoker/AdminManageBoker'
 import PostRooms from './pages/PostRooms/PostRooms'
 import AdminManage from './pages/admin/AdminManage/AdminManage'
 import Audio from './pages/AI/Audio'
-
-import { getMotelByUsername } from '~/apis/apiClient'
-
 import RoomManagement from './pages/admin/AdminManage/RoomManagement'
 import Recognition from './pages/AI/Recognition'
 import FaceMatch from './pages/AI/FaceMatch'
-
-//nav 2 cac tab o ben admin
-import AssetManager from './pages/admin/NavContentAdmin/AssetManager'
-import ContractManager from './pages/admin/NavContentAdmin/ContractManager'
-import ImportFileExcel from './pages/admin/NavContentAdmin/ImportFileExcel'
-import Income_summary from './pages/admin/NavContentAdmin/Income_summary'
 import InvoiceManager from './pages/admin/NavContentAdmin/InvoiceManager'
 import ServiceManager from './pages/admin/NavContentAdmin/ServiceManager'
+import AssetManager from './pages/admin/NavContentAdmin/AssetManager'
+import ContractManager from './pages/admin/NavContentAdmin/ContractManager'
 import TenantManager from './pages/admin/NavContentAdmin/TenantManager'
+import IncomeSummary from './pages/admin/NavContentAdmin/IncomeSummary/IncomeSummary'
 import Zalo_history from './pages/admin/NavContentAdmin/Zalo_history'
 import SettingMotel from './pages/admin/NavContentAdmin/SettingMotel'
 import ImageComparison from './pages/AI/ImageComparison'
 // import TestPage from './pages/TestPage'
 // import ValidCaptcha from './components/ValidCaptcha'
+import ImportFileExcel from './pages/admin/NavContentAdmin/ImportFileExcel'
 
 function App() {
   const [username, setUsername] = useState('')
   const [avatar, setAvatar] = useState('')
+  //lay thong tin tro cua tk account truyen xuong cho trang chu tro
   const [isAdmin, setIsAdmin] = useState(false)
   const [isNavAdmin, setIsNavAdmin] = useState(true)
   const [motels, setmotels] = useState([])
 
+  useEffect(() => {
+    fetchMotelsByUsername('admin')
+  }, [])
   const fetchMotelsByUsername = async (username) => {
     getMotelByUsername(username).then((res) => {
       setmotels(res.data.result)
     })
   }
+
   //Muốn mất header thì thêm props setIsAdmin={setIsAdmin}
   useEffect(() => {
     //   setIsAdmin(true)
@@ -71,9 +68,9 @@ function App() {
     if (user) {
       setUsername(user.username)
       setAvatar(user.avatar)
-      fetchMotelsByUsername(user.username)
     }
   }, [])
+
   return (
     <>
       <Router>
@@ -105,7 +102,7 @@ function App() {
           <Route path="/contact" element={<Contact setIsAdmin={setIsAdmin} />} />
           <Route path="/introduce" element={<Introduce setIsAdmin={setIsAdmin} />} />
           <Route path="/register" element={<Register setIsAdmin={setIsAdmin} />} />
-          <Route path="/profile" element={<Profile setIsAdmin={setIsAdmin} />} />
+          <Route path="/profile" element={<Profile setIsAdmin={setIsAdmin} username={username} />} />
           <Route path="/payment" element={<PaymentPage setIsAdmin={setIsAdmin} />} />
           <Route path="/support" element={<Support setIsAdmin={setIsAdmin} />} />
           <Route path="/heart" element={<Heart setIsAdmin={setIsAdmin} />} />
@@ -257,7 +254,7 @@ function App() {
           <Route
             path="/quanlytro/thu-chi-tong-ket"
             element={
-              <Income_summary
+              <IncomeSummary
                 motels={motels}
                 setmotels={setmotels}
                 setIsAdmin={setIsAdmin}

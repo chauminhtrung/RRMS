@@ -6,6 +6,10 @@ import { env } from '~/configs/environment'
 //   timeout: 5000, // Thời gian chờ
 // });
 
+export const ValidCaptchaAPI = async (token) => {
+  return await axios.post(`${env.API_URL}/api/verify-captcha`, { token })
+}
+
 export const getDetail = async (roomId) => {
   return await axios.get(`${env.API_URL}/room/${roomId}`)
 }
@@ -60,10 +64,21 @@ export const getPhuongXa = async (selectedDistrict) => {
   return await axios.get(`https://esgoo.net/api-tinhthanh/3/${selectedDistrict}.htm`)
 }
 
-
-export const listMotel = async () => { return await axios.get(`${env.API_URL}/motels`)};
-export const createMotel = async (Motel) => { return await axios.post(`${env.API_URL}/motels`,Motel) }
-export const getMotelByname = async (motelName) => {return await axios.get(`${env.API_URL}/motels/${motelName}`)}
-export const updateMotel = async (motelId,Motel) => {return await axios.put(`${env.API_URL}/motels/${motelId}`,Motel)}
-export const deleteMotel = async (motelId) => {return await axios.delete(`${env.API_URL}/motels/${motelId}`)}
-export const getMotelByUsername = async (username) => {return await axios.get(`${env.API_URL}/motels/get-motel-account?username=${username}`)}
+export const listMotel = async () => {
+  return await axios.get(`${env.API_URL}/motels`)
+}
+export const createMotel = async (Motel) => {
+  return await axios.post(`${env.API_URL}/motels`, Motel)
+}
+export const getMotelByname = async (motelName) => {
+  return await axios.get(`${env.API_URL}/motels/${motelName}`)
+}
+export const updateMotel = async (motelId, Motel) => {
+  return await axios.put(`${env.API_URL}/motels/${motelId}`, Motel)
+}
+export const deleteMotel = async (motelId) => {
+  return await axios.delete(`${env.API_URL}/motels/${motelId}`)
+}
+export const getMotelByUsername = async (username) => {
+  return await axios.get(`${env.API_URL}/motels/get-motel-account?username=${username}`)
+}
