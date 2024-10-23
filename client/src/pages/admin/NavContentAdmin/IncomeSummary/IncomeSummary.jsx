@@ -14,6 +14,7 @@ import {
   InputLabel,
   FormControl,
   Badge,
+  Checkbox,
 } from '@mui/material'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import AddIcon from '@mui/icons-material/Add'
@@ -28,6 +29,9 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
   useEffect(() => {
     setIsAdmin(true)
   }, [])
+
+  const label = { inputProps: { 'aria-label': 'Checkbox demo' } }
+
   return (
     <div>
       <NavAdmin
@@ -76,7 +80,7 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
           {/* Filters */}
           <Paper
             variant="outlined"
-            sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, mt: 2 }}>
+            sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1, mt: 2 }}>
             <Badge
               badgeContent={4}
               sx={{
@@ -101,7 +105,10 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
                   color: 'white',
                 },
               }}>
-              <Button variant="outlined">Tất cả phiếu thu (tiền vào)</Button>{' '}
+              <Paper variant="outlined" sx={{ pr: 1 }}>
+                <Checkbox {...label} defaultChecked />
+                Tất cả phiếu thu (tiền vào)
+              </Paper>
             </Badge>
 
             <Badge
@@ -112,9 +119,10 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
                   color: 'white',
                 },
               }}>
-              <Button variant="outlined" color="error">
+              <Paper variant="outlined" sx={{ pr: 1 }}>
+                <Checkbox {...label} defaultChecked />
                 Tất cả phiếu chi (tiền ra)
-              </Button>
+              </Paper>
             </Badge>
 
             {/* Action Buttons */}
@@ -139,7 +147,7 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
             </Button>
           </Paper>
 
-          <Paper variant="outlined" sx={{ display: 'flex', justifyContent: 'space-between', p: 2, mt: 2 }}>
+          <Paper variant="outlined" sx={{ display: 'flex', justifyContent: 'space-between', p: 1, mt: 2 }}>
             {/* Category and Report Type */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <FormControl sx={{ minWidth: 170 }} variant="standard" fullWidth>
@@ -167,7 +175,7 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
                 display: 'flex',
                 alignItems: 'center',
                 gap: 1,
-                '.MuiCardContent-root': { p: 1, pb: 0.5, bgcolor: '#E8F5E9' },
+                '.MuiCardContent-root': { bgcolor: '#E8F5E9' },
               }}>
               <Card variant="outlined">
                 <CardContent>
