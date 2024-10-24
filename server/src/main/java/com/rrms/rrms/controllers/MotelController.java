@@ -31,12 +31,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/motels")
 public class MotelController {
-
     IMotelService motelService;
     @Autowired
     private RedisRateLimiter rateLimiter;
-
-
     @Operation(summary = "Get motel by name")
     @GetMapping("/{name}")
     public ApiResponse<List<MotelResponse>> getMotel(@PathVariable String name) {
@@ -48,27 +45,21 @@ public class MotelController {
                 .result(motelResponses)
                 .build();
     }
-
-
     @Operation(summary = "Get motel by id")
     @GetMapping("/get-motel-id")
     public ApiResponse<List<MotelResponse>> getMotelbyid(@RequestParam UUID id) {
         List<MotelResponse> motelResponses = motelService.findById(id);
         return ApiResponse.<List<MotelResponse>>builder().code(HttpStatus.OK.value()).message("success").result(motelResponses).build();
     }
-
-
     @GetMapping("/get-motel-account")
     public ApiResponse<List<MotelResponse>> getMotelbyaccount(@RequestParam String username) {
         List<MotelResponse> motelResponses = motelService.findMotelByAccount_Username(username);
         return ApiResponse.<List<MotelResponse>>builder().code(HttpStatus.OK.value()).message("success").result(motelResponses).build();
     }
-
-
     @Operation(summary = "Get all motels")
-
     @GetMapping()
     public ApiResponse<List<MotelResponse>> getMotels(@RequestParam String username) {
+        // test valid request
         boolean allowed = rateLimiter.isAllowed(username);
         if (allowed) {
             List<MotelResponse> motelResponses = motelService.findAll();
@@ -86,9 +77,7 @@ public class MotelController {
                     .result(null)
                     .build();
         }
-
     }
-
     @Operation(summary = "Add motel by id")
     @PostMapping()
     public ApiResponse<MotelResponse> insertMotel(@RequestBody MotelRequest motelRequest) {
@@ -100,7 +89,6 @@ public class MotelController {
                 .result(motelResponse)
                 .build();
     }
-
     @Operation(summary = "Update motel by id")
     @PutMapping("/{id}")
     public ApiResponse<MotelResponse> updateMotel(@PathVariable("id") UUID id, @RequestBody MotelRequest motelRequest) {
@@ -120,7 +108,6 @@ public class MotelController {
                 .result(null)
                 .build();
     }
-
     @Operation(summary = "Delete motel by id")
     @DeleteMapping()
     public ApiResponse<Boolean> deleteMotel(@PathVariable("id") UUID id) {
