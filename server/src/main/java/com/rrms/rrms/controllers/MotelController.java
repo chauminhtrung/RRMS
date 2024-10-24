@@ -73,7 +73,7 @@ public class MotelController {
                 .build();
     }
 
-    @Operation(summary = "Get motel by id")
+    @Operation(summary = "Add motel by id")
     @PostMapping()
     public ApiResponse<MotelResponse> insertMotel(@RequestBody MotelRequest motelRequest) {
         MotelResponse motelResponse = motelService.insert(motelRequest);
