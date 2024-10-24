@@ -17,6 +17,9 @@ public enum ErrorCode {
     TYPE_ROOM_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Type room not found", HttpStatus.NOT_FOUND),
     SERVICE_ID_REQUIRED(HttpStatus.BAD_REQUEST.value(), "Service id required", HttpStatus.BAD_REQUEST),
     INVALID_SEARCH_PARAMETER(HttpStatus.BAD_REQUEST.value(), "INVALID_SEARCH_PARAMETER", HttpStatus.BAD_REQUEST),
+    PHONE_NOT_EXIST(HttpStatus.BAD_REQUEST.value(), "PHONE NOT EXIST", HttpStatus.BAD_REQUEST),
+    AUTHENTICATED(HttpStatus.BAD_REQUEST.value(), "AUTHENTICATED", HttpStatus.BAD_REQUEST),
+    INVALID_PASSWORD(HttpStatus.BAD_REQUEST.value(), "INVALID_PASSWORD", HttpStatus.BAD_REQUEST),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

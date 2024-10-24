@@ -2,22 +2,22 @@ import { Link, useParams } from 'react-router-dom'
 import './NavbarAdmin.css'
 import { useEffect, useState } from 'react'
 import NavWData from './NavWData'
-import { getMotelByname } from '~/apis/apiClient'
+import { getMotelById } from '~/apis/apiClient'
 const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) => {
-  const { motelName } = useParams() // Lấy tham số motelName từ URL
+  const { motelId } = useParams() // Lấy tham số motelId từ URL
   const [motel, setmotel] = useState(null)
 
   useEffect(() => {
     // Nếu có danh sách nhà trọ và không có tên cụ thể từ URL
-    if (motels && motels.length > 0 && !motelName) {
+    if (motels && motels.length > 0 && !motelId) {
       setmotel(motels[0]) // Cập nhật phòng trọ đầu tiên nếu tồn tại dữ liệu
     } else {
       // Nếu có tên nhà trọ từ URL, lấy dữ liệu bằng API
-      getMotelByname(motelName).then((res) => {
+      getMotelById(motelId).then((res) => {
         setmotel(res.data.result[0])
       })
     }
-  }, [motels, motelName, getMotelByname]) // Thêm các dependencies cần thiết vào mảng dependencies
+  }, [motels, motelId, getMotelById]) // Thêm các dependencies cần thiết vào mảng dependencies
 
   // Theo dõi khi motel thay đổi để kiểm tra giá trị
   useEffect(() => {
@@ -79,7 +79,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) 
                 </ul>
                 <ul className="topbar-items main-menu-right navbar-nav">
                   <li className="nav-item menu-item active">
-                    <Link to={motel ? `/quanlytro/${motel.motelName}` : '/quanlytro'} className="nav-link ">
+                    <Link to={motel ? `/quanlytro/${motel.motelId}` : '/quanlytro'} className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -100,7 +100,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) 
                     </Link>
                   </li>
                   <li className="nav-item menu-item ">
-                    <Link to={motel ? `/bao-cao/${motel.motelName}` : '#'} className="nav-link ">
+                    <Link to={motel ? `/bao-cao/${motel.motelId}` : '#'} className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -122,7 +122,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) 
                   </li>
                   <li className="nav-item menu-item ">
                     <Link
-                      to={motel ? `/dang-tin/${motel.motelName}` : '#'}
+                      to={motel ? `/dang-tin/${motel.motelId}` : '#'}
                       className="nav-link "
                       setIsNavAdmin={setIsNavAdmin}>
                       <svg
@@ -145,7 +145,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) 
                     </Link>
                   </li>
                   <li className="nav-item menu-item ">
-                    <Link to={motel ? `/moi-gioi/${motel.motelName}` : '#'} className="nav-link ">
+                    <Link to={motel ? `/moi-gioi/${motel.motelId}` : '#'} className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -168,7 +168,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) 
                     </Link>
                   </li>
                   <li className="nav-item menu-item ">
-                    <Link to={motel ? `/phan-quyen/${motel.motelName}` : '#'} className="nav-link ">
+                    <Link to={motel ? `/phan-quyen/${motel.motelId}` : '#'} className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -190,7 +190,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) 
                     </Link>
                   </li>
                   <li className="nav-item menu-item ">
-                    <Link to={motel ? `/cai-dat/${motel.motelName}` : '#'} className="nav-link ">
+                    <Link to={motel ? `/cai-dat/${motel.motelId}` : '#'} className="nav-link ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"

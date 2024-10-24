@@ -43,6 +43,23 @@ const theme = createTheme({
         },
       },
     },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+        },
+      },
+    },
+    MuiCardContent: {
+      styleOverrides: {
+        root: {
+          padding: 8,
+          '&:last-child': {
+            paddingBottom: 8,
+          },
+        },
+      },
+    },
   },
 })
 
