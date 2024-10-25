@@ -47,6 +47,7 @@ import ImportFileExcel from './pages/admin/NavContentAdmin/ImportFileExcel'
 function App() {
   const [username, setUsername] = useState('')
   const [avatar, setAvatar] = useState('')
+  const [token, setToken] = useState(null);
   //lay thong tin tro cua tk account truyen xuong cho trang chu tro
   const [isAdmin, setIsAdmin] = useState(false)
   const [isNavAdmin, setIsNavAdmin] = useState(true)
@@ -65,6 +66,7 @@ function App() {
     if (user) {
       setUsername(user.username)
       setAvatar(user.avatar)
+      setToken(user.token);
       fetchMotelsByUsername(user.username)
     }
   }, [])
@@ -74,7 +76,7 @@ function App() {
       <Router>
         {/* <ValidCaptcha /> */}
         {!isAdmin ? (
-          <Header username={username} avatar={avatar} setUsername={setUsername} setAvatar={setAvatar} />
+          <Header username={username} avatar={avatar} token={token} setUsername={setUsername} setAvatar={setAvatar} setToken={setToken}/>
         ) : (
           <></>
         )}
@@ -93,10 +95,6 @@ function App() {
           <Route path="/search" element={<Search setIsAdmin={setIsAdmin} />} />
           <Route path="/detail/:roomId" element={<Detail setIsAdmin={setIsAdmin} />} />
           <Route path="/forgot-password" element={<Forgot_Password setIsAdmin={setIsAdmin} />} />
-          <Route
-            path="/login"
-            element={<Login setUsername={setUsername} setAvatar={setAvatar} setIsAdmin={setIsAdmin} />}
-          />
           <Route path="/contact" element={<Contact setIsAdmin={setIsAdmin} />} />
           <Route path="/introduce" element={<Introduce setIsAdmin={setIsAdmin} />} />
           <Route path="/register" element={<Register setIsAdmin={setIsAdmin} />} />
