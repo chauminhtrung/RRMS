@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 
 import com.rrms.rrms.enums.Gender;
 
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -55,4 +56,10 @@ public class Account {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "heart_id")
     private Heart heart;
+
+    public List<String> getRoles() {
+        return authorities.stream()
+            .map(auth -> auth.getRole().getRoleName().name())
+            .collect(Collectors.toList());
+    }
 }

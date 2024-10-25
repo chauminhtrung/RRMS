@@ -17,9 +17,14 @@ public enum ErrorCode {
     TYPE_ROOM_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Type room not found", HttpStatus.NOT_FOUND),
     SERVICE_ID_REQUIRED(HttpStatus.BAD_REQUEST.value(), "Service id required", HttpStatus.BAD_REQUEST),
     INVALID_SEARCH_PARAMETER(HttpStatus.BAD_REQUEST.value(), "INVALID_SEARCH_PARAMETER", HttpStatus.BAD_REQUEST),
-    PHONE_NOT_EXIST(HttpStatus.BAD_REQUEST.value(), "PHONE NOT EXIST", HttpStatus.BAD_REQUEST),
-    AUTHENTICATED(HttpStatus.BAD_REQUEST.value(), "AUTHENTICATED", HttpStatus.BAD_REQUEST),
+
+    //error for authen
+    PHONE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Phone not found", HttpStatus.NOT_FOUND),
+    UNAUTHENTICATED(HttpStatus.UNAUTHORIZED.value(), "AUTHENTICATED", HttpStatus.UNAUTHORIZED),
+    UNAUTHORIZED(HttpStatus.FORBIDDEN.value(), "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST.value(), "INVALID_PASSWORD", HttpStatus.BAD_REQUEST),
+    ACCOUNT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST.value(), "Account elready exists", HttpStatus.BAD_REQUEST),
+    ROLE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Role not found", HttpStatus.NOT_FOUND),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

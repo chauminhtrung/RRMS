@@ -1,8 +1,13 @@
 package com.rrms.rrms.services.servicesImp;
 
+import com.rrms.rrms.dto.request.RegisterRequest;
+import com.rrms.rrms.enums.Roles;
+import com.rrms.rrms.models.Role;
+import com.rrms.rrms.repositories.RoleRepository;
 import java.util.List;
 import java.util.Optional;
 
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,13 +40,18 @@ public class AccountService implements IAccountService {
     AuthRepository authRepository;
 
     @Autowired
+    RoleRepository roleRepository;
+
+    @Autowired
     AccountMapper accountMapper;
 
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
-    public List<Account> findAll() {
-        return List.of();
+    public List<AccountResponse> findAll() {
+        List<Account> accounts = accountRepository.findAll();
+        return accounts.stream().map(accountMapper::toAccountResponse)
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -52,6 +62,39 @@ public class AccountService implements IAccountService {
     @Override
     public Optional<Account> findByPhone(String phone) {
         return accountRepository.findByPhone(phone);
+    }
+
+    @Override
+    public Account register(RegisterRequest request) {
+        // Kiểm tra xem username hoặc phone đã tồn tại chưa
+        if (accountRepository.existsByUsername(request.getUsername()) ||
+            accountRepository.existsByPhone(request.getPhone())) {
+            throw new AppException(ErrorCode.ACCOUNT_ALREADY_EXISTS);
+        }
+
+        // Mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+
+        // Tạo đối tượng Account mới
+        Account account = new Account();
+        account.setUsername(request.getUsername());
+        account.setPhone(request.getPhone());
+        account.setPassword(encodedPassword);
+
+        // Lưu tài khoản vào cơ sở dữ liệu
+        Account savedAccount = accountRepository.save(account);
+
+        // Lấy role CUSTOMER từ cơ sở dữ liệu
+        Role customerRole = roleRepository.findByRoleName(Roles.CUSTOMER)
+            .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+
+        // Tạo đối tượng Auth và gán role CUSTOMER cho tài khoản
+        Auth auth = new Auth();
+        auth.setAccount(savedAccount);
+        auth.setRole(customerRole);
+        authRepository.save(auth);
+
+        return savedAccount;
     }
 
     @Override
@@ -101,8 +144,8 @@ public class AccountService implements IAccountService {
     @Override
     public AccountResponse findByUsername(String username) {
         Account account = accountRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+            .findByUsername(username)
+            .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
         return accountMapper.toAccountResponse(account);
     }
 
@@ -116,8 +159,8 @@ public class AccountService implements IAccountService {
     @Override
     public AccountResponse update(AccountRequest accountRequest) {
         Account account = accountRepository
-                .findByUsername(accountRequest.getUsername())
-                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+            .findByUsername(accountRequest.getUsername())
+            .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
         accountMapper.updateAccount(account, accountRequest);
         account = accountRepository.save(account);
         return accountMapper.toAccountResponse(account);
@@ -126,8 +169,8 @@ public class AccountService implements IAccountService {
     @Override
     public String changePassword(ChangePasswordRequest changePasswordRequest) {
         Account account = accountRepository
-                .findByUsername(changePasswordRequest.getUsername())
-                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+            .findByUsername(changePasswordRequest.getUsername())
+            .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
 
         BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
 
