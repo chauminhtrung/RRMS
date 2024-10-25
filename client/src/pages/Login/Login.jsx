@@ -8,24 +8,24 @@ import { Link, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import './Login.css'
 import { env } from '~/configs/environment'
-import ValidCaptcha from '~/components/ValidCaptcha'
-import { toast } from 'react-toastify'
+// import ValidCaptcha from '~/components/ValidCaptcha'
+// import { toast } from 'react-toastify'
 
 //test
 const Login = ({ setUsername, setAvatar }) => {
   const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
-  const [validCaptcha, setValidCaptcha] = useState(false)
+  // const [validCaptcha, setValidCaptcha] = useState(false)
   const navigate = useNavigate()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    if (!validCaptcha) {
-      toast.error('Captcha xác thực không thành công!')
-      return
-    }
-
-    event.preventDefault()
+    
+    // if (!validCaptcha) {
+    //   toast.error('Captcha xác thực không thành công!')
+    //   return
+    // }
+  
     if (!phone || !password) {
       Swal.fire({
         icon: 'warning',
@@ -34,35 +34,40 @@ const Login = ({ setUsername, setAvatar }) => {
       })
       return
     }
-
+  
     const account = { phone, password }
+    
     try {
       const response = await axios.post(`${env.API_URL}/authen/login`, account)
+      
       if (response.status === 200) {
         Swal.fire({
           icon: 'success',
           title: 'Đăng nhập thành công!',
           text: 'Chào mừng bạn quay trở lại!',
         })
-
+  
         const usernameFromResponse = response.data.data.username
         const avtFromResponse = response.data.data.avatar
-
+        const token = response.data.data.token  // JWT token từ phản hồi
+  
         if (!usernameFromResponse) {
           throw new Error('Username không tồn tại trong phản hồi từ server')
         }
-
+  
         const userData = {
           phone: phone,
           avatar: avtFromResponse,
           username: usernameFromResponse,
+          token: token,  // Lưu trữ token
         }
-        sessionStorage.setItem('user', JSON.stringify(userData))
-
+        
+        sessionStorage.setItem('user', JSON.stringify(userData))  // Lưu dữ liệu người dùng cùng với token
+  
         // Cập nhật trạng thái trong App
         setUsername(usernameFromResponse)
         setAvatar(avtFromResponse)
-
+  
         navigate('/') // Điều hướng về trang chính
       }
     } catch (error) {
@@ -97,6 +102,7 @@ const Login = ({ setUsername, setAvatar }) => {
       }
     }
   }
+  
 
   return (
     <div
@@ -160,7 +166,6 @@ const Login = ({ setUsername, setAvatar }) => {
                       <div className="invalid-feedback">Vui lòng nhập mật khẩu</div>
                     </div>
                   </div>
-                  <ValidCaptcha setValidCaptcha={setValidCaptcha} />
                   <div className="form-group">
                     <button type="submit" id="submit-login" className="btnSubmit">
                       Đăng nhập
