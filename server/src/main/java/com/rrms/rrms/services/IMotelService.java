@@ -13,7 +13,7 @@ public interface IMotelService {
 
     MotelResponse insert(MotelRequest motel);
 
-    MotelResponse findById(UUID id);
+    List<MotelResponse> findById(UUID id);
 
     List<MotelResponse> findAllByMotelName(String motelName);
 

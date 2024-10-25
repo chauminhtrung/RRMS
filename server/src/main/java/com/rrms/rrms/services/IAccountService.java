@@ -1,5 +1,6 @@
 package com.rrms.rrms.services;
 
+import com.rrms.rrms.dto.request.RegisterRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,11 +10,13 @@ import com.rrms.rrms.dto.response.AccountResponse;
 import com.rrms.rrms.models.Account;
 
 public interface IAccountService {
-    List<Account> findAll();
+    List<AccountResponse> findAll();
 
     Optional<Account> findAccountsByUsername(String username);
 
     Optional<Account> findByPhone(String phone);
+
+    Account register(RegisterRequest request);
 
     Optional<Account> login(String phone, String password);
 

@@ -10,4 +10,6 @@ public interface IHeartService {
     HeartResponse getHeartByAccount(AccountRequest accountRequest);
 
     HeartResponse addHeart(AccountResponse accountResponse, RoomDetailResponse roomDetailResponse);
+
+    HeartResponse removeHeart(AccountResponse accountResponse, RoomDetailResponse roomDetailResponse);
 }

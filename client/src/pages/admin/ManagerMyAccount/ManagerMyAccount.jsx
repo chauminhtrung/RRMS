@@ -1,13 +1,29 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
-const ManagerMyAccount = ({ setIsAdmin }) => {
+import { getAccountByUsername } from '~/apis/apiClient'
+const ManagerMyAccount = ({ setIsAdmin, TaiKhoan }) => {
+  const [account, setAccount] = useState([])
+
   useEffect(() => {
     setIsAdmin(true)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+
+    fetchAccountByUsername(TaiKhoan)
+  }, [TaiKhoan]) // Thêm dependency array cho TaiKhoan
+
+  const fetchAccountByUsername = async (username) => {
+    try {
+      const res = await getAccountByUsername(username)
+      setAccount(res.data)
+    } catch (error) {
+      console.error('Error fetching account:', error)
+    }
+  }
+
   return (
     <div>
       <NavAdmin setIsAdmin={setIsAdmin} />
+
       <div className="page-setting mb-4">
         <div className="container">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -88,7 +104,7 @@ const ManagerMyAccount = ({ setIsAdmin }) => {
                         <div className="text-center">
                           <h3 className="mt-0 text-black">
                             <span>
-                              <b>chauminhtrung</b>
+                              <b>{account.username}</b>
                             </span>
                           </h3>
                           <div>
@@ -203,7 +219,7 @@ const ManagerMyAccount = ({ setIsAdmin }) => {
                         <div className="item d-flex justify-content-between">
                           <span>Số điện thoại</span>
                           <span>
-                            <b>0907274629</b>
+                            <b>{account.phone}</b>
                           </span>
                         </div>
                         <div className="item d-flex justify-content-between">

@@ -45,9 +45,21 @@ public class HeartService implements IHeartService {
                 heartRepository.save(find);
                 return heartMapper.heartToHeartResponse(find);
             }
-            return null;
-        } else {
-            return null;
         }
+        return null;
+    }
+
+    @Override
+    public HeartResponse removeHeart(AccountResponse accountResponse, RoomDetailResponse roomDetailResponse) {
+        Heart find = heartRepository.findHeartByAccount_Username(accountResponse.getUsername());
+        Room room = roomRepository.getOne(roomDetailResponse.getRoomId());
+        if (find != null && room != null) {
+            if (find.getRooms().contains(room)) {
+                find.getRooms().remove(room);
+                heartRepository.save(find);
+                return heartMapper.heartToHeartResponse(find);
+            }
+        }
+        return null;
     }
 }

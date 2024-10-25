@@ -15,8 +15,10 @@ import {
 } from '@mui/material'
 import LoadingPage from '~/components/LoadingPage'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import { useTranslation } from 'react-i18next'
 
 const ModalSearch = ({ open, handleClose }) => {
+  const { t } = useTranslation()
   const [propertyType, setPropertyType] = useState('Phòng trọ, nhà trọ')
   const [occupation, setOccupation] = useState('Ngành nghề khác')
   const [provinces, setProvinces] = useState([])
@@ -66,17 +68,9 @@ const ModalSearch = ({ open, handleClose }) => {
     setSelectedDistrict(event.target.value)
   }
 
-  const propertyTypes = [
-    'Phòng trọ, nhà trọ',
-    'Nhà cho thuê',
-    'Văn phòng',
-    'Căn hộ chung cư',
-    'Kho, nhà xưởng',
-    'Ký túc xá, sleepbox',
-    'Ở ghép & pass phòng',
-  ]
+  const propertyTypes = ['phong-tro', 'nha-cho-thue', 'van-phong', 'can-ho', 'kho', 'ky-tuc-xa', 'pass-phong']
 
-  const occupations = ['Sinh viên', 'Nhân viên văn phòng', 'Nhân viên xí nghiệp', 'Ngành nghề khác']
+  const occupations = ['sinh-vien', 'nhan-vien-van-phong', 'nhan-vien-xi-nghiep', 'nganh-nghe-khac']
 
   if (!provinces.length) {
     return <LoadingPage />
@@ -120,14 +114,14 @@ const ModalSearch = ({ open, handleClose }) => {
             {/* Chọn Khu vực */}
             <Box sx={{ mt: 3, mb: 2 }}>
               <Typography variant="subtitle1" gutterBottom>
-                Bạn muốn tìm kiếm tại Khu vực quận/huyện nào?
+                {t('khu-vuc-tim-kiem')}
               </Typography>
               <FormControl fullWidth>
                 <Grid container justifyContent="center" spacing={isMobile ? 1 : 2}>
                   {/* Chọn Tỉnh/Thành phố */}
                   <Grid item xs={12} sm={6} md={6}>
                     <FormControl fullWidth size={isMobile ? 'small' : 'medium'}>
-                      <InputLabel id="province-label">Chọn Tỉnh/Thành phố</InputLabel>
+                      <InputLabel id="province-label">{t('tinh-thanhpho')}</InputLabel>
 
                       {/* Select */}
                       <Select
@@ -137,7 +131,7 @@ const ModalSearch = ({ open, handleClose }) => {
                         onChange={handleProvinceChange}
                         label="Chọn Tỉnh/Thành phố">
                         <MenuItem value="">
-                          <em>Chọn tỉnh/thành phố</em>
+                          <em>{t('tinh-thanhpho')}</em>
                         </MenuItem>
                         {provinces.map((province) => (
                           <MenuItem key={province.id} value={province.id}>
@@ -151,7 +145,7 @@ const ModalSearch = ({ open, handleClose }) => {
                   {/* Chọn Quận/Huyện */}
                   <Grid item xs={12} sm={6} md={6}>
                     <FormControl fullWidth>
-                      <InputLabel id="province-label">Chọn Quận/Huyện</InputLabel>
+                      <InputLabel id="province-label">{t('quan-huyen')}</InputLabel>
                       <Select
                         labelId="district-label"
                         id="quan"
@@ -160,7 +154,7 @@ const ModalSearch = ({ open, handleClose }) => {
                         size={isMobile ? 'small' : 'medium'}
                         label="Chọn Quận/Huyện">
                         <MenuItem value="">
-                          <em>Chọn quận/huyện</em>
+                          <em>{t('quan-huyen')}</em>
                         </MenuItem>
                         {districts.map((district) => (
                           <MenuItem key={district.id} value={district.id}>
@@ -177,7 +171,7 @@ const ModalSearch = ({ open, handleClose }) => {
             {/* Loại hình tìm kiếm */}
             <Box sx={{ mb: 3 }}>
               <Typography variant="subtitle1" gutterBottom>
-                Loại hình tìm kiếm?
+                {t('loai-hinh')}
               </Typography>
               <Grid container spacing={isMobile ? 0.5 : 1}>
                 {propertyTypes.map((type) => (
@@ -194,7 +188,7 @@ const ModalSearch = ({ open, handleClose }) => {
                         color: propertyType === type ? 'white' : 'black',
                         fontSize: isMobile ? '0.75rem' : '1rem', // Điều chỉnh font cho mobile
                       }}>
-                      {type}
+                      {t(type)}
                     </Button>
                   </Grid>
                 ))}
@@ -204,7 +198,7 @@ const ModalSearch = ({ open, handleClose }) => {
             {/* Hiện tại bạn đang làm gì? */}
             <Box sx={{ mb: 3 }}>
               <Typography variant="subtitle1" gutterBottom>
-                Hiện tại bạn đang làm gì?
+                {t('hien-tai-ban-dang-lam-gi')}
               </Typography>
               <Grid container spacing={isMobile ? 0.5 : 1}>
                 {occupations.map((occ) => (
@@ -221,7 +215,7 @@ const ModalSearch = ({ open, handleClose }) => {
                         color: occupation === occ ? 'white' : 'black',
                         fontSize: isMobile ? '0.75rem' : '1rem',
                       }}>
-                      {occ}
+                      {t(occ)}
                     </Button>
                   </Grid>
                 ))}
@@ -241,12 +235,12 @@ const ModalSearch = ({ open, handleClose }) => {
                   border: '1px solid gray',
                   color: '#ffffff',
                 }}>
-                Đóng bộ lọc
+                {t('dong-bo-loc')}
               </Button>
               <Button
                 variant="contained"
                 sx={{ width: isMobile ? '100%' : '48%', textTransform: 'none', backgroundColor: '#1e90ff' }}>
-                Tìm kiếm ngay
+                {t('tim-kiem-ngay')}
               </Button>
             </Box>
           </Paper>

@@ -1,18 +1,14 @@
 package com.rrms.rrms.controllers;
 
+import com.rrms.rrms.dto.request.RoleRequest;
+import com.rrms.rrms.dto.response.RoleResponse;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.rrms.rrms.models.Auth;
-import com.rrms.rrms.services.IAccountService;
-import com.rrms.rrms.services.IAuthorityService;
 import com.rrms.rrms.services.IRoleService;
-
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,60 +20,79 @@ import lombok.extern.slf4j.Slf4j;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api-roles")
+@RequestMapping("/roles")
 public class RolesController {
 
-    @Autowired
-    IAccountService accountService;
+  @Autowired
+  IRoleService roleService;
 
-    @Autowired
-    IAuthorityService authorityService;
-
-    @Autowired
-    IRoleService roleService;
-
-    @Operation(summary = "Get all authorities")
-    @GetMapping("/rest/authorities")
-    public Map<String, Object> getAllAuthoritries(Model model) {
-        Map<String, Object> data = new HashMap<>();
-        //    data.put("authorities", authorityService.findAll());
-        data.put("roles", roleService.findAll());
-        data.put("accounts", accountService.findAll());
-        log.info("Get all authorities successfully");
-        return data;
+  @GetMapping("/getAllRole")
+  public ResponseEntity<?> getAllRole() {
+    Map<String, Object> rs = new HashMap<>();
+    try {
+      rs.put("status", true);
+      rs.put("message", "Call api success");
+      rs.put("data", roleService.GetAllRoles());
+      log.info("Get all role successfully");
+    } catch (Exception ex) {
+      rs.put("status", false);
+      rs.put("message", "Call api failed");
+      rs.put("data", null);
+      log.error("Get all role failed", ex);
     }
+    return ResponseEntity.ok(rs);
+  }
 
-    @Operation(summary = "Get authorities by role")
-    @GetMapping("/rest/authoritiesbyR")
-    public Map<String, Object> getAllAuthoritriesWRole(@RequestParam("role") String role, Model model) {
-        Map<String, Object> data = new HashMap<>();
-        //    data.put("authorities", authorityService.findAll());
-        data.put("roles", roleService.findAll());
-        data.put("accounts", accountService.findAllByRole(role));
-        log.info("Get authorities by role successfully: {}", role);
-        return data;
+  @PostMapping("/createRole")
+  public ResponseEntity<?> addRole(@RequestBody RoleRequest request) {
+    Map<String, Object> rs = new HashMap<>();
+    try {
+      RoleResponse roleResponse = roleService.createRole(request);
+      rs.put("status", true);
+      rs.put("message", "Role added successfully");
+      rs.put("data", roleResponse);
+      log.info("Add role successfully: {}", roleResponse);
+    } catch (Exception ex) {
+      rs.put("status", false);
+      rs.put("message", "Failed to add role");
+      rs.put("data", null);
+      log.error("Add role failed", ex);
     }
+    return ResponseEntity.ok(rs);
+  }
 
-    @Operation(summary = "Get authorities by username")
-    @GetMapping("/rest/authoritiesbyU")
-    public Map<String, Object> getAllAuthoritriesWUs(@RequestParam("username") String username, Model model) {
-        Map<String, Object> data = new HashMap<>();
-        //    data.put("authorities", authorityService.findAll());
-        data.put("roles", roleService.findAll());
-        data.put("accounts", accountService.findListAccountsByUsername(username));
-        log.info("Get authorities by username successfully: {}", username);
-        return data;
-    }
+  @PutMapping("/updateRole")
+  public ResponseEntity<?> updateRole(@RequestBody RoleRequest roleRequest) {
+    Map<String, Object> rs = new HashMap<>();
+    try {
+      RoleResponse roleResponse = roleService.updateRole(roleRequest);
 
-    @Operation(summary = "Get authorities by id")
-    @PostMapping("/rest/authorities")
-    public Auth createAuthoritrie(@RequestBody Auth authortie) {
-        return null;
+      rs.put("status", true);
+      rs.put("message", "Role updated successfully");
+      rs.put("data", roleResponse);
+      log.info("Update role successfully: {}", roleResponse);
+    } catch (Exception ex) {
+      rs.put("status", false);
+      rs.put("message", "Failed to update role");
+      rs.put("data", null);
+      log.error("Update role failed", ex);
     }
+    return ResponseEntity.ok(rs);
+  }
 
-    @Operation(summary = "Get authorities by id")
-    @DeleteMapping("/rest/authorities/{id}")
-    public void deleteAuthoritrie(@PathVariable int id) {
-        //    authorityService.deleteById(id);
+  @DeleteMapping("/deleteRole/{id}")
+  public ResponseEntity<?> deleteRole(@PathVariable UUID id) {
+    Map<String, Object> rs = new HashMap<>();
+    try {
+      roleService.deleteRole(id);
+      rs.put("status", true);
+      rs.put("message", "Role deleted successfully");
+      log.info("Delete role successfully for id: {}", id);
+    } catch (Exception ex) {
+      rs.put("status", false);
+      rs.put("message", "Failed to delete role");
+      log.error("Delete role failed for id: {}", id, ex);
     }
+    return ResponseEntity.ok(rs);
+  }
 }

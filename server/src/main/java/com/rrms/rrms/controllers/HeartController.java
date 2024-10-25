@@ -89,4 +89,37 @@ public class HeartController {
                 .result(false)
                 .build();
     }
+
+    @Operation(summary = "Remove heart")
+    @PostMapping("/removeHeart")
+    public ApiResponse<Boolean> removeHeart(@RequestParam("username") String username,
+            @RequestParam("idRoom") UUID idRoom) {
+        AccountResponse accountResponse = accountService.findByUsername(username);
+        RoomDetailResponse roomDetailResponse = roomService.getRoomById(idRoom);
+        if (accountResponse != null && roomDetailResponse != null) {
+            HeartResponse statusAdd = heartService.removeHeart(accountResponse, roomDetailResponse);
+            if (statusAdd != null) {
+                log.info("Remove heart successfully: {}", statusAdd);
+                return ApiResponse.<Boolean>builder()
+                        .code(HttpStatus.CREATED.value())
+                        .message("remove heart successfully")
+                        .result(true)
+                        .build();
+            } else {
+                log.info("Remove heart fail: {}", "null");
+                return ApiResponse.<Boolean>builder()
+                        .code(HttpStatus.BAD_REQUEST.value())
+                        .message("room has already been removed")
+                        .result(false)
+                        .build();
+            }
+        }
+        log.info("Valid Error: {}", "null");
+        return ApiResponse.<Boolean>builder()
+                .code(HttpStatus.BAD_REQUEST.value())
+                .message("Valid Error")
+                .result(false)
+                .build();
+    }
+
 }

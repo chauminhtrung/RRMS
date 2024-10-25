@@ -108,7 +108,7 @@ public class SearchController {
         List<RoomSearchResponse> roomSearchResponseList = searchService.findByAddressFuzzy(address);
         return ApiResponse.<List<RoomSearchResponse>>builder()
                 .code(HttpStatus.OK.value())
-                .message("success")
+                .message("success " + roomSearchResponseList.size())
                 .result(roomSearchResponseList)
                 .build();
     }

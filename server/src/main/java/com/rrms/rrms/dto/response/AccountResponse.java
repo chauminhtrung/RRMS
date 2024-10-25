@@ -6,6 +6,7 @@ import java.util.Date;
 import com.rrms.rrms.enums.Gender;
 import com.rrms.rrms.enums.Roles;
 
+import java.util.List;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -23,5 +24,6 @@ public class AccountResponse implements Serializable {
     Gender gender;
     String cccd;
     String avatar;
-    Roles role;
+    List<String> role;
+    List<String> permissions;
 }
