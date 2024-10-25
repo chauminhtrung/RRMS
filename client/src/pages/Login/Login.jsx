@@ -7,7 +7,7 @@ import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import './Login.css'
-import { env } from '~/configs/environment'
+import { env } from '~/configs/environment';
 // import ValidCaptcha from '~/components/ValidCaptcha'
 // import { toast } from 'react-toastify'
 
