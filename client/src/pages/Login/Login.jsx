@@ -49,7 +49,7 @@ const Login = ({ setUsername, setAvatar }) => {
   
         const usernameFromResponse = response.data.data.username
         const avtFromResponse = response.data.data.avatar
-        const token = response.data.data.token  // JWT token từ phản hồi
+        const token = response.data.data.token  
   
         if (!usernameFromResponse) {
           throw new Error('Username không tồn tại trong phản hồi từ server')

@@ -23,6 +23,10 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +38,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequestMapping("/authen")
+@Slf4j
 public class AuthenController {
   @Autowired
   private IAccountService accountService;
@@ -97,22 +104,31 @@ public class AuthenController {
   public ResponseEntity<?> logout(@RequestBody LogoutRequest request) {
     Map<String, Object> response = new HashMap<>();
     try {
+      // Log token để kiểm tra xem token có được gửi đúng không
+      log.info("Token nhận được để logout: " + request.getToken());
+
+      // Gọi hàm logout của authorityService, nơi bạn xử lý việc đưa token vào blacklist
       authorityService.logout(request);
+
+      // Trả về thông báo đăng xuất thành công
       response.put("status", true);
       response.put("message", "Đăng xuất thành công.");
       return ResponseEntity.ok(response);
     } catch (ParseException | JOSEException e) {
-      // Xử lý lỗi liên quan tới JWT (cụ thể)
+      // Xử lý lỗi liên quan đến token không hợp lệ
+      log.error("Lỗi khi phân tích token: " + e.getMessage(), e);
       response.put("status", false);
       response.put("message", "Token không hợp lệ: " + e.getMessage());
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     } catch (Exception ex) {
-      // Xử lý lỗi không mong đợi
+      // Xử lý lỗi hệ thống không lường trước
+      log.error("Lỗi không mong muốn trong quá trình đăng xuất: " + ex.getMessage(), ex);
       response.put("status", false);
       response.put("message", "Đã xảy ra lỗi khi thực hiện đăng xuất.");
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
   }
+
 
   @PostMapping("/register")
   public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest registerRequest) {
