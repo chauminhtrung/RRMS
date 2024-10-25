@@ -1,5 +1,15 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.text.ParseException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
@@ -31,9 +41,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -57,8 +64,7 @@ public class AuthorityService implements IAuthorityService {
   @Value("${jwt.signer-key}")
   private String signerKey;
 
-  public IntrospecTokenResponse introspect(IntrospecTokenRequest request)
-      throws ParseException, JOSEException {
+  public IntrospecTokenResponse introspect(IntrospecTokenRequest request) throws ParseException, JOSEException {
     try {
       // Lấy token từ request
       String token = request.getToken();
@@ -97,14 +103,14 @@ public class AuthorityService implements IAuthorityService {
 
       // Nếu token hợp lệ (chữ ký đúng và chưa hết hạn)
       return IntrospecTokenResponse.builder()
-          .valid(true)                        // Token hợp lệ
-          .message("Token is valid")          // Message thông báo
-          .subject(claimsSet.getSubject())    // Subject của token (thường là username/phone)
-          .expirationTime(expirationTime)     // Thời gian hết hạn
-          .issuer(claimsSet.getIssuer())      // Issuer (người phát hành token)
+          .valid(true) // Token hợp lệ
+          .message("Token is valid") // Message thông báo
+          .subject(claimsSet.getSubject()) // Subject của token (thường là username/phone)
+          .expirationTime(expirationTime) // Thời gian hết hạn
+          .issuer(claimsSet.getIssuer()) // Issuer (người phát hành token)
           .issuedAt(claimsSet.getIssueTime()) // Thời gian phát hành token
-          .roles(roles)                       // Thêm roles vào response
-          .permissions(permissions)           // Thêm permissions vào response
+          .roles(roles) // Thêm roles vào response
+          .permissions(permissions) // Thêm permissions vào response
           .build();
 
     } catch (Exception e) {
@@ -119,7 +125,6 @@ public class AuthorityService implements IAuthorityService {
     }
   }
 
-
   public LoginResponse loginResponse(LoginRequest request) {
     // Lấy tài khoản từ AccountService dựa trên số điện thoại và mật khẩu
     // Nếu không tìm thấy hoặc mật khẩu sai, ném ngoại lệ AUTHENTICATED
@@ -131,16 +136,16 @@ public class AuthorityService implements IAuthorityService {
 
     // Xây dựng đối tượng LoginResponse với các thông tin cần thiết
     return LoginResponse.builder()
-        .token(token)                       // Token JWT
-        .authenticated(true)                // Trạng thái xác thực thành công
-        .username(account.getUsername())    // Tên người dùng
-        .fullname(account.getFullname())    // Họ và tên đầy đủ
-        .email(account.getEmail())          // Địa chỉ email
-        .avatar(account.getAvatar())        // Ảnh đại diện (avatar)
-        .birthday(account.getBirthday())    // Ngày sinh của người dùng
-        .gender(account.getGender())        // Giới tính
-        .cccd(account.getCccd())            // CCCD (Chứng minh nhân dân)
-        .build();                           // Hoàn thành việc xây dựng LoginResponse
+        .token(token) // Token JWT
+        .authenticated(true) // Trạng thái xác thực thành công
+        .username(account.getUsername()) // Tên người dùng
+        .fullname(account.getFullname()) // Họ và tên đầy đủ
+        .email(account.getEmail()) // Địa chỉ email
+        .avatar(account.getAvatar()) // Ảnh đại diện (avatar)
+        .birthday(account.getBirthday()) // Ngày sinh của người dùng
+        .gender(account.getGender()) // Giới tính
+        .cccd(account.getCccd()) // CCCD (Chứng minh nhân dân)
+        .build(); // Hoàn thành việc xây dựng LoginResponse
   }
 
   private String generateToken(Account account) {
@@ -149,25 +154,26 @@ public class AuthorityService implements IAuthorityService {
 
     // Lấy danh sách role và permission từ tài khoản
     List<String> roles = account.getAuthorities().stream()
-        .map(auth -> auth.getRole().getRoleName().name())  // Lấy tên của các role
+        .map(auth -> auth.getRole().getRoleName().name()) // Lấy tên của các role
         .collect(Collectors.toList());
 
     List<String> permissions = account.getAuthorities().stream()
-        .flatMap(auth -> auth.getRole().getPermissions().stream())  // Lấy các permissions từ role
-        .map(permission -> permission.getName())  // Lấy tên của các permission
-        .distinct()  // Loại bỏ trùng lặp nếu có
+        .flatMap(auth -> auth.getRole().getPermissions().stream()) // Lấy các permissions từ role
+        .map(permission -> permission.getName()) // Lấy tên của các permission
+        .distinct() // Loại bỏ trùng lặp nếu có
         .collect(Collectors.toList());
 
     // Xây dựng JWT với các thông tin cần thiết
     JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-        .subject(account.getPhone())  // Subject của JWT là số điện thoại người dùng
+        .subject(account.getPhone()) // Subject của JWT là số điện thoại người dùng
         .issuer(account.getUsername()) // Người phát hành (issuer)
-        .issueTime(new Date())        // Thời gian phát hành JWT
-        .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))  // Thời gian hết hạn của JWT là 1 giờ
-        .claim("roles", roles)  // Thêm danh sách roles vào claim
+        .issueTime(new Date()) // Thời gian phát hành JWT
+        .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli())) // Thời gian hết hạn của JWT
+                                                                                          // là 1 giờ
+        .claim("roles", roles) // Thêm danh sách roles vào claim
         .jwtID(UUID.randomUUID().toString())
-        .claim("permissions", permissions)  // Thêm danh sách permissions vào claim
-        .build();  // Hoàn thành việc xây dựng claims
+        .claim("permissions", permissions) // Thêm danh sách permissions vào claim
+        .build(); // Hoàn thành việc xây dựng claims
 
     // Chuyển claims thành payload cho JWT
     Payload payload = new Payload(jwtClaimsSet.toJSONObject());
@@ -187,6 +193,7 @@ public class AuthorityService implements IAuthorityService {
       throw new RuntimeException(e);
     }
   }
+
   public void logout(LogoutRequest request) throws ParseException, JOSEException {
     try {
       // Lấy token từ request
@@ -222,7 +229,6 @@ public class AuthorityService implements IAuthorityService {
   public Auth save(Auth auth) {
     return authRepository.save(auth);
   }
-
 
   private String verifyToken(String token) throws ParseException, JOSEException {
     try {

@@ -24,12 +24,12 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-  private final String [] PUBLIC_ENDPOINTS = {"/",
+  private final String[] PUBLIC_ENDPOINTS = { "/",
       "/authen/login",
       "/authen/introspect",
       "/authen/register",
       "/authen/logout",
-//      "/api-accounts/get-all-account"
+      // "/api-accounts/get-all-account"
   };
 
   @Value("${jwt.signer-key}")
@@ -40,19 +40,17 @@ public class SecurityConfig {
     // CORS configuration
     http.cors(withDefaults());
 
-    http.authorizeHttpRequests(request ->
-        request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-            .anyRequest().authenticated());
+    http.authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+        .anyRequest().authenticated());
 
-    http.oauth2ResourceServer(oauth2 ->
-        oauth2.jwt(jwtConfigurer ->
-                jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter()))
-            .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
-    );
+    http.oauth2ResourceServer(
+        oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+            .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
 
     http.csrf(AbstractHttpConfigurer::disable);
     return http.build();
   }
+
   @Bean
   public JwtAuthenticationConverter jwtAuthenticationConverter() {
     JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
@@ -64,7 +62,7 @@ public class SecurityConfig {
   }
 
   @Bean
-  JwtDecoder jwtDecoder(){
+  JwtDecoder jwtDecoder() {
     SecretKeySpec secretKeySpec = new SecretKeySpec(signerKey.getBytes(), "HS512");
     return NimbusJwtDecoder
         .withSecretKey(secretKeySpec)

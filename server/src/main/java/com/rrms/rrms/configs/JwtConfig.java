@@ -6,11 +6,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class JwtConfig {
-  @Value("${jwt.signer-key}")
-  private String signerKey;
+    @Value("${jwt.signer-key}")
+    private String signerKey;
 
-  @Bean
-  public String jwtSignerKey() {
-    return signerKey;
-  }
+    @Bean
+    public String jwtSignerKey() {
+        return signerKey;
+    }
 }

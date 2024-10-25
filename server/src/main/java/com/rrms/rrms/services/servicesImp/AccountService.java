@@ -104,7 +104,7 @@ public class AccountService implements IAccountService {
             Account account = accountOptional.get();
             if (passwordEncoder.matches(password, account.getPassword())) {
                 return Optional.of(account);
-            }else {
+            } else {
                 throw new AppException(ErrorCode.INVALID_PASSWORD);
             }
         }
