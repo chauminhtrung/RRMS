@@ -2,22 +2,22 @@ import { Link, useParams } from 'react-router-dom'
 import { Tooltip } from 'react-tooltip'
 import { useEffect, useState } from 'react'
 import ModalCreateHome from '~/pages/admin/ManagerHome/ModelCreateHome'
-import { getMotelByname } from '~/apis/apiClient'
+import { getMotelById } from '~/apis/apiClient'
 const NavWData = ({ motels, setmotels }) => {
-  const { motelName } = useParams() // Lấy tham số motelName từ URL
+  const { motelId } = useParams() // Lấy tham số motelName từ URL
   const [motel, setmotel] = useState(null)
 
   useEffect(() => {
     // Nếu có danh sách nhà trọ và không có tên cụ thể từ URL
-    if (motels && motels.length > 0 && !motelName) {
+    if (motels && motels.length > 0 && !motelId) {
       setmotel(motels[0]) // Cập nhật phòng trọ đầu tiên nếu tồn tại dữ liệu
     } else {
       // Nếu có tên nhà trọ từ URL, lấy dữ liệu bằng API
-      getMotelByname(motelName).then((res) => {
+      getMotelById(motelId).then((res) => {
         setmotel(res.data.result[0])
       })
     }
-  }, [motels, motelName, getMotelByname]) // Thêm các dependencies cần thiết vào mảng dependencies
+  }, [motels, motelId, getMotelById]) // Thêm các dependencies cần thiết vào mảng dependencies
 
   // Theo dõi khi motel thay đổi để kiểm tra giá trị
   useEffect(() => {
@@ -152,7 +152,7 @@ const NavWData = ({ motels, setmotels }) => {
                   overflowX: 'auto',
                   position: 'relative',
                 }}>
-                <a href="/quanlytro" className="item-menu active">
+                <Link to={motel ? `/quanlytro/${motel.motelId}` : '/quanlytro'} className="item-menu active">
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -165,8 +165,8 @@ const NavWData = ({ motels, setmotels }) => {
                       <b>Quản lý phòng</b>
                     </span>
                   </div>
-                </a>
-                <Link to="/quanlytro/quan-ly-hoa-don" className="item-menu">
+                </Link>
+                <Link to={motel ? `/quanlytro/${motel.motelId}/quan-ly-hoa-don` : '#'} className="item-menu">
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -180,7 +180,7 @@ const NavWData = ({ motels, setmotels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to="/quanlytro/quan-ly-dich-vu" className="item-menu">
+                <Link to={motel ? `/quanlytro/${motel.motelId}/quan-ly-dich-vu` : '#'} className="item-menu">
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -194,7 +194,7 @@ const NavWData = ({ motels, setmotels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to="/quanlytro/quan-ly-tai-san" className="item-menu">
+                <Link to={motel ? `/quanlytro/${motel.motelId}/quan-ly-tai-san` : '#'} className="item-menu">
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -208,7 +208,7 @@ const NavWData = ({ motels, setmotels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to="/quanlytro/tat-ca-hop-dong" className="item-menu">
+                <Link to={motel ? `/quanlytro/${motel.motelId}/tat-ca-hop-dong` : '#'} className="item-menu">
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -222,7 +222,7 @@ const NavWData = ({ motels, setmotels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to="/quanlytro/tat-ca-khach-thue" className="item-menu">
+                <Link to={motel ? `/quanlytro/${motel.motelId}/tat-ca-khach-thue` : '#'} className="item-menu">
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -236,7 +236,7 @@ const NavWData = ({ motels, setmotels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to="/quanlytro/thu-chi-tong-ket" className="item-menu">
+                <Link to={motel ? `/quanlytro/${motel.motelId}/thu-chi-tong-ket` : '#'} className="item-menu">
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -250,7 +250,7 @@ const NavWData = ({ motels, setmotels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to="/quanlytro/cai-dat-nha-tro" className="item-menu">
+                <Link to={motel ? `/quanlytro/${motel.motelId}/cai-dat-nha-tro` : '#'} className="item-menu">
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -264,7 +264,7 @@ const NavWData = ({ motels, setmotels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to="/quanlytro/lich-su-gui-zalo" className="item-menu">
+                <Link to={motel ? `/quanlytro/${motel.motelId}/lich-su-gui-zalo` : '#'} className="item-menu">
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -278,7 +278,7 @@ const NavWData = ({ motels, setmotels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to="/quanlytro/import-data-from-file" className="item-menu">
+                <Link to={motel ? `/quanlytro/${motel.motelId}/import-data-from-file` : '#'} className="item-menu">
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -346,7 +346,7 @@ const NavWData = ({ motels, setmotels }) => {
                     </div>
 
                     {/* nut remove */}
-                    {motel && motelinMap.motelName === motel.motelName ? (
+                    {motel && motelinMap.motelId === motel.motelId ? (
                       <div
                         className="btn-round  disabled btn-secondary"
                         data-bs-toggle="tooltip"
@@ -448,7 +448,7 @@ const NavWData = ({ motels, setmotels }) => {
                       data-bs-toggle="tooltip"
                       data-bs-placement="top"
                       title=""
-                      href={`/quanlytro/${motelinMap.motelName}`}
+                      href={`/quanlytro/${motelinMap.motelId}`}
                       data-bs-original-title="Tới quản lý Nhà trọ"
                       data-tooltip-id="my-tooltipManagerMotel"
                       data-tooltip-content="Tới quản lý Nhà trọ"

@@ -8,6 +8,7 @@ import com.rrms.rrms.services.ISearchService;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
@@ -45,6 +46,7 @@ public class DB {
 
         return args -> {
             int roomsLength = 5;
+
 
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
 
@@ -218,6 +220,7 @@ public class DB {
             Account userAccount = Account.builder()
                 .username("employee")
                 .password(pe.encode("123"))
+
                 .fullname("Minh Trung")
                 .email("minhtrung@gmail.com")
                 .phone("03333345553")
@@ -226,15 +229,10 @@ public class DB {
                 .avatar("https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
                 .birthday(LocalDate.now())
                 .build();
-
             accountRepository.save(userAccount);
-
-            // Fetch the customer role by name
             Optional<Role> customerRoleOpt = roleRepository.findByRoleName(Roles.EMPLOYEE);
             if (customerRoleOpt.isPresent()) {
                 Role customerRole = customerRoleOpt.get();
-
-                // Create the auth entry for the user account
                 Auth userAuth = new Auth();
                 userAuth.setAccount(userAccount);
                 userAuth.setRole(customerRole);
@@ -286,8 +284,8 @@ public class DB {
                 .avatar("https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
                 .birthday(LocalDate.now())
                 .build();
-
             accountRepository.save(userAccount);
+
 
             // Fetch the customer role by name
             Optional<Role> customerRoleOpt = roleRepository.findByRoleName(Roles.CUSTOMER);
