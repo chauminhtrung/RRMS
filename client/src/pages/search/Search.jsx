@@ -23,7 +23,6 @@ const Search = ({ setIsAdmin }) => {
   const [recordedText, setRecordedText] = useState('')
   useEffect(() => {
     setIsAdmin(false)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {

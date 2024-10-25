@@ -38,11 +38,10 @@ public class MotelService implements IMotelService {
     }
 
     @Override
-    public MotelResponse findById(UUID id) {
-        return motelRepository
-                .findById(id)
+    public List<MotelResponse> findById(UUID id) {
+        return motelRepository.findById(id).stream()
                 .map(motelMapper::motelToMotelResponse)
-                .orElse(null);
+                .collect(Collectors.toList());
     }
 
     @Override
