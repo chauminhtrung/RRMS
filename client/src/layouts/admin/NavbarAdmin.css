@@ -83,7 +83,7 @@ a {
 }
 
 .title-item::before, .title-item-small::before {
-    border-left: 4px solid #3c9e47;
+    border-left: 4px solid #4bcffa;
     border-radius: 10px;
     position: absolute;
     left: 0px;
@@ -102,18 +102,28 @@ a {
 .label-feature{
     width: 100%;
     border-radius: 5px;
-    background-color: #8bc34a26;
+    background-color: #20a9e7;
     padding: 10px;
-    border: 1px solid #88c0464f;
+    border: 1px solid #20a9e7;
     position: relative;
     margin-top: 10px;
     display: inline-grid;
-    border-left: 5px solid #88c046a6;
+    border-left: 5px solid #20a9e7;
 }
 
 .item-feature.active{
-    background-color: #15A05C;
+    background-color: #20a9e7;
     color: #fff;
+}
+.btn-round:hover {
+    color: #20a9e7;
+}
+
+
+.btn-secondary.disabled, .btn-secondary:disabled {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
 }
 
 .text-flow {
@@ -154,13 +164,7 @@ a {
     align-self: center;
 }
 
-.form-floating>.form-control:required~label::after {
-    position: absolute;
-    content: "*";
-    color: red;
-    right: 3px;
-    font-weight: bold;
-}
+
 
 .form-floating>.form-control:focus~label::after,
 .form-floating>.form-control:not(:placeholder-shown)~label::after,
@@ -229,7 +233,7 @@ a {
 }
 
 .add-round {
-    background-color: #15a05c;
+    background-color: #20a9e7;
     width: 50px;
     border: 0;
     height: 50px;
@@ -245,13 +249,13 @@ a {
 
 .loz-alert {
     display: flex;
-    border: 1px solid #4caf50;
+    border: 1px solid #20a9e7;
     border-radius: 5px;
 }
 
 .loz-alert.info{
-    border: 1px solid #4caf50;
-    background-color: #efffef;
+    border: 1px solid #20a9e7;
+    background-color: #cde5ef;
 }
 
 .loz-alert.warning{
@@ -260,7 +264,7 @@ a {
 }
 
 .loz-alert .icon{
-    margin-right: 10px;
+
     padding: 10px;
 }
 
@@ -269,7 +273,7 @@ a {
 }
 
 .loz-alert.info .icon{
-    background-color: #4caf50;
+    background-color: #20a9e7;
     color: #fff;
 }
 
@@ -637,7 +641,7 @@ div.navbar-brand {
 }
 
 .setting-tabs a.nav-link.active, .setting-tabs-horizontal a.nav-link.active {
-    background-color: #15a05c;
+    background-color: #20a9e7;
     color: #fff;
 }
 
@@ -670,7 +674,7 @@ div.navbar-brand {
     height: 20px;
     border-radius: 5px;
     color: #fff;
-    background-color: #8bc34a;
+    background-color: rgb(32, 169, 231);
     text-align: center;
     display: flex;
     align-items: center;

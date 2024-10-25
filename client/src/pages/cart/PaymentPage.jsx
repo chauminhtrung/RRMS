@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Box,
   Grid,
@@ -30,13 +30,17 @@ import RequestQuoteIcon from '@mui/icons-material/RequestQuote'
 import DetailsIcon from '@mui/icons-material/Details'
 import { remove as removeDiacritics } from 'diacritics'
 
-const PaymentPage = () => {
+const PaymentPage = ({ setIsAdmin }) => {
   const [cardOwner, setCardOwner] = useState('')
   const [cardType, setCardType] = useState('')
   const [cardNumber, setCardNumber] = useState('')
   const [expiryDate, setExpiryDate] = useState('')
   const [cvc, setCvc] = useState('')
   const [isChecked, setIsChecked] = useState(false)
+  useEffect(() => {
+    setIsAdmin(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handlePayment = () => {
     console.log('Thông tin thanh toán:', {

@@ -1,117 +1,193 @@
 package com.rrms.rrms.controllers;
 
-import com.rrms.rrms.dto.request.LoginRequest;
-import com.rrms.rrms.enums.Roles;
-import com.rrms.rrms.services.IAccountService;
-import com.rrms.rrms.services.IAuthorityService;
-import com.rrms.rrms.services.IRoleService;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import com.rrms.rrms.dto.request.AccountRequest;
+import com.rrms.rrms.dto.request.ChangePasswordRequest;
+import com.rrms.rrms.dto.response.AccountResponse;
+import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.models.Account;
-import com.rrms.rrms.models.Auth;
-import com.rrms.rrms.models.Role;
+import com.rrms.rrms.services.IAccountService;
 
-@Controller
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+
+@Tag(name = "Account Controller", description = "Controller for Account")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
+@Slf4j
+@RestController
+@RequestMapping("/api-accounts")
 public class AccountController {
-    @Autowired
+
     IAccountService accountService;
 
-    @Autowired
-    IAuthorityService authorityService;
-
-    @Autowired
-    IRoleService roleService;
-
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
-        System.out.println("Login request received for phone: " + loginRequest.getPhone());
-
-        Optional<Account> accountOptional = accountService.login(loginRequest.getPhone(), loginRequest.getPassword());
-
-        if (accountOptional.isPresent()) {
-            return ResponseEntity.ok("Login successful for user: " + accountOptional.get().getUsername());
-        }
-
-        System.out.println("Login failed for phone: " + loginRequest.getPhone());
-        return ResponseEntity.status(401).body("Invalid username or password");
-    }
-
-    @RequestMapping("/security/login/error")
-    public String loginerror(Model model) {
-        model.addAttribute("loginError", true);
-        model.addAttribute("message", "Sai thông tin đăng nhập !!");
-        return "form/login";
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody Account account, BindingResult bindingResult) {
-        Optional<Account> existingAccount = accountService.findAccountsByUsername(account.getUsername());
-
-        // Check if the account already exists
-        if (existingAccount.isPresent()) {
-            return ResponseEntity.badRequest().body("Tên người dùng đã được sử dụng");
-        }
-
-        // Check for validation errors
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
-        }
-
+    @Operation(summary = "Get all account")
+    @GetMapping("/get-all-account")
+    public ResponseEntity<?> getAllAccount() {
+        Map<String, Object> rs = new HashMap<>();
         try {
-            // Create a new account
-            Account newAccount = new Account();
-            newAccount.setUsername(account.getUsername());
-            newAccount.setPassword(account.getPassword());
-            newAccount.setPhone(account.getPhone());
-            newAccount.setFullname(account.getFullname());
-            newAccount.setEmail(account.getEmail());
-            newAccount.setBirthday(account.getBirthday());
-            newAccount.setGender(account.getGender());
-            newAccount.setCccd(account.getCccd());
-            accountService.save(newAccount);
+            rs.put("status", true);
+            rs.put("message", "Call api success");
+            rs.put("data", accountService.findAll());
+            log.info("Get all account successfully");
+        } catch (Exception ex) {
+            rs.put("status", false);
+            rs.put("message", "Call api failed");
+            rs.put("data", null);
+            ex.printStackTrace();
+            log.error("Get all account failed", ex);
+        }
+        return ResponseEntity.ok(rs);
+    }
 
-            // Convert string to enum
-            Roles roleEnum = Roles.valueOf("CUSTOMER"); // Chuyển đổi "CUSTOMER" thành enum Roles.CUSTOMER
+    @Operation(summary = "Get account by username")
+    @GetMapping("/get-account/{username}")
+    public ResponseEntity<?> getAccount(@PathVariable String username) {
+        Optional<Account> ac = accountService.findAccountsByUsername(username);
+        if (ac.isPresent()) {
+            log.info("Get account successfully: {}", username);
+            return ResponseEntity.ok(ac);
+        }
+        log.error("Get account failed");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Call api failed");
+    }
 
-            // Find role and create auth
-            Optional<Role> existingRole = roleService.findRoleByName(roleEnum);
-            if (!existingRole.isPresent()) {
-                return ResponseEntity.badRequest().body("Role does not exist.");
-            }
+    @Operation(summary = "Get account by username")
+    @GetMapping("/get-account")
+    public ResponseEntity<?> getProductByIdManager(@RequestParam("username") String username) {
+        Map<String, Object> rs = new HashMap<>();
+        try {
+            rs.put("status", true);
+            rs.put("message", "Call api success");
+            rs.put("data", accountService.findAccountsByUsername(username));
+            log.info("Get account successfully: {}", username);
+        } catch (Exception ex) {
+            rs.put("status", false);
+            rs.put("message", "Call api failed");
+            rs.put("data", null);
+            ex.printStackTrace();
+            log.error("Get account failed", ex);
+        }
+        return ResponseEntity.ok(rs);
+    }
 
-            Auth authority = new Auth();
-            authority.setAccount(newAccount);
-            authority.setRole(existingRole.get());
-//            authorityService.save(authority);
+    @Operation(summary = "Delete account by username")
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteAccount(@RequestParam("username") String username) {
+        Map<String, Object> rs = new HashMap<>();
+        try {
+            accountService.deleteAcc(username); // Gọi phương thức xóa sản phẩm
+            rs.put("status", true);
+            rs.put("message", "Account deleted successfully");
+            rs.put("data", null); // Không có dữ liệu trả về
+            log.info("Account deleted successfully: {}", username);
+        } catch (EntityNotFoundException ex) {
+            rs.put("status", false);
+            rs.put("message", "Account not found");
+            rs.put("data", null);
+            log.error("Account not found", ex);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(rs); // Trả về mã 404 nếu không tìm thấy
+        } catch (Exception ex) {
+            rs.put("status", false);
+            rs.put("message", "Call api failed: " + ex.getMessage());
+            rs.put("data", null);
+            log.error("Delete account failed", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(rs); // Trả về mã 500 nếu có lỗi
+        }
+        return ResponseEntity.ok(rs);
+    }
 
-            return ResponseEntity.ok().body("Register successful");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Invalid role name provided: " + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+    @Operation(summary = "Update account by username")
+    @PutMapping("/update-acc")
+    public ResponseEntity<?> updateProduct(@RequestParam("username") String username, @RequestBody Account account) {
+        Map<String, Object> rs = new HashMap<>();
+        try {
+            Account updateAcc = accountService.updateAcc(username, account);
+            rs.put("status", true);
+            rs.put("message", "Update product successful");
+            rs.put("data", updateAcc);
+            log.info("Update product successfully: {}", username);
+            return ResponseEntity.ok(rs); // Trả về mã trạng thái 200 OK
+        } catch (EntityNotFoundException ex) {
+            rs.put("status", false);
+            rs.put("message", "Account not found: " + ex.getMessage());
+            rs.put("data", null);
+            log.error("Account not found", ex);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(rs); // Trả về mã trạng thái 404 Not Found
+        } catch (Exception ex) {
+            rs.put("status", false);
+            rs.put("message", "Update Account failed: " + ex.getMessage());
+            rs.put("data", null);
+            log.error("Update Account failed", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(rs);
         }
     }
 
-    //    @RequestMapping("/error/accedd-denied")
-    //    public String loginerrorAs(Model model) {
-    //        model.addAttribute("loginError", true);
-    //        model.addAttribute("message", "Khong co quyen truy xuat !!");
-    //        return "form/login";
-    //    }
+    @Operation(summary = "Get list account by username")
+    @GetMapping("/get-ListaccountByUsername")
+    public ResponseEntity<?> getListaccountByUsername(@RequestParam("username") String username) {
+        Map<String, Object> rs = new HashMap<>();
+        try {
+            rs.put("status", true);
+            rs.put("message", "Call api success");
+            rs.put("data", accountService.findListAccountsByUsername(username));
+            log.info("Get list account successfully: {}", username);
+        } catch (Exception ex) {
+            rs.put("status", false);
+            rs.put("message", "Call api failed");
+            rs.put("data", null);
+            ex.printStackTrace();
+            log.error("Get list account failed", ex);
+        }
+        return ResponseEntity.ok(rs);
+    }
 
-    //  @RequestMapping("/oauth2/login/success")
-    //  public String success(OAuth2AuthenticationToken oAuth2Token) {
-    //    accountService.loginOAuth2(oAuth2Token);
-    //    return "/home";
-    //  }
+    @Operation(summary = "Get profile by username")
+    @GetMapping("/profile")
+    public ApiResponse<AccountResponse> getProfile(@RequestParam("username") String username) {
+        AccountResponse accountResponse = accountService.findByUsername(username);
+        log.info("Get profile successfully");
+        return ApiResponse.<AccountResponse>builder()
+                .code(HttpStatus.OK.value())
+                .message("Get profile successfully")
+                .result(accountResponse)
+                .build();
+    }
+
+    @Operation(summary = "Update profile by username")
+    @PutMapping("/profile")
+    public ApiResponse<AccountResponse> updateProfile(@RequestBody AccountRequest accountRequest) {
+        AccountResponse accountResponse = accountService.update(accountRequest);
+        log.info("Update profile successfully");
+        return ApiResponse.<AccountResponse>builder()
+                .code(HttpStatus.OK.value())
+                .message("Update profile successfully")
+                .result(accountResponse)
+                .build();
+    }
+
+    @Operation(summary = "Change password by username")
+    @PutMapping("/profile/change-password")
+    public ApiResponse<String> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
+        String changePassword = accountService.changePassword(changePasswordRequest);
+        log.info("Change password successfully");
+        return ApiResponse.<String>builder()
+                .code(HttpStatus.OK.value())
+                .message("Change password successfully")
+                .result(changePassword)
+                .build();
+    }
 }

@@ -1,0 +1,13 @@
+@baseUrl = http://localhost:8080
+
+@contentType = application/json
+
+POST {{baseUrl}}/service
+Content-Type: {{contentType}}
+Accept: {{contentType}} 
+
+{
+    "typeService": "Tiện nghi",
+    "nameService": "Có gà móng đỏ",
+    "price": 3300000
+}

@@ -1,5 +1,7 @@
 package com.rrms.rrms.dto.response;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -12,8 +14,13 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RoomDetailResponse {
+public class RoomDetailResponse implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     UUID roomId;
+    String censor;
     String nameRoom;
     Double deposit;
     Double price;

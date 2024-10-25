@@ -1,4 +1,4 @@
-import { Box, Button, Typography, useMediaQuery } from '@mui/material'
+import { Box, Button, Chip, Typography, useMediaQuery } from '@mui/material'
 import FmdGoodIcon from '@mui/icons-material/FmdGood'
 import { GlassMagnifier } from '@datobs/react-image-magnifiers'
 
@@ -12,6 +12,7 @@ const Item = ({ item, index, totalItems, addressDetail }) => {
   return (
     <Box sx={{ position: 'relative' }}>
       <GlassMagnifier
+        // style={{ width: '1000px', height: '500px' }}
         imageSrc={item.image}
         imageAlt="Example"
         square={true}
@@ -42,9 +43,20 @@ const Item = ({ item, index, totalItems, addressDetail }) => {
           startIcon={<FmdGoodIcon />}>
           {isMobile ? '' : 'Xem vị trí'}
         </Button>
-        <Typography color="white" variant="h6">
-          Ảnh {index + 1}/{totalItems}
-        </Typography>
+        <Chip
+          label={
+            <Typography
+              color="white"
+              variant="h6"
+              sx={{
+                fontWeight: 'bold',
+                textShadow: '1px 1px #000',
+              }}>
+              ảnh {index + 1}/{totalItems}
+            </Typography>
+          }
+          variant="outlined"
+        />
       </Box>
     </Box>
   )

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Slider from 'react-slick'
 import {
   Box,
@@ -22,12 +22,17 @@ import AutorenewIcon from '@mui/icons-material/Autorenew'
 import NextArrow from '../Detail/NextArrow'
 import PrevArrow from '../Detail/PrevArrow'
 
-const Heart = () => {
+const Heart = ({ setIsAdmin }) => {
   const [age, setAge] = useState(10)
   const [isFavorited, setIsFavorited] = useState(false)
   const [showPhoneNumber, setShowPhoneNumber] = useState(false)
   const [totalPosts, setTotalPosts] = useState(1)
   const [showArrows, setShowArrows] = useState(false)
+
+  useEffect(() => {
+    setIsAdmin(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleChange = (event) => {
     setAge(event.target.value)
@@ -66,15 +71,38 @@ const Heart = () => {
 
   return (
     <Container sx={{ mt: 3 }}>
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={6} sx={{}}>
-          <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold', color: '#3f51b5' }}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={10}>
+          <Typography variant="h4" sx={{ mb: 1.5, fontWeight: 'bold', color: '#3f51b5' }}>
             Tin đăng đã lưu
           </Typography>
-          <Typography variant="subtitle1" sx={{ mb: 4 }}>
+          <Typography
+            variant="subtitle1"
+            sx={{ mb: 1, color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894') }}>
             Tổng số {totalPosts} tin đăng
           </Typography>
-
+        </Grid>
+        <Grid item xs={12} md={2} sx={{ mb: 2 }}>
+          <FormControl sx={{ width: 190 }}>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={age}
+              onChange={handleChange}
+              sx={{
+                bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542'),
+                borderRadius: '8px',
+                border: '1px solid #ddd',
+              }}>
+              <MenuItem value={10}>Tin mới nhất</MenuItem>
+              <MenuItem value={20}>Giá từ thấp đến cao</MenuItem>
+              <MenuItem value={30}>Giá từ cao đến thấp</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+      </Grid>
+      <Grid container spacing={4}>
+        <Grid item xs={12} md={6} sx={{}}>
           <Slider {...settings}>
             {slides.map((slide) => (
               <Card
@@ -115,19 +143,6 @@ const Heart = () => {
           </Slider>
         </Grid>
         <Grid item xs={12} md={6}>
-          <FormControl sx={{ width: 190, mt: 1 }}>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={age}
-              onChange={handleChange}
-              sx={{ bgcolor: '#fff', borderRadius: '8px', border: '1px solid #ddd' }}>
-              <MenuItem value={10}>Tin mới nhất</MenuItem>
-              <MenuItem value={20}>Giá từ thấp đến cao</MenuItem>
-              <MenuItem value={30}>Giá từ cao đến thấp</MenuItem>
-            </Select>
-          </FormControl>
-
           <Box sx={{ mt: 2 }}>
             <Typography variant="h5" gutterBottom sx={{ color: '#3f51b5', mb: 2, fontWeight: 'bold' }}>
               Chi tiết nhà trọ
@@ -192,6 +207,7 @@ const Heart = () => {
           </Box>
         </Grid>
       </Grid>
+
       <Divider sx={{ my: 5 }} />
     </Container>
   )

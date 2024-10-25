@@ -1,7 +1,8 @@
 package com.rrms.rrms.dto.response;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.UUID;
-import javax.swing.*;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,10 +14,14 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MotelResponse {
+public class MotelResponse implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     UUID motelId;
-    String address;
-    String description;
     String motelName;
+    Double area;
+    Long averagePrice;
+    String address;
     AccountResponse account;
 }

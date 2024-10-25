@@ -1,10 +1,8 @@
 package com.rrms.rrms.services;
 
-import java.util.UUID;
-
-import com.rrms.rrms.dto.response.RoomDetailResponse;
+import com.rrms.rrms.dto.request.RoomServiceRequest;
+import com.rrms.rrms.dto.response.RoomServiceResponse;
 
 public interface IRoomService {
-
-    RoomDetailResponse getRoomById(UUID id);
+    RoomServiceResponse createRoomService(RoomServiceRequest roomServiceRequest);
 }

@@ -4,3 +4,8 @@
 *.html linguist-language=HTML
 Dockerfile linguist-detectable=true
 Dockerfile linguist-language=Dockerfile
+docker-compose.yml linguist-language=Dockerfile
+.dockerignore linguist-language=Dockerfile
+DFD.drawio linguist-language=Dockerfile
+ERD.mwb linguist-language=SQL
+ERD_finish.mwb linguist-language=HTML

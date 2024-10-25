@@ -4,413 +4,352 @@ USE rrms;
 
 DROP DATABASE rrms;
 
-CREATE TABLE Roles (
-    roleId BINARY(16) PRIMARY KEY,
-    roleName VARCHAR(255),
-    description TEXT
+CREATE TABLE accounts (
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NULL,
+    fullname VARCHAR(255) NULL,
+    phone VARCHAR(20) NULL,
+    email VARCHAR(255) NULL,
+    avatar VARCHAR(255) NULL,
+    birthday date NULL,
+    gender ENUM('MALE', 'FEMALE', 'OTHER') NULL,
+    cccd VARCHAR(15) NULL,
+    heart_id BINARY(16) NULL,
+    CONSTRAINT pk_accounts PRIMARY KEY (username)
 );
 
-CREATE TABLE Accounts (
-    username VARCHAR(255) NOT NULL PRIMARY KEY,
-    password VARCHAR(255),
-    fullname VARCHAR(255),
-    phone VARCHAR(20),
-    email VARCHAR(255),
-    birthday DATE,
-    gender ENUM('Male', 'Female'),
-    cccd VARCHAR(15)
+CREATE TABLE auths (
+    auth_id BINARY(16) NOT NULL,
+    username VARCHAR(255) NULL,
+    role_id BINARY(16) NULL,
+    CONSTRAINT pk_auths PRIMARY KEY (auth_id)
 );
 
-CREATE TABLE Auths (
-    authId BINARY(16) PRIMARY KEY,
-    username VARCHAR(50),
-    roleId BINARY(16),
-    FOREIGN KEY (username) REFERENCES Accounts (username),
-    FOREIGN KEY (roleId) REFERENCES Roles (roleId)
+CREATE TABLE bulletin_boards (
+    bulletin_board_id BINARY(16) NOT NULL,
+    room_id BINARY(16) NULL,
+    username VARCHAR(255) NULL,
+    title VARCHAR(255) NULL,
+    date_of_stay date NULL,
+    CONSTRAINT pk_bulletin_boards PRIMARY KEY (bulletin_board_id)
 );
 
-CREATE TABLE Motels (
-    motelId BINARY(16) PRIMARY KEY,
-    motelName VARCHAR(255),
-    area DOUBLE,
-    averagePrice DECIMAL(10, 2),
-    address NVARCHAR (255),
-    username VARCHAR(255),
-    FOREIGN KEY (username) REFERENCES Accounts (username)
+CREATE TABLE contracts (
+    contract_id BINARY(16) NOT NULL,
+    room_id BINARY(16) NULL,
+    username_tenant VARCHAR(255) NULL,
+    username_landlord VARCHAR(255) NULL,
+    first_time date NULL,
+    lease_term INT NULL,
+    `description` TEXT NULL,
+    deposit DECIMAL(10, 2) NULL,
+    status ENUM('ACTIVE', 'ENDED') NULL,
+    CONSTRAINT pk_contracts PRIMARY KEY (contract_id)
 );
 
-CREATE TABLE Rules (
-    ruleId BINARY(16) PRIMARY KEY,
-    ruleName NVARCHAR (255),
-    price DECIMAL(10, 2)
+CREATE TABLE detail_invoices (
+    detail_invoice_id BINARY(16) NOT NULL,
+    invoice_id BINARY(16) NULL,
+    room_service_id BINARY(16) NULL,
+    room_device_id BINARY(16) NULL,
+    CONSTRAINT pk_detail_invoices PRIMARY KEY (detail_invoice_id)
 );
 
-CREATE TABLE NameMotelServices (
-    nameMotelServicesId BINARY(16) PRIMARY KEY,
-    typeService NVARCHAR (255),
-    nameService NVARCHAR (255),
-    price DECIMAL(10, 2)
+CREATE TABLE devices (
+    device_id BINARY(16) NOT NULL,
+    device_name VARCHAR(255) NULL,
+    available BIT(1) NULL,
+    CONSTRAINT pk_devices PRIMARY KEY (device_id)
 );
 
-
-
-CREATE TABLE Searchs (
-    searchId BINARY(16) PRIMARY KEY,
-    username VARCHAR(100) NOT NULL,
-    content TEXT,
-    FOREIGN KEY (username) REFERENCES Accounts (username)
+CREATE TABLE heart_room (
+    heart_id BINARY(16) NOT NULL,
+    room_id BINARY(16) NOT NULL
 );
 
-CREATE TABLE MotelRules (
-    motelRuleId BINARY(16) PRIMARY KEY,
-    motelId BINARY(16),
-    ruleId BINARY(16),
-    FOREIGN KEY (motelId) REFERENCES Motels (motelId),
-    FOREIGN KEY (ruleId) REFERENCES Rules (ruleId)
+CREATE TABLE hearts (
+    heart_id BINARY(16) NOT NULL,
+    username VARCHAR(255) NULL,
+    CONSTRAINT pk_hearts PRIMARY KEY (heart_id)
 );
 
-CREATE TABLE MotelServices (
-    motelServiceId BINARY(16) PRIMARY KEY,
-    motelId BINARY(16),
-    nameMotelServiceId BINARY(16),
-    FOREIGN KEY (motelId) REFERENCES Motels (motelId),
-    FOREIGN KEY (nameMotelServiceId) REFERENCES NameMotelServices (nameMotelServicesId)
+CREATE TABLE invoices (
+    invoice_id BINARY(16) NOT NULL,
+    username VARCHAR(255) NULL,
+    room_id BINARY(16) NULL,
+    payment_id BINARY(16) NULL,
+    status VARCHAR(50) NULL,
+    create_date date NULL,
+    CONSTRAINT pk_invoices PRIMARY KEY (invoice_id)
 );
 
-CREATE TABLE Supports (
-    supportId BINARY(16) NOT NULL PRIMARY KEY,
-    username VARCHAR(255),
-    dateOfStay DATE,
-    createDate DATE,
-    price DECIMAL(10, 2),
-    FOREIGN KEY (username) REFERENCES Accounts (username)
+CREATE TABLE motels (
+    motel_id BINARY(16) NOT NULL,
+    motel_name VARCHAR(255) NULL,
+    area DOUBLE NULL,
+    average_price DECIMAL(10, 2) NULL,
+    address NVARCHAR (255) NULL,
+    username VARCHAR(255) NULL,
+    CONSTRAINT pk_motels PRIMARY KEY (motel_id)
 );
 
-CREATE TABLE TypeRooms (
-    typeRoomId BINARY(16) PRIMARY KEY,
-    name VARCHAR(50)
+CREATE TABLE motel_rules (
+    motel_rule_id BINARY(16) NOT NULL,
+    motel_id BINARY(16) NULL,
+    rule_id BINARY(16) NULL,
+    CONSTRAINT pk_motel_rules PRIMARY KEY (motel_rule_id)
 );
 
-CREATE TABLE Devices (
-    deviceId BINARY(16) PRIMARY KEY,
-    deviceName VARCHAR(255),
-    available BOOLEAN
+CREATE TABLE motel_services (
+    motel_service_id BINARY(16) NOT NULL,
+    motel_id BINARY(16) NULL,
+    name_motel_service_id BINARY(16) NULL,
+    CONSTRAINT pk_motel_services PRIMARY KEY (motel_service_id)
 );
 
-CREATE TABLE Services (
-    serviceId BINARY(16) PRIMARY KEY,
-    typeService VARCHAR(255),
-    nameService VARCHAR(255),
-    price DECIMAL(10, 2)
+CREATE TABLE name_motel_services (
+    name_motel_services_id BINARY(16) NOT NULL,
+    type_service NVARCHAR (255) NULL,
+    name_service NVARCHAR (255) NULL,
+    price DECIMAL(10, 2) NULL,
+    CONSTRAINT pk_name_motel_services PRIMARY KEY (name_motel_services_id)
 );
 
-CREATE TABLE Payments (
-    paymentId BINARY(16) PRIMARY KEY,
-    paymentName VARCHAR(255),
-    description TEXT
+CREATE TABLE notifications (
+    notification_id BINARY(16) NOT NULL,
+    username_landlord VARCHAR(255) NULL,
+    username_tenant VARCHAR(255) NULL,
+    title VARCHAR(255) NULL,
+    content TEXT NULL,
+    number_of_recipients INT NULL,
+    CONSTRAINT pk_notifications PRIMARY KEY (notification_id)
 );
 
-CREATE TABLE Rooms (
-    roomId BINARY(16) PRIMARY KEY,
-    motelId BINARY(16),
-    typeRoomId BINARY(16),
-    price DECIMAL(10, 2),
-    roomArea DECIMAL(10, 2),
-    available BOOLEAN,
-    description TEXT,
-    FOREIGN KEY (motelId) REFERENCES Motels (motelId),
-    FOREIGN KEY (typeRoomId) REFERENCES TypeRooms (typeRoomId)
+CREATE TABLE notification_rooms (
+    notification_room_id BINARY(16) NOT NULL,
+    room_id BINARY(16) NULL,
+    notification_id BINARY(16) NULL,
+    CONSTRAINT pk_notification_rooms PRIMARY KEY (notification_room_id)
 );
 
-CREATE TABLE RoomImages (
-    roomImageId BINARY(16) PRIMARY KEY,
-    roomId BINARY(16),
-    fileName VARCHAR(255),
-    linkImg TEXT,
-    mainImg BOOLEAN,
-    FOREIGN KEY (roomId) REFERENCES Rooms (roomId)
+CREATE TABLE payments (
+    payment_id BINARY(16) NOT NULL,
+    payment_name VARCHAR(255) NULL,
+    `description` TEXT NULL,
+    CONSTRAINT pk_payments PRIMARY KEY (payment_id)
 );
 
-CREATE TABLE RoomReviews (
-    roomReviewId BINARY(16) PRIMARY KEY,
-    username VARCHAR(255),
-    roomId BINARY(16),
-    content TEXT,
-    rating INT,
-    FOREIGN KEY (roomId) REFERENCES Rooms (roomId)
+CREATE TABLE roles (
+    role_id BINARY(16) NOT NULL,
+    role_name VARCHAR(255) NULL,
+    `description` TEXT NULL,
+    CONSTRAINT pk_roles PRIMARY KEY (role_id)
 );
 
-CREATE TABLE Invoices (
-    invoiceId BINARY(16) PRIMARY KEY,
-    username VARCHAR(255),
-    roomId BINARY(16),
-    paymentId BINARY(16),
-    status VARCHAR(50),
-    createDate DATE,
-    FOREIGN KEY (username) REFERENCES Accounts (username),
-    FOREIGN KEY (roomId) REFERENCES Rooms (roomId),
-    FOREIGN KEY (paymentId) REFERENCES Payments (paymentId)
+CREATE TABLE rooms (
+    room_id BINARY(16) NOT NULL,
+    motel_id BINARY(16) NOT NULL,
+    type_room_id BINARY(16) NOT NULL,
+    name_room VARCHAR(255) NOT NULL,
+    price DECIMAL(10, 2) NULL,
+    deposit DECIMAL(10, 2) NULL,
+    room_area INT NULL,
+    max_person INT NULL,
+    rental_start_time date NULL,
+    available BIT(1) NULL,
+    censor BIT(1) NULL,
+    hours NVARCHAR (255) NULL,
+    `description` TEXT NULL,
+    CONSTRAINT pk_rooms PRIMARY KEY (room_id)
 );
 
-CREATE TABLE RoomDevices (
-    roomDeviceId BINARY(16) PRIMARY KEY,
-    roomId BINARY(16),
-    deviceId BINARY(16),
-    quantity INT,
-    FOREIGN KEY (roomId) REFERENCES Rooms (roomId),
-    FOREIGN KEY (deviceId) REFERENCES Devices (deviceId)
+CREATE TABLE room_devices (
+    room_device_id BINARY(16) NOT NULL,
+    room_id BINARY(16) NULL,
+    device_id BINARY(16) NULL,
+    quantity INT NULL,
+    CONSTRAINT pk_room_devices PRIMARY KEY (room_device_id)
 );
 
-CREATE TABLE RoomServices (
-    roomServiceId BINARY(16) PRIMARY KEY,
-    roomId BINARY(16),
-    serviceId BINARY(16),
-    FOREIGN KEY (roomId) REFERENCES Rooms (roomId),
-    FOREIGN KEY (serviceId) REFERENCES Services (serviceId)
+CREATE TABLE room_images (
+    room_image_id BINARY(16) NOT NULL,
+    room_id BINARY(16) NULL,
+    image VARCHAR(255) NULL,
+    CONSTRAINT pk_room_images PRIMARY KEY (room_image_id)
 );
 
-CREATE TABLE DetailInvoices (
-    detailInvoiceId BINARY(16) PRIMARY KEY,
-    invoiceId BINARY(16),
-    roomServiceId BINARY(16),
-    roomDeviceId BINARY(16),
-    FOREIGN KEY (invoiceId) REFERENCES Invoices (invoiceId),
-    FOREIGN KEY (roomServiceId) REFERENCES RoomServices (roomServiceId),
-    FOREIGN KEY (roomDeviceId) REFERENCES RoomDevices (roomDeviceId)
+CREATE TABLE room_reviews (
+    room_review_id BINARY(16) NOT NULL,
+    room_id BINARY(16) NULL,
+    username VARCHAR(255) NULL,
+    rating INT NULL,
+    comment TEXT NULL,
+    CONSTRAINT pk_room_reviews PRIMARY KEY (room_review_id)
 );
 
-CREATE TABLE Notifications (
-    notificationId BINARY(16) NOT NULL PRIMARY KEY,
-    usernameLandlord VARCHAR(255),
-    usernameTenant VARCHAR(255),
-    title VARCHAR(255),
-    content TEXT,
-    numberOfRecipients INT,
-    FOREIGN KEY (usernameLandlord) REFERENCES Accounts (username),
-    FOREIGN KEY (usernameTenant) REFERENCES Accounts (username)
+CREATE TABLE room_services (
+    room_service_id BINARY(16) NOT NULL,
+    room_id BINARY(16) NOT NULL,
+    service_id BINARY(16) NULL,
+    CONSTRAINT pk_room_services PRIMARY KEY (room_service_id)
 );
 
-CREATE TABLE NotificationRooms (
-    notificationRoomId BINARY(16) PRIMARY KEY,
-    roomId BINARY(16),
-    notificationId BINARY(16),
-    FOREIGN KEY (roomId) REFERENCES Rooms (roomId),
-    FOREIGN KEY (notificationId) REFERENCES Notifications (notificationId)
+CREATE TABLE rules (
+    rule_id BINARY(16) NOT NULL,
+    rule_name NVARCHAR (255) NULL,
+    price DECIMAL(10, 2) NULL,
+    CONSTRAINT pk_rules PRIMARY KEY (rule_id)
 );
 
-CREATE TABLE BulletinBoards (
-    bulletinBoardId BINARY(16) PRIMARY KEY,
-    roomId BINARY(16),
-    username VARCHAR(255),
-    title VARCHAR(255),
-    dateOfStay DATE,
-    FOREIGN KEY (username) REFERENCES Accounts (username),
-    FOREIGN KEY (roomId) REFERENCES Rooms (roomId)
+CREATE TABLE searchs (
+    search_id BINARY(16) NOT NULL,
+    username VARCHAR(255) NULL,
+    content TEXT NULL,
+    CONSTRAINT pk_searchs PRIMARY KEY (search_id)
 );
 
-CREATE TABLE Contracts (
-    contractId BINARY(16) PRIMARY KEY,
-    roomId BINARY(16),
-    usernameTenant VARCHAR(50),
-    usernameLandlord VARCHAR(50),
-    firstTime DATE,
-    leaseTerm INT,
-    description TEXT,
-    deposit DECIMAL(10, 2),
-    status ENUM('ACTIVE', 'ENDED'),
-    FOREIGN KEY (usernameTenant) REFERENCES Accounts (username), 
-    FOREIGN KEY (usernameLandlord) REFERENCES Accounts (username),
-    FOREIGN KEY (roomId) REFERENCES Rooms (roomId)
+CREATE TABLE services (
+    service_id BINARY(16) NOT NULL,
+    type_service VARCHAR(255) NULL,
+    name_service VARCHAR(255) NULL,
+    price DECIMAL(10, 2) NULL,
+    CONSTRAINT pk_services PRIMARY KEY (service_id)
 );
 
-INSERT INTO Roles (roleId, roleName, description) VALUES   
-(UNHEX(REPLACE(UUID(), '-', '')), 'ADMIN', 'ADMIN role'),   
-(UNHEX(REPLACE(UUID(), '-', '')), 'CUSTOMER', 'CUSTOMER role'),   
-(UNHEX(REPLACE(UUID(), '-', '')), 'EMPLOYEE', 'EMPLOYEE role'),   
-(UNHEX(REPLACE(UUID(), '-', '')), 'GUEST', 'GUEST role'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'HOST', 'HOST role');
+CREATE TABLE supports (
+    support_id BINARY(16) NOT NULL,
+    username VARCHAR(255) NULL,
+    date_of_stay date NULL,
+    create_date date NULL,
+    price DECIMAL(10, 2) NULL,
+    CONSTRAINT pk_supports PRIMARY KEY (support_id)
+);
 
-INSERT INTO Accounts (username, password, fullname, phone, email, birthday, gender, cccd) VALUES
-('user1', 'password1', 'User One', '1234567890', 'user1@example.com', '1990-01-01', 'Male', '123456789'),
-('user2', 'password2', 'User Two', '0987654321', 'user2@example.com', '1992-02-02', 'Female', '987654321'),
-('landlord1', 'password3', 'Landlord One', '1112223333', 'landlord1@example.com', '1985-03-03', 'Male', '123123123'),
-('tenant1', 'password4', 'Tenant One', '4445556666', 'tenant1@example.com', '1995-04-04', 'Female', '321321321'),
-('user3', 'password5', 'User Three', '7778889999', 'user3@example.com', '1988-05-05', 'Male', '456456456');
+CREATE TABLE type_rooms (
+    type_room_id BINARY(16) NOT NULL,
+    name VARCHAR(50) NULL,
+    CONSTRAINT pk_type_rooms PRIMARY KEY (type_room_id)
+);
 
-INSERT INTO Auths (authId, username, roleId) VALUES  
-(UNHEX(REPLACE(UUID(), '-', '')), 'user1', (SELECT roleId FROM Roles WHERE roleName = 'ADMIN')),  
-(UNHEX(REPLACE(UUID(), '-', '')), 'user2', (SELECT roleId FROM Roles WHERE roleName = 'CUSTOMER')),  
-(UNHEX(REPLACE(UUID(), '-', '')), 'landlord1', (SELECT roleId FROM Roles WHERE roleName = 'EMPLOYEE')),  
-(UNHEX(REPLACE(UUID(), '-', '')), 'tenant1', (SELECT roleId FROM Roles WHERE roleName = 'GUEST')),  
-(UNHEX(REPLACE(UUID(), '-', '')), 'user3', (SELECT roleId FROM Roles WHERE roleName = 'HOST'));
+ALTER TABLE type_rooms
+ADD CONSTRAINT uc_type_rooms_name UNIQUE (name);
 
+-- Relationships
+ALTER TABLE accounts
+ADD CONSTRAINT uc_accounts_heart UNIQUE (heart_id);
 
-INSERT INTO Motels (motelId, motelName, area, averagePrice, address, username) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), 'Motel A', 150.0, 100.00, 'Address A', 'landlord1'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Motel B', 200.0, 150.00, 'Address B', 'landlord1'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Motel C', 120.0, 80.00, 'Address C', 'landlord1'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Motel D', 180.0, 120.00, 'Address D', 'landlord1'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Motel E', 220.0, 200.00, 'Address E', 'landlord1');
+ALTER TABLE accounts ADD CONSTRAINT uc_accounts_phone UNIQUE (phone);
 
-INSERT INTO Rules (ruleId, ruleName, price) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), 'No Pets', 0.00),
-(UNHEX(REPLACE(UUID(), '-', '')), 'No Smoking', 0.00),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Quiet Hours', 0.00),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Visitor Policy', 0.00),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Cleaning Fee', 50.00);
+ALTER TABLE accounts
+ADD CONSTRAINT FK_ACCOUNTS_ON_HEART FOREIGN KEY (heart_id) REFERENCES hearts (heart_id);
 
-INSERT INTO NameMotelServices (nameMotelServicesId, typeService, nameService, price) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), 'Cleaning', 'Room Cleaning', 30.00),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Laundry', 'Laundry Service', 20.00),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Internet', 'High-Speed Internet', 15.00),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Food', 'Meal Service', 50.00),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Parking', 'Parking Service', 10.00);
+ALTER TABLE auths
+ADD CONSTRAINT FK_AUTHS_ON_ROLE FOREIGN KEY (role_id) REFERENCES roles (role_id);
 
-INSERT INTO Auths (authId, username, roleId) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), 'user1', (SELECT roleId FROM Roles WHERE roleName = 'User')),
-(UNHEX(REPLACE(UUID(), '-', '')), 'landlord1', (SELECT roleId FROM Roles WHERE roleName = 'Landlord')),
-(UNHEX(REPLACE(UUID(), '-', '')), 'tenant1', (SELECT roleId FROM Roles WHERE roleName = 'Tenant')),
-(UNHEX(REPLACE(UUID(), '-', '')), 'user2', (SELECT roleId FROM Roles WHERE roleName = 'User')),
-(UNHEX(REPLACE(UUID(), '-', '')), 'user3', (SELECT roleId FROM Roles WHERE roleName = 'User'));
+ALTER TABLE auths
+ADD CONSTRAINT FK_AUTHS_ON_USERNAME FOREIGN KEY (username) REFERENCES accounts (username);
 
-INSERT INTO Searchs (searchId, username, content) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), 'user1', 'Looking for a room in the city center.'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'user2', 'Searching for pet-friendly accommodations.'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'tenant1', 'Need a room with kitchen facilities.'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'user3', 'Looking for shared rooms.'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'landlord1', 'Available rooms for rent.');
+ALTER TABLE bulletin_boards
+ADD CONSTRAINT FK_BULLETIN_BOARDS_ON_ROOM FOREIGN KEY (room_id) REFERENCES rooms (room_id);
 
-INSERT INTO MotelRules (motelRuleId, motelId, ruleId) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT motelId FROM Motels WHERE motelName = 'Motel A'), (SELECT ruleId FROM Rules WHERE ruleName = 'No Pets')),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT motelId FROM Motels WHERE motelName = 'Motel B'), (SELECT ruleId FROM Rules WHERE ruleName = 'No Smoking')),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT motelId FROM Motels WHERE motelName = 'Motel C'), (SELECT ruleId FROM Rules WHERE ruleName = 'Quiet Hours')),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT motelId FROM Motels WHERE motelName = 'Motel D'), (SELECT ruleId FROM Rules WHERE ruleName = 'Visitor Policy')),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT motelId FROM Motels WHERE motelName = 'Motel E'), (SELECT ruleId FROM Rules WHERE ruleName = 'Cleaning Fee'));
+ALTER TABLE bulletin_boards
+ADD CONSTRAINT FK_BULLETIN_BOARDS_ON_USERNAME FOREIGN KEY (username) REFERENCES accounts (username);
 
-INSERT INTO MotelServices (motelServiceId, motelId, nameMotelServiceId) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT motelId FROM Motels WHERE motelName = 'Motel A'), (SELECT nameMotelServicesId FROM NameMotelServices WHERE nameService = 'Room Cleaning')),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT motelId FROM Motels WHERE motelName = 'Motel B'), (SELECT nameMotelServicesId FROM NameMotelServices WHERE nameService = 'Laundry Service')),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT motelId FROM Motels WHERE motelName = 'Motel C'), (SELECT nameMotelServicesId FROM NameMotelServices WHERE nameService = 'High-Speed Internet')),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT motelId FROM Motels WHERE motelName = 'Motel D'), (SELECT nameMotelServicesId FROM NameMotelServices WHERE nameService = 'Meal Service')),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT motelId FROM Motels WHERE motelName = 'Motel E'), (SELECT nameMotelServicesId FROM NameMotelServices WHERE nameService = 'Parking Service'));
+ALTER TABLE contracts
+ADD CONSTRAINT FK_CONTRACTS_ON_ROOM FOREIGN KEY (room_id) REFERENCES rooms (room_id);
 
-INSERT INTO Supports (supportId, username, dateOfStay, createDate, price) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), 'tenant1', '2024-09-01', '2024-08-25', 150.00),
-(UNHEX(REPLACE(UUID(), '-', '')), 'tenant1', '2024-10-01', '2024-09-25', 200.00),
-(UNHEX(REPLACE(UUID(), '-', '')), 'user1', '2024-09-15', '2024-09-10', 100.00),
-(UNHEX(REPLACE(UUID(), '-', '')), 'user2', '2024-09-20', '2024-09-15', 120.00),
-(UNHEX(REPLACE(UUID(), '-', '')), 'user3', '2024-09-30', '2024-09-28', 180.00);
+ALTER TABLE contracts
+ADD CONSTRAINT FK_CONTRACTS_ON_USERNAME_LANDLORD FOREIGN KEY (username_landlord) REFERENCES accounts (username);
 
-INSERT INTO TypeRooms (typeRoomId, name) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), 'Single Room'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Double Room'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Suite'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Dormitory'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Family Room');
+ALTER TABLE contracts
+ADD CONSTRAINT FK_CONTRACTS_ON_USERNAME_TENANT FOREIGN KEY (username_tenant) REFERENCES accounts (username);
 
-INSERT INTO Devices (deviceId, deviceName, available) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), 'Air Conditioner', TRUE),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Television', TRUE),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Refrigerator', TRUE),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Microwave', TRUE),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Wi-Fi Router', TRUE);
+ALTER TABLE detail_invoices
+ADD CONSTRAINT FK_DETAIL_INVOICES_ON_INVOICE FOREIGN KEY (invoice_id) REFERENCES invoices (invoice_id);
 
-INSERT INTO Services (serviceId, typeService, nameService, price) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), 'Cleaning', 'Daily Cleaning', 25.00),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Laundry', 'Laundry Service', 15.00),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Food', 'Breakfast Service', 10.00),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Transportation', 'Airport Shuttle', 50.00),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Leisure', 'Spa Services', 100.00);
+ALTER TABLE detail_invoices
+ADD CONSTRAINT FK_DETAIL_INVOICES_ON_ROOM_DEVICE FOREIGN KEY (room_device_id) REFERENCES room_devices (room_device_id);
 
-INSERT INTO Payments (paymentId, paymentName, description) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), 'Credit Card', 'Payment via credit card'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Cash', 'Payment in cash'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Bank Transfer', 'Payment via bank transfer'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'PayPal', 'Payment via PayPal'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'Bitcoin', 'Payment via Bitcoin');
+ALTER TABLE detail_invoices
+ADD CONSTRAINT FK_DETAIL_INVOICES_ON_ROOM_SERVICE FOREIGN KEY (room_service_id) REFERENCES room_services (room_service_id);
 
-INSERT INTO Rooms (roomId, motelId, typeRoomId, price, roomArea, available, description) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT motelId FROM Motels WHERE motelName = 'Motel A'), (SELECT typeRoomId FROM TypeRooms WHERE name = 'Single Room'), 100.00, 20.0, TRUE, 'Cozy single room.'),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT motelId FROM Motels WHERE motelName = 'Motel B'), (SELECT typeRoomId FROM TypeRooms WHERE name = 'Double Room'), 150.00, 25.0, TRUE, 'Spacious double room.'),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT motelId FROM Motels WHERE motelName = 'Motel C'), (SELECT typeRoomId FROM TypeRooms WHERE name = 'Suite'), 200.00, 30.0, TRUE, 'Luxury suite with a view.'),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT motelId FROM Motels WHERE motelName = 'Motel D'), (SELECT typeRoomId FROM TypeRooms WHERE name = 'Dormitory'), 50.00, 15.0, TRUE, 'Shared dormitory room.'),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT motelId FROM Motels WHERE motelName = 'Motel E'), (SELECT typeRoomId FROM TypeRooms WHERE name = 'Family Room'), 250.00, 40.0, TRUE, 'Ideal for families.');
+ALTER TABLE hearts
+ADD CONSTRAINT uc_hearts_username UNIQUE (username);
 
-INSERT INTO RoomImages (roomImageId, roomId, fileName, linkImg, mainImg) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel A')), 'room1_a.jpg', 'http://example.com/room1_a.jpg', TRUE),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel A')), 'room1_b.jpg', 'http://example.com/room1_b.jpg', FALSE),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel B')), 'room2_a.jpg', 'http://example.com/room2_a.jpg', TRUE),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel B')), 'room2_b.jpg', 'http://example.com/room2_b.jpg', FALSE),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel C')), 'room3_a.jpg', 'http://example.com/room3_a.jpg', TRUE);
+ALTER TABLE hearts
+ADD CONSTRAINT FK_HEARTS_ON_USERNAME FOREIGN KEY (username) REFERENCES accounts (username);
 
-INSERT INTO RoomReviews (roomReviewId, username, roomId, content, rating) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), 'user1', (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel A')), 'Great stay!', 5),
-(UNHEX(REPLACE(UUID(), '-', '')), 'user2', (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel B')), 'Average experience.', 3),
-(UNHEX(REPLACE(UUID(), '-', '')), 'tenant1', (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel C')), 'Loved the amenities!', 4),
-(UNHEX(REPLACE(UUID(), '-', '')), 'user3', (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel D')), 'Not clean enough.', 2),
-(UNHEX(REPLACE(UUID(), '-', '')), 'landlord1', (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel E')), 'Very comfortable stay.', 5);
+ALTER TABLE heart_room
+ADD CONSTRAINT fk_hearoo_on_heart FOREIGN KEY (heart_id) REFERENCES hearts (heart_id);
 
-INSERT INTO Invoices (invoiceId, username, roomId, paymentId, status, createDate) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), 'tenant1', (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel A')), (SELECT paymentId FROM Payments WHERE paymentName = 'Credit Card'), 'PAID', '2024-09-01'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'user1', (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel B')), (SELECT paymentId FROM Payments WHERE paymentName = 'Cash'), 'UNPAID', '2024-09-05'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'tenant1', (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel C')), (SELECT paymentId FROM Payments WHERE paymentName = 'Bank Transfer'), 'PAID', '2024-09-10'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'user2', (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel D')), (SELECT paymentId FROM Payments WHERE paymentName = 'PayPal'), 'PAID', '2024-09-12'),
-(UNHEX(REPLACE(UUID(), '-', '')), 'user3', (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel E')), (SELECT paymentId FROM Payments WHERE paymentName = 'Bitcoin'), 'UNPAID', '2024-09-15');
+ALTER TABLE heart_room
+ADD CONSTRAINT fk_hearoo_on_room FOREIGN KEY (room_id) REFERENCES rooms (room_id);
 
-INSERT INTO RoomDevices (roomDeviceId, roomId, deviceId, quantity) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel A')), (SELECT deviceId FROM Devices WHERE deviceName = 'Air Conditioner'), 1),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel B')), (SELECT deviceId FROM Devices WHERE deviceName = 'Television'), 1),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel C')), (SELECT deviceId FROM Devices WHERE deviceName = 'Refrigerator'), 1),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel D')), (SELECT deviceId FROM Devices WHERE deviceName = 'Microwave'), 1),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel E')), (SELECT deviceId FROM Devices WHERE deviceName = 'Wi-Fi Router'), 1);
+ALTER TABLE invoices
+ADD CONSTRAINT FK_INVOICES_ON_PAYMENT FOREIGN KEY (payment_id) REFERENCES payments (payment_id);
 
-INSERT INTO RoomServices (roomServiceId, roomId, serviceId) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel A')), (SELECT serviceId FROM Services WHERE nameService = 'Daily Cleaning')),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel B')), (SELECT serviceId FROM Services WHERE nameService = 'Laundry Service')),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel C')), (SELECT serviceId FROM Services WHERE nameService = 'Breakfast Service')),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel D')), (SELECT serviceId FROM Services WHERE nameService = 'Airport Shuttle')),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel E')), (SELECT serviceId FROM Services WHERE nameService = 'Spa Services'));
+ALTER TABLE invoices
+ADD CONSTRAINT FK_INVOICES_ON_ROOM FOREIGN KEY (room_id) REFERENCES rooms (room_id);
 
-INSERT INTO DetailInvoices (detailInvoiceId, invoiceId, roomServiceId, roomDeviceId) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT invoiceId FROM Invoices WHERE username = 'tenant1'), (SELECT roomServiceId FROM RoomServices WHERE roomId = (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel A'))), NULL),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT invoiceId FROM Invoices WHERE username = 'user1'), NULL, (SELECT roomDeviceId FROM RoomDevices WHERE roomId = (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel B')))),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT invoiceId FROM Invoices WHERE username = 'tenant1'), (SELECT roomServiceId FROM RoomServices WHERE roomId = (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel C'))), NULL),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT invoiceId FROM Invoices WHERE username = 'user2'), NULL, (SELECT roomDeviceId FROM RoomDevices WHERE roomId = (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel D')))),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT invoiceId FROM Invoices WHERE username = 'user3'), (SELECT roomServiceId FROM RoomServices WHERE roomId = (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel E'))), NULL);
+ALTER TABLE invoices
+ADD CONSTRAINT FK_INVOICES_ON_USERNAME FOREIGN KEY (username) REFERENCES accounts (username);
 
-INSERT INTO Notifications (notificationId, usernameLandlord, usernameTenant, title, content, numberOfRecipients) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), 'landlord1', 'tenant1', 'Room Available', 'Your requested room is now available.', 1),
-(UNHEX(REPLACE(UUID(), '-', '')), 'landlord1', 'user1', 'Payment Reminder', 'Your payment is due soon.', 1),
-(UNHEX(REPLACE(UUID(), '-', '')), 'landlord1', 'user2', 'Lease Ending', 'Your lease is ending next week.', 1),
-(UNHEX(REPLACE(UUID(), '-', '')), 'landlord1', 'tenant1', 'New Amenities', 'We have added new amenities to your building.', 1),
-(UNHEX(REPLACE(UUID(), '-', '')), 'landlord1', 'user3', 'Feedback Request', 'We would love your feedback.', 1);
+ALTER TABLE motels
+ADD CONSTRAINT FK_MOTELS_ON_USERNAME FOREIGN KEY (username) REFERENCES accounts (username);
 
-INSERT INTO NotificationRooms (notificationRoomId, roomId, notificationId) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel A')), (SELECT notificationId FROM Notifications WHERE title = 'Room Available')),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel B')), (SELECT notificationId FROM Notifications WHERE title = 'Payment Reminder')),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel C')), (SELECT notificationId FROM Notifications WHERE title = 'Lease Ending')),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel D')), (SELECT notificationId FROM Notifications WHERE title = 'New Amenities')),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel E')), (SELECT notificationId FROM Notifications WHERE title = 'Feedback Request'));
+ALTER TABLE motel_rules
+ADD CONSTRAINT FK_MOTEL_RULES_ON_MOTEL FOREIGN KEY (motel_id) REFERENCES motels (motel_id);
 
-INSERT INTO BulletinBoards (bulletinBoardId, roomId, username, title, dateOfStay) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel A')), 'landlord1', 'Room for Rent', 'Room available starting next month.', '2024-10-01'),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel B')), 'user1', 'Looking for Roommate', 'Looking for a roommate to share the cost.', '2024-09-15'),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel C')), 'user2', 'Available for Rent', 'Room available for immediate rent.', '2024-09-10'),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel D')), 'user3', 'Need a place', 'In need of a temporary room.', '2024-09-20'),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel E')), 'tenant1', 'Seeking Tenants', 'Looking for tenants for a lovely room.', '2024-09-25');
+ALTER TABLE motel_rules
+ADD CONSTRAINT FK_MOTEL_RULES_ON_RULE FOREIGN KEY (rule_id) REFERENCES rules (rule_id);
 
-INSERT INTO Contracts (contractId, roomId, usernameTenant, usernameLandlord, firstTime, leaseTerm, description, deposit, status) VALUES
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel A')), 'tenant1', 'landlord1', '2024-09-01', 12, 'Lease for one year', 300.00, 'ACTIVE'),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel B')), 'user1', 'landlord1', '2024-09-05', 6, 'Lease for six months', 150.00, 'ACTIVE'),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel C')), 'user2', 'landlord1', '2024-09-10', 12, 'Lease for one year', 400.00, 'ENDED'),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel D')), 'user3', 'landlord1', '2024-09-15', 3, 'Lease for three months', 100.00, 'ACTIVE'),
-(UNHEX(REPLACE(UUID(), '-', '')), (SELECT roomId FROM Rooms WHERE motelId = (SELECT motelId FROM Motels WHERE motelName = 'Motel E')), 'tenant1', 'landlord1', '2024-09-20', 12, 'Lease for one year', 500.00, 'ACTIVE');
+ALTER TABLE motel_services
+ADD CONSTRAINT FK_MOTEL_SERVICES_ON_MOTEL FOREIGN KEY (motel_id) REFERENCES motels (motel_id);
 
-SELECT CONCAT(
-    SUBSTRING(HEX(roleId), 1, 8), '-',
-    SUBSTRING(HEX(roleId), 9, 4), '-',
-    SUBSTRING(HEX(roleId), 13, 4), '-',
-    SUBSTRING(HEX(roleId), 17, 4), '-',
-    SUBSTRING(HEX(roleId), 21)
-) AS uuid, roleName
-FROM roles;
+ALTER TABLE motel_services
+ADD CONSTRAINT FK_MOTEL_SERVICES_ON_NAME_MOTEL_SERVICE FOREIGN KEY (name_motel_service_id) REFERENCES name_motel_services (name_motel_services_id);
+
+ALTER TABLE notifications
+ADD CONSTRAINT FK_NOTIFICATIONS_ON_USERNAME_LANDLORD FOREIGN KEY (username_landlord) REFERENCES accounts (username);
+
+ALTER TABLE notifications
+ADD CONSTRAINT FK_NOTIFICATIONS_ON_USERNAME_TENANT FOREIGN KEY (username_tenant) REFERENCES accounts (username);
+
+ALTER TABLE notification_rooms
+ADD CONSTRAINT FK_NOTIFICATION_ROOMS_ON_NOTIFICATION FOREIGN KEY (notification_id) REFERENCES notifications (notification_id);
+
+ALTER TABLE notification_rooms
+ADD CONSTRAINT FK_NOTIFICATION_ROOMS_ON_ROOM FOREIGN KEY (room_id) REFERENCES rooms (room_id);
+
+ALTER TABLE rooms
+ADD CONSTRAINT FK_ROOMS_ON_MOTEL FOREIGN KEY (motel_id) REFERENCES motels (motel_id);
+
+ALTER TABLE rooms
+ADD CONSTRAINT FK_ROOMS_ON_TYPE_ROOM FOREIGN KEY (type_room_id) REFERENCES type_rooms (type_room_id);
+
+ALTER TABLE room_devices
+ADD CONSTRAINT FK_ROOM_DEVICES_ON_DEVICE FOREIGN KEY (device_id) REFERENCES devices (device_id);
+
+ALTER TABLE room_devices
+ADD CONSTRAINT FK_ROOM_DEVICES_ON_ROOM FOREIGN KEY (room_id) REFERENCES rooms (room_id);
+
+ALTER TABLE room_images
+ADD CONSTRAINT FK_ROOM_IMAGES_ON_ROOM FOREIGN KEY (room_id) REFERENCES rooms (room_id);
+
+ALTER TABLE room_reviews
+ADD CONSTRAINT FK_ROOM_REVIEWS_ON_ROOM FOREIGN KEY (room_id) REFERENCES rooms (room_id);
+
+ALTER TABLE room_reviews
+ADD CONSTRAINT FK_ROOM_REVIEWS_ON_USERNAME FOREIGN KEY (username) REFERENCES accounts (username);
+
+ALTER TABLE room_services
+ADD CONSTRAINT FK_ROOM_SERVICES_ON_ROOM FOREIGN KEY (room_id) REFERENCES rooms (room_id);
+
+ALTER TABLE room_services
+ADD CONSTRAINT FK_ROOM_SERVICES_ON_SERVICE FOREIGN KEY (service_id) REFERENCES services (service_id);
+
+ALTER TABLE searchs
+ADD CONSTRAINT FK_SEARCHS_ON_USERNAME FOREIGN KEY (username) REFERENCES accounts (username);
+
+ALTER TABLE supports
+ADD CONSTRAINT FK_SUPPORTS_ON_USERNAME FOREIGN KEY (username) REFERENCES accounts (username);

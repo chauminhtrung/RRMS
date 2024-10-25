@@ -1,10 +1,11 @@
 package com.rrms.rrms.services.servicesImp;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.repositories.ContractRepository;
 import com.rrms.rrms.services.IContractService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ContractService implements IContractService {

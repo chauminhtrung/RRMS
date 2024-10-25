@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Tooltip,
   IconButton,
@@ -10,9 +10,15 @@ import {
   TextField,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
+import NavAdmin from '~/layouts/admin/NavbarAdmin'
 
-const AdminManageBoker = () => {
+const AdminManageBoker = ({ setIsAdmin, motels, setmotels }) => {
   const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    setIsAdmin(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   const handleClickOpen = () => {
     setOpen(true)
   }
@@ -22,6 +28,7 @@ const AdminManageBoker = () => {
 
   return (
     <>
+      <NavAdmin setmotels={setmotels} motels={motels} />
       <div style={{ backgroundColor: '#c2c5aa' }}>
         <div className="row justify-content-center">
           <div className="col-md-8 col-sm-8 col-xs-12 mt-3">

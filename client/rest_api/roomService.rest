@@ -1,0 +1,16 @@
+@baseUrl = http://localhost:8080
+
+@contentType = application/json
+
+@roomId = 3bd0a764-1cbc-4b60-b8c6-ae105e7fc537
+
+@serviceId = 0a9d6fd1-b246-44ea-9a93-f8e764739fe9
+
+POST {{baseUrl}}/room-service
+Content-Type: {{contentType}}
+Accept: {{contentType}} 
+
+{
+    "roomId": "{{roomId}}",
+    "serviceId": "{{serviceId}}"
+}

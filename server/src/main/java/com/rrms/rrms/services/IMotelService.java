@@ -1,21 +1,27 @@
 package com.rrms.rrms.services;
 
-import com.rrms.rrms.dto.response.MotelResponse;
-import com.rrms.rrms.models.Account;
-import com.rrms.rrms.models.Motel;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.UUID;
 
+import com.rrms.rrms.dto.request.MotelRequest;
+import com.rrms.rrms.dto.response.MotelResponse;
+import com.rrms.rrms.models.Account;
 
 public interface IMotelService {
-        public MotelResponse insert(Motel motel);
-        public MotelResponse findById(UUID id);
-        public List<MotelResponse> findAll();
-        public MotelResponse update(UUID id,Motel motel);
-        public void delete(UUID id);
-        Integer getTotalAreaByUsername(Account username);
+
+    Integer getTotalAreaByUsername(Account username);
+
+    MotelResponse insert(MotelRequest motel);
+
+    MotelResponse findById(UUID id);
+
+    List<MotelResponse> findAllByMotelName(String motelName);
+
+    List<MotelResponse> findMotelByAccount_Username(String username);
+
+    List<MotelResponse> findAll();
+
+    MotelResponse update(UUID id, MotelRequest motel);
+
+    void delete(UUID id);
 }

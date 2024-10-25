@@ -1,0 +1,49 @@
+@baseUrl = http://localhost:8080
+@roomId = 7d9c1cb7-fd8b-414b-897c-457dd4ab7960
+@motelId = 043d0cfa-1978-41ce-8f55-dcfb4efa1a46
+
+GET {{baseUrl}}/room/{{roomId}}
+
+###
+
+GET {{baseUrl}}/room/post-room-table?username=dung
+
+###
+POST {{baseUrl}}/room
+Content-Type: application/json
+Accept: application/json
+
+{
+    "available": false,
+    "nameRoom": "Cho thuê + loại hình phòng trọ + diện tích + giá + tên đường/quận",
+    "typeRoomName": "Phòng Deluxe",
+    "username": "dung",
+    "description": "Phòng đẹp mới xây",
+    "price": 3300000,
+    "deposit": 2500000,
+    "roomArea": 15,
+    "censor": false,
+    "priceElectric": 3800,
+    "priceWater": 35000,
+    "maxPerson": 2,
+    "rentalStartTime": "2024-03-01",
+    "hours": "Tự do",
+    "roomServices": ["Wifi miễn phí", "Hồ bơi"],
+    "roomImages": [
+        "https://picsum.photos/1000/700?random=1",
+        "https://picsum.photos/300/200?random=2",
+        "https://picsum.photos/700/700?random=3"
+    ],
+    "rules": [
+        "No Pets",
+        "No Smoking",
+        "Quiet Hours",
+        "Visitor Policy",
+        "Cleaning Fee"
+    ],
+    "address": "Bắc Từ Liên"
+}
+
+###
+
+DELETE {{baseUrl}}/room/{{roomId}}

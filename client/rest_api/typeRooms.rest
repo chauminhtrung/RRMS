@@ -1,0 +1,11 @@
+@baseUrl = http://localhost:8080
+
+@contentType = application/json
+
+POST {{baseUrl}}/type-rooms
+Content-Type: {{contentType}}
+Accept: {{contentType}} 
+
+{
+    "name": "Động bàn tơ 2"
+}

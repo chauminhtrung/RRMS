@@ -5,6 +5,7 @@ import java.util.UUID;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "type_rooms")
 public class TypeRoom {
 
@@ -19,6 +21,6 @@ public class TypeRoom {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID typeRoomId;
 
-    @Column(columnDefinition = "VARCHAR(50)")
+    @Column(columnDefinition = "VARCHAR(50)", unique = true)
     private String name;
 }

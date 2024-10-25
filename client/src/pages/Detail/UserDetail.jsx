@@ -27,10 +27,12 @@ const UserDetail = ({ item }) => {
         position: 'sticky',
         top: 20,
       }}>
-      <Avatar alt="Remy Sharp" sx={{ height: '75px', width: '75px' }} src="https://picsum.photos/500/500?random=5" />
+      <Avatar sx={{ height: '75px', width: '75px' }} src={item.avatar}>
+        {item?.motel.account.fullname}
+      </Avatar>
       <Typography variant="subtitle1">Chủ nhà: {item.motel.account.fullname}</Typography>
-      <Typography sx={{ color: 'lime' }} variant="overline">
-        Đã được chứng thực
+      <Typography sx={{ color: item.censor ? 'lime' : 'red' }} variant="overline">
+        {item.censor ? 'Đã được chứng thực' : 'Chưa chứng thực'}
       </Typography>
       <Grid
         container
@@ -58,7 +60,7 @@ const UserDetail = ({ item }) => {
               width: '100%',
             }}
             onClick={togleShowPhone}>
-            {showPhone ? item.motel.account.phone : 'Lấy số điện thoại'}
+            {showPhone ? item.phone : 'Lấy số điện thoại'}
           </Button>
         </Grid>
       </Grid>

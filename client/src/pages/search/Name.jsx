@@ -6,6 +6,7 @@ const Name = () => {
       sx={{
         gap: 1,
         m: 2,
+
         bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542'),
         color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894'),
       }}>

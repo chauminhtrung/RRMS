@@ -34,21 +34,25 @@ const VisuallyHiddenInput = styled('input')({
   whiteSpace: 'nowrap',
   width: 1,
 })
-const Profile = () => {
+const Profile = ({ setIsAdmin, username }) => {
   const [tabIndex, setTabIndex] = useState('1')
   const [selectedImage, setSelectedImage] = useState(null)
 
   const [profile, setProfile] = useState({})
+  useEffect(() => {
+    setIsAdmin(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleChange = (event, newValue) => {
     setTabIndex(newValue)
   }
 
   useEffect(() => {
-    getProfile('admin').then((res) => {
+    getProfile(username).then((res) => {
       setProfile(res.data.result)
     })
-  }, [])
+  }, [username])
 
   const handleImageChange = async (event) => {
     const image = event.target.files[0]
@@ -77,14 +81,8 @@ const Profile = () => {
             <Paper variant="outlined" sx={{ textAlign: 'center', position: 'relative' }}>
               <Box sx={{ position: 'relative', display: 'inline-block', mt: 3 }}>
                 <Avatar
-                  alt="User Avatar"
-                  src={
-                    selectedImage
-                      ? URL.createObjectURL(selectedImage)
-                      : profile.avatar
-                      ? profile.avatar
-                      : 'https://mui.com/static/images/avatar/2.jpg'
-                  }
+                  alt={profile.fullname}
+                  src={selectedImage ? URL.createObjectURL(selectedImage) : profile.avatar}
                   sx={{ width: 100, height: 100, margin: 'auto' }}
                 />
                 <IconButton

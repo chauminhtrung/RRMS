@@ -5,8 +5,13 @@ import FilterSearch from '../search/FilterSearch'
 import { data } from '~/utils/slider'
 import { sliderSettings } from '~/utils/common.js'
 import { wards_list } from '~/utils/wards_list'
-
-const RRMS = () => {
+import { useEffect } from 'react'
+import 'swiper/css'
+const RRMS = ({ setIsAdmin }) => {
+  useEffect(() => {
+    setIsAdmin(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   const renderList = (card, start, end) => {
     const listItems = []
     for (let i = start; i < end; i++) {
@@ -154,6 +159,7 @@ const RRMS = () => {
           </section>
         </div>
       </section>
+
       <section id="menu-home">
         <div className="contaienr">
           <div className="container-menu-home ">
@@ -859,7 +865,7 @@ const SliderButtons = () => {
   const swiper = useSwiper()
 
   return (
-    <div className="r-buttons" style={{ position: 'absolute', top: '16px', right: '205px' }}>
+    <div className="r-buttons d-none d-md-block" style={{ position: 'absolute', top: '16px', right: '205px' }}>
       <button onClick={() => swiper.slidePrev()}>&lt;</button>
       <button onClick={() => swiper.slideNext()}>&gt;</button>
     </div>

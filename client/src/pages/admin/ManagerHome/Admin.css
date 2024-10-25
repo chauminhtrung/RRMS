@@ -1,0 +1,457 @@
+
+.stepProgress {
+    position: relative;
+    padding-left: 45px;
+    list-style: none;
+}
+.stepProgress::before {
+    display: inline-block;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 15px;
+    width: 10px;
+    height: 100%;
+    border-left: 2px solid #CCC;
+}
+.stepProgress-item {
+    position: relative;
+    counter-increment: list;
+}
+.stepProgress-item:not(:last-child) {
+    padding-bottom: 20px;
+}
+.stepProgress-item::before {
+    display: inline-block;
+    content: '';
+    position: absolute;
+    left: -30px;
+    height: 100%;
+    width: 10px;
+}
+.stepProgress-item::after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: -39px;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #CCC;
+    border-radius: 50%;
+    background-color: #FFF;
+}
+
+
+.type-input-room .item{
+    width: 100%;
+    border: 1px solid #ccc;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+
+.stepProgress {
+    position: relative;
+    padding-left: 45px;
+    list-style: none;
+}
+.stepProgress::before {
+    display: inline-block;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 15px;
+    width: 10px;
+    height: 100%;
+    border-left: 2px solid #CCC;
+}
+.stepProgress-item {
+    position: relative;
+    counter-increment: list;
+}
+.stepProgress-item:not(:last-child) {
+    padding-bottom: 20px;
+}
+.stepProgress-item::before {
+    display: inline-block;
+    content: '';
+    position: absolute;
+    left: -30px;
+    height: 100%;
+    width: 10px;
+}
+.stepProgress-item::after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: -39px;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #CCC;
+    border-radius: 50%;
+    background-color: #FFF;
+}
+
+
+
+.account-payment{
+    border-radius: 10px;
+    border: 1px solid #68c3ed;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #e1f6ff;
+    margin-top: 10px;
+}
+
+.account-payment .item{
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    width: 33.33333%;
+}
+
+.account-payment .item .icon{
+    margin-right: 15px;
+}
+.info-account {
+    margin-top: 15px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+}
+
+.info-account .item {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.info-account .item.no-border{
+    border-bottom: 0px;
+}
+
+
+.card-feature2 {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  
+  .icon-collapse{
+    display: flex;
+    justify-content: flex-end;
+    padding: 0px
+}
+.icon-collapse button{
+    border: none;
+    background: none;
+}
+.tox .tox-tbtn{
+    background-color: #fffce5;
+    border: 1px solid #000;
+    margin-right: 5px;
+}
+.mce-content-body{
+    margin: 1rem auto 1rem auto!important;
+}
+
+
+.toolbar-container-sticky {
+    width: 30%;
+    position: fixed!important;
+    left: 50%;
+    bottom: 30px!important;
+    z-index: 1000!important; /* Ensure it's above other content */
+    background-color: white; /* Match the background color to your needs */
+    transform: translateX(-50%);
+}
+.tox:not(.tox-tinymce-inline).tox-tinymce--toolbar-bottom .tox-editor-header {
+    border: 1px solid #d5d5d5;
+    box-shadow: none;
+    padding: 8px 0;
+}
+
+.tox .tox-statusbar__branding svg {display: none;}
+
+
+
+.box-home, .item-home {
+    position: relative;
+}
+.icon-home{
+    border-radius: 100%;
+    width: 60px;
+    height: 60px;
+    background: hsla(0,0%,100%,.2);
+    color: #fff;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+}
+.icon-warning{
+    display: flex;
+    background-color: #ffe9e9;
+    border-radius: 100%;
+    color: red;
+    width: 50px;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+}
+.item-home .title {
+    flex:1;
+}
+.item-home h3{
+    font-size: 20px;
+    margin-top: 5px;
+    font-weight: bold
+}
+.item-home h3 span {
+    font-size: 18px;
+}
+
+.create-home {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    border-radius: 40px 0 0 0px;
+    width: 60px;
+    height: 55px;
+    background: hsla(0,0%,100%,.2);
+    z-index: 2;
+    color: #fff;
+    text-align: center;
+}
+.create-home span {
+    width: 40px;
+    height: 40px;
+    line-height: 30px;
+    background: #fff;
+    text-align: center;
+    color: #000;
+    border-radius: 50%;
+    display: flex;
+    margin: 8px 0 0 17px;
+    justify-content: center;
+    align-items: center;
+    border: 0.5px solid #ccc;
+}
+.box-home {
+    padding: 15px;
+    border-radius: 10px;
+    color: #fff!important;
+    display: block;
+    background-color: #ffffff !important;
+    border: 0.5px solid #eeeeee;
+    box-shadow: 0 4px 6px 0 rgb(0 0 0 / 6%);
+}
+
+.bt-home {
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    border-radius: 10px;
+    font-size: 30px;
+    margin: 0 0 20px 0;
+    background: hsla(0,0%,100%,.2);
+}
+
+.box-banner-home {
+    border-radius: 10px;
+    color: #fff;
+    overflow: hidden;
+}
+
+.txt-banner-home {
+    width: 70%;
+    float: left;
+    padding: 20px;
+}
+
+.box-banner-home img {
+    width: 30%;
+    float: left;
+}
+
+.txt-banner-home a {
+    text-decoration: underline;
+    color: #fff;
+}
+
+.span-purple {
+    background-color: #8433e5;
+}
+
+.span-blue {
+    background-color: #03a9f4;
+}
+
+.span-pink {
+    background-color: #ff046d;
+}
+
+
+.span-primary {
+    background-color: #20a9e7;
+}
+
+.span-primary-white {
+    background-color: #d0ffdf;
+    color: #20a9e7!important;
+}
+
+.span-primary-white .icon-home{
+    color: #20a9e7!important;
+}
+
+.span-primary-white .icon-home{
+    background: #f1fafe !important
+}
+
+.span-green {
+    background-color: #20a9e7;
+}
+
+.span-yellow {
+    background-color: #ff9800;
+}
+
+.span-blue-2 {
+    background-color: #018dff;
+}
+
+.span-red {
+    background-color: #ff6161;
+}
+
+.span-gray {
+    background-color: #696464;
+}
+
+.span-red-white {
+    background-color: #fff4f4;
+    color: red!important;
+}
+
+.span-red-white .icon-home{
+    color: red!important;
+}
+.span-red-white .icon-home{
+    background: hsl(0deg 100% 90.2% / 20%) !important;
+}
+
+.span-yellow-white {
+    background-color: #ffc1072e;
+    color: #ff4b00 !important;
+}
+
+.span-yellow-white .icon-home{
+    color: #ff4b00 !important;
+}
+.span-yellow-white .icon-home{
+    background: hsl(36deg 100% 50% / 40%)!important
+}
+
+.tabulator-menu.tabulator-popup-container {
+    width: 40%;
+    display: table;
+}
+
+.tabulator-menu .tabulator-menu-item {
+    width: 50%;
+    flex: 1;
+    display: inline-block;
+}
+
+
+
+.tabulator-row.done-background{
+    background-color: #4caf5029!important
+}
+
+.tabulator-row.cancel-background{
+    background-color: #eeeeee82!important
+}
+.tabulator-row.enable-background{
+    background-color: #ff57220f!important
+}
+
+/* TabulatorCustom.css */
+.tabulator {
+    border: 1px solid rgba(34,36,38,.15);
+    background-color: #fff;
+  }
+
+  .tabulator.celled {
+    border: 1px solid rgba(34,36,38,.15);
+  }
+  
+  .tabulator .tabulator-header {
+    background-color: #ffffff;
+  }
+  
+  .tabulator .tabulator-header .tabulator-col {
+    display: inline-flex;
+    position: relative;
+    box-sizing: border-box;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    background: #f9fafb;
+    text-align: left;
+    vertical-align: bottom;
+    overflow: hidden;
+    height: 70px;
+  }
+
+  .tabulator .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title {
+    margin-top: 10px;
+  }
+  
+  .tabulator-cell {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .tabulator .tabulator-row:hover {
+    background-color: #e3f5fc; /* Thay đổi màu nền của hàng khi hover */
+  }
+  
+  /* CSS cho hiệu ứng hover trên cột */
+  .tabulator .tabulator-header .tabulator-col:hover {
+    background: #e3f5fc; /* Thay đổi màu nền của cột khi hover */
+  }
+
+  .custom-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    position: absolute; /* Để vị trí tuyệt đối */
+    top: 60%; /* Giữa chiều dọc */
+    left: 50%; /* Giữa chiều ngang */
+    transform: translate(-50%, -50%); /* Canh giữa hoàn toàn */
+    z-index: 10; /* Để nó ở trên cùng nếu cần */
+  }
+  
+  .placeholder-image {
+    width: 300px; /* Điều chỉnh kích thước hình ảnh */
+    margin-bottom: 1px;
+  }
+  
+  .placeholder-text {
+    font-size: 22px; /* Kích thước chữ */
+    color: #939393; /* Màu chữ */
+    text-align: center; /* Căn giữa */
+    font-weight: 600;
+  }

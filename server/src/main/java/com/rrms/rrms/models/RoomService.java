@@ -4,7 +4,10 @@ import java.util.UUID;
 
 import jakarta.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "room_services")
 public class RoomService {
 
@@ -20,7 +24,8 @@ public class RoomService {
     private UUID roomServiceId;
 
     @ManyToOne
-    @JoinColumn(name = "room_id")
+    @JoinColumn(name = "room_id", nullable = false)
+    @JsonBackReference
     private Room room;
 
     @ManyToOne
