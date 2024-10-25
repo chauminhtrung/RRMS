@@ -1,6 +1,8 @@
 package com.rrms.rrms.controllers;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.Collections;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -14,8 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
-import java.util.Map;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Captcha Controller")
 @RestController

@@ -1,10 +1,30 @@
 package com.rrms.rrms.controllers;
 
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.nimbusds.jose.JOSEException;
 import com.rrms.rrms.dto.request.IntrospecTokenRequest;
 import com.rrms.rrms.dto.request.LoginRequest;
+import com.rrms.rrms.dto.request.LogoutRequest;
+import com.rrms.rrms.dto.request.RegisterRequest;
 import com.rrms.rrms.dto.response.LoginResponse;
 import com.rrms.rrms.dto.response.MessageTokenResponse;
+import com.rrms.rrms.dto.response.RegisterResponse;
 import com.rrms.rrms.enums.Roles;
 import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.models.Account;
@@ -20,6 +40,10 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +51,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequestMapping("/authen")
+@Slf4j
 public class AuthenController {
   @Autowired
   private IAccountService accountService;
@@ -38,10 +66,10 @@ public class AuthenController {
   @Autowired
   private IAuthorityService authorityService;
 
-  @Autowired
-  private IRoleService roleService;
-
-  private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+  @RequestMapping(value = "/login", method = RequestMethod.OPTIONS)
+  public ResponseEntity<Void> handleOptions() {
+    return ResponseEntity.ok().build();
+  }
 
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
@@ -89,68 +117,65 @@ public class AuthenController {
   }
 
   @PostMapping("/logout")
-  public ResponseEntity<?> logout(HttpServletRequest request) {
+  public ResponseEntity<?> logout(@RequestBody LogoutRequest request) {
     Map<String, Object> response = new HashMap<>();
     try {
-      request.getSession().invalidate(); // Xóa phiên làm việc
+      // Log token để kiểm tra xem token có được gửi đúng không
+      log.info("Token nhận được để logout: " + request.getToken());
 
-      // sử dụng JWT, bạn không cần làm gì ở đây, chỉ cần client không gửi token đó nữa.
+      // Gọi hàm logout của authorityService, nơi bạn xử lý việc đưa token vào blacklist
+      authorityService.logout(request);
+
+      // Trả về thông báo đăng xuất thành công
       response.put("status", true);
       response.put("message", "Đăng xuất thành công.");
       return ResponseEntity.ok(response);
+    } catch (ParseException | JOSEException e) {
+      // Xử lý lỗi liên quan đến token không hợp lệ
+      log.error("Lỗi khi phân tích token: " + e.getMessage(), e);
+      response.put("status", false);
+      response.put("message", "Token không hợp lệ: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     } catch (Exception ex) {
+      // Xử lý lỗi hệ thống không lường trước
+      log.error("Lỗi không mong muốn trong quá trình đăng xuất: " + ex.getMessage(), ex);
       response.put("status", false);
       response.put("message", "Đã xảy ra lỗi khi thực hiện đăng xuất.");
-      ex.printStackTrace();
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
   }
 
+
   @PostMapping("/register")
-  public ResponseEntity<?> register(@Valid @RequestBody Account account) {
-    Optional<Account> existingAccount = accountService.findAccountsByUsername(account.getUsername());
-    if (existingAccount.isPresent()) {
-      return ResponseEntity.badRequest().body("Tên người dùng đã được sử dụng");
-    }
-
+  public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest registerRequest) {
     try {
-      Account newAccount = new Account();
-      Heart heart = new Heart();
-      newAccount.setUsername(account.getUsername());
-      String encodedPassword = passwordEncoder.encode(account.getPassword());
-      newAccount.setPassword(encodedPassword);
-      newAccount.setPhone(account.getPhone());
-      newAccount.setFullname(account.getFullname());
-      newAccount.setEmail(account.getEmail());
-      newAccount.setBirthday(account.getBirthday());
-      newAccount.setGender(account.getGender());
-      newAccount.setCccd(account.getCccd());
-      newAccount.setHeart(heart);
-      heart.setAccount(newAccount);
-      accountService.save(newAccount);
+      // Đăng ký tài khoản mới
+      Account account = accountService.register(registerRequest);
 
-      Roles roleEnum = Roles.valueOf("CUSTOMER");
+      // Tạo đối tượng phản hồi
+      RegisterResponse response = new RegisterResponse();
+      response.setStatus(true);
+      response.setMessage("Đăng ký thành công");
+      response.setUsername(account.getUsername());
 
-      Optional<Role> existingRole = roleService.findRoleByName(roleEnum);
-      if (!existingRole.isPresent()) {
-        return ResponseEntity.badRequest().body("Role does not exist.");
-      }
+      // Trả về phản hồi
+      return ResponseEntity.ok(response);
 
-      Auth authority = new Auth();
-      authority.setAccount(newAccount);
-      authority.setRole(existingRole.get());
-      //authorityService.save(authority);
+    } catch (AppException ex) {
+      // Trường hợp tài khoản đã tồn tại hoặc lỗi khác
+      RegisterResponse response = new RegisterResponse();
+      response.setStatus(false);
+      response.setMessage(ex.getMessage());
 
-      return ResponseEntity.ok().body("Register successful");
-    } catch (IllegalArgumentException e) {
-      return ResponseEntity.badRequest().body("Invalid role name provided: " + e.getMessage());
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().body(e.getMessage());
+      // Trả về phản hồi lỗi
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    } catch (Exception ex) {
+      // Xử lý các lỗi khác không xác định
+      RegisterResponse response = new RegisterResponse();
+      response.setStatus(false);
+      response.setMessage("Đã xảy ra lỗi trong quá trình đăng ký.");
+
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
   }
-  //  @RequestMapping("/oauth2/login/success")
-  //  public String success(OAuth2AuthenticationToken oAuth2Token) {
-  //    accountService.loginOAuth2(oAuth2Token);
-  //    return "/home";
-  //  }
 }
