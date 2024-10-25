@@ -30,6 +30,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -41,10 +42,11 @@ public class AuthenController {
   @Autowired
   private IAuthorityService authorityService;
 
-  @Autowired
-  private IRoleService roleService;
 
-  private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+  @RequestMapping(value = "/login", method = RequestMethod.OPTIONS)
+  public ResponseEntity<Void> handleOptions() {
+    return ResponseEntity.ok().build();
+  }
 
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
