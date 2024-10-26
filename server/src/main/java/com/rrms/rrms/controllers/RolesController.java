@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.rrms.rrms.services.IRoleService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,6 +27,7 @@ public class RolesController {
   @Autowired
   IRoleService roleService;
 
+  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
   @GetMapping("/getAllRole")
   public ResponseEntity<?> getAllRole() {
     Map<String, Object> rs = new HashMap<>();
