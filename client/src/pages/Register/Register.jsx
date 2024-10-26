@@ -1,53 +1,74 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import axios from 'axios'
+import { useEffect, useState, useNavigate } from 'react';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const Register = ({ setIsAdmin }) => {
-  const [username, setUsername] = useState('')
-  const [phone, setPhone] = useState('')
-  const [password, setPassword] = useState('')
-  const [passwordConfirmation, setPasswordConfirmation] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
+  const [username, setUsername] = useState('');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const navigate = useNavigate()
 
   useEffect(() => {
-    setIsAdmin(false)
+    setIsAdmin(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   const handleRegister = async (event) => {
-    event.preventDefault() // Ngăn chặn hành vi mặc định của form
+    event.preventDefault(); // Ngăn chặn hành vi mặc định của form
 
     // Kiểm tra xem tất cả các trường đều được điền
     if (!username || !phone || !password || !passwordConfirmation) {
-      setErrorMessage('Vui lòng nhập đầy đủ thông tin.')
-      return
+      Swal.fire({
+        icon: 'warning',
+        title: 'Lỗi',
+        text: 'Vui lòng nhập đầy đủ thông tin.',
+      });
+      return;
     }
 
     if (password !== passwordConfirmation) {
-      setErrorMessage('Mật khẩu và xác nhận mật khẩu không khớp.')
-      return
+      Swal.fire({
+        icon: 'error',
+        title: 'Lỗi',
+        text: 'Mật khẩu và xác nhận mật khẩu không khớp.',
+      });
+      return;
     }
 
     const account = {
       username,
       phone,
       password,
-      // Thêm các trường khác nếu cần
-    }
+    };
 
     try {
-      const response = await axios.post('http://localhost:8080/authen/register', account)
-      alert(response.data) // Thông báo thành công
-      // Chuyển hướng người dùng đến trang đăng nhập hoặc trang khác nếu cần
+      const response = await axios.post('http://localhost:8080/authen/register', account);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Thành công',
+        text: response.data.message || 'Đăng ký thành công',
+      });
+
+      navigate('/login')
     } catch (error) {
-      // Xử lý lỗi và hiển thị thông báo lỗi
-      if (error.response) {
-        setErrorMessage(error.response.data) // Nhận thông báo lỗi từ backend
+      if (error.response && error.response.data) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Lỗi',
+          text: error.response.data.message || 'Có lỗi xảy ra, vui lòng thử lại.',
+        });
       } else {
-        setErrorMessage('Có lỗi xảy ra, vui lòng thử lại.')
+        Swal.fire({
+          icon: 'error',
+          title: 'Lỗi',
+          text: 'Có lỗi xảy ra, vui lòng thử lại.',
+        });
       }
     }
-  }
+  };
 
   return (
     <body
@@ -154,7 +175,6 @@ const Register = ({ setIsAdmin }) => {
                       </div>
                     </div>
                   </div>
-                  {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
                   <div className="form-group mb-2">
                     <button type="submit" className="btnSubmit btn btn-primary">
                       Đăng ký
