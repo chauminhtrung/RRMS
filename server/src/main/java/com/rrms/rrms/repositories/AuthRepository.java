@@ -8,5 +8,4 @@ import com.rrms.rrms.models.Auth;
 
 public interface AuthRepository extends JpaRepository<Auth, UUID> {
     Auth findAuthorityByAccount_Username(String username);
-
 }

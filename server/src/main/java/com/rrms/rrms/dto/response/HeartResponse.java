@@ -1,17 +1,15 @@
 package com.rrms.rrms.dto.response;
 
-import com.rrms.rrms.models.Account;
-import com.rrms.rrms.models.Room;
+import java.util.List;
+import java.util.UUID;
+
 import jakarta.persistence.*;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor

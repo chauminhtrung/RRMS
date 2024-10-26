@@ -5,9 +5,12 @@ import java.util.UUID;
 
 import com.rrms.rrms.dto.request.MotelRequest;
 import com.rrms.rrms.dto.response.MotelResponse;
-import com.rrms.rrms.models.Motel;
+import com.rrms.rrms.models.Account;
 
 public interface IMotelService {
+
+    Integer getTotalAreaByUsername(Account username);
+
     MotelResponse insert(MotelRequest motel);
 
     List<MotelResponse> findById(UUID id);
@@ -15,7 +18,6 @@ public interface IMotelService {
     List<MotelResponse> findAllByMotelName(String motelName);
 
     List<MotelResponse> findMotelByAccount_Username(String username);
-
 
     List<MotelResponse> findAll();
 
