@@ -79,12 +79,27 @@ export const updateMotel = async (motelId, Motel) => {
 export const deleteMotel = async (motelId) => {
   return await axios.delete(`${env.API_URL}/motels/${motelId}`)
 }
-export const getMotelByUsername = async (username) => {
-  return await axios.get(`${env.API_URL}/motels/get-motel-account?username=${username}`)
-}
 
-export const getMotelById = async (Id ) => {
-  return await axios.get(`${env.API_URL}/motels/get-motel-id?id=${Id}`)
+
+export const getMotelByUsername = async (username) => {  
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;  
+  return await axios.get(`${env.API_URL}/motels/get-motel-account?username=${username}`, {  
+      headers: {  
+          'Authorization': `Bearer ${token}`  
+      }  
+  });  
+}  
+
+export const getMotelById = async (Id) => {  
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;  
+  if (!Id) {  
+      throw new Error('ID không hợp lệ');  
+  }  
+  return await axios.get(`${env.API_URL}/motels/get-motel-id?id=${Id}`, {  
+      headers: {  
+          'Authorization': `Bearer ${token}`  
+      }  
+  });  
 }
 
 
