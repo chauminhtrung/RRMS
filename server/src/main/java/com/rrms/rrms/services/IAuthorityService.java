@@ -1,5 +1,7 @@
 package com.rrms.rrms.services;
 
+import java.text.ParseException;
+
 import com.nimbusds.jose.JOSEException;
 import com.rrms.rrms.dto.request.IntrospecTokenRequest;
 import com.rrms.rrms.dto.request.LoginRequest;
@@ -14,7 +16,7 @@ public interface IAuthorityService {
 
   IntrospecTokenResponse introspect(IntrospecTokenRequest request) throws ParseException, JOSEException;
 
-  void logout(LogoutRequest request)throws ParseException, JOSEException;
+  void logout(LogoutRequest request) throws ParseException, JOSEException;
 
   Auth save(Auth auth);
 }

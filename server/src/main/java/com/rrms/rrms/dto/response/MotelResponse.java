@@ -17,6 +17,7 @@ import lombok.experimental.FieldDefaults;
 public class MotelResponse implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
+
     UUID motelId;
     String motelName;
     Double area;

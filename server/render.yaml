@@ -1,0 +1,75 @@
+# render.yaml
+services:
+  - type: redis
+    name: redis
+    plan: starter
+    env:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+
+  - type: mysql
+    name: mysql
+    plan: standard
+    env:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_ROOT_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+
+  - type: web_service
+    name: elasticsearch
+    env:
+      xpack.security.enabled: "false"
+      discovery.type: "single-node"
+    dockerImage: docker.elastic.co/elasticsearch/elasticsearch:7.17.24
+    plan: standard
+    resources:
+      memory: 1G
+
+  - type: web_service
+    name: kibana
+    dockerImage: docker.elastic.co/kibana/kibana:7.17.24
+    env:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    plan: standard
+    resources:
+      memory: 512M
+    dependsOn:
+      - elasticsearch
+
+  - type: web_service
+    name: logstash
+    dockerImage: docker.elastic.co/logstash/logstash:7.17.24
+    env:
+      xpack.monitoring.enabled: "false"
+      ELASTICSEARCH_HOST: http://elasticsearch:9200
+    plan: standard
+    resources:
+      memory: 512M
+    dependsOn:
+      - elasticsearch
+
+  - type: web_service
+    name: rrms
+    env:
+      PORT: ${PORT}
+      DB_URL: ${DB_URL}
+      DB_USERNAME: ${DB_ROOT_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_USERNAME: ${REDIS_USERNAME}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
+      SECRET_KEY_CAPTCHA: ${SECRET_KEY_CAPTCHA}
+      JWT_SIGNER: ${JWT_SIGNER}
+    plan: standard
+    buildCommand: "./gradlew build"
+    startCommand: "java -jar build/libs/your-app.jar"
+    resources:
+      memory: 1G
+    dependsOn:
+      - mysql
+      - redis
+      - elasticsearch
+      - kibana
+      - logstash
