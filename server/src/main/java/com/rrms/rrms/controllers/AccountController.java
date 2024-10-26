@@ -6,6 +6,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +35,14 @@ public class AccountController {
 
   @Operation(summary = "Get all account")
   @GetMapping("/get-all-account")
-//  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
   public ResponseEntity<?> getAllAccount() {
+    var authen = SecurityContextHolder.getContext().getAuthentication();
+
+    log.info("Get all account {}", authen.getName());
+    authen.getAuthorities().forEach(grantedAuthority -> log.info("GrantedAuthority: {}", grantedAuthority.getAuthority()));
+    log.info("In method get Admin");
+
     Map<String, Object> rs = new HashMap<>();
     try {
       rs.put("status", true);
@@ -130,25 +137,6 @@ public class AccountController {
       log.error("Update Account failed", ex);
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(rs);
     }
-  }
-
-  @Operation(summary = "Get list account by username")
-  @GetMapping("/get-ListaccountByUsername")
-  public ResponseEntity<?> getListaccountByUsername(@RequestParam("username") String username) {
-    Map<String, Object> rs = new HashMap<>();
-    try {
-      rs.put("status", true);
-      rs.put("message", "Call api success");
-      rs.put("data", accountService.findListAccountsByUsername(username));
-      log.info("Get list account successfully: {}", username);
-    } catch (Exception ex) {
-      rs.put("status", false);
-      rs.put("message", "Call api failed");
-      rs.put("data", null);
-      ex.printStackTrace();
-      log.error("Get list account failed", ex);
-    }
-    return ResponseEntity.ok(rs);
   }
 
   @Operation(summary = "Get profile by username")

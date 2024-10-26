@@ -130,16 +130,6 @@ public class AccountService implements IAccountService {
         return accountRepository.save(account);
     }
 
-    @Override
-    public List<Account> findListAccountsByUsername(String username) {
-        return List.of();
-    }
-
-    @Override
-    public List<Account> findAllByRole(String role) {
-        return List.of();
-    }
-
     //    @Cacheable(value = "account", key = "#username")
     @Override
     public AccountResponse findByUsername(String username) {

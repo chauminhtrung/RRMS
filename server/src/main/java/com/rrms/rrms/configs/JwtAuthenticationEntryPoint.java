@@ -10,7 +10,9 @@ import java.io.IOException;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.stereotype.Component;
 
+@Component // Đánh dấu lớp này là bean của Spring
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
   @Override
@@ -27,7 +29,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         .build();
 
     ObjectMapper mapper = new ObjectMapper();
-
     response.getWriter().write(mapper.writeValueAsString(apiResponse));
     response.flushBuffer();
   }

@@ -135,6 +135,7 @@ public class AuthorityService implements IAuthorityService {
         .authenticated(true)                // Trạng thái xác thực thành công
         .username(account.getUsername())    // Tên người dùng
         .fullname(account.getFullname())    // Họ và tên đầy đủ
+        .phone(account.getPhone())
         .email(account.getEmail())          // Địa chỉ email
         .avatar(account.getAvatar())        // Ảnh đại diện (avatar)
         .birthday(account.getBirthday())    // Ngày sinh của người dùng
@@ -222,7 +223,6 @@ public class AuthorityService implements IAuthorityService {
   public Auth save(Auth auth) {
     return authRepository.save(auth);
   }
-
 
   private String verifyToken(String token) throws ParseException, JOSEException {
     try {

@@ -26,10 +26,6 @@ public interface IAccountService {
 
     Account updateAcc(String username, Account account);
 
-    List<Account> findListAccountsByUsername(String username);
-
-    List<Account> findAllByRole(String role);
-
     AccountResponse findByUsername(String username);
 
     AccountResponse save(AccountRequest accountRequest);

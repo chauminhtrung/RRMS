@@ -30,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,16 +50,14 @@ public class AuthenController {
   @Autowired
   private IAuthorityService authorityService;
 
-
-  @RequestMapping(value = "/login", method = RequestMethod.OPTIONS)
-  public ResponseEntity<Void> handleOptions() {
-    return ResponseEntity.ok().build();
-  }
-
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
     Map<String, Object> response = new HashMap<>();
     try {
+      var authen = SecurityContextHolder.getContext().getAuthentication();
+
+      log.info("Get all account {}", authen.getName());
+      authen.getAuthorities().forEach(grantedAuthority -> log.info("GrantedAuthority: {}", grantedAuthority.getAuthority()));
       Optional<Account> accountOptional = accountService.findByPhone(loginRequest.getPhone());
       if (accountOptional.isEmpty()) {
         response.put("status", false);

@@ -19,6 +19,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,17 +46,22 @@ public class MotelController {
                 .result(motelResponses)
                 .build();
     }
+
     @Operation(summary = "Get motel by id")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")//su dung phân quền phù hop theo role
     @GetMapping("/get-motel-id")
     public ApiResponse<List<MotelResponse>> getMotelbyid(@RequestParam UUID id) {
         List<MotelResponse> motelResponses = motelService.findById(id);
         return ApiResponse.<List<MotelResponse>>builder().code(HttpStatus.OK.value()).message("success").result(motelResponses).build();
     }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
     @GetMapping("/get-motel-account")
     public ApiResponse<List<MotelResponse>> getMotelbyaccount(@RequestParam String username) {
         List<MotelResponse> motelResponses = motelService.findMotelByAccount_Username(username);
         return ApiResponse.<List<MotelResponse>>builder().code(HttpStatus.OK.value()).message("success").result(motelResponses).build();
     }
+
     @Operation(summary = "Get all motels")
     @GetMapping()
     public ApiResponse<List<MotelResponse>> getMotels(@RequestParam String username) {
