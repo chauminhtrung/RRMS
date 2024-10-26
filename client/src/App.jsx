@@ -43,11 +43,12 @@ import ImageComparison from './pages/AI/ImageComparison'
 // import TestPage from './pages/TestPage'
 // import ValidCaptcha from './components/ValidCaptcha'
 import ImportFileExcel from './pages/admin/NavContentAdmin/ImportFileExcel'
+import MotelSetting from './pages/admin/MotelSettings/MotelSetting'
 
 function App() {
   const [username, setUsername] = useState('')
   const [avatar, setAvatar] = useState('')
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(null)
   //lay thong tin tro cua tk account truyen xuong cho trang chu tro
   const [isAdmin, setIsAdmin] = useState(false)
   const [isNavAdmin, setIsNavAdmin] = useState(true)
@@ -66,7 +67,7 @@ function App() {
     if (user) {
       setUsername(user.username)
       setAvatar(user.avatar)
-      setToken(user.token);
+      setToken(user.token)
       fetchMotelsByUsername(user.username)
     }
   }, [])
@@ -76,7 +77,14 @@ function App() {
       <Router>
         {/* <ValidCaptcha /> */}
         {!isAdmin ? (
-          <Header username={username} avatar={avatar} token={token} setUsername={setUsername} setAvatar={setAvatar} setToken={setToken}/>
+          <Header
+            username={username}
+            avatar={avatar}
+            token={token}
+            setUsername={setUsername}
+            setAvatar={setAvatar}
+            setToken={setToken}
+          />
         ) : (
           <></>
         )}
@@ -180,6 +188,7 @@ function App() {
             element={<ManagerCompanyAT setIsAdmin={setIsAdmin} motels={motels} setmotels={setmotels} />}
           />
           <Route path="/cai-dat" element={<ManagerSettings setIsAdmin={setIsAdmin} />} />
+          <Route path="/motelsetting" element={<MotelSetting setIsAdmin={setIsAdmin} />} />
           <Route
             path="/cai-dat/:motelId"
             element={<ManagerSettings setIsAdmin={setIsAdmin} motels={motels} setmotels={setmotels} />}
