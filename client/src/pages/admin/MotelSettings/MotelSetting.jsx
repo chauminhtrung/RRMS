@@ -278,62 +278,199 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                       </div>
                     </div>
                     <div id="contract_template" className="container tab-pane fade show">
-                      <br />
                       <div className="header-item">
                         <div className="container tab-pane">
-                          <br />
-                          <h3>Danh sách các mẫu hợp đồng đang có</h3>
-                          <p>Mẫu hợp đồng được sử dụng khi in dựa trên những thông tin bạn nhập</p>
+                          <div className="header-item">
+                            <h4 className="title-item">
+                              Tăng giá thuê
+                              <i style={{ fontSize: '14px', fontWeight: 'normal' }}>
+                                Tăng giá thuê cho tất cả các phòng hoặc chỉ 1 số phòng
+                                <br />
+                              </i>
+                            </h4>
+                          </div>
                         </div>
-                        <button
-                          className="add-round"
-                          data-bs-toggle="modal"
-                          data-bs-target="#contractTemplateModal"
-                          id="setting-contract-template">
-                          <span
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="left"
-                            title=""
-                            data-bs-original-title=" Tạo mẫu hợp đồng">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              className="feather feather-plus">
-                              <line x1="12" y1="5" x2="12" y2="19"></line>
-                              <line x1="5" y1="12" x2="19" y2="12"></line>
-                            </svg>
-                          </span>
-                        </button>
                       </div>
-                      <div id="list-contract-template" className="row" style={{ padding: '10PX' }}>
-                        <table className="table" id="table-contract-template">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <b>Tên mẫu hợp đồng</b>
-                              </td>
-                              <td>
-                                <b>Nhà đang áp dụng</b>
-                              </td>
-                              <td>
-                                <b>Thứ tự sắp xếp</b>
-                              </td>
-                              <td>
-                                <b>Chỉnh sửa</b>
-                              </td>
-                              <td>
-                                <b>Xóa</b>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
+                      <div id="contract-template" className="row" style={{ padding: '10PX' }}>
+                        <div className="col-12">
+                          <div className="form-floating">
+                            <input
+                              data-format="string"
+                              type="text"
+                              className="form-control"
+                              name="job"
+                              value="2.222.222"
+                              id="setting_info_job"
+                              placeholder="Giá thuê mới"
+                              required=""
+                            />
+                            <label htmlFor="setting_info_job">
+                              Giá thuê mới <span className="text-danger">*</span>
+                            </label>
+                            <div className="invalid-feedback">Vui lòng nhập công việc của bạn</div>
+                          </div>
+                        </div>
+                        <hr className="my-2" />
+                        <div className="col-12">
+                          <div className="header-item">
+                            <div className="header-item">
+                              <p className="title-item fw-bold">
+                                Chọn phòng muốn áp dụng
+                                <i style={{ fontSize: '14px', fontWeight: 'normal' }}>Danh sách phòng chọn áp dụng</i>
+                              </p>
+                            </div>
+                            <div>
+                              Chọn tất cả
+                              <input class="form-check-input ms-2" type="checkbox" value="" />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-md-3 col-sm-3 col-xs-12">
+                            <div className="row border pt-2 pb-3 m-1">
+                              <div className="col-md-3 col-sm-3 col-xs-12">
+                                <input class="form-check-input" type="checkbox" />
+                              </div>
+                              <div className="col-md-9 col-sm-9 col-xs-12">
+                                Phòng 1
+                                <br />
+                                <span className="fw-bold">2.222.222đ</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-md-3 col-sm-3 col-xs-12">
+                            <div className="row border pt-2 pb-3 m-1">
+                              <div className="col-md-3 col-sm-3 col-xs-12">
+                                <input class="form-check-input" type="checkbox" />
+                              </div>
+                              <div className="col-md-9 col-sm-9 col-xs-12">
+                                Phòng 1
+                                <br />
+                                <span className="fw-bold">2.222.222đ</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-md-3 col-sm-3 col-xs-12">
+                            <div className="row border pt-2 pb-3 m-1">
+                              <div className="col-md-3 col-sm-3 col-xs-12">
+                                <input class="form-check-input" type="checkbox" />
+                              </div>
+                              <div className="col-md-9 col-sm-9 col-xs-12">
+                                Phòng 1
+                                <br />
+                                <span className="fw-bold">2.222.222đ</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-md-3 col-sm-3 col-xs-12">
+                            <div className="row border pt-2 pb-3 m-1">
+                              <div className="col-md-3 col-sm-3 col-xs-12">
+                                <input class="form-check-input" type="checkbox" />
+                              </div>
+                              <div className="col-md-9 col-sm-9 col-xs-12">
+                                Phòng 1
+                                <br />
+                                <span className="fw-bold">2.222.222đ</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-md-3 col-sm-3 col-xs-12">
+                            <div className="row border pt-2 pb-3 m-1">
+                              <div className="col-md-3 col-sm-3 col-xs-12">
+                                <input class="form-check-input" type="checkbox" />
+                              </div>
+                              <div className="col-md-9 col-sm-9 col-xs-12">
+                                Phòng 1
+                                <br />
+                                <span className="fw-bold">2.222.222đ</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-md-3 col-sm-3 col-xs-12">
+                            <div className="row border pt-2 pb-3 m-1">
+                              <div className="col-md-3 col-sm-3 col-xs-12">
+                                <input class="form-check-input" type="checkbox" />
+                              </div>
+                              <div className="col-md-9 col-sm-9 col-xs-12">
+                                Phòng 1
+                                <br />
+                                <span className="fw-bold">2.222.222đ</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-md-3 col-sm-3 col-xs-12">
+                            <div className="row border pt-2 pb-3 m-1">
+                              <div className="col-md-3 col-sm-3 col-xs-12">
+                                <input class="form-check-input" type="checkbox" />
+                              </div>
+                              <div className="col-md-9 col-sm-9 col-xs-12">
+                                Phòng 1
+                                <br />
+                                <span className="fw-bold">2.222.222đ</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-md-3 col-sm-3 col-xs-12">
+                            <div className="row border pt-2 pb-3 m-1">
+                              <div className="col-md-3 col-sm-3 col-xs-12">
+                                <input class="form-check-input" type="checkbox" />
+                              </div>
+                              <div className="col-md-9 col-sm-9 col-xs-12">
+                                Phòng 1
+                                <br />
+                                <span className="fw-bold">2.222.222đ</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-md-3 col-sm-3 col-xs-12">
+                            <div className="row border pt-2 pb-3 m-1">
+                              <div className="col-md-3 col-sm-3 col-xs-12">
+                                <input class="form-check-input" type="checkbox" />
+                              </div>
+                              <div className="col-md-9 col-sm-9 col-xs-12">
+                                Phòng 1
+                                <br />
+                                <span className="fw-bold">2.222.222đ</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-md-3 col-sm-3 col-xs-12">
+                            <div className="row border pt-2 pb-3 m-1">
+                              <div className="col-md-3 col-sm-3 col-xs-12">
+                                <input class="form-check-input" type="checkbox" />
+                              </div>
+                              <div className="col-md-9 col-sm-9 col-xs-12">
+                                Phòng 1
+                                <br />
+                                <span className="fw-bold">2.222.222đ</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-md-3 col-sm-3 col-xs-12">
+                            <div className="row border pt-2 pb-3 m-1">
+                              <div className="col-md-3 col-sm-3 col-xs-12">
+                                <input class="form-check-input" type="checkbox" />
+                              </div>
+                              <div className="col-md-9 col-sm-9 col-xs-12">
+                                Phòng 1
+                                <br />
+                                <span className="fw-bold">2.222.222đ</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-md-3 col-sm-3 col-xs-12">
+                            <div className="row border pt-2 pb-3 m-1">
+                              <div className="col-md-3 col-sm-3 col-xs-12">
+                                <input class="form-check-input" type="checkbox" />
+                              </div>
+                              <div className="col-md-9 col-sm-9 col-xs-12">
+                                Phòng 1
+                                <br />
+                                <span className="fw-bold">2.222.222đ</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div id="on_off" className="container tab-pane fade show">
