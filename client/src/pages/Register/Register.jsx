@@ -1,12 +1,15 @@
-import { useEffect, useState, useNavigate } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material';  
 
 const Register = ({ setIsAdmin }) => {
   const [username, setUsername] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
+  const [userType, setUserType] = useState('CUSTOMER'); 
+
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const navigate = useNavigate()
 
@@ -41,6 +44,7 @@ const Register = ({ setIsAdmin }) => {
       username,
       phone,
       password,
+      userType,
     };
 
     try {
@@ -113,6 +117,12 @@ const Register = ({ setIsAdmin }) => {
             <div className="row login-form-container">
               <div className="col-12 login-form-1" style={{ backgroundColor: '#fff' }}>
                 <form onSubmit={handleRegister} method="POST" className="needs-validation" id="login-form" noValidate>
+                  <FormControl component="fieldset">  
+                    <RadioGroup row value={userType} onChange={(e) => setUserType(e.target.value)}>  
+                      <FormControlLabel value="HOST" control={<Radio />} label="Tôi là Chủ nhà, Nhân viên" />  
+                      <FormControlLabel value="CUSTOMER" control={<Radio />} label="Tôi tìm nhà trọ, phòng trọ" />  
+                    </RadioGroup>  
+                  </FormControl>
                   <div className="row g-2">
                     <div className="col-6">
                       <div className="form-group mb-2">

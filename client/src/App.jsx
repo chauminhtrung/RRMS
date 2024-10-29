@@ -7,6 +7,7 @@ import Chart from './pages/Charts/Chart'
 import Header from './layouts/Header/Header'
 import Search from './pages/search/Search'
 import Footer from './layouts/Footer/Footer'
+import GoogleLoginRedirect from './pages/Login/GoogleLoginRedirect'
 import Login from './pages/Login/Login'
 import Register from './pages/Register/Register'
 import Forgot_Password from './pages/Forgot-Password/Forgot_Password'
@@ -93,6 +94,10 @@ function App() {
           <Route
             path="/login"
             element={<Login setUsername={setUsername} setAvatar={setAvatar} setIsAdmin={setIsAdmin} />}
+          />
+          <Route
+            path="/google-redirect"
+            element={<GoogleLoginRedirect setUsername={setUsername} setAvatar={setAvatar} />}
           />
           <Route path="/forgot-password" element={<Forgot_Password setIsAdmin={setIsAdmin} />} />
           <Route path="/chart" element={<Chart setIsAdmin={setIsAdmin} />} />
