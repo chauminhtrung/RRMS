@@ -16,6 +16,8 @@ public interface IAccountService {
 
     Optional<Account> findByPhone(String phone);
 
+    Optional<Account> findByEmail(String email);
+
     Account register(RegisterRequest request);
 
     Optional<Account> login(String phone, String password);

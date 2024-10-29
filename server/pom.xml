@@ -42,13 +42,6 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-
-        <!-- Spring Boot Starter OAuth2 Resource Server: Cung cấp OAuth2 Resource Server cho bảo mật API -->
-        <!--		<dependency>-->
-        <!--			<groupId>org.springframework.boot</groupId>-->
-        <!--			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>-->
-        <!--		</dependency>-->
-
         <!-- Spring Boot Starter Validation: Hỗ trợ xác thực dữ liệu input thông qua Hibernate Validator -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -62,21 +55,26 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- Spring Dotenv: Hỗ trợ quản lý biến môi trường từ tệp .env cho ứng dụng Spring -->
         <dependency>
             <groupId>me.paulschwarz</groupId>
             <artifactId>spring-dotenv</artifactId>
             <version>2.5.4</version>
         </dependency>
 
+        <!-- Spring Data Redis: Hỗ trợ tích hợp Redis để lưu trữ và truy xuất dữ liệu, giúp quản lý cache và session -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
+        <!-- Spring Data Elasticsearch: Hỗ trợ tích hợp Elasticsearch cho việc tìm kiếm và phân tích dữ liệu hiệu quả -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
         </dependency>
+
+        <!-- Logstash Logback Encoder: Cung cấp các encoder cho Logback để ghi log dưới định dạng JSON, tương thích với Logstash -->
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
@@ -112,6 +110,7 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Springdoc OpenAPI: Hỗ trợ tạo tài liệu API tự động cho ứng dụng Spring sử dụng OpenAPI Specification, cung cấp giao diện người dùng để kiểm tra các endpoint -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
@@ -155,21 +154,19 @@
             <scope>test</scope>
         </dependency>
 
-        <!--		<dependency>-->
-        <!--			<groupId>org.springframework.boot</groupId>-->
-        <!--			<artifactId>spring-boot-starter-security</artifactId>-->
-        <!--		</dependency>-->
-
+        <!-- Spring Boot OAuth2 Resource Server: Cung cấp khả năng triển khai server tài nguyên hỗ trợ OAuth2 cho ứng dụng Spring -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
         </dependency>
 
+        <!-- Spring Security Core: Cung cấp các tính năng bảo mật cơ bản cho ứng dụng Spring, bao gồm xác thực và phân quyền người dùng -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
         </dependency>
 
+        <!-- DataFaker: Thư viện tạo dữ liệu giả cho các mục đích kiểm thử và phát triển, giúp tạo dữ liệu mẫu nhanh chóng và hiệu quả -->
         <dependency>
             <groupId>net.datafaker</groupId>
             <artifactId>datafaker</artifactId>
@@ -182,8 +179,20 @@
             <artifactId>nimbus-jose-jwt</artifactId>
             <version>9.37.2</version>
         </dependency>
-    </dependencies>
 
+        <!-- Spring Boot Security: Cung cấp các tính năng bảo mật cho ứng dụng Spring Boot, bao gồm xác thực và phân quyền người dùng -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!-- Spring Boot OAuth2 Client: Cung cấp khả năng tích hợp OAuth2 cho ứng dụng Spring Boot, cho phép ứng dụng tương tác với các dịch vụ OAuth2 như Google, Facebook, v.v. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
+
+    </dependencies>
     <build>
         <plugins>
             <plugin>

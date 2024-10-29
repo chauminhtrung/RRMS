@@ -69,7 +69,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
       });  
     }  
   };
-  
+  const tokenExists = sessionStorage.getItem('user') !== null; 
   return (
     <body>
       <div className="ct-appwrapper aw__sa4yob3" style={{ '--sa4yob3-0': '#fff', '--sa4yob3-1': 'inherit' }}>
@@ -719,21 +719,22 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                             <div className="clearfix"></div>
                           </a>
                         </div>
-                        <div className="aw__l1txzw95">  
-                          <a   
-                            className="aw__iys36jq"   
-                            target="_self"   
-                            rel="noreferrer"   
-                            onClick={handleLogout} 
-                            
-                          >  
-                            <div className="aw__l1uq3g0v">  
-                              <img className="aw__i1x7vrum" src="./setting.svg" alt="Đơn bán" />  
-                            </div>  
-                            <div className="aw__r1o9ejq6">Đăng xuất</div>  
-                            <div className="clearfix"></div>  
-                          </a>  
-                        </div> 
+                        {tokenExists && ( // Only show logout if user is logged in  
+                          <div className="aw__l1txzw95">  
+                            <a   
+                              className="aw__iys36jq"   
+                              target="_self"   
+                              rel="noreferrer"   
+                              onClick={handleLogout}   
+                            >  
+                              <div className="aw__l1uq3g0v">  
+                                <img className="aw__i1x7vrum" src="./setting.svg" alt="Đăng xuất" />  
+                              </div>  
+                              <div className="aw__r1o9ejq6">Đăng xuất</div>  
+                              <div className="clearfix"></div>  
+                            </a>  
+                          </div>  
+                        )} 
                       </div>
                     </div>
                   ) : (
