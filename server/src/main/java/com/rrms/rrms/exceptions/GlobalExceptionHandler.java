@@ -24,11 +24,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = AccessDeniedException.class)
     public ResponseEntity<ApiResponse> handlingAccessDeniedException(AccessDeniedException e) {
         ApiResponse apiResponse = ApiResponse.builder()
-            .code(ErrorCode.UNAUTHORIZED.getCode())
-            .message(ErrorCode.UNAUTHORIZED.getMessage())
-            .build();
+                .code(ErrorCode.UNAUTHORIZED.getCode())
+                .message(ErrorCode.UNAUTHORIZED.getMessage())
+                .build();
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(apiResponse);
     }
-
 }

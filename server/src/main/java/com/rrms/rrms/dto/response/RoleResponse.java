@@ -1,8 +1,8 @@
 package com.rrms.rrms.dto.response;
 
-import com.rrms.rrms.models.Permission;
 import java.util.Set;
 import java.util.UUID;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,8 +16,8 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoleResponse {
-  UUID roleId;
-  String roleName;
-  String roleDescription;
-  Set<PermissionResponse> permissions;
+    UUID roleId;
+    String roleName;
+    String roleDescription;
+    Set<PermissionResponse> permissions;
 }

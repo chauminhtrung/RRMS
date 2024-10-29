@@ -92,8 +92,8 @@ public class HeartController {
 
     @Operation(summary = "Remove heart")
     @PostMapping("/removeHeart")
-    public ApiResponse<Boolean> removeHeart(@RequestParam("username") String username,
-            @RequestParam("idRoom") UUID idRoom) {
+    public ApiResponse<Boolean> removeHeart(
+            @RequestParam("username") String username, @RequestParam("idRoom") UUID idRoom) {
         AccountResponse accountResponse = accountService.findByUsername(username);
         RoomDetailResponse roomDetailResponse = roomService.getRoomById(idRoom);
         if (accountResponse != null && roomDetailResponse != null) {
@@ -121,5 +121,4 @@ public class HeartController {
                 .result(false)
                 .build();
     }
-
 }
