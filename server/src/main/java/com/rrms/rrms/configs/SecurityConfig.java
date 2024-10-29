@@ -24,7 +24,17 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-  private final String[] PUBLIC_ENDPOINTS = {"/", "/authen/login", "/authen/introspect", "/authen/register", "/authen/logout"};
+  private final String[] PUBLIC_ENDPOINTS_POST = {
+      "/",
+      "/authen/login",
+      "/authen/introspect",
+      "/authen/register",
+      "/authen/logout"
+  };
+  private final String[] PUBLIC_ENDPOINTS_GET = {
+      "/",
+      "/authen/login/oauth2"
+  };
 
   @Value("${jwt.signer-key}")
   private String signerKey;
@@ -34,8 +44,16 @@ public class SecurityConfig {
     http.cors(withDefaults());
 
     http.authorizeHttpRequests(request ->
-        request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+        request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS_POST).permitAll()
+            .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS_GET).permitAll()
             .anyRequest().authenticated());
+
+    // Cấu hình OAuth2 Login với Google
+    http.oauth2Login(oauth2 -> oauth2
+        .loginPage("/authen/login") // trang đăng nhập mặc định
+        .defaultSuccessUrl("/home") // trang chuyển hướng sau đăng nhập thành công
+        .failureUrl("/authen/login?error=true") // trang chuyển hướng khi đăng nhập thất bại
+    );
 
     http.oauth2ResourceServer(oauth2 ->
         oauth2.jwt(jwtConfigurer ->
