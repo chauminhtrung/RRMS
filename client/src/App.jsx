@@ -175,7 +175,7 @@ function App() {
             }
           />
 
-          <Route path="/roomManagement" element={<RoomManagement setIsAdmin={setIsAdmin} />} />
+          <Route path="/adminManage/*" element={<AdminManage setIsAdmin={setIsAdmin} />} /> 
           <Route path="/AdminStatis" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
           <Route path="/bao-cao" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
 
