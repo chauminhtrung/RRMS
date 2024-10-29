@@ -1,5 +1,6 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,5 +101,15 @@ public class SearchService implements ISearchService {
     public List<RoomSearchResponse> findByAddressFuzzy(String keyword) {
         log.info("Fuzzy search address: {}", keyword);
         return roomRepositoryElasticsearch.findByAddressFuzzy(keyword);
+    }
+
+    @Override
+    public List<RoomDetailResponse> findByAuthenIs(Boolean authenis) {
+        return roomRepository.findAllByAuthenIs(authenis).stream().map(roomMapper::toRoomDetailResponse).collect(Collectors.toList()) ;
+    }
+
+    @Override
+    public List<RoomDetailResponse> findAllByDatenew() {
+        return roomRepository.findAllByDatenew().stream().map(roomMapper::toRoomDetailResponse).collect(Collectors.toList()) ;
     }
 }

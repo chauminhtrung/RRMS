@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RegisterResponse {
-  boolean status;
-  String message;
-  String username;
+    boolean status;
+    String message;
+    String username;
 }

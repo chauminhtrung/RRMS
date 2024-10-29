@@ -2,11 +2,10 @@ package com.rrms.rrms.dto.response;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import com.rrms.rrms.enums.Gender;
-import com.rrms.rrms.enums.Roles;
 
-import java.util.List;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

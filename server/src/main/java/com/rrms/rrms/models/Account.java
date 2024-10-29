@@ -2,12 +2,12 @@ package com.rrms.rrms.models;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.*;
 
 import com.rrms.rrms.enums.Gender;
 
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -59,7 +59,7 @@ public class Account {
 
     public List<String> getRoles() {
         return authorities.stream()
-            .map(auth -> auth.getRole().getRoleName().name())
-            .collect(Collectors.toList());
+                .map(auth -> auth.getRole().getRoleName().name())
+                .collect(Collectors.toList());
     }
 }

@@ -1,7 +1,5 @@
 package com.rrms.rrms.dto.request;
 
-import com.rrms.rrms.enums.Gender;
-import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RegisterRequest {
-  String username;
-  String phone;
-  String password;
+    String username;
+    String phone;
+    String password;
 }

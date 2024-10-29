@@ -1,5 +1,6 @@
 package com.rrms.rrms.repositories;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,4 +26,9 @@ public interface RoomRepository extends JpaRepository<Room, UUID> {
     List<Room> findByAddress(String address);
 
     List<Room> findAllByMotel_Account(Account account);
+
+    List<Room> findAllByAuthenIs(Boolean authenIs);
+
+    @Query("SELECT r FROM Room r ORDER BY r.datenew DESC")
+    List<Room> findAllByDatenew();
 }

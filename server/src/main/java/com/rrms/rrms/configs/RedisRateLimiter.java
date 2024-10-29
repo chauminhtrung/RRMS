@@ -1,11 +1,12 @@
 package com.rrms.rrms.configs;
 
-import lombok.extern.slf4j.Slf4j;
+import java.time.Duration;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component

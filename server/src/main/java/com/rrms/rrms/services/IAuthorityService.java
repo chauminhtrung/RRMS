@@ -9,14 +9,13 @@ import com.rrms.rrms.dto.request.LogoutRequest;
 import com.rrms.rrms.dto.response.IntrospecTokenResponse;
 import com.rrms.rrms.dto.response.LoginResponse;
 import com.rrms.rrms.models.Auth;
-import java.text.ParseException;
 
 public interface IAuthorityService {
-  LoginResponse loginResponse(LoginRequest request);
+    LoginResponse loginResponse(LoginRequest request);
 
-  IntrospecTokenResponse introspect(IntrospecTokenRequest request) throws ParseException, JOSEException;
+    IntrospecTokenResponse introspect(IntrospecTokenRequest request) throws ParseException, JOSEException;
 
-  void logout(LogoutRequest request) throws ParseException, JOSEException;
+    void logout(LogoutRequest request) throws ParseException, JOSEException;
 
-  Auth save(Auth auth);
+    Auth save(Auth auth);
 }
