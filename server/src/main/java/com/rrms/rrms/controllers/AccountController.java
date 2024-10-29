@@ -2,10 +2,13 @@ package com.rrms.rrms.controllers;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.request.ChangePasswordRequest;
@@ -32,7 +35,14 @@ public class AccountController {
 
   @Operation(summary = "Get all account")
   @GetMapping("/get-all-account")
+  @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
   public ResponseEntity<?> getAllAccount() {
+    var authen = SecurityContextHolder.getContext().getAuthentication();
+
+    log.info("Get all account {}", authen.getName());
+    authen.getAuthorities().forEach(grantedAuthority -> log.info("GrantedAuthority: {}", grantedAuthority.getAuthority()));
+    log.info("In method get Admin");
+
     Map<String, Object> rs = new HashMap<>();
     try {
       rs.put("status", true);
@@ -43,7 +53,6 @@ public class AccountController {
       rs.put("status", false);
       rs.put("message", "Call api failed");
       rs.put("data", null);
-      ex.printStackTrace();
       log.error("Get all account failed", ex);
     }
     return ResponseEntity.ok(rs);
@@ -51,34 +60,32 @@ public class AccountController {
 
   @Operation(summary = "Get account by username")
   @GetMapping("/get-account/{username}")
-  public ResponseEntity<?> getAccount(@PathVariable String username) {
-    Optional<Account> ac = accountService.findAccountsByUsername(username);
-    if (ac.isPresent()) {
-      log.info("Get account successfully: {}", username);
-      return ResponseEntity.ok(ac);
-    }
-    log.error("Get account failed");
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Call api failed");
-  }
-
-  @Operation(summary = "Get account by username")
-  @GetMapping("/get-account")
-  public ResponseEntity<?> getProductByIdManager(@RequestParam("username") String username) {
+  @PostAuthorize("returnObject.body.phone == authentication.name")
+  public ResponseEntity<?> getAccountByUsername(@PathVariable String username) {
     Map<String, Object> rs = new HashMap<>();
     try {
+      AccountResponse account = accountService.findByUsername(username);
+
+      // Log giá trị của account.username và authentication.name để kiểm tra
+      log.info("Username from account: {}", account.getPhone());
+      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      log.info("Username from authentication: {}", authentication.getName());
+
       rs.put("status", true);
-      rs.put("message", "Call api success");
-      rs.put("data", accountService.findAccountsByUsername(username));
-      log.info("Get account successfully: {}", username);
+      rs.put("message", "Call API success");
+      rs.put("data", account);
+      log.info("Get account by Username successfully");
+      return ResponseEntity.ok(account);
     } catch (Exception ex) {
       rs.put("status", false);
-      rs.put("message", "Call api failed");
+      rs.put("message", "Call API failed");
       rs.put("data", null);
-      ex.printStackTrace();
-      log.error("Get account failed", ex);
+      log.error("Get account by Username failed", ex);
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(rs);
     }
-    return ResponseEntity.ok(rs);
   }
+
+
 
   @Operation(summary = "Delete account by username")
   @DeleteMapping("/delete")
@@ -130,25 +137,6 @@ public class AccountController {
       log.error("Update Account failed", ex);
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(rs);
     }
-  }
-
-  @Operation(summary = "Get list account by username")
-  @GetMapping("/get-ListaccountByUsername")
-  public ResponseEntity<?> getListaccountByUsername(@RequestParam("username") String username) {
-    Map<String, Object> rs = new HashMap<>();
-    try {
-      rs.put("status", true);
-      rs.put("message", "Call api success");
-      rs.put("data", accountService.findListAccountsByUsername(username));
-      log.info("Get list account successfully: {}", username);
-    } catch (Exception ex) {
-      rs.put("status", false);
-      rs.put("message", "Call api failed");
-      rs.put("data", null);
-      ex.printStackTrace();
-      log.error("Get list account failed", ex);
-    }
-    return ResponseEntity.ok(rs);
   }
 
   @Operation(summary = "Get profile by username")

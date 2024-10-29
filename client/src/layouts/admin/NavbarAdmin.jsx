@@ -1,23 +1,29 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useLocation, useNavigate } from 'react-router-dom'
 import './NavbarAdmin.css'
 import { useEffect, useState } from 'react'
 import NavWData from './NavWData'
-import { getMotelByname } from '~/apis/apiClient'
-const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) => {
-  const { motelName } = useParams() // Lấy tham số motelName từ URL
+import { getMotelById } from '~/apis/apiClient'
+import Swal from 'sweetalert2';
+import { env } from '~/configs/environment';
+
+
+const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels,setUsername,setAvatar, setToken }) => {
+  const { motelId } = useParams() // Lấy tham số motelId từ URL
+  const location = useLocation();
   const [motel, setmotel] = useState(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     // Nếu có danh sách nhà trọ và không có tên cụ thể từ URL
-    if (motels && motels.length > 0 && !motelName) {
+    if (motels && motels.length > 0 && !motelId) {
       setmotel(motels[0]) // Cập nhật phòng trọ đầu tiên nếu tồn tại dữ liệu
     } else {
       // Nếu có tên nhà trọ từ URL, lấy dữ liệu bằng API
-      getMotelByname(motelName).then((res) => {
+      getMotelById(motelId).then((res) => {
         setmotel(res.data.result[0])
       })
     }
-  }, [motels, motelName, getMotelByname]) // Thêm các dependencies cần thiết vào mảng dependencies
+  }, [motels, motelId]) // Thêm các dependencies cần thiết vào mảng dependencies
 
   // Theo dõi khi motel thay đổi để kiểm tra giá trị
   useEffect(() => {
@@ -27,6 +33,62 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) 
     }
   }, [motel]) // Chỉ chạy khi motel thay đổi
 
+  
+  const handleLogout = async () => {  
+    const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;  
+  
+    if (!token) {  
+      Swal.fire({  
+        icon: 'warning',  
+        title: 'Thông báo',  
+        text: 'Không tìm thấy token, vui lòng đăng nhập lại.',  
+      });  
+      return;  
+    }  
+  
+    const requestPayload = { token };  
+  
+    try {  
+      const response = await fetch(`${env.API_URL}/authen/logout`, {  
+        method: 'POST',  
+        headers: {  
+          'Content-Type': 'application/json',  
+          'Authorization': `Bearer ${token}`  // Thêm Authorization header nếu server yêu cầu  
+        },  
+        body: JSON.stringify(requestPayload)  
+      });  
+  
+      if (response.ok) {  
+        // Xoá thông tin người dùng sau khi đăng xuất thành công  
+        sessionStorage.removeItem('user');  
+        setToken(null);     // Xóa token khỏi state  
+        setUsername('');    // Cập nhật username về trống  
+        setAvatar('');      // Cập nhật avatar về mặc định  
+        navigate('/login')
+        Swal.fire({  
+          icon: 'success',  
+          title: 'Thành công',  
+          text: 'Đăng xuất thành công!',  
+        });  
+      } else {  
+        const errorData = await response.json();  
+        console.error('Lỗi từ server:', errorData);  
+        Swal.fire({  
+          icon: 'error',  
+          title: 'Đăng xuất thất bại',  
+          text: `Lỗi: ${errorData.message}`,  
+        });  
+      }  
+    } catch (error) {  
+      console.error('Đã xảy ra lỗi khi đăng xuất:', error);  
+      Swal.fire({  
+        icon: 'error',  
+        title: 'Lỗi',  
+        text: 'Đã xảy ra lỗi khi thực hiện đăng xuất.',  
+      });  
+    }  
+  };
+  
   return (
     <header>
       <div className="header-inner">
@@ -78,29 +140,27 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) 
                   </li>
                 </ul>
                 <ul className="topbar-items main-menu-right navbar-nav">
-                  <li className="nav-item menu-item active">
-                    <Link to={motel ? `/quanlytro/${motel.motelName}` : '/quanlytro'} className="nav-link ">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="feather feather-home">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                      </svg>
-                      <span style={{ marginTop: '5px' }} className="text">
-                        {motel ? 'quản lý trọ' : 'quản lý trọ'}
-                      </span>
-                    </Link>
+                  <li className={`nav-item menu-item ${location.pathname === (motel ? `/quanlytro/${motel.motelId}` : '/quanlytro') ? 'active' : ''}`}>  
+                    <Link to={motel ? `/quanlytro/${motel.motelId}` : '/quanlytro'} className="nav-link ">  
+                      <svg  
+                        xmlns="http://www.w3.org/2000/svg"  
+                        width="24"  
+                        height="24"  
+                        viewBox="0 0 24 24"  
+                        fill="none"  
+                        stroke="currentColor"  
+                        strokeWidth="2"  
+                        strokeLinecap="round"  
+                        strokeLinejoin="round"  
+                        className="feather feather-home">  
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>  
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>  
+                      </svg>  
+                      <span style={{ marginTop: '5px' }} className="text">Quản lý trọ</span>  
+                    </Link>  
                   </li>
-                  <li className="nav-item menu-item ">
-                    <Link to={motel ? `/bao-cao/${motel.motelName}` : '#'} className="nav-link ">
+                  <li className={`nav-item menu-item ${location.pathname === (motel ? `/bao-cao/${motel.motelId}` : '#') ? 'active' : ''}`}>  
+                    <Link to={motel ? `/bao-cao/${motel.motelId}` : '#'} className="nav-link ">  
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -120,11 +180,8 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) 
                       </span>
                     </Link>
                   </li>
-                  <li className="nav-item menu-item ">
-                    <Link
-                      to={motel ? `/dang-tin/${motel.motelName}` : '#'}
-                      className="nav-link "
-                      setIsNavAdmin={setIsNavAdmin}>
+                  <li className={`nav-item menu-item ${location.pathname === (motel ? `/dang-tin/${motel.motelId}` : '#') ? 'active' : ''}`}>  
+                    <Link to={motel ? `/dang-tin/${motel.motelId}` : '#'} className="nav-link " setIsNavAdmin={setIsNavAdmin}>  
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -144,8 +201,8 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) 
                       </span>
                     </Link>
                   </li>
-                  <li className="nav-item menu-item ">
-                    <Link to={motel ? `/moi-gioi/${motel.motelName}` : '#'} className="nav-link ">
+                  <li className={`nav-item menu-item ${location.pathname === (motel ? `/moi-gioi/${motel.motelId}` : '#') ? 'active' : ''}`}>  
+                    <Link to={motel ? `/moi-gioi/${motel.motelId}` : '#'} className="nav-link">  
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -167,8 +224,8 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) 
                       </span>
                     </Link>
                   </li>
-                  <li className="nav-item menu-item ">
-                    <Link to={motel ? `/phan-quyen/${motel.motelName}` : '#'} className="nav-link ">
+                  <li className={`nav-item menu-item ${location.pathname === (motel ? `/phan-quyen/${motel.motelId}` : '#') ? 'active' : ''}`}>  
+                    <Link to={motel ? `/phan-quyen/${motel.motelId}` : '#'} className="nav-link">  
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -189,8 +246,8 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) 
                       </span>
                     </Link>
                   </li>
-                  <li className="nav-item menu-item ">
-                    <Link to={motel ? `/cai-dat/${motel.motelName}` : '#'} className="nav-link ">
+                  <li className={`nav-item menu-item ${location.pathname === (motel ? `/cai-dat/${motel.motelId}` : '#') ? 'active' : ''}`}>  
+                    <Link to={motel ? `/cai-dat/${motel.motelId}` : '#'} className="nav-link">  
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -210,45 +267,49 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) 
                       </span>
                     </Link>
                   </li>
-                  <li className="nav-item btn-group menu-item ">
-                    <Link to="javascript:;" className="nav-link" data-bs-toggle="dropdown" aria-expanded="false">
-                      <span className="count-notification badge">0</span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="feather feather-bell">
-                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                      </svg>
-                      <span style={{ marginTop: '5px' }} className="text">
-                        Thông báo
-                      </span>
-                    </Link>
-                    <ul className="dropdown-menu notication-dropdown dropdown-menu-lg-end">
-                      <div className="text-center" style={{ padding: '20px' }}>
-                        <img
-                          style={{ margin: 'auto' }}
-                          src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2FLoading.gif?alt=media&token=644068ee-9eb8-4f35-928f-cd348bbe8658"
-                          alt="Đang tải..."
-                          width="50px"
-                        />
-                        <div>
-                          <i className="loading_text" style={{ marginTop: '-10px', fontSize: '13px' }}>
-                            Đang tải thông báo...
-                          </i>
-                        </div>
-                      </div>
-                    </ul>
+                  <li className="nav-item btn-group menu-item">  
+                    <Link  
+                      to="javascript:;"  
+                      className={`nav-link ${location.pathname === "/thong-bao" ? "active" : ""}`}  
+                      data-bs-toggle="dropdown"  
+                      aria-expanded="false"  
+                    >  
+                      <span className="count-notification badge">0</span>  
+                      <svg  
+                        xmlns="http://www.w3.org/2000/svg"  
+                        width="24"  
+                        height="24"  
+                        viewBox="0 0 24 24"  
+                        fill="none"  
+                        stroke="currentColor"  
+                        strokeWidth="2"  
+                        strokeLinecap="round"  
+                        strokeLinejoin="round"  
+                        className="feather feather-bell"  
+                      >  
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>  
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>  
+                      </svg>  
+                      <span style={{ marginTop: '5px' }} className="text">Thông báo</span>  
+                    </Link>  
+                    <ul className="dropdown-menu notication-dropdown dropdown-menu-lg-end">  
+                      <div className="text-center" style={{ padding: '20px' }}>  
+                        <img  
+                          style={{ margin: 'auto' }}  
+                          src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2FLoading.gif?alt=media&token=644068ee-9eb8-4f35-928f-cd348bbe8658"  
+                          alt="Đang tải..."  
+                          width="50px"  
+                        />  
+                        <div>  
+                          <i className="loading_text" style={{ marginTop: '-10px', fontSize: '13px' }}>  
+                            Đang tải thông báo...  
+                          </i>  
+                        </div>  
+                      </div>  
+                    </ul>  
                   </li>
-                  <li className="nav-item menu-item ">
-                    <Link to={`/tai-khoan`} className="nav-link ">
+                  <li className={`nav-item menu-item ${location.pathname === "/tai-khoan" ? "active" : ""}`}>  
+                    <Link to="/tai-khoan" className="nav-link">  
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -268,27 +329,35 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) 
                       </span>
                     </Link>
                   </li>
-                  <li className="nav-item menu-item ">
-                    <Link to="/dang-xuat" className="nav-link ">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="feather feather-log-out">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                        <polyline points="16 17 21 12 16 7"></polyline>
-                        <line x1="21" y1="12" x2="9" y2="12"></line>
-                      </svg>
-                      <span style={{ marginTop: '5px' }} className="text">
-                        Đăng xuất
-                      </span>
-                    </Link>
+                  <li className={`nav-item menu-item`}>  
+                    <Link   
+                      to="/login"   
+                      className="nav-link"   
+                      onClick={async (e) => {  
+                        e.preventDefault(); // Ngăn chặn hành vi điều hướng mặc định của Link  
+                        
+                        await handleLogout(); // Gọi hàm handleLogout  
+                      }}   
+                    >  
+                      <svg  
+                        xmlns="http://www.w3.org/2000/svg"  
+                        width="24"  
+                        height="24"  
+                        viewBox="0 0 24 24"  
+                        fill="none"  
+                        stroke="currentColor"  
+                        strokeWidth="2"  
+                        strokeLinecap="round"  
+                        strokeLinejoin="round"  
+                        className="feather feather-log-out">  
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>  
+                        <polyline points="16 17 21 12 16 7"></polyline>  
+                        <line x1="21" y1="12" x2="9" y2="12"></line>  
+                      </svg>  
+                      <span style={{ marginTop: '5px' }} className="text">  
+                        Đăng xuất  
+                      </span>  
+                    </Link>  
                   </li>
                 </ul>
               </nav>

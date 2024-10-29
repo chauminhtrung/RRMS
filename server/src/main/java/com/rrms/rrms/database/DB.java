@@ -1,24 +1,26 @@
 package com.rrms.rrms.database;
 
-import com.rrms.rrms.enums.Gender;
-import com.rrms.rrms.enums.Roles;
-import com.rrms.rrms.models.*;
-import com.rrms.rrms.repositories.*;
-import com.rrms.rrms.services.ISearchService;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
-import net.datafaker.Faker;
+import java.util.UUID;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
+import com.rrms.rrms.enums.Gender;
+import com.rrms.rrms.enums.Roles;
+import com.rrms.rrms.models.*;
+import com.rrms.rrms.repositories.*;
+import com.rrms.rrms.services.ISearchService;
+
+import lombok.extern.slf4j.Slf4j;
+import net.datafaker.Faker;
 
 @Configuration
 @Slf4j
@@ -40,7 +42,7 @@ public class DB {
             ISearchService searchService,
             RoleRepository roleRepository) {
         return args -> {
-            int roomsLength = 20;
+            int roomsLength = 5;
 
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
 
@@ -48,10 +50,10 @@ public class DB {
             createSampleRoles(roleRepository);
 
             // Tạo tài khoản admin nếu chưa tồn tại
-            createAdminAccount(accountRepository, pe,roleRepository,authRepository);
-            createEmployAccount(accountRepository, pe,roleRepository,authRepository);
-            createCustomerAccount(accountRepository, pe,roleRepository,authRepository);
-            createHostAccount(accountRepository, pe,roleRepository,authRepository);
+            createAdminAccount(accountRepository, pe, roleRepository, authRepository);
+            createEmployAccount(accountRepository, pe, roleRepository, authRepository);
+            createCustomerAccount(accountRepository, pe, roleRepository, authRepository);
+            createHostAccount(accountRepository, pe, roleRepository, authRepository);
 
             if (roomRepository.findAll().isEmpty()) {
                 log.info("Starting to create data...");
@@ -128,20 +130,24 @@ public class DB {
         }
     }
 
-    private void createAdminAccount(AccountRepository accountRepository, BCryptPasswordEncoder pe, RoleRepository roleRepository, AuthRepository authRepository) {
+    private void createAdminAccount(
+            AccountRepository accountRepository,
+            BCryptPasswordEncoder pe,
+            RoleRepository roleRepository,
+            AuthRepository authRepository) {
         if (accountRepository.findByUsername("admin").isEmpty()) {
             // Create admin account
             Account adminAccount = Account.builder()
-                .username("admin")
-                .password(pe.encode("123"))
-                .fullname("Administrator")
-                .email("admin@example.com")
-                .phone("0123456789")
-                .cccd("012345678901")
-                .gender(Gender.MALE)
-                .avatar("AVT_ADMIN.jpg")
-                .birthday(LocalDate.now())
-                .build();
+                    .username("admin")
+                    .password(pe.encode("123"))
+                    .fullname("Administrator")
+                    .email("admin@example.com")
+                    .phone("0123456789")
+                    .cccd("012345678901")
+                    .gender(Gender.MALE)
+                    .avatar("AVT_ADMIN.jpg")
+                    .birthday(LocalDate.now())
+                    .build();
 
             accountRepository.save(adminAccount);
 
@@ -159,20 +165,25 @@ public class DB {
         }
     }
 
-    private void createEmployAccount(AccountRepository accountRepository, BCryptPasswordEncoder pe, RoleRepository roleRepository, AuthRepository authRepository) {
+    private void createEmployAccount(
+            AccountRepository accountRepository,
+            BCryptPasswordEncoder pe,
+            RoleRepository roleRepository,
+            AuthRepository authRepository) {
         if (accountRepository.findByUsername("employee").isEmpty()) {
             // Create user account
             Account userAccount = Account.builder()
-                .username("employee")
-                .password(pe.encode("123")) // Encode the password
-                .fullname("Minh Trung")
-                .email("minhtrung@gmail.com")
-                .phone("03333345553")
-                .cccd("012345678900")
-                .gender(Gender.FEMALE)
-                .avatar("https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
-                .birthday(LocalDate.now())
-                .build();
+                    .username("employee")
+                    .password(pe.encode("123")) // Encode the password
+                    .fullname("Minh Trung")
+                    .email("minhtrung@gmail.com")
+                    .phone("03333345553")
+                    .cccd("012345678900")
+                    .gender(Gender.FEMALE)
+                    .avatar(
+                            "https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
+                    .birthday(LocalDate.now())
+                    .build();
 
             accountRepository.save(userAccount);
 
@@ -189,20 +200,26 @@ public class DB {
             }
         }
     }
-    private void createHostAccount(AccountRepository accountRepository, BCryptPasswordEncoder pe, RoleRepository roleRepository, AuthRepository authRepository) {
+
+    private void createHostAccount(
+            AccountRepository accountRepository,
+            BCryptPasswordEncoder pe,
+            RoleRepository roleRepository,
+            AuthRepository authRepository) {
         if (accountRepository.findByUsername("host").isEmpty()) {
             // Create user account
             Account userAccount = Account.builder()
-                .username("host")
-                .password(pe.encode("123")) // Encode the password
-                .fullname("KienQuoc")
-                .email("quoc@gmail.com")
-                .phone("0919925302")
-                .cccd("012345678900")
-                .gender(Gender.FEMALE)
-                .avatar("https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
-                .birthday(LocalDate.now())
-                .build();
+                    .username("host")
+                    .password(pe.encode("123")) // Encode the password
+                    .fullname("KienQuoc")
+                    .email("quoc@gmail.com")
+                    .phone("0919925302")
+                    .cccd("012345678900")
+                    .gender(Gender.FEMALE)
+                    .avatar(
+                            "https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
+                    .birthday(LocalDate.now())
+                    .build();
 
             accountRepository.save(userAccount);
 
@@ -219,20 +236,26 @@ public class DB {
             }
         }
     }
-    private void createCustomerAccount(AccountRepository accountRepository, BCryptPasswordEncoder pe, RoleRepository roleRepository, AuthRepository authRepository) {
+
+    private void createCustomerAccount(
+            AccountRepository accountRepository,
+            BCryptPasswordEncoder pe,
+            RoleRepository roleRepository,
+            AuthRepository authRepository) {
         if (accountRepository.findByUsername("customer").isEmpty()) {
             // Create user account
             Account userAccount = Account.builder()
-                .username("customer")
-                .password(pe.encode("123"))
-                .fullname("Thuan")
-                .email("thuan@gmail.com")
-                .phone("0829280927")
-                .cccd("012345678900")
-                .gender(Gender.FEMALE)
-                .avatar("https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
-                .birthday(LocalDate.now())
-                .build();
+                    .username("customer")
+                    .password(pe.encode("123"))
+                    .fullname("Thuan")
+                    .email("thuan@gmail.com")
+                    .phone("0829280927")
+                    .cccd("012345678900")
+                    .gender(Gender.FEMALE)
+                    .avatar(
+                            "https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
+                    .birthday(LocalDate.now())
+                    .build();
 
             accountRepository.save(userAccount);
 
@@ -276,7 +299,8 @@ public class DB {
         return room;
     }
 
-    private void createServices(Faker faker, List<RoomService> roomServices, Room room, ServiceRepository serviceRepository) {
+    private void createServices(
+            Faker faker, List<RoomService> roomServices, Room room, ServiceRepository serviceRepository) {
         Service service1 = Service.builder()
                 .typeService("Tiện nghi")
                 .nameService(faker.options().option("Có chuồng chó", "Wifi miễn phí", "Hồ bơi", "Gym"))

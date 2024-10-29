@@ -1,13 +1,75 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import './Header.css'
 import { useState } from 'react'
-const Header = ({ username, avatar }) => {
-  const [IsDanhmuc, setIsDanhmuc] = useState(false)
-  const [IsMuaban, setIsMuaban] = useState(false)
-  const [IsTaikhoan, setIsTaikhoan] = useState(false)
-  const [IsThongbao, setIsThongbao] = useState(false)
-  const [IsMobileTaikhoan, setIsMobileTaikhoan] = useState(false)
+import { env } from '~/configs/environment';
+import Swal from 'sweetalert2';
 
+const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
+  const [IsDanhmuc, setIsDanhmuc] = useState(false);
+  const [IsMuaban, setIsMuaban] = useState(false);
+  const [IsTaikhoan, setIsTaikhoan] = useState(false);
+  const [IsThongbao, setIsThongbao] = useState(false);
+  const [IsMobileTaikhoan, setIsMobileTaikhoan] = useState(false);
+  const navigate = useNavigate()
+  const handleMenuItemClick = () => {  
+    setIsTaikhoan(false); // Đóng menu khi click vào bất kỳ mục nào  
+  }; 
+  const handleLogout = async () => {  
+    handleMenuItemClick();
+    const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;  
+  
+    if (!token) {  
+      Swal.fire({  
+        icon: 'warning',  
+        title: 'Thông báo',  
+        text: 'Không tìm thấy token, vui lòng đăng nhập lại.',  
+      });  
+      return;  
+    }  
+  
+    const requestPayload = { token };  
+  
+    try {  
+      const response = await fetch(`${env.API_URL}/authen/logout`, {  
+        method: 'POST',  
+        headers: {  
+          'Content-Type': 'application/json',  
+          'Authorization': `Bearer ${token}`  // Thêm Authorization header nếu server yêu cầu  
+        },  
+        body: JSON.stringify(requestPayload)  
+      });  
+  
+      if (response.ok) {  
+        // Xoá thông tin người dùng sau khi đăng xuất thành công  
+        sessionStorage.removeItem('user');  
+        setToken(null);     // Xóa token khỏi state  
+        setUsername('');    // Cập nhật username về trống  
+        setAvatar('');      // Cập nhật avatar về mặc định  
+        navigate('/login')
+        Swal.fire({  
+          icon: 'success',  
+          title: 'Thành công',  
+          text: 'Đăng xuất thành công!',  
+        });  
+      } else {  
+        const errorData = await response.json();  
+        console.error('Lỗi từ server:', errorData);  
+        Swal.fire({  
+          icon: 'error',  
+          title: 'Đăng xuất thất bại',  
+          text: `Lỗi: ${errorData.message}`,  
+        });  
+      }  
+    } catch (error) {  
+      console.error('Đã xảy ra lỗi khi đăng xuất:', error);  
+      Swal.fire({  
+        icon: 'error',  
+        title: 'Lỗi',  
+        text: 'Đã xảy ra lỗi khi thực hiện đăng xuất.',  
+      });  
+    }  
+  };
+  
   return (
     <body>
       <div className="ct-appwrapper aw__sa4yob3" style={{ '--sa4yob3-0': '#fff', '--sa4yob3-1': 'inherit' }}>
@@ -424,7 +486,7 @@ const Header = ({ username, avatar }) => {
                       <div className="aw__m1n72bce">
                         <div className="aw__ntc1674" style={{ '--ntc1674-2': '124px' }}>
                           {username ? (
-                            <Link to="/profile" rel="nofollow">
+                            <Link to="/profile" rel="nofollow" onClick={handleMenuItemClick}>
                               <span
                                 className="aw__nrouw61"
                                 style={{
@@ -436,7 +498,7 @@ const Header = ({ username, avatar }) => {
                               </span>
                             </Link>
                           ) : (
-                            <Link to="/login" rel="nofollow">
+                            <Link to="/login" rel="nofollow" onClick={handleMenuItemClick}>
                               <span
                                 className="aw__nrouw61"
                                 style={{
@@ -485,7 +547,7 @@ const Header = ({ username, avatar }) => {
                           <span>Quản lí đơn hàng</span>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./escrow_buy_orders.svg" alt="Đơn bán" />
                             </div>
@@ -494,7 +556,7 @@ const Header = ({ username, avatar }) => {
                           </a>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./escrow-orders.svg" alt="Đơn bán" />
                             </div>
@@ -503,7 +565,7 @@ const Header = ({ username, avatar }) => {
                           </a>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq aw__ibqb3a4" href="#" target="_self" rel="noreferrer">
+                          <a className="aw__iys36jq aw__ibqb3a4" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./escrow.svg" alt="Ví bán hàng" />
                             </div>
@@ -528,7 +590,7 @@ const Header = ({ username, avatar }) => {
                           <span>Tiện ích</span>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./menu-saved-ad.svg" alt="Đơn bán" />
                             </div>
@@ -537,7 +599,7 @@ const Header = ({ username, avatar }) => {
                           </a>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./menu-saved-search.svg" alt="Đơn bán" />
                             </div>
@@ -546,7 +608,7 @@ const Header = ({ username, avatar }) => {
                           </a>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./menu-rating-management.svg" alt="Đơn bán" />
                             </div>
@@ -567,7 +629,7 @@ const Header = ({ username, avatar }) => {
                           <span>Dịch vụ trả phí</span>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./sub-pro.svg" alt="Đơn bán" />
                             </div>
@@ -576,7 +638,7 @@ const Header = ({ username, avatar }) => {
                           </a>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./circle-list.svg" alt="Đơn bán" />
                             </div>
@@ -585,7 +647,7 @@ const Header = ({ username, avatar }) => {
                           </a>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq aw__ibqb3a4" href="#" target="_self" rel="noreferrer">
+                          <a className="aw__iys36jq aw__ibqb3a4" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./shop-more.svg" alt="Ví bán hàng" />
                             </div>
@@ -610,7 +672,7 @@ const Header = ({ username, avatar }) => {
                           <span>Ưu đãi, khuyến mãi</span>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./reward-icon.svg" alt="Đơn bán" />
                             </div>
@@ -619,7 +681,7 @@ const Header = ({ username, avatar }) => {
                           </a>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./voucher-icon.svg" alt="Đơn bán" />
                             </div>
@@ -640,7 +702,7 @@ const Header = ({ username, avatar }) => {
                           <span>Khác</span>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./setting.svg" alt="Đơn bán" />
                             </div>
@@ -649,7 +711,7 @@ const Header = ({ username, avatar }) => {
                           </a>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./setting.svg" alt="Đơn bán" />
                             </div>
@@ -657,6 +719,21 @@ const Header = ({ username, avatar }) => {
                             <div className="clearfix"></div>
                           </a>
                         </div>
+                        <div className="aw__l1txzw95">  
+                          <a   
+                            className="aw__iys36jq"   
+                            target="_self"   
+                            rel="noreferrer"   
+                            onClick={handleLogout} 
+                            
+                          >  
+                            <div className="aw__l1uq3g0v">  
+                              <img className="aw__i1x7vrum" src="./setting.svg" alt="Đơn bán" />  
+                            </div>  
+                            <div className="aw__r1o9ejq6">Đăng xuất</div>  
+                            <div className="clearfix"></div>  
+                          </a>  
+                        </div> 
                       </div>
                     </div>
                   ) : (
@@ -1178,6 +1255,15 @@ const Header = ({ username, avatar }) => {
                     <img className="aw__i1x7vrum" src="./setting.svg" alt="Đơn bán" />
                   </div>
                   <div className="aw__r1o9ejq6">Trợ giúp</div>
+                  <div className="clearfix"></div>
+                </a>
+              </div>
+              <div className="aw__ma2dsz4">
+                <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                  <div className="aw__l1uq3g0v">
+                    <img className="aw__i1x7vrum" src="./setting.svg" alt="Đơn bán" />
+                  </div>
+                  <div className="aw__r1o9ejq6">Đăng xuất</div>
                   <div className="clearfix"></div>
                 </a>
               </div>

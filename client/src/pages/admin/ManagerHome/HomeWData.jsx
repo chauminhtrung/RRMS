@@ -55,9 +55,6 @@ const HomeWData = () => {
     },
   }
 
-  // Tùy chọn để hiển thị thông báo không có dữ liệu với hình ảnh
-  // Tùy chọn để hiển thị thông báo không có dữ liệu với hình ảnh
-
   return (
     <div
       style={{
@@ -71,7 +68,7 @@ const HomeWData = () => {
         <div>
           <div className="row g-3 row-box-home" style={{ marginTop: '0px' }}>
             <div className="col-sm-3" style={{ marginTop: '0px' }}>
-              <div className="item-home" data-bs-toggle="modal" data-bs-target="#reportBillDebt">
+              <div className="item-home " data-bs-toggle="modal" data-bs-target="#reportBillDebt" >
                 <a href="javascript:," className="create-home">
                   <span>
                     <svg
@@ -174,7 +171,7 @@ const HomeWData = () => {
                     </span>
                     <div>
                       <span style={{ color: '#20a9e7' }} className="titleadmin">
-                        Tổng số tiền cọc giữ chỗ phòng
+                        Tổng số tiền cọc giữ phòng
                       </span>
                       <h3 style={{ color: '#20a9e7' }}>0đ</h3>
                     </div>

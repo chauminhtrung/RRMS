@@ -1,5 +1,6 @@
 package com.rrms.rrms.models;
 
+import java.util.Set;
 import java.util.UUID;
 
 import jakarta.persistence.*;
@@ -7,6 +8,7 @@ import jakarta.persistence.*;
 import com.rrms.rrms.enums.Roles;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "roles")
 public class Role {
 
@@ -26,4 +29,7 @@ public class Role {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @ManyToMany
+    private Set<Permission> permissions;
 }

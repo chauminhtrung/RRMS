@@ -1,0 +1,24 @@
+@baseUrl = http://localhost:8080
+@contentType = application/json
+
+@token = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIwMTIzNDU2Nzg5IiwicGVybWlzc2lvbnMiOltdLCJyb2xlcyI6WyJBRE1JTiJdLCJpc3MiOiJhZG1pbiIsImV4cCI6MTcyOTg1OTk5NywiaWF0IjoxNzI5ODU2Mzk3LCJqdGkiOiIzZWYxZTUwZC03NDc5LTRkNDUtYjM2MC00N2IzYjE5OTZhZDgifQ.uKd-qeCeJlq8q5Bh3osvSBcmnI2Uzywui7F2TMhyUn3sprdnAvvBjTqNkiSFC0zHxBX36i9-u9UrfXaQuPqn7Q
+
+
+POST {{baseUrl}}/authen/login
+Content-Type: {{contentType}}
+Accept: {{contentType}} 
+
+{
+    "phone": "0123456789",
+    "password": "123"
+}
+
+###
+POST {{baseUrl}}/authen/introspect
+Content-Type: {{contentType}}
+Accept: {{contentType}} 
+Authorization: Bearer {{token}}
+
+{
+    "token": "{{token}}"
+}
