@@ -15,24 +15,25 @@ function ChatAI() {
       headerTextColor: '#fff',
       headerLogoEnable: false,
       headerText: 'Hệ thống hỗ trợ nhà trọ RRMS',
-      avatarBot: './avatarbot.png',
+      avatarBot:
+        'https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Fpty-chatbot-white-new.png?alt=media&token=ba6209c0-3ff3-4bdd-835e-677275d8b37e',
       sendMessagePlaceholder: 'Nhập tin nhắn...',
       floatButtonLogo:
-        'https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2Fz5853942551637_69ff5e01c58a7f32cb061491e42a3bf9.jpg?alt=media&token=432a3105-d78c-4bb4-be7a-78bcf9e5af4c',
+        'https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Fpty-chatbot-white-new.png?alt=media&token=ba6209c0-3ff3-4bdd-835e-677275d8b37e',
       floatButtonTooltip: 'Hỗ trợ trực tuyến nhà trọ RRMS',
       customerWelcomeText: 'Vui lòng nhập tên của bạn',
       customerButtonText: 'Bắt đầu',
       prefixEnable: false,
       prefixOptions: ['Anh', 'Chị'],
       floatButtonTooltipEnable: true,
-      prefixPlaceholder: 'Danh xưng',
+      prefixPlaceholder: 'Danh xưng'
     }
 
     const FptLiveChatConfigs = {
       appName: FptAppName,
       appCode: FptAppCode,
       themes: '',
-      styles: CustomStyles,
+      styles: CustomStyles
     }
 
     const initializeChat = () => {

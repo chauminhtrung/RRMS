@@ -1,17 +1,117 @@
 import { Swiper, SwiperSlide, useSwiper } from 'swiper/react'
-import { Rooms } from '~/utils/Rooms'
 import { Pkeyw } from '~/utils/PoKey'
 import FilterSearch from '../search/FilterSearch'
 import { data } from '~/utils/slider'
 import { sliderSettings } from '~/utils/common.js'
 import { wards_list } from '~/utils/wards_list'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import 'swiper/css'
+import axios from 'axios'
+import LoadingPage from '~/components/LoadingPage'
+import { formatterAmount } from '~/utils/formatterAmount'
+import { Pagination } from '@mui/material'
 const RRMS = ({ setIsAdmin }) => {
+  const [searchData, setSearchData] = useState([])
+
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 8 // Số lượng item hiển thị mỗi trang
+
+  const [currentPageNew, setCurrentPageNew] = useState(1)
+  const itemsPerPageNew = 4 // Số lượng item hiển thị mỗi trang
+
+  const indexOfLastItemNew = currentPageNew * itemsPerPageNew
+  const indexOfFirstItemNew = indexOfLastItemNew - itemsPerPageNew
+  let currentItemsNew = []
+  if (Array.isArray(searchData)) {
+    currentItemsNew = searchData.slice(indexOfFirstItemNew, indexOfLastItemNew)
+    console.log(currentItemsNew)
+  } else {
+    currentItemsNew = []
+  }
+  const handlePageChangeNumberNew = (event, value) => {
+    setCurrentPageNew(value)
+  }
+
+  const indexOfLastItem = currentPage * itemsPerPage // Vị trí item cuối trên trang hiện tại
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage // Vị trí item đầu trên trang hiện tại
+  let currentItems = []
+  if (Array.isArray(searchData)) {
+    currentItems = searchData.slice(indexOfFirstItem, indexOfLastItem)
+    console.log(currentItems) // Hiển thị các phần tử hiện tại
+  } else {
+    currentItems = []
+  }
+
+  const handlePageChangeNumber = (event, value) => {
+    setCurrentPage(value)
+  }
   useEffect(() => {
     setIsAdmin(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    loadData()
+    loadDataDateNew()
+  }, [])
+
+  const loadData = async () => {
+    const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+
+    try {
+      const result = await axios.get(`http://localhost:8080/searchs/rooms`, {
+        validateStatus: () => true,
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      // Kiểm tra trạng thái phản hồi
+      if (result.status === 200) {
+        const fetchedData = result.data.result
+
+        if (Array.isArray(fetchedData) && fetchedData.length > 0) {
+          console.log('Data fetched:', fetchedData)
+          setSearchData(fetchedData)
+        } else {
+          console.log('No results found or data is null')
+          setSearchData([])
+        }
+      } else {
+        console.log('Error: Status', result.status)
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
+
+  const loadDataDateNew = async () => {
+    const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+
+    try {
+      const result = await axios.get(`http://localhost:8080/searchs/roomNews`, {
+        validateStatus: () => true,
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      // Kiểm tra trạng thái phản hồi
+      if (result.status === 200) {
+        const fetchedDataDateNew = result.data.result
+
+        if (Array.isArray(fetchedDataDateNew) && fetchedDataDateNew.length > 0) {
+          console.log('Data fetched:', fetchedDataDateNew)
+          setSearchData(fetchedDataDateNew)
+        } else {
+          console.log('No results found or data is null')
+          setSearchData([])
+        }
+      } else {
+        console.log('Error: Status', result.status)
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
   const renderList = (card, start, end) => {
     const listItems = []
     for (let i = start; i < end; i++) {
@@ -21,7 +121,7 @@ const RRMS = ({ setIsAdmin }) => {
             className="item-district small"
             style={{
               backgroundImage: `url(${card[i].image})`,
-              backgroundSize: 'cover',
+              backgroundSize: 'cover'
             }}
             href="#">
             <div className="info">
@@ -31,7 +131,7 @@ const RRMS = ({ setIsAdmin }) => {
               </span>
               <div
                 style={{
-                  fontSize: '13px',
+                  fontSize: '13px'
                 }}>
                 {card[i].detail}
               </div>
@@ -217,7 +317,7 @@ const RRMS = ({ setIsAdmin }) => {
                         top: '-5px',
                         right: '-20px',
                         fontSize: '12px',
-                        padding: '0px 5px',
+                        padding: '0px 5px'
                       }}>
                       HOT
                     </span>
@@ -243,7 +343,7 @@ const RRMS = ({ setIsAdmin }) => {
                         top: '-5px',
                         right: '-20px',
                         fontSize: '12px',
-                        padding: '0px 5px',
+                        padding: '0px 5px'
                       }}>
                       PRO
                     </span>
@@ -378,14 +478,14 @@ const RRMS = ({ setIsAdmin }) => {
             style={{
               borderRadius: '10px',
               background: 'linear-gradient(#eef7ff 40%, rgb(238 247 255 / 35%) 50%)',
-              padding: '5px 14px 0px 14px',
+              padding: '5px 14px 0px 14px'
             }}>
             <div className="header-item">
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  marginLeft: '0px',
+                  marginLeft: '0px'
                 }}>
                 <div
                   style={{
@@ -396,7 +496,7 @@ const RRMS = ({ setIsAdmin }) => {
                     alignItems: 'center',
                     backgroundColor: '#ffebd5',
                     borderRadius: '100%',
-                    marginRight: '10px',
+                    marginRight: '10px'
                   }}>
                   <img src="./feature_icon.webp" alt="icon lịch" style={{ width: '30px', height: '30px' }} />
                 </div>
@@ -406,97 +506,115 @@ const RRMS = ({ setIsAdmin }) => {
                 </h2>
               </div>
             </div>
-            <div className="grid">
-              <div className="row">
-                <article className="i-column col-md-3" style={{ marginBottom: '14px' }}>
-                  <a
-                    target="_blank"
-                    title="Cho thuê phòng trọ full nội thất, giá sinh viên Tam Đảo, Quận 10"
-                    href="#"
-                    className="inner-item"
-                    style={{ textDecoration: 'none', color: 'black' }}>
-                    <div className="img" style={{ position: 'relative' }}>
-                      <img
-                        alt="Cho thuê phòng trọ full nội thất, giá sinh viên Tam Đảo, Quận 10"
-                        src="https://cdn.lozido.com/image/post_temp/thumb/64ec08bef22c5-1693190334-tmp-glvx5dspng.jpg"
-                        data-src="https://cdn.lozido.com/image/post_temp/thumb/64ec08bef22c5-1693190334-tmp-glvx5dspng.jpg"
-                        className="lazy"
-                      />
-                      <div className="images-count">4</div>
-                      <div className="bookmark-item bookmark" data-post="712" id="post_712">
-                        <svg
-                          viewBox="0 0 24 24"
-                          width="18"
-                          height="18"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          fill="none"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="css-i6dzq1">
-                          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                        </svg>
-                      </div>
-                    </div>
-                    <div className="read">
-                      <div className="title cut-text-2">
-                        <span className="lable-now">NOW</span> Cho thuê phòng trọ full nội thất, giá sinh viên Tam Đảo,
-                        Quận 10
-                      </div>
-                      <div className="address cut-text">
-                        <span className="icon-user-small">
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', marginTop: 26 }}>
+            {currentItems.length > 0 ? (
+              currentItems.map((item, i) => (
+                <div className="grid-item" key={i} style={{ maxWidth: '280px' }}>
+                  {' '}
+                  <article className="i-column" style={{ marginBottom: '14px' }}>
+                    <a
+                      target="_blank"
+                      title="Cho thuê phòng trọ full nội thất, giá sinh viên Tam Đảo, Quận 10"
+                      href="#"
+                      className="inner-item"
+                      style={{ textDecoration: 'none', color: 'black' }}>
+                      <div
+                        className="img"
+                        style={{
+                          position: 'relative',
+                          overflow: 'hidden',
+                          width: '100%',
+                          height: '150px',
+                          borderRadius: '8px'
+                        }}>
+                        <img
+                          alt="Cho thuê phòng trọ full nội thất, giá sinh viên Tam Đảo, Quận 10"
+                          src={item.roomImages[0].image}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            objectPosition: 'center'
+                          }}
+                          className="lazy"
+                        />
+                        <div className="images-count">4</div>
+                        <div className="bookmark-item bookmark" data-post="712" id="post_712">
                           <svg
                             viewBox="0 0 24 24"
-                            width="12"
-                            height="12"
+                            width="18"
+                            height="18"
                             stroke="currentColor"
-                            strokeWidth="2"
+                            strokeWidth="1.5"
                             fill="none"
                             strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="css-i6dzq1">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
+                            strokeLinejoin="round">
+                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
                           </svg>
-                        </span>
-                        <strong
-                          style={{
-                            textTransform: 'capitalize',
-                            paddingLeft: '5px',
-                          }}>
-                          Cẩm Tú{' '}
-                        </strong>
-                        <span className="zone" style={{ fontSize: '11px' }}>
-                          {' '}
-                          - Quận 10 . Hồ Chí Minh
-                        </span>
+                        </div>
                       </div>
-                    </div>
-                    <div
-                      className="info"
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        display: 'flex',
-                        padding: '5px',
-                      }}>
-                      <b className="text-danger">8.000.000đ/tháng</b>
+
+                      <div className="read">
+                        <div className="title cut-text-2" style={{ fontSize: '14px', marginTop: 10 }}>
+                          <span className="lable-now">NOW</span> {item.motel.address}
+                        </div>
+                        <div className="address cut-text">
+                          <span className="icon-user-small">
+                            <svg
+                              viewBox="0 0 24 24"
+                              width="12"
+                              height="12"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              fill="none"
+                              strokeLinecap="round"
+                              strokeLinejoin="round">
+                              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                              <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                          </span>
+                          <strong style={{ textTransform: 'capitalize', paddingLeft: '5px' }}>
+                            {item.motel.account.username}
+                          </strong>
+                          <span className="zone" style={{ fontSize: '11px' }}>
+                            {' '}
+                            {item.nameRoom}
+                          </span>
+                        </div>
+                      </div>
                       <div
-                        className="i area"
+                        className="info"
                         style={{
-                          justifyContent: 'center',
-                          alignItems: 'center',
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
                           display: 'flex',
+                          padding: '5px'
                         }}>
-                        <b>38</b> m2
+                        <b className="text-danger"> {formatterAmount(item.price)} /Tháng</b>
+                        <div
+                          className="i area"
+                          style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
+                          <b> {item.roomArea}</b> m²
+                        </div>
                       </div>
-                    </div>
-                  </a>
-                </article>
-              </div>
-            </div>
+                    </a>
+                  </article>
+                </div>
+              ))
+            ) : (
+              <LoadingPage />
+            )}
           </div>
         </div>
+        <Pagination
+          count={Math.ceil(searchData.length / itemsPerPage)} // Tổng số trang
+          page={currentPage} // Trang hiện tại
+          onChange={handlePageChangeNumber} // Hàm xử lý khi thay đổi trang
+          variant="outlined"
+          color="primary"
+          sx={{ mt: 4, display: 'flex', justifyContent: 'center' }} // Đặt margin-top và căn giữa
+        />
       </section>
       <section className="district-search" style={{ position: 'relative' }}>
         <div className="container">
@@ -521,7 +639,7 @@ const RRMS = ({ setIsAdmin }) => {
                                 className="item-district large"
                                 style={{
                                   backgroundImage: `url(${card.image})`,
-                                  backgroundSize: 'cover',
+                                  backgroundSize: 'cover'
                                 }}
                                 title="Tìm phòng trọ Quận 1"
                                 href="/thue-phong-tro-quan-1-id-760/ho-chi-minh-id-79">
@@ -532,7 +650,7 @@ const RRMS = ({ setIsAdmin }) => {
                                   </span>
                                   <div
                                     style={{
-                                      fontSize: '13px',
+                                      fontSize: '13px'
                                     }}>
                                     {card.detail}
                                   </div>
@@ -593,13 +711,13 @@ const RRMS = ({ setIsAdmin }) => {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                width: '100%',
+                width: '100%'
               }}>
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  marginLeft: '-5px',
+                  marginLeft: '-5px'
                 }}>
                 <div
                   style={{
@@ -610,7 +728,7 @@ const RRMS = ({ setIsAdmin }) => {
                     alignItems: 'center',
                     backgroundColor: '#ffebd5',
                     borderRadius: '100%',
-                    marginRight: '10px',
+                    marginRight: '10px'
                   }}>
                   <img src="./feature_icon.webp" alt="icon lịch" style={{ width: '30px', height: '30px' }} />
                 </div>
@@ -629,130 +747,142 @@ const RRMS = ({ setIsAdmin }) => {
             </div>
           </div>
           <div className="list-6 row">
-            {Rooms.map((room, i) => (
-              <article className="item col-xs-12 col-md-12 col-lg-6 " key={i}>
-                <div className="inner-item flex">
-                  <section className="list-img" style={{ width: '36%' }}>
-                    <div style={{ position: 'relative', height: '100%' }}>
-                      <a
-                        style={{
-                          display: 'block',
-                          width: '100%',
-                          maxHeight: '205px',
-                          overflow: 'hidden',
-                          height: '100%',
-                        }}
-                        target="_blank"
-                        title={room.name}
-                        href="#"
-                        className="is-adss">
-                        <img alt={room.name} src={room.img} className="lazy" />
-                      </a>
-
-                      <div className="images-count">3</div>
-                      <div className="bookmark-item bookmark" data-post="290" id="post_290">
-                        <svg
-                          viewBox="0 0 24 24"
-                          width="18"
-                          height="18"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          fill="none"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="css-i6dzq1">
-                          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                        </svg>
-                      </div>
-                    </div>
-                  </section>
-                  <section className="list-info" style={{ width: '64%' }}>
-                    <div>
-                      <div className="title">
+            {currentItemsNew.length > 0 ? (
+              currentItemsNew.map((room, i) => (
+                <article className="item col-xs-12 col-md-12 col-lg-6 " key={i}>
+                  <div className="inner-item flex">
+                    <section className="list-img" style={{ width: '36%' }}>
+                      <div style={{ position: 'relative', height: '100%' }}>
                         <a
+                          style={{
+                            display: 'block',
+                            width: '100%',
+                            maxHeight: '205px',
+                            overflow: 'hidden',
+                            height: '100%'
+                          }}
+                          target="_blank"
                           title={room.name}
-                          target="_blank"
                           href="#"
-                          className="cut-text-2"
-                          style={{ textDecoration: 'none', color: 'black' }}>
-                          <span>{room.name}</span>
+                          className="is-adss">
+                          <img alt={room.name} src={room.roomImages[0].image} className="lazy" />
                         </a>
-                      </div>
-                      <div className="adress cut-text">
-                        <svg
-                          viewBox="0 0 24 24"
-                          width="12"
-                          height="12"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          fill="none"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="css-i6dzq1">
-                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                          <circle cx="12" cy="10" r="3"></circle>
-                        </svg>
-                        {room.address}
-                      </div>
-                      <div className="mf">
-                        <div className="i price">
-                          <b className="text-danger">{room.price}</b>
-                        </div>
-                        <div className="i are">
-                          <i className="fa fa-area-chart hidden" aria-hidden="true">
-                            {' '}
-                          </i>
-                          <b>{room.area}</b>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="author">
-                      <div className="i info-author">
-                        <img width="30px" src="./default-user.webp" alt="icon user" />
-                        <div style={{ color: '#666', fontSize: '12px' }}>
-                          <strong className="author-name" style={{ textTransform: 'capitalize' }}>
-                            {room.user}
-                          </strong>
-                          <div style={{ fontSize: '11px' }} data-time="1 ngày trước">
-                            1 ngày trước
-                          </div>
-                        </div>
-                      </div>
-                      <div className="i info-author">
-                        <a
-                          rel="nofollow, noindex"
-                          target="_blank"
-                          href="#"
-                          className="btn-quick-zalo"
-                          style={{ textDecoration: 'none' }}>
-                          Zalo
-                        </a>
-                        <span className="btn-quick-call">
+
+                        <div className="images-count">3</div>
+                        <div className="bookmark-item bookmark" data-post="290" id="post_290">
                           <svg
                             viewBox="0 0 24 24"
-                            width="16"
-                            height="16"
+                            width="18"
+                            height="18"
                             stroke="currentColor"
                             strokeWidth="1.5"
                             fill="none"
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             className="css-i6dzq1">
-                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
                           </svg>
-                          <span className="show-phone-item-290">Xem SĐT</span>
-                          <span className="phone-item-290" style={{ display: 'none' }}>
-                            0937072468
-                          </span>
-                        </span>
+                        </div>
                       </div>
-                    </div>
-                  </section>
-                </div>
-              </article>
-            ))}
+                    </section>
+                    <section className="list-info" style={{ width: '64%' }}>
+                      <div>
+                        <div className="title">
+                          <a
+                            title={room.nameRoom}
+                            target="_blank"
+                            href="#"
+                            className="cut-text-2"
+                            style={{ textDecoration: 'none', color: 'black' }}>
+                            <span>{room.nameRoom}</span>
+                          </a>
+                        </div>
+                        <div className="adress cut-text">
+                          <svg
+                            viewBox="0 0 24 24"
+                            width="12"
+                            height="12"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            fill="none"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="css-i6dzq1">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                          </svg>
+                          {room.motel.address}
+                        </div>
+                        <div className="mf">
+                          <div className="i price">
+                            <b className="text-danger">{formatterAmount(room.price)}</b>
+                          </div>
+                          <div className="i are">
+                            <i className="fa fa-area-chart hidden" aria-hidden="true">
+                              {' '}
+                            </i>
+                            <b> {room.roomArea} m²</b>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="author">
+                        <div className="i info-author">
+                          <img width="30px" src="./default-user.webp" alt="icon user" />
+                          <div style={{ color: '#666', fontSize: '12px' }}>
+                            <strong className="author-name" style={{ textTransform: 'capitalize' }}>
+                              {room.motel.account.username}
+                            </strong>
+                            <div style={{ fontSize: '11px' }} data-time="1 ngày trước">
+                              1 ngày trước
+                            </div>
+                          </div>
+                        </div>
+                        <div className="i info-author">
+                          <a
+                            rel="nofollow, noindex"
+                            target="_blank"
+                            href="#"
+                            className="btn-quick-zalo"
+                            style={{ textDecoration: 'none' }}>
+                            Zalo
+                          </a>
+                          <span className="btn-quick-call">
+                            <svg
+                              viewBox="0 0 24 24"
+                              width="16"
+                              height="16"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                              fill="none"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="css-i6dzq1">
+                              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                            </svg>
+                            <span className="show-phone-item-290">Xem SĐT</span>
+                            <span className="phone-item-290" style={{ display: 'none' }}>
+                              0937072468
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </article>
+              ))
+            ) : (
+              <LoadingPage />
+            )}
           </div>
         </div>
+        <Pagination
+          count={Math.ceil(searchData.length / itemsPerPage)} // Tổng số trang
+          page={currentPageNew} // Trang hiện tại
+          onChange={handlePageChangeNumberNew} // Hàm xử lý khi thay đổi trang
+          variant="outlined"
+          color="primary"
+          sx={{ mt: 4, display: 'flex', justifyContent: 'center' }} // Đặt margin-top và căn giữa
+        />
       </section>
       <div className="container bot">
         <div className="flex row" style={{ marginBlock: '15px' }}>
@@ -787,7 +917,7 @@ const RRMS = ({ setIsAdmin }) => {
             border: '0.5px solid #dbdbdb',
             backgroundColor: '#fff',
             borderRadius: '5px',
-            padding: '15px',
+            padding: '15px'
           }}>
           <ul
             className="list-link"
@@ -796,7 +926,7 @@ const RRMS = ({ setIsAdmin }) => {
               padding: '0px',
               margin: '0px',
               display: 'grid',
-              gridTemplateColumns: 'repeat(4,1fr)',
+              gridTemplateColumns: 'repeat(4,1fr)'
             }}>
             {Pkeyw.map((key, i) => (
               <li key={i}>
@@ -805,7 +935,7 @@ const RRMS = ({ setIsAdmin }) => {
                   target="_blank"
                   style={{
                     textDecoration: 'none',
-                    color: '#3d3d3d',
+                    color: '#3d3d3d'
                   }}>
                   {key.name}
                 </a>

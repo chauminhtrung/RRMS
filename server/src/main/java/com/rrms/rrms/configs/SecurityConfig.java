@@ -57,11 +57,15 @@ public class SecurityConfig {
                 .failureUrl("/authen/login?error=true") // trang chuyển hướng khi đăng nhập thất bại
         );
 
-        http.oauth2ResourceServer(oauth2 ->
-                oauth2.jwt(jwtConfigurer ->
-                        jwtConfigurer.decoder(jwtDecoder())
-                                .jwtAuthenticationConverter(jwtAuthenticationConverter()))
-        );
+    // Cấu hình OAuth2 Login với Google
+    http.oauth2Login(oauth2 -> oauth2
+        .loginPage("/authen/login") // trang đăng nhập mặc định
+        .defaultSuccessUrl("/home") // trang chuyển hướng sau đăng nhập thành công
+        .failureUrl("/authen/login?error=true") // trang chuyển hướng khi đăng nhập thất bại
+    );
+
+        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer ->
+                jwtConfigurer.decoder(jwtDecoder()).jwtAuthenticationConverter(jwtAuthenticationConverter())));
 
         http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
 

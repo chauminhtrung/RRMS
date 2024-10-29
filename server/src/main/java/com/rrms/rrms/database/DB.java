@@ -36,7 +36,7 @@ public class DB {
             ISearchService searchService,
             RoleRepository roleRepository) {
         return args -> {
-            int roomsLength = 20;
+            int roomsLength = 100;
 
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
 
@@ -284,10 +284,16 @@ public class DB {
 
     private Room createRoom(Faker faker, RoomRepository roomRepository, Motel motel, TypeRoom typeRoom) {
         Room room = new Room();
+        Date randomDate = faker.date().between(
+                new Date(System.currentTimeMillis() - 30L * 24 * 60 * 60 * 1000), // 30 ngày trước
+                new Date() // Ngày hiện tại
+        );
         room.setDeposit(faker.number().randomDouble(2, 500000, 5000000));
         room.setHours(faker.options().option("Tự do", "6:00 AM - 12:00 PM", "1:00 PM - 6:00 PM"));
         room.setRentalStartTime(LocalDate.now());
         room.setMotel(motel);
+        room.setAuthen(faker.options().option(true, false));
+        room.setDatenew(randomDate);
         room.setTypeRoom(typeRoom);
         room.setNameRoom(faker.address().city());
         room.setDescription(faker.lorem().paragraph());

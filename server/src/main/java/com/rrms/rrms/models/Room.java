@@ -1,6 +1,7 @@
 package com.rrms.rrms.models;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -56,6 +57,12 @@ public class Room {
 
     @Column(name = "censor", columnDefinition = "BOOLEAN")
     private Boolean censor;
+
+    @Column(name = "authen", columnDefinition = "BOOLEAN")
+    private Boolean authen;
+
+    @Column(name = "datenew", columnDefinition = "DATE")
+    private Date datenew;
 
     @Column(name = "hours", columnDefinition = "NVARCHAR(255)")
     private String hours;

@@ -21,6 +21,7 @@ const Search = ({ setIsAdmin }) => {
   const [totalRooms, setTotalRooms] = useState(0)
   const [searchValue, setSearchValue] = useState('')
   const [recordedText, setRecordedText] = useState('')
+
   useEffect(() => {
     setIsAdmin(false)
   }, [])
@@ -45,9 +46,14 @@ const Search = ({ setIsAdmin }) => {
   // /name?name=${searchValue}
   // Hàm để tải dữ liệu
   const loadData = async (searchValue) => {
+    const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+
     try {
       const result = await axios.get(`http://localhost:8080/searchs`, {
         validateStatus: () => true,
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       })
 
       // Kiểm tra trạng thái phản hồi
@@ -80,7 +86,7 @@ const Search = ({ setIsAdmin }) => {
       <Container
         sx={{
           mt: 5,
-          borderRadius: '6px',
+          borderRadius: '6px'
         }}>
         <FilterSearch setSearchData={setSearchData} recordedText={recordedText} />
       </Container>
