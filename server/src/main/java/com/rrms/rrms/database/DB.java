@@ -1,11 +1,7 @@
 package com.rrms.rrms.database;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -42,7 +38,7 @@ public class DB {
             ISearchService searchService,
             RoleRepository roleRepository) {
         return args -> {
-            int roomsLength = 5;
+            int roomsLength = 20000;
 
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
 
