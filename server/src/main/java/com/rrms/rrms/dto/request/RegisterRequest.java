@@ -1,7 +1,5 @@
 package com.rrms.rrms.dto.request;
 
-import com.rrms.rrms.enums.Gender;
-import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

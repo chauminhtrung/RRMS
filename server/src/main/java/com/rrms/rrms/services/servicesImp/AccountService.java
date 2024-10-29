@@ -1,27 +1,27 @@
 package com.rrms.rrms.services.servicesImp;
 
-import com.rrms.rrms.dto.request.RegisterRequest;
-import com.rrms.rrms.enums.Roles;
-import com.rrms.rrms.models.Role;
-import com.rrms.rrms.repositories.RoleRepository;
 import java.util.List;
 import java.util.Optional;
-
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.request.ChangePasswordRequest;
+import com.rrms.rrms.dto.request.RegisterRequest;
 import com.rrms.rrms.dto.response.AccountResponse;
 import com.rrms.rrms.enums.ErrorCode;
+import com.rrms.rrms.enums.Roles;
 import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.mapper.AccountMapper;
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Auth;
+import com.rrms.rrms.models.Role;
 import com.rrms.rrms.repositories.AccountRepository;
 import com.rrms.rrms.repositories.AuthRepository;
+import com.rrms.rrms.repositories.RoleRepository;
 import com.rrms.rrms.services.IAccountService;
 
 import lombok.AccessLevel;
@@ -50,8 +50,7 @@ public class AccountService implements IAccountService {
     @Override
     public List<AccountResponse> findAll() {
         List<Account> accounts = accountRepository.findAll();
-        return accounts.stream().map(accountMapper::toAccountResponse)
-            .collect(Collectors.toList());
+        return accounts.stream().map(accountMapper::toAccountResponse).collect(Collectors.toList());
     }
 
     @Override
@@ -72,8 +71,8 @@ public class AccountService implements IAccountService {
     @Override
     public Account register(RegisterRequest request) {
         // Kiểm tra xem username hoặc phone đã tồn tại chưa
-        if (accountRepository.existsByUsername(request.getUsername()) ||
-            accountRepository.existsByPhone(request.getPhone())) {
+        if (accountRepository.existsByUsername(request.getUsername())
+                || accountRepository.existsByPhone(request.getPhone())) {
             throw new AppException(ErrorCode.ACCOUNT_ALREADY_EXISTS);
         }
 
@@ -145,8 +144,8 @@ public class AccountService implements IAccountService {
     @Override
     public AccountResponse findByUsername(String username) {
         Account account = accountRepository
-            .findByUsername(username)
-            .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+                .findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
         return accountMapper.toAccountResponse(account);
     }
 
@@ -160,8 +159,8 @@ public class AccountService implements IAccountService {
     @Override
     public AccountResponse update(AccountRequest accountRequest) {
         Account account = accountRepository
-            .findByUsername(accountRequest.getUsername())
-            .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+                .findByUsername(accountRequest.getUsername())
+                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
         accountMapper.updateAccount(account, accountRequest);
         account = accountRepository.save(account);
         return accountMapper.toAccountResponse(account);
@@ -170,8 +169,8 @@ public class AccountService implements IAccountService {
     @Override
     public String changePassword(ChangePasswordRequest changePasswordRequest) {
         Account account = accountRepository
-            .findByUsername(changePasswordRequest.getUsername())
-            .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+                .findByUsername(changePasswordRequest.getUsername())
+                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
 
         BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
 
