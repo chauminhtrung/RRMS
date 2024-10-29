@@ -1,22 +1,20 @@
 package com.rrms.rrms.database;
 
-import java.time.LocalDate;
-import java.util.*;
-
+import com.rrms.rrms.enums.Gender;
+import com.rrms.rrms.enums.Roles;
+import com.rrms.rrms.models.*;
+import com.rrms.rrms.repositories.*;
+import com.rrms.rrms.services.ISearchService;
+import lombok.extern.slf4j.Slf4j;
+import net.datafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rrms.rrms.enums.Gender;
-import com.rrms.rrms.enums.Roles;
-import com.rrms.rrms.models.*;
-import com.rrms.rrms.repositories.*;
-import com.rrms.rrms.services.ISearchService;
-
-import lombok.extern.slf4j.Slf4j;
-import net.datafaker.Faker;
+import java.time.LocalDate;
+import java.util.*;
 
 @Configuration
 @Slf4j
@@ -38,7 +36,7 @@ public class DB {
             ISearchService searchService,
             RoleRepository roleRepository) {
         return args -> {
-            int roomsLength = 20000;
+            int roomsLength = 20;
 
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
 
@@ -121,6 +119,11 @@ public class DB {
             hostRole.setRoleName(Roles.HOST);
             hostRole.setDescription("Host for organizing events.");
             roleRepository.save(hostRole);
+
+            Role brokerRole = new Role();
+            brokerRole.setRoleName(Roles.BROKER);
+            brokerRole.setDescription("Host for organizing events.");
+            roleRepository.save(brokerRole);
 
             log.info("Sample roles created.");
         }

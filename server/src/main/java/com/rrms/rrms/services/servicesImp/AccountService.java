@@ -1,13 +1,5 @@
 package com.rrms.rrms.services.servicesImp;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.request.ChangePasswordRequest;
 import com.rrms.rrms.dto.request.RegisterRequest;
@@ -23,10 +15,16 @@ import com.rrms.rrms.repositories.AccountRepository;
 import com.rrms.rrms.repositories.AuthRepository;
 import com.rrms.rrms.repositories.RoleRepository;
 import com.rrms.rrms.services.IAccountService;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -92,10 +90,10 @@ public class AccountService implements IAccountService {
         Role customerRole;
         if ("CUSTOMER".equals(request.getUserType())) {
             customerRole = roleRepository.findByRoleName(Roles.CUSTOMER)
-                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+                    .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
         } else {
             customerRole = roleRepository.findByRoleName(Roles.HOST)
-                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+                    .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
         }
 
         // Tạo đối tượng Auth và gán role CUSTOMER cho tài khoản
@@ -191,4 +189,6 @@ public class AccountService implements IAccountService {
 
         return "Password changed successfully";
     }
+
+
 }

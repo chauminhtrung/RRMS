@@ -1,17 +1,17 @@
 package com.rrms.rrms.mapper;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.rrms.rrms.dto.request.AccountRequest;
+import com.rrms.rrms.dto.response.AccountResponse;
+import com.rrms.rrms.dto.response.BrokerResponse;
+import com.rrms.rrms.models.Account;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
-import com.rrms.rrms.dto.request.AccountRequest;
-import com.rrms.rrms.dto.response.AccountResponse;
-import com.rrms.rrms.models.Account;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper(
         componentModel =
@@ -31,12 +31,14 @@ public interface AccountMapper {
             target = "permissions",
             source = "account",
             qualifiedByName =
-                    "mapPermissions") // Thiết lập rằng trường "permissions" sẽ được lấy từ phương thức mapPermissions
+                    "mapPermissions")
+    // Thiết lập rằng trường "permissions" sẽ được lấy từ phương thức mapPermissions
     AccountResponse toAccountResponse(
             Account account); // Phương thức nhận một Account và trả về đối tượng AccountResponse
 
     // Phương thức để cập nhật thông tin của tài khoản người dùng mà không thay đổi mật khẩu
-    @Mapping(target = "password", ignore = true) // Bỏ qua trường "password" trong quá trình cập nhật
+    @Mapping(target = "password", ignore = true)
+    // Bỏ qua trường "password" trong quá trình cập nhật
     void updateAccount(
             @MappingTarget Account user, AccountRequest request); // Cập nhật user dựa trên thông tin từ AccountRequest
 
@@ -66,4 +68,6 @@ public interface AccountMapper {
         }
         return Collections.emptyList(); // Nếu không có authorities, trả về danh sách rỗng
     }
+
+    BrokerResponse toBrokerResponse(Account account);
 }
