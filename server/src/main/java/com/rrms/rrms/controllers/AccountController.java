@@ -1,10 +1,18 @@
 package com.rrms.rrms.controllers;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.rrms.rrms.dto.request.AccountRequest;
+import com.rrms.rrms.dto.request.ChangePasswordRequest;
+import com.rrms.rrms.dto.response.AccountResponse;
+import com.rrms.rrms.dto.response.ApiResponse;
+import com.rrms.rrms.models.Account;
+import com.rrms.rrms.services.IAccountService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
-
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -13,19 +21,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import com.rrms.rrms.dto.request.AccountRequest;
-import com.rrms.rrms.dto.request.ChangePasswordRequest;
-import com.rrms.rrms.dto.response.AccountResponse;
-import com.rrms.rrms.dto.response.ApiResponse;
-import com.rrms.rrms.models.Account;
-import com.rrms.rrms.services.IAccountService;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
+import java.util.HashMap;
+import java.util.Map;
 
 @Tag(name = "Account Controller", description = "Controller for Account")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)

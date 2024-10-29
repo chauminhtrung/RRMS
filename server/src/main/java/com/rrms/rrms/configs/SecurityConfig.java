@@ -1,9 +1,5 @@
 package com.rrms.rrms.configs;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
-import javax.crypto.spec.SecretKeySpec;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,21 +14,26 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
+import javax.crypto.spec.SecretKeySpec;
+
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
     private static final String[] PUBLIC_ENDPOINTS = {
-        "/",
-        "/authen/login",
-        "/authen/introspect",
-        "/authen/register",
-        "/authen/logout",
-        "/swagger-ui/*",
-        "/v3/api-docs/*",
-        "/searchs/*",
-        "/detail/*"
+            "/",
+            "/authen/login",
+            "/authen/introspect",
+            "/authen/register",
+            "/authen/logout",
+            "/authen/login/oauth2",
+            "/swagger-ui/*",
+            "/v3/api-docs/*",
+            "/searchs/*",
+            "/detail/*",
     };
 
     @Value("${jwt.signer-key}")
@@ -49,6 +50,12 @@ public class SecurityConfig {
                 .authenticated());
 
 
+        // Cấu hình OAuth2 Login với Google
+        http.oauth2Login(oauth2 -> oauth2
+                .loginPage("/authen/login") // trang đăng nhập mặc định
+                .defaultSuccessUrl("/home") // trang chuyển hướng sau đăng nhập thành công
+                .failureUrl("/authen/login?error=true") // trang chuyển hướng khi đăng nhập thất bại
+        );
 
     // Cấu hình OAuth2 Login với Google
     http.oauth2Login(oauth2 -> oauth2

@@ -5,5 +5,6 @@ public enum Roles {
     CUSTOMER,
     EMPLOYEE,
     GUEST,
-    HOST
+    HOST,
+    BROKER
 }
