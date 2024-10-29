@@ -57,11 +57,8 @@ public class SecurityConfig {
         .failureUrl("/authen/login?error=true") // trang chuyển hướng khi đăng nhập thất bại
     );
 
-    http.oauth2ResourceServer(oauth2 ->
-        oauth2.jwt(jwtConfigurer ->
-            jwtConfigurer.decoder(jwtDecoder())
-                .jwtAuthenticationConverter(jwtAuthenticationConverter()))
-    );
+        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer ->
+                jwtConfigurer.decoder(jwtDecoder()).jwtAuthenticationConverter(jwtAuthenticationConverter())));
 
         http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
 

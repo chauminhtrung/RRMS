@@ -41,8 +41,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.stereotype.Service;
 import com.rrms.rrms.services.IAuthorityService;
 
@@ -117,13 +115,14 @@ public class AuthorityService implements IAuthorityService {
             // Log lại lỗi nếu có exception xảy ra trong quá trình xử lý token
             log.error("Error introspecting token", e);
 
-            // Trả về response với thông báo lỗi cụ thể
-            return IntrospecTokenResponse.builder()
-                    .valid(false)
-                    .message("Error processing token: " + e.getMessage())
-                    .build();
-        }
+      // Trả về response với thông báo lỗi cụ thể
+      return IntrospecTokenResponse.builder()
+          .valid(false)
+          .message("Error processing token: " + e.getMessage())
+          .build();
     }
+  }
+
 
   public LoginResponse loginResponse(LoginRequest request) {
     // Lấy tài khoản từ AccountService dựa trên số điện thoại và mật khẩu
@@ -131,71 +130,27 @@ public class AuthorityService implements IAuthorityService {
     Account account = accountService.login(request.getPhone(), request.getPassword())
         .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
-    // Tạo token JWT cho tài khoản sau khi đăng nhập thành công
-    var token = generateToken(account);
+        // Tạo token JWT cho tài khoản sau khi đăng nhập thành công
+        var token = generateToken(account);
 
-    // Xây dựng đối tượng LoginResponse với các thông tin cần thiết
-    return LoginResponse.builder()
-        .token(token)                       // Token JWT
-        .authenticated(true)                // Trạng thái xác thực thành công
-        .username(account.getUsername())    // Tên người dùng
-        .fullname(account.getFullname())    // Họ và tên đầy đủ
-        .phone(account.getPhone())
-        .email(account.getEmail())          // Địa chỉ email
-        .avatar(account.getAvatar())        // Ảnh đại diện (avatar)
-        .birthday(account.getBirthday())    // Ngày sinh của người dùng
-        .gender(account.getGender())        // Giới tính
-        .cccd(account.getCccd())            // CCCD (Chứng minh nhân dân)
-        .build();                           // Hoàn thành việc xây dựng LoginResponse
-  }
-
-  public String generateToken(Account account) {
-    // Tạo tiêu đề cho JWT sử dụng thuật toán ký HS512
-    JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
-
-    // Lấy danh sách role và permission từ tài khoản
-    List<String> roles = account.getAuthorities().stream()
-        .map(auth -> auth.getRole().getRoleName().name())  // Lấy tên của các role
-        .collect(Collectors.toList());
-
-    List<String> permissions = account.getAuthorities().stream()
-        .flatMap(auth -> auth.getRole().getPermissions().stream())  // Lấy các permissions từ role
-        .map(permission -> permission.getName())  // Lấy tên của các permission
-        .distinct()  // Loại bỏ trùng lặp nếu có
-        .collect(Collectors.toList());
-
-    // Xây dựng JWT với các thông tin cần thiết
-    JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-        .subject(account.getPhone())  // Subject của JWT là số điện thoại người dùng
-        .issuer(account.getUsername()) // Người phát hành (issuer)
-        .issueTime(new Date())        // Thời gian phát hành JWT
-        .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))  // Thời gian hết hạn của JWT là 1 giờ
-        .claim("roles", roles)  // Thêm danh sách roles vào claim
-        .jwtID(UUID.randomUUID().toString())
-        .claim("permissions", permissions)  // Thêm danh sách permissions vào claim
-        .build();  // Hoàn thành việc xây dựng claims
-
-    // Chuyển claims thành payload cho JWT
-    Payload payload = new Payload(jwtClaimsSet.toJSONObject());
-
-    // Tạo đối tượng JWSObject chứa header và payload
-    JWSObject jwsObject = new JWSObject(header, payload);
-
-    try {
-      // Ký JWT bằng khóa bí mật
-      jwsObject.sign(new MACSigner(signerKey.getBytes()));
-
-      // Trả về JWT đã được ký (token) dưới dạng chuỗi
-      return jwsObject.serialize();
-    } catch (JOSEException e) {
-      // Log lỗi nếu không thể tạo token JWT và ném ra ngoại lệ
-      log.error("Cannot generate token", e);
-      throw new RuntimeException(e);
+        // Xây dựng đối tượng LoginResponse với các thông tin cần thiết
+        return LoginResponse.builder()
+                .token(token) // Token JWT
+                .authenticated(true) // Trạng thái xác thực thành công
+                .username(account.getUsername()) // Tên người dùng
+                .fullname(account.getFullname()) // Họ và tên đầy đủ
+                .phone(account.getPhone())
+                .email(account.getEmail()) // Địa chỉ email
+                .avatar(account.getAvatar()) // Ảnh đại diện (avatar)
+                .birthday(account.getBirthday()) // Ngày sinh của người dùng
+                .gender(account.getGender()) // Giới tính
+                .cccd(account.getCccd()) // CCCD (Chứng minh nhân dân)
+                .build(); // Hoàn thành việc xây dựng LoginResponse
     }
 
-    private String generateToken(Account account) {
-        // Tạo tiêu đề cho JWT sử dụng thuật toán ký HS512
-        JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
+  private String generateToken(Account account) {
+    // Tạo tiêu đề cho JWT sử dụng thuật toán ký HS512
+    JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         // Lấy danh sách role và permission từ tài khoản
         List<String> roles = account.getAuthorities().stream()
@@ -220,8 +175,8 @@ public class AuthorityService implements IAuthorityService {
                 .claim("permissions", permissions) // Thêm danh sách permissions vào claim
                 .build(); // Hoàn thành việc xây dựng claims
 
-        // Chuyển claims thành payload cho JWT
-        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
+    // Chuyển claims thành payload cho JWT
+    Payload payload = new Payload(jwtClaimsSet.toJSONObject());
 
         // Tạo đối tượng JWSObject chứa header và payload
         JWSObject jwsObject = new JWSObject(header, payload);

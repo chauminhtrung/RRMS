@@ -1,5 +1,6 @@
 package com.rrms.rrms.services;
 
+import java.util.Date;
 import java.util.List;
 
 import com.rrms.rrms.dto.response.RoomDetailResponse;
@@ -18,4 +19,8 @@ public interface ISearchService {
     List<RoomSearchResponse> findByAddress(String keyword);
 
     List<RoomSearchResponse> findByAddressFuzzy(String keyword);
+
+    List<RoomDetailResponse> findByAuthenIs(Boolean authenis);
+
+    List<RoomDetailResponse> findAllByDatenew();
 }

@@ -135,7 +135,7 @@ function FilterSearch({ setSearchData }) {
                     style={{
                       alignItems: 'center',
                       display: 'flex',
-                      marginRight: '7px',
+                      marginRight: '7px'
                     }}>
                     <div
                       style={{
@@ -146,7 +146,7 @@ function FilterSearch({ setSearchData }) {
                         padding: '6px',
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center',
+                        justifyContent: 'center'
                       }}>
                       <svg
                         viewBox="0 0 24 24"
@@ -198,7 +198,7 @@ function FilterSearch({ setSearchData }) {
                       style={{
                         display: 'flex',
                         alignItems: 'center',
-                        color: '#666',
+                        color: '#666'
                       }}>
                       <svg
                         viewBox="0 0 24 24"
@@ -236,7 +236,7 @@ function FilterSearch({ setSearchData }) {
                         fontSize: '28px',
                         color: '#555',
                         top: '9',
-                        right: '0',
+                        right: '0'
                       }}
                     />
                     <div className="guid-search id-1727803392186 dropdown" style={{ display: 'none' }}>
@@ -264,7 +264,7 @@ function FilterSearch({ setSearchData }) {
                         border: 'var(--bs-border-width) solid var(--bs-border-color)',
                         appearance: 'none',
                         borderRadius: 'var(--bs-border-radius)',
-                        transition: 'border-color .15s ease-in-out, box-shadow .15s ease-in-out',
+                        transition: 'border-color .15s ease-in-out, box-shadow .15s ease-in-out'
                       }}
                       value={selectedValueArea} // Chuyển đổi state range sang dạng '1-5' để khớp với giá trị của MenuItem
                       onChange={handleAreaChange}
@@ -307,7 +307,7 @@ function FilterSearch({ setSearchData }) {
                         border: 'var(--bs-border-width) solid var(--bs-border-color)',
                         appearance: 'none',
                         borderRadius: 'var(--bs-border-radius)',
-                        transition: 'border-color .15s ease-in-out, box-shadow .15s ease-in-out',
+                        transition: 'border-color .15s ease-in-out, box-shadow .15s ease-in-out'
                       }}
                       value={selectedValue} // Chuyển đổi state range sang dạng '1-5' để khớp với giá trị của MenuItem
                       onChange={handleGiaChange}
