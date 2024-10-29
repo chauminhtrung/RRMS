@@ -4,7 +4,7 @@ import GoogleIcon from '@mui/icons-material/Google'
 import TwitterIcon from '@mui/icons-material/Twitter'
 import InstagramIcon from '@mui/icons-material/Instagram'
 import axios from 'axios'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import './Login.css'
 import { env } from '~/configs/environment';
@@ -16,7 +16,7 @@ const Login = ({ setUsername, setAvatar }) => {
   const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
   // const [validCaptcha, setValidCaptcha] = useState(false)
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -68,7 +68,8 @@ const Login = ({ setUsername, setAvatar }) => {
         setUsername(usernameFromResponse)
         setAvatar(avtFromResponse)
   
-        navigate('/') // Điều hướng về trang chính
+        //navigate('/') // Điều hướng về trang chính
+        window.location.href = '/'
       }
     } catch (error) {
       if (error.response) {
@@ -103,7 +104,6 @@ const Login = ({ setUsername, setAvatar }) => {
     }
   }
   
-
   return (
     <div
       style={{
@@ -138,10 +138,11 @@ const Login = ({ setUsername, setAvatar }) => {
             </div>
 
             <div className="row login-form-container">
-              <div className="col-md-6 login-form-1" style={{ backgroundColor: '#fff' }}>
+              <div className="col-md-8 login-form-1" style={{ backgroundColor: '#fff' }}>
                 <h3>Đăng nhập tài khoản</h3>
 
                 <form onSubmit={handleSubmit} className="needs-validation" id="login-form">
+                  
                   <div className="container-input">
                     <div className="form-group">
                       <input
@@ -176,7 +177,7 @@ const Login = ({ setUsername, setAvatar }) => {
                     <a href="#" className="btn-social btn-social-outline btn-facebook">
                       <FacebookIcon />
                     </a>
-                    <a href="#" className="btn-social btn-social-outline btn-googleplus">
+                    <a href={`${env.API_URL}/authen/login/oauth2`} className="btn-social btn-social-outline btn-googleplus">
                       <GoogleIcon />
                     </a>
                     <a href="#" className="btn-social btn-social-outline btn-twitter">
@@ -197,7 +198,7 @@ const Login = ({ setUsername, setAvatar }) => {
                 </form>
               </div>
 
-              <div className="col-md-6 login-form-2 text-center" style={{ color: '#fff' }}>
+              <div className="col-md-4 login-form-2 text-center" style={{ color: '#fff' }}>
                 <div className="mt-5">
                   <img
                     width="110px"

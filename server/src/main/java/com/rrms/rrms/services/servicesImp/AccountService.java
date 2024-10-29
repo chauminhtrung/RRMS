@@ -64,6 +64,11 @@ public class AccountService implements IAccountService {
     }
 
     @Override
+    public Optional<Account> findByEmail(String email) {
+        return accountRepository.findByEmail(email);
+    }
+
+    @Override
     public Account register(RegisterRequest request) {
         // Kiểm tra xem username hoặc phone đã tồn tại chưa
         if (accountRepository.existsByUsername(request.getUsername())
@@ -84,9 +89,14 @@ public class AccountService implements IAccountService {
         Account savedAccount = accountRepository.save(account);
 
         // Lấy role CUSTOMER từ cơ sở dữ liệu
-        Role customerRole = roleRepository
-                .findByRoleName(Roles.CUSTOMER)
+        Role customerRole;
+        if ("CUSTOMER".equals(request.getUserType())) {
+            customerRole = roleRepository.findByRoleName(Roles.CUSTOMER)
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+        } else {
+            customerRole = roleRepository.findByRoleName(Roles.HOST)
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+        }
 
         // Tạo đối tượng Auth và gán role CUSTOMER cho tài khoản
         Auth auth = new Auth();

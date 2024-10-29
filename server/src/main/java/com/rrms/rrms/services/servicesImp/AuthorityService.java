@@ -41,6 +41,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import com.rrms.rrms.services.IAuthorityService;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -113,20 +115,20 @@ public class AuthorityService implements IAuthorityService {
             // Log lại lỗi nếu có exception xảy ra trong quá trình xử lý token
             log.error("Error introspecting token", e);
 
-            // Trả về response với thông báo lỗi cụ thể
-            return IntrospecTokenResponse.builder()
-                    .valid(false)
-                    .message("Error processing token: " + e.getMessage())
-                    .build();
-        }
+      // Trả về response với thông báo lỗi cụ thể
+      return IntrospecTokenResponse.builder()
+          .valid(false)
+          .message("Error processing token: " + e.getMessage())
+          .build();
     }
+  }
 
-    public LoginResponse loginResponse(LoginRequest request) {
-        // Lấy tài khoản từ AccountService dựa trên số điện thoại và mật khẩu
-        // Nếu không tìm thấy hoặc mật khẩu sai, ném ngoại lệ AUTHENTICATED
-        Account account = accountService
-                .login(request.getPhone(), request.getPassword())
-                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+
+  public LoginResponse loginResponse(LoginRequest request) {
+    // Lấy tài khoản từ AccountService dựa trên số điện thoại và mật khẩu
+    // Nếu không tìm thấy hoặc mật khẩu sai, ném ngoại lệ AUTHENTICATED
+    Account account = accountService.login(request.getPhone(), request.getPassword())
+        .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
         // Tạo token JWT cho tài khoản sau khi đăng nhập thành công
         var token = generateToken(account);
@@ -146,9 +148,9 @@ public class AuthorityService implements IAuthorityService {
                 .build(); // Hoàn thành việc xây dựng LoginResponse
     }
 
-    private String generateToken(Account account) {
-        // Tạo tiêu đề cho JWT sử dụng thuật toán ký HS512
-        JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
+  private String generateToken(Account account) {
+    // Tạo tiêu đề cho JWT sử dụng thuật toán ký HS512
+    JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         // Lấy danh sách role và permission từ tài khoản
         List<String> roles = account.getAuthorities().stream()
@@ -173,8 +175,8 @@ public class AuthorityService implements IAuthorityService {
                 .claim("permissions", permissions) // Thêm danh sách permissions vào claim
                 .build(); // Hoàn thành việc xây dựng claims
 
-        // Chuyển claims thành payload cho JWT
-        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
+    // Chuyển claims thành payload cho JWT
+    Payload payload = new Payload(jwtClaimsSet.toJSONObject());
 
         // Tạo đối tượng JWSObject chứa header và payload
         JWSObject jwsObject = new JWSObject(header, payload);

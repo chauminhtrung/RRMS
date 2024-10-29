@@ -7,7 +7,6 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,8 +23,16 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final String[] PUBLIC_ENDPOINTS = {
-        "/", "/authen/login", "/authen/introspect", "/authen/register", "/authen/logout"
+    private static final String[] PUBLIC_ENDPOINTS = {
+        "/",
+        "/authen/login",
+        "/authen/introspect",
+        "/authen/register",
+        "/authen/logout",
+        "/swagger-ui/*",
+        "/v3/api-docs/*",
+        "/searchs/*",
+        "/detail/*"
     };
 
     @Value("${jwt.signer-key}")
@@ -36,10 +43,19 @@ public class SecurityConfig {
             throws Exception {
         http.cors(withDefaults());
 
-        http.authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
+        http.authorizeHttpRequests(request -> request.requestMatchers(PUBLIC_ENDPOINTS)
                 .permitAll()
                 .anyRequest()
                 .authenticated());
+
+
+
+    // Cấu hình OAuth2 Login với Google
+    http.oauth2Login(oauth2 -> oauth2
+        .loginPage("/authen/login") // trang đăng nhập mặc định
+        .defaultSuccessUrl("/home") // trang chuyển hướng sau đăng nhập thành công
+        .failureUrl("/authen/login?error=true") // trang chuyển hướng khi đăng nhập thất bại
+    );
 
         http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer ->
                 jwtConfigurer.decoder(jwtDecoder()).jwtAuthenticationConverter(jwtAuthenticationConverter())));

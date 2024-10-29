@@ -1,5 +1,6 @@
 package com.rrms.rrms.services;
 
+import com.rrms.rrms.models.Account;
 import java.text.ParseException;
 
 import com.nimbusds.jose.JOSEException;
@@ -17,5 +18,7 @@ public interface IAuthorityService {
 
     void logout(LogoutRequest request) throws ParseException, JOSEException;
 
-    Auth save(Auth auth);
+  Auth save(Auth auth);
+
+  String generateToken(Account account);
 }
