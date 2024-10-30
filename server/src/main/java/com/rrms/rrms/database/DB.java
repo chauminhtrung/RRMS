@@ -34,15 +34,15 @@ public class DB {
             ServiceRepository serviceRepository,
             RoomServiceRepository roomServiceRepository,
             ISearchService searchService,
-            RoleRepository roleRepository) {
+            RoleRepository roleRepository,
+            PermissionRepository permissionRepository) {
         return args -> {
             int roomsLength = 100;
 
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
 
             // Tạo dữ liệu mẫu cho các vai trò
-            createSampleRoles(roleRepository);
-
+            createSampleRolesAndPermissions(roleRepository, permissionRepository);
             // Tạo tài khoản admin nếu chưa tồn tại
             createAdminAccount(accountRepository, pe, roleRepository, authRepository);
             createEmployAccount(accountRepository, pe, roleRepository, authRepository);
@@ -92,48 +92,81 @@ public class DB {
     }
 
     // Phương thức để tạo dữ liệu mẫu cho roles
-    private void createSampleRoles(RoleRepository roleRepository) {
-        if (roleRepository.count() == 0) { // Kiểm tra nếu chưa có vai trò nào trong cơ sở dữ liệu
-            log.info("Creating sample roles...");
-            Role adminRole = new Role();
-            adminRole.setRoleName(Roles.ADMIN);
-            adminRole.setDescription("Administrator with full access.");
-            roleRepository.save(adminRole);
-
-            Role customerRole = new Role();
-            customerRole.setRoleName(Roles.CUSTOMER);
-            customerRole.setDescription("Regular customer role.");
-            roleRepository.save(customerRole);
-
-            Role employeeRole = new Role();
-            employeeRole.setRoleName(Roles.EMPLOYEE);
-            employeeRole.setDescription("Employee role with limited access.");
-            roleRepository.save(employeeRole);
-
-            Role guestRole = new Role();
-            guestRole.setRoleName(Roles.GUEST);
-            guestRole.setDescription("Guest user without account.");
-            roleRepository.save(guestRole);
-
-            Role hostRole = new Role();
-            hostRole.setRoleName(Roles.HOST);
-            hostRole.setDescription("Host for organizing events.");
-            roleRepository.save(hostRole);
-
-            Role brokerRole = new Role();
-            brokerRole.setRoleName(Roles.BROKER);
-            brokerRole.setDescription("Host for organizing events.");
-            roleRepository.save(brokerRole);
-
-            log.info("Sample roles created.");
+    private void createSampleRolesAndPermissions(RoleRepository roleRepository, PermissionRepository permissionRepository) {
+        if (roleRepository.count() == 0) {
+            log.info("Creating sample roles and permissions...");
+            // Define ADMIN permissions
+            Set<Permission> adminPermissions = new HashSet<>();
+            adminPermissions.add(createPermission("CREATE_HOST_ACCOUNT", "Create host accounts", permissionRepository));
+            adminPermissions.add(createPermission("UPDATE_HOST_ACCOUNT", "Update host accounts", permissionRepository));
+            adminPermissions.add(createPermission("DELETE_HOST_ACCOUNT", "Delete host accounts", permissionRepository));
+            adminPermissions.add(createPermission("SEARCH_HOST_ACCOUNT", "Search host accounts", permissionRepository));
+            adminPermissions.add(createPermission("APPROVED_POST", "Approve posts", permissionRepository));
+            // Define HOST permissions
+            Set<Permission> hostPermissions = new HashSet<>();
+            hostPermissions.add(createPermission("CREATE_EMPLOYEE_ACCOUNT", "Create employee accounts", permissionRepository));
+            hostPermissions.add(createPermission("UPDATE_EMPLOYEE_ACCOUNT", "Update employee accounts", permissionRepository));
+            hostPermissions.add(createPermission("DELETE_EMPLOYEE_ACCOUNT", "Delete employee accounts", permissionRepository));
+            hostPermissions.add(createPermission("SEARCH_EMPLOYEE_ACCOUNT", "Search employee accounts", permissionRepository));
+            hostPermissions.add(createPermission("CREATE_CUSTOMER_ACCOUNT", "Create customer accounts", permissionRepository));
+            hostPermissions.add(createPermission("UPDATE_CUSTOMER_ACCOUNT", "Update customer accounts", permissionRepository));
+            hostPermissions.add(createPermission("DELETE_CUSTOMER_ACCOUNT", "Delete customer accounts", permissionRepository));
+            hostPermissions.add(createPermission("SEARCH_CUSTOMER_ACCOUNT", "Search customer accounts", permissionRepository));
+            hostPermissions.add(createPermission("CREATE_POST", "Create posts", permissionRepository));
+            hostPermissions.add(createPermission("CREATE_MOTEL", "Create motels", permissionRepository));
+            hostPermissions.add(createPermission("UPDATE_MOTEL", "Update motels", permissionRepository));
+            hostPermissions.add(createPermission("DELETE_MOTEL", "Delete motels", permissionRepository));
+            hostPermissions.add(createPermission("CREATE_ROOM", "Create rooms", permissionRepository));
+            hostPermissions.add(createPermission("UPDATE_ROOM", "Update rooms", permissionRepository));
+            hostPermissions.add(createPermission("DELETE_ROOM", "Delete rooms", permissionRepository));
+            hostPermissions.add(createPermission("CREATE_CONTRACT", "Create contracts", permissionRepository));
+            hostPermissions.add(createPermission("UPDATE_CONTRACT", "Update contracts", permissionRepository));
+            hostPermissions.add(createPermission("DELETE_CONTRACT", "Delete contracts", permissionRepository));
+            // Define EMPLOYEE permissions
+            Set<Permission> employeePermissions = new HashSet<>();
+            employeePermissions.add(createPermission("UPDATE_EMPLOYEE_ACCOUNT", "Update employee accounts", permissionRepository));
+            employeePermissions.add(createPermission("UPDATE_CUSTOMER_ACCOUNT", "Update customer accounts", permissionRepository));
+            employeePermissions.add(createPermission("SEARCH_CUSTOMER_ACCOUNT", "Search customer accounts", permissionRepository));
+            employeePermissions.add(createPermission("UPDATE_MOTEL", "Update motels", permissionRepository));
+            employeePermissions.add(createPermission("UPDATE_ROOM", "Update rooms", permissionRepository));
+            Set<Permission> customerPermissions = new HashSet<>();
+            customerPermissions.add(createPermission("VIEW_SEARCH_MOTEL", "View and search motels", permissionRepository));
+            customerPermissions.add(createPermission("VIEW_SEARCH_ROOM", "View and search rooms", permissionRepository));
+            customerPermissions.add(createPermission("UPDATE_ACCOUNT", "Update account information", permissionRepository));
+            customerPermissions.add(createPermission("VIEW_CONTRACT", "View contracts", permissionRepository));
+            customerPermissions.add(createPermission("SUPPORT", "Support requests", permissionRepository));
+            customerPermissions.add(createPermission("PAYMENT", "Handle payments", permissionRepository));
+            // Define GUEST permissions
+            Set<Permission> guestPermissions = new HashSet<>();
+            guestPermissions.add(createPermission("VIEW_SEARCH_MOTEL", "View and search motels", permissionRepository));
+            guestPermissions.add(createPermission("VIEW_SEARCH_ROOM", "View and search rooms", permissionRepository));
+            guestPermissions.add(createPermission("CREATE_ACCOUNT", "Create a user account", permissionRepository));
+            // Create roles and assign permissions
+            createRoleWithPermissions(roleRepository, "ADMIN", "Administrator with full access.", adminPermissions);
+            createRoleWithPermissions(roleRepository, "HOST", "Host for organizing events.", hostPermissions);
+            createRoleWithPermissions(roleRepository, "EMPLOYEE", "Employee role with limited access.", employeePermissions);
+            createRoleWithPermissions(roleRepository, "CUSTOMER", "Regular customer role.", customerPermissions);
+            createRoleWithPermissions(roleRepository, "GUEST", "Guest user without account.", guestPermissions);
+            log.info("Sample roles and permissions created.");
         }
     }
 
-    private void createAdminAccount(
-            AccountRepository accountRepository,
-            BCryptPasswordEncoder pe,
-            RoleRepository roleRepository,
-            AuthRepository authRepository) {
+    private Permission createPermission(String name, String description, PermissionRepository permissionRepository) {
+        Permission permission = new Permission();
+        permission.setName(name);
+        permission.setDescription(description);
+        return permissionRepository.save(permission);
+    }
+
+    private void createRoleWithPermissions(RoleRepository roleRepository, String roleName, String description, Set<Permission> permissions) {
+        Role role = new Role();
+        role.setRoleName(Roles.valueOf(roleName));
+        role.setDescription(description);
+        role.setPermissions(permissions);
+        roleRepository.save(role);
+    }
+
+    private void createAdminAccount(AccountRepository accountRepository, BCryptPasswordEncoder pe, RoleRepository roleRepository, AuthRepository authRepository) {
         if (accountRepository.findByUsername("admin").isEmpty()) {
             // Create admin account
             Account adminAccount = Account.builder()
