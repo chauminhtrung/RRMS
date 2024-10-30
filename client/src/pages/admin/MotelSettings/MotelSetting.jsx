@@ -56,6 +56,15 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
               Cài đặt nhà trọ
               <i style={{ fontSize: '14px', fontWeight: 'normal' }}>Các thiết lập cho nhà trọ</i>
             </h4>
+            <div>
+              <button type="button" class="btn btn-light border me-2">
+                <i class="bi bi-arrow-left"></i>
+                <b> Về trang quản lý</b>
+              </button>
+              <button type="button" class="btn btn-light border text-light" style={{ background: '#20a9e7' }}>
+                <i class="bi bi-floppy"></i> <b> Lưu cài đặt</b>
+              </button>
+            </div>
           </div>
           <div className="card-feature2 overflow-hidden">
             <div className="d-flex">
@@ -1063,8 +1072,191 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                     </div>
                     <div id="extension_setting" className="container tab-pane fade show">
                       <br />
-                      <h3>Extension</h3>
-                      <p>Extension</p>
+                      <div className="header-item">
+                        <div className="container tab-pane">
+                          <div className="header-item">
+                            <h4 className="title-item">
+                              Nội quy, giờ giấc, tiện ích cho thuê
+                              <i style={{ fontSize: '14px', fontWeight: 'normal' }}>
+                                Thiết lập thời gian, nội quy và tiện ích. Các thông tin này sẽ được sẽ dụng để đăng tin
+                                trong khi tìm khách thuê.
+                                <br />
+                              </i>
+                            </h4>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-md-6 col-sm-6 col-xs-12 my-2">
+                          <div className="row">
+                            <h4>Tiện ích của Nhà trọ</h4>
+                          </div>
+                          <div className="row">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" />
+                              <label class="form-check-label">
+                                <b>Có gác lửng</b>
+                              </label>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" />
+                              <label class="form-check-label">
+                                <b>Có chỗ giữ xe</b>
+                              </label>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" />
+                              <label class="form-check-label">
+                                <b>Toilet riêng</b>
+                              </label>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" />
+                              <label class="form-check-label">
+                                <b>Riêng với chủ</b>
+                              </label>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" />
+                              <label class="form-check-label">
+                                <b>Có wifi</b>
+                              </label>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" />
+                              <label class="form-check-label">
+                                <b>Có camera an ninh</b>
+                              </label>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" />
+                              <label class="form-check-label">
+                                <b>Được nuôi thú cưng</b>
+                              </label>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" />
+                              <label class="form-check-label">
+                                <b>Có ban công</b>
+                              </label>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" />
+                              <label class="form-check-label">
+                                <b>Có nơi sinh hoạt</b>
+                              </label>
+                            </div>
+                          </div>
+                          <div className="row my-2">
+                            <h4>Nội dung giờ giấc của Nhà trọ</h4>
+                            <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                              <div className="form-floating">
+                                <select
+                                  id=""
+                                  data-format="numeric"
+                                  name="address_component[province_id]"
+                                  className="form-select form-control province"
+                                  value=""
+                                  required>
+                                  <option value="">4h sáng</option>
+                                </select>
+                                <label htmlFor="province">Giờ mở cửa</label>
+                                <div className="invalid-feedback">Error</div>
+                              </div>
+                            </div>
+                            <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                              <div className="form-floating">
+                                <select
+                                  id=""
+                                  data-format="numeric"
+                                  name="address_component[province_id]"
+                                  className="form-select form-control province"
+                                  value=""
+                                  required>
+                                  <option value="">22h tối</option>
+                                </select>
+                                <label htmlFor="province">Giờ đóng cửa</label>
+                                <div className="invalid-feedback">Error</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 col-xs-12 my-2">
+                          <div className="row">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" />
+                              <label class="form-check-label">
+                                <b>Nhà trọ có giờ giấc không về quá khuya</b>
+                                <p>Không về sau 12h tối</p>
+                              </label>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" />
+                              <label class="form-check-label">
+                                <b>Đóng tiền trọ đúng ngày</b>
+                                <p>Đóng tiền trọ đúng ngày, không thiếu thường xuyên...</p>
+                              </label>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" />
+                              <label class="form-check-label">
+                                <b>Không hút thuốc, say xỉn</b>
+                                <p>Không tụ tập nhậu nhẹt, hát hò làm ảnh hưởng phòng xung quanh</p>
+                              </label>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" />
+                              <label class="form-check-label">
+                                <b>Không chứa chấp tội phạm</b>
+                                <p>Không che giấu và chứa chấp tội phạm trong phòng</p>
+                              </label>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" />
+                              <label class="form-check-label">
+                                <b>Không hát karaoke, nhậu nhẹt ảnh hưởng tới phòng kế bên</b>
+                                <p>Không gây ồn ào, mất trật tự, nhậu nhẹt, say xỉn...</p>
+                              </label>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="" />
+                              <label class="form-check-label">
+                                <b>Cư xử văn hóa</b>
+                                <p>
+                                  Không gây gỗ chửi thề, gây hiềm khích với mọi người, tạo văn hóa phòng trọ yên bình,
+                                  hòa đồng.
+                                </p>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
