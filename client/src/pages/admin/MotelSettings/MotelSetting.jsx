@@ -832,8 +832,110 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                     </div>
                     <div id="account_bank_setting" className="container tab-pane fade show">
                       <br />
-                      <h3>Cài đặt tài khoản ngân hàng</h3>
-                      <p>Cài đặt tài khoản ngân hàng</p>
+                      <div className="header-item">
+                        <div className="container tab-pane">
+                          <div className="header-item">
+                            <h4 className="title-item">
+                              Cài đặt ngân hàng
+                              <i style={{ fontSize: '14px', fontWeight: 'normal' }}>
+                                Dùng để hiển thị trên hóa đơn, mã xóa mã QR giúp khách thuê thanh toán chuyển khoản cho
+                                bạn dễ dàng hơn
+                                <br />
+                              </i>
+                            </h4>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-md-12 col-sm-12 col-xs-12 mt-2 hide-when-edit">
+                        <div className="form-floating">
+                          <select
+                            id=""
+                            data-format="numeric"
+                            name="address_component[province_id]"
+                            className="form-select form-control province"
+                            value=""
+                            required>
+                            <option value="">Ngân hàng ABC</option>
+                          </select>
+                          <label htmlFor="province">Tên ngân hàng</label>
+                          <div className="invalid-feedback">Error</div>
+                        </div>
+                      </div>
+                      <div className="col-md-12 col-sm-12 col-xs-12 mt-2 hide-when-edit">
+                        <div className="form-floating">
+                          <input
+                            data-format="string"
+                            type="text"
+                            className="form-control"
+                            name="job"
+                            id="setting_info_job"
+                            placeholder="Chi nhánh ngân hàng"
+                            required=""
+                          />
+                          <label htmlFor="setting_info_job">Chi nhánh ngân hàng</label>
+                          <div className="invalid-feedback">Error</div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="header-item">
+                          <div className="container tab-pane">
+                            <div className="header-item">
+                              <b className="title-item">Thông tin tài khoản</b>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                          <div className="form-floating">
+                            <input
+                              data-format="string"
+                              type="text"
+                              className="form-control"
+                              name="job"
+                              id="setting_info_job"
+                              placeholder="Chi nhánh ngân hàng"
+                              required=""
+                            />
+                            <label htmlFor="setting_info_job">
+                              Tên chủ tài khoản <span className="text-danger">*</span>
+                            </label>
+                            <div className="invalid-feedback">Error</div>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                          <div className="form-floating">
+                            <input
+                              data-format="string"
+                              type="text"
+                              className="form-control"
+                              name="job"
+                              id="setting_info_job"
+                              placeholder="Chi nhánh ngân hàng"
+                              required=""
+                            />
+                            <label htmlFor="setting_info_job">
+                              Số tài khoản <span className="text-danger">*</span>
+                            </label>
+                            <div className="invalid-feedback">Error</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row my-2">
+                        <div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                            <label class="form-check-label" for="flexCheckDefault">
+                              <b>Đồng bộ tất cả nhà trọ</b>
+                            </label>
+                          </div>
+                        </div>
+                        <div>
+                          <p className="text-setting-invoice">
+                            Đồng bộ thông tin ngân hàng nay cho tất cả các nhà trọ khác trong cùng hệ thống
+                          </p>
+                        </div>
+                      </div>
                     </div>
                     <div id="app_book" className="container tab-pane fade show">
                       <br />
