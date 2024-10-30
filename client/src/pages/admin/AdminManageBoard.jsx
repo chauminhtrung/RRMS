@@ -1,21 +1,10 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import { yellow } from '@mui/material/colors'
 import {
-  Box,
-  Breadcrumbs,
-  Button,
-  Container,
-  Grid,
-  Pagination,
-  Rating,
-  TextField,
   Typography,
-  useMediaQuery,
 } from '@mui/material'
-import { fontSize } from '@mui/system'
 
 const AdminManagerBoard = ({ setIsAdmin }) => {
   useEffect(() => {

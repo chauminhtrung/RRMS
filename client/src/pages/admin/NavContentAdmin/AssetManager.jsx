@@ -1,9 +1,8 @@
 import { useEffect } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
-import { Box, FormControl, InputLabel, Select, MenuItem, } from '@mui/material';
-import DescriptionIcon from '@mui/icons-material/Description';
+import { Box} from '@mui/material';
 import { ReactTabulator } from 'react-tabulator';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 
 const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {

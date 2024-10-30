@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Box, Button } from '@mui/material'
 import { Grid } from '@mui/material'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
@@ -7,13 +7,13 @@ const MainManagement = ({ setIsAdmin }) => {
   useEffect(() => {
     setIsAdmin(true)
   }, [])
-  const [open, setOpen] = useState(false)
-  const handleClickOpen = () => {
-    setOpen(true)
-  }
-  const handleClose = () => {
-    setOpen(false)
-  }
+  // const [open, setOpen] = useState(false)
+  // const handleClickOpen = () => {
+  //   setOpen(true)
+  // }
+  // const handleClose = () => {
+  //   setOpen(false)
+  // }
   return (
     <div>
       <NavAdmin setIsAdmin={setIsAdmin} />
