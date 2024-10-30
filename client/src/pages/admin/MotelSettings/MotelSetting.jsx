@@ -475,8 +475,133 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                     </div>
                     <div id="on_off" className="container tab-pane fade show">
                       <br />
-                      <h3>Bật tắt tính năng</h3>
-                      <p>Bật tắt tính năng</p>
+                      <div className="header-item">
+                        <div className="container tab-pane">
+                          <div className="header-item">
+                            <h4 className="title-item">
+                              Cài đặt tính năng
+                              <i style={{ fontSize: '14px', fontWeight: 'normal' }}>
+                                Bật/Tắt các tính năng có thể áp dụng trong Nhà trọ của bạn
+                                <br />
+                              </i>
+                            </h4>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                          <div className="form-check form-switch">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              value="1"
+                              id="setting[asset_function]"
+                              name="setting[asset_function]"
+                              checked
+                            />
+                            <label className="form-check-label" htmlFor="setting[asset_function]">
+                              <b>Quản lý tài sản</b>
+                              <p>Quản lý tài sản khách thuê sử dụng</p>
+                            </label>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                          <div className="form-check form-switch">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              value="1"
+                              id="setting[asset_function]"
+                              name="setting[asset_function]"
+                              checked
+                            />
+                            <label className="form-check-label" htmlFor="setting[asset_function]">
+                              <b>Quản lý xe</b>
+                              <p>Các thông tin xe của khách thuê</p>
+                            </label>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                          <div className="form-check form-switch">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              value="1"
+                              id="setting[asset_function]"
+                              name="setting[asset_function]"
+                              checked
+                            />
+                            <label className="form-check-label" htmlFor="setting[asset_function]">
+                              <b>Quản lý mô giới</b>
+                              <p>Các thông tin về mô giới</p>
+                            </label>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                          <div className="form-check form-switch">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              value="1"
+                              id="setting[asset_function]"
+                              name="setting[asset_function]"
+                              checked
+                            />
+                            <label className="form-check-label" htmlFor="setting[asset_function]">
+                              <b>Quản lý tin đăng</b>
+                              <p>Các thông tin về tin đăng</p>
+                            </label>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                          <div className="form-check form-switch">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              value="1"
+                              id="setting[asset_function]"
+                              name="setting[asset_function]"
+                              checked
+                            />
+                            <label className="form-check-label" htmlFor="setting[asset_function]">
+                              <b>Quản lý công việc cần làm</b>
+                              <p>Các thông tin về việc cần làm</p>
+                            </label>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                          <div className="form-check form-switch">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              value="1"
+                              id="setting[asset_function]"
+                              name="setting[asset_function]"
+                              checked
+                            />
+                            <label className="form-check-label" htmlFor="setting[asset_function]">
+                              <b>Gửi tin nhắn tự động cho khách thuê</b>
+                              <p>Giửi tin nhắn SMS tự động cho khách thuê sau khi lập phiếu</p>
+                            </label>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                          <div className="form-check form-switch">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              value="1"
+                              id="setting[asset_function]"
+                              name="setting[asset_function]"
+                              checked
+                            />
+                            <label className="form-check-label" htmlFor="setting[asset_function]">
+                              <b>Hình ảnh, file chứng từ hợp đồng</b>
+                              <p>Bật/Tắt thêm hình ảnh, file chứng từ cho hợp đồng</p>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <div id="invoice_setting" className="container tab-pane fade show">
                       <br />
