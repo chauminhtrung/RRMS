@@ -3,7 +3,7 @@ import NavAdmin from '~/layouts/admin/NavbarAdmin'
 import 'flatpickr/dist/themes/material_blue.css'
 import ModelDeposit from '../ManagerSettings/ModelDeposit'
 import AddIcon from '@mui/icons-material/Add'
-import './CSS/MotelSetting.css'
+import './MotelSetting.css'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 const initialItems = [
   { id: '1', name: 'Tầng trệt 1' },
@@ -74,7 +74,7 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                         stroke-width="2"
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                        class="feather feather-box">
+                        className="feather feather-box">
                         <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
                         <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
                         <line x1="12" y1="22.08" x2="12" y2="12" />
@@ -114,7 +114,7 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                         stroke-width="2"
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                        class="feather feather-settings">
+                        className="feather feather-settings">
                         <circle cx="12" cy="12" r="3"></circle>
                         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                       </svg>
@@ -133,7 +133,7 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                         stroke-width="2"
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                        class="feather feather-bookmark">
+                        className="feather feather-bookmark">
                         <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
                       </svg>
                       Cài đặt hóa đơn
@@ -151,7 +151,7 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                         stroke-width="2"
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                        class="feather feather-dollar-sign">
+                        className="feather feather-dollar-sign">
                         <line x1="12" y1="1" x2="12" y2="23" />
                         <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                       </svg>
@@ -170,7 +170,7 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                         stroke-width="2"
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                        class="feather feather-smartphone">
+                        className="feather feather-smartphone">
                         <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
                         <line x1="12" y1="18" x2="12.01" y2="18" />
                       </svg>
@@ -189,7 +189,7 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                         stroke-width="2"
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                        class="feather feather-file-text">
+                        className="feather feather-file-text">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                         <polyline points="14 2 14 8 20 8" />
                         <line x1="16" y1="13" x2="8" y2="13" />
@@ -321,7 +321,7 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                             </div>
                             <div>
                               Chọn tất cả
-                              <input class="form-check-input ms-2" type="checkbox" value="" />
+                              <input className="form-check-input ms-2" type="checkbox" value="" />
                             </div>
                           </div>
                         </div>
@@ -329,7 +329,7 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                           <div className="col-md-3 col-sm-3 col-xs-12">
                             <div className="row border pt-2 pb-3 m-1">
                               <div className="col-md-3 col-sm-3 col-xs-12">
-                                <input class="form-check-input" type="checkbox" />
+                                <input className="form-check-input" type="checkbox" />
                               </div>
                               <div className="col-md-9 col-sm-9 col-xs-12">
                                 Phòng 1
@@ -341,7 +341,7 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                           <div className="col-md-3 col-sm-3 col-xs-12">
                             <div className="row border pt-2 pb-3 m-1">
                               <div className="col-md-3 col-sm-3 col-xs-12">
-                                <input class="form-check-input" type="checkbox" />
+                                <input className="form-check-input" type="checkbox" />
                               </div>
                               <div className="col-md-9 col-sm-9 col-xs-12">
                                 Phòng 1
@@ -353,7 +353,7 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                           <div className="col-md-3 col-sm-3 col-xs-12">
                             <div className="row border pt-2 pb-3 m-1">
                               <div className="col-md-3 col-sm-3 col-xs-12">
-                                <input class="form-check-input" type="checkbox" />
+                                <input className="form-check-input" type="checkbox" />
                               </div>
                               <div className="col-md-9 col-sm-9 col-xs-12">
                                 Phòng 1
@@ -365,7 +365,7 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                           <div className="col-md-3 col-sm-3 col-xs-12">
                             <div className="row border pt-2 pb-3 m-1">
                               <div className="col-md-3 col-sm-3 col-xs-12">
-                                <input class="form-check-input" type="checkbox" />
+                                <input className="form-check-input" type="checkbox" />
                               </div>
                               <div className="col-md-9 col-sm-9 col-xs-12">
                                 Phòng 1
@@ -377,7 +377,7 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                           <div className="col-md-3 col-sm-3 col-xs-12">
                             <div className="row border pt-2 pb-3 m-1">
                               <div className="col-md-3 col-sm-3 col-xs-12">
-                                <input class="form-check-input" type="checkbox" />
+                                <input className="form-check-input" type="checkbox" />
                               </div>
                               <div className="col-md-9 col-sm-9 col-xs-12">
                                 Phòng 1
@@ -389,7 +389,7 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                           <div className="col-md-3 col-sm-3 col-xs-12">
                             <div className="row border pt-2 pb-3 m-1">
                               <div className="col-md-3 col-sm-3 col-xs-12">
-                                <input class="form-check-input" type="checkbox" />
+                                <input className="form-check-input" type="checkbox" />
                               </div>
                               <div className="col-md-9 col-sm-9 col-xs-12">
                                 Phòng 1
@@ -401,7 +401,7 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                           <div className="col-md-3 col-sm-3 col-xs-12">
                             <div className="row border pt-2 pb-3 m-1">
                               <div className="col-md-3 col-sm-3 col-xs-12">
-                                <input class="form-check-input" type="checkbox" />
+                                <input className="form-check-input" type="checkbox" />
                               </div>
                               <div className="col-md-9 col-sm-9 col-xs-12">
                                 Phòng 1
@@ -413,7 +413,7 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                           <div className="col-md-3 col-sm-3 col-xs-12">
                             <div className="row border pt-2 pb-3 m-1">
                               <div className="col-md-3 col-sm-3 col-xs-12">
-                                <input class="form-check-input" type="checkbox" />
+                                <input className="form-check-input" type="checkbox" />
                               </div>
                               <div className="col-md-9 col-sm-9 col-xs-12">
                                 Phòng 1
@@ -425,7 +425,7 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                           <div className="col-md-3 col-sm-3 col-xs-12">
                             <div className="row border pt-2 pb-3 m-1">
                               <div className="col-md-3 col-sm-3 col-xs-12">
-                                <input class="form-check-input" type="checkbox" />
+                                <input className="form-check-input" type="checkbox" />
                               </div>
                               <div className="col-md-9 col-sm-9 col-xs-12">
                                 Phòng 1
@@ -437,7 +437,7 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                           <div className="col-md-3 col-sm-3 col-xs-12">
                             <div className="row border pt-2 pb-3 m-1">
                               <div className="col-md-3 col-sm-3 col-xs-12">
-                                <input class="form-check-input" type="checkbox" />
+                                <input className="form-check-input" type="checkbox" />
                               </div>
                               <div className="col-md-9 col-sm-9 col-xs-12">
                                 Phòng 1
@@ -449,7 +449,7 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                           <div className="col-md-3 col-sm-3 col-xs-12">
                             <div className="row border pt-2 pb-3 m-1">
                               <div className="col-md-3 col-sm-3 col-xs-12">
-                                <input class="form-check-input" type="checkbox" />
+                                <input className="form-check-input" type="checkbox" />
                               </div>
                               <div className="col-md-9 col-sm-9 col-xs-12">
                                 Phòng 1
@@ -461,7 +461,7 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                           <div className="col-md-3 col-sm-3 col-xs-12">
                             <div className="row border pt-2 pb-3 m-1">
                               <div className="col-md-3 col-sm-3 col-xs-12">
-                                <input class="form-check-input" type="checkbox" />
+                                <input className="form-check-input" type="checkbox" />
                               </div>
                               <div className="col-md-9 col-sm-9 col-xs-12">
                                 Phòng 1
@@ -605,8 +605,230 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                     </div>
                     <div id="invoice_setting" className="container tab-pane fade show">
                       <br />
-                      <h3>Cài đặt hóa đơn</h3>
-                      <p>Cài đặt hóa đơn</p>
+                      <div className="header-item">
+                        <div className="container tab-pane">
+                          <div className="header-item">
+                            <h4 className="title-item">
+                              Cài đặt phiếu thu (hóa đơn)
+                              <i style={{ fontSize: '14px', fontWeight: 'normal' }}>
+                                Thiết lập, tùy chỉnh cho hóa đơn của bạn
+                                <br />
+                              </i>
+                            </h4>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-md-6 col-sm-6 col-xs-12">
+                          <div className="form-floating">
+                            <input
+                              data-format="string"
+                              type="text"
+                              className="form-control"
+                              name="job"
+                              value="12"
+                              id="setting_info_job"
+                              placeholder=" Ngày lập hóa đơn(trong khoảng 1 đến 31)"
+                              required=""
+                            />
+                            <label htmlFor="setting_info_job">
+                              Ngày lập hóa đơn(trong khoảng 1 đến 31) <span className="text-danger">*</span>
+                            </label>
+                            <div className="invalid-feedback">Vui lòng nhập công việc của bạn</div>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 col-xs-12">
+                          <div className="form-floating">
+                            <input
+                              data-format="string"
+                              type="text"
+                              className="form-control"
+                              name="job"
+                              value="12"
+                              id="setting_info_job"
+                              placeholder="Hạn đóng tiền"
+                              required=""
+                            />
+                            <label htmlFor="setting_info_job">
+                              Hạn đóng tiền <span className="text-danger">*</span>
+                            </label>
+                            <div className="invalid-feedback">Vui lòng nhập công việc của bạn</div>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 col-xs-12">
+                          <div className="alert alert-primary d-flex align-items-center mt-2" role="alert">
+                            <svg
+                              style={{ width: '20px' }}
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"
+                              viewBox="0 0 16 16"
+                              role="img"
+                              aria-label="Warning:">
+                              <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                            </svg>
+                            <div className="text-setting-invoice">
+                              <b>Thông tin:</b> Khi đến ngày lập hóa đơn hệ thống sẽ nhắc nhở qua thông báo
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 col-xs-12">
+                          <div className="alert alert-primary d-flex align-items-center mt-2" role="alert">
+                            <svg
+                              style={{ width: '20px' }}
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"
+                              viewBox="0 0 16 16"
+                              role="img"
+                              aria-label="Warning:">
+                              <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                            </svg>
+                            <div className="text-setting-invoice">
+                              <b>Thông tin:</b> Khi khách đóng tiền không đúng thời hạn hệ thống sẽ nhắc nhở
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 col-xs-12">
+                          <p className="text-setting-invoice">- Là ngày lập hóa đơn tiền điện, nước...</p>
+                          <p className="text-setting-invoice">
+                            - Nhập một ngày trong tháng. Nếu không nhập mặc định là cuối tháng.
+                          </p>
+                        </div>
+                        <div className="col-md-6 col-sm-6 col-xs-12">
+                          <p className="text-setting-invoice">
+                            <b> Ví dụ:</b> Bạn lập phiếu ngày 01 và hạn đóng tiền thuê trọ ở đây là 5 ngày thì ngày 05
+                            sẽ là ngày hết hạn
+                          </p>
+                        </div>
+                        <hr className="my-2" />
+                        <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                          <div className="form-check form-switch">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              value="1"
+                              id="setting[asset_function]"
+                              name="setting[asset_function]"
+                              checked
+                            />
+                            <label className="form-check-label" htmlFor="setting[asset_function]">
+                              <b>Gửi hóa đơn tự động cho khách qua Zalo</b>
+                            </label>
+                            <p className="text-setting-invoice">
+                              Tự động gửi hóa đơn qua zalo cho khách ngay khi tạo hóa đơn
+                            </p>
+                            <p className="text-setting-invoice text-danger">
+                              * Tính năng chỉ hoạt động khi bạn đang sử dụng gói có phí
+                            </p>
+                            <p className="text-setting-invoice text-danger">
+                              * Chỉ có thể gửi zalo cho khách thuê từ 6.00 đến 22.00 giờ
+                            </p>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                          <div className="form-floating">
+                            <select
+                              id=""
+                              data-format="numeric"
+                              name="address_component[province_id]"
+                              className="form-select form-control province"
+                              value=""
+                              required>
+                              <option value="">Mẩu dạng bảng</option>
+                            </select>
+                            <label htmlFor="province">Mẩu hóa đơn gửi qua zalo</label>
+                            <div className="invalid-feedback">Vui lòng chọn mẩu hóa đơn</div>
+                            <b className="text-setting-invoice">* Xem hình gửi mẩu zalo</b>
+                          </div>
+                        </div>
+                        <hr className="my-2" />
+                        <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                          <div className="form-check form-switch">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              value="1"
+                              id="setting[asset_function]"
+                              name="setting[asset_function]"
+                              checked
+                            />
+                            <label className="form-check-label" htmlFor="setting[asset_function]">
+                              <b>Ẩn/Hiển mã QR trong hóa đơn</b>
+                            </label>
+                            <p className="text-setting-invoice">
+                              Bạn muốn hiển thị thông tin tài khoản & số tiền hóa đơn bằng mã QR giúp khách hàng thanh
+                              toán chuyển khoản nhanh hơn ?
+                            </p>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                          <div className="form-check form-switch">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              value="1"
+                              id="setting[asset_function]"
+                              name="setting[asset_function]"
+                              checked
+                            />
+                            <label className="form-check-label" htmlFor="setting[asset_function]">
+                              <b>Phân loại thu/chi từ hóa đơn</b>
+                            </label>
+                            <p className="text-setting-invoice">
+                              Khi thu tiền hóa đơn bạn muốn phân tách các phiếu thu chi rõ ràng như: Tiền phòng/giường,
+                              tiền dịch vụ, giảm trừ, cộng thêm
+                            </p>
+                          </div>
+                        </div>
+                        <hr className="my-2" />
+                        <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                          <div className="form-check form-switch">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              value="1"
+                              id="setting[asset_function]"
+                              name="setting[asset_function]"
+                              checked
+                            />
+                            <label className="form-check-label" htmlFor="setting[asset_function]">
+                              <b>Làm tròn hóa đơn</b>
+                            </label>
+                            <p className="text-setting-invoice">
+                              Làm tròn đơn vị 1.000 đ Ví dụ: 4.300 đ &rarr; 4.000đ, 4.500 đ &rarr; 4.000 đ, 4.600 đ
+                              &rarr; 5.000đ, 4.800 đ &rarr; 5.000đ
+                            </p>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                          <div className="form-floating">
+                            <select
+                              id=""
+                              data-format="numeric"
+                              name="address_component[province_id]"
+                              className="form-select form-control province"
+                              value=""
+                              required>
+                              <option value="">Tiền mặt</option>
+                            </select>
+                            <label htmlFor="province">
+                              Hình thức thanh toán mặc định <span className="text-danger">*</span>
+                            </label>
+                            <div className="invalid-feedback">Vui lòng chọn hình thức thanh toán mặc định</div>
+                          </div>
+                        </div>
+                        <div className="col-md-12 col-sm-12 col-xs-12 mt-2 hide-when-edit">
+                          <label className="">
+                            <b>Ghi chú thêm cho hóa đơn</b>
+                          </label>
+                          <div className="input-group">
+                            <textarea
+                              className="form-control"
+                              aria-label="With textarea"
+                              rows={5}
+                              placeholder="Ví dụ: Các vi phạm khi đóng tiền trể hạn..."></textarea>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <div id="account_bank_setting" className="container tab-pane fade show">
                       <br />
