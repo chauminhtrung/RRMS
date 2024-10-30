@@ -939,8 +939,127 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                     </div>
                     <div id="app_book" className="container tab-pane fade show">
                       <br />
-                      <h3>App</h3>
-                      <p>App</p>
+                      <div className="header-item">
+                        <div className="container tab-pane">
+                          <div className="header-item">
+                            <h4 className="title-item">
+                              Thiết lập cho App khách thuê/dân cư
+                              <i style={{ fontSize: '14px', fontWeight: 'normal' }}>
+                                Những thiết lập cho khách thuê khi sử dụng App khách thuê kết nối với chủ nhà
+                                <br />
+                              </i>
+                            </h4>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                          <div className="form-check form-switch">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              value="1"
+                              id="setting[asset_function]"
+                              name="setting[asset_function]"
+                              checked
+                            />
+                            <label className="form-check-label" htmlFor="setting[asset_function]">
+                              <b>Tự tạo tài khoản cho khách thuê</b>
+                            </label>
+                            <p className="text-setting-invoice">
+                              Tự tạo tài khoản đăng nhập vào App khách thuê khi lập hợp đồng <br /> Tài khoản là số điện
+                              thoại dùng cho lập hợp đồng <br /> Mật khẩu mặc định vui lòng nhập ở ô kê bên <br /> *Lưu
+                              ý: Yêu cầu khách thuê cập nhật lại mật khẩu mới sau khi đăng nhập vào App
+                            </p>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                          <div className="form-floating">
+                            <input
+                              data-format="string"
+                              type="text"
+                              className="form-control"
+                              name="job"
+                              value="123456789"
+                              id="setting_info_job"
+                              placeholder="Giá thuê mới"
+                              required=""
+                            />
+                            <label htmlFor="setting_info_job">Mật khẩu cho khách thuê </label>
+                            <div className="invalid-feedback">Vui lòng nhập công việc của bạn</div>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                          <div className="form-check form-switch">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              value="1"
+                              id="setting[asset_function]"
+                              name="setting[asset_function]"
+                              checked
+                            />
+                            <label className="form-check-label" htmlFor="setting[asset_function]">
+                              <b>Chốt đồng hồ điện nước</b>
+                            </label>
+                            <p className="text-setting-invoice">
+                              Cho phép khách thuê gửi thông tin chốt điện nước để lập hóa đơn
+                            </p>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                          <div className="form-check form-switch">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              value="1"
+                              id="setting[asset_function]"
+                              name="setting[asset_function]"
+                              checked
+                            />
+                            <label className="form-check-label" htmlFor="setting[asset_function]">
+                              <b>Nhập thông tin cá nhân</b>
+                            </label>
+                            <p className="text-setting-invoice">
+                              Cho phép khách thuê cập nhật thông tin cá nhân qua App khách thuê
+                            </p>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                          <div className="form-check form-switch">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              value="1"
+                              id="setting[asset_function]"
+                              name="setting[asset_function]"
+                              checked
+                            />
+                            <label className="form-check-label" htmlFor="setting[asset_function]">
+                              <b>Cập nhật thông tin xe</b>
+                            </label>
+                            <p className="text-setting-invoice">
+                              Cho phép khách thuê cập nhật thông tin xe trong phòng
+                            </p>
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 col-xs-12 mt-2 hide-when-edit">
+                          <div className="form-check form-switch">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              value="1"
+                              id="setting[asset_function]"
+                              name="setting[asset_function]"
+                              checked
+                            />
+                            <label className="form-check-label" htmlFor="setting[asset_function]">
+                              <b>Báo kết thúc hợp đồng</b>
+                            </label>
+                            <p className="text-setting-invoice">Cho phép khách thuê báo kết thúc hợp đồng</p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <div id="extension_setting" className="container tab-pane fade show">
                       <br />
