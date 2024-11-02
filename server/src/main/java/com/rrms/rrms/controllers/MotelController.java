@@ -27,11 +27,13 @@ import lombok.extern.slf4j.Slf4j;
 @Tag(name = "Motel Controller", description = "Controller for Motel")
 @RestController
 @RequestMapping("/motels")
+@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
 public class MotelController {
     IMotelService motelService;
 
     @Autowired
     private RedisRateLimiter rateLimiter;
+
 
     @Operation(summary = "Get motel by name")
     @GetMapping("/{name}")
@@ -90,6 +92,35 @@ public class MotelController {
                     .build();
         }
     }
+
+
+    @Operation(summary = "Get motel by name")
+    @GetMapping("/{name}")
+    public ApiResponse<List<MotelResponse>> getMotel(@PathVariable String name) {
+        List<MotelResponse> motelResponses = motelService.findAllByMotelName(name);
+        log.info("Get motel successfully: {}", name);
+        return ApiResponse.<List<MotelResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .message("success")
+                .result(motelResponses)
+                .build();
+    }
+
+    @Operation(summary = "Get motel by id")
+    @GetMapping("/get-motel-id")
+    public ApiResponse<List<MotelResponse>> getMotelbyid(@RequestParam UUID id) {
+        List<MotelResponse> motelResponses = motelService.findById(id);
+        return ApiResponse.<List<MotelResponse>>builder().code(HttpStatus.OK.value()).message("success").result(motelResponses).build();
+    }
+
+
+    @GetMapping("/get-motel-account")
+    public ApiResponse<List<MotelResponse>> getMotelbyaccount(@RequestParam String username) {
+        List<MotelResponse> motelResponses = motelService.findMotelByAccount_Username(username);
+        return ApiResponse.<List<MotelResponse>>builder().code(HttpStatus.OK.value()).message("success").result(motelResponses).build();
+    }
+
+
 
     @Operation(summary = "Add motel by id")
     @PostMapping()

@@ -1,10 +1,114 @@
 import { Editor } from '@tinymce/tinymce-react'
-import { useRef } from 'react'
-const ModelDeposit = () => {
-  const editorRef = useRef()
+import { useEffect, useRef, useState } from 'react'
 
-  function onClickgetText() {
-    console.log(editorRef.current.getContent({ format: 'text' }))
+import { createContractTemplate, getContractTemplateById, updateContractTemplate } from '~/apis/apiClient'
+import Swal from 'sweetalert2'
+
+const ModelDeposit = ({ motel, username, templatecontractRouteId, fetchDataTemlateContract }) => {
+  const editorRef = useRef()
+  const [templatecontracts, setTemplatecontracts] = useState()
+
+  useEffect(() => {
+    console.log(templatecontracts)
+
+    if (templatecontractRouteId !== 'Create') {
+      fetchDataWhenEdit(templatecontractRouteId)
+    } else {
+      setTemplatecontracts({
+        contractTemplateId: '',
+        motelId: '',
+        namecontract: '',
+        templatename: '',
+        sortOrder: '',
+        content: ''
+      })
+    }
+  }, [templatecontractRouteId]) // Thêm templatecontractRouteId vào dependency array
+
+  const fetchDataWhenEdit = async (id) => {
+    if (username) {
+      try {
+        const response = await getContractTemplateById(id)
+        setTemplatecontracts(response)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    setTemplatecontracts((prev) => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  // ham save
+  const onSaveTemplate = (event) => {
+    const form = document.getElementById('templatecontract-setting-info')
+    if (!form.checkValidity()) {
+      event.preventDefault()
+      form.classList.add('was-validated')
+    } else {
+      if (username) {
+        if (editorRef.current) {
+          const content = editorRef.current.getContent()
+
+          const contractTemplate = {
+            motelId: motel.motelId,
+            namecontract: document.getElementById('namecontract').value,
+            templatename: document.getElementById('templatename').value,
+            sortOrder: parseInt(document.getElementById('sortOrder').value, 10),
+            content: content
+          }
+
+          console.log('Template to be saved:', contractTemplate)
+
+          if (templatecontractRouteId === 'Create') {
+            // Tạo mới nếu không có dữ liệu tồn tại
+            createContractTemplate(contractTemplate)
+              .then((response) => {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Thông báo',
+                  text: 'Contract Template created successfully!'
+                })
+                setTemplatecontracts(response)
+                fetchDataTemlateContract()
+              })
+              .catch((error) => {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Thông báo',
+                  text: 'Error creating contract template.'
+                })
+                console.error('Error creating template:', error)
+              })
+          } else {
+            // Cập nhật nếu đã có dữ liệu
+            updateContractTemplate(templatecontractRouteId, contractTemplate)
+              .then((response) => {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Thông báo',
+                  text: 'Contract Template updated successfully!'
+                })
+                setTemplatecontracts(response)
+                fetchDataTemlateContract()
+              })
+              .catch((error) => {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Thông báo',
+                  text: 'Error updating contract template.'
+                })
+                console.error('Error updating template:', error)
+              })
+          }
+        }
+      }
+    }
   }
 
   return (
@@ -33,7 +137,7 @@ const ModelDeposit = () => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   display: 'flex',
-                  backgroundColor: 'rgb(111 171 232)',
+                  backgroundColor: 'rgb(111 171 232)'
                 }}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -62,13 +166,13 @@ const ModelDeposit = () => {
                   type="button"
                   id="submit-contract-template-form"
                   className="btn btn-primary"
-                  onClick={onClickgetText}>
+                  onClick={onSaveTemplate}>
                   Tạo mẫu
                 </button>
               </div>
             </div>
             <div className="modal-body">
-              <form action="" method="POST" className="needs-validation" id="contract-template-form" noValidate>
+              <form method="POST" className="needs-validation" id="templatecontract-setting-info" noValidate>
                 <input type="hidden" name="_token" value="UHzAXFSkKsIc0ue0DDZLi3EGz63beVebygqBgiKV" />
                 <div className="hide-when-edit">
                   <div className="title-item-small" style={{ marginTop: '-10px' }}>
@@ -87,7 +191,7 @@ const ModelDeposit = () => {
                         checked
                       />
                       <label className="form-check-label" htmlFor="blocks_id_6891">
-                        <b>Trung</b>
+                        <b>{motel ? motel.motelName : <></>}</b>
                       </label>
                     </div>
                   </div>
@@ -99,10 +203,12 @@ const ModelDeposit = () => {
                         <input
                           type="text"
                           className="form-control"
-                          name="template_name"
-                          id="template_name"
+                          name="templatename"
+                          id="templatename"
                           placeholder="vd: Mẫu 1, Mẫu 2..."
                           required
+                          value={templatecontracts ? templatecontracts.templatename : <></>}
+                          onChange={handleInputChange}
                         />
                         <label htmlFor="template_name">
                           Tên mẫu hợp đồng <span style={{ color: 'red' }}>*</span>
@@ -116,9 +222,12 @@ const ModelDeposit = () => {
                         <input
                           type="number"
                           className="form-control"
-                          name="sort"
-                          id="template_sort"
+                          name="sortOrder"
+                          id="sortOrder"
                           placeholder="vd:1,2,3..."
+                          required
+                          value={templatecontracts ? templatecontracts.sortOrder : <></>}
+                          onChange={handleInputChange}
                         />
                         <label htmlFor="template_sort">Số thứ tự ưu tiên</label>
                       </div>
@@ -129,10 +238,12 @@ const ModelDeposit = () => {
                         <input
                           type="text"
                           className="form-control"
-                          name="name"
-                          id="name_contract"
+                          name="namecontract"
+                          id="namecontract"
                           placeholder="HỢP ĐỒNG CHO THUÊ PHÒNG TRỌ ..."
                           required
+                          value={templatecontracts ? templatecontracts.namecontract : <></>}
+                          onChange={handleInputChange}
                         />
                         <label htmlFor="name">
                           Tên hợp đồng <span style={{ color: 'red' }}>*</span>
@@ -151,13 +262,12 @@ const ModelDeposit = () => {
                   id="content-contract"
                   aria-hidden="true"></textarea>
                 <Editor
-                  apiKey="cd7eqaooqjeqld5vh5f6gf6y1w7nkyd7bztthz8b7htohgk1"
+                  apiKey="bj3v769fvuxhilkoz8g48ituulf3bl6d7bi27ji6fb1k7f2w"
                   onEditorChange={(evt, editor) => {
                     editorRef.current = editor
                   }}
                   init={{
                     plugins: [
-                      // Core editing features
                       'anchor',
                       'autolink',
                       'charmap',
@@ -171,8 +281,6 @@ const ModelDeposit = () => {
                       'table',
                       'visualblocks',
                       'wordcount',
-                      // Your account includes a free trial of TinyMCE premium features
-                      // Try the most popular premium features until Oct 27, 2024:
                       'checklist',
                       'mediaembed',
                       'casechange',
@@ -196,7 +304,7 @@ const ModelDeposit = () => {
                       'autocorrect',
                       'typography',
                       'inlinecss',
-                      'markdown',
+                      'markdown'
                     ],
                     toolbar:
                       'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
@@ -204,14 +312,13 @@ const ModelDeposit = () => {
                     tinycomments_author: 'Author name',
                     mergetags_list: [
                       { value: 'First.Name', title: 'First Name' },
-                      { value: 'Email', title: 'Email' },
+                      { value: 'Email', title: 'Email' }
                     ],
                     height: '1000px',
-
                     ai_request: (request, respondWith) =>
-                      respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
+                      respondWith.string(() => Promise.reject('See docs to implement AI Assistant'))
                   }}
-                  initialValue="Welcome to TinyMCE!"
+                  initialValue={templatecontracts ? templatecontracts.content : <></>}
                 />
               </form>
             </div>
