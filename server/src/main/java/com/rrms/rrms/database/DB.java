@@ -128,7 +128,7 @@ public class DB {
 
             log.info("Sample roles created.");
         }
-    }
+    }   
 
     private void createAdminAccount(
             AccountRepository accountRepository,
