@@ -1,17 +1,7 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import {
-  Box,
-  Breadcrumbs,
-  Button,
-  Container,
-  Grid,
-  Pagination,
-  Rating,
-  TextField,
   Typography,
-  useMediaQuery,
 } from '@mui/material'
-import { fontSize } from '@mui/system'
 const AdminManagerGroup = ({ setIsAdmin }) => {
   useEffect(() => {
     setIsAdmin(true)

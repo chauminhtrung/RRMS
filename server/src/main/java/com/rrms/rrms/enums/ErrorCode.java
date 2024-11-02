@@ -18,7 +18,7 @@ public enum ErrorCode {
     SERVICE_ID_REQUIRED(HttpStatus.BAD_REQUEST.value(), "Service id required", HttpStatus.BAD_REQUEST),
     INVALID_SEARCH_PARAMETER(HttpStatus.BAD_REQUEST.value(), "INVALID_SEARCH_PARAMETER", HttpStatus.BAD_REQUEST),
 
-    //error for authen
+    // error for authen
     PHONE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Phone not found", HttpStatus.NOT_FOUND),
     UNAUTHENTICATED(HttpStatus.UNAUTHORIZED.value(), "AUTHENTICATED", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(HttpStatus.FORBIDDEN.value(), "You do not have permission", HttpStatus.FORBIDDEN),

@@ -1,17 +1,15 @@
 package com.rrms.rrms.models;
 
-import java.time.LocalDate;
-import java.util.List;
-
-import jakarta.persistence.*;
-
 import com.rrms.rrms.enums.Gender;
-
-import java.util.stream.Collectors;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -50,6 +48,9 @@ public class Account {
     @Column(columnDefinition = "VARCHAR(15)")
     private String cccd;
 
+    @Column(columnDefinition = "INT")
+    private int commissionRate;
+
     @OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
     List<Auth> authorities;
 
@@ -59,7 +60,7 @@ public class Account {
 
     public List<String> getRoles() {
         return authorities.stream()
-            .map(auth -> auth.getRole().getRoleName().name())
-            .collect(Collectors.toList());
+                .map(auth -> auth.getRole().getRoleName().name())
+                .collect(Collectors.toList());
     }
 }

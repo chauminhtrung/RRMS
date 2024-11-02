@@ -1,23 +1,21 @@
-import React, { useEffect, useState } from 'react'
-import {
-  Tooltip,
-  IconButton,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Button,
-  TextField,
-} from '@mui/material'
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from 'react'
+import { Tooltip, IconButton } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
+import BrokerModal from './BrokerModal'
+import { useParams } from 'react-router-dom'
+import { getBrokers } from '~/apis/apiClient'
 
 const AdminManageBoker = ({ setIsAdmin, motels, setmotels }) => {
   const [open, setOpen] = useState(false)
+  const [brokers, setBrokers] = useState([])
+  const { motelId } = useParams()
 
   useEffect(() => {
     setIsAdmin(true)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const handleClickOpen = () => {
     setOpen(true)
@@ -26,12 +24,23 @@ const AdminManageBoker = ({ setIsAdmin, motels, setmotels }) => {
     setOpen(false)
   }
 
+  const refreshBrokers = () => {
+    getBrokers(motelId).then((res) => {
+      setBrokers(res.data.result)
+    })
+  }
+  useEffect(() => {
+    getBrokers(motelId).then((res) => {
+      setBrokers(res.data.result)
+    })
+  }, [motelId])
+
   return (
     <>
       <NavAdmin setmotels={setmotels} motels={motels} />
       <div style={{ backgroundColor: '#c2c5aa' }}>
         <div className="row justify-content-center">
-          <div className="col-md-8 col-sm-8 col-xs-12 mt-3">
+          <div className="col-md-10 col-sm-10 col-xs-12 mt-3">
             <div>
               <b style={{ fontSize: '30px' }}>
                 <b style={{ color: '#5eb7ff' }}>|</b> Môi giới
@@ -43,7 +52,7 @@ const AdminManageBoker = ({ setIsAdmin, motels, setmotels }) => {
           </div>
         </div>
         <div className="row justify-content-center">
-          <div className="col-md-8 col-sm-8 col-xs-12">
+          <div className="col-md-10 col-sm-10 col-xs-12">
             <div className="row bg-light mb-5" style={{ borderRadius: '15px' }}>
               <div className="col-md-3 col-sm-3 col-xs-12">
                 <div className="row" style={{ backgroundColor: '#4bcffa', borderTopLeftRadius: '15px' }}>
@@ -65,138 +74,53 @@ const AdminManageBoker = ({ setIsAdmin, motels, setmotels }) => {
                           sx={{
                             backgroundColor: 'green',
                             '&:hover': {
-                              backgroundColor: 'darkgreen',
+                              backgroundColor: 'darkgreen'
                             },
                             color: 'white',
-                            padding: '12px',
+                            padding: '12px'
                           }}>
                           <AddIcon sx={{ fontSize: 30 }} />
                         </IconButton>
                       </Tooltip>
-
-                      <Dialog open={open} onClose={handleClose}>
-                        <DialogTitle>Thêm Môi Giới</DialogTitle>
-                        <DialogContent>
-                          <TextField autoFocus margin="dense" label="Tên môi giới" fullWidth variant="standard" />
-                          <TextField margin="dense" label="Email" fullWidth variant="standard" />
-                          <TextField margin="dense" label="Số điện thoại" fullWidth variant="standard" />
-                        </DialogContent>
-                        <DialogActions>
-                          <Button onClick={handleClose} color="primary">
-                            Hủy
-                          </Button>
-                          <Button onClick={handleClose} color="primary">
-                            Lưu
-                          </Button>
-                        </DialogActions>
-                      </Dialog>
+                      <BrokerModal handleClose={handleClose} open={open} refreshBrokers={refreshBrokers} />
                     </div>
                   </div>
                 </div>
                 <table className="table align-middle mb-0 bg-white">
                   <thead className="bg-light">
                     <tr>
-                      <th>Name</th>
-                      <th>Title</th>
-                      <th>Status</th>
-                      <th>Position</th>
-                      <th>Actions</th>
+                      <th>Tên</th>
+                      <th>SDT</th>
+                      <th>Tình trạng tài khoản</th>
+                      <th>Phần trăm hoa hồng</th>
+                      <th>Thao tác</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>
-                        <div className="d-flex align-items-center">
-                          <img
-                            src="https://mdbootstrap.com/img/new/avatars/8.jpg"
-                            alt=""
-                            style={{ width: '45px', height: '45px' }}
-                            className="rounded-circle"
-                          />
-                          <div className="ms-3">
-                            <p className="fw-bold mb-1">John Doe</p>
-                            <p className="text-muted mb-0">john.doe@gmail.com</p>
+                    {brokers.map((broker) => (
+                      <tr key={broker.brokerId}>
+                        <td>
+                          <div className="d-flex align-items-center">
+                            <div className="ms-3">
+                              <p className="fw-bold mb-1">{broker.name}</p>
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p className="fw-normal mb-1">Software engineer</p>
-                        <p className="text-muted mb-0">IT department</p>
-                      </td>
-                      <td>
-                        <span className="badge badge-success rounded-pill d-inline">Active</span>
-                      </td>
-                      <td>Senior</td>
-                      <td>
-                        <button type="button" className="btn btn-link btn-sm btn-rounded">
-                          Edit
-                        </button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div className="d-flex align-items-center">
-                          <img
-                            src="https://mdbootstrap.com/img/new/avatars/6.jpg"
-                            className="rounded-circle"
-                            alt=""
-                            style={{ width: '45px', height: '45px' }}
-                          />
-                          <div className="ms-3">
-                            <p className="fw-bold mb-1">Alex Ray</p>
-                            <p className="text-muted mb-0">alex.ray@gmail.com</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p className="fw-normal mb-1">Consultant</p>
-                        <p className="text-muted mb-0">Finance</p>
-                      </td>
-                      <td>
-                        <span className="badge badge-primary rounded-pill d-inline">Onboarding</span>
-                      </td>
-                      <td>Junior</td>
-                      <td>
-                        <button
-                          type="button"
-                          className="btn btn-link btn-rounded btn-sm fw-bold"
-                          data-mdb-ripple-color="dark">
-                          Edit
-                        </button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div className="d-flex align-items-center">
-                          <img
-                            src="https://mdbootstrap.com/img/new/avatars/7.jpg"
-                            className="rounded-circle"
-                            alt=""
-                            style={{ width: '45px', height: '45px' }}
-                          />
-                          <div className="ms-3">
-                            <p className="fw-bold mb-1">Kate Hunington</p>
-                            <p className="text-muted mb-0">kate.hunington@gmail.com</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p className="fw-normal mb-1">Designer</p>
-                        <p className="text-muted mb-0">UI/UX</p>
-                      </td>
-                      <td>
-                        <span className="badge badge-warning rounded-pill d-inline">Awaiting</span>
-                      </td>
-                      <td>Senior</td>
-                      <td>
-                        <button
-                          type="button"
-                          className="btn btn-link btn-rounded btn-sm fw-bold"
-                          data-mdb-ripple-color="dark">
-                          Edit
-                        </button>
-                      </td>
-                    </tr>
+                        </td>
+                        <td>
+                          <p className="fw-normal mb-1">{broker.phone}</p>
+                        </td>
+                        <td>
+                          <p className="fw-normal mb-1">Đang hoạt động</p>
+                        </td>
+                        <td>
+                          <p className="fw-normal mb-1">{broker.commissionRate} %</p>
+                        </td>
+                        <td>
+                          <EditIcon sx={{ fontSize: 30 }} />
+                          <DeleteIcon sx={{ fontSize: 30 }} />
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>

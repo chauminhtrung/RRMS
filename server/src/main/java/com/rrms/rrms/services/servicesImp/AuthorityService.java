@@ -36,6 +36,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.stereotype.Service;
 import com.rrms.rrms.services.IAuthorityService;
 
@@ -119,7 +121,6 @@ public class AuthorityService implements IAuthorityService {
     }
   }
 
-
   public LoginResponse loginResponse(LoginRequest request) {
     // Lấy tài khoản từ AccountService dựa trên số điện thoại và mật khẩu
     // Nếu không tìm thấy hoặc mật khẩu sai, ném ngoại lệ AUTHENTICATED
@@ -144,7 +145,7 @@ public class AuthorityService implements IAuthorityService {
         .build();                           // Hoàn thành việc xây dựng LoginResponse
   }
 
-  private String generateToken(Account account) {
+  public String generateToken(Account account) {
     // Tạo tiêu đề cho JWT sử dụng thuật toán ký HS512
     JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 

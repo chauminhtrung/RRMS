@@ -6,7 +6,7 @@ GET {{baseUrl}}/searchs/price?startPrice=1255565.31&endPrice=4229298.69
 
 ###
 
-GET {{baseUrl}}/searchs/name?name=Vinh
+GET {{baseUrl}}/searchs/name?name=Tây
 
 ###
 

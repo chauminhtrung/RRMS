@@ -1,29 +1,25 @@
 package com.rrms.rrms.controllers;
 
-
 import java.util.List;
 import java.util.UUID;
 
-import com.rrms.rrms.configs.RedisRateLimiter;
-import com.rrms.rrms.dto.request.AccountRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
+import com.rrms.rrms.configs.RedisRateLimiter;
 import com.rrms.rrms.dto.request.MotelRequest;
 import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.dto.response.MotelResponse;
 import com.rrms.rrms.services.IMotelService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -34,8 +30,45 @@ import java.util.UUID;
 @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
 public class MotelController {
     IMotelService motelService;
+
     @Autowired
     private RedisRateLimiter rateLimiter;
+
+
+    @Operation(summary = "Get motel by name")
+    @GetMapping("/{name}")
+    public ApiResponse<List<MotelResponse>> getMotel(@PathVariable String name) {
+        List<MotelResponse> motelResponses = motelService.findAllByMotelName(name);
+        log.info("Get motel successfully: {}", name);
+        return ApiResponse.<List<MotelResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .message("success")
+                .result(motelResponses)
+                .build();
+    }
+
+    @Operation(summary = "Get motel by id")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')") // su dung phân quền phù hop theo role
+    @GetMapping("/get-motel-id")
+    public ApiResponse<List<MotelResponse>> getMotelbyid(@RequestParam UUID id) {
+        List<MotelResponse> motelResponses = motelService.findById(id);
+        return ApiResponse.<List<MotelResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .message("success")
+                .result(motelResponses)
+                .build();
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
+    @GetMapping("/get-motel-account")
+    public ApiResponse<List<MotelResponse>> getMotelbyaccount(@RequestParam String username) {
+        List<MotelResponse> motelResponses = motelService.findMotelByAccount_Username(username);
+        return ApiResponse.<List<MotelResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .message("success")
+                .result(motelResponses)
+                .build();
+    }
 
     @Operation(summary = "Get all motels")
     @GetMapping()
@@ -88,6 +121,7 @@ public class MotelController {
     }
 
 
+
     @Operation(summary = "Add motel by id")
     @PostMapping()
     public ApiResponse<MotelResponse> insertMotel(@RequestBody MotelRequest motelRequest) {
@@ -99,6 +133,7 @@ public class MotelController {
                 .result(motelResponse)
                 .build();
     }
+
     @Operation(summary = "Update motel by id")
     @PutMapping("/{id}")
     public ApiResponse<MotelResponse> updateMotel(@PathVariable("id") UUID id, @RequestBody MotelRequest motelRequest) {
@@ -118,6 +153,7 @@ public class MotelController {
                 .result(null)
                 .build();
     }
+
     @Operation(summary = "Delete motel by id")
     @DeleteMapping()
     public ApiResponse<Boolean> deleteMotel(@PathVariable("id") UUID id) {
