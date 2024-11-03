@@ -35,6 +35,12 @@ public class Contract {
     @JoinColumn(name = "username_landlord")
     private Account landlord;
 
+    @ManyToOne
+    @JoinColumn(name = "contract_template")
+    private ContractTemplate contract_template;
+
+
+
     @Column(columnDefinition = "DATE")
     private LocalDate firstTime;
 
@@ -46,6 +52,19 @@ public class Contract {
 
     @Column(columnDefinition = "DECIMAL(10, 2)")
     private BigDecimal deposit;
+
+    @Column(columnDefinition = "TEXT")
+    private String collection_cycle;
+
+
+    @Column(columnDefinition = "DATE")
+    private LocalDate createdate;
+
+    @Column(columnDefinition = "TEXT")
+    private LocalDate Sign_contract;
+
+    @Column(columnDefinition = "TEXT")
+    private LocalDate language;
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "ENUM('ACTIVE', 'ENDED')")

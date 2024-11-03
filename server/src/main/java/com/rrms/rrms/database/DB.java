@@ -149,7 +149,7 @@ public class DB {
             createRoleWithPermissions(roleRepository, "GUEST", "Guest user without account.", guestPermissions);
             log.info("Sample roles and permissions created.");
         }
-    }
+    }   
 
     private Permission createPermission(String name, String description, PermissionRepository permissionRepository) {
         Permission permission = new Permission();
