@@ -71,7 +71,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
   };
   const tokenExists = sessionStorage.getItem('user') !== null; 
   return (
-    <body>
+    <header>
       <div className="ct-appwrapper aw__sa4yob3" style={{ '--sa4yob3-0': '#fff', '--sa4yob3-1': 'inherit' }}>
         <div className="aw__s10g0md5" style={{ '--s10g0md5-0': '#22222' }}>
           <span className="aw__l3mdvjv">
@@ -1547,7 +1547,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
       ) : (
         <></>
       )}
-    </body>
+    </header>
   )
 }
 

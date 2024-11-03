@@ -15,6 +15,7 @@ import com.rrms.rrms.repositories.AccountRepository;
 import com.rrms.rrms.repositories.AuthRepository;
 import com.rrms.rrms.repositories.RoleRepository;
 import com.rrms.rrms.services.IAccountService;
+import java.util.ArrayList;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -49,6 +50,17 @@ public class AccountService implements IAccountService {
     public List<AccountResponse> findAll() {
         List<Account> accounts = accountRepository.findAll();
         return accounts.stream().map(accountMapper::toAccountResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AccountResponse> getAccountsByRole(Roles role) {
+        List<Account> accounts = accountRepository.findAllByAuthorities_Role_RoleName(role);
+        return accounts.stream().map(accountMapper::toAccountResponse).collect(Collectors.toList());
+    }
+
+    public List<AccountResponse> searchAccounts(String search, Roles role) {
+        List<Account> searchResults = accountRepository.searchAccounts(search, role);
+        return searchResults.stream().map(accountMapper::toAccountResponse).collect(Collectors.toList());
     }
 
     @Override
@@ -120,8 +132,70 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public void save(Account acc) {
-        accountRepository.save(acc);
+    public AccountResponse createHostAccount(AccountRequest accountRequest) {
+        // Kiểm tra xem tên đăng nhập hoặc số điện thoại đã tồn tại hay chưa
+        if (accountRepository.existsByUsername(accountRequest.getUsername())
+            || accountRepository.existsByPhone(accountRequest.getPhone())) {
+            throw new AppException(ErrorCode.ACCOUNT_ALREADY_EXISTS);
+        }
+
+        // Tạo đối tượng Account mới
+        Account account = new Account();
+        account.setUsername(accountRequest.getUsername());
+        account.setFullname(accountRequest.getFullname());
+        account.setPhone(accountRequest.getPhone());
+        account.setEmail(accountRequest.getEmail());
+        account.setBirthday(accountRequest.getBirthday());
+        account.setGender(accountRequest.getGender());
+        account.setCccd(accountRequest.getCccd());
+        account.setAvatar(accountRequest.getAvatar());
+
+        // Mã hóa mật khẩu
+        String encodedPassword = passwordEncoder.encode(accountRequest.getPassword());
+        account.setPassword(encodedPassword);
+
+        // Khởi tạo danh sách authorities để tránh NullPointerException
+        account.setAuthorities(new ArrayList<>());
+
+        // Lưu tài khoản vào cơ sở dữ liệu
+        Account savedAccount = accountRepository.save(account);
+
+        // Tìm vai trò HOST
+        Optional<Role> hostRoleOptional = roleRepository.findByRoleName(Roles.HOST);
+        if (hostRoleOptional.isPresent()) {
+            Role hostRole = hostRoleOptional.get();
+
+            // Tạo đối tượng Auth mới để liên kết tài khoản với vai trò
+            Auth auth = new Auth();
+            auth.setAccount(savedAccount);
+            auth.setRole(hostRole);
+
+            // Lưu dữ liệu quyền vào cơ sở dữ liệu
+            authRepository.save(auth);
+
+            // Thêm quyền vào danh sách authorities của tài khoản
+            account.getAuthorities().add(auth);  // Đảm bảo authorities không null
+        } else {
+            throw new AppException(ErrorCode.ROLE_NOT_FOUND);
+        }
+
+        return convertToAccountResponse(savedAccount); // Trả về AccountResponse cho tài khoản đã lưu
+    }
+
+    private AccountResponse convertToAccountResponse(Account account) {
+        AccountResponse response = new AccountResponse();
+        response.setUsername(account.getUsername());
+        response.setFullname(account.getFullname());
+        response.setPhone(account.getPhone());
+        response.setEmail(account.getEmail());
+        response.setBirthday(java.sql.Date.valueOf(account.getBirthday())); // Chuyển đổi LocalDate sang Date
+        response.setGender(account.getGender());
+        response.setCccd(account.getCccd());
+        response.setAvatar(account.getAvatar());
+        response.setRole(account.getRoles());
+        // Thêm thông tin phân quyền nếu cần
+        response.setPermissions(new ArrayList<>()); // Nếu bạn có thông tin phân quyền
+        return response;
     }
 
     @Override

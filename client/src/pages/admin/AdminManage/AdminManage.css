@@ -54,11 +54,6 @@ li {
   margin-left: -264px;
 }
 
-.main {  
-  flex: 1; 
-  overflow: hidden;
-  height: 100%;
-}  
 
 .sidebar-logo {
   padding: 1.15rem 1.5rem;
@@ -112,10 +107,7 @@ a.sidebar-link {
   transition: all 0.2s ease-out;
 }
 
-.content {  
-  overflow-y: auto;
-  height: 100%;
-}
+
 
 /* Responsive */
 
