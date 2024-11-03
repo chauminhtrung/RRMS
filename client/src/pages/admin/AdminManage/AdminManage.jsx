@@ -268,19 +268,19 @@ const AdminManage = ({ setIsAdmin }) => {
           </Menu>
         </nav>
 
-        <main className="content px-2 py-2" style={{backgroundColor:'rgb(228, 238, 245)'}}>
+        <main className="content px-2 py-2" style={{backgroundColor:'rgb(228, 238, 245)',width:'1255px'}}>
           <div className="container-fluid">
-          <Routes>
-            <Route index element={<DashboardHome />} />
-            <Route path="manage-landlords/add" element={<AddLandlords />} />
-            <Route path="manage-landlords/list" element={<ListLandlords />} />
-            <Route path="manage-users/add" element={<AddUsers/>} />
-            <Route path="manage-users/list" element={<ListUsers />} />
-            <Route path="manage-posts/add" element={<div>Thêm Đăng Tin</div>} />
-            <Route path="manage-posts/list" element={<div>Danh Sách Đăng Tin</div>} />
-            <Route path="manage-reports/add" element={<div>Thêm Báo Cáo</div>} />
-            <Route path="manage-reports/list" element={<div>Danh Sách Báo Cáo</div>} />
-          </Routes>
+            <Routes>
+              <Route index element={<DashboardHome />} />
+              <Route path="manage-landlords/add" element={<AddLandlords />} />
+              <Route path="manage-landlords/list" element={<ListLandlords />} />
+              <Route path="manage-users/add" element={<AddUsers/>} />
+              <Route path="manage-users/list" element={<ListUsers />} />
+              <Route path="manage-posts/add" element={<div>Thêm Đăng Tin</div>} />
+              <Route path="manage-posts/list" element={<div>Danh Sách Đăng Tin</div>} />
+              <Route path="manage-reports/add" element={<div>Thêm Báo Cáo</div>} />
+              <Route path="manage-reports/list" element={<div>Danh Sách Báo Cáo</div>} />
+            </Routes>
           </div>
         </main>
       </div>
