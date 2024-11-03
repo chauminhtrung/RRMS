@@ -30,6 +30,21 @@
         <java.version>17</java.version>
     </properties>
     <dependencies>
+        <!-- Setup environment send mail -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.mail</groupId>
+            <artifactId>jakarta.mail-api</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>2.0.1</version>
+        </dependency>
         <!-- Spring Boot Starter Web: Cung cấp các thành phần cho ứng dụng web (REST API, Tomcat, Jackson) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
