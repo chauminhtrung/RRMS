@@ -4,6 +4,7 @@ import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.request.ChangePasswordRequest;
 import com.rrms.rrms.dto.request.RegisterRequest;
 import com.rrms.rrms.dto.response.AccountResponse;
+import com.rrms.rrms.enums.Roles;
 import com.rrms.rrms.models.Account;
 
 import java.util.List;
@@ -11,6 +12,10 @@ import java.util.Optional;
 
 public interface IAccountService {
     List<AccountResponse> findAll();
+
+    List<AccountResponse> getAccountsByRole(Roles role);
+
+    List<AccountResponse> searchAccounts(String search, Roles role);
 
     Optional<Account> findAccountsByUsername(String username);
 
@@ -22,7 +27,7 @@ public interface IAccountService {
 
     Optional<Account> login(String phone, String password);
 
-    void save(Account acc);
+    AccountResponse createHostAccount(AccountRequest accountRequest);
 
     void deleteAcc(String username);
 
@@ -33,8 +38,6 @@ public interface IAccountService {
     AccountResponse save(AccountRequest accountRequest);
 
     AccountResponse update(AccountRequest accountRequest);
-
-    //  void loginOAuth2(OAuth2AuthenticationToken oAuth2Token);
 
     String changePassword(ChangePasswordRequest changePasswordRequest);
 

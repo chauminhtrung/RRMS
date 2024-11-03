@@ -16,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AccountResponse implements Serializable {
     String username;
+    String password;
     String fullname;
     String phone;
     String email;
