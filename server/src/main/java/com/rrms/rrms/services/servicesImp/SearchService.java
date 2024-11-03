@@ -1,6 +1,5 @@
 package com.rrms.rrms.services.servicesImp;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -105,11 +104,15 @@ public class SearchService implements ISearchService {
 
     @Override
     public List<RoomDetailResponse> findByAuthenIs(Boolean authenis) {
-        return roomRepository.findAllByAuthenIs(authenis).stream().map(roomMapper::toRoomDetailResponse).collect(Collectors.toList()) ;
+        return roomRepository.findAllByAuthenIs(authenis).stream()
+                .map(roomMapper::toRoomDetailResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<RoomDetailResponse> findAllByDatenew() {
-        return roomRepository.findAllByDatenew().stream().map(roomMapper::toRoomDetailResponse).collect(Collectors.toList()) ;
+        return roomRepository.findAllByDatenew().stream()
+                .map(roomMapper::toRoomDetailResponse)
+                .collect(Collectors.toList());
     }
 }

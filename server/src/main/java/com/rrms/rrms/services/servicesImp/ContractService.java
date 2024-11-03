@@ -7,6 +7,8 @@ import com.rrms.rrms.models.Account;
 import com.rrms.rrms.repositories.ContractRepository;
 import com.rrms.rrms.services.IContractService;
 
+import java.math.BigDecimal;
+
 @Service
 public class ContractService implements IContractService {
     @Autowired
@@ -18,7 +20,17 @@ public class ContractService implements IContractService {
     }
 
     @Override
-    public Double getTotalActiveContractsDepositByLandlord(Account usernameLandlord) {
+    public BigDecimal getTotalActiveContractsDepositByLandlord(Account usernameLandlord) {
         return contractRepository.sumActiveContractDepositsByLandlord(usernameLandlord);
+    }
+
+    @Override
+    public long getExpiredContracts(Account usernameLandlord) {
+        return contractRepository.countExpiredContracts(usernameLandlord);
+    }
+
+    @Override
+    public long getExpiringContracts(Account usernameLandlord) {
+        return contractRepository.countExpiringContracts(usernameLandlord);
     }
 }

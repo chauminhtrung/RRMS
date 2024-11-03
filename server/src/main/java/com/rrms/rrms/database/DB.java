@@ -1,20 +1,22 @@
 package com.rrms.rrms.database;
 
-import com.rrms.rrms.enums.Gender;
-import com.rrms.rrms.enums.Roles;
-import com.rrms.rrms.models.*;
-import com.rrms.rrms.repositories.*;
-import com.rrms.rrms.services.ISearchService;
-import lombok.extern.slf4j.Slf4j;
-import net.datafaker.Faker;
+import java.time.LocalDate;
+import java.util.*;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.*;
+import com.rrms.rrms.enums.Gender;
+import com.rrms.rrms.enums.Roles;
+import com.rrms.rrms.models.*;
+import com.rrms.rrms.repositories.*;
+import com.rrms.rrms.services.ISearchService;
+
+import lombok.extern.slf4j.Slf4j;
+import net.datafaker.Faker;
 
 @Configuration
 @Slf4j
@@ -92,7 +94,8 @@ public class DB {
     }
 
     // Phương thức để tạo dữ liệu mẫu cho roles
-    private void createSampleRolesAndPermissions(RoleRepository roleRepository, PermissionRepository permissionRepository) {
+    private void createSampleRolesAndPermissions(
+            RoleRepository roleRepository, PermissionRepository permissionRepository) {
         if (roleRepository.count() == 0) {
             log.info("Creating sample roles and permissions...");
             // Define ADMIN permissions
@@ -104,14 +107,22 @@ public class DB {
             adminPermissions.add(createPermission("APPROVED_POST", "Approve posts", permissionRepository));
             // Define HOST permissions
             Set<Permission> hostPermissions = new HashSet<>();
-            hostPermissions.add(createPermission("CREATE_EMPLOYEE_ACCOUNT", "Create employee accounts", permissionRepository));
-            hostPermissions.add(createPermission("UPDATE_EMPLOYEE_ACCOUNT", "Update employee accounts", permissionRepository));
-            hostPermissions.add(createPermission("DELETE_EMPLOYEE_ACCOUNT", "Delete employee accounts", permissionRepository));
-            hostPermissions.add(createPermission("SEARCH_EMPLOYEE_ACCOUNT", "Search employee accounts", permissionRepository));
-            hostPermissions.add(createPermission("CREATE_CUSTOMER_ACCOUNT", "Create customer accounts", permissionRepository));
-            hostPermissions.add(createPermission("UPDATE_CUSTOMER_ACCOUNT", "Update customer accounts", permissionRepository));
-            hostPermissions.add(createPermission("DELETE_CUSTOMER_ACCOUNT", "Delete customer accounts", permissionRepository));
-            hostPermissions.add(createPermission("SEARCH_CUSTOMER_ACCOUNT", "Search customer accounts", permissionRepository));
+            hostPermissions.add(
+                    createPermission("CREATE_EMPLOYEE_ACCOUNT", "Create employee accounts", permissionRepository));
+            hostPermissions.add(
+                    createPermission("UPDATE_EMPLOYEE_ACCOUNT", "Update employee accounts", permissionRepository));
+            hostPermissions.add(
+                    createPermission("DELETE_EMPLOYEE_ACCOUNT", "Delete employee accounts", permissionRepository));
+            hostPermissions.add(
+                    createPermission("SEARCH_EMPLOYEE_ACCOUNT", "Search employee accounts", permissionRepository));
+            hostPermissions.add(
+                    createPermission("CREATE_CUSTOMER_ACCOUNT", "Create customer accounts", permissionRepository));
+            hostPermissions.add(
+                    createPermission("UPDATE_CUSTOMER_ACCOUNT", "Update customer accounts", permissionRepository));
+            hostPermissions.add(
+                    createPermission("DELETE_CUSTOMER_ACCOUNT", "Delete customer accounts", permissionRepository));
+            hostPermissions.add(
+                    createPermission("SEARCH_CUSTOMER_ACCOUNT", "Search customer accounts", permissionRepository));
             hostPermissions.add(createPermission("CREATE_POST", "Create posts", permissionRepository));
             hostPermissions.add(createPermission("CREATE_MOTEL", "Create motels", permissionRepository));
             hostPermissions.add(createPermission("UPDATE_MOTEL", "Update motels", permissionRepository));
@@ -124,15 +135,21 @@ public class DB {
             hostPermissions.add(createPermission("DELETE_CONTRACT", "Delete contracts", permissionRepository));
             // Define EMPLOYEE permissions
             Set<Permission> employeePermissions = new HashSet<>();
-            employeePermissions.add(createPermission("UPDATE_EMPLOYEE_ACCOUNT", "Update employee accounts", permissionRepository));
-            employeePermissions.add(createPermission("UPDATE_CUSTOMER_ACCOUNT", "Update customer accounts", permissionRepository));
-            employeePermissions.add(createPermission("SEARCH_CUSTOMER_ACCOUNT", "Search customer accounts", permissionRepository));
+            employeePermissions.add(
+                    createPermission("UPDATE_EMPLOYEE_ACCOUNT", "Update employee accounts", permissionRepository));
+            employeePermissions.add(
+                    createPermission("UPDATE_CUSTOMER_ACCOUNT", "Update customer accounts", permissionRepository));
+            employeePermissions.add(
+                    createPermission("SEARCH_CUSTOMER_ACCOUNT", "Search customer accounts", permissionRepository));
             employeePermissions.add(createPermission("UPDATE_MOTEL", "Update motels", permissionRepository));
             employeePermissions.add(createPermission("UPDATE_ROOM", "Update rooms", permissionRepository));
             Set<Permission> customerPermissions = new HashSet<>();
-            customerPermissions.add(createPermission("VIEW_SEARCH_MOTEL", "View and search motels", permissionRepository));
-            customerPermissions.add(createPermission("VIEW_SEARCH_ROOM", "View and search rooms", permissionRepository));
-            customerPermissions.add(createPermission("UPDATE_ACCOUNT", "Update account information", permissionRepository));
+            customerPermissions.add(
+                    createPermission("VIEW_SEARCH_MOTEL", "View and search motels", permissionRepository));
+            customerPermissions.add(
+                    createPermission("VIEW_SEARCH_ROOM", "View and search rooms", permissionRepository));
+            customerPermissions.add(
+                    createPermission("UPDATE_ACCOUNT", "Update account information", permissionRepository));
             customerPermissions.add(createPermission("VIEW_CONTRACT", "View contracts", permissionRepository));
             customerPermissions.add(createPermission("SUPPORT", "Support requests", permissionRepository));
             customerPermissions.add(createPermission("PAYMENT", "Handle payments", permissionRepository));
@@ -144,7 +161,8 @@ public class DB {
             // Create roles and assign permissions
             createRoleWithPermissions(roleRepository, "ADMIN", "Administrator with full access.", adminPermissions);
             createRoleWithPermissions(roleRepository, "HOST", "Host for organizing events.", hostPermissions);
-            createRoleWithPermissions(roleRepository, "EMPLOYEE", "Employee role with limited access.", employeePermissions);
+            createRoleWithPermissions(
+                    roleRepository, "EMPLOYEE", "Employee role with limited access.", employeePermissions);
             createRoleWithPermissions(roleRepository, "CUSTOMER", "Regular customer role.", customerPermissions);
             createRoleWithPermissions(roleRepository, "GUEST", "Guest user without account.", guestPermissions);
             log.info("Sample roles and permissions created.");
@@ -158,7 +176,8 @@ public class DB {
         return permissionRepository.save(permission);
     }
 
-    private void createRoleWithPermissions(RoleRepository roleRepository, String roleName, String description, Set<Permission> permissions) {
+    private void createRoleWithPermissions(
+            RoleRepository roleRepository, String roleName, String description, Set<Permission> permissions) {
         Role role = new Role();
         role.setRoleName(Roles.valueOf(roleName));
         role.setDescription(description);
@@ -166,7 +185,11 @@ public class DB {
         roleRepository.save(role);
     }
 
-    private void createAdminAccount(AccountRepository accountRepository, BCryptPasswordEncoder pe, RoleRepository roleRepository, AuthRepository authRepository) {
+    private void createAdminAccount(
+            AccountRepository accountRepository,
+            BCryptPasswordEncoder pe,
+            RoleRepository roleRepository,
+            AuthRepository authRepository) {
         if (accountRepository.findByUsername("admin").isEmpty()) {
             // Create admin account
             Account adminAccount = Account.builder()
@@ -317,10 +340,11 @@ public class DB {
 
     private Room createRoom(Faker faker, RoomRepository roomRepository, Motel motel, TypeRoom typeRoom) {
         Room room = new Room();
-        Date randomDate = faker.date().between(
-                new Date(System.currentTimeMillis() - 30L * 24 * 60 * 60 * 1000), // 30 ngày trước
-                new Date() // Ngày hiện tại
-        );
+        Date randomDate = faker.date()
+                .between(
+                        new Date(System.currentTimeMillis() - 30L * 24 * 60 * 60 * 1000), // 30 ngày trước
+                        new Date() // Ngày hiện tại
+                        );
         room.setDeposit(faker.number().randomDouble(2, 500000, 5000000));
         room.setHours(faker.options().option("Tự do", "6:00 AM - 12:00 PM", "1:00 PM - 6:00 PM"));
         room.setRentalStartTime(LocalDate.now());

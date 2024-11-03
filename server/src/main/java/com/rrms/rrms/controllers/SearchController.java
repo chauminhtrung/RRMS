@@ -2,7 +2,6 @@ package com.rrms.rrms.controllers;
 
 import java.util.List;
 
-import com.rrms.rrms.models.Room;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -139,6 +138,4 @@ public class SearchController {
                 .result(roomSearchResponseList)
                 .build();
     }
-
-
 }

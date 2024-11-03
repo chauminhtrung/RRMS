@@ -1,7 +1,10 @@
 package com.rrms.rrms.repositories;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,11 +13,27 @@ import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Contract;
 
 public interface ContractRepository extends JpaRepository<Contract, UUID> {
+
     // tinh tong contract da dc active
     @Query("SELECT COUNT(c) FROM Contract c WHERE c.landlord = :usernameLandlord AND c.status = 'ACTIVE'")
     Integer countActiveContractsByLandlord(@Param("usernameLandlord") Account usernameLandlord);
 
     // tinh tong tien contact da dc active
     @Query("SELECT SUM(c.deposit) FROM Contract c WHERE c.landlord = :usernameLandlord AND c.status = 'ACTIVE'")
-    Double sumActiveContractDepositsByLandlord(@Param("usernameLandlord") Account usernameLandlord);
+    BigDecimal sumActiveContractDepositsByLandlord(@Param("usernameLandlord") Account usernameLandlord);
+
+
+
+    //tinh tổng hợp đồng đã hết hạn
+    @Query("SELECT COUNT(c) FROM Contract c " +
+            "WHERE DATE_ADD(c.firstTime, INTERVAL (c.leaseTerm MONTH)) <= DATE_SUB(CURDATE(), INTERVAL (1 MONTH)) " +
+            "AND c.landlord = :usernameLandlord")
+    long countExpiredContracts(@Param("usernameLandlord") Account usernameLandlord);
+
+    //tính tổng hợp đồng sắp hết hạn
+    @Query("SELECT COUNT(c) FROM Contract c " +
+            "WHERE DATE_ADD(c.firstTime, INTERVAL (c.leaseTerm MONTH)) <= CURDATE() + INTERVAL (30 DAY) " +
+            "AND DATE_ADD(c.firstTime, INTERVAL (c.leaseTerm MONTH)) >= CURDATE() " +
+            "AND c.landlord = :usernameLandlord")
+    long countExpiringContracts(@Param("usernameLandlord") Account usernameLandlord);
 }

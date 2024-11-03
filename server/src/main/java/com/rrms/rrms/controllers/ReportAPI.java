@@ -1,5 +1,6 @@
 package com.rrms.rrms.controllers;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -29,6 +30,7 @@ public class ReportAPI {
     private AccountService accountService;
 
     @GetMapping("/total-rooms/{username}")
+    // tổng nhà trọ
     public ResponseEntity<?> getTotalRooms(@PathVariable String username) {
         Map<String, Object> rs = new HashMap<>();
         try {
@@ -57,6 +59,7 @@ public class ReportAPI {
     }
 
     @GetMapping("/total-active-contracts/{usernameLandlord}")
+    // tổng các hợp đồng đã được active
     public ResponseEntity<?> getTotalActiveContracts(@PathVariable String usernameLandlord) {
         Map<String, Object> response = new HashMap<>();
         try {
@@ -85,6 +88,7 @@ public class ReportAPI {
     }
 
     @GetMapping("/total-active-contracts-deposit/{usernameLandlord}")
+    // tổng tiền các hợp đồng đã được active
     public ResponseEntity<?> getTotalActiveContractsDeposit(@PathVariable String usernameLandlord) {
         Map<String, Object> response = new HashMap<>();
         try {
@@ -99,7 +103,7 @@ public class ReportAPI {
             // Lấy account từ Optional
             Account account = accountOpt.get();
 
-            Double totalDeposit = contractService.getTotalActiveContractsDepositByLandlord(account);
+            BigDecimal totalDeposit = contractService.getTotalActiveContractsDepositByLandlord(account);
             response.put("status", true);
             response.put("message", "Call API success");
             response.put("data", totalDeposit != null ? totalDeposit : 0.0);
@@ -112,4 +116,62 @@ public class ReportAPI {
             return ResponseEntity.status(500).body(response);
         }
     }
+    @GetMapping("/contracts-expired/{usernameLandlord}")
+    // tổng các hợp đồng đã hết hạn
+    public ResponseEntity<?> getExpiredContracts(@PathVariable String usernameLandlord) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Optional<Account> accountOpt = accountService.findAccountsByUsername(usernameLandlord);
+
+            if (accountOpt.isEmpty()) {
+                response.put("status", false);
+                response.put("message", "Account not found");
+                return ResponseEntity.status(404).body(response);
+            }
+
+            // Lấy account từ Optional
+            Account account = accountOpt.get();
+            long expiredContracts = contractService.getExpiredContracts(account);
+            response.put("status", true);
+            response.put("message", "Call API success");
+            response.put("data", expiredContracts);
+            return ResponseEntity.ok(response);
+        } catch (Exception ex) {
+            response.put("status", false);
+            response.put("message", "Call API failed");
+            response.put("data", null);
+            ex.printStackTrace();
+            return ResponseEntity.status(500).body(response);
+        }
+    }
+
+    @GetMapping("/contracts-expiring/{usernameLandlord}")
+    // tổng các hợp đồng sắp hết hạn
+    public ResponseEntity<?> getExpiringContracts(@PathVariable String usernameLandlord) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Optional<Account> accountOpt = accountService.findAccountsByUsername(usernameLandlord);
+
+            if (accountOpt.isEmpty()) {
+                response.put("status", false);
+                response.put("message", "Account not found");
+                return ResponseEntity.status(404).body(response);
+            }
+
+            // Lấy account từ Optional
+            Account account = accountOpt.get();
+            long expiredContracts = contractService.getExpiringContracts(account);
+            response.put("status", true);
+            response.put("message", "Call API success");
+            response.put("data", expiredContracts);
+            return ResponseEntity.ok(response);
+        } catch (Exception ex) {
+            response.put("status", false);
+            response.put("message", "Call API failed");
+            response.put("data", null);
+            ex.printStackTrace();
+            return ResponseEntity.status(500).body(response);
+        }
+    }
+
 }
