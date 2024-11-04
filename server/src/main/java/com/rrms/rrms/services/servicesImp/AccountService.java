@@ -4,18 +4,21 @@ import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.request.ChangePasswordRequest;
 import com.rrms.rrms.dto.request.RegisterRequest;
 import com.rrms.rrms.dto.response.AccountResponse;
+import com.rrms.rrms.dto.response.PermissionResponse;
 import com.rrms.rrms.enums.ErrorCode;
 import com.rrms.rrms.enums.Roles;
 import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.mapper.AccountMapper;
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Auth;
+import com.rrms.rrms.models.Permission;
 import com.rrms.rrms.models.Role;
 import com.rrms.rrms.repositories.AccountRepository;
 import com.rrms.rrms.repositories.AuthRepository;
 import com.rrms.rrms.repositories.RoleRepository;
 import com.rrms.rrms.services.IAccountService;
 import java.util.ArrayList;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,6 +29,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -160,7 +164,7 @@ public class AccountService implements IAccountService {
         // Lưu tài khoản vào cơ sở dữ liệu
         Account savedAccount = accountRepository.save(account);
 
-        // Tìm vai trò HOST
+        // Lấy vai trò HOST
         Optional<Role> hostRoleOptional = roleRepository.findByRoleName(Roles.HOST);
         if (hostRoleOptional.isPresent()) {
             Role hostRole = hostRoleOptional.get();
@@ -174,7 +178,7 @@ public class AccountService implements IAccountService {
             authRepository.save(auth);
 
             // Thêm quyền vào danh sách authorities của tài khoản
-            account.getAuthorities().add(auth);  // Đảm bảo authorities không null
+            savedAccount.getAuthorities().add(auth); // Đảm bảo authorities không null
         } else {
             throw new AppException(ErrorCode.ROLE_NOT_FOUND);
         }
@@ -188,23 +192,72 @@ public class AccountService implements IAccountService {
         response.setFullname(account.getFullname());
         response.setPhone(account.getPhone());
         response.setEmail(account.getEmail());
-        response.setBirthday(java.sql.Date.valueOf(account.getBirthday())); // Chuyển đổi LocalDate sang Date
+        response.setBirthday(java.sql.Date.valueOf(account.getBirthday()));
         response.setGender(account.getGender());
         response.setCccd(account.getCccd());
         response.setAvatar(account.getAvatar());
-        response.setRole(account.getRoles());
-        // Thêm thông tin phân quyền nếu cần
-        response.setPermissions(new ArrayList<>()); // Nếu bạn có thông tin phân quyền
+
+        // Lấy danh sách các vai trò từ account
+        List<String> roles = account.getRoles();
+        response.setRole(roles);
+
+        // Lấy quyền từ danh sách authorities và chuyển đổi thành List<String>
+        List<String> permissions = account.getAuthorities().stream()
+            .flatMap(auth -> auth.getRole().getPermissions().stream()
+                .map(Permission::getName)) // Chỉ lấy tên quyền
+            .distinct() // Để loại bỏ trùng lặp nếu cần
+            .collect(Collectors.toList());
+
+        response.setPermissions(permissions); // Gán vào response
+
         return response;
     }
 
     @Override
-    public void deleteAcc(String username) {
-        Account acc = findAccountsByUsername(username).orElse(null);
-        Auth au = authRepository.findAuthorityByAccount_Username(username);
-        if (au.getRole().getRoleId().equals("CUST")) {
-            accountRepository.delete(acc);
+    public AccountResponse updateHostAccount(String username, AccountRequest accountRequest) {
+        // Kiểm tra xem tài khoản có tồn tại hay không
+        Optional<Account> accountOptional = accountRepository.findById(username);
+        if (!accountOptional.isPresent()) {
+            throw new AppException(ErrorCode.ACCOUNT_NOT_FOUND);
         }
+
+        // Lấy tài khoản đã tồn tại
+        Account account = accountOptional.get();
+
+        // Cập nhật thông tin
+        account.setFullname(accountRequest.getFullname());
+        account.setPhone(accountRequest.getPhone());
+        account.setEmail(accountRequest.getEmail());
+        account.setBirthday(accountRequest.getBirthday());
+        account.setGender(accountRequest.getGender());
+        account.setCccd(accountRequest.getCccd());
+        account.setAvatar(accountRequest.getAvatar());
+
+        // Nếu mật khẩu mới được cung cấp, mã hóa và cập nhật
+        if (accountRequest.getPassword() != null && !accountRequest.getPassword().isEmpty()) {
+            String encodedPassword = passwordEncoder.encode(accountRequest.getPassword());
+            account.setPassword(encodedPassword);
+        }
+
+        // Lưu tài khoản vào cơ sở dữ liệu
+        Account updatedAccount = accountRepository.save(account);
+
+        return convertToAccountResponse(updatedAccount); // Trả về AccountResponse cho tài khoản đã cập nhật
+    }
+
+    @Override
+    @Transactional
+    public void deleteAccount(String username) {
+        // Kiểm tra xem tài khoản có tồn tại hay không
+        if (!accountRepository.existsById(username)) {
+            throw new AppException(ErrorCode.ACCOUNT_NOT_FOUND);
+        }
+
+        // Xóa các bản ghi liên quan trong bảng auths
+        authRepository.deleteByAccount_Username(username);
+
+        // Xóa tài khoản từ cơ sở dữ liệu
+        accountRepository.deleteById(username);
     }
 
     @Override
