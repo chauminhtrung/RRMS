@@ -35,7 +35,7 @@ public class SecurityConfig {
             "/v3/api-docs/*",
             "/searchs/*",
             "/detail/*",
-            "/api-accounts/*"
+            "/api-accounts/**"
     };
 
     @Value("${jwt.signer-key}")
