@@ -23,32 +23,34 @@ import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { useLocation } from 'react-router-dom';  
 import axios from 'axios';
 import { env } from '~/configs/environment';
+import Swal from 'sweetalert2'
 
 const AddLandlords = () => {  
-  const [form, setForm] = useState({
-    username: '',
-    password: '',
-    comfirmpassword: '',
-    fullname: '',
-    phone: '',
-    email: '',
-    avatar: '',
-    birthday: '',
-    gender: '',
-    cccd: '',
-  })
+  const [form, setForm] = useState({  
+    username: '',  
+    password: '',  
+    comfirmpassword: '',  
+    fullname: '',  
+    phone: '',  
+    email: '',  
+    avatar: '',  
+    birthday: '',  
+    gender: '',  
+    cccd: '',  
+  });
   const [showPassword, setShowPassword] = useState(false)
   const [phoneError, setPhoneError] = useState('')
   const [emailError, setEmailError] = useState('')
   const [cccdError, setCccdError] = useState('')
   const location = useLocation();
   const accountId = location.state?.accountId;
+  const today = new Date().toISOString().split('T')[0]
   const genders = [
     { id: 'MALE', name: 'Nam' },
     { id: 'FEMALE', name: 'Nữ' },
     { id: 'OTHER', name: 'Khác' },
   ]
-
+  
   useEffect(() => {
     const fetchAccountData = async () => {
       if (accountId) {
@@ -81,7 +83,174 @@ const AddLandlords = () => {
     fetchAccountData();
   }, [accountId]);
   
+  const createAccount = async () => {  
+    if (!form.username || !form.password || !form.fullname ||   
+        !form.phone || !form.email || !form.cccd || !form.birthday || !form.gender) {  
+      Swal.fire({  
+        icon: 'warning',  
+        title: 'Thông báo',  
+        text: 'Vui lòng điền đầy đủ thông tin.',  
+      });  
+      return;  
+    }  
   
+    try {  
+      const response = await axios.post(`${env.API_URL}/api-accounts/createHostAccount`, {  
+        username: form.username,  
+        password: form.password,  
+        fullname: form.fullname,  
+        phone: form.phone,  
+        email: form.email,  
+        avatar: form.avatar,  
+        birthday: form.birthday,  
+        gender: form.gender,  
+        cccd: form.cccd  
+      });  
+      
+      if (response.data.status) {  
+        Swal.fire({  
+          icon: 'success',  
+          title: 'Thành công',  
+          text: 'Tạo tài khoản thành công!',  
+        });  
+        ClearInputFields();  
+      } else {  
+        Swal.fire({  
+          icon: 'error',  
+          title: 'Thất bại',  
+          text: response.data.message || 'Tạo tài khoản không thành công.',  
+        });  
+      }  
+    } catch (error) {  
+      console.error('Error creating account:', error);  
+      Swal.fire({  
+        icon: 'error',  
+        title: 'Lỗi',  
+        text: 'Đã xảy ra lỗi. Vui lòng thử lại sau.',  
+      });  
+    }  
+  };  
+  
+  const updateAccount = async () => {  
+    if (!form.username || !form.fullname || !form.phone || !form.email || !form.cccd ||   
+        !form.birthday || !form.gender) {  
+      Swal.fire({  
+        icon: 'warning',  
+        title: 'Thông báo',  
+        text: 'Vui lòng điền đầy đủ thông tin.',  
+      });  
+      return;  
+    }  
+  
+    try {  
+      const response = await axios.put(`${env.API_URL}/api-accounts/updateAccount/${form.username}`, {  
+        username: form.username,  
+        password: form.password,  
+        fullname: form.fullname,  
+        phone: form.phone,  
+        email: form.email,  
+        avatar: form.avatar,  
+        birthday: form.birthday,  
+        gender: form.gender,  
+        cccd: form.cccd  
+      });  
+  
+      if (response.data.status) {  
+        Swal.fire({  
+          icon: 'success',  
+          title: 'Thành công',  
+          text: 'Cập nhật tài khoản thành công!',  
+        });  
+        ClearInputFields();  
+      } else {  
+        Swal.fire({  
+          icon: 'error',  
+          title: 'Thất bại',  
+          text: response.data.message || 'Cập nhật tài khoản không thành công.',  
+        });  
+      }  
+    } catch (error) {  
+      console.error('Error updating account:', error);  
+      Swal.fire({  
+        icon: 'error',  
+        title: 'Lỗi',  
+        text: 'Đã xảy ra lỗi. Vui lòng thử lại sau.',  
+      });  
+    }  
+  };  
+  
+  const deleteAccount = async () => {  
+    if (!form.username) {  
+      Swal.fire({  
+        icon: 'warning',  
+        title: 'Thông báo',  
+        text: 'Không có tên tài khoản để xóa.',  
+      });  
+      return;  
+    }  
+  
+    const confirmDelete = await Swal.fire({  
+      title: `Bạn có chắc chắn muốn xóa tài khoản "${form.username}" không?`,  
+      icon: 'warning',  
+      showCancelButton: true,  
+      confirmButtonText: 'Xóa',  
+      cancelButtonText: 'Hủy',  
+    });  
+  
+    if (!confirmDelete.isConfirmed) {  
+      return;  
+    }  
+    
+    try {  
+      const response = await axios.delete(`${env.API_URL}/api-accounts/deleteAccount/${form.username}`);  
+  
+      if (response.data.status) {  
+        Swal.fire({  
+          icon: 'success',  
+          title: 'Thành công',  
+          text: 'Tài khoản đã được xóa thành công!',  
+        });  
+        ClearInputFields();  
+      } else {  
+        Swal.fire({  
+          icon: 'error',  
+          title: 'Thất bại',  
+          text: response.data.message || 'Không thể xóa tài khoản.',  
+        });  
+      }  
+    } catch (error) {  
+      console.error('Error deleting account:', error);  
+      Swal.fire({  
+        icon: 'error',  
+        title: 'Lỗi',  
+        text: 'Đã xảy ra lỗi khi xóa tài khoản. Vui lòng thử lại sau.',  
+      });  
+    }  
+  };  
+
+  const ClearInputFields = () => {  
+    setForm({  
+      username: '',  
+      password: '',  
+      comfirmpassword: '',  
+      fullname: '',  
+      phone: '',  
+      email: '',  
+      avatar: '',  
+      birthday: '',  
+      gender: '',  
+      cccd: '',  
+    });  
+    setPhoneError('');  
+    setEmailError('');  
+    setCccdError('');  
+
+    Swal.fire({  
+      icon: 'success',  
+      title: 'Thành công',  
+      text: 'Các trường nhập đã được làm mới!',  
+  });  
+  }; 
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -145,31 +314,11 @@ const AddLandlords = () => {
     setForm({ ...form, [name]: value })
   }
 
-  const handleClearInputFields = () => {  
-    setForm({  
-      username: '',  
-      password: '',  
-      comfirmpassword: '',  
-      fullname: '',  
-      phone: '',  
-      email: '',  
-      avatar: '',  
-      birthday: '',  
-      gender: '',  
-      cccd: '',  
-    });  
-    setPhoneError('');  
-    setEmailError('');  
-    setCccdError('');  
-  };  
-  
-  const today = new Date().toISOString().split('T')[0]
 
   return (
-    <Box sx={{backgroundColor: '#fff', borderRadius: '5px',marginTop:'17px'}}>
+    <Box sx={{backgroundColor: '#fff', borderRadius: '5px',marginTop:'17px',height:'665px'}}>
       <Grid container spacing={2} sx={{paddingLeft:'30px',paddingTop:'15px', marginBottom:'15px' }}> 
         <Grid container sx={{backgroundColor:'rgb(236, 242, 255)',marginBottom:'10px',borderRadius: '5px',padding:'10px',marginRight:'15px'}}>  
-          {/* Phần tiêu đề và Breadcrumbs */}  
           <Grid item xs={12} sm={6} lg={8}>  
             <Typography variant="h4" sx={{ verticalAlign: 'inherit' }}>Thêm chủ trọ</Typography>  
             <Breadcrumbs aria-label="vụn bánh mì">  
@@ -188,7 +337,8 @@ const AddLandlords = () => {
             sx={{   
               marginBottom:'30px',
               borderRadius: '5px',   
-              textAlign: 'center'   
+              textAlign: 'center',
+              height:'500px'
             }}  
           >  
             <Typography variant="h5" sx={{ pt: 1, pb: 1 }}>  
@@ -201,6 +351,7 @@ const AddLandlords = () => {
                 alignItems: 'center',   
                 border: '1px dashed rgb(240, 240, 240)',   
                 borderRadius: '5px',   
+                height:'320px',
                 padding: 2,  
                 cursor: 'pointer',  
                 '&:hover': {  
@@ -376,22 +527,25 @@ const AddLandlords = () => {
             </Grid> 
             <Grid container spacing={2} wrap="nowrap" sx={{ marginTop: '10px', marginRight:'15px' }}>  
               <Grid item xs={3} sm={3} textAlign="center">  
-                  <Button  
-                      variant="outlined"  
-                      color="primary"  
-                      startIcon={<AddIcon />}  
-                      fullWidth  
-                      sx={{ height: '40px', justifyContent: 'center' }}>  
-                      Thêm  
-                  </Button>  
-              </Grid>  
+                <Button  
+                  variant="outlined"  
+                  color="primary"  
+                  startIcon={<AddIcon />}  
+                  fullWidth  
+                  sx={{ height: '40px', justifyContent: 'center' }}  
+                  onClick={createAccount} 
+                >  
+                  Thêm  
+                </Button>  
+              </Grid> 
               <Grid item xs={3} sm={3} textAlign="center">  
                   <Button  
                       variant="outlined"  
                       color="success"  
                       startIcon={<SaveIcon />}  
                       fullWidth  
-                      sx={{ height: '40px', justifyContent: 'center' }}>  
+                      sx={{ height: '40px', justifyContent: 'center' }}
+                      onClick={updateAccount}>  
                       Cập nhật  
                   </Button>  
               </Grid>  
@@ -401,7 +555,8 @@ const AddLandlords = () => {
                       color="error"  
                       startIcon={<DeleteIcon />}  
                       fullWidth  
-                      sx={{ height: '40px', justifyContent: 'center' }}>  
+                      sx={{ height: '40px', justifyContent: 'center' }}
+                      onClick={deleteAccount}>  
                       Xóa  
                   </Button>  
               </Grid>  
@@ -411,7 +566,7 @@ const AddLandlords = () => {
                       color="info"  
                       startIcon={<RefreshIcon />}  
                       fullWidth  
-                      onClick={handleClearInputFields}
+                      onClick={ClearInputFields}
                       sx={{ height: '40px', justifyContent: 'center' }}>  
                       Mới  
                   </Button>  

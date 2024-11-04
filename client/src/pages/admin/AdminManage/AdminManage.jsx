@@ -268,7 +268,7 @@ const AdminManage = ({ setIsAdmin }) => {
           </Menu>
         </nav>
 
-        <main className="content px-2 py-2" style={{backgroundColor:'rgb(228, 238, 245)',width:'1255px'}}>
+        <main className="content px-2 py-2" style={{backgroundColor:'rgb(228, 238, 245)',width:'1255px',height:'685px'}}>
           <div className="container-fluid">
             <Routes>
               <Route index element={<DashboardHome />} />
