@@ -28,12 +28,14 @@ public class SecurityConfig {
             "/authen/login",
             "/authen/introspect",
             "/authen/register",
+            "/authen/forgetpassword",
             "/authen/logout",
             "/authen/login/oauth2",
             "/swagger-ui/*",
             "/v3/api-docs/*",
             "/searchs/*",
             "/detail/*",
+            "/api-accounts/**"
     };
 
     @Value("${jwt.signer-key}")

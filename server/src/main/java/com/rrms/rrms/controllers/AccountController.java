@@ -4,11 +4,15 @@ import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.request.ChangePasswordRequest;
 import com.rrms.rrms.dto.response.AccountResponse;
 import com.rrms.rrms.dto.response.ApiResponse;
+import com.rrms.rrms.enums.Roles;
+import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.services.IAccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -60,19 +64,37 @@ public class AccountController {
         return ResponseEntity.ok(rs);
     }
 
+    @GetMapping("/by-host-role")
+    public ResponseEntity<?> getAccountsByHostRole() {
+        Map<String, Object> rs = new HashMap<>();
+        try {
+            List<AccountResponse> accountResponses = accountService.getAccountsByRole(Roles.HOST);
+            if (!accountResponses.isEmpty()) {  // Check if the list is not empty
+                rs.put("status", true);
+                rs.put("message", "Call api success");
+                rs.put("data", accountResponses);  // Directly send the list
+            } else {
+                rs.put("status", false);
+                rs.put("message", "No accounts found for HOST role");
+                rs.put("data", null);
+            }
+            log.info("Get accounts by HOST role successfully");
+        } catch (Exception ex) {
+            rs.put("status", false);
+            rs.put("message", "Call api failed");
+            rs.put("data", null);
+            log.error("Get accounts by HOST role failed", ex);
+        }
+        return ResponseEntity.ok(rs);
+    }
+
     @Operation(summary = "Get account by username")
-    @GetMapping("/get-account/{username}")
-    @PostAuthorize("returnObject.body.phone == authentication.name")
+    @GetMapping("/{username}")
+//    @PostAuthorize("returnObject.body.phone == authentication.name")
     public ResponseEntity<?> getAccountByUsername(@PathVariable String username) {
         Map<String, Object> rs = new HashMap<>();
         try {
             AccountResponse account = accountService.findByUsername(username);
-
-            // Log giá trị của account.username và authentication.name để kiểm tra
-            log.info("Username from account: {}", account.getPhone());
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            log.info("Username from authentication: {}", authentication.getName());
-
             rs.put("status", true);
             rs.put("message", "Call API success");
             rs.put("data", account);
@@ -87,35 +109,79 @@ public class AccountController {
         }
     }
 
-    @Operation(summary = "Delete account by username")
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteAccount(@RequestParam("username") String username) {
-        Map<String, Object> rs = new HashMap<>();
+    @Operation(summary = "Create a new host account")
+    @PostMapping("/createHostAccount")
+    public ResponseEntity<Map<String, Object>> createHostAccount(@RequestBody AccountRequest accountRequest) {
+        Map<String, Object> response = new HashMap<>();
         try {
-            accountService.deleteAcc(username); // Gọi phương thức xóa sản phẩm
-            rs.put("status", true);
-            rs.put("message", "Account deleted successfully");
-            rs.put("data", null); // Không có dữ liệu trả về
-            log.info("Account deleted successfully: {}", username);
-        } catch (EntityNotFoundException ex) {
-            rs.put("status", false);
-            rs.put("message", "Account not found");
-            rs.put("data", null);
-            log.error("Account not found", ex);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(rs); // Trả về mã 404 nếu không tìm thấy
+            AccountResponse accountResponse = accountService.createHostAccount(accountRequest);
+            response.put("status", true);
+            response.put("message", "Account created successfully");
+            response.put("data", accountResponse);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (AppException ex) {
+            response.put("status", false);
+            response.put("message", "Error creating account: " + ex.getMessage());
+            response.put("data", null);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
         } catch (Exception ex) {
-            rs.put("status", false);
-            rs.put("message", "Call api failed: " + ex.getMessage());
-            rs.put("data", null);
-            log.error("Delete account failed", ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(rs); // Trả về mã 500 nếu có lỗi
+            response.put("status", false);
+            response.put("message", "Account creation failed: " + ex.getMessage());
+            response.put("data", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-        return ResponseEntity.ok(rs);
+    }
+
+    @Operation(summary = "Update an existing host account")
+    @PutMapping("/updateAccount/{username}")
+    public ResponseEntity<Map<String, Object>> updateAccount(@PathVariable String username,
+        @RequestBody AccountRequest accountRequest) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            AccountResponse accountResponse = accountService.updateHostAccount(username, accountRequest);
+            response.put("status", true);
+            response.put("message", "Account updated successfully");
+            response.put("data", accountResponse);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (AppException ex) {
+            response.put("status", false);
+            response.put("message", "Error updating account: " + ex.getMessage());
+            response.put("data", null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception ex) {
+            response.put("status", false);
+            response.put("message", "Account update failed: " + ex.getMessage());
+            response.put("data", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @Operation(summary = "Delete an existing account")
+    @DeleteMapping("/deleteAccount/{username}")
+    public ResponseEntity<Map<String, Object>> deleteAccount(@PathVariable String username) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            accountService.deleteAccount(username);
+            response.put("status", true);
+            response.put("message", "Account deleted successfully");
+            response.put("data", null);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (AppException ex) {
+            response.put("status", false);
+            response.put("message", "Error deleting account: " + ex.getMessage());
+            response.put("data", null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception ex) {
+            response.put("status", false);
+            response.put("message", "Account deletion failed: " + ex.getMessage());
+            response.put("data", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 
     @Operation(summary = "Update account by username")
     @PutMapping("/update-acc")
-    public ResponseEntity<?> updateProduct(@RequestParam("username") String username, @RequestBody Account account) {
+    public ResponseEntity<?> updateAccount(@RequestParam("username") String username, @RequestBody Account account) {
         Map<String, Object> rs = new HashMap<>();
         try {
             Account updateAcc = accountService.updateAcc(username, account);
@@ -123,13 +189,13 @@ public class AccountController {
             rs.put("message", "Update product successful");
             rs.put("data", updateAcc);
             log.info("Update product successfully: {}", username);
-            return ResponseEntity.ok(rs); // Trả về mã trạng thái 200 OK
+            return ResponseEntity.ok(rs);
         } catch (EntityNotFoundException ex) {
             rs.put("status", false);
             rs.put("message", "Account not found: " + ex.getMessage());
             rs.put("data", null);
             log.error("Account not found", ex);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(rs); // Trả về mã trạng thái 404 Not Found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(rs);
         } catch (Exception ex) {
             rs.put("status", false);
             rs.put("message", "Update Account failed: " + ex.getMessage());
@@ -173,5 +239,35 @@ public class AccountController {
                 .message("Change password successfully")
                 .result(changePassword)
                 .build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchAccounts(@RequestParam(required = false) String search,
+        @RequestParam(defaultValue = "HOST") Roles roleName) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            List<AccountResponse> accounts;
+            if (search == null || search.trim().isEmpty()) {
+                accounts = accountService.findAll();
+            } else {
+                accounts = accountService.searchAccounts(search.toLowerCase(), roleName);
+            }
+
+            if (!accounts.isEmpty()) {
+                response.put("status", true);
+                response.put("message", "Search results found");
+                response.put("data", accounts);
+            } else {
+                response.put("status", false);
+                response.put("message", "No accounts found matching the criteria");
+                response.put("data", null);
+            }
+        } catch (Exception ex) {
+            response.put("status", false);
+            response.put("message", "Search operation failed");
+            response.put("data", null);
+            ex.printStackTrace();
+        }
+        return ResponseEntity.ok(response);
     }
 }
