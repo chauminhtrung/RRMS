@@ -1,10 +1,8 @@
 package com.rrms.rrms.controllers;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import com.rrms.rrms.dto.request.TypeRoomRequest;
 import com.rrms.rrms.dto.response.ApiResponse;
@@ -18,12 +16,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 @Tag(name = "Type Room Controller")
 @RestController
 @Slf4j
 @RequestMapping("/type-rooms")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
 public class TypeRoomController {
     ITypeRoom typeRoomService;
 
@@ -37,4 +38,17 @@ public class TypeRoomController {
                 .result(typeRoomService.createTypeRoom(typeRoomRequest))
                 .build();
     }
+
+    @Operation(summary = "Get all type rooms")
+    @GetMapping
+    public ApiResponse<List<TypeRoomResponse>> findAllTypeRooms() {
+        log.info("Get all type rooms");
+        return ApiResponse.<List<TypeRoomResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .message("Fetch all type rooms successfully")
+                .result(typeRoomService.findAllTypeRooms())
+                .build();
+    }
+
+
 }

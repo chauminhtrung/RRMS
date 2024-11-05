@@ -12,7 +12,6 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoomRequest {
-    String typeRoomName;
     List<String> roomImages;
     long priceElectric;
     long priceWater;

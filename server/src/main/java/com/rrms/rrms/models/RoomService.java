@@ -31,4 +31,9 @@ public class RoomService {
     @ManyToOne
     @JoinColumn(name = "service_id")
     private Service service;
+
+    @Column(columnDefinition = "VARCHAR(255)")
+    private String chargetype;
+
+
 }

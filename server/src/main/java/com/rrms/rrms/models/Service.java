@@ -32,6 +32,4 @@ public class Service implements Serializable {
     @Column(columnDefinition = "VARCHAR(255)")
     private String nameService;
 
-    @Column(columnDefinition = "DECIMAL(10, 2)")
-    private long price;
 }

@@ -68,16 +68,31 @@ export const listMotel = async () => {
   return await axios.get(`${env.API_URL}/motels`)
 }
 export const createMotel = async (Motel) => {
-  return await axios.post(`${env.API_URL}/motels`, Motel)
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  return await axios.post(`${env.API_URL}/motels`, Motel, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
 }
 export const getMotelByname = async (motelName) => {
   return await axios.get(`${env.API_URL}/motels/${motelName}`)
 }
 export const updateMotel = async (motelId, Motel) => {
-  return await axios.put(`${env.API_URL}/motels/${motelId}`, Motel)
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  return await axios.put(`${env.API_URL}/motels/${motelId}`, Motel, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
 }
 export const deleteMotel = async (motelId) => {
-  return await axios.delete(`${env.API_URL}/motels/${motelId}`)
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  return await axios.delete(`${env.API_URL}/motels/${motelId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
 }
 
 //motel
@@ -169,7 +184,7 @@ export const getContractTemplateById = async (id) => {
 // Lấy danh sách tất cả Contract Templates
 export const getAllContractTemplates = async () => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null; 
-  const response = await axios.get(env.API_URL,{  
+  const response = await axios.get(`${env.API_URL}/contract-templates`,{  
     headers: {  
         'Authorization': `Bearer ${token}`  
     }  
@@ -227,3 +242,45 @@ export const getBrokers = async (motelId) => {
   })
 }
 
+//type room
+//lay danh sach type room
+export const getAllTypeRoom= async () => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null; 
+  const response = await axios.get(`${env.API_URL}/type-rooms`,{  
+    headers: {  
+        'Authorization': `Bearer ${token}`  
+    }  
+});
+  return response.data;
+};
+
+//Motel-Service
+export const createSerivceMotel= async (data) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null; 
+  const response = await axios.post(`${env.API_URL}/motel-services`, data,{  
+    headers: {  
+        'Authorization': `Bearer ${token}`  
+    }  
+});
+  return response.data;
+};
+
+export const updateSerivceMotel = async (id, data) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null; 
+  const response = await axios.put(`${env.API_URL}/motel-services/${id}`, data,{  
+    headers: {  
+        'Authorization': `Bearer ${token}`  
+    }  
+});
+  return response.data;
+};
+
+export const updateSerivceMotelbyMotelId = async (id, data) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null; 
+  const response = await axios.put(`${env.API_URL}/motel-services/update-by-motel/${id}`, data,{  
+    headers: {  
+        'Authorization': `Bearer ${token}`  
+    }  
+});
+  return response.data;
+};

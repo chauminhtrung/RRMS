@@ -1,5 +1,6 @@
 package com.rrms.rrms.models;
 
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.*;
@@ -33,7 +34,29 @@ public class Motel {
     @Column(columnDefinition = "NVARCHAR(255)")
     private String address;
 
+    @Column(columnDefinition = "NVARCHAR(255)")
+    private String methodofcreation;
+
+    @Column(columnDefinition = "INT")
+    private int maxperson;
+
+    @Column(columnDefinition = "INT")
+    private int invoicedate;
+
+    @Column(columnDefinition = "INT")
+    private int paymentdeadline;
+
+
     @ManyToOne
     @JoinColumn(name = "username")
     private Account account;
+
+    @ManyToOne
+    @JoinColumn(name = "type_room_id", nullable = false)
+    private TypeRoom typeRoom;
+
+    //de xoa motell xoa luon dich vu
+    @OneToMany(mappedBy = "motel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MotelService> motelServices;
+
 }

@@ -1,13 +1,15 @@
-import { Link, useParams, useLocation  } from 'react-router-dom'
+import { Link, useParams, useLocation } from 'react-router-dom'
 import { Tooltip } from 'react-tooltip'
 import { useEffect, useState } from 'react'
 import ModalCreateHome from '~/pages/admin/ManagerHome/ModelCreateHome'
-import { getMotelById } from '~/apis/apiClient'
-
+import { getMotelById, deleteMotel } from '~/apis/apiClient'
+import Swal from 'sweetalert2'
 const NavWData = ({ motels }) => {
+  const username = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).username : null
   const { motelId } = useParams() // Lấy tham số motelName từ URL
-  const location = useLocation(); // Nhận thông tin đường dẫn hiện tại  
+  const location = useLocation() // Nhận thông tin đường dẫn hiện tại
   const [motel, setmotel] = useState(null)
+  const [selectedMotelId, setSelectedMotelId] = useState(null)
 
   useEffect(() => {
     // Nếu có danh sách nhà trọ và không có tên cụ thể từ URL
@@ -29,6 +31,32 @@ const NavWData = ({ motels }) => {
     }
   }, [motel]) // Chỉ chạy khi motel thay đổi
 
+  //nhan vao nut edit
+  //ham xoa template Contract
+  const handleDelete = async (motelId) => {
+    const result = await Swal.fire({
+      title: 'Bạn có chắc muốn xóa không?',
+      text: 'Bạn sẽ không thể hoàn tác hành động này!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Xóa'
+    })
+
+    if (result.isConfirmed) {
+      try {
+        await deleteMotel(motelId)
+        Swal.fire('Đã xóa!', 'motel đã được xóa.', 'success')
+        // Sau khi xóa thành công, cập nhật lại danh sách template
+        window.location.reload()
+      } catch (error) {
+        console.error('Lỗi khi xóa motel:', error)
+        Swal.fire('Lỗi', 'Không thể xóa motelg.', 'error')
+      }
+    }
+  }
+
   return (
     <div>
       <div>
@@ -36,7 +64,7 @@ const NavWData = ({ motels }) => {
           style={{
             minHeight: '125px',
             display: 'flex',
-            padding: '0px 10px 0px 0px',
+            padding: '0px 10px 0px 0px'
           }}>
           <div className="col-md-2 d-flex align-items-center justify-content-center" style={{ marginRight: '10px' }}>
             <div
@@ -74,7 +102,7 @@ const NavWData = ({ motels }) => {
                       whiteSpace: 'nowrap',
                       maxWidth: '150px',
                       overflow: 'hidden',
-                      textOverflow: 'ellipsis',
+                      textOverflow: 'ellipsis'
                     }}>
                     <span>Nhà trọ {motel ? motel.motelName : 'Chưa có dữ liệu'}</span>
                   </h4>
@@ -87,6 +115,7 @@ const NavWData = ({ motels }) => {
                 data-bs-toggle="modal"
                 data-bs-target="#addBlock"
                 data-mode="add"
+                onClick={() => setSelectedMotelId('Create')}
                 style={{
                   position: 'absolute',
                   right: '-10px',
@@ -99,7 +128,7 @@ const NavWData = ({ motels }) => {
                   backgroundColor: '#20a9e7',
                   color: '#fff',
                   border: '1px solid #20a9e7',
-                  zIndex: '10',
+                  zIndex: '10'
                 }}
                 data-tooltip-id="my-tooltip"
                 data-tooltip-content="Thêm mới nhà cho thuê"
@@ -134,7 +163,7 @@ const NavWData = ({ motels }) => {
             style={{
               alignItems: 'center',
               justifyContent: 'space-between',
-              display: 'flex',
+              display: 'flex'
             }}>
             <div
               className=" scrollable-content-container"
@@ -143,7 +172,7 @@ const NavWData = ({ motels }) => {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 display: 'flex',
-                overflow: 'hidden',
+                overflow: 'hidden'
               }}>
               <button className="scroll-left hidden">←</button>
               <div
@@ -152,44 +181,49 @@ const NavWData = ({ motels }) => {
                   display: 'flex',
                   flexWrap: 'nowrap',
                   overflowX: 'auto',
-                  position: 'relative',
+                  position: 'relative'
                 }}>
-                <Link  
-                  to={motel ? `/quanlytro/${motel.motelId}` : '/quanlytro'}  
-                  className={`item-menu ${location.pathname === (motel ? `/quanlytro/${motel.motelId}` : '/quanlytro') ? 'active' : ''}`}  
-                >  
-                  <div className="icon text-center">  
-                    <img  
-                      width="47px"  
-                      className="mb-2"  
-                      src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Fbillicon.png?alt=media&token=3b38557e-411a-484f-ad52-436f4b86f40f"  
-                    />  
-                  </div>  
-                  <div className="key">  
-                    <span className="titleAdmin">  
-                      <b>Quản lý phòng</b>  
-                    </span>  
-                  </div>  
+                <Link
+                  to={motel ? `/quanlytro/${motel.motelId}` : '/quanlytro'}
+                  className={`item-menu ${
+                    location.pathname === (motel ? `/quanlytro/${motel.motelId}` : '/quanlytro') ? 'active' : ''
+                  }`}>
+                  <div className="icon text-center">
+                    <img
+                      width="47px"
+                      className="mb-2"
+                      src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Fbillicon.png?alt=media&token=3b38557e-411a-484f-ad52-436f4b86f40f"
+                    />
+                  </div>
+                  <div className="key">
+                    <span className="titleAdmin">
+                      <b>Quản lý phòng</b>
+                    </span>
+                  </div>
                 </Link>
-                <Link  
-                  to={motel ? `/quanlytro/${motel.motelId}/quan-ly-hoa-don` : '#'}  
-                  className={`item-menu ${location.pathname === (motel ? `/quanlytro/${motel.motelId}/quan-ly-hoa-don` : '#') ? 'active' : ''}`}  
-                >  
-                  <div className="icon text-center">  
-                    <img  
-                      width="47px"  
-                      className="mb-2"  
-                      src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Fbillicon.png?alt=media&token=3b38557e-411a-484f-ad52-436f4b86f40f"  
-                    />  
-                  </div>  
-                  <div className="key">  
-                    <span className="titleAdmin">  
-                      <b>Quản lý hóa đơn</b>  
-                    </span>  
-                  </div>  
+                <Link
+                  to={motel ? `/quanlytro/${motel.motelId}/quan-ly-hoa-don` : '#'}
+                  className={`item-menu ${
+                    location.pathname === (motel ? `/quanlytro/${motel.motelId}/quan-ly-hoa-don` : '#') ? 'active' : ''
+                  }`}>
+                  <div className="icon text-center">
+                    <img
+                      width="47px"
+                      className="mb-2"
+                      src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Fbillicon.png?alt=media&token=3b38557e-411a-484f-ad52-436f4b86f40f"
+                    />
+                  </div>
+                  <div className="key">
+                    <span className="titleAdmin">
+                      <b>Quản lý hóa đơn</b>
+                    </span>
+                  </div>
                 </Link>
-                <Link to={motel ? `/quanlytro/${motel.motelId}/quan-ly-dich-vu` : '#'} 
-                className={`item-menu ${location.pathname === (motel ? `/quanlytro/${motel.motelId}/quan-ly-dich-vu` : '#') ? 'active' : ''}`}>
+                <Link
+                  to={motel ? `/quanlytro/${motel.motelId}/quan-ly-dich-vu` : '#'}
+                  className={`item-menu ${
+                    location.pathname === (motel ? `/quanlytro/${motel.motelId}/quan-ly-dich-vu` : '#') ? 'active' : ''
+                  }`}>
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -203,8 +237,11 @@ const NavWData = ({ motels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to={motel ? `/quanlytro/${motel.motelId}/quan-ly-tai-san` : '#'} 
-                className={`item-menu ${location.pathname === (motel ? `/quanlytro/${motel.motelId}/quan-ly-tai-san` : '#') ? 'active' : ''}`}>
+                <Link
+                  to={motel ? `/quanlytro/${motel.motelId}/quan-ly-tai-san` : '#'}
+                  className={`item-menu ${
+                    location.pathname === (motel ? `/quanlytro/${motel.motelId}/quan-ly-tai-san` : '#') ? 'active' : ''
+                  }`}>
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -218,8 +255,11 @@ const NavWData = ({ motels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to={motel ? `/quanlytro/${motel.motelId}/tat-ca-hop-dong` : '#'} 
-                className={`item-menu ${location.pathname === (motel ? `/quanlytro/${motel.motelId}/tat-ca-hop-dong` : '#') ? 'active' : ''}`}>
+                <Link
+                  to={motel ? `/quanlytro/${motel.motelId}/tat-ca-hop-dong` : '#'}
+                  className={`item-menu ${
+                    location.pathname === (motel ? `/quanlytro/${motel.motelId}/tat-ca-hop-dong` : '#') ? 'active' : ''
+                  }`}>
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -233,8 +273,13 @@ const NavWData = ({ motels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to={motel ? `/quanlytro/${motel.motelId}/tat-ca-khach-thue` : '#'} 
-                className={`item-menu ${location.pathname === (motel ? `/quanlytro/${motel.motelId}/tat-ca-khach-thue` : '#') ? 'active' : ''}`}>
+                <Link
+                  to={motel ? `/quanlytro/${motel.motelId}/tat-ca-khach-thue` : '#'}
+                  className={`item-menu ${
+                    location.pathname === (motel ? `/quanlytro/${motel.motelId}/tat-ca-khach-thue` : '#')
+                      ? 'active'
+                      : ''
+                  }`}>
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -248,8 +293,11 @@ const NavWData = ({ motels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to={motel ? `/quanlytro/${motel.motelId}/thu-chi-tong-ket` : '#'} 
-                className={`item-menu ${location.pathname === (motel ? `/quanlytro/${motel.motelId}/thu-chi-tong-ket` : '#') ? 'active' : ''}`}>
+                <Link
+                  to={motel ? `/quanlytro/${motel.motelId}/thu-chi-tong-ket` : '#'}
+                  className={`item-menu ${
+                    location.pathname === (motel ? `/quanlytro/${motel.motelId}/thu-chi-tong-ket` : '#') ? 'active' : ''
+                  }`}>
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -263,8 +311,11 @@ const NavWData = ({ motels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to={motel ? `/quanlytro/${motel.motelId}/cai-dat-nha-tro` : '#'} 
-                className={`item-menu ${location.pathname === (motel ? `/quanlytro/${motel.motelId}/cai-dat-nha-tro` : '#') ? 'active' : ''}`}>
+                <Link
+                  to={motel ? `/quanlytro/${motel.motelId}/cai-dat-nha-tro` : '#'}
+                  className={`item-menu ${
+                    location.pathname === (motel ? `/quanlytro/${motel.motelId}/cai-dat-nha-tro` : '#') ? 'active' : ''
+                  }`}>
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -278,8 +329,11 @@ const NavWData = ({ motels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to={motel ? `/quanlytro/${motel.motelId}/lich-su-gui-zalo` : '#'} 
-                className={`item-menu ${location.pathname === (motel ? `/quanlytro/${motel.motelId}/lich-su-gui-zalo` : '#') ? 'active' : ''}`}>
+                <Link
+                  to={motel ? `/quanlytro/${motel.motelId}/lich-su-gui-zalo` : '#'}
+                  className={`item-menu ${
+                    location.pathname === (motel ? `/quanlytro/${motel.motelId}/lich-su-gui-zalo` : '#') ? 'active' : ''
+                  }`}>
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -293,8 +347,13 @@ const NavWData = ({ motels }) => {
                     </span>
                   </div>
                 </Link>
-                <Link to={motel ? `/quanlytro/${motel.motelId}/import-data-from-file` : '#'} 
-                className={`item-menu ${location.pathname === (motel ? `/quanlytro/${motel.motelId}/import-data-from-file` : '#') ? 'active' : ''}`}>
+                <Link
+                  to={motel ? `/quanlytro/${motel.motelId}/import-data-from-file` : '#'}
+                  className={`item-menu ${
+                    location.pathname === (motel ? `/quanlytro/${motel.motelId}/import-data-from-file` : '#')
+                      ? 'active'
+                      : ''
+                  }`}>
                   <div className="icon text-center">
                     <img
                       width="47px"
@@ -366,12 +425,12 @@ const NavWData = ({ motels }) => {
                       <div
                         className="btn-round  disabled btn-secondary"
                         data-bs-toggle="tooltip"
-                        data-bs-placement="top"
+                        data-bs-placement="bottom"
                         title=""
                         data-bs-original-title="Không thể xóa nhà trọ đang thao tác"
                         data-tooltip-id="my-tooltipRemove"
                         data-tooltip-content="Không thể xóa nhà trọ đang thao tác"
-                        data-tooltip-place="top">
+                        data-tooltip-place="bottom">
                         <Tooltip id="my-tooltipRemove" />
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -398,6 +457,7 @@ const NavWData = ({ motels }) => {
                         title=""
                         data-tooltip-id="my-tooltipRemove"
                         data-tooltip-content=" xóa nhà trọ"
+                        onClick={() => handleDelete(motelinMap.motelId)}
                         data-tooltip-place="top">
                         <Tooltip id="my-tooltipRemove" />
                         <svg
@@ -423,7 +483,7 @@ const NavWData = ({ motels }) => {
                       className="btn-round btn-edit"
                       data-bs-toggle="modal"
                       data-bs-target="#addBlock"
-                      data-block='{"id":6891,"name":"Trung","name_full":"Nh\u00e0 tr\u1ecd Trung","user_id":7661,"category":0,"category_name":"Nh\u00e0 tr\u1ecd","category_name_short":"Nh\u00e0 tr\u1ecd","room_type":"room","room_type_name":"ph\u00f2ng","type":"floor","room_total":0,"count_floor":1,"area":15,"room_amount":2000000,"ele_amount":0,"water_amount":0,"price_items_cache":[{"id":22728,"name":"Ti\u1ec1n \u0111i\u1ec7n","type":"constant","unit":"kwh","price":1700,"rooms":[],"value":null,"frames":[],"status":"is_active","history":null,"user_id":7661,"block_id":6891,"category":"ele","type_text":"Theo gi\u00e1 tr\u1ecb c\u1ed1 \u0111\u1ecbnh","unit_text":"KWh","is_default":1,"status_text":"\u0110ang s\u1eed d\u1ee5ng","subtraction":1},{"id":22729,"name":"Ti\u1ec1n n\u01b0\u1edbc","type":"constant","unit":"khoi","price":18000,"rooms":[],"value":null,"frames":[],"status":"is_active","history":null,"user_id":7661,"block_id":6891,"category":"water","type_text":"Theo gi\u00e1 tr\u1ecb c\u1ed1 \u0111\u1ecbnh","unit_text":"Kh\u1ed1i","is_default":1,"status_text":"\u0110ang s\u1eed d\u1ee5ng","subtraction":1}],"circle_order":1,"deadline_bill":1,"bill_setting":{"note":{"content":null},"enable_qr":1,"payment_default":"cash","show_circle_day":0,"single_send_zalo":0,"template_bill_zalo":1,"enable_rounding_money":1,"extract_receipt_expense":0},"app_renter_setting":{"allow_update_car":1,"default_password":123456789,"allow_close_clock":0,"auto_create_account":0,"allow_ticket_contract":1,"allow_update_customer":1},"room_group":[],"max_member":0,"open_door":null,"close_door":null,"rule":null,"extension":null,"data_log":null,"setting":{"car_function":1,"post_function":1,"agent_function":1,"asset_function":1,"price_item_ele":3,"price_item_wifi":0,"price_item_trash":0,"price_item_water":3,"task_job_function":1,"send_sms_when_create_bill":1,"contract_document_function":0},"province_id":79,"district_id":771,"ward_id":27199,"address_component":{"address":"b\u00ecnh d\u01b0\u01a1ng, Ph\u01b0\u1eddng 05, Qu\u1eadn 10, Th\u00e0nh ph\u1ed1 H\u1ed3 Ch\u00ed Minh","ward_id":"27199","position":{"latitude":"10.7829132","longitude":"106.6961898"},"district_id":"771","province_id":"79","address_detail":"b\u00ecnh d\u01b0\u01a1ng"},"address":"b\u00ecnh d\u01b0\u01a1ng, Ph\u01b0\u1eddng 05, Qu\u1eadn 10, Th\u00e0nh ph\u1ed1 H\u1ed3 Ch\u00ed Minh","latitude":10.7829132,"longitude":106.6961898,"auto_create_room":0,"post_ids":[]}'>
+                      onClick={() => setSelectedMotelId(motelinMap.motelId)}>
                       <div
                         style={{
                           width: '100%',
@@ -432,7 +492,7 @@ const NavWData = ({ motels }) => {
                           display: 'inherit',
                           textAlign: 'center',
                           justifyContent: 'center',
-                          color: '#000',
+                          color: '#000'
                         }}
                         data-bs-toggle="tooltip"
                         data-bs-placement="top"
@@ -495,7 +555,7 @@ const NavWData = ({ motels }) => {
         </div>
       </div>
       {/* Modal add  */}
-      <ModalCreateHome />
+      <ModalCreateHome username={username} MotelId={selectedMotelId} />
     </div>
   )
 }

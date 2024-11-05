@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
-import ModalCreateHome from './ModelCreateHome'
 import HomeNData from './HomeNData'
 import HomeWData from './HomeWData'
 import './Admin.css'
@@ -22,9 +21,6 @@ const MainManagement = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
         isNavAdmin={isNavAdmin}
       />
       {motels.length == 0 ? <HomeNData /> : <HomeWData />}
-
-      {/* modal and block */}
-      <ModalCreateHome />
     </div>
   )
 }
