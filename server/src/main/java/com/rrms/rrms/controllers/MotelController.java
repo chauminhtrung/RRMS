@@ -35,14 +35,10 @@ public class MotelController {
     private RedisRateLimiter rateLimiter;
 
 
-
-
     @Operation(summary = "Get all motels")
     @GetMapping()
-    public ApiResponse<List<MotelResponse>> getMotels(@RequestParam String username) {
-        // test valid request
-        boolean allowed = rateLimiter.isAllowed(username);
-        if (allowed) {
+    public ApiResponse<List<MotelResponse>> getMotels() {
+
             List<MotelResponse> motelResponses = motelService.findAll();
             log.info("Get all motels successfully");
             return ApiResponse.<List<MotelResponse>>builder()
@@ -50,14 +46,7 @@ public class MotelController {
                     .message("success")
                     .result(motelResponses)
                     .build();
-        } else {
-            log.info("Get all motels fail");
-            return ApiResponse.<List<MotelResponse>>builder()
-                    .code(HttpStatus.TOO_MANY_REQUESTS.value())
-                    .message("Request to many:::" + username)
-                    .result(null)
-                    .build();
-        }
+
     }
 
 
@@ -122,7 +111,7 @@ public class MotelController {
     }
 
     @Operation(summary = "Delete motel by id")
-    @DeleteMapping()
+    @DeleteMapping("/{id}")
     public ApiResponse<Boolean> deleteMotel(@PathVariable("id") UUID id) {
         try {
             motelService.delete(id);

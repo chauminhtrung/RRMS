@@ -16,7 +16,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class NameMotelServiceServiceImpl implements INameMotelServiceService {
+public class NameMotelServiceService implements INameMotelServiceService {
 
     @Autowired
     private NameMotelServiceRepository nameMotelServiceRepository;
@@ -26,8 +26,7 @@ public class NameMotelServiceServiceImpl implements INameMotelServiceService {
         NameMotelService nameMotelService = new NameMotelService();
         nameMotelService.setTypeService(request.getTypeService());
         nameMotelService.setNameService(request.getNameService());
-        nameMotelService.setPrice(request.getPrice());
-        nameMotelService.setChargetype(request.getChargetype());
+
         return nameMotelService;
     }
 
@@ -36,9 +35,7 @@ public class NameMotelServiceServiceImpl implements INameMotelServiceService {
         return new NameMotelServiceResponse(
                 nameMotelService.getNameMotelServicesId(),
                 nameMotelService.getTypeService(),
-                nameMotelService.getNameService(),
-                nameMotelService.getPrice(),
-                nameMotelService.getChargetype()
+                nameMotelService.getNameService()
         );
     }
 
@@ -55,8 +52,7 @@ public class NameMotelServiceServiceImpl implements INameMotelServiceService {
                 .orElseThrow(() -> new RuntimeException("Service not found"));
         nameMotelService.setTypeService(request.getTypeService());
         nameMotelService.setNameService(request.getNameService());
-        nameMotelService.setPrice(request.getPrice());
-        nameMotelService.setChargetype(request.getChargetype());
+
         NameMotelService updatedNameMotelService = nameMotelServiceRepository.save(nameMotelService);
         return toNameMotelServiceResponse(updatedNameMotelService);
     }

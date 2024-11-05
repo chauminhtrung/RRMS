@@ -16,5 +16,5 @@ public class ServiceResponse {
     UUID serviceId;
     String typeService;
     String nameService;
-    long price;
+
 }

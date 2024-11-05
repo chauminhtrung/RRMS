@@ -5,6 +5,7 @@ import com.rrms.rrms.enums.Roles;
 import com.rrms.rrms.models.*;
 import com.rrms.rrms.repositories.*;
 import com.rrms.rrms.services.ISearchService;
+import com.rrms.rrms.services.servicesImp.NameMotelServiceService;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
@@ -35,9 +36,9 @@ public class DB {
             RoomServiceRepository roomServiceRepository,
             ISearchService searchService,
             RoleRepository roleRepository,
-            PermissionRepository permissionRepository) {
+            PermissionRepository permissionRepository, NameMotelServiceRepository nameMotelServiceRepository) {
         return args -> {
-            int roomsLength = 100;
+            int roomsLength = 5;
 
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
 
@@ -62,18 +63,23 @@ public class DB {
                 List<RoomService> roomServices = new ArrayList<>();
                 List<RoomImage> roomImages = new ArrayList<>();
 
+                // Tạo và lưu dịch vụ
+                createServices(faker, serviceRepository);
+
+                createNameMotelService(nameMotelServiceRepository);
+
                 for (int i = 0; i < roomsLength; i++) {
                     log.info("Creating data: {}/{}", i + 1, roomsLength);
                     // Tạo và lưu motel
-                    Motel motel = createMotel(faker, accountRepository);
+                    Motel motel = createMotel(faker, accountRepository,typeRoom);
                     motels.add(motel);
 
                     // Tạo và lưu phòng
-                    Room room = createRoom(faker, roomRepository, motel, typeRoom);
+                    Room room = createRoom(faker, roomRepository, motel);
                     rooms.add(room);
 
-                    // Tạo và lưu dịch vụ
-                    createServices(faker, roomServices, room, serviceRepository);
+                    // Tạo và lưu dịch vụ Room
+                    createServicesRoom(faker, roomServices, room, serviceRepository);
 
                     // Tạo hình ảnh cho phòng
                     createRoomImages(faker, roomImages, room);
@@ -305,17 +311,43 @@ public class DB {
         }
     }
 
-    private Motel createMotel(Faker faker, AccountRepository accountRepository) {
+    private Motel createMotel(Faker faker, AccountRepository accountRepository,TypeRoom typeRoom) {
+
         Motel motel = new Motel();
         motel.setAccount(accountRepository.findByUsername("admin").get());
         motel.setMotelName(faker.address().cityName());
         motel.setAddress(faker.address().fullAddress());
         motel.setArea((double) faker.number().numberBetween(50, 200));
         motel.setAveragePrice((long) faker.number().numberBetween(500000, 5000000));
+        motel.setMethodofcreation("thủ công");
+        motel.setMaxperson((int) faker.number().numberBetween(1, 8));
+        motel.setInvoicedate((int) faker.number().numberBetween(1, 31));
+        motel.setPaymentdeadline((int) faker.number().numberBetween(1, 20));
+        motel.setTypeRoom(typeRoom);
         return motel;
     }
 
-    private Room createRoom(Faker faker, RoomRepository roomRepository, Motel motel, TypeRoom typeRoom) {
+    private void createNameMotelService(NameMotelServiceRepository nameMotelServiceRepository ) {
+        NameMotelService NameMotelservice1 = new NameMotelService();
+        NameMotelservice1.setTypeService("Điện");
+        NameMotelservice1.setNameService("Tiền điện");
+
+        NameMotelService NameMotelservice2 = new NameMotelService();
+        NameMotelservice2.setTypeService("Nước");
+        NameMotelservice2.setNameService("Tiền nước");
+
+        NameMotelService NameMotelservice3 = new NameMotelService();
+        NameMotelservice3.setTypeService("Rác");
+        NameMotelservice3.setNameService("Tiền rác");
+
+        NameMotelService NameMotelservice4 = new NameMotelService();
+        NameMotelservice4.setTypeService("Wifi/Internet");
+        NameMotelservice4.setNameService("Tiền wifi");
+
+        nameMotelServiceRepository.saveAll(List.of(NameMotelservice1, NameMotelservice2, NameMotelservice3,NameMotelservice4));
+    }
+
+    private Room createRoom(Faker faker, RoomRepository roomRepository, Motel motel) {
         Room room = new Room();
         Date randomDate = faker.date().between(
                 new Date(System.currentTimeMillis() - 30L * 24 * 60 * 60 * 1000), // 30 ngày trước
@@ -327,7 +359,7 @@ public class DB {
         room.setMotel(motel);
         room.setAuthen(faker.options().option(true, false));
         room.setDatenew(randomDate);
-        room.setTypeRoom(typeRoom);
+
         room.setNameRoom(faker.address().city());
         room.setDescription(faker.lorem().paragraph());
         room.setAvailable(faker.bool().bool());
@@ -337,30 +369,40 @@ public class DB {
         return room;
     }
 
-    private void createServices(
+    private void createServicesRoom(
             Faker faker, List<RoomService> roomServices, Room room, ServiceRepository serviceRepository) {
+
+        List<Service> ListService = serviceRepository.findAll();
+
+        roomServices.add(RoomService.builder().room(room).service(ListService.get(0)).chargetype("theo tháng").build());
+        roomServices.add(RoomService.builder().room(room).service(ListService.get(1)).chargetype("theo đồng hồ").build());
+        roomServices.add(RoomService.builder().room(room).service(ListService.get(2)).chargetype("theo đồng hồ").build());
+        roomServices.add(RoomService.builder().room(room).service(ListService.get(3)).chargetype("theo người").build());
+    }
+
+    private void createServices(
+            Faker faker, ServiceRepository serviceRepository) {
         Service service1 = Service.builder()
-                .typeService("Tiện nghi")
-                .nameService(faker.options().option("Có chuồng chó", "Wifi miễn phí", "Hồ bơi", "Gym"))
+                .typeService("rác")
+                .nameService(faker.options().option("rác"))
                 .build();
 
         Service service2 = Service.builder()
-                .typeService("Điện nước")
-                .nameService("Điện")
-                .price((long) faker.number().randomDouble(2, 50000, 100000))
+                .typeService("điện")
+                .nameService("điện")
                 .build();
 
         Service service3 = Service.builder()
-                .typeService("Điện nước")
-                .nameService("Nước")
-                .price((long) faker.number().randomDouble(2, 50000, 100000))
+                .typeService("nước")
+                .nameService("nước")
                 .build();
 
-        serviceRepository.saveAll(List.of(service1, service2, service3));
+        Service service4 = Service.builder()
+                .typeService("wifi/internet")
+                .nameService("wifi/internet")
+                .build();
 
-        roomServices.add(RoomService.builder().room(room).service(service1).build());
-        roomServices.add(RoomService.builder().room(room).service(service2).build());
-        roomServices.add(RoomService.builder().room(room).service(service3).build());
+        serviceRepository.saveAll(List.of(service1, service2, service3,service4));
     }
 
     private void createRoomImages(Faker faker, List<RoomImage> roomImages, Room room) {

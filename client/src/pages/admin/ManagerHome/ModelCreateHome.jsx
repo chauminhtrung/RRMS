@@ -1,7 +1,16 @@
 import { useState, useEffect } from 'react'
-import { getPhuongXa, getQuanHuyen, getTinhThanh } from '~/apis/apiClient'
-
-const ModelCreateHome = () => {
+import {
+  getPhuongXa,
+  getQuanHuyen,
+  getTinhThanh,
+  getAllTypeRoom,
+  createMotel,
+  getMotelById,
+  updateMotel,
+  createSerivceMotel
+} from '~/apis/apiClient'
+import Swal from 'sweetalert2'
+const ModelCreateHome = ({ username, MotelId }) => {
   const [selectedOption, setSelectedOption] = useState('')
   const [FileName, setFileName] = useState('')
   const [provinces, setProvinces] = useState([])
@@ -10,9 +19,30 @@ const ModelCreateHome = () => {
   const [selectedProvince, setSelectedProvince] = useState('')
   const [selectedDistrict, setSelectedDistrict] = useState('')
   const [selectedWard, setSelectedWard] = useState('')
+  const [Typerooms, setTyperooms] = useState([])
 
+  const [priceItemEle, setPriceItemEle] = useState('3')
+  const [priceItemWater, setPriceItemWater] = useState('3')
+  const [priceItemTrash, setPriceItemTrash] = useState('0')
+  const [priceItemWifi, setPriceItemWifi] = useState('0')
+
+  const [addressDetail, setaddressDetail] = useState('')
+  //motel
+  const [motel, setMotel] = useState({
+    typeRoom: '',
+    account: '',
+    motelName: '',
+    methodofcreation: '',
+    address: '',
+    area: '',
+    averagePrice: '',
+    maxperson: 4,
+    invoicedate: '',
+    paymentdeadline: ''
+  })
   // lấy danh sách tỉnh/thành từ API
   useEffect(() => {
+    fetchDataTypeRoom()
     getTinhThanh()
       .then((response) => {
         if (response.data.error === 0) {
@@ -23,6 +53,124 @@ const ModelCreateHome = () => {
         console.error('Error fetching provinces:', error)
       })
   }, [])
+
+  useEffect(() => {
+    if (MotelId !== 'Create') {
+      fetchDataWhenEdit(MotelId)
+    } else {
+      setMotel({
+        typeRoom: '',
+        account: '',
+        motelName: '',
+        methodofcreation: '',
+        address: '',
+        area: '',
+        averagePrice: '',
+        maxperson: 1,
+        invoicedate: '',
+        paymentdeadline: ''
+      })
+    }
+  }, [MotelId]) // Thêm templatecontractRouteId vào dependency array
+
+  //tao service
+  const handleCreateServices = async (id) => {
+    const motelId = id // Thay thế bằng ID của Motel thực tế
+
+    // Tạo mảng chứa các dịch vụ
+    const services = [
+      {
+        motelId: motelId,
+        nameService: 'Dịch vụ điện',
+        price: parseFloat(1700), // Chuyển đổi giá thành số Long
+        chargetype:
+          priceItemEle === '0'
+            ? 'Miễn phí'
+            : priceItemEle === '1'
+            ? 'Theo người'
+            : priceItemEle === '2'
+            ? 'Theo tháng'
+            : 'Theo đồng hồ'
+      },
+      {
+        motelId: motelId,
+        nameService: 'Dịch vụ nước',
+        price: parseFloat(18000),
+        chargetype:
+          priceItemWater === '0'
+            ? 'Miễn phí'
+            : priceItemWater === '1'
+            ? 'Theo người'
+            : priceItemWater === '2'
+            ? 'Theo tháng'
+            : 'Theo đồng hồ'
+      },
+      {
+        motelId: motelId,
+        nameService: 'Dịch vụ rác',
+        price: parseFloat(15000),
+        chargetype: priceItemTrash === '0' ? 'Miễn phí' : priceItemTrash === '1' ? 'Theo người' : 'Theo tháng'
+      },
+      {
+        motelId: motelId,
+        nameService: 'Dịch vụ wifi/internet',
+        price: parseFloat(50000),
+        chargetype: priceItemWifi === '0' ? 'Miễn phí' : priceItemWifi === '1' ? 'Theo người' : 'Theo tháng'
+      }
+    ]
+
+    try {
+      // Gửi từng dịch vụ đến API
+      for (const service of services) {
+        await createSerivceMotel(service)
+      }
+      console.log('All services created successfully.')
+      // Xử lý phản hồi từ API (như thông báo thành công)
+    } catch (error) {
+      console.error('Error creating services:', error)
+      // Xử lý lỗi (như thông báo lỗi)
+    }
+  }
+
+  //nhan vao nut edit
+  const fetchDataWhenEdit = async (id) => {
+    if (username) {
+      try {
+        const response = await getMotelById(id)
+        setMotel({
+          typeRoom: { typeRoomId: response.data.result[0].typeRoom.typeRoomId },
+          account: { username: response.data.result[0].account.username },
+          motelName: response.data.result[0].motelName,
+          methodofcreation: response.data.result[0].methodofcreation,
+          address: response.data.result[0].address,
+          area: response.data.result[0].area,
+          averagePrice: response.data.result[0].averagePrice,
+          maxperson: response.data.result[0].maxperson,
+          invoicedate: response.data.result[0].invoicedate,
+          paymentdeadline: response.data.result[0].paymentdeadline
+        })
+        setSelectedOption(response.data.result[0].methodofcreation)
+        const [addressDetail, ward, district, province] = response.data.result[0].address.split(', ')
+        setaddressDetail(addressDetail)
+        setSelectedWard(Number(ward)) // Đảm bảo ward là số nếu cần
+        setSelectedDistrict(Number(district))
+        setSelectedProvince(Number(province))
+        console.log(ward)
+        console.log(fetchDistricts(province))
+        console.log(fetchWards(district))
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
+  // Tìm tên của từng phần tử dựa trên `id`
+
+  //update address
+  const updateAdress = (e) => {
+    setaddressDetail(e.target.value)
+  }
+
   // Hàm để lấy danh sách quận/huyện theo tỉnh/thành từ API
   const fetchDistricts = async (provinceId) => {
     getQuanHuyen(provinceId)
@@ -52,20 +200,16 @@ const ModelCreateHome = () => {
     setFileName(event.target.files[0].name)
   }
 
-  const handleOptionChange = (event) => {
-    setSelectedOption(event.target.value)
-  }
-
   // Hàm xử lý khi chọn tỉnh/thành
   const handleProvinceChange = (event) => {
-    const provinceId = event.target.value
+    const provinceId = Number(event.target.value)
     setSelectedProvince(provinceId)
     fetchDistricts(provinceId)
   }
 
   // Hàm xử lý khi chọn quận/huyện
   const handleDistrictChange = (event) => {
-    const districtId = event.target.value
+    const districtId = Number(event.target.value)
     setSelectedDistrict(districtId)
     console.log(districtId)
     fetchWards(districtId)
@@ -73,7 +217,114 @@ const ModelCreateHome = () => {
 
   // Hàm xử lý khi chọn xa/phuong
   const handleWardChange = (event) => {
-    setSelectedWard(event.target.value)
+    setSelectedWard(Number(event.target.value))
+  }
+
+  //ham lay all typeroom
+  const fetchDataTypeRoom = async () => {
+    if (username) {
+      try {
+        const response = await getAllTypeRoom()
+        console.log(response)
+
+        setTyperooms(response.result)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    setMotel((prev) => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  // Hàm thay đổi methodofcreation khi chọn radio
+  const handleOptionChange = (event) => {
+    setMotel((prevMotel) => ({
+      ...prevMotel,
+      methodofcreation: event.target.value
+    }))
+    setSelectedOption(event.target.value)
+  }
+
+  const onSaveMotel = (event) => {
+    const form = document.getElementById('add-block-form')
+    if (!form.checkValidity()) {
+      event.preventDefault()
+      form.classList.add('was-validated')
+    } else {
+      if (username) {
+        const fullAddress = `${addressDetail}, ${selectedWard}, ${selectedDistrict}, ${selectedProvince}`
+        console.log(fullAddress)
+
+        const motelData = {
+          typeRoom: { typeRoomId: document.getElementById('category').value },
+          account: { username: username },
+          motelName: document.getElementById('motelName').value,
+          methodofcreation: selectedOption,
+          address: fullAddress ? fullAddress : null,
+          area: Number(document.getElementById('area').value),
+          averagePrice: parseFloat(document.getElementById('averagePrice').value),
+          maxperson: Number(document.getElementById('maxperson').value),
+          invoicedate: Number(document.getElementById('invoicedate').value),
+          paymentdeadline: Number(document.getElementById('paymentdeadline').value)
+        }
+
+        if (MotelId === 'Create') {
+          if (selectedOption === 'disable') {
+            createMotel(motelData)
+              .then((response) => {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Thông báo',
+                  text: 'Motel created successfully!'
+                })
+                setMotel(response)
+                handleCreateServices(response.data.result.motelId)
+
+                setTimeout(() => {
+                  window.location.reload()
+                }, 1400)
+              })
+              .catch((error) => {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Thông báo',
+                  text: 'Error creating motel.'
+                })
+                console.error('Error creating motel:', error)
+              })
+          }
+        } else {
+          // Cập nhật nếu đã có dữ liệu
+          updateMotel(MotelId, motelData)
+            .then((response) => {
+              Swal.fire({
+                icon: 'success',
+                title: 'Thông báo',
+                text: 'Motel updated successfully!'
+              })
+              setMotel(response)
+
+              setTimeout(() => {
+                window.location.reload()
+              }, 1400)
+            })
+            .catch((error) => {
+              Swal.fire({
+                icon: 'error',
+                title: 'Thông báo',
+                text: 'Error updating motel.'
+              })
+              console.error('Error updating template:', error)
+            })
+        }
+      }
+    }
   }
 
   return (
@@ -99,7 +350,7 @@ const ModelCreateHome = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 display: 'flex',
-                backgroundColor: 'rgb(111 171 232)',
+                backgroundColor: 'rgb(111 171 232)'
               }}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -141,12 +392,15 @@ const ModelCreateHome = () => {
                       name="category"
                       className="form-select form-control"
                       required="">
-                      <option value="0">Nhà trọ</option>
-                      <option value="1">Ký túc xá/sleepbox</option>
-                      <option value="2">Chung cư mini</option>
-                      <option value="5">Tòa nhà chung cư</option>
-                      <option value="3">Nhà nguyên căn</option>
-                      <option value="4">Văn phòng cho thuê</option>
+                      {Typerooms ? (
+                        Typerooms.map((type, i) => (
+                          <option key={i} value={type.typeRoomId}>
+                            {type.name}
+                          </option>
+                        ))
+                      ) : (
+                        <></>
+                      )}
                     </select>
                     <label htmlFor="category">
                       Loại nhà trọ <span style={{ color: 'red' }}>*</span>
@@ -158,12 +412,14 @@ const ModelCreateHome = () => {
                     <input
                       type="text"
                       className="form-control"
-                      name="name"
-                      id="name"
-                      required=""
+                      name="motelName"
+                      id="motelName"
+                      value={motel ? motel.motelName : <></>}
+                      onChange={handleInputChange}
+                      required
                       placeholder="Tên nhà trọ"
                     />
-                    <label htmlFor="name">
+                    <label htmlFor="motelName">
                       Tên nhà trọ <span style={{ color: 'red' }}>*</span>
                     </label>
                     <div className="invalid-feedback">Vui lòng nhập tên nhà trọ</div>
@@ -198,62 +454,73 @@ const ModelCreateHome = () => {
                     <i className="des">Chọn 1 trong 3 phương thức tạo khởi tạo dữ liệu</i>
                   </div>
                 </div>
-                <div className="col-12 mt-2 type-input-room hide-when-edit d-flex" style={{ textAlign: 'center' }}>
-                  <div className="item">
-                    <div className="form-check form-check-inline">
-                      <input
-                        data-format="numeric"
-                        className="form-check-input"
-                        type="radio"
-                        name="flexRadioDefault"
-                        id="enable"
-                        value="enable"
-                        onChange={handleOptionChange}
-                      />
-                      <label className="form-check-label mt-1" htmlFor="enable">
-                        <b>
-                          Tạo dữ liệu <span className="room_type_name"></span> tự động{' '}
-                        </b>
-                      </label>
+
+                {MotelId === 'Create' ? (
+                  <div className="col-12 mt-2 type-input-room hide-when-edit d-flex" style={{ textAlign: 'center' }}>
+                    <div className="item">
+                      <div className="form-check form-check-inline">
+                        <input
+                          data-format="numeric"
+                          className="form-check-input"
+                          type="radio"
+                          name="methodofcreation"
+                          id="enable"
+                          value="enable"
+                          onChange={handleOptionChange}
+                          checked={motel.methodofcreation === 'enable'}
+                          required
+                        />
+                        <label className="form-check-label mt-1" htmlFor="enable">
+                          <b>
+                            Tạo dữ liệu <span className="room_type_name"></span> tự động{' '}
+                          </b>
+                        </label>
+                      </div>
+                    </div>
+                    <div className="item">
+                      <div className="form-check form-check-inline">
+                        <input
+                          data-format="numeric"
+                          className="form-check-input"
+                          type="radio"
+                          name="methodofcreation"
+                          id="excel"
+                          value="excel"
+                          onChange={handleOptionChange}
+                          checked={motel.methodofcreation === 'excel'}
+                          required
+                        />
+                        <label className="form-check-label  mt-1" htmlFor="excel">
+                          <b>
+                            Tạo dữ liệu <span className="room_type_name"></span> từ Excel
+                          </b>
+                        </label>
+                      </div>
+                    </div>
+                    <div className="item">
+                      <div className="form-check form-check-inline">
+                        <input
+                          data-format="numeric"
+                          className="form-check-input"
+                          type="radio"
+                          name="methodofcreation"
+                          id="disable"
+                          value="disable"
+                          onChange={handleOptionChange}
+                          checked={motel.methodofcreation === 'disable'}
+                          required
+                        />
+                        <label className="form-check-label mt-1" htmlFor="disable">
+                          <b>
+                            Tạo dữ liệu <span className="room_type_name"></span> thủ công{' '}
+                          </b>
+                        </label>
+                      </div>
                     </div>
                   </div>
-                  <div className="item">
-                    <div className="form-check form-check-inline">
-                      <input
-                        data-format="numeric"
-                        className="form-check-input"
-                        type="radio"
-                        name="flexRadioDefault"
-                        id="excel"
-                        value="excel"
-                        onChange={handleOptionChange}
-                      />
-                      <label className="form-check-label  mt-1" htmlFor="excel">
-                        <b>
-                          Tạo dữ liệu <span className="room_type_name"></span> từ Excel
-                        </b>
-                      </label>
-                    </div>
-                  </div>
-                  <div className="item">
-                    <div className="form-check form-check-inline">
-                      <input
-                        data-format="numeric"
-                        className="form-check-input"
-                        type="radio"
-                        name="flexRadioDefault"
-                        id="disable"
-                        value="disable"
-                        onChange={handleOptionChange}
-                      />
-                      <label className="form-check-label mt-1" htmlFor="disable">
-                        <b>
-                          Tạo dữ liệu <span className="room_type_name"></span> thủ công{' '}
-                        </b>
-                      </label>
-                    </div>
-                  </div>
-                </div>
+                ) : (
+                  <></>
+                )}
 
                 {selectedOption === 'enable' ? (
                   <div className="col-12 mt-2 info-auto-create-room-enable ">
@@ -333,6 +600,7 @@ const ModelCreateHome = () => {
                             accept=".xlsx"
                             style={{ display: 'none', visibility: 'none' }}
                             onChange={handleChangeFileName}
+                            required
                           />
                           <div
                             className="container-upload"
@@ -348,7 +616,7 @@ const ModelCreateHome = () => {
                                   alignItems: 'center',
                                   justifyContent: 'center',
                                   height: '100%',
-                                  margin: '-10px',
+                                  margin: '-10px'
                                 }}>
                                 <div className="icon-upload" style={{ margin: 'auto' }}>
                                   <svg
@@ -393,7 +661,7 @@ const ModelCreateHome = () => {
                                   alignItems: 'center',
                                   justifyContent: 'center',
                                   height: '100%',
-                                  margin: '-10px',
+                                  margin: '-10px'
                                 }}>
                                 <div className="icon-upload" style={{ margin: 'auto' }}>
                                   <svg
@@ -435,7 +703,7 @@ const ModelCreateHome = () => {
                         id="count_floor"
                         name="count_floor"
                         className="form-select form-control"
-                        required="">
+                        required>
                         <option value="1">Tầng trệt (không có tầng)</option>
                         <option value="2">2 tầng (Gồm 1 trệt + 1 tầng)</option>
                         <option value="3">3 tầng (Gồm 1 trệt + 2 tầng)</option>
@@ -463,7 +731,7 @@ const ModelCreateHome = () => {
                         name="room_total"
                         id="room_total"
                         placeholder="Nhập số phòng"
-                        required="required"
+                        required
                       />
                       <label htmlFor="room_total">
                         Số{' '}
@@ -499,7 +767,9 @@ const ModelCreateHome = () => {
                           name="address_component[province_id]"
                           className="form-select form-control province"
                           value={selectedProvince}
-                          onChange={handleProvinceChange}
+                          onChange={(e) => {
+                            handleProvinceChange(e)
+                          }}
                           required>
                           <option value="">Chọn Tỉnh/Thành phố</option>
                           {provinces.map((province, index) => (
@@ -511,7 +781,6 @@ const ModelCreateHome = () => {
                         <label htmlFor="province">
                           Chọn Tỉnh/Thành phố <span style={{ color: 'red' }}>*</span>
                         </label>
-                        <div className="invalid-feedback">Vui lòng chọn thành phố</div>
                       </div>
                     </div>
                     {/* chon quan huyen */}
@@ -522,8 +791,10 @@ const ModelCreateHome = () => {
                           name="address_component[district_id]"
                           className="form-select form-control district"
                           value={selectedDistrict}
-                          onChange={handleDistrictChange}
-                          required="">
+                          onChange={(e) => {
+                            handleDistrictChange(e)
+                          }}
+                          required>
                           <option value="">Chọn quận/huyện</option>
                           {districts.map((district, index) => (
                             <option key={index} value={district.id}>
@@ -534,7 +805,6 @@ const ModelCreateHome = () => {
                         <label htmlFor="district">
                           Chọn Quận/Huyện <span style={{ color: 'red' }}>*</span>
                         </label>
-                        <div className="invalid-feedback">Vui lòng chọn quận hoặc huyện</div>
                       </div>
                     </div>
                     {/* chon phuong xa*/}
@@ -545,8 +815,10 @@ const ModelCreateHome = () => {
                           name="address_component[ward_id]"
                           className="form-select form-control ward"
                           value={selectedWard}
-                          onChange={handleWardChange}
-                          required="">
+                          onChange={(e) => {
+                            handleWardChange(e)
+                          }}
+                          required>
                           <option value="">Chọn Phường/Xã</option>
                           {wards.map((ward, index) => (
                             <option key={index} value={ward.id}>
@@ -557,7 +829,6 @@ const ModelCreateHome = () => {
                         <label htmlFor="ward">
                           Chọn Phường/Xã <span style={{ color: 'red' }}>*</span>
                         </label>
-                        <div className="invalid-feedback">Vui lòng chọn phường hoặc xã</div>
                       </div>
                     </div>
                     {/* dia chi cu the*/}
@@ -566,9 +837,11 @@ const ModelCreateHome = () => {
                         <input
                           type="text"
                           className="form-control address_detail"
-                          name="address_component[address_detail]"
+                          name="address_detail"
+                          value={addressDetail}
+                          onChange={updateAdress}
                           placeholder="ví dụ: 122 - Đường Nguyễn Duy Trinh"
-                          required=""
+                          required
                         />
                         <label htmlFor="address_detail">
                           Địa chỉ chi tiết. Ví dụ: 122 - Đường Nguyễn Duy Trinh <span style={{ color: 'red' }}>*</span>
@@ -597,14 +870,14 @@ const ModelCreateHome = () => {
                     </svg>
                     <input
                       type="hidden"
-                      required=""
+                      required
                       value="10.7829132"
                       className="form-control"
                       name="address_component[position][latitude]"
                       id="address_component[position][latitude]"></input>
                     <input
                       type="hidden"
-                      required=""
+                      required
                       value="106.6961898"
                       className="form-control"
                       name="address_component[position][longitude]"
@@ -617,13 +890,16 @@ const ModelCreateHome = () => {
                 <div className="col-12">
                   <div className="title-item-small">
                     <b>Thông tin cơ bản:</b>
-                    <i className="des not-edit">Thông tin diện tích, giá thuê, số lượng thành viên</i>
-                    <i className="des note" style={{ color: 'red', display: 'none' }}>
-                      {' '}
-                      <b>
-                        *Các thông tin dưới đây chỉ áp dụng cho lúc tạo nhà trọ tự động và khởi tạo đăng tin cho thuê
-                      </b>
-                    </i>
+                    {MotelId === 'Create' ? (
+                      <i className="des not-edit">Thông tin diện tích, giá thuê, số lượng thành viên</i>
+                    ) : (
+                      <i className="des note" style={{ color: 'red' }}>
+                        {' '}
+                        <b>
+                          *Các thông tin dưới đây chỉ áp dụng cho lúc tạo nhà trọ tự động và khởi tạo đăng tin cho thuê
+                        </b>
+                      </i>
+                    )}
                   </div>
                 </div>
                 <div className="col-6 hide-when-not-room">
@@ -634,8 +910,9 @@ const ModelCreateHome = () => {
                       className="form-control"
                       name="area"
                       id="area"
-                      value="15"
-                      required=""
+                      required
+                      value={motel ? motel.area : <></>}
+                      onChange={handleInputChange}
                       placeholder="Nhập diện tích"
                     />
                     <label htmlFor="area">Diện tích (m2)</label>
@@ -648,12 +925,14 @@ const ModelCreateHome = () => {
                       data-format="numeric"
                       type="text"
                       className="form-control"
-                      name="room_amount"
-                      id="room_amount"
+                      name="averagePrice"
+                      id="averagePrice"
                       placeholder="Giá thuê"
-                      required=""
+                      value={motel ? motel.averagePrice : <></>}
+                      onChange={handleInputChange}
+                      required
                     />
-                    <label htmlFor="room_amount">Giá thuê trung bình (đ)</label>
+                    <label htmlFor="averagePrice">Giá thuê trung bình (đ)</label>
                     <div className="invalid-feedback">Vui lòng nhập giá thuê</div>
                   </div>
                 </div>
@@ -661,8 +940,10 @@ const ModelCreateHome = () => {
                   <div className="form-floating">
                     <select
                       data-format="numeric"
-                      id="max_member"
-                      name="max_member"
+                      id="maxperson"
+                      name="maxperson"
+                      value={motel ? motel.maxperson : <></>}
+                      onChange={handleInputChange}
                       className="form-select form-control">
                       <option value="1">1 người ở</option>
                       <option value="2">2 người ở</option>
@@ -672,170 +953,179 @@ const ModelCreateHome = () => {
                       <option value="6">7-10 người ở</option>
                       <option value="0">Không giới hạn</option>
                     </select>
-                    <label htmlFor="max_member">
+                    <label htmlFor="maxperson">
                       Tối đa người ở / <span className="room_type_name">phòng</span>
                     </label>
                   </div>
                 </div>
 
                 {/* Cài đặt dịch vụ: Thiết lập các dịch vụ khi khách thuê sử dụng khi thuê */}
-                <div className="col-12 hide-when-edit">
-                  <div className="title-item-small">
-                    <b>Cài đặt dịch vụ:</b>
-                    <i className="des">Thiết lập các dịch vụ khi khách thuê sử dụng khi thuê</i>
-                  </div>
-                </div>
-                <div className="col-6 mt-2 hide-when-edit">
-                  <div className="form-floating">
-                    <select
-                      data-format="numeric"
-                      id="setting[price_item_ele]"
-                      name="setting[price_item_ele]"
-                      className="form-select form-control">
-                      <option value="0">Miễn phí/Không sử dụng</option>
-                      <option value="1">Tính theo người</option>
-                      <option value="2">Tính theo tháng</option>
-                      <option value="3" selected="">
-                        Tính theo đồng hồ (phổ biến)
-                      </option>
-                    </select>
-                    <label htmlFor="setting[price_item_ele]">Dịch vụ điện</label>
-                  </div>
-                </div>
-                <div className="col-6 mt-2 hide-when-edit">
-                  <div className="form-floating">
-                    <select
-                      data-format="numeric"
-                      id="setting[price_item_water]"
-                      name="setting[price_item_water]"
-                      className="form-select form-control">
-                      <option value="0">Miễn phí/Không sử dụng</option>
-                      <option value="1">Tính theo người</option>
-                      <option value="2">Tính theo tháng</option>
-                      <option value="3" selected="">
-                        Tính theo đồng hồ (phổ biến)
-                      </option>
-                    </select>
-                    <label htmlFor="setting[price_item_water]">Dịch vụ nước</label>
-                  </div>
-                </div>
-                <div className="col-6 mt-2 hide-when-edit">
-                  <div className="form-floating">
-                    <select
-                      data-format="numeric"
-                      id="setting[price_item_trash]"
-                      name="setting[price_item_trash]"
-                      className="form-select form-control">
-                      <option value="0">Miễn phí/Không sử dụng</option>
-                      <option value="1">Tính theo người</option>
-                      <option value="2">Tính theo tháng</option>
-                    </select>
-                    <label htmlFor="setting[price_item_trash]">Dịch vụ rác</label>
-                  </div>
-                </div>
-                <div className="col-6 mt-2 hide-when-edit">
-                  <div className="form-floating">
-                    <select
-                      data-format="numeric"
-                      id="setting[price_item_wifi]"
-                      name="setting[price_item_wifi]"
-                      className="form-select form-control">
-                      <option value="0">Miễn phí/Không sử dụng</option>
-                      <option value="1">Tính theo người</option>
-                      <option value="2">Tính theo tháng</option>
-                    </select>
-                    <label htmlFor="setting[price_item_wifi]">Dịch vụ wifi/internet</label>
-                  </div>
-                </div>
+                {MotelId === 'Create' ? (
+                  <>
+                    <div className="col-12 hide-when-edit">
+                      <div className="title-item-small">
+                        <b>Cài đặt dịch vụ:</b>
+                        <i className="des">Thiết lập các dịch vụ khi khách thuê sử dụng khi thuê</i>
+                      </div>
+                    </div>
+                    <div className="col-6 mt-2 hide-when-edit">
+                      <div className="form-floating">
+                        <select
+                          value={priceItemEle}
+                          onChange={(e) => setPriceItemEle(e.target.value)}
+                          className="form-select form-control">
+                          <option value="0">Miễn phí/Không sử dụng</option>
+                          <option value="1">Tính theo người</option>
+                          <option value="2">Tính theo tháng</option>
+                          <option value="3" selected>
+                            Tính theo đồng hồ (phổ biến)
+                          </option>
+                        </select>
+                        <label htmlFor="setting[price_item_ele]">Dịch vụ điện</label>
+                      </div>
+                    </div>
+                    <div className="col-6 mt-2 hide-when-edit">
+                      <div className="form-floating">
+                        <select
+                          value={priceItemWater}
+                          onChange={(e) => setPriceItemWater(e.target.value)}
+                          className="form-select form-control">
+                          <option value="0">Miễn phí/Không sử dụng</option>
+                          <option value="1">Tính theo người</option>
+                          <option value="2">Tính theo tháng</option>
+                          <option value="3" selected>
+                            Tính theo đồng hồ (phổ biến)
+                          </option>
+                        </select>
+                        <label htmlFor="setting[price_item_water]">Dịch vụ nước</label>
+                      </div>
+                    </div>
+                    <div className="col-6 mt-2 hide-when-edit">
+                      <div className="form-floating">
+                        <select
+                          value={priceItemTrash}
+                          onChange={(e) => setPriceItemTrash(e.target.value)}
+                          className="form-select form-control">
+                          <option value="0">Miễn phí/Không sử dụng</option>
+                          <option value="1">Tính theo người</option>
+                          <option value="2">Tính theo tháng</option>
+                        </select>
+                        <label htmlFor="setting[price_item_trash]">Dịch vụ rác</label>
+                      </div>
+                    </div>
+                    <div className="col-6 mt-2 hide-when-edit">
+                      <div className="form-floating">
+                        <select
+                          value={priceItemWifi}
+                          onChange={(e) => setPriceItemWifi(e.target.value)}
+                          className="form-select form-control">
+                          <option value="0">Miễn phí/Không sử dụng</option>
+                          <option value="1">Tính theo người</option>
+                          <option value="2">Tính theo tháng</option>
+                        </select>
+                        <label htmlFor="setting[price_item_wifi]">Dịch vụ wifi/internet</label>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <></>
+                )}
+
                 {/* Cài đặt tính năng:Thiết lập các tính năng cho nhà trọ */}
-                <div className="col-12 hide-when-edit">
-                  <div className="title-item-small">
-                    <b>Cài đặt tính năng:</b>
-                    <i className="des">Thiết lập các tính năng cho nhà trọ</i>
-                  </div>
-                </div>
-                <div className="col-6 mt-2 hide-when-edit">
-                  <div className="form-check form-switch">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value="1"
-                      id="setting[asset_function]"
-                      name="setting[asset_function]"
-                      checked
-                    />
-                    <label className="form-check-label" htmlFor="setting[asset_function]">
-                      <b>Quản lý tài sản</b>
-                      <p>Quản lý tài sản khách thuê sử dụng</p>
-                    </label>
-                  </div>
-                </div>
-                <div className="col-6 mt-2 hide-when-edit">
-                  <div className="form-check form-switch">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value="1"
-                      id="setting[car_function]"
-                      name="setting[car_function]"
-                      checked
-                    />
-                    <label className="form-check-label" htmlFor="setting[car_function]">
-                      <b>Quản lý xe</b>
-                      <p>Các thông tin xe của khách thuê</p>
-                    </label>
-                  </div>
-                </div>
-                <div className="col-6 mt-2">
-                  <div className="form-check form-switch">
-                    <input
-                      data-format="numeric"
-                      className="form-check-input"
-                      type="checkbox"
-                      value="1"
-                      id="setting[post_function]"
-                      name="setting[post_function]"
-                      checked
-                    />
-                    <label className="form-check-label" htmlFor="setting[post_function]">
-                      <b>Quản lý tin đăng</b>
-                      <p>Các thông tin về tin đăng</p>
-                    </label>
-                  </div>
-                </div>
-                <div className="col-6 mt-2">
-                  <div className="form-check form-switch">
-                    <input
-                      data-format="numeric"
-                      className="form-check-input"
-                      type="checkbox"
-                      value="1"
-                      id="setting[post_function]"
-                      name="setting[post_function]"
-                      checked
-                    />
-                    <label className="form-check-label" htmlFor="setting[post_function]">
-                      <b>Quản lý tin đăng</b>
-                      <p>Các thông tin về tin đăng</p>
-                    </label>
-                  </div>
-                </div>
-                <div className="col-6 mt-2 hide-when-edit">
-                  <div className="form-check form-switch">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value="1"
-                      id="setting[send_sms_when_create_bill]"
-                      name="setting[send_sms_when_create_bill]"
-                      checked
-                    />
-                    <label className="form-check-label" htmlFor="setting[send_sms_when_create_bill]">
-                      <b>Gửi tin nhắn tự động cho khách thuê</b>
-                      <p>Giửi tin nhắn SMS tự động cho khách thuê sau khi lập phiếu</p>
-                    </label>
-                  </div>
-                </div>
+                {MotelId === 'Create' ? (
+                  <>
+                    <div className="col-12 hide-when-edit">
+                      <div className="title-item-small">
+                        <b>Cài đặt tính năng:</b>
+                        <i className="des">Thiết lập các tính năng cho nhà trọ</i>
+                      </div>
+                    </div>
+                    <div className="col-6 mt-2 hide-when-edit">
+                      <div className="form-check form-switch">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          value="1"
+                          id="setting[asset_function]"
+                          name="setting[asset_function]"
+                          checked
+                        />
+                        <label className="form-check-label" htmlFor="setting[asset_function]">
+                          <b>Quản lý tài sản</b>
+                          <p>Quản lý tài sản khách thuê sử dụng</p>
+                        </label>
+                      </div>
+                    </div>
+                    <div className="col-6 mt-2 hide-when-edit">
+                      <div className="form-check form-switch">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          value="1"
+                          id="setting[car_function]"
+                          name="setting[car_function]"
+                          checked
+                        />
+                        <label className="form-check-label" htmlFor="setting[car_function]">
+                          <b>Quản lý xe</b>
+                          <p>Các thông tin xe của khách thuê</p>
+                        </label>
+                      </div>
+                    </div>
+                    <div className="col-6 mt-2">
+                      <div className="form-check form-switch">
+                        <input
+                          data-format="numeric"
+                          className="form-check-input"
+                          type="checkbox"
+                          value="1"
+                          id="setting[post_function]"
+                          name="setting[post_function]"
+                          checked
+                        />
+                        <label className="form-check-label" htmlFor="setting[post_function]">
+                          <b>Quản lý tin đăng</b>
+                          <p>Các thông tin về tin đăng</p>
+                        </label>
+                      </div>
+                    </div>
+                    <div className="col-6 mt-2">
+                      <div className="form-check form-switch">
+                        <input
+                          data-format="numeric"
+                          className="form-check-input"
+                          type="checkbox"
+                          value="1"
+                          id="setting[post_function]"
+                          name="setting[post_function]"
+                          checked
+                        />
+                        <label className="form-check-label" htmlFor="setting[post_function]">
+                          <b>Quản lý tin đăng</b>
+                          <p>Các thông tin về tin đăng</p>
+                        </label>
+                      </div>
+                    </div>
+                    <div className="col-6 mt-2 hide-when-edit">
+                      <div className="form-check form-switch">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          value="1"
+                          id="setting[send_sms_when_create_bill]"
+                          name="setting[send_sms_when_create_bill]"
+                          checked
+                        />
+                        <label className="form-check-label" htmlFor="setting[send_sms_when_create_bill]">
+                          <b>Gửi tin nhắn tự động cho khách thuê</b>
+                          <p>Giửi tin nhắn SMS tự động cho khách thuê sau khi lập phiếu</p>
+                        </label>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <></>
+                )}
                 {/* Cài đặt cho phiếu thu (hóa đơn): Thiết lập cho hóa đơn khi bạn lập hóa đơn tiền thuê cho khách thuê */}
                 <div className="col-12">
                   <div className="title-item-small">
@@ -849,14 +1139,16 @@ const ModelCreateHome = () => {
                       data-format="numeric"
                       type="text"
                       className="form-control"
-                      id="circle_order"
-                      name="circle_order"
+                      id="invoicedate"
+                      name="invoicedate"
                       placeholder="Ngày lập hóa đơn"
                       min="1"
                       max="31"
-                      required=""
+                      value={motel ? motel.invoicedate : <></>}
+                      onChange={handleInputChange}
+                      required
                     />
-                    <label htmlFor="circle_order">Ngày lập hóa đơn và trong khoảng 1 đến 31</label>
+                    <label htmlFor="invoicedate">Ngày lập hóa đơn và trong khoảng 1 đến 31</label>
                     <div className="invalid-feedback">Vui lòng nhập ngày lập hóa đơn</div>
                   </div>
                   <div className="loz-alert info mt-2 mb-2">
@@ -893,15 +1185,16 @@ const ModelCreateHome = () => {
                       data-format="numeric"
                       type="text"
                       className="form-control"
-                      id="deadline_bill"
-                      name="deadline_bill"
+                      id="paymentdeadline"
+                      name="paymentdeadline"
                       placeholder="Ngày lập hóa đơn"
+                      value={motel ? motel.paymentdeadline : <></>}
                       min="1"
+                      onChange={handleInputChange}
                       max="20"
-                      required=""
+                      required
                     />
-                    <label htmlFor="deadline_bill">Hạn đóng tiền</label>
-                    <div className="invalid-feedback">Vui lòng nhập hạn đóng tiền và trong khoảng 1 đến 20 ngày</div>
+                    <label htmlFor="paymentdeadline">Hạn đóng tiền</label>
                   </div>
                   <div className="loz-alert info mt-2 mb-2">
                     <div className="icon flex-0">
@@ -938,8 +1231,8 @@ const ModelCreateHome = () => {
             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
               Đóng
             </button>
-            <button type="button" id="submit-block" className="btn btn-primary">
-              Thêm nhà trọ
+            <button type="button" id="submit-block" className="btn btn-primary" onClick={onSaveMotel}>
+              {MotelId === 'Create' ? <>Thêm nhà trọ</> : <>Chỉnh sửa Nhà trọ</>}
             </button>
           </div>
         </div>

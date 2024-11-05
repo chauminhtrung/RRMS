@@ -26,6 +26,6 @@ public class NameMotelService {
     @Column(columnDefinition = "NVARCHAR(255)")
     private String nameService;
 
-    @Column(columnDefinition = "DECIMAL(10, 2)")
-    private Long price;
+
+
 }
