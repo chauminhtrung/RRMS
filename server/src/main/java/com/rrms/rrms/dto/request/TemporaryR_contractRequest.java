@@ -1,15 +1,12 @@
 package com.rrms.rrms.dto.request;
 
-import com.rrms.rrms.dto.response.AccountResponse;
-import com.rrms.rrms.dto.response.MotelResponse;
+import java.time.LocalDate;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -28,4 +25,3 @@ public class TemporaryR_contractRequest {
     String motelId; // ID của Motel
     String tenantUsername; // Tên người dùng của Tenant (Account)
 }
-

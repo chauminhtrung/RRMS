@@ -1,9 +1,9 @@
 package com.rrms.rrms.dto.response;
 
+import java.io.Serializable;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.io.Serializable;
 
 @Data
 @NoArgsConstructor

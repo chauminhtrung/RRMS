@@ -31,5 +31,4 @@ public class MotelService {
 
     @Column(columnDefinition = "VARCHAR(255)")
     private String chargetype;
-
 }

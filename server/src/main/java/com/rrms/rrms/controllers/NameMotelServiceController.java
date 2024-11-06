@@ -1,5 +1,13 @@
 package com.rrms.rrms.controllers;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
 import com.rrms.rrms.dto.request.NameMotelServiceRequest;
 import com.rrms.rrms.dto.response.NameMotelServiceResponse;
 import com.rrms.rrms.services.INameMotelServiceService;
@@ -9,14 +17,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
-
 
 @RestController
 @Slf4j
@@ -32,7 +32,8 @@ public class NameMotelServiceController {
 
     // Tạo mới một NameMotelService
     @PostMapping
-    public ResponseEntity<NameMotelServiceResponse> createNameMotelService(@RequestBody NameMotelServiceRequest request) {
+    public ResponseEntity<NameMotelServiceResponse> createNameMotelService(
+            @RequestBody NameMotelServiceRequest request) {
         NameMotelServiceResponse response = nameMotelServiceService.createNameMotelService(request);
         return ResponseEntity.ok(response);
     }
@@ -40,8 +41,7 @@ public class NameMotelServiceController {
     // Cập nhật một NameMotelService
     @PutMapping("/{id}")
     public ResponseEntity<NameMotelServiceResponse> updateNameMotelService(
-            @PathVariable UUID id,
-            @RequestBody NameMotelServiceRequest request) {
+            @PathVariable UUID id, @RequestBody NameMotelServiceRequest request) {
         NameMotelServiceResponse response = nameMotelServiceService.updateNameMotelService(id, request);
         return ResponseEntity.ok(response);
     }

@@ -1,5 +1,17 @@
 package com.rrms.rrms.controllers;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import jakarta.persistence.EntityNotFoundException;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
 import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.request.ChangePasswordRequest;
 import com.rrms.rrms.dto.response.AccountResponse;
@@ -8,25 +20,13 @@ import com.rrms.rrms.enums.Roles;
 import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.services.IAccountService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Tag(name = "Account Controller", description = "Controller for Account")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -69,10 +69,10 @@ public class AccountController {
         Map<String, Object> rs = new HashMap<>();
         try {
             List<AccountResponse> accountResponses = accountService.getAccountsByRole(Roles.HOST);
-            if (!accountResponses.isEmpty()) {  // Check if the list is not empty
+            if (!accountResponses.isEmpty()) { // Check if the list is not empty
                 rs.put("status", true);
                 rs.put("message", "Call api success");
-                rs.put("data", accountResponses);  // Directly send the list
+                rs.put("data", accountResponses); // Directly send the list
             } else {
                 rs.put("status", false);
                 rs.put("message", "No accounts found for HOST role");
@@ -90,7 +90,7 @@ public class AccountController {
 
     @Operation(summary = "Get account by username")
     @GetMapping("/{username}")
-//    @PostAuthorize("returnObject.body.phone == authentication.name")
+    // @PostAuthorize("returnObject.body.phone == authentication.name")
     public ResponseEntity<?> getAccountByUsername(@PathVariable String username) {
         Map<String, Object> rs = new HashMap<>();
         try {
@@ -134,8 +134,8 @@ public class AccountController {
 
     @Operation(summary = "Update an existing host account")
     @PutMapping("/updateAccount/{username}")
-    public ResponseEntity<Map<String, Object>> updateAccount(@PathVariable String username,
-        @RequestBody AccountRequest accountRequest) {
+    public ResponseEntity<Map<String, Object>> updateAccount(
+            @PathVariable String username, @RequestBody AccountRequest accountRequest) {
         Map<String, Object> response = new HashMap<>();
         try {
             AccountResponse accountResponse = accountService.updateHostAccount(username, accountRequest);
@@ -242,8 +242,8 @@ public class AccountController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchAccounts(@RequestParam(required = false) String search,
-        @RequestParam(defaultValue = "HOST") Roles roleName) {
+    public ResponseEntity<?> searchAccounts(
+            @RequestParam(required = false) String search, @RequestParam(defaultValue = "HOST") Roles roleName) {
         Map<String, Object> response = new HashMap<>();
         try {
             List<AccountResponse> accounts;

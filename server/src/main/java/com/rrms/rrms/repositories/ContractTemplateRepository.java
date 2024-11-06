@@ -1,12 +1,11 @@
 package com.rrms.rrms.repositories;
 
-
-import com.rrms.rrms.models.ContractTemplate;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-
 import java.util.List;
 import java.util.UUID;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.rrms.rrms.models.ContractTemplate;
 
 public interface ContractTemplateRepository extends JpaRepository<ContractTemplate, UUID> {
 

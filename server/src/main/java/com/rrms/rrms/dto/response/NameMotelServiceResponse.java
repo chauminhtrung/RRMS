@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class NameMotelServiceResponse {
     private UUID nameMotelServicesId; // ID của NameMotelService
-    private String typeService;       // Loại dịch vụ
-    private String nameService;       // Tên dịch vụ
-
+    private String typeService; // Loại dịch vụ
+    private String nameService; // Tên dịch vụ
 }

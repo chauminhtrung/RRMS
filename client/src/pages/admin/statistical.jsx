@@ -1,4 +1,5 @@
-import React, {  useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios';
 import {
   Box,
   Tabs,
@@ -17,6 +18,7 @@ import {
   Grid,
   Paper,
 } from '@mui/material'
+import { env } from '~/configs/environment';
 import dayjs from 'dayjs'
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -26,11 +28,15 @@ import NavAdmin from '~/layouts/admin/NavbarAdmin'
 // import { useParams } from 'react-router-dom'
 const RentalStatus = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
   const [value, setValue] = React.useState(0)
+  const [username, setUsername] = useState('');
   // const { motelName } = useParams() // Lấy tham số motelName từ URL
   // const [motel, setmotel] = useState(null)
 
   useEffect(() => {
     setIsAdmin(true)
+    const userData = JSON.parse(sessionStorage.getItem('user'));
+    const username = userData?.username || '';
+    setUsername(username); // Lưu username vào state
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -66,14 +72,77 @@ const RentalStatus = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
         />
       </Tabs>
       <Box p={3}>
-        {value === 0 && <HouseRentalTable />}
-        {value === 1 && <ContractEndingTable />}
+        {value === 0 && <HouseRentalTable username={username} />}
+        {value === 1 && <ContractEndingTable username={username} />}
       </Box>
     </Box>
   )
 }
 
-const HouseRentalTable = () => {
+const HouseRentalTable = ({ username }) => {
+  const [totalRooms, setTotalRooms] = useState(0);
+  const [totalActiveContracts, setTotalActiveContracts] = useState(0);
+  const [totalExpiredContracts, setTotalExpiredContracts] = useState(0);
+  const [totalExpiringContracts, setTotalExpiringContracts] = useState(0);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchTotalRooms = async () => {
+      const userData = JSON.parse(sessionStorage.getItem('user')); // Lấy dữ liệu người dùng từ session storage
+      const token = userData?.token; // Lấy token
+      const username = userData?.username; // Lấy username
+      if (!token || !username) {
+        setError('Token hoặc username không tồn tại');
+
+        return;
+      }
+
+      try {
+
+        const totalrooms = await axios.get(`${env.API_URL}/report/total-rooms/${username}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const totalactiveContracts = await axios.get(`${env.API_URL}/report/total-active-contracts/${username}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const totalexpiredcontracts = await axios.get(`${env.API_URL}/report/contracts-expired/${username}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const totalexpiringcontracts = await axios.get(`${env.API_URL}/report/contracts-expiring/${username}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (totalrooms.data.status) {
+          setTotalRooms(totalrooms.data.data);
+          setTotalActiveContracts(totalactiveContracts.data.data);
+          setTotalExpiredContracts(totalexpiredcontracts.data.data);
+          setTotalExpiringContracts(totalexpiringcontracts.data.data);
+        } else {
+          setError(totalrooms.data.message);
+          setError(totalactiveContracts.data.message);
+          setError(totalexpiredcontracts.data.message);
+          setError(totalexpiringcontracts.data.message);
+        }
+      } catch (err) {
+        setError('Failed to fetch total rooms');
+        console.error(err);
+      } finally {
+
+      }
+    };
+
+    fetchTotalRooms();
+  }, []);
+
   return (
     <div className="row">
       <div className="col-12">
@@ -122,20 +191,20 @@ const HouseRentalTable = () => {
               </TableHead>
               <TableBody>
                 <TableRow>
-                  <TableCell style={{ fontWeight: 'bold' }}>trungkien</TableCell>
-                  <TableCell className="number">10</TableCell>
-                  <TableCell className="number">
-                    0 <span className="text-success">(0%)</span>
+                  <TableCell className="username" style={{ fontWeight: 'bold' }}>{username}</TableCell>
+                  <TableCell className="countRom">{totalRooms !== null ? totalRooms : 'Loading...'}</TableCell>
+                  <TableCell className="RomTrong">
+                    <span className="RoomConstract">{totalRooms - totalActiveContracts} (0%)</span>
                   </TableCell>
                   <TableCell className="number">
-                    0 <span className="text-success">(0%)</span>
+                    <span className="text-success">{totalActiveContracts !== null ? totalActiveContracts : 'Loading...'} (0%)</span>
                   </TableCell>
+                  <TableCell className="number">{totalActiveContracts}</TableCell>
+                  <TableCell className="number">0</TableCell>
+                  <TableCell className="HopdongEnded">{totalExpiredContracts}</TableCell>
+                  <TableCell className="HopdongEnding">{totalExpiringContracts}</TableCell>
                   <TableCell className="number">0</TableCell>
                   <TableCell className="number">0</TableCell>
-                  <TableCell className="number">0</TableCell>
-                  <TableCell className="number">0</TableCell>
-                  <TableCell className="number">0</TableCell>
-                  <TableCell className="number">1</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -192,7 +261,81 @@ const HouseRentalTable = () => {
   )
 }
 
-const ContractEndingTable = () => {
+const ContractEndingTable = ({ username }) => {
+
+  const [totalcontracts, setTotalContracts] = useState(0);
+  const [totalinvoice, setTotalInvoice] = useState(0);
+  const [totalroom, setTotalRoom] = useState(0);
+  const [totalservice, setTotalService] = useState(0);
+  const [error, setError] = useState(null);
+
+  const formatCurrency = (value) => {
+    if (value == null) return '0 ₫';
+    return value.toLocaleString('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    });
+  };
+
+  useEffect(() => {
+    const fetchInvoid = async () => {
+      const userData = JSON.parse(sessionStorage.getItem('user')); // Lấy dữ liệu người dùng từ session storage
+      const token = userData?.token; // Lấy token
+      const username = userData?.username; // Lấy username
+      if (!token || !username) {
+        setError('Token hoặc username không tồn tại');
+
+        return;
+      }
+
+      try {
+
+        const totalcontracts = await axios.get(`${env.API_URL}/report/total-active-contracts-deposit/${username}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const totalinvoice = await axios.get(`${env.API_URL}/report/total-invoice-price/${username}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const totalroom = await axios.get(`${env.API_URL}/report/total-room-price/${username}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const totalservice = await axios.get(`${env.API_URL}/report/total-service-price/${username}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (totalcontracts.data.status) {
+          setTotalContracts(totalcontracts.data.data);
+          setTotalInvoice(totalinvoice.data.data);
+          setTotalRoom(totalroom.data.data);
+          setTotalService(totalservice.data.data);
+        } else {
+          setError(totalcontracts.data.message);
+          setError(totalinvoice.data.message);
+          setError(totalroom.data.message);
+          setError(totalservice.data.message);
+        }
+      } catch (err) {
+        setError('Failed to fetch total rooms');
+        console.error(err);
+      } finally {
+
+      }
+
+    };
+
+
+    fetchInvoid();
+  }, []);
+
   // Một giả định đơn giản về cách hiện thị thông tin hợp đồng kết thúc
   return (
     <div className="row">
@@ -224,8 +367,8 @@ const ContractEndingTable = () => {
               </TableHead>
               <TableBody>
                 <TableRow>
-                  <TableCell style={{ fontWeight: 'bold' }}>trungkien</TableCell>
-                  <TableCell className="number">0</TableCell>
+                  <TableCell style={{ fontWeight: 'bold' }}>{username}</TableCell>
+                  <TableCell className="totalConstrat">{formatCurrency(totalcontracts)}</TableCell>
                   <TableCell className="number">0</TableCell>
                   <TableCell className="number">0</TableCell>
                 </TableRow>
@@ -298,26 +441,26 @@ const ContractEndingTable = () => {
               <Grid container spacing={2}>
                 <Grid item xs={6} sm={6} md={6} lg={4}>
                   <Box className="btn-colo1" flex="1" m={1}>
-                    <Typography variant="h5">Tổng thu</Typography>
+                    <Typography variant="h5" className='sumInvoicd'>Tổng tiền hóa đơn</Typography>
                     <Box>
-                      <Typography>0đ</Typography>
+                      <Typography>{formatCurrency(totalinvoice)}</Typography>
                     </Box>
                   </Box>
                 </Grid>
                 <Grid item xs={6} sm={6} md={6} lg={4}>
                   <Box className="btn-colo2" flex="1" m={1}>
-                    <Typography variant="h5">Tổng chi</Typography>
+                    <Typography variant="h5" className='sumRoom'>Tổng tiền phòng</Typography>
 
                     <Box>
-                      <Typography>0đ</Typography>
+                      <Typography>{formatCurrency(totalroom)}</Typography>
                     </Box>
                   </Box>
                 </Grid>
                 <Grid item xs={6} sm={6} md={6} lg={4}>
                   <Box className="btn-colo3" flex="1" m={1}>
-                    <Typography variant="h5">Lợi nhuận</Typography>
+                    <Typography variant="h5" className='sumService'>Tổng tiền dịch vụ</Typography>
                     <Box>
-                      <Typography>0đ</Typography>
+                      <Typography>{formatCurrency(totalservice)}</Typography>
                     </Box>
                   </Box>
                 </Grid>

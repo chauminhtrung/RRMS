@@ -25,7 +25,4 @@ public class NameMotelService {
 
     @Column(columnDefinition = "NVARCHAR(255)")
     private String nameService;
-
-
-
 }

@@ -1,23 +1,23 @@
 package com.rrms.rrms.controllers;
 
+import java.util.List;
+import java.util.UUID;
 
-import com.rrms.rrms.dto.request.TemporaryR_contractRequest;
-import com.rrms.rrms.dto.response.ApiResponse;
-import com.rrms.rrms.dto.response.MotelResponse;
-import com.rrms.rrms.dto.response.TemporaryR_contractRespone;
-import com.rrms.rrms.services.ITemporaryR_contract;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.UUID;
+import com.rrms.rrms.dto.request.TemporaryR_contractRequest;
+import com.rrms.rrms.dto.response.ApiResponse;
+import com.rrms.rrms.dto.response.TemporaryR_contractRespone;
+import com.rrms.rrms.services.ITemporaryR_contract;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -41,13 +41,15 @@ public class TemporaryR_contractController {
                 .build();
     }
 
-
     @GetMapping("/get-TemRC-account")
     public ApiResponse<List<TemporaryR_contractRespone>> getTemRCbyaccount(@RequestParam String username) {
         List<TemporaryR_contractRespone> TemRCResponses = trcService.findTRCByAccount_Username(username);
-        return ApiResponse.<List<TemporaryR_contractRespone>>builder().code(HttpStatus.OK.value()).message("success").result(TemRCResponses).build();
+        return ApiResponse.<List<TemporaryR_contractRespone>>builder()
+                .code(HttpStatus.OK.value())
+                .message("success")
+                .result(TemRCResponses)
+                .build();
     }
-
 
     @PostMapping("/insert-TemRC")
     public ApiResponse<TemporaryR_contractRespone> insertTemRC(@RequestBody TemporaryR_contractRequest contract) {
@@ -59,9 +61,9 @@ public class TemporaryR_contractController {
                 .build();
     }
 
-
     @PutMapping("/update-TemRC/{id}")
-    public ApiResponse<TemporaryR_contractRespone> updateTemRC(@PathVariable UUID id, @RequestBody TemporaryR_contractRequest contract) {
+    public ApiResponse<TemporaryR_contractRespone> updateTemRC(
+            @PathVariable UUID id, @RequestBody TemporaryR_contractRequest contract) {
         TemporaryR_contractRespone updatedContract = trcService.update(id, contract);
         return ApiResponse.<TemporaryR_contractRespone>builder()
                 .code(HttpStatus.OK.value())
@@ -69,7 +71,6 @@ public class TemporaryR_contractController {
                 .result(updatedContract)
                 .build();
     }
-
 
     @DeleteMapping("/delete-TemRC/{id}")
     public ApiResponse<Void> deleteTemRC(@PathVariable UUID id) {
@@ -79,5 +80,4 @@ public class TemporaryR_contractController {
                 .message("Contract deleted successfully")
                 .build();
     }
-
 }

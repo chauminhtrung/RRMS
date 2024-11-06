@@ -20,6 +20,7 @@ import lombok.experimental.FieldDefaults;
 public class RoomSearchResponse implements Serializable {
     @Id
     UUID roomId;
+
     String nameRoom;
     MotelResponse motel;
     String chargetype;

@@ -159,6 +159,7 @@ function App() {
                 setIsAdmin={setIsAdmin}
                 isNavAdmin={isNavAdmin}
                 setIsNavAdmin={setIsNavAdmin}
+                setUsername={setUsername}
               />
             }
           />

@@ -30,7 +30,6 @@ public class Room {
     @JoinColumn(name = "motel_id", nullable = false)
     private Motel motel;
 
-
     @Column(name = "name_room", columnDefinition = "VARCHAR(255)", nullable = false)
     private String nameRoom;
 

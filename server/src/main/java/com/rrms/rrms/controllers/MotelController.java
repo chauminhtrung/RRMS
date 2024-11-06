@@ -34,21 +34,18 @@ public class MotelController {
     @Autowired
     private RedisRateLimiter rateLimiter;
 
-
     @Operation(summary = "Get all motels")
     @GetMapping()
     public ApiResponse<List<MotelResponse>> getMotels() {
 
-            List<MotelResponse> motelResponses = motelService.findAll();
-            log.info("Get all motels successfully");
-            return ApiResponse.<List<MotelResponse>>builder()
-                    .code(HttpStatus.OK.value())
-                    .message("success")
-                    .result(motelResponses)
-                    .build();
-
+        List<MotelResponse> motelResponses = motelService.findAll();
+        log.info("Get all motels successfully");
+        return ApiResponse.<List<MotelResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .message("success")
+                .result(motelResponses)
+                .build();
     }
-
 
     @Operation(summary = "Get motel by name")
     @GetMapping("/{name}")
@@ -66,17 +63,22 @@ public class MotelController {
     @GetMapping("/get-motel-id")
     public ApiResponse<List<MotelResponse>> getMotelbyid(@RequestParam UUID id) {
         List<MotelResponse> motelResponses = motelService.findById(id);
-        return ApiResponse.<List<MotelResponse>>builder().code(HttpStatus.OK.value()).message("success").result(motelResponses).build();
+        return ApiResponse.<List<MotelResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .message("success")
+                .result(motelResponses)
+                .build();
     }
-
 
     @GetMapping("/get-motel-account")
     public ApiResponse<List<MotelResponse>> getMotelbyaccount(@RequestParam String username) {
         List<MotelResponse> motelResponses = motelService.findMotelByAccount_Username(username);
-        return ApiResponse.<List<MotelResponse>>builder().code(HttpStatus.OK.value()).message("success").result(motelResponses).build();
+        return ApiResponse.<List<MotelResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .message("success")
+                .result(motelResponses)
+                .build();
     }
-
-
 
     @Operation(summary = "Add motel by id")
     @PostMapping()

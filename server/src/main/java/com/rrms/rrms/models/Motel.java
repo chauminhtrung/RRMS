@@ -46,7 +46,6 @@ public class Motel {
     @Column(columnDefinition = "INT")
     private int paymentdeadline;
 
-
     @ManyToOne
     @JoinColumn(name = "username")
     private Account account;
@@ -55,8 +54,7 @@ public class Motel {
     @JoinColumn(name = "type_room_id", nullable = false)
     private TypeRoom typeRoom;
 
-    //de xoa motell xoa luon dich vu
+    // de xoa motell xoa luon dich vu
     @OneToMany(mappedBy = "motel", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MotelService> motelServices;
-
 }

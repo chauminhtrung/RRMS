@@ -34,6 +34,4 @@ public class RoomService {
 
     @Column(columnDefinition = "VARCHAR(255)")
     private String chargetype;
-
-
 }
