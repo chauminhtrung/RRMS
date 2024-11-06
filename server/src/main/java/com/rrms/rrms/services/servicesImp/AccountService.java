@@ -62,8 +62,8 @@ public class AccountService implements IAccountService {
         return accounts.stream().map(accountMapper::toAccountResponse).collect(Collectors.toList());
     }
 
-    public List<AccountResponse> searchAccounts(String search, Roles role) {
-        List<Account> searchResults = accountRepository.searchAccounts(search, role);
+    public List<AccountResponse> searchAccounts(String search) {
+        List<Account> searchResults = accountRepository.searchAccounts(search);
         return searchResults.stream().map(accountMapper::toAccountResponse).collect(Collectors.toList());
     }
 
@@ -136,7 +136,7 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public AccountResponse createHostAccount(AccountRequest accountRequest) {
+    public AccountResponse createAccount(AccountRequest accountRequest) {
         // Kiểm tra xem tên đăng nhập hoặc số điện thoại đã tồn tại hay chưa
         if (accountRepository.existsByUsername(accountRequest.getUsername())
             || accountRepository.existsByPhone(accountRequest.getPhone())) {
@@ -161,30 +161,43 @@ public class AccountService implements IAccountService {
         // Khởi tạo danh sách authorities để tránh NullPointerException
         account.setAuthorities(new ArrayList<>());
 
-        // Lưu tài khoản vào cơ sở dữ liệu
-        Account savedAccount = accountRepository.save(account);
+        // Xử lý danh sách vai trò
+        if (accountRequest.getRole() != null && !accountRequest.getRole().isEmpty()) {
+            for (String roleName : accountRequest.getRole()) {
+                // Chuyển đổi roleName thành Roles enum
+                Roles roleEnum;
+                try {
+                    roleEnum = Roles.valueOf(roleName.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    throw new AppException(ErrorCode.ROLE_NOT_FOUND);
+                }
 
-        // Lấy vai trò HOST
-        Optional<Role> hostRoleOptional = roleRepository.findByRoleName(Roles.HOST);
-        if (hostRoleOptional.isPresent()) {
-            Role hostRole = hostRoleOptional.get();
+                Optional<Role> roleOptional = roleRepository.findByRoleName(roleEnum);
+                if (roleOptional.isPresent()) {
+                    Role role = roleOptional.get();
 
-            // Tạo đối tượng Auth mới để liên kết tài khoản với vai trò
-            Auth auth = new Auth();
-            auth.setAccount(savedAccount);
-            auth.setRole(hostRole);
+                    // Tạo đối tượng Auth mới cho mỗi vai trò và liên kết tài khoản với vai trò
+                    Auth auth = new Auth();
+                    auth.setAccount(account);
+                    auth.setRole(role);
 
-            // Lưu dữ liệu quyền vào cơ sở dữ liệu
-            authRepository.save(auth);
+                    // Thêm quyền vào danh sách authorities của tài khoản
+                    account.getAuthorities().add(auth);
 
-            // Thêm quyền vào danh sách authorities của tài khoản
-            savedAccount.getAuthorities().add(auth); // Đảm bảo authorities không null
+                    // Lưu dữ liệu quyền vào cơ sở dữ liệu
+                    authRepository.save(auth);
+                } else {
+                    throw new AppException(ErrorCode.ROLE_NOT_FOUND);
+                }
+            }
         } else {
-            throw new AppException(ErrorCode.ROLE_NOT_FOUND);
+            throw new AppException(ErrorCode.ROLE_NOT_PROVIDED);
         }
 
-        return convertToAccountResponse(savedAccount); // Trả về AccountResponse cho tài khoản đã lưu
+        Account savedAccount = accountRepository.save(account);
+        return convertToAccountResponse(savedAccount);
     }
+
 
     private AccountResponse convertToAccountResponse(Account account) {
         AccountResponse response = new AccountResponse();
@@ -197,8 +210,11 @@ public class AccountService implements IAccountService {
         response.setCccd(account.getCccd());
         response.setAvatar(account.getAvatar());
 
-        // Lấy danh sách các vai trò từ account
-        List<String> roles = account.getRoles();
+        // Lấy danh sách các vai trò từ account và chuyển thành List<String>
+        List<String> roles = account.getAuthorities().stream()
+            .map(auth -> auth.getRole().getRoleName().name())
+            .distinct() // Đảm bảo không có trùng lặp
+            .collect(Collectors.toList());
         response.setRole(roles);
 
         // Lấy quyền từ danh sách authorities và chuyển đổi thành List<String>
@@ -207,11 +223,12 @@ public class AccountService implements IAccountService {
                 .map(Permission::getName)) // Chỉ lấy tên quyền
             .distinct() // Để loại bỏ trùng lặp nếu cần
             .collect(Collectors.toList());
-
-        response.setPermissions(permissions); // Gán vào response
+        response.setPermissions(permissions);
 
         return response;
     }
+
+
 
     @Override
     public AccountResponse updateHostAccount(String username, AccountRequest accountRequest) {

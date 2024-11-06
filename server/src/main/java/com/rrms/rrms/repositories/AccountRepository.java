@@ -24,14 +24,11 @@ public interface AccountRepository extends JpaRepository<Account, String> {
 
     boolean existsByPhone(String phone);
 
-    @Query("SELECT a FROM Account a JOIN a.authorities auth WHERE auth.role.roleName = :roleName AND " +
+    @Query("SELECT a FROM Account a WHERE " +
         "(LOWER(a.username) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
         "LOWER(a.fullname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
         "LOWER(a.phone) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
         "LOWER(a.email) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
         "LOWER(a.cccd) LIKE LOWER(CONCAT('%', :search, '%')))")
-    List<Account> searchAccounts(@Param("search") String search, @Param("roleName") Roles roleName);
-
-
-
+    List<Account> searchAccounts(@Param("search") String search);
 }
