@@ -1,4 +1,8 @@
+import ModalCreateHome from './ModelCreateHome'
+import { useState } from 'react'
 const HomeNData = () => {
+  const username = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).username : null
+  const [selectedMotelId, setSelectedMotelId] = useState(null)
   return (
     <div style={{ backgroundColor: '#fff', borderRadius: '10px', margin: '10px' }}>
       <div style={{ height: '100vh', padding: '15px' }}>
@@ -27,7 +31,7 @@ const HomeNData = () => {
                   borderRadius: '15px',
                   padding: '30px',
                   margin: '40px',
-                  marginTop: '0px',
+                  marginTop: '0px'
                 }}>
                 <h3>Bắt đầu tạo nhà cho thuê của bạn</h3>
                 <p>Để nhập nhanh hơn hãy bắt đầu nhập tự tập tin excel</p>
@@ -41,6 +45,7 @@ const HomeNData = () => {
                     className="btn btn-primary mt-3"
                     data-bs-toggle="modal"
                     data-bs-target="#addBlock"
+                    onClick={() => setSelectedMotelId('Create')}
                     data-mode="add">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -64,6 +69,8 @@ const HomeNData = () => {
           </div>
         </div>
       </div>
+      {/* modal and block */}
+      <ModalCreateHome username={username} MotelId={selectedMotelId} />
     </div>
   )
 }

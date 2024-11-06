@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect  } from 'react'
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Table,
@@ -23,43 +24,73 @@ import {
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditNoteIcon from '@mui/icons-material/EditNote';
+import InputAdornment from '@mui/material/InputAdornment';  
+import { format } from 'date-fns'; 
+import axios from 'axios';
+import { env } from '~/configs/environment';
+
 const ListLandlords = () => {  
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [role, setRole] = useState('');  
   const [plan, setPlan] = useState('');  
   const [status, setStatus] = useState('');  
-
-  // Dữ liệu mẫu cho các menu item  
+  const [accounts, setAccounts] = useState([]); 
+  const [loading, setLoading] = useState(true);
   const roles = ['Host', 'Customer', 'Admin'];  
   const plans = ['Basic', 'Premium', 'Enterprise'];  
   const statuses = ['Active', 'Inactive', 'Pending']; 
   const [search, setSearch] = useState('');  
+  const [noResults, setNoResults] = useState(false);  
+  const navigate = useNavigate();
 
+  const fetchAccounts = async (query) => {  
+    setLoading(true);  
+    setNoResults(false);  
+    try {  
+      let url;  
+      // Chỉ cần gửi một tham số tìm kiếm chung cho tất cả các trường  
+      if (query) {  
+        const params = new URLSearchParams();  
+  
+        // Thay vì gửi nhiều tham số trống, bạn chỉ định query tìm kiếm cho tất cả các trường cùng một lúc  
+        params.append("search", query); // gửi 1 tham số chung  
+        url = `${env.API_URL}/api-accounts/search?${params.toString()}`;  
+      } else {  
+        url = `${env.API_URL}/api-accounts/by-host-role`;;  
+      }  
+  
+      const response = await axios.get(url);  
+      if (response.data && response.data.status) {  
+        setAccounts(response.data.data);  
+      } else {  
+        setNoResults(true);  
+      }  
+    } catch (error) {  
+      console.error('Error fetching accounts', error);  
+      setNoResults(true);  
+    } finally {  
+      setLoading(false);  
+    }  
+  };  
+  
+  useEffect(() => {  
+    fetchAccounts(search);  
+  }, [search]);
 
-  const handleAddUser = () => {  
-    // Xử lý thêm người dùng mới  
-    console.log("Thêm người dùng mới");  
+  const handleEdit = (accountId) => {  
+  navigate('/adminManage/manage-landlords/add', { state: { accountId } });  
   };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0) // Đặt lại trang về 0 khi thay đổi số dòng
+    setPage(0) 
   }
-  const data = Array.from({ length: 20 }, (_, index) => ({
-    username: `user${index + 1}`,
-    fullname: `Nguyễn Văn ${index + 1}`,
-    phone: `090123456${index}`,
-    email: `user${index + 1}@example.com`,
-    cccd: `12345678${index}`,
-    gender: index % 2 === 0 ? 'Nam' : 'Nữ',
-    birthday: `01-01-20${index + 1}`,
-    image: `avt.png`,
-  }))
-  
+
   return (
     <Box sx={{backgroundColor: '#fff', borderRadius: '5px',marginTop:'27px'}}>
       <CardHeader  
@@ -144,29 +175,25 @@ const ListLandlords = () => {
           <Grid item container spacing={2} xs alignItems="center" justifyContent="flex-end">  
             <Grid item >  
               <TextField  
-                variant="outlined"  
-                size="small"  
-                placeholder="Tìm kiếm người dùng"  
-                fullWidth  
-                value={search}  
-                onChange={(e) => setSearch(e.target.value)}  
-                style={{width: '300px'}}
-              />  
-            </Grid>  
-
-            <Grid item>  
-              <Button  
-                variant="contained"  
-                color="primary"  
-                startIcon={<i className="bi bi-search"></i>} 
-                sx={{   
-                  '&:hover': {  
-                    backgroundColor: '#1976d2', 
-                  },  
-                }}  
-              >  
-                Tìm kiếm  
-              </Button>  
+                  variant="outlined"  
+                  size="small"  
+                  placeholder="Tìm kiếm người dùng"  
+                  fullWidth  
+                  value={search}  
+                  onChange={(e) => setSearch(e.target.value)}  
+                  onKeyDown={(e) => {  
+                      if (e.key === 'Enter') {  
+                          fetchAccounts();  
+                      }  
+                  }}  
+                  InputProps={{  
+                      startAdornment: (  
+                          <InputAdornment position="start">  
+                              <i className="bi bi-search"></i>  
+                          </InputAdornment>  
+                      ),  
+                  }}  
+              />
             </Grid>  
 
             <Grid item>  
@@ -179,9 +206,8 @@ const ListLandlords = () => {
                   },  
                 }} 
                 startIcon={<i className="bi bi-plus-lg"></i>}
-                onClick={handleAddUser}  
               >  
-                Thêm người dùng mới  
+                Thêm chủ trọ mới  
               </Button>  
             </Grid>  
           </Grid>  
@@ -189,51 +215,72 @@ const ListLandlords = () => {
       </Box>         
 
       <TableContainer component={Paper} sx={{ width: '100%' }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Tên đăng nhập</TableCell>
-              <TableCell>Họ tên</TableCell>
-              <TableCell>Số điện thoại</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Số CCCD</TableCell>
-              <TableCell>Giới tính</TableCell>
-              <TableCell>Ngày sinh</TableCell>
-              <TableCell>Ảnh</TableCell>
-              <TableCell>Thao tác</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-              <TableRow key={row.username}>
-                <TableCell>{row.username}</TableCell>
-                <TableCell>{row.fullname}</TableCell>
-                <TableCell>{row.phone}</TableCell>
-                <TableCell>{row.email}</TableCell>
-                <TableCell>{row.cccd}</TableCell>
-                <TableCell>{row.gender}</TableCell>
-                <TableCell>{row.birthday}</TableCell>
-                <TableCell>{row.image}</TableCell>
-                <TableCell>
-                  <IconButton color="primary" size="small">
-                    <EditNoteIcon />
-                  </IconButton>
-                  <IconButton color="error" size="small">
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
+        <Table>  
+          <TableHead>  
+            <TableRow>  
+              <TableCell>Tên đăng nhập</TableCell>  
+              <TableCell>Họ tên</TableCell>  
+              <TableCell>Số điện thoại</TableCell>  
+              <TableCell>Email</TableCell>  
+              <TableCell>Số CCCD</TableCell>  
+              <TableCell>Giới tính</TableCell>  
+              <TableCell>Ngày sinh</TableCell>  
+              <TableCell>Ảnh</TableCell>  
+              <TableCell>Thao tác</TableCell>  
+            </TableRow>  
+          </TableHead>  
+          <TableBody>  
+            {loading ? (  
+              <TableRow>  
+                <TableCell colSpan={9} align="center">Loading...</TableCell>  
+              </TableRow>  
+            ) : noResults ? (  
+              <TableRow>  
+                <TableCell colSpan={9} align="center">  
+                  <Typography color="error">Không có kết quả tìm kiếm nào.</Typography>  
+                </TableCell>  
+              </TableRow>  
+            ) : (  
+              accounts  
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)  
+                .map((account,index) => (  
+                  <TableRow key={account.id || index}> 
+                    <TableCell>{account.username}</TableCell>  
+                    <TableCell>{account.fullname}</TableCell>  
+                    <TableCell>{account.phone}</TableCell>  
+                    <TableCell>{account.email}</TableCell>  
+                    <TableCell>{account.cccd}</TableCell>  
+                    <TableCell>{account.gender}</TableCell>  
+                    <TableCell>  
+                      {account.birthday ? format(new Date(account.birthday), 'dd/MM/yyyy') : ''}  
+                    </TableCell>  
+                    <TableCell>  
+                      <img  
+                        src={account.avatar}  
+                        alt="Image"  
+                        style={{ width: '50px', height: '50px', borderRadius: '2px' }}  
+                      />  
+                    </TableCell>  
+                    <TableCell>  
+                      <IconButton color="primary" size="small" onClick={() => handleEdit(account.username)}>  
+                        <EditNoteIcon />  
+                      </IconButton>  
+                      <IconButton color="error" size="small">  
+                        <DeleteIcon />  
+                      </IconButton>  
+                    </TableCell>  
+                  </TableRow>  
+                ))  
+            )}  
           </TableBody>
-        </Table>
+        </Table> 
         <TablePagination
           sx={{
             marginTop: '10px',
-            padding: '0 16px',
           }}
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={data.length} // Tổng số dòng
+          count={accounts.length} 
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

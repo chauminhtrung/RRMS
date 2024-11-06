@@ -4,6 +4,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.UUID;
 
+import com.rrms.rrms.models.TypeRoom;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,5 +25,10 @@ public class MotelResponse implements Serializable {
     Double area;
     Long averagePrice;
     String address;
+    String methodofcreation;
+    int maxperson;
+    int invoicedate;
+    int paymentdeadline;
+    TypeRoom typeRoom;
     AccountResponse account;
 }

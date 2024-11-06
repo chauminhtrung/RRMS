@@ -11,5 +11,4 @@ import lombok.experimental.FieldDefaults;
 public class ServiceRequest {
     String typeService;
     String nameService;
-    long price;
 }

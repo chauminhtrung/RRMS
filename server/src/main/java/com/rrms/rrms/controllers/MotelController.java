@@ -27,11 +27,25 @@ import lombok.extern.slf4j.Slf4j;
 @Tag(name = "Motel Controller", description = "Controller for Motel")
 @RestController
 @RequestMapping("/motels")
+@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
 public class MotelController {
     IMotelService motelService;
 
     @Autowired
     private RedisRateLimiter rateLimiter;
+
+    @Operation(summary = "Get all motels")
+    @GetMapping()
+    public ApiResponse<List<MotelResponse>> getMotels() {
+
+        List<MotelResponse> motelResponses = motelService.findAll();
+        log.info("Get all motels successfully");
+        return ApiResponse.<List<MotelResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .message("success")
+                .result(motelResponses)
+                .build();
+    }
 
     @Operation(summary = "Get motel by name")
     @GetMapping("/{name}")
@@ -46,7 +60,6 @@ public class MotelController {
     }
 
     @Operation(summary = "Get motel by id")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')") // su dung phân quền phù hop theo role
     @GetMapping("/get-motel-id")
     public ApiResponse<List<MotelResponse>> getMotelbyid(@RequestParam UUID id) {
         List<MotelResponse> motelResponses = motelService.findById(id);
@@ -57,7 +70,6 @@ public class MotelController {
                 .build();
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
     @GetMapping("/get-motel-account")
     public ApiResponse<List<MotelResponse>> getMotelbyaccount(@RequestParam String username) {
         List<MotelResponse> motelResponses = motelService.findMotelByAccount_Username(username);
@@ -66,29 +78,6 @@ public class MotelController {
                 .message("success")
                 .result(motelResponses)
                 .build();
-    }
-
-    @Operation(summary = "Get all motels")
-    @GetMapping()
-    public ApiResponse<List<MotelResponse>> getMotels(@RequestParam String username) {
-        // test valid request
-        boolean allowed = rateLimiter.isAllowed(username);
-        if (allowed) {
-            List<MotelResponse> motelResponses = motelService.findAll();
-            log.info("Get all motels successfully");
-            return ApiResponse.<List<MotelResponse>>builder()
-                    .code(HttpStatus.OK.value())
-                    .message("success")
-                    .result(motelResponses)
-                    .build();
-        } else {
-            log.info("Get all motels fail");
-            return ApiResponse.<List<MotelResponse>>builder()
-                    .code(HttpStatus.TOO_MANY_REQUESTS.value())
-                    .message("Request to many:::" + username)
-                    .result(null)
-                    .build();
-        }
     }
 
     @Operation(summary = "Add motel by id")
@@ -124,7 +113,7 @@ public class MotelController {
     }
 
     @Operation(summary = "Delete motel by id")
-    @DeleteMapping()
+    @DeleteMapping("/{id}")
     public ApiResponse<Boolean> deleteMotel(@PathVariable("id") UUID id) {
         try {
             motelService.delete(id);

@@ -28,12 +28,14 @@ public class SecurityConfig {
         "/authen/login",
         "/authen/introspect",
         "/authen/register",
+        "/authen/forgetpassword",
         "/authen/logout",
         "/authen/login/oauth2",
         "/swagger-ui/*",
         "/v3/api-docs/*",
         "/searchs/*",
         "/detail/*",
+        "/api-accounts/**"
     };
 
     @Value("${jwt.signer-key}")
@@ -52,15 +54,19 @@ public class SecurityConfig {
         // Cấu hình OAuth2 Login với Google
         http.oauth2Login(
                 oauth2 -> oauth2.loginPage("/authen/login") // trang đăng nhập mặc định
-                        .defaultSuccessUrl("/home") // trang chuyển hướng sau đăng nhập thành công
-                        .failureUrl("/authen/login?error=true") // trang chuyển hướng khi đăng nhập thất bại
+                        .defaultSuccessUrl("/home") // trang chuyển hướng sau đăng nhập thành
+                        // công
+                        .failureUrl("/authen/login?error=true") // trang chuyển hướng khi đăng
+                // nhập thất bại
                 );
 
         // Cấu hình OAuth2 Login với Google
         http.oauth2Login(
                 oauth2 -> oauth2.loginPage("/authen/login") // trang đăng nhập mặc định
-                        .defaultSuccessUrl("/home") // trang chuyển hướng sau đăng nhập thành công
-                        .failureUrl("/authen/login?error=true") // trang chuyển hướng khi đăng nhập thất bại
+                        .defaultSuccessUrl("/home") // trang chuyển hướng sau đăng nhập thành
+                        // công
+                        .failureUrl("/authen/login?error=true") // trang chuyển hướng khi đăng
+                // nhập thất bại
                 );
 
         http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer ->

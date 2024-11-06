@@ -1,14 +1,174 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
 import Flatpickr from 'react-flatpickr'
 import 'flatpickr/dist/themes/material_blue.css'
-
+import { useParams } from 'react-router-dom'
 import ModelDeposit from './ModelDeposit'
+import {
+  CreateTRC,
+  getTRCByusername,
+  updateTRCById,
+  getContractTemplatesByMotelId,
+  deleteContractTemplate,
+  getMotelById
+} from '~/apis/apiClient'
+import Swal from 'sweetalert2'
+
 const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
+  // Khởi tạo một đối tượng trạng thái cho tất cả các trường
+  const { motelId } = useParams()
+  const username = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).username : null
+  const [isExistingData, setIsExistingData] = useState(false) // Biến để kiểm tra dữ liệu đã tồn tại
+  const [TRCID, setTRCID] = useState('') // Biến để kiểm tra dữ liệu đã tồn tại
+  const [templatecontracts, setTemplatecontracts] = useState([])
+  const [motel, setmotel] = useState()
+  const [selectedTemplateId, setSelectedTemplateId] = useState(null)
+  const [formData, setFormData] = useState({
+    householdhead: 'ktlhp',
+    representativename: '',
+    phone: '',
+    birth: '', // Dùng null cho ngày
+    permanentaddress: '',
+    job: '',
+    identifier: '',
+    placeofissue: '',
+    dateofissue: '', // Dùng null cho ngày
+    motelId: motelId ? String(motelId) : '', // Bạn có thể thay đổi kiểu dữ liệu nếu cần
+    tenantUsername: username // Bạn có thể thay đổi kiểu dữ liệu nếu cần
+  })
+
   useEffect(() => {
+    fetchDataTrc()
+    fetchDataTemlateContract()
+    fetchDataMotel()
     setIsAdmin(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const fetchDataTrc = async () => {
+    if (username) {
+      try {
+        const response = await getTRCByusername(username)
+        console.log(response.data.result.length)
+
+        if (response && response.data.result.length > 0) {
+          // Cập nhật formData với dữ liệu từ API
+          setFormData((prevData) => ({
+            ...prevData,
+            householdhead: response.data.result[0].householdhead || prevData.householdhead,
+            representativename: response.data.result[0].representativename || prevData.representativename,
+            phone: response.data.result[0].phone || prevData.phone,
+            birth: response.data.result[0].birth || prevData.birth,
+            permanentaddress: response.data.result[0].permanentaddress || prevData.permanentaddress,
+            job: response.data.result[0].job || prevData.job,
+            identifier: response.data.result[0].identifier || prevData.identifier,
+            placeofissue: response.data.result[0].placeofissue || prevData.placeofissue,
+            dateofissue: response.data.result[0].dateofissue || prevData.dateofissue
+          }))
+          setTRCID(response.data.result[0].temporaryrcontractId)
+          setIsExistingData(true) // Đánh dấu là dữ liệu đã tồn tại
+        }
+      } catch (error) {
+        console.error('Lỗi khi gọi API getTRCByusername:', error)
+      }
+    }
+  }
+
+  const fetchDataTemlateContract = async () => {
+    if (username && motelId) {
+      try {
+        const dataContactTemplate = await getContractTemplatesByMotelId(motelId)
+        setTemplatecontracts(dataContactTemplate)
+        console.log(dataContactTemplate)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
+  const fetchDataMotel = async () => {
+    if (username && motelId) {
+      try {
+        const dataMotel = await getMotelById(motelId)
+        setmotel(dataMotel.data.result[0])
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
+  const handleSave = async (event) => {
+    const form = document.getElementById('househoder-setting-info')
+
+    if (!form.checkValidity()) {
+      event.preventDefault()
+      form.classList.add('was-validated')
+    } else {
+      try {
+        let response
+        if (isExistingData && TRCID) {
+          response = await updateTRCById(TRCID, formData) // Cập nhật nếu dữ liệu đã tồn tại
+        } else {
+          response = await CreateTRC(formData) // Tạo mới nếu dữ liệu chưa có
+        }
+
+        if (response.status === 200) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Thông báo',
+            text: isExistingData ? 'Cập nhật thông tin thành công.' : 'Lưu thông tin thành công.'
+          })
+          window.location.reload()
+        } else {
+          console.error('Lỗi khi lưu thông tin:', response.message)
+        }
+      } catch (error) {
+        console.error('Lỗi khi gọi API CreateTRC hoặc UpdateTRC:', error)
+      }
+    }
+  }
+
+  // Hàm cập nhật formData
+  const handleInputChange = (event) => {
+    const { name, value } = event.target
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value
+    }))
+  }
+
+  // Hàm xử lý khi chọn ngày trong Flatpickr
+  const handleDateChange = (name, date) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: date[0]
+    }))
+  }
+
+  //ham xoa template Contract
+  const handleDelete = async (templateId) => {
+    const result = await Swal.fire({
+      title: 'Bạn có chắc muốn xóa không?',
+      text: 'Bạn sẽ không thể hoàn tác hành động này!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Xóa'
+    })
+
+    if (result.isConfirmed) {
+      try {
+        await deleteContractTemplate(templateId)
+        Swal.fire('Đã xóa!', 'Mẫu hợp đồng đã được xóa.', 'success')
+        // Sau khi xóa thành công, cập nhật lại danh sách template
+        fetchDataTemlateContract()
+      } catch (error) {
+        console.error('Lỗi khi xóa mẫu hợp đồng:', error)
+        Swal.fire('Lỗi', 'Không thể xóa mẫu hợp đồng.', 'error')
+      }
+    }
+  }
 
   return (
     <div>
@@ -114,10 +274,10 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
                       <br />
                       <div className="header-item">
                         <div>
-                          <h3>Thông tin đại diện chủ tòa nhà</h3>
+                          <h2 className="text-dark">Thông tin đại diện chủ tòa nhà</h2>
                           <p>Thông tin dùng làm hợp đồng tạm trú cho khách thuê</p>
                         </div>
-                        <button className="btn btn-primary" id="save-househoder-setting-info">
+                        <button className="btn btn-primary" id="save-househoder-setting-info" onClick={handleSave}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -149,12 +309,14 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
                               <div className="form-floating">
                                 <select
                                   data-format="numeric"
-                                  id="representative_residence"
-                                  name="representative_residence"
+                                  id="householdhead"
+                                  name="householdhead"
                                   className="form-select form-control"
-                                  required="">
-                                  <option value="0">Khách thuê lập hộ mới</option>
-                                  <option value="1">Chủ nhà là đại diện chủ hộ</option>
+                                  value={formData.householdhead}
+                                  onChange={handleInputChange}
+                                  required>
+                                  <option value="ktlhp">Khách thuê lập hộ mới</option>
+                                  <option value="cnlđch">Chủ nhà là đại diện chủ hộ</option>
                                 </select>
                                 <label htmlFor="owner">Chủ hộ</label>
                               </div>
@@ -165,36 +327,40 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
                                 <i className="des">Các thông tin cơ bản dùng để hiển thị các thông tin đại diện</i>
                               </div>
                             </div>
+                            {/* Tên */}
                             <div className="col-4">
                               <div className="form-floating">
                                 <input
-                                  data-format="string"
                                   type="text"
                                   className="form-control"
-                                  name="name"
-                                  id="setting_info_name"
-                                  placeholder="Nhập tên chủ nhà"
-                                  required=""
+                                  name="representativename"
+                                  placeholder="Nhập tên đại diện"
+                                  required
+                                  value={formData.representativename}
+                                  onChange={handleInputChange}
                                 />
-                                <label htmlFor="setting_info_name">Nhập tên đại diện cho các loại giấy tờ</label>
+                                <label>Nhập tên đại diện cho các loại giấy tờ</label>
                                 <div className="invalid-feedback">Vui lòng nhập tên người đại diện</div>
                               </div>
                             </div>
+
+                            {/* Số điện thoại */}
                             <div className="col-4">
                               <div className="form-floating">
                                 <input
-                                  data-format="stringNumber"
                                   type="text"
                                   className="form-control"
                                   name="phone"
-                                  id="setting_info_phone"
-                                  placeholder="Nhập số điện thoại liên hệ"
-                                  required=""
+                                  placeholder="Nhập số điện thoại"
+                                  required
+                                  value={formData.phone}
+                                  onChange={handleInputChange}
                                 />
-                                <label htmlFor="setting_info_phone">Nhập số điện thoại liên hệ</label>
+                                <label>Nhập số điện thoại liên hệ</label>
                                 <div className="invalid-feedback">Vui lòng nhập số điện thoại</div>
                               </div>
                             </div>
+
                             <div className="col-4">
                               <div className="input-group">
                                 <div className="form-floating">
@@ -202,10 +368,16 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
                                     data-format="date"
                                     type="text"
                                     className="form-control flatpickr-input"
-                                    name="birthday"
-                                    id="setting_info_birthday"
+                                    name="birth"
+                                    id="birth"
                                     placeholder="Nhập ngày/tháng/năm sinh"
-                                    required=""
+                                    required
+                                    options={{
+                                      allowInput: true,
+                                      dateFormat: 'd/m/Y'
+                                    }}
+                                    value={formData.birth}
+                                    onChange={(date) => handleDateChange('birth', date)}
                                   />
                                   <label htmlFor="setting_info_birthday">Nhập ngày/tháng/năm sinh</label>
                                 </div>
@@ -241,12 +413,14 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
                                   data-format="string"
                                   type="text"
                                   className="form-control"
-                                  name="address"
-                                  id="setting_info_address"
+                                  name="permanentaddress"
+                                  id="permanentaddress"
                                   placeholder="Nhập địa chỉ thường trú"
-                                  required=""
+                                  required
+                                  value={formData.permanentaddress}
+                                  onChange={handleInputChange}
                                 />
-                                <label htmlFor="setting_info_address">Nhập địa chỉ thường trú</label>
+                                <label htmlFor="permanentaddress">Nhập địa chỉ thường trú</label>
                                 <div className="invalid-feedback">Vui lòng nhập địa chỉ thường trú</div>
                               </div>
                             </div>
@@ -259,7 +433,9 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
                                   name="job"
                                   id="setting_info_job"
                                   placeholder="Nhập công việc"
-                                  required=""
+                                  required
+                                  value={formData.job}
+                                  onChange={handleInputChange}
                                 />
                                 <label htmlFor="setting_info_job">Nhập công việc</label>
                                 <div className="invalid-feedback">Vui lòng nhập công việc của bạn</div>
@@ -277,12 +453,14 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
                                   data-format="string"
                                   type="text"
                                   className="form-control"
-                                  name="identity_number"
-                                  id="setting_info_identity_number"
+                                  name="identifier"
+                                  id="identifier"
                                   placeholder="Nhập mã định danh"
-                                  required=""
+                                  required
+                                  value={formData.identifier}
+                                  onChange={handleInputChange}
                                 />
-                                <label htmlFor="setting_info_identity_number">Nhập mã định danh</label>
+                                <label htmlFor="identifier">Nhập mã định danh</label>
                                 <div className="invalid-feedback">Vui lòng nhập mã định danh</div>
                               </div>
                             </div>
@@ -292,12 +470,14 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
                                   data-format="string"
                                   type="text"
                                   className="form-control"
-                                  name="identity_place"
-                                  id="setting_info_identity_place"
+                                  name="placeofissue"
+                                  id="placeofissue"
                                   placeholder="Nhập nơi cấp"
-                                  required=""
+                                  required
+                                  value={formData.placeofissue}
+                                  onChange={handleInputChange}
                                 />
-                                <label htmlFor="setting_info_identity_place">Nhập nơi cấp</label>
+                                <label htmlFor="placeOfIssue">Nhập nơi cấp</label>
                                 <div className="invalid-feedback">Vui lòng nhập nơi cấp mã định danh</div>
                               </div>
                             </div>
@@ -305,10 +485,17 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
                               <div className="input-group">
                                 <div className="form-floating">
                                   <Flatpickr
-                                    class="form-control"
+                                    className="form-control"
                                     id="setting_info_identity_date"
-                                    name="identity_date"
+                                    name="dateofissue"
                                     placeholder="Nhập ngày cấp"
+                                    required
+                                    options={{
+                                      allowInput: true,
+                                      dateFormat: 'd/m/Y'
+                                    }}
+                                    value={formData.dateofissue}
+                                    onChange={(date) => handleDateChange('dateofissue', date)}
                                   />
                                   <label htmlFor="setting_info_identity_date">Nhập ngày cấp</label>
                                 </div>
@@ -342,14 +529,15 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
                       <div className="header-item">
                         <div className="container tab-pane">
                           <br />
-                          <h3>Danh sách các mẫu hợp đồng đang có</h3>
+                          <h2 className="text-dark ">Danh sách các mẫu hợp đồng đang có</h2>
                           <p>Mẫu hợp đồng được sử dụng khi in dựa trên những thông tin bạn nhập</p>
                         </div>
                         <button
                           className="add-round"
                           data-bs-toggle="modal"
                           data-bs-target="#contractTemplateModal"
-                          id="setting-contract-template">
+                          id="setting-contract-template"
+                          onClick={() => setSelectedTemplateId('Create')}>
                           <span
                             data-bs-toggle="tooltip"
                             data-bs-placement="left"
@@ -392,6 +580,81 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
                                 <b>Xóa</b>
                               </td>
                             </tr>
+                            {templatecontracts && motel ? (
+                              templatecontracts.map((tc, i) => (
+                                <tr id="template-338" key={i}>
+                                  <td>{tc.templatename}</td>
+                                  <td>{motel.motelName}</td>
+                                  <td>{tc.sortOrder}</td>
+                                  <td>
+                                    <div
+                                      className="btn-round btn-edit"
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#contractTemplateModal"
+                                      onClick={() => setSelectedTemplateId(tc.contractTemplateId)}>
+                                      <div
+                                        style={{
+                                          width: '100%',
+                                          height: '100%',
+                                          alignItems: 'center',
+                                          display: 'inherit',
+                                          textAlign: 'center',
+                                          justifyContent: 'center',
+                                          color: '#000'
+                                        }}
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        title=""
+                                        data-bs-original-title="Chỉnh sửa">
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          width="24"
+                                          height="24"
+                                          viewBox="0 0 24 24"
+                                          fill="none"
+                                          stroke="currentColor"
+                                          strokeWidth="2"
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          className="feather feather-edit">
+                                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                        </svg>
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <div
+                                      className="btn-round btn-delete"
+                                      onClick={() => handleDelete(tc.contractTemplateId)} //ham xoa o day
+                                      data-id="338"
+                                      data-bs-toggle="tooltip"
+                                      data-bs-placement="top"
+                                      title=""
+                                      data-bs-original-title="Xóa">
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        className="feather feather-trash-2">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                                      </svg>
+                                    </div>
+                                  </td>
+                                </tr>
+                              ))
+                            ) : (
+                              <></>
+                            )}
                           </tbody>
                         </table>
                       </div>
@@ -407,7 +670,14 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
           </div>
         </div>
       </div>
-      <ModelDeposit />
+      {selectedTemplateId && (
+        <ModelDeposit
+          motel={motel}
+          username={username}
+          templatecontractRouteId={selectedTemplateId}
+          fetchDataTemlateContract={fetchDataTemlateContract}
+        />
+      )}
     </div>
   )
 }

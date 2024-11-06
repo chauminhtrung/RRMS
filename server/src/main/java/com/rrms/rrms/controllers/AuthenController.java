@@ -125,7 +125,8 @@ public class AuthenController {
             // Log token để kiểm tra xem token có được gửi đúng không
             log.info("Token nhận được để logout: " + request.getToken());
 
-            // Gọi hàm logout của authorityService, nơi bạn xử lý việc đưa token vào blacklist
+            // Gọi hàm logout của authorityService, nơi bạn xử lý việc đưa token vào
+            // blacklist
             authorityService.logout(request);
 
             // Trả về thông báo đăng xuất thành công
@@ -178,5 +179,10 @@ public class AuthenController {
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
+    }
+
+    @PostMapping("/forgetpassword")
+    public ResponseEntity<RegisterResponse> forget(@RequestBody RegisterRequest registerRequest) {
+        return null;
     }
 }
