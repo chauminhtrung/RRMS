@@ -27,6 +27,11 @@ import com.rrms.rrms.repositories.AuthRepository;
 import com.rrms.rrms.repositories.RoleRepository;
 import com.rrms.rrms.services.IAccountService;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import java.util.ArrayList;
+
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -202,8 +207,11 @@ public class AccountService implements IAccountService {
         response.setCccd(account.getCccd());
         response.setAvatar(account.getAvatar());
 
-        // Lấy danh sách các vai trò từ account
-        List<String> roles = account.getRoles();
+        // Lấy danh sách các vai trò từ account và chuyển thành List<String>
+        List<String> roles = account.getAuthorities().stream()
+            .map(auth -> auth.getRole().getRoleName().name())
+            .distinct() // Đảm bảo không có trùng lặp
+            .collect(Collectors.toList());
         response.setRole(roles);
 
         // Lấy quyền từ danh sách authorities và chuyển đổi thành List<String>
@@ -212,11 +220,12 @@ public class AccountService implements IAccountService {
                 .map(Permission::getName)) // Chỉ lấy tên quyền
             .distinct() // Để loại bỏ trùng lặp nếu cần
             .collect(Collectors.toList());
-
-        response.setPermissions(permissions); // Gán vào response
+        response.setPermissions(permissions);
 
         return response;
     }
+
+
 
     @Override
     public AccountResponse updateHostAccount(String username, AccountRequest accountRequest) {

@@ -15,7 +15,7 @@ public interface IAccountService {
 
     List<AccountResponse> getAccountsByRole(Roles role);
 
-    List<AccountResponse> searchAccounts(String search, Roles role);
+    List<AccountResponse> searchAccounts(String search);
 
     Optional<Account> findAccountsByUsername(String username);
 
@@ -27,7 +27,7 @@ public interface IAccountService {
 
     Optional<Account> login(String phone, String password);
 
-    AccountResponse createHostAccount(AccountRequest accountRequest);
+    AccountResponse createAccount(AccountRequest accountRequest);
 
     AccountResponse updateHostAccount(String username, AccountRequest accountRequest);
 
