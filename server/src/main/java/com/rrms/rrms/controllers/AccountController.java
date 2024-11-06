@@ -40,7 +40,7 @@ public class AccountController {
 
     @Operation(summary = "Get all account")
     @GetMapping("/get-all-account")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
+//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
     public ResponseEntity<?> getAllAccount() {
         var authen = SecurityContextHolder.getContext().getAuthentication();
 
@@ -110,11 +110,11 @@ public class AccountController {
     }
 
     @Operation(summary = "Create a new host account")
-    @PostMapping("/createHostAccount")
-    public ResponseEntity<Map<String, Object>> createHostAccount(@RequestBody AccountRequest accountRequest) {
+    @PostMapping("/createAccount")
+    public ResponseEntity<Map<String, Object>> createAccount(@RequestBody AccountRequest accountRequest) {
         Map<String, Object> response = new HashMap<>();
         try {
-            AccountResponse accountResponse = accountService.createHostAccount(accountRequest);
+            AccountResponse accountResponse = accountService.createAccount(accountRequest);
             response.put("status", true);
             response.put("message", "Account created successfully");
             response.put("data", accountResponse);
@@ -242,15 +242,14 @@ public class AccountController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchAccounts(
-            @RequestParam(required = false) String search, @RequestParam(defaultValue = "HOST") Roles roleName) {
+    public ResponseEntity<?> searchAccounts(@RequestParam(required = false) String search) {
         Map<String, Object> response = new HashMap<>();
         try {
             List<AccountResponse> accounts;
             if (search == null || search.trim().isEmpty()) {
                 accounts = accountService.findAll();
             } else {
-                accounts = accountService.searchAccounts(search.toLowerCase(), roleName);
+                accounts = accountService.searchAccounts(search.toLowerCase());
             }
 
             if (!accounts.isEmpty()) {
