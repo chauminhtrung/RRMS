@@ -1,2 +1,3 @@
-package com.rrms.rrms.services.servicesImp;public interface IInvoiceService {
-}
+package com.rrms.rrms.services;
+
+public interface IInvoiceService {}

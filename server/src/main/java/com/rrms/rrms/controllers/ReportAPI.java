@@ -1,9 +1,7 @@
 package com.rrms.rrms.controllers;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +14,7 @@ import com.rrms.rrms.models.Account;
 import com.rrms.rrms.services.IMotelService;
 import com.rrms.rrms.services.servicesImp.AccountService;
 import com.rrms.rrms.services.servicesImp.ContractService;
+import com.rrms.rrms.services.servicesImp.InvoiceService;
 
 @RestController
 @RequestMapping("/report")
@@ -28,6 +27,9 @@ public class ReportAPI {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private InvoiceService invoiceService;
 
     @GetMapping("/total-rooms/{username}")
     // tổng nhà trọ
@@ -116,22 +118,13 @@ public class ReportAPI {
             return ResponseEntity.status(500).body(response);
         }
     }
+
     @GetMapping("/contracts-expired/{usernameLandlord}")
     // tổng các hợp đồng đã hết hạn
-    public ResponseEntity<?> getExpiredContracts(@PathVariable String usernameLandlord) {
+    public ResponseEntity<?> getTotalExpiredContracts(@PathVariable String usernameLandlord) {
         Map<String, Object> response = new HashMap<>();
         try {
-            Optional<Account> accountOpt = accountService.findAccountsByUsername(usernameLandlord);
-
-            if (accountOpt.isEmpty()) {
-                response.put("status", false);
-                response.put("message", "Account not found");
-                return ResponseEntity.status(404).body(response);
-            }
-
-            // Lấy account từ Optional
-            Account account = accountOpt.get();
-            long expiredContracts = contractService.getExpiredContracts(account);
+            int expiredContracts = contractService.getTotalExpiredContracts(usernameLandlord);
             response.put("status", true);
             response.put("message", "Call API success");
             response.put("data", expiredContracts);
@@ -146,21 +139,11 @@ public class ReportAPI {
     }
 
     @GetMapping("/contracts-expiring/{usernameLandlord}")
-    // tổng các hợp đồng sắp hết hạn
-    public ResponseEntity<?> getExpiringContracts(@PathVariable String usernameLandlord) {
+    // tổng các hợp đồng đã hết hạn
+    public ResponseEntity<?> getTotalExpiringContracts(@PathVariable String usernameLandlord) {
         Map<String, Object> response = new HashMap<>();
         try {
-            Optional<Account> accountOpt = accountService.findAccountsByUsername(usernameLandlord);
-
-            if (accountOpt.isEmpty()) {
-                response.put("status", false);
-                response.put("message", "Account not found");
-                return ResponseEntity.status(404).body(response);
-            }
-
-            // Lấy account từ Optional
-            Account account = accountOpt.get();
-            long expiredContracts = contractService.getExpiringContracts(account);
+            int expiredContracts = contractService.getTotalExpiringContracts(usernameLandlord);
             response.put("status", true);
             response.put("message", "Call API success");
             response.put("data", expiredContracts);
@@ -174,4 +157,60 @@ public class ReportAPI {
         }
     }
 
+    @GetMapping("/total-room-price/{usernameLandlord}")
+    // tổng tiền phong
+    public ResponseEntity<?> getTotalRoomPrice(@PathVariable String usernameLandlord) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Double totalDeposit = invoiceService.getTotalRoomPrice(usernameLandlord);
+            response.put("status", true);
+            response.put("message", "Call API success");
+            response.put("data", totalDeposit != null ? totalDeposit : 0.0);
+            return ResponseEntity.ok(response);
+        } catch (Exception ex) {
+            response.put("status", false);
+            response.put("message", "Call API failed");
+            response.put("data", null);
+            ex.printStackTrace();
+            return ResponseEntity.status(500).body(response);
+        }
+    }
+
+    @GetMapping("/total-service-price/{usernameLandlord}")
+    // tổng tiền service
+    public ResponseEntity<?> getTotalServicePrice(@PathVariable String usernameLandlord) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Double totalDeposit = invoiceService.getTotalServicePrice(usernameLandlord);
+            response.put("status", true);
+            response.put("message", "Call API success");
+            response.put("data", totalDeposit != null ? totalDeposit : 0.0);
+            return ResponseEntity.ok(response);
+        } catch (Exception ex) {
+            response.put("status", false);
+            response.put("message", "Call API failed");
+            response.put("data", null);
+            ex.printStackTrace();
+            return ResponseEntity.status(500).body(response);
+        }
+    }
+
+    @GetMapping("/total-invoice-price/{usernameLandlord}")
+    // tổng tiền invoice
+    public ResponseEntity<?> getTotalInvoice(@PathVariable String usernameLandlord) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Double totalDeposit = invoiceService.getTotalInvoice(usernameLandlord);
+            response.put("status", true);
+            response.put("message", "Call API success");
+            response.put("data", totalDeposit != null ? totalDeposit : 0.0);
+            return ResponseEntity.ok(response);
+        } catch (Exception ex) {
+            response.put("status", false);
+            response.put("message", "Call API failed");
+            response.put("data", null);
+            ex.printStackTrace();
+            return ResponseEntity.status(500).body(response);
+        }
+    }
 }

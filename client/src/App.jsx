@@ -159,6 +159,7 @@ function App() {
                 setIsAdmin={setIsAdmin}
                 isNavAdmin={isNavAdmin}
                 setIsNavAdmin={setIsNavAdmin}
+                setUsername={setUsername}
               />
             }
           />
@@ -175,7 +176,7 @@ function App() {
             }
           />
 
-          <Route path="/adminManage/*" element={<AdminManage setIsAdmin={setIsAdmin} />} /> 
+          <Route path="/adminManage/*" element={<AdminManage setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminStatis" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
           <Route path="/bao-cao" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
 
