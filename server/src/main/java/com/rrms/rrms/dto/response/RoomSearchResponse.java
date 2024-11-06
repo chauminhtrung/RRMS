@@ -23,4 +23,5 @@ public class RoomSearchResponse implements Serializable {
 
     String nameRoom;
     MotelResponse motel;
+    String chargetype;
 }

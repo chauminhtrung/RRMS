@@ -30,7 +30,6 @@ public class RoomDetailResponse implements Serializable {
     Integer maxPerson;
     LocalDate rentalStartTime;
     String hours;
-    TypeRoomResponse typeRoom;
     MotelResponse motel;
     List<RoomServiceResponse> roomServices;
     List<RoomReviewResponse> roomReviews;

@@ -1,17 +1,18 @@
 package com.rrms.rrms.mapper;
 
-import com.rrms.rrms.dto.request.AccountRequest;
-import com.rrms.rrms.dto.response.AccountResponse;
-import com.rrms.rrms.dto.response.BrokerResponse;
-import com.rrms.rrms.models.Account;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.rrms.rrms.dto.request.AccountRequest;
+import com.rrms.rrms.dto.response.AccountResponse;
+import com.rrms.rrms.dto.response.BrokerResponse;
+import com.rrms.rrms.models.Account;
 
 @Mapper(
         componentModel =
@@ -27,11 +28,7 @@ public interface AccountMapper {
             source = "account",
             qualifiedByName =
                     "mapRole") // Thiết lập rằng trường "role" trong AccountResponse sẽ được lấy từ phương thức mapRole
-    @Mapping(
-            target = "permissions",
-            source = "account",
-            qualifiedByName =
-                    "mapPermissions")
+    @Mapping(target = "permissions", source = "account", qualifiedByName = "mapPermissions")
     // Thiết lập rằng trường "permissions" sẽ được lấy từ phương thức mapPermissions
     AccountResponse toAccountResponse(
             Account account); // Phương thức nhận một Account và trả về đối tượng AccountResponse

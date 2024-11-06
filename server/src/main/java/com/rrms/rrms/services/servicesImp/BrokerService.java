@@ -1,17 +1,19 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+
 import com.rrms.rrms.dto.request.BrokerCreateRequest;
 import com.rrms.rrms.dto.response.BrokerResponse;
 import com.rrms.rrms.mapper.BrokerMapper;
 import com.rrms.rrms.repositories.BrokerRepository;
 import com.rrms.rrms.services.IBroker;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.UUID;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -29,6 +31,8 @@ public class BrokerService implements IBroker {
 
     @Override
     public List<BrokerResponse> getAllBroker(UUID motelId) {
-        return brokerRepository.findByMotelId(motelId).stream().map(brokerMapper::toBrokerResponse).toList();
+        return brokerRepository.findByMotelId(motelId).stream()
+                .map(brokerMapper::toBrokerResponse)
+                .toList();
     }
 }

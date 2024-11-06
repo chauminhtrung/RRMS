@@ -23,7 +23,12 @@ public class MotelService {
     @JoinColumn(name = "motel_id")
     private Motel motel;
 
-    @ManyToOne
-    @JoinColumn(name = "name_motel_service_id")
-    private NameMotelService nameMotelService;
+    @Column(columnDefinition = "NVARCHAR(255)")
+    private String nameService;
+
+    @Column(columnDefinition = "DECIMAL(10, 2)")
+    private Long price;
+
+    @Column(columnDefinition = "VARCHAR(255)")
+    private String chargetype;
 }

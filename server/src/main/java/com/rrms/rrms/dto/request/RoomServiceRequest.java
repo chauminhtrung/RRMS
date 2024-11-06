@@ -13,4 +13,5 @@ import lombok.experimental.FieldDefaults;
 public class RoomServiceRequest {
     UUID roomId;
     UUID serviceId;
+    String chargetype;
 }

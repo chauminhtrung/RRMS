@@ -39,7 +39,7 @@ import ContractManager from './pages/admin/NavContentAdmin/ContractManager'
 import TenantManager from './pages/admin/NavContentAdmin/TenantManager'
 import IncomeSummary from './pages/admin/NavContentAdmin/IncomeSummary/IncomeSummary'
 import Zalo_history from './pages/admin/NavContentAdmin/Zalo_history'
-import SettingMotel from './pages/admin/NavContentAdmin/SettingMotel'
+import SettingMotel from './pages/admin/NavContentAdmin/SettingMotel/SettingMotel'
 import ImageComparison from './pages/AI/ImageComparison'
 // import TestPage from './pages/TestPage'
 // import ValidCaptcha from './components/ValidCaptcha'
@@ -159,6 +159,7 @@ function App() {
                 setIsAdmin={setIsAdmin}
                 isNavAdmin={isNavAdmin}
                 setIsNavAdmin={setIsNavAdmin}
+                setUsername={setUsername}
               />
             }
           />
@@ -175,7 +176,7 @@ function App() {
             }
           />
 
-          <Route path="/adminManage/*" element={<AdminManage setIsAdmin={setIsAdmin} />} /> 
+          <Route path="/adminManage/*" element={<AdminManage setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminStatis" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
           <Route path="/bao-cao" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
 

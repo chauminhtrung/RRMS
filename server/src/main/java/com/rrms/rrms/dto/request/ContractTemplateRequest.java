@@ -1,10 +1,9 @@
 package com.rrms.rrms.dto.request;
 
+import java.util.UUID;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor

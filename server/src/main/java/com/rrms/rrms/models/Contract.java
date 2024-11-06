@@ -39,8 +39,6 @@ public class Contract {
     @JoinColumn(name = "contract_template")
     private ContractTemplate contract_template;
 
-
-
     @Column(columnDefinition = "DATE")
     private LocalDate firstTime;
 
@@ -55,7 +53,6 @@ public class Contract {
 
     @Column(columnDefinition = "TEXT")
     private String collection_cycle;
-
 
     @Column(columnDefinition = "DATE")
     private LocalDate createdate;

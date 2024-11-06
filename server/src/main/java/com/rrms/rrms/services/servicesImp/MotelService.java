@@ -69,7 +69,12 @@ public class MotelService implements IMotelService {
             motelfind.get().setArea(motel.getArea());
             motelfind.get().setAveragePrice(motel.getAveragePrice());
             motelfind.get().setAddress(motel.getAddress());
+            motelfind.get().setMethodofcreation(motel.getMethodofcreation());
+            motelfind.get().setMaxperson(motel.getMaxperson());
+            motelfind.get().setInvoicedate(motel.getInvoicedate());
+            motelfind.get().setPaymentdeadline(motel.getPaymentdeadline());
             motelfind.get().setAccount(accountMapper.toAccount(motel.getAccount()));
+            motelfind.get().setTypeRoom(motel.getTypeRoom());
             return motelMapper.motelToMotelResponse(motelRepository.save(motelfind.get()));
         }
         return null;

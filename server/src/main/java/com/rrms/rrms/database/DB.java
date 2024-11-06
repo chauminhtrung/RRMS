@@ -1,20 +1,22 @@
 package com.rrms.rrms.database;
 
-import com.rrms.rrms.enums.Gender;
-import com.rrms.rrms.enums.Roles;
-import com.rrms.rrms.models.*;
-import com.rrms.rrms.repositories.*;
-import com.rrms.rrms.services.ISearchService;
-import lombok.extern.slf4j.Slf4j;
-import net.datafaker.Faker;
+import java.time.LocalDate;
+import java.util.*;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.*;
+import com.rrms.rrms.enums.Gender;
+import com.rrms.rrms.enums.Roles;
+import com.rrms.rrms.models.*;
+import com.rrms.rrms.repositories.*;
+import com.rrms.rrms.services.ISearchService;
+
+import lombok.extern.slf4j.Slf4j;
+import net.datafaker.Faker;
 
 @Configuration
 @Slf4j
@@ -35,9 +37,10 @@ public class DB {
             RoomServiceRepository roomServiceRepository,
             ISearchService searchService,
             RoleRepository roleRepository,
-            PermissionRepository permissionRepository) {
+            PermissionRepository permissionRepository,
+            NameMotelServiceRepository nameMotelServiceRepository) {
         return args -> {
-            int roomsLength = 100;
+            int roomsLength = 5;
 
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
 
@@ -62,18 +65,23 @@ public class DB {
                 List<RoomService> roomServices = new ArrayList<>();
                 List<RoomImage> roomImages = new ArrayList<>();
 
+                // Tạo và lưu dịch vụ
+                createServices(faker, serviceRepository);
+
+                createNameMotelService(nameMotelServiceRepository);
+
                 for (int i = 0; i < roomsLength; i++) {
                     log.info("Creating data: {}/{}", i + 1, roomsLength);
                     // Tạo và lưu motel
-                    Motel motel = createMotel(faker, accountRepository);
+                    Motel motel = createMotel(faker, accountRepository, typeRoom);
                     motels.add(motel);
 
                     // Tạo và lưu phòng
-                    Room room = createRoom(faker, roomRepository, motel, typeRoom);
+                    Room room = createRoom(faker, roomRepository, motel);
                     rooms.add(room);
 
-                    // Tạo và lưu dịch vụ
-                    createServices(faker, roomServices, room, serviceRepository);
+                    // Tạo và lưu dịch vụ Room
+                    createServicesRoom(faker, roomServices, room, serviceRepository);
 
                     // Tạo hình ảnh cho phòng
                     createRoomImages(faker, roomImages, room);
@@ -92,7 +100,8 @@ public class DB {
     }
 
     // Phương thức để tạo dữ liệu mẫu cho roles
-    private void createSampleRolesAndPermissions(RoleRepository roleRepository, PermissionRepository permissionRepository) {
+    private void createSampleRolesAndPermissions(
+            RoleRepository roleRepository, PermissionRepository permissionRepository) {
         if (roleRepository.count() == 0) {
             log.info("Creating sample roles and permissions...");
             // Define ADMIN permissions
@@ -104,14 +113,22 @@ public class DB {
             adminPermissions.add(createPermission("APPROVED_POST", "Approve posts", permissionRepository));
             // Define HOST permissions
             Set<Permission> hostPermissions = new HashSet<>();
-            hostPermissions.add(createPermission("CREATE_EMPLOYEE_ACCOUNT", "Create employee accounts", permissionRepository));
-            hostPermissions.add(createPermission("UPDATE_EMPLOYEE_ACCOUNT", "Update employee accounts", permissionRepository));
-            hostPermissions.add(createPermission("DELETE_EMPLOYEE_ACCOUNT", "Delete employee accounts", permissionRepository));
-            hostPermissions.add(createPermission("SEARCH_EMPLOYEE_ACCOUNT", "Search employee accounts", permissionRepository));
-            hostPermissions.add(createPermission("CREATE_CUSTOMER_ACCOUNT", "Create customer accounts", permissionRepository));
-            hostPermissions.add(createPermission("UPDATE_CUSTOMER_ACCOUNT", "Update customer accounts", permissionRepository));
-            hostPermissions.add(createPermission("DELETE_CUSTOMER_ACCOUNT", "Delete customer accounts", permissionRepository));
-            hostPermissions.add(createPermission("SEARCH_CUSTOMER_ACCOUNT", "Search customer accounts", permissionRepository));
+            hostPermissions.add(
+                    createPermission("CREATE_EMPLOYEE_ACCOUNT", "Create employee accounts", permissionRepository));
+            hostPermissions.add(
+                    createPermission("UPDATE_EMPLOYEE_ACCOUNT", "Update employee accounts", permissionRepository));
+            hostPermissions.add(
+                    createPermission("DELETE_EMPLOYEE_ACCOUNT", "Delete employee accounts", permissionRepository));
+            hostPermissions.add(
+                    createPermission("SEARCH_EMPLOYEE_ACCOUNT", "Search employee accounts", permissionRepository));
+            hostPermissions.add(
+                    createPermission("CREATE_CUSTOMER_ACCOUNT", "Create customer accounts", permissionRepository));
+            hostPermissions.add(
+                    createPermission("UPDATE_CUSTOMER_ACCOUNT", "Update customer accounts", permissionRepository));
+            hostPermissions.add(
+                    createPermission("DELETE_CUSTOMER_ACCOUNT", "Delete customer accounts", permissionRepository));
+            hostPermissions.add(
+                    createPermission("SEARCH_CUSTOMER_ACCOUNT", "Search customer accounts", permissionRepository));
             hostPermissions.add(createPermission("CREATE_POST", "Create posts", permissionRepository));
             hostPermissions.add(createPermission("CREATE_MOTEL", "Create motels", permissionRepository));
             hostPermissions.add(createPermission("UPDATE_MOTEL", "Update motels", permissionRepository));
@@ -124,15 +141,21 @@ public class DB {
             hostPermissions.add(createPermission("DELETE_CONTRACT", "Delete contracts", permissionRepository));
             // Define EMPLOYEE permissions
             Set<Permission> employeePermissions = new HashSet<>();
-            employeePermissions.add(createPermission("UPDATE_EMPLOYEE_ACCOUNT", "Update employee accounts", permissionRepository));
-            employeePermissions.add(createPermission("UPDATE_CUSTOMER_ACCOUNT", "Update customer accounts", permissionRepository));
-            employeePermissions.add(createPermission("SEARCH_CUSTOMER_ACCOUNT", "Search customer accounts", permissionRepository));
+            employeePermissions.add(
+                    createPermission("UPDATE_EMPLOYEE_ACCOUNT", "Update employee accounts", permissionRepository));
+            employeePermissions.add(
+                    createPermission("UPDATE_CUSTOMER_ACCOUNT", "Update customer accounts", permissionRepository));
+            employeePermissions.add(
+                    createPermission("SEARCH_CUSTOMER_ACCOUNT", "Search customer accounts", permissionRepository));
             employeePermissions.add(createPermission("UPDATE_MOTEL", "Update motels", permissionRepository));
             employeePermissions.add(createPermission("UPDATE_ROOM", "Update rooms", permissionRepository));
             Set<Permission> customerPermissions = new HashSet<>();
-            customerPermissions.add(createPermission("VIEW_SEARCH_MOTEL", "View and search motels", permissionRepository));
-            customerPermissions.add(createPermission("VIEW_SEARCH_ROOM", "View and search rooms", permissionRepository));
-            customerPermissions.add(createPermission("UPDATE_ACCOUNT", "Update account information", permissionRepository));
+            customerPermissions.add(
+                    createPermission("VIEW_SEARCH_MOTEL", "View and search motels", permissionRepository));
+            customerPermissions.add(
+                    createPermission("VIEW_SEARCH_ROOM", "View and search rooms", permissionRepository));
+            customerPermissions.add(
+                    createPermission("UPDATE_ACCOUNT", "Update account information", permissionRepository));
             customerPermissions.add(createPermission("VIEW_CONTRACT", "View contracts", permissionRepository));
             customerPermissions.add(createPermission("SUPPORT", "Support requests", permissionRepository));
             customerPermissions.add(createPermission("PAYMENT", "Handle payments", permissionRepository));
@@ -144,12 +167,13 @@ public class DB {
             // Create roles and assign permissions
             createRoleWithPermissions(roleRepository, "ADMIN", "Administrator with full access.", adminPermissions);
             createRoleWithPermissions(roleRepository, "HOST", "Host for organizing events.", hostPermissions);
-            createRoleWithPermissions(roleRepository, "EMPLOYEE", "Employee role with limited access.", employeePermissions);
+            createRoleWithPermissions(
+                    roleRepository, "EMPLOYEE", "Employee role with limited access.", employeePermissions);
             createRoleWithPermissions(roleRepository, "CUSTOMER", "Regular customer role.", customerPermissions);
             createRoleWithPermissions(roleRepository, "GUEST", "Guest user without account.", guestPermissions);
             log.info("Sample roles and permissions created.");
         }
-    }   
+    }
 
     private Permission createPermission(String name, String description, PermissionRepository permissionRepository) {
         Permission permission = new Permission();
@@ -158,7 +182,8 @@ public class DB {
         return permissionRepository.save(permission);
     }
 
-    private void createRoleWithPermissions(RoleRepository roleRepository, String roleName, String description, Set<Permission> permissions) {
+    private void createRoleWithPermissions(
+            RoleRepository roleRepository, String roleName, String description, Set<Permission> permissions) {
         Role role = new Role();
         role.setRoleName(Roles.valueOf(roleName));
         role.setDescription(description);
@@ -166,7 +191,11 @@ public class DB {
         roleRepository.save(role);
     }
 
-    private void createAdminAccount(AccountRepository accountRepository, BCryptPasswordEncoder pe, RoleRepository roleRepository, AuthRepository authRepository) {
+    private void createAdminAccount(
+            AccountRepository accountRepository,
+            BCryptPasswordEncoder pe,
+            RoleRepository roleRepository,
+            AuthRepository authRepository) {
         if (accountRepository.findByUsername("admin").isEmpty()) {
             // Create admin account
             Account adminAccount = Account.builder()
@@ -305,29 +334,59 @@ public class DB {
         }
     }
 
-    private Motel createMotel(Faker faker, AccountRepository accountRepository) {
+    private Motel createMotel(Faker faker, AccountRepository accountRepository, TypeRoom typeRoom) {
+
         Motel motel = new Motel();
         motel.setAccount(accountRepository.findByUsername("admin").get());
         motel.setMotelName(faker.address().cityName());
         motel.setAddress(faker.address().fullAddress());
         motel.setArea((double) faker.number().numberBetween(50, 200));
         motel.setAveragePrice((long) faker.number().numberBetween(500000, 5000000));
+        motel.setMethodofcreation("thủ công");
+        motel.setMaxperson((int) faker.number().numberBetween(1, 8));
+        motel.setInvoicedate((int) faker.number().numberBetween(1, 31));
+        motel.setPaymentdeadline((int) faker.number().numberBetween(1, 20));
+        motel.setTypeRoom(typeRoom);
         return motel;
     }
 
-    private Room createRoom(Faker faker, RoomRepository roomRepository, Motel motel, TypeRoom typeRoom) {
+    private void createNameMotelService(NameMotelServiceRepository nameMotelServiceRepository) {
+        NameMotelService NameMotelservice1 = new NameMotelService();
+        NameMotelservice1.setTypeService("Điện");
+        NameMotelservice1.setNameService("Tiền điện");
+
+        NameMotelService NameMotelservice2 = new NameMotelService();
+        NameMotelservice2.setTypeService("Nước");
+        NameMotelservice2.setNameService("Tiền nước");
+
+        NameMotelService NameMotelservice3 = new NameMotelService();
+        NameMotelservice3.setTypeService("Rác");
+        NameMotelservice3.setNameService("Tiền rác");
+
+        NameMotelService NameMotelservice4 = new NameMotelService();
+        NameMotelservice4.setTypeService("Wifi/Internet");
+        NameMotelservice4.setNameService("Tiền wifi");
+
+        nameMotelServiceRepository.saveAll(
+                List.of(NameMotelservice1, NameMotelservice2, NameMotelservice3, NameMotelservice4));
+    }
+
+    private Room createRoom(Faker faker, RoomRepository roomRepository, Motel motel) {
         Room room = new Room();
-        Date randomDate = faker.date().between(
-                new Date(System.currentTimeMillis() - 30L * 24 * 60 * 60 * 1000), // 30 ngày trước
-                new Date() // Ngày hiện tại
-        );
+        Date randomDate = faker.date()
+                .between(
+                        new Date(System.currentTimeMillis() - 30L * 24 * 60 * 60 * 1000), // 30
+                        // ngày
+                        // trước
+                        new Date() // Ngày hiện tại
+                        );
         room.setDeposit(faker.number().randomDouble(2, 500000, 5000000));
         room.setHours(faker.options().option("Tự do", "6:00 AM - 12:00 PM", "1:00 PM - 6:00 PM"));
         room.setRentalStartTime(LocalDate.now());
         room.setMotel(motel);
         room.setAuthen(faker.options().option(true, false));
         room.setDatenew(randomDate);
-        room.setTypeRoom(typeRoom);
+
         room.setNameRoom(faker.address().city());
         room.setDescription(faker.lorem().paragraph());
         room.setAvailable(faker.bool().bool());
@@ -337,30 +396,51 @@ public class DB {
         return room;
     }
 
-    private void createServices(
+    private void createServicesRoom(
             Faker faker, List<RoomService> roomServices, Room room, ServiceRepository serviceRepository) {
+
+        List<Service> ListService = serviceRepository.findAll();
+
+        roomServices.add(RoomService.builder()
+                .room(room)
+                .service(ListService.get(0))
+                .chargetype("theo tháng")
+                .build());
+        roomServices.add(RoomService.builder()
+                .room(room)
+                .service(ListService.get(1))
+                .chargetype("theo đồng hồ")
+                .build());
+        roomServices.add(RoomService.builder()
+                .room(room)
+                .service(ListService.get(2))
+                .chargetype("theo đồng hồ")
+                .build());
+        roomServices.add(RoomService.builder()
+                .room(room)
+                .service(ListService.get(3))
+                .chargetype("theo người")
+                .build());
+    }
+
+    private void createServices(Faker faker, ServiceRepository serviceRepository) {
         Service service1 = Service.builder()
-                .typeService("Tiện nghi")
-                .nameService(faker.options().option("Có chuồng chó", "Wifi miễn phí", "Hồ bơi", "Gym"))
+                .typeService("rác")
+                .nameService(faker.options().option("rác"))
                 .build();
 
-        Service service2 = Service.builder()
-                .typeService("Điện nước")
-                .nameService("Điện")
-                .price((long) faker.number().randomDouble(2, 50000, 100000))
+        Service service2 =
+                Service.builder().typeService("điện").nameService("điện").build();
+
+        Service service3 =
+                Service.builder().typeService("nước").nameService("nước").build();
+
+        Service service4 = Service.builder()
+                .typeService("wifi/internet")
+                .nameService("wifi/internet")
                 .build();
 
-        Service service3 = Service.builder()
-                .typeService("Điện nước")
-                .nameService("Nước")
-                .price((long) faker.number().randomDouble(2, 50000, 100000))
-                .build();
-
-        serviceRepository.saveAll(List.of(service1, service2, service3));
-
-        roomServices.add(RoomService.builder().room(room).service(service1).build());
-        roomServices.add(RoomService.builder().room(room).service(service2).build());
-        roomServices.add(RoomService.builder().room(room).service(service3).build());
+        serviceRepository.saveAll(List.of(service1, service2, service3, service4));
     }
 
     private void createRoomImages(Faker faker, List<RoomImage> roomImages, Room room) {

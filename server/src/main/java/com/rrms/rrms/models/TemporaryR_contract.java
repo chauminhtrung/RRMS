@@ -1,12 +1,13 @@
 package com.rrms.rrms.models;
 
+import java.time.LocalDate;
+import java.util.UUID;
+
 import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
-import java.util.UUID;
 
 @Entity
 @Data
@@ -20,7 +21,7 @@ public class TemporaryR_contract {
 
     @ManyToOne
     @JoinColumn(name = "motel_id")
-    private Motel motel ;
+    private Motel motel;
 
     @ManyToOne
     @JoinColumn(name = "username_tenant")
@@ -28,7 +29,6 @@ public class TemporaryR_contract {
 
     @Column(columnDefinition = "TEXT")
     private String householdhead;
-
 
     @Column(columnDefinition = "TEXT")
     private String representativename;
@@ -53,5 +53,4 @@ public class TemporaryR_contract {
 
     @Column(columnDefinition = "DATE")
     private LocalDate dateofissue;
-
 }
