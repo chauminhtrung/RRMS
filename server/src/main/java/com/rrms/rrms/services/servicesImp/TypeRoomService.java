@@ -1,7 +1,8 @@
 package com.rrms.rrms.services.servicesImp;
 
-import com.rrms.rrms.dto.response.TemporaryR_contractRespone;
-import com.rrms.rrms.models.TemporaryR_contract;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.request.TypeRoomRequest;
@@ -16,9 +17,6 @@ import com.rrms.rrms.services.ITypeRoom;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -43,8 +41,6 @@ public class TypeRoomService implements ITypeRoom {
     @Override
     public List<TypeRoomResponse> findAllTypeRooms() {
         List<TypeRoom> typeRooms = typeRoomRepository.findAll();
-        return typeRooms.stream()
-                .map(typeRoomMapper::toTypeRoomResponse)
-                .collect(Collectors.toList());
+        return typeRooms.stream().map(typeRoomMapper::toTypeRoomResponse).collect(Collectors.toList());
     }
 }

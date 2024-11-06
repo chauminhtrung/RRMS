@@ -1,13 +1,14 @@
 package com.rrms.rrms.services.servicesImp;
 
-import com.rrms.rrms.services.IMailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import com.rrms.rrms.services.IMailService;
 
 @Service
 public class MailService implements IMailService {
