@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './AdminManage.css';
-import AddLandlords from './Dashboard/AddLandlords';
-import ListLandlords from './Dashboard/ListLandlords';
 import AddUsers from './Dashboard/AddUsers';
+import AddPosts from './Dashboard/AddPosts';
+import AddReports from './Dashboard/AddReports';
 import ListUsers from './Dashboard/ListUsers';
+import ListReports from './Dashboard/ListReports';
+import ListPosts from './Dashboard/ListPosts';
 import DashboardHome from './Dashboard/DashboardHome';
 import {
   Box,
@@ -97,32 +99,6 @@ const AdminManage = ({ setIsAdmin }) => {
               </ListItemIcon>
               <ListItemText primary="Trang Chủ" />
             </ListItemButton>
-
-            {/* Landlords Management */}
-            <ListItemButton onClick={() => handleToggle('landlords')}>
-              <ListItemIcon>
-                <People />
-              </ListItemIcon>
-              <ListItemText primary="Quản Lý Chủ Trọ" />
-              {openLandlords ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={openLandlords} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                <ListItemButton component={Link} to="/adminManage/manage-landlords/add" sx={{ pl: 4 }}>
-                  <ListItemIcon>
-                    <PostAdd />
-                  </ListItemIcon>
-                  <ListItemText primary="Thêm Chủ Trọ" />
-                </ListItemButton>
-                <ListItemButton component={Link} to="/adminManage/manage-landlords/list" sx={{ pl: 4 }}>
-                  <ListItemIcon>
-                    <ListAlt />
-                  </ListItemIcon>
-                  <ListItemText primary="Danh Sách Chủ Trọ" />
-                </ListItemButton>
-              </List>
-            </Collapse>
-
             {/* Users Management */}
             <ListItemButton onClick={() => handleToggle('users')}>
               <ListItemIcon>
@@ -158,13 +134,13 @@ const AdminManage = ({ setIsAdmin }) => {
             </ListItemButton>
             <Collapse in={openPosts} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <ListItemButton component={Link} to="" sx={{ pl: 4 }}>
+                <ListItemButton component={Link} to="/adminManage/manage-posts/add" sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <PostAdd />
                   </ListItemIcon>
                   <ListItemText primary="Thêm Đăng Tin" />
                 </ListItemButton>
-                <ListItemButton component={Link} to="" sx={{ pl: 4 }}>
+                <ListItemButton component={Link} to="/adminManage/manage-posts/list" sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <ListAlt />
                   </ListItemIcon>
@@ -183,13 +159,13 @@ const AdminManage = ({ setIsAdmin }) => {
             </ListItemButton>
             <Collapse in={openReports} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <ListItemButton component={Link} to="" sx={{ pl: 4 }}>
+                <ListItemButton component={Link} to="/adminManage/manage-reports/add" sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <PostAdd />
                   </ListItemIcon>
                   <ListItemText primary="Thêm Báo Cáo" />
                 </ListItemButton>
-                <ListItemButton component={Link} to="" sx={{ pl: 4 }}>
+                <ListItemButton component={Link} to="/adminManage/manage-reports/list" sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <ListAlt />
                   </ListItemIcon>
@@ -272,14 +248,12 @@ const AdminManage = ({ setIsAdmin }) => {
           <div className="container-fluid">
             <Routes>
               <Route index element={<DashboardHome />} />
-              <Route path="manage-landlords/add" element={<AddLandlords />} />
-              <Route path="manage-landlords/list" element={<ListLandlords />} />
               <Route path="manage-users/add" element={<AddUsers/>} />
               <Route path="manage-users/list" element={<ListUsers />} />
-              <Route path="manage-posts/add" element={<div>Thêm Đăng Tin</div>} />
-              <Route path="manage-posts/list" element={<div>Danh Sách Đăng Tin</div>} />
-              <Route path="manage-reports/add" element={<div>Thêm Báo Cáo</div>} />
-              <Route path="manage-reports/list" element={<div>Danh Sách Báo Cáo</div>} />
+              <Route path="manage-posts/add" element={<AddPosts />} />
+              <Route path="manage-posts/list" element={<ListPosts />} />
+              <Route path="manage-reports/add" element={<AddReports />} />
+              <Route path="manage-reports/list" element={<ListReports />} />
             </Routes>
           </div>
         </main>
