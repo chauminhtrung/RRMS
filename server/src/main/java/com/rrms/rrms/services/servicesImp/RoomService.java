@@ -55,7 +55,6 @@ public class RoomService implements IRoom {
         Room room = roomMapper.toRoom(roomRequest);
         room.setMotel(motel);
 
-
         List<com.rrms.rrms.models.RoomService> roomServices =
                 new ArrayList<>(roomMapper.mapRoomServices(roomRequest.getRoomServices()));
 

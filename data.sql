@@ -535,3 +535,7 @@ BEGIN
 END //
 
 DELIMITER ;
+
+
+
+select  * from accounts
