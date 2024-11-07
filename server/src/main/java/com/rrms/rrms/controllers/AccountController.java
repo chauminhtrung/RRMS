@@ -8,7 +8,6 @@ import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +39,7 @@ public class AccountController {
 
     @Operation(summary = "Get all account")
     @GetMapping("/get-all-account")
-//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
+    //    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
     public ResponseEntity<?> getAllAccount() {
         var authen = SecurityContextHolder.getContext().getAuthentication();
 

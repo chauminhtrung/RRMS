@@ -1,20 +1,22 @@
 package com.rrms.rrms.database;
 
-import com.rrms.rrms.enums.Gender;
-import com.rrms.rrms.enums.Roles;
-import com.rrms.rrms.models.*;
-import com.rrms.rrms.repositories.*;
-import com.rrms.rrms.services.ISearchService;
-import lombok.extern.slf4j.Slf4j;
-import net.datafaker.Faker;
+import java.time.LocalDate;
+import java.util.*;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.*;
+import com.rrms.rrms.enums.Gender;
+import com.rrms.rrms.enums.Roles;
+import com.rrms.rrms.models.*;
+import com.rrms.rrms.repositories.*;
+import com.rrms.rrms.services.ISearchService;
+
+import lombok.extern.slf4j.Slf4j;
+import net.datafaker.Faker;
 
 @Configuration
 @Slf4j
@@ -45,9 +47,12 @@ public class DB {
             BulletinBoardRepository bulletinBoardRepository,
             RuleRepository ruleRepository,
             RentalAmenitiesRepository rentalAmenitiesRepository,
-            BulletinBoardReviewsRepository bulletinBoardReviewsRepository) {
+            BulletinBoardReviewsRepository bulletinBoardReviewsRepository,
+            BulletinBoardImageRepository bulletinBoardImageRepository,
+            BulletinBoards_RentalAmRepository bulletinBoards_rentalAmRepository) {
         return args -> {
             int roomsLength = 5;
+            log.info("Starting to create data... length: {}", roomsLength);
 
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
 
@@ -60,7 +65,6 @@ public class DB {
             createHostAccount(accountRepository, pe, roleRepository, authRepository);
 
             if (roomRepository.findAll().isEmpty()) {
-                log.info("Starting to create data...");
                 TypeRoom typeRoom = new TypeRoom();
                 typeRoom.setName("Trọ");
                 typeRoomRepository.save(typeRoom);
@@ -78,7 +82,6 @@ public class DB {
                 createNameMotelService(nameMotelServiceRepository);
 
                 for (int i = 0; i < roomsLength; i++) {
-                    log.info("Creating data: {}/{}", i + 1, roomsLength);
                     // Tạo và lưu motel
                     Motel motel = createMotel(faker, accountRepository, typeRoom);
                     motels.add(motel);
@@ -102,7 +105,6 @@ public class DB {
             }
 
             if (bulletinBoardRepository.findAll().isEmpty()) {
-                log.info("Starting to create data...");
 
                 // Khởi tạo Faker một lần
                 Faker faker = new Faker(new Locale("vi"));
@@ -112,23 +114,32 @@ public class DB {
                 List<BulletinBoardRule> bulletinBoardRule = new ArrayList<>();
                 List<BulletinBoardReviews> bulletinBoardReviews = new ArrayList<>();
 
-                createRentalAmenities(faker, rentalAmenitiesRepository);
-
-                bulletinBoardRule(faker, bulletinBoardRule, ruleRepository);
-
                 createNameMotelService(nameMotelServiceRepository);
 
                 BulletinBoard bulletinBoard = null;
                 for (int i = 0; i < roomsLength; i++) {
-                    log.info("Creating data: {}/{}", i + 1, roomsLength);
 
-
-                    // Tạo và lưu phòng
-                    bulletinBoard = createBulletinBoard(faker, accountRepository);
+                    // Tạo và lưu BulletinBoard
+                    bulletinBoard = createBulletinBoard(faker, accountRepository, bulletinBoardImageRepository);
                     bulletinBoardRepository.save(bulletinBoard);
 
+                    for (int j = 0; j < 5; j++) {
+                        BulletinBoardImage bulletinBoardImage = new BulletinBoardImage();
+                        bulletinBoardImage.setBulletinBoard(bulletinBoard);
+                        bulletinBoardImage.setImageLink(faker.internet().url());
+                        bulletinBoardImages.add(bulletinBoardImage);
+                    }
+                    bulletinBoardRule(faker, bulletinBoardRule, ruleRepository, bulletinBoard);
+                    createRentalAmenities(
+                            faker, rentalAmenitiesRepository, bulletinBoard, bulletinBoards_rentalAmRepository);
+                    bulletinBoardImageRepository.saveAll(bulletinBoardImages);
                 }
-                bulletinBoardReviews(faker, bulletinBoardReviews, bulletinBoard, accountRepository.findByUsername("admin").get(), bulletinBoardReviewsRepository);
+                bulletinBoardReviews(
+                        faker,
+                        bulletinBoardReviews,
+                        bulletinBoard,
+                        accountRepository.findByUsername("admin").get(),
+                        bulletinBoardReviewsRepository);
             }
 
             log.info("All data created");
@@ -416,7 +427,7 @@ public class DB {
                         // ngày
                         // trước
                         new Date() // Ngày hiện tại
-                );
+                        );
         room.setDeposit(faker.number().randomDouble(2, 500000, 5000000));
         room.setMotel(motel);
         room.setPrice(faker.number().randomDouble(2, 500000, 5000000));
@@ -478,35 +489,48 @@ public class DB {
         }
     }
 
-    private void createRentalAmenities(Faker faker, RentalAmenitiesRepository rentalAmenities) {
+    private void createRentalAmenities(
+            Faker faker,
+            RentalAmenitiesRepository rentalAmenitiesRepository,
+            BulletinBoard bulletinBoard,
+            BulletinBoards_RentalAmRepository bulletinBoards_RentalAmRepository) {
         for (int i = 0; i < 5; i++) {
-            rentalAmenities.save(RentalAmenities.builder()
-                    .name(faker.address().city())
-                    .build());
+
+            RentalAmenities rentalAmenities = rentalAmenitiesRepository.save(
+                    RentalAmenities.builder().name(faker.address().city()).build());
+            bulletinBoards_RentalAmRepository.save(createBulletinBoards_RentalAm(bulletinBoard, rentalAmenities));
         }
     }
 
-    private void bulletinBoardRule(Faker faker, List<BulletinBoardRule> bulletinBoardRuleList, RuleRepository ruleRepository) {
+    private void bulletinBoardRule(
+            Faker faker,
+            List<BulletinBoardRule> bulletinBoardRuleList,
+            RuleRepository ruleRepository,
+            BulletinBoard bulletinBoard) {
         for (int j = 0; j < 5; j++) {
-            Rule rule = ruleRepository.save(Rule.builder().ruleName(faker.address().city()).build());
-            BulletinBoardRule bulletinBoardRule = new BulletinBoardRule();
+            Rule rule = ruleRepository.save(
+                    Rule.builder().ruleName(faker.address().city()).build());
             bulletinBoardRuleList = new ArrayList<>();
-            bulletinBoardRuleList.add(bulletinBoardRuleRepository.save(bulletinBoardRule.builder().rule(rule).build()));
+            bulletinBoardRuleList.add(bulletinBoardRuleRepository.save(BulletinBoardRule.builder()
+                    .rule(rule)
+                    .bulletinBoard(bulletinBoard)
+                    .build()));
         }
         bulletinBoardRuleRepository.saveAll(bulletinBoardRuleList);
     }
 
-    private void bulletinBoardReviews(Faker faker,
-                                      List<BulletinBoardReviews> bulletinBoardReviewList,
-                                      BulletinBoard bulletinBoard,
-                                      Account account,
-                                      BulletinBoardReviewsRepository bulletinBoardReviewsRepository
-    ) {
+    private void bulletinBoardReviews(
+            Faker faker,
+            List<BulletinBoardReviews> bulletinBoardReviewList,
+            BulletinBoard bulletinBoard,
+            Account account,
+            BulletinBoardReviewsRepository bulletinBoardReviewsRepository) {
 
         BulletinBoardReviews bulletinBoardReviews = new BulletinBoardReviews();
-        bulletinBoardReviewList.add(bulletinBoardReviewsRepository.save(bulletinBoardReviews.builder()
+        bulletinBoardReviewList.add(bulletinBoardReviewsRepository.save(bulletinBoardReviews
+                .builder()
                 .account(account)
-                .bulletInBoard(bulletinBoard)
+                .bulletinBoard(bulletinBoard)
                 .rating(faker.number().numberBetween(1, 5))
                 .content(faker.lorem().paragraph())
                 .build()));
@@ -514,7 +538,10 @@ public class DB {
         bulletinBoardReviewsRepository.saveAll(bulletinBoardReviewList);
     }
 
-    private BulletinBoard createBulletinBoard(Faker faker, AccountRepository accountRepository) {
+    private BulletinBoard createBulletinBoard(
+            Faker faker,
+            AccountRepository accountRepository,
+            BulletinBoardImageRepository bulletinBoardImageRepository) {
         BulletinBoard bulletinBoard = new BulletinBoard();
         bulletinBoard.setAccount(accountRepository.findByUsername("admin").get());
         bulletinBoard.setTitle(faker.address().city());
@@ -533,14 +560,16 @@ public class DB {
         bulletinBoard.setAddress(faker.address().fullAddress());
         bulletinBoard.setLongitude(faker.number().randomDouble(2, 50, 50000));
         bulletinBoard.setLatitude(faker.number().randomDouble(2, 50, 5000));
-
-        List<BulletinBoardImage> bulletinBoardImages = new ArrayList<>();
-        for (int j = 0; j < 5; j++) {
-            BulletinBoardImage bulletinBoardImage = new BulletinBoardImage();
-            bulletinBoardImage.setBulletInBoard(bulletinBoard);
-        }
-        bulletinBoard.setBulletinBoardImages(bulletinBoardImages);
+        bulletinBoard.setStatus(faker.random().nextBoolean());
+        bulletinBoard.setIsActive(faker.random().nextBoolean());
         return bulletinBoard;
     }
 
+    private BulletinBoards_RentalAm createBulletinBoards_RentalAm(
+            BulletinBoard bulletinBoard, RentalAmenities rentalAmenities) {
+        BulletinBoards_RentalAm bulletinBoards_RentalAm = new BulletinBoards_RentalAm();
+        bulletinBoards_RentalAm.setBulletinBoard(bulletinBoard);
+        bulletinBoards_RentalAm.setRentalAmenities(rentalAmenities);
+        return bulletinBoards_RentalAm;
+    }
 }

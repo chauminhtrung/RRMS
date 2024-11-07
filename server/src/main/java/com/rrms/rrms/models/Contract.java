@@ -66,6 +66,4 @@ public class Contract {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "ENUM('ACTIVE', 'ENDED')")
     private ContractStatus status;
-
-
 }

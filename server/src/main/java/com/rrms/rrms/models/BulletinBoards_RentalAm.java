@@ -1,17 +1,21 @@
 package com.rrms.rrms.models;
 
+import java.util.UUID;
+
 import jakarta.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.UUID;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "bulletinBoards_rentalAms")
+@JsonIgnoreProperties({"bulletinBoard"})
 public class BulletinBoards_RentalAm {
 
     @Id
@@ -23,6 +27,6 @@ public class BulletinBoards_RentalAm {
     private RentalAmenities rentalAmenities;
 
     @ManyToOne
-    @JoinColumn(name = "bullet_in_boards_id")
+    @JoinColumn(name = "bulletin_boards_id")
     private BulletinBoard bulletinBoard;
 }

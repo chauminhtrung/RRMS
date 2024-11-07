@@ -17,6 +17,7 @@ public class Broker {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID brokerId;
+
     private String name;
     private String phone;
     private UUID motelId;

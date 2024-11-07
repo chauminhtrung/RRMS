@@ -1,14 +1,16 @@
 package com.rrms.rrms.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import jakarta.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
@@ -73,11 +75,25 @@ public class BulletinBoard {
     @Column(columnDefinition = "DOUBLE")
     private Double latitude;
 
-    @OneToMany(mappedBy = "bulletInBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(columnDefinition = "BOOLEAN")
+    private Boolean status;
+
+    @Column(columnDefinition = "BOOLEAN")
+    private Boolean isActive;
+
+    @OneToMany(mappedBy = "bulletinBoard", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<BulletinBoardImage> bulletinBoardImages;
 
-    @OneToMany(mappedBy = "bulletInBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "bulletinBoard", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<BulletinBoardReviews> bulletinBoardReviews;
+
+    @OneToMany(mappedBy = "bulletinBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<BulletinBoardRule> bulletinBoardRules;
+
+    @OneToMany(mappedBy = "bulletinBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<BulletinBoards_RentalAm> bulletinBoards_RentalAm;
 }

@@ -1,12 +1,13 @@
 package com.rrms.rrms.models;
 
+import java.util.UUID;
+
 import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.UUID;
 
 @Entity
 @Data
@@ -21,10 +22,10 @@ public class BulletinBoardReviews {
     private UUID bulletinBoardReviewsId;
 
     @ManyToOne
-    @JoinColumn(name = "bulletInBoardId")
-    private BulletinBoard bulletInBoard;
+    @JoinColumn(name = "bulletin_board_id")
+    private BulletinBoard bulletinBoard;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
 
@@ -33,5 +34,4 @@ public class BulletinBoardReviews {
 
     @Column(columnDefinition = "Integer")
     private Integer rating;
-
 }
