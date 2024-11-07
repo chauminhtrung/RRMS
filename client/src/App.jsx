@@ -45,6 +45,7 @@ import ImageComparison from './pages/AI/ImageComparison'
 // import ValidCaptcha from './components/ValidCaptcha'
 import ImportFileExcel from './pages/admin/NavContentAdmin/ImportFileExcel'
 import MotelSetting from './pages/admin/MotelSettings/MotelSetting'
+import PassportRecognition from './pages/AI/PassportRecognition'
 
 function App() {
   const [username, setUsername] = useState('')
@@ -105,6 +106,7 @@ function App() {
           <Route path="/image" element={<ImageComparison setIsAdmin={setIsAdmin} />} />
           <Route path="/recognition" element={<Recognition setIsAdmin={setIsAdmin} />} />
           <Route path="/facematch" element={<FaceMatch setIsAdmin={setIsAdmin} />} />
+          <Route path="/passport" element={<PassportRecognition setIsAdmin={setIsAdmin} />} />
           <Route path="/search" element={<Search setIsAdmin={setIsAdmin} />} />
           <Route path="/detail/:roomId" element={<Detail setIsAdmin={setIsAdmin} />} />
           <Route path="/forgot-password" element={<Forgot_Password setIsAdmin={setIsAdmin} />} />
