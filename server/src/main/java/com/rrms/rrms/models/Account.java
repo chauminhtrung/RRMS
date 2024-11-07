@@ -1,17 +1,15 @@
 package com.rrms.rrms.models;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import jakarta.persistence.*;
-
 import com.rrms.rrms.enums.Gender;
-
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -34,7 +32,7 @@ public class Account {
     @Column(columnDefinition = "VARCHAR(20)", unique = true)
     private String phone;
 
-    @Column(columnDefinition = "VARCHAR(255)")
+    @Column(columnDefinition = "VARCHAR(255)", unique = true) // unique = true để trường này là duy nhất
     private String email;
 
     @Column(columnDefinition = "VARCHAR(255)")
