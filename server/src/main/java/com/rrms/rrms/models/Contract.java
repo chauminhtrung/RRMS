@@ -29,7 +29,7 @@ public class Contract {
 
     @ManyToOne
     @JoinColumn(name = "username_tenant")
-    private Account tenant;
+    private Tenant tenant;
 
     @ManyToOne
     @JoinColumn(name = "username_landlord")
@@ -66,4 +66,6 @@ public class Contract {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "ENUM('ACTIVE', 'ENDED')")
     private ContractStatus status;
+
+
 }
