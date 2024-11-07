@@ -4,6 +4,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 import javax.crypto.spec.SecretKeySpec;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,21 +22,17 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@Slf4j
 public class SecurityConfig {
 
     private static final String[] PUBLIC_ENDPOINTS = {
         "/",
-        "/authen/login",
-        "/authen/introspect",
-        "/authen/register",
-        "/authen/forgetpassword",
-        "/authen/logout",
-        "/authen/login/oauth2",
+        "/authen/*",
         "/swagger-ui/*",
         "/v3/api-docs/*",
         "/searchs/*",
         "/detail/*",
-        "/api-accounts/**"
+        "/api-accounts/**",
     };
 
     @Value("${jwt.signer-key}")
