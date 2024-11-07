@@ -1,16 +1,14 @@
 package com.rrms.rrms.models;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
-import jakarta.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -54,8 +52,8 @@ public class BulletinBoard {
     @Column(columnDefinition = "DOUBLE")
     private Double waterPrice;
 
-    @Column(columnDefinition = "INT")
-    private Integer maxPerson;
+    @Column(columnDefinition = "VARCHAR(255)")
+    private String maxPerson;
 
     @Column(columnDefinition = "Date")
     private Date moveInDate;
@@ -81,19 +79,19 @@ public class BulletinBoard {
     @Column(columnDefinition = "BOOLEAN")
     private Boolean isActive;
 
-    @OneToMany(mappedBy = "bulletinBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "bulletinBoard", cascade = CascadeType.MERGE, orphanRemoval = true)
     @JsonIgnore
     private List<BulletinBoardImage> bulletinBoardImages;
 
-    @OneToMany(mappedBy = "bulletinBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "bulletinBoard", cascade = CascadeType.MERGE, orphanRemoval = true)
     @JsonIgnore
     private List<BulletinBoardReviews> bulletinBoardReviews;
 
-    @OneToMany(mappedBy = "bulletinBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "bulletinBoard", cascade = CascadeType.MERGE, orphanRemoval = true)
     @JsonIgnore
     private List<BulletinBoardRule> bulletinBoardRules;
 
-    @OneToMany(mappedBy = "bulletinBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "bulletinBoard", cascade = CascadeType.MERGE, orphanRemoval = true)
     @JsonIgnore
     private List<BulletinBoards_RentalAm> bulletinBoards_RentalAm;
 }
