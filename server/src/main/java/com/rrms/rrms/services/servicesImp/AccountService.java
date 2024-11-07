@@ -163,6 +163,9 @@ public class AccountService implements IAccountService {
         // Khởi tạo danh sách authorities để tránh NullPointerException
         account.setAuthorities(new ArrayList<>());
 
+        // Lưu tài khoản trước
+        Account savedAccount = accountRepository.save(account);
+
         // Xử lý danh sách vai trò
         if (accountRequest.getRole() != null && !accountRequest.getRole().isEmpty()) {
             for (String roleName : accountRequest.getRole()) {
@@ -180,11 +183,11 @@ public class AccountService implements IAccountService {
 
                     // Tạo đối tượng Auth mới cho mỗi vai trò và liên kết tài khoản với vai trò
                     Auth auth = new Auth();
-                    auth.setAccount(account);
+                    auth.setAccount(savedAccount); // Sử dụng savedAccount
                     auth.setRole(role);
 
                     // Thêm quyền vào danh sách authorities của tài khoản
-                    account.getAuthorities().add(auth);
+                    savedAccount.getAuthorities().add(auth);
 
                     // Lưu dữ liệu quyền vào cơ sở dữ liệu
                     authRepository.save(auth);
@@ -196,7 +199,6 @@ public class AccountService implements IAccountService {
             throw new AppException(ErrorCode.ROLE_NOT_PROVIDED);
         }
 
-        Account savedAccount = accountRepository.save(account);
         return convertToAccountResponse(savedAccount);
     }
 
@@ -229,7 +231,7 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public AccountResponse updateHostAccount(String username, AccountRequest accountRequest) {
+    public AccountResponse updateAccount(String username, AccountRequest accountRequest) {
         // Kiểm tra xem tài khoản có tồn tại hay không
         Optional<Account> accountOptional = accountRepository.findById(username);
         if (!accountOptional.isPresent()) {

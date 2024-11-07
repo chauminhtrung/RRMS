@@ -3,14 +3,11 @@ package com.rrms.rrms.controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import jakarta.persistence.EntityNotFoundException;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
 import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.request.ChangePasswordRequest;
 import com.rrms.rrms.dto.response.AccountResponse;
@@ -19,7 +16,6 @@ import com.rrms.rrms.enums.Roles;
 import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.services.IAccountService;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
@@ -108,9 +104,8 @@ public class AccountController {
         }
     }
 
-    @Operation(summary = "Create a new host account")
     @PostMapping("/createAccount")
-    public ResponseEntity<Map<String, Object>> createAccount(@RequestBody AccountRequest accountRequest) {
+    public ResponseEntity<?> createAccount(@RequestBody AccountRequest accountRequest) {
         Map<String, Object> response = new HashMap<>();
         try {
             AccountResponse accountResponse = accountService.createAccount(accountRequest);
@@ -137,7 +132,7 @@ public class AccountController {
             @PathVariable String username, @RequestBody AccountRequest accountRequest) {
         Map<String, Object> response = new HashMap<>();
         try {
-            AccountResponse accountResponse = accountService.updateHostAccount(username, accountRequest);
+            AccountResponse accountResponse = accountService.updateAccount(username, accountRequest);
             response.put("status", true);
             response.put("message", "Account updated successfully");
             response.put("data", accountResponse);

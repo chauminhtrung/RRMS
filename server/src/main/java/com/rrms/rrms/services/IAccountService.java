@@ -29,7 +29,7 @@ public interface IAccountService {
 
     AccountResponse createAccount(AccountRequest accountRequest);
 
-    AccountResponse updateHostAccount(String username, AccountRequest accountRequest);
+    AccountResponse updateAccount(String username, AccountRequest accountRequest);
 
     void deleteAccount(String username);
 
