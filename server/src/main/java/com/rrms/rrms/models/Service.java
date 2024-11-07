@@ -31,5 +31,4 @@ public class Service implements Serializable {
 
     @Column(columnDefinition = "VARCHAR(255)")
     private String nameService;
-
 }

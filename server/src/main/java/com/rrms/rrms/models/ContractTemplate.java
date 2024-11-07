@@ -1,12 +1,12 @@
 package com.rrms.rrms.models;
 
+import java.util.UUID;
 
 import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.UUID;
 
 @Entity
 @Data
@@ -20,7 +20,7 @@ public class ContractTemplate {
 
     @ManyToOne
     @JoinColumn(name = "motel_id")
-    private Motel motel ;
+    private Motel motel;
 
     @Column(columnDefinition = "TEXT")
     private String namecontract;
@@ -33,6 +33,4 @@ public class ContractTemplate {
 
     @Column(columnDefinition = "TEXT") // Để lưu nội dung lớn
     private String content;
-
-
 }

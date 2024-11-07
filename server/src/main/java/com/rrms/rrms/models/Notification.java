@@ -23,10 +23,6 @@ public class Notification {
     @JoinColumn(name = "username_landlord")
     private Account landlord;
 
-    @ManyToOne
-    @JoinColumn(name = "username_tenant")
-    private Account tenant;
-
     @Column(columnDefinition = "VARCHAR(255)")
     private String title;
 

@@ -1,5 +1,13 @@
 package com.rrms.rrms.controllers;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
 import com.rrms.rrms.dto.request.MotelServiceRequest;
 import com.rrms.rrms.dto.response.MotelServiceResponse;
 import com.rrms.rrms.services.IMotelServiceService;
@@ -9,13 +17,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @Slf4j
@@ -38,8 +39,7 @@ public class MotelServiceController {
 
     @PutMapping("/update-by-motel/{motelId}")
     public ResponseEntity<MotelServiceResponse> updateMotelServiceByIdMotel(
-            @PathVariable UUID motelId,
-            @RequestBody MotelServiceRequest request) {
+            @PathVariable UUID motelId, @RequestBody MotelServiceRequest request) {
         MotelServiceResponse updatedService = motelServiceService.updateMotelServiceById(motelId, request);
         return ResponseEntity.ok(updatedService);
     }
@@ -47,8 +47,7 @@ public class MotelServiceController {
     // Cập nhật một MotelService
     @PutMapping("/{id}")
     public ResponseEntity<MotelServiceResponse> updateMotelService(
-            @PathVariable UUID id,
-            @RequestBody MotelServiceRequest request) {
+            @PathVariable UUID id, @RequestBody MotelServiceRequest request) {
         MotelServiceResponse response = motelServiceService.updateMotelService(id, request);
         return ResponseEntity.ok(response);
     }
@@ -73,8 +72,4 @@ public class MotelServiceController {
         motelServiceService.deleteMotelService(id);
         return ResponseEntity.noContent().build();
     }
-
-
-
-
 }

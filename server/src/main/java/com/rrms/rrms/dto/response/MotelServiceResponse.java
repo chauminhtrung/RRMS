@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MotelServiceResponse {
-    private UUID motelServiceId;    // ID của MotelService
-    private UUID motelId;           // ID của Motel (liên kết với bảng Motel)
+    private UUID motelServiceId; // ID của MotelService
+    private UUID motelId; // ID của Motel (liên kết với bảng Motel)
     private String nameService;
-    private Long price;         // Giá của dịch vụ
-    private String chargetype;  // Kiểu tính phí (vd: theo tháng, theo người)
+    private Long price; // Giá của dịch vụ
+    private String chargetype; // Kiểu tính phí (vd: theo tháng, theo người)
 }

@@ -10,5 +10,4 @@ import lombok.NoArgsConstructor;
 public class NameMotelServiceRequest {
     private String typeService; // Loại dịch vụ (vd: điện, nước,...)
     private String nameService; // Tên dịch vụ (vd: dịch vụ điện)
-
 }

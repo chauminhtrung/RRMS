@@ -29,7 +29,7 @@ public class Contract {
 
     @ManyToOne
     @JoinColumn(name = "username_tenant")
-    private Account tenant;
+    private Tenant tenant;
 
     @ManyToOne
     @JoinColumn(name = "username_landlord")
@@ -38,8 +38,6 @@ public class Contract {
     @ManyToOne
     @JoinColumn(name = "contract_template")
     private ContractTemplate contract_template;
-
-
 
     @Column(columnDefinition = "DATE")
     private LocalDate firstTime;
@@ -56,7 +54,6 @@ public class Contract {
     @Column(columnDefinition = "TEXT")
     private String collection_cycle;
 
-
     @Column(columnDefinition = "DATE")
     private LocalDate createdate;
 
@@ -69,4 +66,6 @@ public class Contract {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "ENUM('ACTIVE', 'ENDED')")
     private ContractStatus status;
+
+
 }

@@ -1,5 +1,18 @@
 package com.rrms.rrms.controllers;
 
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.bind.annotation.*;
+
 import com.nimbusds.jose.JOSEException;
 import com.rrms.rrms.dto.request.IntrospecTokenRequest;
 import com.rrms.rrms.dto.request.LoginRequest;
@@ -12,22 +25,11 @@ import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.services.IAccountService;
 import com.rrms.rrms.services.IAuthorityService;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.bind.annotation.*;
-
-import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -55,19 +57,16 @@ public class AuthenController {
             String token = authorityService.generateToken(account);
 
             // Trả về thông tin đăng nhập thành công cùng token
-            return ResponseEntity.ok(
-                    LoginResponse.builder()
-                            .authenticated(true)
-                            .username(name)
-                            .email(email)
-                            .token(token)
-                            .build()
-            );
+            return ResponseEntity.ok(LoginResponse.builder()
+                    .authenticated(true)
+                    .username(name)
+                    .email(email)
+                    .token(token)
+                    .build());
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Tài khoản không tồn tại.");
         }
     }
-
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
@@ -126,7 +125,8 @@ public class AuthenController {
             // Log token để kiểm tra xem token có được gửi đúng không
             log.info("Token nhận được để logout: " + request.getToken());
 
-            // Gọi hàm logout của authorityService, nơi bạn xử lý việc đưa token vào blacklist
+            // Gọi hàm logout của authorityService, nơi bạn xử lý việc đưa token vào
+            // blacklist
             authorityService.logout(request);
 
             // Trả về thông báo đăng xuất thành công
@@ -180,6 +180,7 @@ public class AuthenController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
     @PostMapping("/forgetpassword")
     public ResponseEntity<RegisterResponse> forget(@RequestBody RegisterRequest registerRequest) {
         return null;

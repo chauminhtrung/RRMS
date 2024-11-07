@@ -353,3 +353,185 @@ ADD CONSTRAINT FK_SEARCHS_ON_USERNAME FOREIGN KEY (username) REFERENCES accounts
 
 ALTER TABLE supports
 ADD CONSTRAINT FK_SUPPORTS_ON_USERNAME FOREIGN KEY (username) REFERENCES accounts (username);
+
+
+
+
+
+
+-- hợp đồng đã hết hạn
+DELIMITER //
+
+CREATE FUNCTION GetTotalExpiredContracts(username VARCHAR(255))
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE total_expired INT;
+
+    SELECT COUNT(*) INTO total_expired
+    FROM Contracts
+    WHERE DATE_ADD(first_time, INTERVAL lease_term MONTH) <= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+    AND username_landlord = username;
+
+    RETURN total_expired;
+END //
+
+DELIMITER ;
+-- hợp đồng da hết hạn
+DELIMITER //
+SHOW PROCEDURE STATUS WHERE Name = 'GetTotalExpiredContracts';
+CREATE PROCEDURE GetTotalExpiredContracts(IN username VARCHAR(255))
+BEGIN
+    DECLARE total_expired INT;
+
+    -- Gọi hàm để lấy tổng số hợp đồng sắp hết hạn
+    SET total_expired = GetTotalExpiredContracts(username);
+
+    -- Trả về tổng số hợp đồng sắp hết hạn
+    SELECT total_expired AS total_expired_contracts;
+END //
+
+DELIMITER ;
+-- hợp đồng sắp hết hạn
+DELIMITER //
+
+CREATE FUNCTION GetTotalExpiringContracts(username VARCHAR(255))
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE total_expiring INT;
+
+    SELECT COUNT(*) INTO total_expiring
+    FROM Contracts
+    WHERE DATE_ADD(first_time, INTERVAL lease_term MONTH) <= CURDATE() + INTERVAL 30 DAY
+    AND DATE_ADD(first_time, INTERVAL lease_term MONTH) >= CURDATE()
+    AND username_landlord = username;
+
+    RETURN total_expiring;
+END //
+
+DELIMITER ;
+
+-- hợp đồng sắp hết hạn
+DELIMITER //
+SHOW PROCEDURE STATUS WHERE Name = 'GetTotalExpiringContractsProcedure';
+CREATE PROCEDURE GetTotalExpiringContractsProcedure(IN username VARCHAR(255))
+BEGIN
+    DECLARE total_expiring INT;
+
+    -- Gọi hàm để lấy tổng số hợp đồng sắp hết hạn
+    SET total_expiring = GetTotalExpiringContracts(username);
+
+    -- Trả về tổng số hợp đồng sắp hết hạn
+    SELECT total_expiring AS total_expiring_contracts;
+END //
+
+DELIMITER ;
+
+-- funtion
+-- tong tien phong
+DELIMITER //
+
+CREATE FUNCTION GetTotalRoomPrice(username VARCHAR(255))
+RETURNS DOUBLE
+DETERMINISTIC
+BEGIN
+    DECLARE total_room_price DOUBLE;
+
+    SELECT SUM(r.price) INTO total_room_price
+    FROM Motels m
+    JOIN Rooms r ON m.motel_id = r.motel_id
+    JOIN Invoices i ON r.room_id = i.room_id
+    WHERE i.status = 'Đã thanh toán' AND m.username = username;
+
+    RETURN total_room_price;
+END //
+
+DELIMITER ;
+
+-- tong tien dich vu
+DELIMITER //
+
+CREATE FUNCTION GetTotalServicePrice(username VARCHAR(255))
+RETURNS DOUBLE
+DETERMINISTIC
+BEGIN
+    DECLARE total_service_price DOUBLE;
+
+    SELECT SUM(s.price) INTO total_service_price
+    FROM Motels m
+    JOIN Rooms r ON m.motel_id = r.motel_id
+    JOIN Invoices i ON r.room_id = i.room_id
+    LEFT JOIN Room_services rs ON rs.room_id = r.room_id
+    LEFT JOIN Services s ON s.service_id = rs.service_id
+    WHERE i.status = 'Đã thanh toán' AND m.username = username;
+
+    RETURN total_service_price;
+END //
+
+DELIMITER ;
+
+-- tong hoa don
+DELIMITER //
+SELECT GetTotalRoomPrice('admin') AS total_expiring;
+CREATE FUNCTION GetTotalInvoice(username VARCHAR(255))
+RETURNS DOUBLE
+DETERMINISTIC
+BEGIN
+    DECLARE total_invoice DOUBLE;
+
+    SELECT (SUM(r.price) + COALESCE(SUM(s.price), 0)) INTO total_invoice
+    FROM Motels m
+    JOIN Rooms r ON m.motel_id = r.motel_id
+    JOIN Invoices i ON r.room_id = i.room_id
+    LEFT JOIN Room_services rs ON rs.room_id = r.room_id
+    LEFT JOIN Services s ON s.service_id = rs.service_id
+    WHERE i.status = 'Đã thanh toán' AND m.username = username;
+
+    RETURN total_invoice;
+END //
+
+DELIMITER ;
+
+-- PROCEDURE
+-- tien phong
+DELIMITER //
+
+CREATE PROCEDURE GetTotalRoomPriceProcedure(IN username VARCHAR(255))
+BEGIN
+    DECLARE total_room_price DOUBLE;
+
+    SET total_room_price = GetTotalRoomPrice(username);
+    
+    SELECT total_room_price AS total_room_price;
+END //
+
+DELIMITER ;
+
+-- tien dich vu
+DELIMITER //
+
+CREATE PROCEDURE GetTotalServicePriceProcedure(IN username VARCHAR(255))
+BEGIN
+    DECLARE total_service_price DOUBLE;
+
+    SET total_service_price = GetTotalServicePrice(username);
+    
+    SELECT total_service_price AS total_service_price;
+END //
+
+DELIMITER ;
+
+-- tien hoa don
+DELIMITER //
+
+CREATE PROCEDURE GetTotalInvoiceProcedure(IN username VARCHAR(255))
+BEGIN
+    DECLARE total_invoice DOUBLE;
+
+    SET total_invoice = GetTotalInvoice(username);
+    
+    SELECT total_invoice AS total_invoice;
+END //
+
+DELIMITER ;
