@@ -1,24 +1,19 @@
 package com.rrms.rrms.services.servicesImp;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-
-import com.rrms.rrms.dto.response.RoomDetailResponse;
 import com.rrms.rrms.dto.response.RoomSearchResponse;
-import com.rrms.rrms.enums.ErrorCode;
-import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.mapper.RoomMapper;
 import com.rrms.rrms.models.Room;
 import com.rrms.rrms.repositories.RoomRepository;
 import com.rrms.rrms.repositories.RoomRepositoryElasticsearch;
 import com.rrms.rrms.services.ISearchService;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -30,18 +25,18 @@ public class SearchService implements ISearchService {
 
     RoomMapper roomMapper;
 
-    @Override
-    public List<RoomDetailResponse> listRoomByName(String name) {
-        List<Room> rooms = roomRepository.findAllByNameRoom(name);
-        if (rooms.isEmpty()) {
-            throw new AppException(ErrorCode.SEARCH_NOT_FOUND);
-        }
-
-        //        rooms.forEach(room -> System.out.printf("room0"+room));
-
-        // Chuyển đổi từ Room sang RoomDetailResponse
-        return rooms.stream().map(roomMapper::toRoomDetailResponse).collect(Collectors.toList());
-    }
+//    @Override
+//    public List<RoomDetailResponse> listRoomByName(String name) {
+//        List<Room> rooms = roomRepository.findAllByNameRoom(name);
+//        if (rooms.isEmpty()) {
+//            throw new AppException(ErrorCode.SEARCH_NOT_FOUND);
+//        }
+//
+//        //        rooms.forEach(room -> System.out.printf("room0"+room));
+//
+//        // Chuyển đổi từ Room sang RoomDetailResponse
+//        return rooms.stream().map(roomMapper::toRoomDetailResponse).collect(Collectors.toList());
+//    }
 
     //    @Override
     //    public List<RoomDetailResponse> listRoomPrice(Double startPrice, Double endPrice) {
@@ -102,17 +97,17 @@ public class SearchService implements ISearchService {
         return roomRepositoryElasticsearch.findByAddressFuzzy(keyword);
     }
 
-    @Override
-    public List<RoomDetailResponse> findByAuthenIs(Boolean authenis) {
-        return roomRepository.findAllByAuthenIs(authenis).stream()
-                .map(roomMapper::toRoomDetailResponse)
-                .collect(Collectors.toList());
-    }
+//    @Override
+//    public List<RoomDetailResponse> findByAuthenIs(Boolean authenis) {
+//        return roomRepository.findAllByAuthenIs(authenis).stream()
+//                .map(roomMapper::toRoomDetailResponse)
+//                .collect(Collectors.toList());
+//    }
 
-    @Override
-    public List<RoomDetailResponse> findAllByDatenew() {
-        return roomRepository.findAllByDatenew().stream()
-                .map(roomMapper::toRoomDetailResponse)
-                .collect(Collectors.toList());
-    }
+//    @Override
+//    public List<RoomDetailResponse> findAllByDatenew() {
+//        return roomRepository.findAllByDatenew().stream()
+//                .map(roomMapper::toRoomDetailResponse)
+//                .collect(Collectors.toList());
+//    }
 }

@@ -1,5 +1,12 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.rrms.rrms.dto.request.ContractTemplateRequest;
 import com.rrms.rrms.dto.response.ContractTemplateRespone;
 import com.rrms.rrms.models.ContractTemplate;
@@ -7,12 +14,6 @@ import com.rrms.rrms.models.Motel;
 import com.rrms.rrms.repositories.ContractTemplateRepository;
 import com.rrms.rrms.repositories.MotelRepository;
 import com.rrms.rrms.services.IContractTemplateService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class ContractTemplateService implements IContractTemplateService {
@@ -22,7 +23,6 @@ public class ContractTemplateService implements IContractTemplateService {
 
     @Autowired
     private MotelRepository motelRepository;
-
 
     @Override
     public ContractTemplateRespone createContractTemplate(ContractTemplateRequest request) {
@@ -41,7 +41,8 @@ public class ContractTemplateService implements IContractTemplateService {
 
     @Override
     public ContractTemplateRespone getContractTemplateById(UUID contractTemplateId) {
-        ContractTemplate contractTemplate = contractTemplateRepository.findById(contractTemplateId).orElse(null);
+        ContractTemplate contractTemplate =
+                contractTemplateRepository.findById(contractTemplateId).orElse(null);
         return contractTemplate != null ? toResponse(contractTemplate) : null;
     }
 
@@ -59,7 +60,8 @@ public class ContractTemplateService implements IContractTemplateService {
 
     @Override
     public ContractTemplateRespone updateContractTemplate(UUID contractTemplateId, ContractTemplateRequest request) {
-        ContractTemplate contractTemplate = contractTemplateRepository.findById(contractTemplateId).orElse(null);
+        ContractTemplate contractTemplate =
+                contractTemplateRepository.findById(contractTemplateId).orElse(null);
         if (contractTemplate == null) {
             return null;
         }
