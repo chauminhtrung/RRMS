@@ -18,15 +18,19 @@ import {
   TableRow,
   Paper,
   Snackbar,
-  Alert,
+  Alert
 } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import PrintIcon from '@mui/icons-material/Print'
 import * as XLSX from 'xlsx'
 import Inventory2Icon from '@mui/icons-material/Inventory2'
+import AddTenantModal from './ModalTenant'
 
 const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
   const [page, setPage] = useState(0)
+  const [open, setOpen] = useState(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState('')
@@ -47,7 +51,7 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
     { id: 'relationship', label: 'Quan hệ', minWidth: 100 },
     { id: 'tenantType', label: 'Loại người thuê', minWidth: 150 },
     { id: 'documentStatus', label: 'Trạng thái giấy tờ', minWidth: 180 },
-    { id: 'residenceStatus', label: 'Trạng thái tạm trú', minWidth: 180 },
+    { id: 'residenceStatus', label: 'Trạng thái tạm trú', minWidth: 180 }
   ]
 
   const rows = [
@@ -65,7 +69,7 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
       relationship: 'Người thân',
       tenantType: 'Người thuê chính',
       documentStatus: 'Đã nộp',
-      residenceStatus: 'Đang cư trú',
+      residenceStatus: 'Đang cư trú'
     },
     {
       id: 2,
@@ -81,8 +85,8 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
       relationship: 'Bạn bè',
       tenantType: 'Người thuê phụ',
       documentStatus: 'Chưa nộp',
-      residenceStatus: 'Tạm vắng',
-    },
+      residenceStatus: 'Tạm vắng'
+    }
   ]
 
   const handleChangePage = (event, newPage) => {
@@ -124,7 +128,7 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
           backgroundColor: '#fff',
           padding: '15px',
           borderRadius: '10px',
-          margin: '0 10px 10px 10px',
+          margin: '0 10px 10px 10px'
         }}>
         <Box sx={{ padding: 4 }}>
           <Grid container spacing={2}>
@@ -136,7 +140,7 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
                   bgcolor: 'primary.main',
                   border: '1px solid #0056b3',
                   marginRight: 3,
-                  alignSelf: 'flex-start',
+                  alignSelf: 'flex-start'
                 }}
               />
               <Grid item>
@@ -158,16 +162,17 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
                   borderRadius: '50px',
                   color: 'white',
                   padding: '10px 20px',
-                  textTransform: 'none',
+                  textTransform: 'none'
                 }}>
                 Tra cứu khách thuê cũ
               </Button>
               <IconButton
+                onClick={handleOpen}
                 sx={{
                   backgroundColor: '#66bb6a',
                   color: 'white',
                   borderRadius: '50%',
-                  '&:hover': { backgroundColor: '#43a047' },
+                  '&:hover': { backgroundColor: '#43a047' }
                 }}>
                 <AddIcon />
               </IconButton>
@@ -180,7 +185,7 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
               borderRadius: '8px',
               padding: 2,
               backgroundColor: '#fff',
-              mt: 3,
+              mt: 3
             }}>
             <Grid container spacing={2} alignItems="center" direction={{ xs: 'column', sm: 'row' }}>
               <Grid item xs={12} sm={8} display="flex" alignItems="center" gap={2}>
@@ -216,8 +221,8 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
                       '&:hover': {
                         bgcolor: '#0056b3',
                         boxShadow: 1,
-                        cursor: 'pointer',
-                      },
+                        cursor: 'pointer'
+                      }
                     }}>
                     0
                   </Typography>
@@ -254,8 +259,8 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
                       '&:hover': {
                         bgcolor: '#0056b3',
                         boxShadow: 1,
-                        cursor: 'pointer',
-                      },
+                        cursor: 'pointer'
+                      }
                     }}>
                     0
                   </Typography>
@@ -292,8 +297,8 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
                       '&:hover': {
                         bgcolor: '#0056b3',
                         boxShadow: 1,
-                        cursor: 'pointer',
-                      },
+                        cursor: 'pointer'
+                      }
                     }}>
                     0
                   </Typography>
@@ -330,8 +335,8 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
                       '&:hover': {
                         bgcolor: '#0056b3',
                         boxShadow: 1,
-                        cursor: 'pointer',
-                      },
+                        cursor: 'pointer'
+                      }
                     }}>
                     0
                   </Typography>
@@ -363,7 +368,7 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
                         key={column.id}
                         style={{
                           minWidth: column.minWidth,
-                          borderRight: index < columns.length - 1 ? '1px solid rgba(224, 224, 224, 1)' : 'none',
+                          borderRight: index < columns.length - 1 ? '1px solid rgba(224, 224, 224, 1)' : 'none'
                         }}>
                         {column.label}
                       </TableCell>
@@ -419,6 +424,7 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
           {snackbarMessage}
         </Alert>
       </Snackbar>
+      <AddTenantModal open={open} onClose={handleClose} />
     </div>
   )
 }
