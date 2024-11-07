@@ -20,6 +20,12 @@ import java.util.*;
 @Slf4j
 @Transactional
 public class DB {
+    private final BulletinBoardRuleRepository bulletinBoardRuleRepository;
+
+    public DB(BulletinBoardRuleRepository bulletinBoardRuleRepository) {
+        this.bulletinBoardRuleRepository = bulletinBoardRuleRepository;
+    }
+
     int imageIndex = 0;
 
     @Bean
