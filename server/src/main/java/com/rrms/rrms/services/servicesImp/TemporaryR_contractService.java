@@ -1,5 +1,13 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.rrms.rrms.dto.request.TemporaryR_contractRequest;
 import com.rrms.rrms.dto.response.TemporaryR_contractRespone;
 import com.rrms.rrms.mapper.TemporaryR_contractMapper;
@@ -10,13 +18,6 @@ import com.rrms.rrms.repositories.AccountRepository;
 import com.rrms.rrms.repositories.MotelRepository;
 import com.rrms.rrms.repositories.TemporaryR_contractRepository;
 import com.rrms.rrms.services.ITemporaryR_contract;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class TemporaryR_contractService implements ITemporaryR_contract {
@@ -49,11 +50,13 @@ public class TemporaryR_contractService implements ITemporaryR_contract {
         contract.setDateofissue(request.getDateofissue());
 
         // Tìm kiếm Motel và Account dựa vào motelId và tenantUsername
-        Motel motel = motelRepository.findById(UUID.fromString(request.getMotelId()))
+        Motel motel = motelRepository
+                .findById(UUID.fromString(request.getMotelId()))
                 .orElseThrow(() -> new RuntimeException("Motel not found"));
         contract.setMotel(motel);
 
-        Account tenant = accountRepository.findByUsername(request.getTenantUsername())
+        Account tenant = accountRepository
+                .findByUsername(request.getTenantUsername())
                 .orElseThrow(() -> new RuntimeException("Account not found"));
         contract.setTenant(tenant);
 
@@ -61,7 +64,7 @@ public class TemporaryR_contractService implements ITemporaryR_contract {
         temporaryR_contractRepository.save(contract);
 
         // Trả về TemporaryR_contractRespone
-        return new TemporaryR_contractRespone(/* truyền các tham số từ đối tượng contract */);
+        return new TemporaryR_contractRespone(/* truyền các tham số từ đối tượng contract */ );
     }
 
     @Override
@@ -82,9 +85,7 @@ public class TemporaryR_contractService implements ITemporaryR_contract {
     public List<TemporaryR_contractRespone> findAll() {
         List<TemporaryR_contract> contracts = temporaryR_contractRepository.findAll();
 
-        return contracts.stream()
-                .map(TemporaryR_contractRespone::new)
-                .collect(Collectors.toList());
+        return contracts.stream().map(TemporaryR_contractRespone::new).collect(Collectors.toList());
     }
 
     @Override
@@ -100,7 +101,8 @@ public class TemporaryR_contractService implements ITemporaryR_contract {
             TemporaryR_contractfind.get().setIdentifier(temporaryR_contract.getIdentifier());
             TemporaryR_contractfind.get().setPlaceofissue(temporaryR_contract.getPlaceofissue());
             TemporaryR_contractfind.get().setDateofissue(temporaryR_contract.getDateofissue());
-            return temporaryRContractMapper.TRCToTRCRespone(temporaryR_contractRepository.save(TemporaryR_contractfind.get()));
+            return temporaryRContractMapper.TRCToTRCRespone(
+                    temporaryR_contractRepository.save(TemporaryR_contractfind.get()));
         }
         return null;
     }

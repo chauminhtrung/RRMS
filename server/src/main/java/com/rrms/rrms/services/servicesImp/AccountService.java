@@ -1,5 +1,6 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -7,12 +8,12 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.request.ChangePasswordRequest;
 import com.rrms.rrms.dto.request.RegisterRequest;
 import com.rrms.rrms.dto.response.AccountResponse;
-import com.rrms.rrms.dto.response.PermissionResponse;
 import com.rrms.rrms.enums.ErrorCode;
 import com.rrms.rrms.enums.Roles;
 import com.rrms.rrms.exceptions.AppException;
@@ -143,7 +144,7 @@ public class AccountService implements IAccountService {
     public AccountResponse createAccount(AccountRequest accountRequest) {
         // Kiểm tra xem tên đăng nhập hoặc số điện thoại đã tồn tại hay chưa
         if (accountRepository.existsByUsername(accountRequest.getUsername())
-            || accountRepository.existsByPhone(accountRequest.getPhone())) {
+                || accountRepository.existsByPhone(accountRequest.getPhone())) {
             throw new AppException(ErrorCode.ACCOUNT_ALREADY_EXISTS);
         }
 
@@ -204,7 +205,6 @@ public class AccountService implements IAccountService {
         return convertToAccountResponse(savedAccount);
     }
 
-
     private AccountResponse convertToAccountResponse(Account account) {
         AccountResponse response = new AccountResponse();
         response.setUsername(account.getUsername());
@@ -218,22 +218,21 @@ public class AccountService implements IAccountService {
 
         // Lấy danh sách các vai trò từ account và chuyển thành List<String>
         List<String> roles = account.getAuthorities().stream()
-            .map(auth -> auth.getRole().getRoleName().name())
-            .distinct() // Đảm bảo không có trùng lặp
-            .collect(Collectors.toList());
+                .map(auth -> auth.getRole().getRoleName().name())
+                .distinct() // Đảm bảo không có trùng lặp
+                .collect(Collectors.toList());
         response.setRole(roles);
 
         // Lấy quyền từ danh sách authorities và chuyển đổi thành List<String>
         List<String> permissions = account.getAuthorities().stream()
-            .flatMap(auth -> auth.getRole().getPermissions().stream()
-                .map(Permission::getName)) // Chỉ lấy tên quyền
-            .distinct() // Để loại bỏ trùng lặp nếu cần
-            .collect(Collectors.toList());
+                .flatMap(auth -> auth.getRole().getPermissions().stream()
+                        .map(Permission::getName)) // Chỉ lấy tên quyền
+                .distinct() // Để loại bỏ trùng lặp nếu cần
+                .collect(Collectors.toList());
         response.setPermissions(permissions);
 
         return response;
     }
-
 
     @Override
     public AccountResponse updateAccount(String username, AccountRequest accountRequest) {
@@ -256,7 +255,8 @@ public class AccountService implements IAccountService {
         account.setAvatar(accountRequest.getAvatar());
 
         // Nếu mật khẩu mới được cung cấp, mã hóa và cập nhật
-        if (accountRequest.getPassword() != null && !accountRequest.getPassword().isEmpty()) {
+        if (accountRequest.getPassword() != null
+                && !accountRequest.getPassword().isEmpty()) {
             String encodedPassword = passwordEncoder.encode(accountRequest.getPassword());
             account.setPassword(encodedPassword);
         }
@@ -287,7 +287,7 @@ public class AccountService implements IAccountService {
         return accountRepository.save(account);
     }
 
-    //    @Cacheable(value = "account", key = "#username")
+    // @Cacheable(value = "account", key = "#username")
     @Override
     public AccountResponse findByUsername(String username) {
         Account account = accountRepository

@@ -1,23 +1,20 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.rrms.rrms.dto.request.MotelServiceRequest;
 import com.rrms.rrms.dto.response.MotelServiceResponse;
 import com.rrms.rrms.models.Motel;
 import com.rrms.rrms.models.MotelService;
-import com.rrms.rrms.models.NameMotelService;
-
-
 import com.rrms.rrms.repositories.MotelRepository;
 import com.rrms.rrms.repositories.MotelServiceRepository;
 import com.rrms.rrms.repositories.NameMotelServiceRepository;
 import com.rrms.rrms.services.IMotelServiceService;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class MotelServiceService implements IMotelServiceService {
@@ -33,7 +30,8 @@ public class MotelServiceService implements IMotelServiceService {
 
     @Override
     public MotelServiceResponse createMotelService(MotelServiceRequest request) {
-        Motel motel = motelRepository.findById(request.getMotelId())
+        Motel motel = motelRepository
+                .findById(request.getMotelId())
                 .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
 
         MotelService motelService = new MotelService();
@@ -47,13 +45,13 @@ public class MotelServiceService implements IMotelServiceService {
 
     @Override
     public MotelServiceResponse updateMotelService(UUID id, MotelServiceRequest request) {
-        MotelService motelService = motelServiceRepository.findById(id)
+        MotelService motelService = motelServiceRepository
+                .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("MotelService not found"));
 
-        Motel motel = motelRepository.findById(request.getMotelId())
+        Motel motel = motelRepository
+                .findById(request.getMotelId())
                 .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
-
-
 
         motelService.setMotel(motel);
         motelService.setNameService(request.getNameService());
@@ -73,7 +71,8 @@ public class MotelServiceService implements IMotelServiceService {
 
     @Override
     public MotelServiceResponse getMotelServiceById(UUID id) {
-        MotelService motelService = motelServiceRepository.findById(id)
+        MotelService motelService = motelServiceRepository
+                .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("MotelService not found"));
         return mapToResponse(motelService);
     }
@@ -85,16 +84,16 @@ public class MotelServiceService implements IMotelServiceService {
                 .collect(Collectors.toList());
     }
 
-
-
     @Override
     public MotelServiceResponse updateMotelServiceById(UUID motelId, MotelServiceRequest request) {
         // Tìm bản ghi MotelService đầu tiên theo motelId
-        MotelService motelService = motelServiceRepository.findFirstByMotel_MotelId(motelId)
+        MotelService motelService = motelServiceRepository
+                .findFirstByMotel_MotelId(motelId)
                 .orElseThrow(() -> new IllegalArgumentException("MotelService not found for given motelId"));
 
         // Kiểm tra xem motel có tồn tại không
-        Motel motel = motelRepository.findById(request.getMotelId())
+        Motel motel = motelRepository
+                .findById(request.getMotelId())
                 .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
 
         // Cập nhật các thuộc tính
@@ -115,8 +114,6 @@ public class MotelServiceService implements IMotelServiceService {
                 motelService.getMotel().getMotelId(),
                 motelService.getNameService(),
                 motelService.getPrice(),
-                motelService.getChargetype()
-
-        );
+                motelService.getChargetype());
     }
 }

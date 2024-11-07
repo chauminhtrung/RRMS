@@ -12,18 +12,14 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "rules")
+@Table(name = "rental_amenities")
 @Builder
-public class Rule {
+public class RentalAmenities {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "rule_id")
-    private UUID ruleId;
+    private UUID RentalAmenitiesId;
 
-    @Column(columnDefinition = "NVARCHAR(255)")
-    private String ruleName;
-
-    @Column(columnDefinition = "DECIMAL(10, 2)")
-    private long price;
+    @Column(columnDefinition = "VARCHAR(255)")
+    private String name;
 }

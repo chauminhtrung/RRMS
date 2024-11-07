@@ -35,7 +35,7 @@ public class Motel {
     private String address;
 
     @Column(columnDefinition = "NVARCHAR(255)")
-    private String methodofcreation;
+            private String methodofcreation;
 
     @Column(columnDefinition = "INT")
     private int maxperson;

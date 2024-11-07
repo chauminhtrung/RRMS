@@ -12,18 +12,19 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "rules")
+@Table(name = "bulletin_board_rules")
 @Builder
-public class Rule {
+public class BulletinBoardRule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "rule_id")
-    private UUID ruleId;
+    private UUID bulletinBoardRuleId;
 
-    @Column(columnDefinition = "NVARCHAR(255)")
-    private String ruleName;
+    @ManyToOne
+    @JoinColumn(name = "bullet_in_board_id")
+    private BulletinBoard bulletInBoard;
 
-    @Column(columnDefinition = "DECIMAL(10, 2)")
-    private long price;
+    @ManyToOne
+    @JoinColumn(columnDefinition = "rule_id")
+    private Rule rule;
 }
