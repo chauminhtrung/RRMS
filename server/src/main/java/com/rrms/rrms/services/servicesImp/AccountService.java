@@ -30,9 +30,6 @@ import com.rrms.rrms.services.IAccountService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import java.util.ArrayList;
-
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -225,8 +222,7 @@ public class AccountService implements IAccountService {
 
         // Lấy quyền từ danh sách authorities và chuyển đổi thành List<String>
         List<String> permissions = account.getAuthorities().stream()
-                .flatMap(auth -> auth.getRole().getPermissions().stream()
-                        .map(Permission::getName)) // Chỉ lấy tên quyền
+                .flatMap(auth -> auth.getRole().getPermissions().stream().map(Permission::getName)) // Chỉ lấy tên quyền
                 .distinct() // Để loại bỏ trùng lặp nếu cần
                 .collect(Collectors.toList());
         response.setPermissions(permissions);
