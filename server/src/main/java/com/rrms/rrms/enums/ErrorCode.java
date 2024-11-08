@@ -17,6 +17,11 @@ public enum ErrorCode {
     TYPE_ROOM_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Type room not found", HttpStatus.NOT_FOUND),
     SERVICE_ID_REQUIRED(HttpStatus.BAD_REQUEST.value(), "Service id required", HttpStatus.BAD_REQUEST),
     INVALID_SEARCH_PARAMETER(HttpStatus.BAD_REQUEST.value(), "INVALID_SEARCH_PARAMETER", HttpStatus.BAD_REQUEST),
+    BULLETIN_BOARD_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Bulletin board not found", HttpStatus.NOT_FOUND),
+    BULLETIN_BOARD_REVIEW_NOT_FOUND(
+            HttpStatus.NOT_FOUND.value(), "Bulletin board review not found", HttpStatus.NOT_FOUND),
+    BULLETIN_BOARD_IMAGE_NOT_FOUND(
+            HttpStatus.NOT_FOUND.value(), "Bulletin board image not found", HttpStatus.NOT_FOUND),
 
     // error for authen
     PHONE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Phone not found", HttpStatus.NOT_FOUND),

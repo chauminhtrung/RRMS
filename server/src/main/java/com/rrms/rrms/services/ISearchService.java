@@ -1,13 +1,13 @@
 package com.rrms.rrms.services;
 
+import java.util.List;
+
 import com.rrms.rrms.dto.response.RoomSearchResponse;
 import com.rrms.rrms.models.Room;
 
-import java.util.List;
-
 public interface ISearchService {
 
-//    List<RoomDetailResponse> listRoomByName(String name);
+    //    List<RoomDetailResponse> listRoomByName(String name);
     //    List<RoomDetailResponse> listRoomPrice(Double startPrice, Double endPrice);
 
     String syncRoom(List<Room> rooms);
@@ -18,7 +18,7 @@ public interface ISearchService {
 
     List<RoomSearchResponse> findByAddressFuzzy(String keyword);
 
-//    List<RoomDetailResponse> findByAuthenIs(Boolean authenis);
+    //    List<RoomDetailResponse> findByAuthenIs(Boolean authenis);
 
-//    List<RoomDetailResponse> findAllByDatenew();
+    //    List<RoomDetailResponse> findAllByDatenew();
 }

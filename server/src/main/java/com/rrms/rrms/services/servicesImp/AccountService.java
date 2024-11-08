@@ -219,8 +219,7 @@ public class AccountService implements IAccountService {
 
         // Lấy quyền từ danh sách authorities và chuyển đổi thành List<String>
         List<String> permissions = account.getAuthorities().stream()
-                .flatMap(auth -> auth.getRole().getPermissions().stream()
-                        .map(Permission::getName)) // Chỉ lấy tên quyền
+                .flatMap(auth -> auth.getRole().getPermissions().stream().map(Permission::getName)) // Chỉ lấy tên quyền
                 .distinct() // Để loại bỏ trùng lặp nếu cần
                 .collect(Collectors.toList());
         response.setPermissions(permissions);

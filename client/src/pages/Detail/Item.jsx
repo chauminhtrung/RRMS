@@ -12,8 +12,8 @@ const Item = ({ item, index, totalItems, addressDetail }) => {
   return (
     <Box sx={{ position: 'relative' }}>
       <GlassMagnifier
-        // style={{ width: '1000px', height: '500px' }}
-        imageSrc={item.image}
+        style={{ borderRadius: '10px' }}
+        imageSrc={item.imageLink}
         imageAlt="Example"
         square={true}
         // style={{
@@ -29,14 +29,14 @@ const Item = ({ item, index, totalItems, addressDetail }) => {
           left: 20,
           display: 'flex',
           justifyContent: 'space-between',
-          width: isMobile ? '90%' : '95%',
+          width: isMobile ? '90%' : '95%'
         }}>
         <Button
           sx={{
             bgcolor: 'primary.main',
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center',
+            alignItems: 'center'
           }}
           variant="contained"
           onClick={openGoogleMap}
@@ -50,7 +50,7 @@ const Item = ({ item, index, totalItems, addressDetail }) => {
               variant="h6"
               sx={{
                 fontWeight: 'bold',
-                textShadow: '1px 1px #000',
+                textShadow: '1px 1px #000'
               }}>
               ảnh {index + 1}/{totalItems}
             </Typography>

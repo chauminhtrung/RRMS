@@ -20,6 +20,6 @@ public class RentalAmenities {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID RentalAmenitiesId;
 
-    @Column(columnDefinition = "VARCHAR(255)")
+    @Column(columnDefinition = "VARCHAR(255)", unique = true)
     private String name;
 }
