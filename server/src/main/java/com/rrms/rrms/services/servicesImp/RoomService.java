@@ -2,11 +2,12 @@ package com.rrms.rrms.services.servicesImp;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-import com.rrms.rrms.dto.response.BulletinBoardSearchResponse;
-import com.rrms.rrms.dto.response.RoomSearchResponse;
-import com.rrms.rrms.mapper.BulletinBoardMapper;
-import com.rrms.rrms.repositories.*;
+import com.rrms.rrms.dto.request.RoomRequest2;
+import com.rrms.rrms.dto.response.RoomResponse2;
+import com.rrms.rrms.models.Motel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.request.RoomRequest;
@@ -34,7 +35,6 @@ public class RoomService implements IRoom {
     ServiceRepository serviceRepository;
     AccountRepository accountRepository;
 
-    BulletinBoardRepository bulletinBoardRepository;
 
     RoomMapper roomMapper;
 
@@ -151,4 +151,127 @@ public class RoomService implements IRoom {
 
         return result;
     }
+
+    // lam bieng sua ben tren nen tao luon ben duoi
+
+    @Override
+    public RoomResponse2 createRoom2(RoomRequest2 roomRequest) {
+        Motel motel = motelRepository.findById(roomRequest.getMotelId())
+                .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
+        Room room = convertToEntity(roomRequest);
+        room.setMotel(motel);
+        Room savedRoom = roomRepository.save(room);
+        return convertToResponse(savedRoom);
+    }
+
+    @Override
+    public RoomResponse2 getRoomById2(UUID roomId) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("Room not found"));
+        return convertToResponse(room);
+    }
+
+    @Override
+    public List<RoomResponse2> getAllRooms() {
+        List<Room> rooms = roomRepository.findAll();
+        return rooms.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public RoomResponse2 updateRoom2(UUID roomId, RoomRequest2 roomRequest) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("Room not found"));
+
+        updateEntityFromRequest(room, roomRequest);
+
+        if (roomRequest.getMotelId() != null) {
+            Motel motel = motelRepository.findById(roomRequest.getMotelId())
+                    .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
+            room.setMotel(motel);
+        }
+
+        Room updatedRoom = roomRepository.save(room);
+        return convertToResponse(updatedRoom);
+    }
+
+    @Override
+    public void deleteRoom2(UUID roomId) {
+        if (!roomRepository.existsById(roomId)) {
+            throw new IllegalArgumentException("Room not found");
+        }
+        roomRepository.deleteById(roomId);
+    }
+
+    @Override
+    public List<RoomResponse2> getRoomsByMotelId(UUID motelId) {
+        // Kiểm tra xem Motel có tồn tại không
+        Motel motel = motelRepository.findById(motelId)
+                .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
+
+        // Lấy danh sách phòng theo motelId
+        List<Room> rooms = roomRepository.findByMotel(motel);
+
+        // Chuyển đổi danh sách Room sang RoomResponse
+        return rooms.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+    // Chuyển đổi từ Room sang RoomResponse
+    private RoomResponse2 convertToResponse(Room room) {
+        RoomResponse2 response = new RoomResponse2();
+        response.setRoomId(room.getRoomId());
+        response.setMotelId(room.getMotel().getMotelId());
+        response.setName(room.getName());
+        response.setGroup(room.getGroup());
+        response.setPrice(room.getPrice());
+        response.setDeposit(room.getDeposit());
+        response.setDebt(room.getDebt());
+        response.setCountTenant(room.getCountTenant());
+        response.setInvoiceDate(room.getInvoiceDate());
+        response.setPaymentCircle(room.getPaymentCircle());
+        response.setMoveInDate(room.getMoveInDate());
+        response.setContractDuration(room.getContractduration());
+        response.setStatus(room.getStatus());
+        response.setFinance(room.getFinance());
+        return response;
+    }
+
+    // Chuyển đổi từ RoomRequest sang Room
+    private Room convertToEntity(RoomRequest2 roomRequest) {
+        Room room = new Room();
+        room.setName(roomRequest.getName());
+        room.setGroup(roomRequest.getGroup());
+        room.setPrice(roomRequest.getPrice());
+        room.setDeposit(roomRequest.getDeposit());
+        room.setDebt(roomRequest.getDebt());
+        room.setCountTenant(roomRequest.getCountTenant());
+        room.setInvoiceDate(roomRequest.getInvoiceDate());
+        room.setPaymentCircle(roomRequest.getPaymentCircle());
+        room.setMoveInDate(roomRequest.getMoveInDate());
+        room.setContractduration(roomRequest.getContractDuration());
+        room.setStatus(roomRequest.getStatus());
+        room.setFinance(roomRequest.getFinance());
+        return room;
+    }
+
+    // Cập nhật Room từ RoomRequest (chỉ cập nhật các trường cần thiết)
+    private void updateEntityFromRequest(Room room, RoomRequest2 roomRequest) {
+        if (roomRequest.getName() != null) room.setName(roomRequest.getName());
+        if (roomRequest.getGroup() != null) room.setGroup(roomRequest.getGroup());
+        if (roomRequest.getPrice() != null) room.setPrice(roomRequest.getPrice());
+        if (roomRequest.getDeposit() != null) room.setDeposit(roomRequest.getDeposit());
+        if (roomRequest.getDebt() != null) room.setDebt(roomRequest.getDebt());
+        if (roomRequest.getCountTenant() != null) room.setCountTenant(roomRequest.getCountTenant());
+        if (roomRequest.getInvoiceDate() != null) room.setInvoiceDate(roomRequest.getInvoiceDate());
+        if (roomRequest.getPaymentCircle() != null) room.setPaymentCircle(roomRequest.getPaymentCircle());
+        if (roomRequest.getMoveInDate() != null) room.setMoveInDate(roomRequest.getMoveInDate());
+        if (roomRequest.getContractDuration() != null) room.setContractduration(roomRequest.getContractDuration());
+        if (roomRequest.getStatus() != null) room.setStatus(roomRequest.getStatus());
+        if (roomRequest.getFinance() != null) room.setFinance(roomRequest.getFinance());
+    }
+
+
 }

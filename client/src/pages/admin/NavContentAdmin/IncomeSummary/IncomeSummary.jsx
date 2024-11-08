@@ -14,7 +14,7 @@ import {
   InputLabel,
   FormControl,
   Badge,
-  Checkbox,
+  Checkbox
 } from '@mui/material'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import AddIcon from '@mui/icons-material/Add'
@@ -46,7 +46,7 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
           backgroundColor: '#fff',
           padding: '15px 15px 15px 15px',
           borderRadius: '10px',
-          margin: '0 10px 10px 10px',
+          margin: '0 10px 10px 10px'
         }}>
         <Box sx={{ flexGrow: 1 }}>
           {/* Header */}
@@ -56,8 +56,8 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
             elevation={0}
             sx={{
               '.MuiToolbar-root': {
-                p: '16px',
-              },
+                p: '16px'
+              }
             }}>
             <Toolbar>
               <Typography variant="h6" sx={{ flexGrow: 1 }}>
@@ -86,13 +86,13 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
               sx={{
                 '.MuiBadge-badge': {
                   backgroundColor: '#7bed9f',
-                  color: 'white',
+                  color: 'white'
                 },
                 '& .MuiButtonBase-root': {
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                },
+                  justifyContent: 'center'
+                }
               }}>
               <FilterAltIcon color="primary" />
             </Badge>
@@ -102,8 +102,8 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
               sx={{
                 '& .MuiBadge-badge': {
                   backgroundColor: '#2ed573',
-                  color: 'white',
-                },
+                  color: 'white'
+                }
               }}>
               <Paper variant="outlined" sx={{ pr: 1 }}>
                 <Checkbox {...label} defaultChecked />
@@ -116,8 +116,8 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
               sx={{
                 '& .MuiBadge-badge': {
                   backgroundColor: '#ff4757',
-                  color: 'white',
-                },
+                  color: 'white'
+                }
               }}>
               <Paper variant="outlined" sx={{ pr: 1 }}>
                 <Checkbox {...label} defaultChecked />
@@ -175,7 +175,7 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
                 display: 'flex',
                 alignItems: 'center',
                 gap: 1,
-                '.MuiCardContent-root': { bgcolor: '#E8F5E9' },
+                '.MuiCardContent-root': { bgcolor: '#E8F5E9' }
               }}>
               <Card variant="outlined">
                 <CardContent>
@@ -214,7 +214,10 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
 
           {/* No Data Found */}
           <Paper variant="outlined" sx={{ textAlign: 'center', marginTop: 4 }}>
-            <img style={{ maxWidth: '200px' }} src="../../images/bg-banner.webp" />
+            <img
+              style={{ maxWidth: '200px' }}
+              src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Fempty-box-4085812-3385481.webp?alt=media&token=eaf37b59-00e3-4d16-8463-5441f54fb60e"
+            />
             <Typography variant="body2">Không tìm thấy dữ liệu!</Typography>
           </Paper>
         </Box>

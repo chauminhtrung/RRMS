@@ -421,6 +421,39 @@
     border-bottom: 1px solid #ddd;
   }
 
+  .bold-text {
+    font-weight: bold;
+  }
+
+  
+  .menu {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 9999; /* Đảm bảo menu nằm trên các phần tử khác */
+  }
+  
+  .menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .menu li {
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  
+  .menu li:hover {
+    background-color: #f0f0f0;
+  }
+
+  .tabulator .tabulator-row {
+    background-color: #ff57220f!important; /* Thay đổi màu nền của hàng khi hover */
+  }
+  
+
   .tabulator .tabulator-row:hover {
     background-color: #e3f5fc; /* Thay đổi màu nền của hàng khi hover */
   }
@@ -429,6 +462,8 @@
   .tabulator .tabulator-header .tabulator-col:hover {
     background: #e3f5fc; /* Thay đổi màu nền của cột khi hover */
   }
+
+  
 
   .custom-placeholder {
     display: flex;

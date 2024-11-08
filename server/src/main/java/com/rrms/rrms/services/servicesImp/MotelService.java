@@ -16,6 +16,7 @@ import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Motel;
 import com.rrms.rrms.repositories.MotelRepository;
 import com.rrms.rrms.services.IMotelService;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MotelService implements IMotelService {
@@ -33,12 +34,17 @@ public class MotelService implements IMotelService {
         return motelMapper.motelToMotelResponse(motelRepository.save(motelMapper.motelRequestToMotel(motel)));
     }
 
+    @Transactional
     @Override
-    public List<MotelResponse> findById(UUID id) {
-        return motelRepository.findById(id).stream()
-                .map(motelMapper::motelToMotelResponse)
-                .collect(Collectors.toList());
+    public MotelResponse findById(UUID id) {
+        return motelRepository.findById(id)
+            .map(motel -> {
+                MotelResponse response = motelMapper.motelToMotelResponse(motel);
+                return response;
+            })
+            .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
     }
+
 
     @Override
     public List<MotelResponse> findAllByMotelName(String motelName) {

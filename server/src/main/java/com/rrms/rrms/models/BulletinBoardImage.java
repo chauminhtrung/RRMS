@@ -1,14 +1,12 @@
 package com.rrms.rrms.models;
 
-import java.util.UUID;
-
-import jakarta.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.UUID;
 
 @Entity
 @Data
@@ -28,4 +26,5 @@ public class BulletinBoardImage {
 
     @Column(columnDefinition = "VARCHAR(255)")
     private String imageLink;
+
 }

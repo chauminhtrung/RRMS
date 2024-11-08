@@ -1,23 +1,20 @@
 package com.rrms.rrms.controllers;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.rrms.rrms.dto.request.BulletinBoardRequest;
 import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.dto.response.BulletinBoardResponse;
+import com.rrms.rrms.dto.response.BulletinBoardTableResponse;
 import com.rrms.rrms.services.IBulletinBoard;
-
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -46,6 +43,30 @@ public class BulletinBoardController {
         log.info("Get bulletin board by id successfully");
         return ApiResponse.<BulletinBoardResponse>builder()
                 .message("Get bulletin board by id successfully")
+                .code(HttpStatus.OK.value())
+                .result(bulletinBoardResponse)
+                .build();
+    }
+
+    @Operation(summary = "Create bulletin board")
+    @PostMapping("")
+    public ApiResponse<BulletinBoardResponse> createBulletinBoard(@RequestBody BulletinBoardRequest bulletinBoardRequest) {
+        BulletinBoardResponse bulletinBoardResponse = bulletinBoardService.createBulletinBoard(bulletinBoardRequest);
+        log.info("Create bulletin board successfully");
+        return ApiResponse.<BulletinBoardResponse>builder()
+                .message("Create bulletin board successfully")
+                .code(HttpStatus.OK.value())
+                .result(bulletinBoardResponse)
+                .build();
+    }
+
+    @Operation(summary = "Get bulletin board table")
+    @GetMapping("/table/{username}")
+    public ApiResponse<List<BulletinBoardTableResponse>> getBulletinBoardTable(@PathVariable String username) {
+        List<BulletinBoardTableResponse> bulletinBoardResponse = bulletinBoardService.getBulletinBoardTable(username);
+        log.info("Get bulletin board table successfully");
+        return ApiResponse.<List<BulletinBoardTableResponse>>builder()
+                .message("Get bulletin board table successfully")
                 .code(HttpStatus.OK.value())
                 .result(bulletinBoardResponse)
                 .build();

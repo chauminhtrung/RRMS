@@ -11,6 +11,7 @@ import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Motel;
 
 public interface MotelRepository extends JpaRepository<Motel, UUID> {
+
     // tong nha tro
     @Query("SELECT COUNT(m) FROM Motel m WHERE m.account = :username")
     Integer findTotalAreaByUsername(@Param("username") Account username);
