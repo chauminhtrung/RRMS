@@ -52,8 +52,8 @@ public class BulletinBoard {
     @Column(columnDefinition = "DOUBLE")
     private Double waterPrice;
 
-    @Column(columnDefinition = "INT")
-    private Integer maxPerson;
+    @Column(columnDefinition = "VARCHAR(255)")
+    private String maxPerson;
 
     @Column(columnDefinition = "Date")
     private Date moveInDate;
@@ -73,11 +73,25 @@ public class BulletinBoard {
     @Column(columnDefinition = "DOUBLE")
     private Double latitude;
 
-    @OneToMany(mappedBy = "bulletInBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(columnDefinition = "BOOLEAN")
+    private Boolean status;
+
+    @Column(columnDefinition = "BOOLEAN")
+    private Boolean isActive;
+
+    @OneToMany(mappedBy = "bulletinBoard", cascade = CascadeType.MERGE, orphanRemoval = true)
     @JsonIgnore
     private List<BulletinBoardImage> bulletinBoardImages;
 
-    @OneToMany(mappedBy = "bulletInBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "bulletinBoard", cascade = CascadeType.MERGE, orphanRemoval = true)
     @JsonIgnore
     private List<BulletinBoardReviews> bulletinBoardReviews;
+
+    @OneToMany(mappedBy = "bulletinBoard", cascade = CascadeType.MERGE, orphanRemoval = true)
+    @JsonIgnore
+    private List<BulletinBoardRule> bulletinBoardRules;
+
+    @OneToMany(mappedBy = "bulletinBoard", cascade = CascadeType.MERGE, orphanRemoval = true)
+    @JsonIgnore
+    private List<BulletinBoards_RentalAm> bulletinBoards_RentalAm;
 }

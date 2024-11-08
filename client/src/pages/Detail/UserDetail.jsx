@@ -25,12 +25,12 @@ const UserDetail = ({ item }) => {
         alignItems: 'center',
         flexDirection: 'column',
         position: 'sticky',
-        top: 20,
+        top: 20
       }}>
-      <Avatar sx={{ height: '75px', width: '75px' }} src={item.avatar}>
-        {item?.motel.account.fullname}
+      <Avatar sx={{ height: '75px', width: '75px' }} src={item.account.avatar}>
+        {item?.account.fullname}
       </Avatar>
-      <Typography variant="subtitle1">Chủ nhà: {item.motel.account.fullname}</Typography>
+      <Typography variant="subtitle1">Chủ nhà: {item.account.fullname}</Typography>
       <Typography sx={{ color: item.censor ? 'lime' : 'red' }} variant="overline">
         {item.censor ? 'Đã được chứng thực' : 'Chưa chứng thực'}
       </Typography>
@@ -40,14 +40,14 @@ const UserDetail = ({ item }) => {
         sx={{
           display: 'flex',
           flexWrap: 'wrap',
-          justifyContent: 'center',
+          justifyContent: 'center'
         }}>
         <Grid item md={6} xs={6}>
           <Button
             variant="contained"
             sx={{
               bgcolor: (theme) => (theme.palette.mode === 'light' ? '#3742fa' : '#5352ed'),
-              width: isMobile ? '90%' : '100%',
+              width: isMobile ? '90%' : '100%'
             }}>
             Nhắn tin Zalo
           </Button>
@@ -57,10 +57,10 @@ const UserDetail = ({ item }) => {
             variant="contained"
             sx={{
               bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffa502' : '#eccc68'),
-              width: '100%',
+              width: '100%'
             }}
             onClick={togleShowPhone}>
-            {showPhone ? item.phone : 'Lấy số điện thoại'}
+            {showPhone ? item.account.phone : 'Lấy số điện thoại'}
           </Button>
         </Grid>
       </Grid>
@@ -69,7 +69,7 @@ const UserDetail = ({ item }) => {
         sx={{
           my: 2,
           bgcolor: (theme) => (theme.palette.mode === 'light' ? '#2ed573' : '#7bed9f'),
-          width: '100%',
+          width: '100%'
         }}>
         Quan tâm
       </Button>
@@ -77,7 +77,7 @@ const UserDetail = ({ item }) => {
         variant="contained"
         sx={{
           bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ff4757' : '#ff6b81'),
-          width: '100%',
+          width: '100%'
         }}>
         Báo cáo tin
       </Button>
