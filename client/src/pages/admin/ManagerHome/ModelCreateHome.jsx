@@ -138,19 +138,19 @@ const ModelCreateHome = ({ username, MotelId }) => {
       try {
         const response = await getMotelById(id)
         setMotel({
-          typeRoom: { typeRoomId: response.data.result[0].typeRoom.typeRoomId },
-          account: { username: response.data.result[0].account.username },
-          motelName: response.data.result[0].motelName,
-          methodofcreation: response.data.result[0].methodofcreation,
-          address: response.data.result[0].address,
-          area: response.data.result[0].area,
-          averagePrice: response.data.result[0].averagePrice,
-          maxperson: response.data.result[0].maxperson,
-          invoicedate: response.data.result[0].invoicedate,
-          paymentdeadline: response.data.result[0].paymentdeadline
+          typeRoom: { typeRoomId: response.data.result.typeRoom.typeRoomId },
+          account: { username: response.data.result.account.username },
+          motelName: response.data.result.motelName,
+          methodofcreation: response.data.result.methodofcreation,
+          address: response.data.result.address,
+          area: response.data.result.area,
+          averagePrice: response.data.result.averagePrice,
+          maxperson: response.data.result.maxperson,
+          invoicedate: response.data.result.invoicedate,
+          paymentdeadline: response.data.result.paymentdeadline
         })
-        setSelectedOption(response.data.result[0].methodofcreation)
-        const [addressDetail, ward, district, province] = response.data.result[0].address.split(', ')
+        setSelectedOption(response.data.result.methodofcreation)
+        const [addressDetail, ward, district, province] = response.data.result.address.split(', ')
         setaddressDetail(addressDetail)
         setSelectedWard(Number(ward)) // Đảm bảo ward là số nếu cần
         setSelectedDistrict(Number(district))
