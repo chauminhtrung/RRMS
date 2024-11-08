@@ -2,6 +2,7 @@ package com.rrms.rrms.services.servicesImp;
 
 import com.rrms.rrms.dto.request.BulletinBoardRequest;
 import com.rrms.rrms.dto.response.BulletinBoardResponse;
+import com.rrms.rrms.dto.response.BulletinBoardTableResponse;
 import com.rrms.rrms.enums.ErrorCode;
 import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.mapper.BulletinBoardMapper;
@@ -108,5 +109,16 @@ public class BulletinBoardService implements IBulletinBoard {
         return bulletinBoardMapper.toBulletinBoardResponse(bulletinBoard);
     }
 
+    @Override
+    public List<BulletinBoardTableResponse> getBulletinBoardTable(String username) {
+        Account account = accountRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+
+        List<BulletinBoard> bulletinBoards = bulletinBoardRepository.findByAccount(account);
+        return bulletinBoards.stream()
+                .map(bulletinBoardMapper::toBulletinBoardTableResponse)
+                .toList();
+    }
 
 }

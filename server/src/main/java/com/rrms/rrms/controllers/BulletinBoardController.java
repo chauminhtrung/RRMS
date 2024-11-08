@@ -3,6 +3,7 @@ package com.rrms.rrms.controllers;
 import com.rrms.rrms.dto.request.BulletinBoardRequest;
 import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.dto.response.BulletinBoardResponse;
+import com.rrms.rrms.dto.response.BulletinBoardTableResponse;
 import com.rrms.rrms.services.IBulletinBoard;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
@@ -54,6 +55,18 @@ public class BulletinBoardController {
         log.info("Create bulletin board successfully");
         return ApiResponse.<BulletinBoardResponse>builder()
                 .message("Create bulletin board successfully")
+                .code(HttpStatus.OK.value())
+                .result(bulletinBoardResponse)
+                .build();
+    }
+
+    @Operation(summary = "Get bulletin board table")
+    @GetMapping("/table/{username}")
+    public ApiResponse<List<BulletinBoardTableResponse>> getBulletinBoardTable(@PathVariable String username) {
+        List<BulletinBoardTableResponse> bulletinBoardResponse = bulletinBoardService.getBulletinBoardTable(username);
+        log.info("Get bulletin board table successfully");
+        return ApiResponse.<List<BulletinBoardTableResponse>>builder()
+                .message("Get bulletin board table successfully")
                 .code(HttpStatus.OK.value())
                 .result(bulletinBoardResponse)
                 .build();
