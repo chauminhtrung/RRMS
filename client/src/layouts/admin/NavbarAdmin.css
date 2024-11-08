@@ -853,6 +853,7 @@ div.navbar-brand {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-left: 35px;
 }
 
 .tabulator-tableholder::-webkit-scrollbar {

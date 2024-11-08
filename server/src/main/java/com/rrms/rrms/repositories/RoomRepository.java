@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.rrms.rrms.models.Motel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -29,4 +30,7 @@ public interface RoomRepository extends JpaRepository<Room, UUID> {
 
     //    @Query("SELECT r FROM Room r ORDER BY r.datenew DESC")
     //    List<Room> findAllByDatenew();
+
+    List<Room> findByMotel(Motel motel); // Thêm phương thức truy vấn theo Motel
+
 }
