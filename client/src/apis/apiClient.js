@@ -275,30 +275,19 @@ export const updateSerivceMotel = async (id, data) => {
 }
 
 export const updateSerivceMotelbyMotelId = async (id, data) => {
-
-  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null; 
-  const response = await axios.put(`${env.API_URL}/motel-services/update-by-motel/${id}`, data,{  
-    headers: {  
-        'Authorization': `Bearer ${token}`  
-    }  
-});
-  return response.data;
-};
-
-
-//Room 
-export const getRoomByMotelId= async (id) => {
-  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null; 
-  const response = await axios.get(`${env.API_URL}/room/motel/${id}`,{  
-    headers: {  
-        'Authorization': `Bearer ${token}`  
-    }  
-});
-  return response.data;
-};
-
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   const response = await axios.put(`${env.API_URL}/motel-services/update-by-motel/${id}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  return response.data
+}
+
+//Room
+export const getRoomByMotelId = async (id) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  const response = await axios.get(`${env.API_URL}/room/motel/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -317,3 +306,12 @@ export const getBulletinBoard = async (id) => {
   return response.data
 }
 
+export const postBulletinBoard = async (data) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  const response = await axios.post(`${env.API_URL}/bulletin-board`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  return response.data
+}

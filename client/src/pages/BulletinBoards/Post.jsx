@@ -2,7 +2,7 @@ import { Box, Fab, Typography } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import { useState } from 'react'
 import PostModal from './PostModal'
-import PostRoomTable from './PostRoomTable'
+import PostRoomTable from './PostBulletinBoardTable'
 
 const Post = () => {
   const [open, setOpen] = useState(false)
@@ -23,7 +23,7 @@ const Post = () => {
           sx={{
             boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
             width: '52px',
-            height: '52px',
+            height: '52px'
           }}>
           <AddIcon />
         </Fab>
