@@ -31,7 +31,7 @@ export const changePassword = async (data) => {
 }
 
 export const searchByName = async (keyword) => {
-  return await axios.get(`${env.API_URL}/searchs/name?name=${keyword}`)
+  return await axios.get(`${env.API_URL}/searchs/addressBullet?address=${keyword}`)
 }
 
 export const getImages = async () => {

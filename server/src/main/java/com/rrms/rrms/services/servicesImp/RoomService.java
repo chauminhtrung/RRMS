@@ -18,10 +18,6 @@ import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.mapper.RoomMapper;
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Room;
-import com.rrms.rrms.repositories.AccountRepository;
-import com.rrms.rrms.repositories.MotelRepository;
-import com.rrms.rrms.repositories.RoomRepository;
-import com.rrms.rrms.repositories.ServiceRepository;
 import com.rrms.rrms.services.IRoom;
 
 import lombok.AccessLevel;
@@ -41,6 +37,8 @@ public class RoomService implements IRoom {
 
 
     RoomMapper roomMapper;
+
+    BulletinBoardMapper bulletinBoardMapper;
 
     @Override
     public RoomDetailResponse getRoomById(UUID id) {
@@ -124,12 +122,11 @@ public class RoomService implements IRoom {
         return null;
     }
 
-    @Override
-    public List<RoomDetailResponse> getRooms() {
-        return roomRepository.findAll().stream()
-                .map(roomMapper::toRoomDetailResponse)
-                .toList();
-    }
+//    @Override
+//    public List<BulletinBoardSearchResponse> getRooms() {
+//        return bulletinBoardRepository.findAll().stream().map(bulletinBoardMapper::toBulletinBoardSearchResponse)
+//                .toList();
+//    }
 
     @Override
     public List<PostRoomTableResponse> getPostRoomTable(String username) {
