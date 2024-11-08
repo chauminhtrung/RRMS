@@ -61,7 +61,6 @@ public class SearchController {
 
     @Operation(summary = "Get all rooms")
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')") // su dung phân quền phù hop theo role
     public ApiResponse<List<BulletinBoardSearchResponse>> getRoom() {
         ApiResponse<List<BulletinBoardSearchResponse>> apiResponse = new ApiResponse<>();
         List<BulletinBoardSearchResponse> rooms = searchService.getRooms();

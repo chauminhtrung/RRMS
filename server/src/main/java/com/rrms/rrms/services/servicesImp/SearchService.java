@@ -54,7 +54,8 @@ public class SearchService implements ISearchService {
 
     @Override
     public List<BulletinBoardSearchResponse> getRooms() {
-        return bulletinBoardRepository.findAll().stream().map(bulletinBoardMapper::toBulletinBoardSearchResponse)
+        List<BulletinBoard> bulletinBoards = bulletinBoardRepository.findAllByIsActive(true);
+        return bulletinBoards.stream().map(bulletinBoardMapper::toBulletinBoardSearchResponse)
                 .toList();
     }
 

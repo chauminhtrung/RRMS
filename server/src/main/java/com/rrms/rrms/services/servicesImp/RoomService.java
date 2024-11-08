@@ -6,7 +6,12 @@ import java.util.stream.Collectors;
 
 import com.rrms.rrms.dto.request.RoomRequest2;
 import com.rrms.rrms.dto.response.RoomResponse2;
+import com.rrms.rrms.mapper.BulletinBoardMapper;
 import com.rrms.rrms.models.Motel;
+import com.rrms.rrms.repositories.AccountRepository;
+import com.rrms.rrms.repositories.MotelRepository;
+import com.rrms.rrms.repositories.RoomRepository;
+import com.rrms.rrms.repositories.ServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
