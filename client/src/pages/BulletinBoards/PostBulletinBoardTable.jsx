@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
   IconButton,
@@ -10,7 +9,7 @@ import {
   TableFooter,
   TableHead,
   TablePagination,
-  TableRow,
+  TableRow
 } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useTheme } from '@emotion/react'
@@ -18,8 +17,7 @@ import FirstPageIcon from '@mui/icons-material/FirstPage'
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
 import LastPageIcon from '@mui/icons-material/LastPage'
-import { useEffect, useState } from 'react'
-import { getPostRoomTable } from '~/apis/apiClient'
+import { useState } from 'react'
 function TablePaginationActions(props) {
   const theme = useTheme()
   const { count, page, rowsPerPage, onPageChange } = props
@@ -68,32 +66,17 @@ TablePaginationActions.propTypes = {
   count: PropTypes.number.isRequired,
   onPageChange: PropTypes.func.isRequired,
   page: PropTypes.number.isRequired,
-  rowsPerPage: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired
 }
 
-function createData(nameRoom, typeRoom, address, price, roomArea, available) {
-  return { nameRoom, typeRoom, address, price, roomArea, available }
-}
-
-const PostRoomTable = () => {
+const PostRoomTable = ({ rows }) => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
-  const [rows, setRows] = useState([])
-
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
-
-  useEffect(() => {
-    getPostRoomTable('dung').then((res) => {
-      const newRows = Array.from(res.data.result).map((item) =>
-        createData(item.nameRoom, item.typeRoom.name, item.motel.address, item.price, item.roomArea, item.available)
-      )
-      setRows(newRows)
-    })
-  }, [])
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10))
@@ -103,7 +86,7 @@ const PostRoomTable = () => {
   return (
     <>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+        <Table stickyHeader sx={{ minWidth: 500 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
               <TableCell>STT</TableCell>
@@ -118,7 +101,7 @@ const PostRoomTable = () => {
           <TableBody>
             {(rowsPerPage > 0 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : rows).map(
               (row, i) => (
-                <TableRow key={row.name}>
+                <TableRow hover key={row.name}>
                   <TableCell>{i + 1}</TableCell>
                   <TableCell>{row.nameRoom}</TableCell>
                   <TableCell>{row.typeRoom}</TableCell>
@@ -146,18 +129,18 @@ const PostRoomTable = () => {
                 slotProps={{
                   select: {
                     inputProps: {
-                      'aria-label': 'rows per page',
+                      'aria-label': 'rows per page'
                     },
-                    native: true,
-                  },
+                    native: true
+                  }
                 }}
                 sx={{
                   '& .MuiTablePagination-selectLabel': {
-                    mb: 0,
+                    mb: 0
                   },
                   '& .MuiTablePagination-displayedRows': {
-                    mb: 0,
-                  },
+                    mb: 0
+                  }
                 }}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}

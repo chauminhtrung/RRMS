@@ -2,6 +2,7 @@ package com.rrms.rrms.dto.response;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 import com.rrms.rrms.models.TypeRoom;
@@ -19,7 +20,6 @@ import lombok.experimental.FieldDefaults;
 public class MotelResponse implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-
     UUID motelId;
     String motelName;
     Double area;
@@ -31,4 +31,5 @@ public class MotelResponse implements Serializable {
     int paymentdeadline;
     TypeRoom typeRoom;
     AccountResponse account;
+    List<MotelServiceResponse> motelServices;
 }
