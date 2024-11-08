@@ -46,6 +46,7 @@ import ImageComparison from './pages/AI/ImageComparison'
 import ImportFileExcel from './pages/admin/NavContentAdmin/ImportFileExcel'
 import MotelSetting from './pages/admin/MotelSettings/MotelSetting'
 import PassportRecognition from './pages/AI/PassportRecognition'
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage.jsx'
 
 function App() {
   const [username, setUsername] = useState('')
@@ -91,6 +92,7 @@ function App() {
           <></>
         )}
         <Routes>
+          <Route path="*" element={<NotFoundPage styled />} />
           <Route path="/" element={<Home setIsAdmin={setIsAdmin} />} />
           <Route
             path="/login"
