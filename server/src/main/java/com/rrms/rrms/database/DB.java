@@ -1,22 +1,20 @@
 package com.rrms.rrms.database;
 
-import java.time.LocalDate;
-import java.util.*;
-
+import com.rrms.rrms.enums.Gender;
+import com.rrms.rrms.enums.Roles;
+import com.rrms.rrms.models.*;
+import com.rrms.rrms.repositories.*;
+import com.rrms.rrms.services.ISearchService;
+import lombok.extern.slf4j.Slf4j;
+import net.datafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rrms.rrms.enums.Gender;
-import com.rrms.rrms.enums.Roles;
-import com.rrms.rrms.models.*;
-import com.rrms.rrms.repositories.*;
-import com.rrms.rrms.services.ISearchService;
-
-import lombok.extern.slf4j.Slf4j;
-import net.datafaker.Faker;
+import java.time.LocalDate;
+import java.util.*;
 
 @Configuration
 @Slf4j
@@ -120,13 +118,15 @@ public class DB {
                 for (int i = 0; i < roomsLength; i++) {
 
                     // Tạo và lưu BulletinBoard
-                    bulletinBoard = createBulletinBoard(faker, accountRepository, bulletinBoardImageRepository);
+                    bulletinBoard = createBulletinBoard(faker, accountRepository);
                     bulletinBoardRepository.save(bulletinBoard);
 
                     for (int j = 0; j < 5; j++) {
+                        imageIndex++;
+                        String imageUrl = "https://picsum.photos/1280/720?random=" + imageIndex;
                         BulletinBoardImage bulletinBoardImage = new BulletinBoardImage();
                         bulletinBoardImage.setBulletinBoard(bulletinBoard);
-                        bulletinBoardImage.setImageLink(faker.internet().url());
+                        bulletinBoardImage.setImageLink(imageUrl);
                         bulletinBoardImages.add(bulletinBoardImage);
                     }
                     bulletinBoardRule(faker, bulletinBoardRule, ruleRepository, bulletinBoard);
@@ -427,7 +427,7 @@ public class DB {
                         // ngày
                         // trước
                         new Date() // Ngày hiện tại
-                        );
+                );
         room.setDeposit(faker.number().randomDouble(2, 500000, 5000000));
         room.setMotel(motel);
         room.setPrice(faker.number().randomDouble(2, 500000, 5000000));
@@ -494,13 +494,20 @@ public class DB {
             RentalAmenitiesRepository rentalAmenitiesRepository,
             BulletinBoard bulletinBoard,
             BulletinBoards_RentalAmRepository bulletinBoards_RentalAmRepository) {
-        for (int i = 0; i < 5; i++) {
 
-            RentalAmenities rentalAmenities = rentalAmenitiesRepository.save(
-                    RentalAmenities.builder().name(faker.address().city()).build());
+        for (int i = 0; i < 5; i++) {
+            String name = faker.address().city();
+
+            Optional<RentalAmenities> existingRentalAmenities = rentalAmenitiesRepository.findByName(name);
+
+            RentalAmenities rentalAmenities;
+            rentalAmenities = existingRentalAmenities.orElseGet(() -> rentalAmenitiesRepository.save(
+                    RentalAmenities.builder().name(name).build()));
+
             bulletinBoards_RentalAmRepository.save(createBulletinBoards_RentalAm(bulletinBoard, rentalAmenities));
         }
     }
+
 
     private void bulletinBoardRule(
             Faker faker,
@@ -540,8 +547,7 @@ public class DB {
 
     private BulletinBoard createBulletinBoard(
             Faker faker,
-            AccountRepository accountRepository,
-            BulletinBoardImageRepository bulletinBoardImageRepository) {
+            AccountRepository accountRepository) {
         BulletinBoard bulletinBoard = new BulletinBoard();
         bulletinBoard.setAccount(accountRepository.findByUsername("admin").get());
         bulletinBoard.setTitle(faker.address().city());
@@ -553,10 +559,10 @@ public class DB {
         bulletinBoard.setArea(faker.number().numberBetween(50, 200));
         bulletinBoard.setElectricityPrice(faker.number().randomDouble(2, 500000, 5000000));
         bulletinBoard.setWaterPrice(faker.number().randomDouble(2, 500000, 5000000));
-        bulletinBoard.setMaxPerson(faker.number().numberBetween(1, 8));
+        bulletinBoard.setMaxPerson(faker.options().option("1 người ở", "2 người ở", "3 người ở", "4 người ở", "5-6 người ở", "7-10 người ở", "Không giới hạn"));
         bulletinBoard.setMoveInDate(new Date());
-        bulletinBoard.setOpeningHours(faker.lorem().paragraph());
-        bulletinBoard.setCloseHours(faker.lorem().paragraph());
+        bulletinBoard.setOpeningHours(faker.options().option("4 sáng", "5 sáng", "6 sáng"));
+        bulletinBoard.setCloseHours(faker.options().option("22 tối", "23 tối", "24 tối"));
         bulletinBoard.setAddress(faker.address().fullAddress());
         bulletinBoard.setLongitude(faker.number().randomDouble(2, 50, 50000));
         bulletinBoard.setLatitude(faker.number().randomDouble(2, 50, 5000));
