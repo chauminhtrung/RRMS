@@ -297,12 +297,7 @@ export const getRoomByMotelId = async (id) => {
 
 // Bulletin Board
 export const getBulletinBoard = async (id) => {
-  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-  const response = await axios.get(`${env.API_URL}/bulletin-board/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
+  const response = await axios.get(`${env.API_URL}/bulletin-board/${id}`)
   return response.data
 }
 

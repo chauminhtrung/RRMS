@@ -108,193 +108,190 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             {currentItems.length > 0 ? (
-              currentItems.map(
-                (item1, i) =>
-                  item1.isActive && (
-                    <Card
-                      key={i}
+              currentItems.map((item1, i) => (
+                <Card
+                  key={i}
+                  sx={{
+                    display: 'flex',
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    alignItems: 'center',
+                    p: 2,
+                    boxShadow: 3,
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    overflow: 'hidden',
+                    border: '1px solid #ccc',
+                    borderRadius: '8px',
+                    mt: 1,
+                    transition: 'transform 0.3s, box-shadow 0.3s'
+                  }}>
+                  <CardMedia
+                    component="img"
+                    image={item1.bulletinBoardImages?.[0]?.imageLink || 'default_image_url.jpg'}
+                    alt="Chung cư"
+                    onClick={() => handlePageChange(item1.bulletinBoardId)}
+                    sx={{
+                      width: { xs: '100%', sm: 200 },
+                      height: { xs: 200, sm: 150 },
+                      objectFit: 'cover',
+                      borderRadius: '8px',
+                      transition: 'transform 0.3s',
+                      '&:hover': {
+                        transform: 'scale(1.05)'
+                      }
+                    }}
+                  />
+
+                  <CardContent
+                    sx={{
+                      flexGrow: 1,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      textAlign: { xs: 'center', sm: 'left' },
+                      transition: 'color 0.3s',
+                      '&:hover': {
+                        color: 'primary.main'
+                      }
+                    }}>
+                    <Typography
+                      variant="h5"
+                      noWrap
                       sx={{
-                        display: 'flex',
-                        flexDirection: { xs: 'column', sm: 'row' },
-                        alignItems: 'center',
-                        p: 2,
-                        boxShadow: 3,
-                        width: '100%',
-                        boxSizing: 'border-box',
-                        overflow: 'hidden',
-                        border: '1px solid #ccc',
-                        borderRadius: '8px',
-                        mt: 1,
-                        transition: 'transform 0.3s, box-shadow 0.3s'
+                        transition: 'color 0.3s',
+                        fontWeight: 'bold',
+                        '&:hover': {
+                          color: 'primary.main'
+                        }
                       }}>
-                      <CardMedia
-                        component="img"
-                        image={item1.roomImages?.[0]?.image || 'default_image_url.jpg'}
-                        alt="Chung cư"
-                        onClick={() => handlePageChange(item1.roomId)}
-                        sx={{
-                          width: { xs: '100%', sm: 200 },
-                          height: { xs: 200, sm: 150 },
-                          objectFit: 'cover',
-                          borderRadius: '8px',
-                          transition: 'transform 0.3s',
-                          '&:hover': {
-                            transform: 'scale(1.05)'
-                          }
-                        }}
-                      />
+                      {item1.title}
+                    </Typography>
 
-                      <CardContent
-                        sx={{
-                          flexGrow: 1,
-                          display: 'flex',
-                          flexDirection: 'column',
-                          justifyContent: 'space-between',
-                          textAlign: { xs: 'center', sm: 'left' },
-                          transition: 'color 0.3s',
-                          '&:hover': {
-                            color: 'primary.main'
-                          }
-                        }}>
-                        <Typography
-                          variant="h5"
-                          noWrap
-                          sx={{
-                            transition: 'color 0.3s',
-                            fontWeight: 'bold',
-                            '&:hover': {
-                              color: 'primary.main'
-                            }
-                          }}>
-                          {item1.title}
-                        </Typography>
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      sx={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'normal',
+                        transition: 'color 0.3s, font-weight 0.3s',
+                        '&:hover': {
+                          color: 'primary.main',
+                          fontWeight: 500
+                        }
+                      }}>
+                      {item1.address}
+                    </Typography>
 
-                        <Typography
-                          variant="body2"
-                          color="textSecondary"
-                          sx={{
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'normal',
-                            transition: 'color 0.3s, font-weight 0.3s',
-                            '&:hover': {
-                              color: 'primary.main',
-                              fontWeight: 500
-                            }
-                          }}>
-                          {item1.address}
-                        </Typography>
+                    <Typography
+                      variant="h6"
+                      color="error"
+                      sx={{
+                        mt: 1,
+                        transition: 'color 0.3s, transform 0.3s',
+                        '&:hover': {
+                          color: 'primary.main',
+                          transform: 'scale(1.05)'
+                        }
+                      }}>
+                      {formatterAmount(item1.rentPrice)} /Tháng
+                    </Typography>
 
-                        <Typography
-                          variant="h6"
-                          color="error"
-                          sx={{
-                            mt: 1,
-                            transition: 'color 0.3s, transform 0.3s',
-                            '&:hover': {
-                              color: 'primary.main',
-                              transform: 'scale(1.05)'
-                            }
-                          }}>
-                          {formatterAmount(item1.rentPrice)} /Tháng
-                        </Typography>
-
-                        <Typography
-                          variant="body2"
-                          sx={{ mt: 1, display: 'flex', alignItems: 'center', flexWrap: 'nowrap' }}>
-                          <Box component="span" sx={{ mr: 2 }}>
-                            {item1.area} m²
-                          </Box>
-                          <Box sx={{ display: 'flex', flexWrap: 'nowrap', alignItems: 'center' }}>
-                            {/* Hiển thị giá Nước nếu có */}
-                            {item1.waterPrice && (
-                              <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-                                <Box component="span">{formatterAmount(item1.waterPrice)}/khối</Box>
-                              </Box>
-                            )}
-
-                            {/* Hiển thị giá Điện nếu có */}
-                            {item1.electricityPrice && (
-                              <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-                                <Box component="span">{formatterAmount(item1.electricityPrice)}/Kw</Box>
-                              </Box>
-                            )}
-                          </Box>
-                        </Typography>
-
-                        <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                          <Avatar
-                            src={item1.account?.avatar || '/path/to/default-avatar.png'} // Dùng ảnh mặc định nếu avatar không có
-                            sx={{ mr: 1 }}
-                          />
-                          <Typography variant="caption" color="textSecondary" noWrap>
-                            {item1.account?.username || 'Người dùng không có sẵn'}, 2 ngày trước
-                          </Typography>
-                          <IconButton
-                            onClick={() => handleHeartClick(item1.bulletinBoardRules[0].bulletinBoardRuleId)} // Here we access the bulletinBoardRuleId of the first rule (adjust as necessary)
-                            sx={{
-                              ml: 'auto',
-                              color: favorites[item1.bulletinBoardRules[0].bulletinBoardRuleId] ? 'red' : 'gray',
-                              transition: 'color 0.3s ease, border 0.3s ease',
-                              border: favorites[item1.bulletinBoardRules[0].bulletinBoardRuleId]
-                                ? '2px solid red'
-                                : '1px solid transparent',
-                              borderRadius: '50%',
-                              padding: '5px',
-                              mx: 3,
-                              marginLeft: 8,
-                              width: '40px',
-                              height: '40px',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center'
-                            }}>
-                            <FavoriteIcon sx={{ fontSize: '35px' }} />
-                          </IconButton>
-                        </Box>
-                      </CardContent>
-
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          flexDirection: { xs: 'row', sm: 'column' },
-                          alignItems: { xs: 'center', sm: 'flex-end' },
-                          gap: 1.75,
-                          width: { xs: '100%', sm: 'auto' },
-                          mt: { xs: 2, sm: 0 }
-                        }}>
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          fullWidth
-                          onClick={handleClick} // Gọi hàm khi click vào nút
-                          sx={{
-                            textTransform: 'none',
-                            padding: '8px 16px'
-                          }}>
-                          Zalo
-                        </Button>
-
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          fullWidth
-                          onClick={() => handleToggle(item1.roomId)}
-                          sx={{
-                            textTransform: 'none',
-                            ml: { xs: 2, sm: 0 },
-                            transition: 'background-color 0.3s, color 0.3s',
-                            '&:hover': {
-                              backgroundColor: 'primary.main',
-                              color: '#fff'
-                            }
-                          }}>
-                          {visiblePhoneNumbers[item1.roomId] ? item1.motel.account.phone : 'Xem SĐT'}
-                        </Button>
+                    <Typography
+                      variant="body2"
+                      sx={{ mt: 1, display: 'flex', alignItems: 'center', flexWrap: 'nowrap' }}>
+                      <Box component="span" sx={{ mr: 2 }}>
+                        {item1.area} m²
                       </Box>
-                    </Card>
-                  )
-              )
+                      <Box sx={{ display: 'flex', flexWrap: 'nowrap', alignItems: 'center' }}>
+                        {/* Hiển thị giá Nước nếu có */}
+                        {item1.waterPrice && (
+                          <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+                            <Box component="span">{formatterAmount(item1.waterPrice)}/khối</Box>
+                          </Box>
+                        )}
+
+                        {/* Hiển thị giá Điện nếu có */}
+                        {item1.electricityPrice && (
+                          <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+                            <Box component="span">{formatterAmount(item1.electricityPrice)}/Kw</Box>
+                          </Box>
+                        )}
+                      </Box>
+                    </Typography>
+
+                    <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                      <Avatar
+                        src={item1.account?.avatar || '/path/to/default-avatar.png'} // Dùng ảnh mặc định nếu avatar không có
+                        sx={{ mr: 1 }}
+                      />
+                      <Typography variant="caption" color="textSecondary" noWrap>
+                        {item1.account?.username || 'Người dùng không có sẵn'}, 2 ngày trước
+                      </Typography>
+                      <IconButton
+                        onClick={() => handleHeartClick(item1.bulletinBoardRules[0].bulletinBoardRuleId)} // Here we access the bulletinBoardRuleId of the first rule (adjust as necessary)
+                        sx={{
+                          ml: 'auto',
+                          color: favorites[item1.bulletinBoardRules[0].bulletinBoardRuleId] ? 'red' : 'gray',
+                          transition: 'color 0.3s ease, border 0.3s ease',
+                          border: favorites[item1.bulletinBoardRules[0].bulletinBoardRuleId]
+                            ? '2px solid red'
+                            : '1px solid transparent',
+                          borderRadius: '50%',
+                          padding: '5px',
+                          mx: 3,
+                          marginLeft: 8,
+                          width: '40px',
+                          height: '40px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}>
+                        <FavoriteIcon sx={{ fontSize: '35px' }} />
+                      </IconButton>
+                    </Box>
+                  </CardContent>
+
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: { xs: 'row', sm: 'column' },
+                      alignItems: { xs: 'center', sm: 'flex-end' },
+                      gap: 1.75,
+                      width: { xs: '100%', sm: 'auto' },
+                      mt: { xs: 2, sm: 0 }
+                    }}>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      fullWidth
+                      onClick={handleClick} // Gọi hàm khi click vào nút
+                      sx={{
+                        textTransform: 'none',
+                        padding: '8px 16px'
+                      }}>
+                      Zalo
+                    </Button>
+
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      fullWidth
+                      onClick={() => handleToggle(item1.roomId)}
+                      sx={{
+                        textTransform: 'none',
+                        ml: { xs: 2, sm: 0 },
+                        transition: 'background-color 0.3s, color 0.3s',
+                        '&:hover': {
+                          backgroundColor: 'primary.main',
+                          color: '#fff'
+                        }
+                      }}>
+                      {visiblePhoneNumbers[item1.roomId] ? item1.motel.account.phone : 'Xem SĐT'}
+                    </Button>
+                  </Box>
+                </Card>
+              ))
             ) : (
               <LoadingPage />
             )}
