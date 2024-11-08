@@ -29,17 +29,23 @@ public class Room {
     @Column(name = "room_group", columnDefinition = "NVARCHAR(255)")
     private String group;
 
+    @Column(name = "name_room", columnDefinition = "NVARCHAR(255)")
+    private String name;
+
     @Column(columnDefinition = "DECIMAL(10, 2)")
     private Double price;
 
     @Column(columnDefinition = "DECIMAL(10, 2)")
     private Double deposit;
 
+    @Column(columnDefinition = "DECIMAL(10, 2)")
+    private Double debt;
+
     @Column(name = "count_tenant", columnDefinition = "TEXT")
     private Integer countTenant;
 
-    @Column(name = "invoice_date", columnDefinition = "DATE")
-    private Date invoiceDate;
+    @Column(name = "invoice_date", columnDefinition = "TEXT")
+    private Integer invoiceDate;
 
     @Column(name = "payment_circle", columnDefinition = "INT")
     private Integer paymentCircle;
@@ -47,8 +53,8 @@ public class Room {
     @Column(name = "move_in_date", columnDefinition = "DATE")
     private Date moveInDate;
 
-    @Column(name = "contract_duration", columnDefinition = "NVARCHAR(255)")
-    private String contractduration;
+    @Column(name = "contract_duration", columnDefinition = "DATE")
+    private Date contractduration;
 
     @Column(name = "status", columnDefinition = "BOOLEAN")
     private Boolean status;
