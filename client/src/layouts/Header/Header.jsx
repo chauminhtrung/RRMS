@@ -3,7 +3,8 @@ import './Header.css'
 import { useState } from 'react'
 import { env } from '~/configs/environment'
 import Swal from 'sweetalert2'
-import Option from './Options/Option'
+import LanguageSelect from './Options/LanguageSelect'
+import ModeSelect from './Options/ModeSelect'
 
 const Header = ({ username, avatar, setUsername, setAvatar, setToken }) => {
   const [IsDanhmuc, setIsDanhmuc] = useState(false)
@@ -364,7 +365,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken }) => {
               </div>
 
               <div className="aw__njogxfr">
-                <Option />
+                <LanguageSelect />
                 {/* <a className="aw__n1u3b0ub" href="https://chat.chotot.com/chat" rel="nofollow" aria-label="chat">
                   <svg
                     width="24"
@@ -403,7 +404,8 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken }) => {
               </div>
 
               <div className="aw__njogxfr">
-                <a
+                <ModeSelect />
+                {/* <a
                   href="https://id.chotot.com/login"
                   color="#222222"
                   rel="nofollow"
@@ -428,7 +430,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken }) => {
                       d="M12 15.5C12 15.0858 12.3358 14.75 12.75 14.75H17.25C17.6642 14.75 18 15.0858 18 15.5C18 15.9142 17.6642 16.25 17.25 16.25H12.75C12.3358 16.25 12 15.9142 12 15.5Z"
                       fill="currentColor"></path>
                   </svg>
-                </a>
+                </a> */}
               </div>
 
               <div className="aw__njogxfr">
