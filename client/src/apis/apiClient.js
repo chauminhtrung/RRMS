@@ -297,15 +297,6 @@ export const getRoomByMotelId= async (id) => {
   return response.data;
 };
 
-  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-  const response = await axios.put(`${env.API_URL}/motel-services/update-by-motel/${id}`, data, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
-  return response.data
-}
-
 // Bulletin Board
 export const getBulletinBoard = async (id) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
