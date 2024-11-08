@@ -1,13 +1,41 @@
 import { Box, Fab, Typography } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import PostModal from './PostModal'
 import PostRoomTable from './PostBulletinBoardTable'
+import { getBulletinBoardTable, introspect } from '~/apis/apiClient'
 
 const Post = () => {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+  const [rows, setRows] = useState([])
+
+  const refreshBulletinBoards = () => {
+    introspect().then((res) => {
+      getBulletinBoardTable(res.data.issuer).then((res) => {
+        const newRows = Array.from(res.result).map((item) =>
+          createData(item.title, item.rentalCategory, item.address, item.rentPrice, item.area, item.status)
+        )
+        setRows(newRows)
+      })
+    })
+  }
+
+  function createData(nameRoom, typeRoom, address, price, roomArea, available) {
+    return { nameRoom, typeRoom, address, price, roomArea, available }
+  }
+
+  useEffect(() => {
+    introspect().then((res) => {
+      getBulletinBoardTable(res.data.issuer).then((res) => {
+        const newRows = Array.from(res.result).map((item) =>
+          createData(item.title, item.rentalCategory, item.address, item.rentPrice, item.area, item.status)
+        )
+        setRows(newRows)
+      })
+    })
+  }, [])
 
   return (
     <Box>
@@ -27,10 +55,15 @@ const Post = () => {
           }}>
           <AddIcon />
         </Fab>
-        <PostModal open={open} handleClose={handleClose} />
+        <PostModal
+          open={open}
+          handleClose={handleClose}
+          setOpen={setOpen}
+          refreshBulletinBoards={refreshBulletinBoards}
+        />
       </Box>
 
-      <PostRoomTable />
+      <PostRoomTable rows={rows} createData={createData} />
     </Box>
   )
 }

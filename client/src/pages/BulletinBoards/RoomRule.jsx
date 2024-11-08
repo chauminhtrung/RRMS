@@ -1,9 +1,9 @@
 import { Box, Checkbox, FormControlLabel, Typography } from '@mui/material'
 
-const RoomRule = ({ title, desciption }) => {
+const RoomRule = ({ title, desciption, checked }) => {
   return (
     <FormControlLabel
-      control={<Checkbox defaultChecked />}
+      control={<Checkbox checked={checked} />}
       label={
         <Box>
           <Typography sx={{ fontWeight: 'bold', fontSize: '14px' }}>{title}</Typography>

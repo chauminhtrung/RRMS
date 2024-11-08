@@ -119,7 +119,14 @@ export const getMotelById = async (Id) => {
 
 //account
 export const getAccountByUsername = async (username) => {
-  return await axios.get(`http://localhost:8080/api-accounts/get-account/${username}`)
+  return await axios.get(`http://localhost:8080/api-accounts/${username}`)
+}
+
+export const introspect = async () => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  return await axios.post(`http://localhost:8080/authen/introspect`, {
+    token: token
+  })
 }
 
 //TRC
@@ -299,6 +306,16 @@ export const getRoomByMotelId = async (id) => {
 export const getBulletinBoard = async (id) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   const response = await axios.get(`${env.API_URL}/bulletin-board/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  return response.data
+}
+
+export const getBulletinBoardTable = async (username) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  const response = await axios.get(`${env.API_URL}/bulletin-board/table/${username}`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
