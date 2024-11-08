@@ -61,14 +61,15 @@ public class MotelController {
 
     @Operation(summary = "Get motel by id")
     @GetMapping("/get-motel-id")
-    public ApiResponse<List<MotelResponse>> getMotelbyid(@RequestParam UUID id) {
-        List<MotelResponse> motelResponses = motelService.findById(id);
-        return ApiResponse.<List<MotelResponse>>builder()
-                .code(HttpStatus.OK.value())
-                .message("success")
-                .result(motelResponses)
-                .build();
+    public ApiResponse<MotelResponse> getMotelbyid(@RequestParam UUID id) {
+        MotelResponse motelResponse = motelService.findById(id);
+        return ApiResponse.<MotelResponse>builder()
+            .code(HttpStatus.OK.value())
+            .message("success")
+            .result(motelResponse)
+            .build();
     }
+
 
     @GetMapping("/get-motel-account")
     public ApiResponse<List<MotelResponse>> getMotelbyaccount(@RequestParam String username) {

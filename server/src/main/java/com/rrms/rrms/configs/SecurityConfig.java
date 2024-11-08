@@ -33,6 +33,7 @@ public class SecurityConfig {
         "/searchs/*",
         "/detail/*",
         "/api-accounts/**",
+        "/motels/get-motel-id"
     };
 
     @Value("${jwt.signer-key}")

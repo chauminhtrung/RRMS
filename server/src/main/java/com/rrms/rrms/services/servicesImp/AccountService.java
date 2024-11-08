@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.request.ChangePasswordRequest;
 import com.rrms.rrms.dto.request.RegisterRequest;
@@ -26,13 +24,9 @@ import com.rrms.rrms.repositories.AccountRepository;
 import com.rrms.rrms.repositories.AuthRepository;
 import com.rrms.rrms.repositories.RoleRepository;
 import com.rrms.rrms.services.IAccountService;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import java.util.ArrayList;
-
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
