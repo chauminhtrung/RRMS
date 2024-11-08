@@ -49,7 +49,7 @@ public class DB {
             BulletinBoardImageRepository bulletinBoardImageRepository,
             BulletinBoards_RentalAmRepository bulletinBoards_rentalAmRepository) {
         return args -> {
-            int roomsLength = 5;
+            int roomsLength = 500;
             log.info("Starting to create data... length: {}", roomsLength);
 
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();

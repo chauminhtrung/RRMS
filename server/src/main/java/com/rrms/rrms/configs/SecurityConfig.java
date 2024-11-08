@@ -30,8 +30,14 @@ public class SecurityConfig {
             "/authen/**",
             "/swagger-ui/*",
             "/v3/api-docs/*",
-            "/searchs/*",
+            "/searchs/**",
+            "/search/**",
+            "/search/*",
+            "/search",
+            "/detail/**",
             "/detail/*",
+            "/detail",
+            "/bulletin-board/*",
             "/api-accounts/**",
             "/motels/get-motel-id"
     };

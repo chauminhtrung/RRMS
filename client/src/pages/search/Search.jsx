@@ -46,15 +46,8 @@ const Search = ({ setIsAdmin }) => {
   // /name?name=${searchValue}
   // Hàm để tải dữ liệu
   const loadData = async (searchValue) => {
-    const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-
     try {
-      const response = await axios.get(`http://localhost:8080/searchs`, {
-        validateStatus: () => true,
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      const response = await axios.get(`http://localhost:8080/searchs`)
 
       // Kiểm tra trạng thái phản hồi
       if (response.status === 200) {
