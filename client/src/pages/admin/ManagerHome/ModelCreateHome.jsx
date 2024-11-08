@@ -55,9 +55,10 @@ const ModelCreateHome = ({ username, MotelId }) => {
   }, [])
 
   useEffect(() => {
-    if (MotelId !== 'Create') {
-      fetchDataWhenEdit(MotelId)
-    } else {
+    if (username && MotelId && MotelId !== 'Create') {
+      fetchDataWhenEdit(MotelId);
+    } else if (MotelId === 'Create') {
+      // Initialize motel state for creation mode
       setMotel({
         typeRoom: '',
         account: '',
@@ -69,9 +70,12 @@ const ModelCreateHome = ({ username, MotelId }) => {
         maxperson: 1,
         invoicedate: '',
         paymentdeadline: ''
-      })
+      });
+    } else {
+      console.error("Missing required data (username or ID).");
     }
-  }, [MotelId]) // Thêm templatecontractRouteId vào dependency array
+  }, [username, MotelId]);
+  
 
   //tao service
   const handleCreateServices = async (id) => {
@@ -134,35 +138,38 @@ const ModelCreateHome = ({ username, MotelId }) => {
 
   //nhan vao nut edit
   const fetchDataWhenEdit = async (id) => {
-    if (username) {
-      try {
-        const response = await getMotelById(id)
-        setMotel({
-          typeRoom: { typeRoomId: response.data.result[0].typeRoom.typeRoomId },
-          account: { username: response.data.result[0].account.username },
-          motelName: response.data.result[0].motelName,
-          methodofcreation: response.data.result[0].methodofcreation,
-          address: response.data.result[0].address,
-          area: response.data.result[0].area,
-          averagePrice: response.data.result[0].averagePrice,
-          maxperson: response.data.result[0].maxperson,
-          invoicedate: response.data.result[0].invoicedate,
-          paymentdeadline: response.data.result[0].paymentdeadline
-        })
-        setSelectedOption(response.data.result[0].methodofcreation)
-        const [addressDetail, ward, district, province] = response.data.result[0].address.split(', ')
-        setaddressDetail(addressDetail)
-        setSelectedWard(Number(ward)) // Đảm bảo ward là số nếu cần
-        setSelectedDistrict(Number(district))
-        setSelectedProvince(Number(province))
-        console.log(ward)
-        console.log(fetchDistricts(province))
-        console.log(fetchWards(district))
-      } catch (error) {
-        console.log(error)
-      }
+    if (!username || !id) {
+      console.error("Missing required data (username or ID).");
+      return;
     }
-  }
+    try {
+      const response = await getMotelById(id);
+      if (response.data.result && response.data.result.length > 0) {
+        const motelData = response.data.result[0];
+        setMotel({
+          typeRoom: { typeRoomId: motelData.typeRoom.typeRoomId },
+          account: { username: motelData.account.username },
+          motelName: motelData.motelName,
+          methodofcreation: motelData.methodofcreation,
+          address: motelData.address,
+          area: motelData.area,
+          averagePrice: motelData.averagePrice,
+          maxperson: motelData.maxperson,
+          invoicedate: motelData.invoicedate,
+          paymentdeadline: motelData.paymentdeadline
+        });
+        // Set selected values from address
+        const [addressDetail, ward, district, province] = motelData.address.split(', ');
+        setaddressDetail(addressDetail);
+        setSelectedWard(Number(ward));
+        setSelectedDistrict(Number(district));
+        setSelectedProvince(Number(province));
+      }
+    } catch (error) {
+      console.error("Error fetching motel data:", error);
+    }
+  };
+  
 
   // Tìm tên của từng phần tử dựa trên `id`
 

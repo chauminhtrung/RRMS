@@ -106,20 +106,33 @@ export const getMotelByUsername = async (username) => {
 }
 
 export const getMotelById = async (Id) => {
-  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   if (!Id) {
-    throw new Error('ID không hợp lệ')
+    throw new Error('ID không hợp lệ');
   }
-  return await axios.get(`${env.API_URL}/motels/get-motel-id?id=${Id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
-}
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;
+  try {
+    return await axios.get(`${env.API_URL}/motels/get-motel-id?id=${Id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching motel by ID:', error);
+    throw error; // Re-throw to catch in calling function
+  }
+};
+
 
 //account
 export const getAccountByUsername = async (username) => {
-  return await axios.get(`http://localhost:8080/api-accounts/get-account/${username}`)
+  return await axios.get(`http://localhost:8080/api-accounts/${username}`)
+}
+
+export const introspect = async () => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  return await axios.post(`http://localhost:8080/authen/introspect`, {
+    token: token
+  })
 }
 
 //TRC
@@ -275,27 +288,25 @@ export const updateSerivceMotel = async (id, data) => {
 }
 
 export const updateSerivceMotelbyMotelId = async (id, data) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  const response = await axios.put(`${env.API_URL}/motel-services/update-by-motel/${id}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  return response.data
+}
 
-  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null; 
-  const response = await axios.put(`${env.API_URL}/motel-services/update-by-motel/${id}`, data,{  
-    headers: {  
-        'Authorization': `Bearer ${token}`  
-    }  
-});
-  return response.data;
-};
-
-
-//Room 
-export const getRoomByMotelId= async (id) => {
-  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null; 
-  const response = await axios.get(`${env.API_URL}/room/motel/${id}`,{  
-    headers: {  
-        'Authorization': `Bearer ${token}`  
-    }  
-});
-  return response.data;
-};
+//Room
+export const getRoomByMotelId = async (id) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  const response = await axios.get(`${env.API_URL}/room/motel/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  return response.data
+}
 
 // Bulletin Board
 export const getBulletinBoard = async (id) => {
@@ -308,3 +319,22 @@ export const getBulletinBoard = async (id) => {
   return response.data
 }
 
+export const getBulletinBoardTable = async (username) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  const response = await axios.get(`${env.API_URL}/bulletin-board/table/${username}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  return response.data
+}
+
+export const postBulletinBoard = async (data) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  const response = await axios.post(`${env.API_URL}/bulletin-board`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  return response.data
+}

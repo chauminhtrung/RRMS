@@ -190,10 +190,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, se
                     className={`nav-item menu-item ${
                       location.pathname === (motel ? `/dang-tin/${motel.motelId}` : '#') ? 'active' : ''
                     }`}>
-                    <Link
-                      to={motel ? `/dang-tin/${motel.motelId}` : '#'}
-                      className="nav-link "
-                      setIsNavAdmin={setIsNavAdmin}>
+                    <Link to={motel ? `/dang-tin/${motel.motelId}` : '#'} className="nav-link" onClick={() => setIsNavAdmin(true)}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -290,7 +287,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, se
                   </li>
                   <li className="nav-item btn-group menu-item">
                     <Link
-                      to="javascript:;"
+                      to="#"
                       className={`nav-link ${location.pathname === '/thong-bao' ? 'active' : ''}`}
                       data-bs-toggle="dropdown"
                       aria-expanded="false">
@@ -386,7 +383,6 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, se
         </div>
       </div>
 
-      {/* neu co du lieu moi co cai nay */}
       {isNavAdmin && motels.length > 0 ? <NavWData motels={motels} setmotels={setmotels} /> : null}
     </header>
   )
