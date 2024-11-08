@@ -18,13 +18,15 @@ import {
   TableRow,
   Paper,
   Snackbar,
-  Alert
+  Alert,
+  Tooltip
 } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import PrintIcon from '@mui/icons-material/Print'
 import * as XLSX from 'xlsx'
-import Inventory2Icon from '@mui/icons-material/Inventory2'
 import AddTenantModal from './ModalTenant'
+import SaveIcon from '@mui/icons-material/Save'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
   const [page, setPage] = useState(0)
@@ -39,19 +41,20 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
   }, [])
 
   const columns = [
-    { id: 'name', label: 'Tên khách hàng', minWidth: 150 },
-    { id: 'phone', label: 'Số điện thoại', minWidth: 120 },
-    { id: 'birthDate', label: 'Ngày sinh', minWidth: 120 },
-    { id: 'gender', label: 'Giới tính', minWidth: 100 },
-    { id: 'address', label: 'Địa chỉ & Nghề nghiệp', minWidth: 200 },
-    { id: 'idCard', label: 'Số CMND/CCCD', minWidth: 150 },
-    { id: 'issueDate', label: 'Ngày cấp', minWidth: 120 },
-    { id: 'issuePlace', label: 'Nơi cấp', minWidth: 150 },
-    { id: 'image', label: 'Ảnh mặt trước & mặt sau cccd', minWidth: 120 },
-    { id: 'relationship', label: 'Quan hệ', minWidth: 100 },
-    { id: 'tenantType', label: 'Loại người thuê', minWidth: 150 },
-    { id: 'documentStatus', label: 'Trạng thái giấy tờ', minWidth: 180 },
-    { id: 'residenceStatus', label: 'Trạng thái tạm trú', minWidth: 180 }
+    { id: 'name', label: 'Tên KH', des: 'Tên khách hàng' },
+    { id: 'phone', label: 'SĐT', des: 'Số điện thoại' },
+    { id: 'birthDate', label: 'NS', des: 'Ngày sinh' },
+    { id: 'gender', label: 'GT', des: 'Giới tính' },
+    { id: 'address', label: 'ĐC & NN', des: 'Địa chỉ & Nghề nghiệp' },
+    { id: 'idCard', label: 'CMND/CCCD', des: 'Số CMND & CCCD' },
+    { id: 'issueDate', label: 'NgC', des: 'Ngày cấp CMND/CCCD' },
+    { id: 'issuePlace', label: 'NC', des: 'Nơi cấp CMND/CCCD' },
+    { id: 'image', label: 'MT CCCD', des: 'Ảnh mặt trước CCCD' },
+    { id: 'image1', label: 'MS CCCD', des: 'Ảnh mặt sau CCCD' },
+    { id: 'relationship', label: 'QH', des: 'Quan hệ' },
+    { id: 'tenantType', label: 'LNT', des: 'Loại người thuê' },
+    { id: 'documentStatus', label: 'TTGT', des: 'Trạng thái giấy tờ' },
+    { id: 'residenceStatus', label: 'TTTT', des: 'Trạng thái tạm trú' }
   ]
 
   const rows = [
@@ -66,6 +69,7 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
       issueDate: '2015-01-01',
       issuePlace: 'Công an TP.HCM',
       image: 'link_to_image_a',
+      image1: 'link_to_image_a',
       relationship: 'Người thân',
       tenantType: 'Người thuê chính',
       documentStatus: 'Đã nộp',
@@ -82,6 +86,7 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
       issueDate: '2018-02-15',
       issuePlace: 'Công an Hà Nội',
       image: 'link_to_image_b',
+      image1: 'link_to_image_b',
       relationship: 'Bạn bè',
       tenantType: 'Người thuê phụ',
       documentStatus: 'Chưa nộp',
@@ -158,7 +163,7 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
                 variant="contained"
                 startIcon={<SearchIcon />}
                 sx={{
-                  background: 'linear-gradient(45deg, #43a047, #66bb6a)',
+                  background: '#1e90ff',
                   borderRadius: '50px',
                   color: 'white',
                   padding: '10px 20px',
@@ -169,10 +174,10 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
               <IconButton
                 onClick={handleOpen}
                 sx={{
-                  backgroundColor: '#66bb6a',
+                  backgroundColor: '#1e90ff',
                   color: 'white',
                   borderRadius: '50%',
-                  '&:hover': { backgroundColor: '#43a047' }
+                  '&:hover': { backgroundColor: '#1e90ff' }
                 }}>
                 <AddIcon />
               </IconButton>
@@ -348,7 +353,12 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
               </Grid>
 
               <Grid item xs={12} sm={4} display="flex" justifyContent="flex-end">
-                <Button variant="contained" color="success" startIcon={<PrintIcon />} onClick={exportToExcel}>
+                <Button
+                  sx={{ background: '#1e90ff' }}
+                  variant="contained"
+                  color="success"
+                  startIcon={<PrintIcon />}
+                  onClick={exportToExcel}>
                   Xuất excel
                 </Button>
               </Grid>
@@ -364,15 +374,26 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
                       <Checkbox />
                     </TableCell>
                     {columns.map((column, index) => (
-                      <TableCell
-                        key={column.id}
-                        style={{
-                          minWidth: column.minWidth,
-                          borderRight: index < columns.length - 1 ? '1px solid rgba(224, 224, 224, 1)' : 'none'
-                        }}>
-                        {column.label}
-                      </TableCell>
+                      <Tooltip key={column.id} title={column.des} placement="top">
+                        <TableCell
+                          style={{
+                            height: '80px',
+                            minWidth: column.minWidth,
+                            borderRight: index < columns.length - 1 ? '1px solid rgba(224, 224, 224, 1)' : 'none'
+                          }}>
+                          {column.label}
+                        </TableCell>
+                      </Tooltip>
                     ))}
+                    <TableCell
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        height: '80px',
+                        alignItems: 'center'
+                      }}>
+                      Action
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -384,9 +405,18 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
                           flexDirection="column"
                           alignItems="center"
                           justifyContent="center"
-                          height="300px">
-                          <Inventory2Icon sx={{ fontSize: 50, color: 'gray' }} />
-                          <Typography variant="body2" color="gray">
+                          height="420px">
+                          <img
+                            src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Fempty-box-4085812-3385481.webp?alt=media&token=eaf37b59-00e3-4d16-8463-5441f54fb60e"
+                            alt="Không có dữ liệu"
+                            style={{
+                              maxWidth: '500px', // Giới hạn chiều rộng tối đa để hình ảnh không quá lớn
+                              height: 'auto', // Đảm bảo hình ảnh giữ tỉ lệ
+                              marginBottom: '16px', // Thêm khoảng cách giữa hình và văn bản
+                              opacity: 0.6 // Tăng độ mờ để hình ảnh nhẹ nhàng hơn
+                            }}
+                          />
+                          <Typography variant="h4" color="gray">
                             Không có dữ liệu
                           </Typography>
                         </Box>
@@ -401,6 +431,10 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
                         {columns.map((column) => (
                           <TableCell key={column.id}>{row[column.id]}</TableCell>
                         ))}
+                        <TableCell sx={{ display: 'flex', justifyContent: 'center', height: '80px' }}>
+                          <DeleteIcon />
+                          <SaveIcon />
+                        </TableCell>
                       </TableRow>
                     ))
                   )}

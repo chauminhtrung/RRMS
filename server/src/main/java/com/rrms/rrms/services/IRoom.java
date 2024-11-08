@@ -15,7 +15,7 @@ public interface IRoom {
 
     RoomDetailResponse createRoom(RoomRequest roomRequest);
 
-    List<RoomDetailResponse> getRooms();
+//    List<BulletinBoardSearchResponse> getRooms();
 
     List<PostRoomTableResponse> getPostRoomTable(String username);
 

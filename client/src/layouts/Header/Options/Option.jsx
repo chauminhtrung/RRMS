@@ -1,32 +1,30 @@
-import { Button, Menu, MenuItem } from "@mui/material";
-import { useState } from "react";
-import LanguageSelect from "./LanguageSelect";
-import ModeSelect from "./ModeSelect";
-import SettingsIcon from "@mui/icons-material/SettingsSuggestOutlined";
+import { Button, Menu, MenuItem } from '@mui/material'
+import { useState } from 'react'
+import LanguageSelect from './LanguageSelect'
+import ModeSelect from './ModeSelect'
 
 const Option = () => {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+  const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
   const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
   const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
 
   return (
     <div>
       <Button
         id="basic-button"
-        aria-controls={open ? "basic-menu" : undefined}
+        aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
+        aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
         sx={{
-          color: "black",
-        }}
-      >
-        <SettingsIcon fontSize="large" />
+          color: 'black'
+        }}>
+        <img src="https://www.svgrepo.com/show/13688/settings.svg" style={{ height: '25px', widt: '40px' }} />
       </Button>
       <Menu
         id="basic-menu"
@@ -34,9 +32,8 @@ const Option = () => {
         open={open}
         onClose={handleClose}
         MenuListProps={{
-          "aria-labelledby": "basic-button",
-        }}
-      >
+          'aria-labelledby': 'basic-button'
+        }}>
         <MenuItem>
           <LanguageSelect />
         </MenuItem>
@@ -45,7 +42,7 @@ const Option = () => {
         </MenuItem>
       </Menu>
     </div>
-  );
-};
+  )
+}
 
-export default Option;
+export default Option

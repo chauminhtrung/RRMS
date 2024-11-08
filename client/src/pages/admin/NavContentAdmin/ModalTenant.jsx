@@ -20,6 +20,7 @@ import {
 } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import AddIcon from '@mui/icons-material/Add'
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -130,6 +131,15 @@ const AddTenantModal = ({ open, onClose }) => {
           overflowY: 'scroll'
         }}>
         <Typography variant="h6" sx={{ mb: 2 }}>
+          <IconButton
+            sx={{
+              backgroundColor: '#1e90ff',
+              color: 'white',
+              borderRadius: '50%',
+              '&:hover': { backgroundColor: '#43a047' }
+            }}>
+            <AddIcon />
+          </IconButton>
           Thêm thông tin khách thuê cho phòng
         </Typography>
         <Grid container spacing={2}>
@@ -453,15 +463,46 @@ const AddTenantModal = ({ open, onClose }) => {
                 </Fragment>
               ))}
             </Box>
-
-            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
-              <Button variant="contained" onClick={onClose} color="inherit">
-                Đóng
-              </Button>
-              <Button variant="contained" color="success">
-                Thêm thông tin khách thuê
-              </Button>
-            </Grid>
+            <Box
+              sx={{
+                position: 'sticky',
+                bottom: -20,
+                left: 0,
+                width: '100%',
+                bgcolor: 'white',
+                p: 2,
+                px: 3, // Padding hai bên để nội dung đẹp hơn
+                borderTop: '1px solid',
+                borderColor: 'divider', // Đường viền ngăn cách với nội dung trên
+                boxShadow: '0px -2px 8px rgba(0, 0, 0, 0.1)', // Đổ bóng nhẹ ở trên
+                zIndex: 1, // Giữ nó nằm trên nội dung khi cuộn
+                mt: 3
+              }}>
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Button
+                  variant="contained"
+                  onClick={onClose}
+                  color="inherit"
+                  sx={{
+                    mr: 2,
+                    bgcolor: 'grey.300',
+                    '&:hover': { bgcolor: 'grey.400' }, // Màu khi hover
+                    color: 'text.primary'
+                  }}>
+                  Đóng
+                </Button>
+                <Button
+                  variant="contained"
+                  color="success"
+                  sx={{
+                    backgroundColor: '#1e90ff',
+                    boxShadow: '0px 4px 10px rgba(76, 175, 80, 0.3)', // Đổ bóng nhẹ cho nút Thêm
+                    '&:hover': { boxShadow: '0px 6px 12px rgba(76, 175, 80, 0.5)' } // Đổ bóng khi hover
+                  }}>
+                  Thêm thông tin khách thuê
+                </Button>
+              </Grid>
+            </Box>
           </Grid>
         </Grid>
       </Box>

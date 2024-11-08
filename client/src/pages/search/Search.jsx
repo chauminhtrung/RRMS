@@ -49,7 +49,7 @@ const Search = ({ setIsAdmin }) => {
     const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
 
     try {
-      const result = await axios.get(`http://localhost:8080/searchs`, {
+      const response = await axios.get(`http://localhost:8080/searchs`, {
         validateStatus: () => true,
         headers: {
           Authorization: `Bearer ${token}`
@@ -57,8 +57,8 @@ const Search = ({ setIsAdmin }) => {
       })
 
       // Kiểm tra trạng thái phản hồi
-      if (result.status === 200) {
-        const fetchedData = result.data.result
+      if (response.status === 200) {
+        const fetchedData = response.data.result
 
         if (Array.isArray(fetchedData) && fetchedData.length > 0) {
           console.log('Data fetched:', fetchedData)
@@ -70,7 +70,7 @@ const Search = ({ setIsAdmin }) => {
           setTotalRooms(0)
         }
       } else {
-        console.log('Error: Status', result.status)
+        console.log('Error: Status', response.status)
       }
     } catch (error) {
       console.error('Error fetching data:', error)
