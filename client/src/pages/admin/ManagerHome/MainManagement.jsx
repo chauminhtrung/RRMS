@@ -20,7 +20,7 @@ const MainManagement = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
         setIsNavAdmin={setIsNavAdmin}
         isNavAdmin={isNavAdmin}
       />
-      {motels.length == 0 ? <HomeNData /> : <HomeWData />}
+      {motels.length == 0 ? <HomeNData /> : <HomeWData Motel={motels} />}
     </div>
   )
 }
