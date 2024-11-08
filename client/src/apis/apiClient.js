@@ -31,7 +31,7 @@ export const changePassword = async (data) => {
 }
 
 export const searchByName = async (keyword) => {
-  return await axios.get(`${env.API_URL}/searchs/name?name=${keyword}`)
+  return await axios.get(`${env.API_URL}/searchs/addressBullet?address=${keyword}`)
 }
 
 export const getImages = async () => {
@@ -106,33 +106,22 @@ export const getMotelByUsername = async (username) => {
 }
 
 export const getMotelById = async (Id) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   if (!Id) {
-    throw new Error('ID không hợp lệ');
+    console.log(Id);
+    
+    throw new Error('ID không hợp ')
   }
-  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;
-  try {
-    return await axios.get(`${env.API_URL}/motels/get-motel-id?id=${Id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-  } catch (error) {
-    console.error('Error fetching motel by ID:', error);
-    throw error; // Re-throw to catch in calling function
-  }
-};
-
+  return await axios.get(`${env.API_URL}/motels/get-motel-id?id=${Id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
 
 //account
 export const getAccountByUsername = async (username) => {
-  return await axios.get(`http://localhost:8080/api-accounts/${username}`)
-}
-
-export const introspect = async () => {
-  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-  return await axios.post(`http://localhost:8080/authen/introspect`, {
-    token: token
-  })
+  return await axios.get(`http://localhost:8080/api-accounts/get-account/${username}`)
 }
 
 //TRC
@@ -310,13 +299,15 @@ export const getRoomByMotelId = async (id) => {
 
 // Bulletin Board
 export const getBulletinBoard = async (id) => {
-  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-  const response = await axios.get(`${env.API_URL}/bulletin-board/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
+  const response = await axios.get(`${env.API_URL}/bulletin-board/${id}`)
   return response.data
+}
+
+export const introspect = async () => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  return await axios.post(`http://localhost:8080/authen/introspect`, {
+    token: token
+  })
 }
 
 export const getBulletinBoardTable = async (username) => {

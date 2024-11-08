@@ -18,8 +18,9 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, se
       setmotel(motels[0]) // Cập nhật phòng trọ đầu tiên nếu tồn tại dữ liệu
     } else {
       // Nếu có tên nhà trọ từ URL, lấy dữ liệu bằng API
+      console.log('co id ben NavBarAdmin', motelId)
       getMotelById(motelId).then((res) => {
-        setmotel(res.data.result[0])
+        setmotel(res.data.result)
       })
     }
   }, [motels, motelId]) // Thêm các dependencies cần thiết vào mảng dependencies

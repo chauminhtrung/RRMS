@@ -46,6 +46,7 @@ import ImageComparison from './pages/AI/ImageComparison'
 import ImportFileExcel from './pages/admin/NavContentAdmin/ImportFileExcel'
 import MotelSetting from './pages/admin/MotelSettings/MotelSetting'
 import PassportRecognition from './pages/AI/PassportRecognition'
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage.jsx'
 
 function App() {
   const [username, setUsername] = useState('')
@@ -91,6 +92,7 @@ function App() {
           <></>
         )}
         <Routes>
+          <Route path="*" element={<NotFoundPage styled />} />
           <Route path="/" element={<Home setIsAdmin={setIsAdmin} />} />
           <Route
             path="/login"
@@ -108,7 +110,7 @@ function App() {
           <Route path="/facematch" element={<FaceMatch setIsAdmin={setIsAdmin} />} />
           <Route path="/passport" element={<PassportRecognition setIsAdmin={setIsAdmin} />} />
           <Route path="/search" element={<Search setIsAdmin={setIsAdmin} />} />
-          <Route path="/detail/:roomId" element={<Detail setIsAdmin={setIsAdmin} />} />
+          <Route path="/detail/:bulletinBoardId" element={<Detail setIsAdmin={setIsAdmin} />} />
           <Route path="/forgot-password" element={<Forgot_Password setIsAdmin={setIsAdmin} />} />
           <Route path="/contact" element={<Contact setIsAdmin={setIsAdmin} />} />
           <Route path="/introduce" element={<Introduce setIsAdmin={setIsAdmin} />} />

@@ -1,75 +1,77 @@
 import { Link, useNavigate } from 'react-router-dom'
 import './Header.css'
 import { useState } from 'react'
-import { env } from '~/configs/environment';
-import Swal from 'sweetalert2';
+import { env } from '~/configs/environment'
+import Swal from 'sweetalert2'
+import LanguageSelect from './Options/LanguageSelect'
+import ModeSelect from './Options/ModeSelect'
 
-const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
-  const [IsDanhmuc, setIsDanhmuc] = useState(false);
-  const [IsMuaban, setIsMuaban] = useState(false);
-  const [IsTaikhoan, setIsTaikhoan] = useState(false);
-  const [IsThongbao, setIsThongbao] = useState(false);
-  const [IsMobileTaikhoan, setIsMobileTaikhoan] = useState(false);
+const Header = ({ username, avatar, setUsername, setAvatar, setToken }) => {
+  const [IsDanhmuc, setIsDanhmuc] = useState(false)
+  const [IsMuaban, setIsMuaban] = useState(false)
+  const [IsTaikhoan, setIsTaikhoan] = useState(false)
+  const [IsThongbao, setIsThongbao] = useState(false)
+  const [IsMobileTaikhoan, setIsMobileTaikhoan] = useState(false)
   const navigate = useNavigate()
-  const handleMenuItemClick = () => {  
-    setIsTaikhoan(false); // Đóng menu khi click vào bất kỳ mục nào  
-  }; 
-  const handleLogout = async () => {  
-    handleMenuItemClick();
-    const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;  
-  
-    if (!token) {  
-      Swal.fire({  
-        icon: 'warning',  
-        title: 'Thông báo',  
-        text: 'Không tìm thấy token, vui lòng đăng nhập lại.',  
-      });  
-      return;  
-    }  
-  
-    const requestPayload = { token };  
-  
-    try {  
-      const response = await fetch(`${env.API_URL}/authen/logout`, {  
-        method: 'POST',  
-        headers: {  
-          'Content-Type': 'application/json',  
-          'Authorization': `Bearer ${token}`  // Thêm Authorization header nếu server yêu cầu  
-        },  
-        body: JSON.stringify(requestPayload)  
-      });  
-  
-      if (response.ok) {  
-        // Xoá thông tin người dùng sau khi đăng xuất thành công  
-        sessionStorage.removeItem('user');  
-        setToken(null);     // Xóa token khỏi state  
-        setUsername('');    // Cập nhật username về trống  
-        setAvatar('');      // Cập nhật avatar về mặc định  
+  const handleMenuItemClick = () => {
+    setIsTaikhoan(false) // Đóng menu khi click vào bất kỳ mục nào
+  }
+  const handleLogout = async () => {
+    handleMenuItemClick()
+    const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+
+    if (!token) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Thông báo',
+        text: 'Không tìm thấy token, vui lòng đăng nhập lại.'
+      })
+      return
+    }
+
+    const requestPayload = { token }
+
+    try {
+      const response = await fetch(`${env.API_URL}/authen/logout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}` // Thêm Authorization header nếu server yêu cầu
+        },
+        body: JSON.stringify(requestPayload)
+      })
+
+      if (response.ok) {
+        // Xoá thông tin người dùng sau khi đăng xuất thành công
+        sessionStorage.removeItem('user')
+        setToken(null) // Xóa token khỏi state
+        setUsername('') // Cập nhật username về trống
+        setAvatar('') // Cập nhật avatar về mặc định
         navigate('/login')
-        Swal.fire({  
-          icon: 'success',  
-          title: 'Thành công',  
-          text: 'Đăng xuất thành công!',  
-        });  
-      } else {  
-        const errorData = await response.json();  
-        console.error('Lỗi từ server:', errorData);  
-        Swal.fire({  
-          icon: 'error',  
-          title: 'Đăng xuất thất bại',  
-          text: `Lỗi: ${errorData.message}`,  
-        });  
-      }  
-    } catch (error) {  
-      console.error('Đã xảy ra lỗi khi đăng xuất:', error);  
-      Swal.fire({  
-        icon: 'error',  
-        title: 'Lỗi',  
-        text: 'Đã xảy ra lỗi khi thực hiện đăng xuất.',  
-      });  
-    }  
-  };
-  const tokenExists = sessionStorage.getItem('user') !== null; 
+        Swal.fire({
+          icon: 'success',
+          title: 'Thành công',
+          text: 'Đăng xuất thành công!'
+        })
+      } else {
+        const errorData = await response.json()
+        console.error('Lỗi từ server:', errorData)
+        Swal.fire({
+          icon: 'error',
+          title: 'Đăng xuất thất bại',
+          text: `Lỗi: ${errorData.message}`
+        })
+      }
+    } catch (error) {
+      console.error('Đã xảy ra lỗi khi đăng xuất:', error)
+      Swal.fire({
+        icon: 'error',
+        title: 'Lỗi',
+        text: 'Đã xảy ra lỗi khi thực hiện đăng xuất.'
+      })
+    }
+  }
+  const tokenExists = sessionStorage.getItem('user') !== null
   return (
     <header>
       <div className="ct-appwrapper aw__sa4yob3" style={{ '--sa4yob3-0': '#fff', '--sa4yob3-1': 'inherit' }}>
@@ -130,7 +132,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
           style={{
             '--fe17nfm-1': '190px',
             '--fe17nfm-3': '#E8E8E8',
-            '--fe17nfm-4': '#222222',
+            '--fe17nfm-4': '#222222'
           }}>
           <span className="aw__muulhme">
             <img
@@ -147,7 +149,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
         style={{
           '--h5101fz-0': '#fff',
           '--h5101fz-2': 'calc(40px + var(--app-wrapper-extra-height,   0px))',
-          '--h5101fz-5': '100',
+          '--h5101fz-5': '100'
         }}>
         <div className="aw__co22znp">
           <div className="leftWrapperContainerCss aw__l8p27ky" style={{ '--l8p27ky-0': '20%', '--l8p27ky-2': 'unset' }}>
@@ -168,7 +170,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                 '--cexsh2j-0': 'flex',
                 '--cexsh2j-3': 'undefined',
                 '--cexsh2j-4': '24px 12px',
-                '--cexsh2j-5': 'undefined',
+                '--cexsh2j-5': 'undefined'
               }}>
               {/* danh muc nam trong day */}
               <div className="aw__i8z877t" style={{ '--i8z877t-0': '#8C8C8C', '--i8z877t-6': '#222222' }}>
@@ -197,7 +199,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                     color="#8C8C8C"
                     style={{
                       '--szp9uz0-1': 'inherit',
-                      '--szp9uz0-9': '#8C8C8C',
+                      '--szp9uz0-9': '#8C8C8C'
                     }}>
                     Danh mục
                   </span>
@@ -275,7 +277,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                           className="aw__ah4jb82"
                           style={{
                             '--ah4jb82-2': 'undefined',
-                            '--ah4jb82-6': '35px',
+                            '--ah4jb82-6': '35px'
                           }}>
                           <button aria-label="Search Button Desktop" className="aw__p1vnrcrb aw__cm4yjvg">
                             <svg
@@ -302,7 +304,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                             '--t16o28i7-3': '36px',
                             '--t16o28i7-5': '#f4f4f4',
                             '--t16o28i7-6': '35px',
-                            '--t16o28i7-8': '35px',
+                            '--t16o28i7-8': '35px'
                           }}
                         />
                       </div>
@@ -324,7 +326,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                       className="aw__i8z877t"
                       style={{
                         '--i8z877t-0': '#222222',
-                        '--i8z877t-6': '#222222',
+                        '--i8z877t-6': '#222222'
                       }}>
                       <svg
                         width="24"
@@ -363,7 +365,8 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
               </div>
 
               <div className="aw__njogxfr">
-                <a className="aw__n1u3b0ub" href="https://chat.chotot.com/chat" rel="nofollow" aria-label="chat">
+                <LanguageSelect />
+                {/* <a className="aw__n1u3b0ub" href="https://chat.chotot.com/chat" rel="nofollow" aria-label="chat">
                   <svg
                     width="24"
                     height="24"
@@ -397,11 +400,12 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                       0
                     </span>
                   </div>
-                </a>
+                </a> */}
               </div>
 
               <div className="aw__njogxfr">
-                <a
+                <ModeSelect />
+                {/* <a
                   href="https://id.chotot.com/login"
                   color="#222222"
                   rel="nofollow"
@@ -426,7 +430,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                       d="M12 15.5C12 15.0858 12.3358 14.75 12.75 14.75H17.25C17.6642 14.75 18 15.0858 18 15.5C18 15.9142 17.6642 16.25 17.25 16.25H12.75C12.3358 16.25 12 15.9142 12 15.5Z"
                       fill="currentColor"></path>
                   </svg>
-                </a>
+                </a> */}
               </div>
 
               <div className="aw__njogxfr">
@@ -441,7 +445,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                         }}
                         style={{
                           '--i8z877t-0': '#8C8C8C',
-                          '--i8z877t-6': '#222222',
+                          '--i8z877t-6': '#222222'
                         }}>
                         <svg
                           width="24"
@@ -491,7 +495,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                                 className="aw__nrouw61"
                                 style={{
                                   '--nrouw61-3': '48px',
-                                  backgroundImage: `url(${avatar || './default_user.png'})`, // Sử dụng avatar hoặc ảnh mặc định
+                                  backgroundImage: `url(${avatar || './default_user.png'})` // Sử dụng avatar hoặc ảnh mặc định
                                 }}></span>
                               <span className="aw__n171wcvy" style={{ '--n171wcvy-0': '8px', '--n171wcvy-1': '14px' }}>
                                 {username || 'Đăng nhập / Đăng ký'}
@@ -503,7 +507,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                                 className="aw__nrouw61"
                                 style={{
                                   '--nrouw61-3': '48px',
-                                  backgroundImage: `url(${avatar || './default_user.png'})`, // Sử dụng avatar hoặc ảnh mặc định
+                                  backgroundImage: `url(${avatar || './default_user.png'})` // Sử dụng avatar hoặc ảnh mặc định
                                 }}></span>
                               <span className="aw__n171wcvy" style={{ '--n171wcvy-0': '8px', '--n171wcvy-1': '14px' }}>
                                 {username || 'Đăng nhập / Đăng ký'}
@@ -542,12 +546,17 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                             '--d15qd39x-0': '38px',
                             '--d15qd39x-1': ' #f5f5f5',
                             '--d15qd39x-2': '10px 0 10px 12px',
-                            '--d15qd39x-3': '0',
+                            '--d15qd39x-3': '0'
                           }}>
                           <span>Quản lí đơn hàng</span>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
+                          <a
+                            className="aw__iys36jq"
+                            href="#"
+                            target="_self"
+                            rel="noreferrer"
+                            onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./escrow_buy_orders.svg" alt="Đơn bán" />
                             </div>
@@ -556,7 +565,12 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                           </a>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
+                          <a
+                            className="aw__iys36jq"
+                            href="#"
+                            target="_self"
+                            rel="noreferrer"
+                            onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./escrow-orders.svg" alt="Đơn bán" />
                             </div>
@@ -565,7 +579,12 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                           </a>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq aw__ibqb3a4" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
+                          <a
+                            className="aw__iys36jq aw__ibqb3a4"
+                            href="#"
+                            target="_self"
+                            rel="noreferrer"
+                            onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./escrow.svg" alt="Ví bán hàng" />
                             </div>
@@ -585,12 +604,17 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                             '--d15qd39x-0': '38px',
                             '--d15qd39x-1': ' #f5f5f5',
                             '--d15qd39x-2': '10px 0 10px 12px',
-                            '--d15qd39x-3': '0',
+                            '--d15qd39x-3': '0'
                           }}>
                           <span>Tiện ích</span>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
+                          <a
+                            className="aw__iys36jq"
+                            href="#"
+                            target="_self"
+                            rel="noreferrer"
+                            onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./menu-saved-ad.svg" alt="Đơn bán" />
                             </div>
@@ -599,7 +623,12 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                           </a>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
+                          <a
+                            className="aw__iys36jq"
+                            href="#"
+                            target="_self"
+                            rel="noreferrer"
+                            onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./menu-saved-search.svg" alt="Đơn bán" />
                             </div>
@@ -608,7 +637,12 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                           </a>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
+                          <a
+                            className="aw__iys36jq"
+                            href="#"
+                            target="_self"
+                            rel="noreferrer"
+                            onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./menu-rating-management.svg" alt="Đơn bán" />
                             </div>
@@ -624,12 +658,17 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                             '--d15qd39x-0': '38px',
                             '--d15qd39x-1': ' #f5f5f5',
                             '--d15qd39x-2': '10px 0 10px 12px',
-                            '--d15qd39x-3': '0',
+                            '--d15qd39x-3': '0'
                           }}>
                           <span>Dịch vụ trả phí</span>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
+                          <a
+                            className="aw__iys36jq"
+                            href="#"
+                            target="_self"
+                            rel="noreferrer"
+                            onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./sub-pro.svg" alt="Đơn bán" />
                             </div>
@@ -638,7 +677,12 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                           </a>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
+                          <a
+                            className="aw__iys36jq"
+                            href="#"
+                            target="_self"
+                            rel="noreferrer"
+                            onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./circle-list.svg" alt="Đơn bán" />
                             </div>
@@ -647,7 +691,12 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                           </a>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq aw__ibqb3a4" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
+                          <a
+                            className="aw__iys36jq aw__ibqb3a4"
+                            href="#"
+                            target="_self"
+                            rel="noreferrer"
+                            onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./shop-more.svg" alt="Ví bán hàng" />
                             </div>
@@ -667,12 +716,17 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                             '--d15qd39x-0': '38px',
                             '--d15qd39x-1': ' #f5f5f5',
                             '--d15qd39x-2': '10px 0 10px 12px',
-                            '--d15qd39x-3': '0',
+                            '--d15qd39x-3': '0'
                           }}>
                           <span>Ưu đãi, khuyến mãi</span>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
+                          <a
+                            className="aw__iys36jq"
+                            href="#"
+                            target="_self"
+                            rel="noreferrer"
+                            onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./reward-icon.svg" alt="Đơn bán" />
                             </div>
@@ -681,7 +735,12 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                           </a>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
+                          <a
+                            className="aw__iys36jq"
+                            href="#"
+                            target="_self"
+                            rel="noreferrer"
+                            onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./voucher-icon.svg" alt="Đơn bán" />
                             </div>
@@ -697,12 +756,17 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                             '--d15qd39x-0': '38px',
                             '--d15qd39x-1': ' #f5f5f5',
                             '--d15qd39x-2': '10px 0 10px 12px',
-                            '--d15qd39x-3': '0',
+                            '--d15qd39x-3': '0'
                           }}>
                           <span>Khác</span>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
+                          <a
+                            className="aw__iys36jq"
+                            href="#"
+                            target="_self"
+                            rel="noreferrer"
+                            onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./setting.svg" alt="Đơn bán" />
                             </div>
@@ -711,7 +775,12 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                           </a>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer" onClick={handleMenuItemClick}>
+                          <a
+                            className="aw__iys36jq"
+                            href="#"
+                            target="_self"
+                            rel="noreferrer"
+                            onClick={handleMenuItemClick}>
                             <div className="aw__l1uq3g0v">
                               <img className="aw__i1x7vrum" src="./setting.svg" alt="Đơn bán" />
                             </div>
@@ -719,22 +788,17 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                             <div className="clearfix"></div>
                           </a>
                         </div>
-                        {tokenExists && ( // Only show logout if user is logged in  
-                          <div className="aw__l1txzw95">  
-                            <a   
-                              className="aw__iys36jq"   
-                              target="_self"   
-                              rel="noreferrer"   
-                              onClick={handleLogout}   
-                            >  
-                              <div className="aw__l1uq3g0v">  
-                                <img className="aw__i1x7vrum" src="./setting.svg" alt="Đăng xuất" />  
-                              </div>  
-                              <div className="aw__r1o9ejq6">Đăng xuất</div>  
-                              <div className="clearfix"></div>  
-                            </a>  
-                          </div>  
-                        )} 
+                        {tokenExists && ( // Only show logout if user is logged in
+                          <div className="aw__l1txzw95">
+                            <a className="aw__iys36jq" target="_self" rel="noreferrer" onClick={handleLogout}>
+                              <div className="aw__l1uq3g0v">
+                                <img className="aw__i1x7vrum" src="./setting.svg" alt="Đăng xuất" />
+                              </div>
+                              <div className="aw__r1o9ejq6">Đăng xuất</div>
+                              <div className="clearfix"></div>
+                            </a>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ) : (
@@ -776,7 +840,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                     color="#8C8C8C"
                     style={{
                       '--iwanj6m-0': '#8C8C8C',
-                      '--iwanj6m-7': '#8C8C8C',
+                      '--iwanj6m-7': '#8C8C8C'
                     }}>
                     <svg
                       width="29"
@@ -795,7 +859,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                       color="#4bcffa"
                       style={{
                         '--szp9uz0-1': 'inherit',
-                        '--szp9uz0-9': '#4bcffa',
+                        '--szp9uz0-9': '#4bcffa'
                       }}>
                       Trang chủ
                     </span>
@@ -812,7 +876,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                   className="aw__iwanj6m"
                   style={{
                     '--iwanj6m-0': '#8C8C8C',
-                    '--iwanj6m-7': '#8C8C8C',
+                    '--iwanj6m-7': '#8C8C8C'
                   }}>
                   <svg
                     width="24"
@@ -838,7 +902,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                     color="#8c8c8c"
                     style={{
                       '--szp9uz0-1': 'inherit',
-                      '--szp9uz0-9': '#8c8c8c',
+                      '--szp9uz0-9': '#8c8c8c'
                     }}>
                     Quản lý tin
                   </span>
@@ -872,7 +936,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                     style={{
                       '--szp9uz0-1': 'inherit',
                       '--szp9uz0-9': '#000',
-                      color: '#fff',
+                      color: '#fff'
                     }}>
                     Đăng tin
                   </span>
@@ -891,7 +955,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                     }}
                     style={{
                       '--iwanj6m-0': '#8C8C8C',
-                      '--iwanj6m-7': '#8C8C8C',
+                      '--iwanj6m-7': '#8C8C8C'
                     }}>
                     <svg
                       width="24"
@@ -924,7 +988,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                       color="#8c8c8c"
                       style={{
                         '--szp9uz0-1': 'inherit',
-                        '--szp9uz0-9': '#8c8c8c',
+                        '--szp9uz0-9': '#8c8c8c'
                       }}>
                       Thông báo
                     </span>
@@ -945,7 +1009,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                       }}
                       style={{
                         '--iwanj6m-0': '#8C8C8C',
-                        '--iwanj6m-7': '#8C8C8C',
+                        '--iwanj6m-7': '#8C8C8C'
                       }}>
                       <svg
                         width="24"
@@ -975,7 +1039,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                         color="#8C8C8C"
                         style={{
                           '--szp9uz0-1': 'inherit',
-                          '--szp9uz0-9': '#8c8c8c',
+                          '--szp9uz0-9': '#8c8c8c'
                         }}></span>
                     </div>
                   </div>
@@ -986,7 +1050,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                 color="#8c8c8c"
                 style={{
                   '--szp9uz0-1': 'inherit',
-                  '--szp9uz0-9': '#8c8c8c',
+                  '--szp9uz0-9': '#8c8c8c'
                 }}>
                 Tài khoản
               </span>
@@ -1077,7 +1141,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                   '--d15qd39x-0': '42px',
                   '--d15qd39x-1': ' #f5f5f5',
                   '--d15qd39x-2': '10px 0 10px 12px',
-                  '--d15qd39x-3': '0',
+                  '--d15qd39x-3': '0'
                 }}>
                 <span>Quản lí đơn hàng</span>
               </div>
@@ -1124,7 +1188,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                   '--d15qd39x-0': '42px',
                   '--d15qd39x-1': ' #f5f5f5',
                   '--d15qd39x-2': '10px 0 10px 12px',
-                  '--d15qd39x-3': '0',
+                  '--d15qd39x-3': '0'
                 }}>
                 <span>Tiện ích</span>
               </div>
@@ -1163,7 +1227,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                   '--d15qd39x-0': '38px',
                   '--d15qd39x-1': ' #f5f5f5',
                   '--d15qd39x-2': '10px 0 10px 12px',
-                  '--d15qd39x-3': '0',
+                  '--d15qd39x-3': '0'
                 }}>
                 <span>Dịch vụ trả phí</span>
               </div>
@@ -1207,7 +1271,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                   '--d15qd39x-0': '42px',
                   '--d15qd39x-1': ' #f5f5f5',
                   '--d15qd39x-2': '10px 0 10px 12px',
-                  '--d15qd39x-3': '0',
+                  '--d15qd39x-3': '0'
                 }}>
                 <span>Ưu đãi, khuyến mãi</span>
               </div>
@@ -1237,7 +1301,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                   '--d15qd39x-0': '38px',
                   '--d15qd39x-1': ' #f5f5f5',
                   '--d15qd39x-2': '10px 0 10px 12px',
-                  '--d15qd39x-3': '0',
+                  '--d15qd39x-3': '0'
                 }}>
                 <span>Khác</span>
               </div>
@@ -1355,7 +1419,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                             className="aw__ah4jb82"
                             style={{
                               '--ah4jb82-2': 'undefined',
-                              '--ah4jb82-6': '35px',
+                              '--ah4jb82-6': '35px'
                             }}></div>
                           <input
                             type="text"
@@ -1367,7 +1431,7 @@ const Header = ({ username, avatar,setUsername,setAvatar, setToken }) => {
                               '--t16o28i7-3': '36px',
                               '--t16o28i7-5': '#f4f4f4',
                               '--t16o28i7-6': '124px',
-                              '--t16o28i7-8': '144px',
+                              '--t16o28i7-8': '144px'
                             }}
                           />
                         </div>

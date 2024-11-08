@@ -30,6 +30,14 @@ function FilterSearch({ setSearchData }) {
 
   useEffect(() => {
     if (debouncedKeyword) {
+      searchByName(debouncedKeyword)
+        .then((searchResult) => {
+          setSearchData(searchResult.data.result)
+        })
+        .catch((error) => {
+          console.error('Error fetching search results:', error)
+        })
+    } else {
       searchByName(debouncedKeyword).then((searchResult) => {
         setSearchData(searchResult.data.result)
       })
