@@ -25,8 +25,8 @@ public interface RoomRepository extends JpaRepository<Room, UUID> {
 
     List<Room> findAllByMotel_Account(Account account);
 
-    //    List<Room> findAllByAuthenIs(Boolean authenIs);
+//        List<Room> findAllByAuthenIs(Boolean authenIs);
 
-    //    @Query("SELECT r FROM Room r ORDER BY r.datenew DESC")
-    //    List<Room> findAllByDatenew();
+//        @Query("SELECT r FROM Room r ORDER BY r. DESC")
+//        List<Room> findAllByDatenew();
 }
