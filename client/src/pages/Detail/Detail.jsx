@@ -71,7 +71,7 @@ const Detail = ({ setIsAdmin }) => {
   }
 
   useEffect(() => {
-    getBulletinBoard('8fe906e1-03ac-43db-bfc5-ed070e9fa642').then((res) => {
+    getBulletinBoard(bulletinBoardId).then((res) => {
       setDetail(res.result)
     })
   }, [bulletinBoardId])
