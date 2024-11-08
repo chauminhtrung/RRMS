@@ -17,9 +17,14 @@ const NavWData = ({ motels }) => {
       setmotel(motels[0]) // Cập nhật phòng trọ đầu tiên nếu tồn tại dữ liệu
     } else {
       // Nếu có tên nhà trọ từ URL, lấy dữ liệu bằng API
-      getMotelById(motelId).then((res) => {
-        setmotel(res.data.result[0])
-      })
+      if (motelId) {
+        console.log('co id ben NawDate', motelId)
+        getMotelById(motelId).then((res) => {
+          console.log(res)
+
+          setmotel(res.data.result)
+        })
+      }
     }
   }, [motels, motelId]) // Thêm các dependencies cần thiết vào mảng dependencies
 
