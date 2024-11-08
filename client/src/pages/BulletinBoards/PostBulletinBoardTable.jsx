@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
   IconButton,
@@ -10,7 +9,7 @@ import {
   TableFooter,
   TableHead,
   TablePagination,
-  TableRow,
+  TableRow
 } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useTheme } from '@emotion/react'
@@ -68,7 +67,7 @@ TablePaginationActions.propTypes = {
   count: PropTypes.number.isRequired,
   onPageChange: PropTypes.func.isRequired,
   page: PropTypes.number.isRequired,
-  rowsPerPage: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired
 }
 
 function createData(nameRoom, typeRoom, address, price, roomArea, available) {
@@ -146,18 +145,18 @@ const PostRoomTable = () => {
                 slotProps={{
                   select: {
                     inputProps: {
-                      'aria-label': 'rows per page',
+                      'aria-label': 'rows per page'
                     },
-                    native: true,
-                  },
+                    native: true
+                  }
                 }}
                 sx={{
                   '& .MuiTablePagination-selectLabel': {
-                    mb: 0,
+                    mb: 0
                   },
                   '& .MuiTablePagination-displayedRows': {
-                    mb: 0,
-                  },
+                    mb: 0
+                  }
                 }}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}

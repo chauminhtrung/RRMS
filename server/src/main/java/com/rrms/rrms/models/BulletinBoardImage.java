@@ -26,4 +26,5 @@ public class BulletinBoardImage {
 
     @Column(columnDefinition = "VARCHAR(255)")
     private String imageLink;
+
 }

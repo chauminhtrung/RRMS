@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import {
   Box,
@@ -18,13 +17,13 @@ import {
   Switch,
   TextareaAutosize,
   TextField,
-  Typography,
+  Typography
 } from '@mui/material'
 import ViewInArIcon from '@mui/icons-material/ViewInAr'
 import { useEffect, useState } from 'react'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import LocationSelect from '~/components/ProvinceSelect'
-import { postRoom } from '~/apis/apiClient'
+import { postBulletinBoard } from '~/apis/apiClient'
 import { toast } from 'react-toastify'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { storage } from '~/configs/firebaseConfig'
@@ -33,6 +32,7 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import TitleAttribute from './TitleAttribute'
 import { processImage } from '~/utils/processImage'
+import MapComponent from './MapComponent'
 
 const style = {
   position: 'absolute',
@@ -47,11 +47,11 @@ const style = {
   overflowY: 'scroll',
   scrollbarWidth: 'none',
   '&::-webkit-scrollbar': {
-    display: 'none',
+    display: 'none'
   },
   scrollBehavior: 'smooth',
   '.MuiSelect-select': { bgcolor: 'white', border: '0.5px solid #dcdcdc', borderRadius: '5px' },
-  '.MuiInputBase-input': { bgcolor: 'white', border: '0.5px solid #dcdcdc', borderRadius: '5px' },
+  '.MuiInputBase-input': { bgcolor: 'white', border: '0.5px solid #dcdcdc', borderRadius: '5px' }
 }
 
 const VisuallyHiddenInput = styled('input')({
@@ -62,7 +62,7 @@ const VisuallyHiddenInput = styled('input')({
   bottom: 0,
   left: 0,
   whiteSpace: 'nowrap',
-  width: 1,
+  width: 1
 })
 
 const validationSchema = Yup.object({
@@ -96,105 +96,121 @@ const validationSchema = Yup.object({
   rules: Yup.array()
     .of(Yup.string().required('Quy định là bắt buộc.'))
     .required('Ít nhất một quy định phải được cung cấp.'),
-  address: Yup.string().required('Địa chỉ là bắt buộc.'),
+  address: Yup.string().required('Địa chỉ là bắt buộc.')
 })
 const PostModal = ({ open, handleClose }) => {
   const label = { inputProps: { 'aria-label': 'Switch demo' } }
-  const [typeRooms, setTypeRooms] = useState('')
-  const [maxPerson, setMaxPerson] = useState('')
   const [selectedImages, setSelectedImages] = useState([])
-  const [openHour, setOpenHour] = useState()
-  const [closeHour, setCloseHour] = useState()
   const [address, setAddress] = useState('')
+  const [position, setPosition] = useState(null)
 
-  const [room, setRoom] = useState({
-    available: false,
-    nameRoom: '',
-    typeRoomName: '',
+  const [bulletinBoard, setBulletinBoard] = useState({
+    username: 'admin',
+    title: '',
+    rentalCategory: '',
     description: '',
-    price: 0,
-    username: 'dung',
+    rentPrice: 0,
+    promotionalRentalPrice: 0,
     deposit: 0,
-    roomArea: 0,
-    censor: false,
-    priceElectric: 0,
-    priceWater: 0,
-    maxPerson: 0,
-    rentalStartTime: '',
-    hours: 'Tự do',
-    roomServices: [],
-    roomImages: [],
-    rules: [],
+    area: 0,
+    electricityPrice: 0,
+    waterPrice: 0,
+    maxPerson: '',
+    moveInDate: '',
+    openingHours: '',
+    closeHours: '',
     address: '',
-  })
-
-  const formik = useFormik({
-    initialValues: {
-      nameRoom: room.nameRoom,
-      typeRoomName: room.typeRoomName,
-      description: room.description,
-      price: room.price,
-      deposit: room.deposit,
-      roomArea: room.roomArea,
-      censor: room.censor,
-      username: 'dung',
-      priceElectric: room.priceElectric,
-      priceWater: room.priceWater,
-      maxPerson: room.maxPerson,
-      rentalStartTime: room.rentalStartTime,
-      roomServices: room.roomServices,
-      roomImages: room.roomImages,
-      rules: room.rules,
-      address: room.address,
-    },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      console.log(values)
-    },
+    longitude: 0,
+    latitude: 0,
+    status: false,
+    isActive: false,
+    bulletinBoardImages: [],
+    bulletinBoardRules: [],
+    bulletinBoards_RentalAm: []
   })
 
   useEffect(() => {
-    formik.setValues({
-      nameRoom: room.nameRoom,
-      typeRoomName: room.typeRoomName,
-      description: room.description,
-      price: room.price,
-      deposit: room.deposit,
-      roomArea: room.roomArea,
-      censor: room.censor,
-      priceElectric: room.priceElectric,
-      priceWater: room.priceWater,
-      maxPerson: room.maxPerson,
-      rentalStartTime: room.rentalStartTime,
-      roomServices: room.roomServices,
-      roomImages: room.roomImages,
-      rules: room.rules,
-      address: room.address,
-    })
-  }, [room])
+    if (position) {
+      // Cập nhật cả latitude và longitude cùng một lúc
+      setBulletinBoard((prevState) => ({
+        ...prevState,
+        latitude: position.lat,
+        longitude: position.lng
+      }))
+    }
+  }, [position])
 
-  const handleChangeTypeRooms = (event) => {
-    setRoom({ ...room, typeRoomName: event.target.value })
-    setTypeRooms(event.target.value)
-  }
+  // const formik = useFormik({
+  //   initialValues: {
+  //     username: bulletinBoard.username,
+  //     title: bulletinBoard.title,
+  //     rentalCategory: bulletinBoard.rentalCategory,
+  //     rentPrice: bulletinBoard.rentPrice,
+  //     promotionalRentalPrice: bulletinBoard.promotionalRentalPrice,
+  //     deposit: bulletinBoard.deposit,
+  //     area: bulletinBoard.area,
+  //     electricityPrice: bulletinBoard.electricityPrice,
+  //     waterPrice: bulletinBoard.waterPrice,
+  //     priceWater: bulletinBoard.priceWater,
+  //     maxPerson: bulletinBoard.maxPerson,
+  //     moveInDate: bulletinBoard.moveInDate,
+  //     openingHours: bulletinBoard.openingHours,
+  //     closeHours: bulletinBoard.closeHours,
+  //     address: bulletinBoard.address,
+  //     longitude: bulletinBoard.longitude,
+  //     latitude: bulletinBoard.latitude,
+  //     status: bulletinBoard.status,
+  //     isActive: bulletinBoard.isActive,
+  //     bulletinBoardImages: bulletinBoard.bulletinBoardImages,
+  //     bulletinBoardRules: bulletinBoard.bulletinBoardRules,
+  //     bulletinBoards_RentalAm: bulletinBoard.bulletinBoards_RentalAm
+  //   },
+  //   validationSchema: validationSchema,
+  //   onSubmit: (values) => {
+  //     console.log(values)
+  //   }
+  // })
 
-  const handleChangeMaxPerson = (event) => {
-    setRoom({ ...room, maxPerson: event.target.value })
-    setMaxPerson(event.target.value)
-  }
+  // useEffect(() => {
+  //   formik.setValues({
+  //     username: bulletinBoard.username,
+  //     title: bulletinBoard.title,
+  //     rentalCategory: bulletinBoard.rentalCategory,
+  //     rentPrice: bulletinBoard.rentPrice,
+  //     promotionalRentalPrice: bulletinBoard.promotionalRentalPrice,
+  //     deposit: bulletinBoard.deposit,
+  //     area: bulletinBoard.area,
+  //     electricityPrice: bulletinBoard.electricityPrice,
+  //     waterPrice: bulletinBoard.waterPrice,
+  //     priceWater: bulletinBoard.priceWater,
+  //     maxPerson: bulletinBoard.maxPerson,
+  //     moveInDate: bulletinBoard.moveInDate,
+  //     openingHours: bulletinBoard.openingHours,
+  //     closeHours: bulletinBoard.closeHours,
+  //     address: bulletinBoard.address,
+  //     longitude: bulletinBoard.longitude,
+  //     latitude: bulletinBoard.latitude,
+  //     status: bulletinBoard.status,
+  //     isActive: bulletinBoard.isActive,
+  //     bulletinBoardImages: bulletinBoard.bulletinBoardImages,
+  //     bulletinBoardRules: bulletinBoard.bulletinBoardRules,
+  //     bulletinBoards_RentalAm: bulletinBoard.bulletinBoards_RentalAm
+  //   })
+  // }, [bulletinBoard])
+
   const handleLocationChange = (province, district, ward) => {
     const newAddress = [ward, district, province].filter(Boolean).join(', ')
-    setRoom((prevRoom) => ({ ...prevRoom, province, district, ward, address: newAddress }))
+    setBulletinBoard((prevRoom) => ({ ...prevRoom, province, district, ward, address: newAddress }))
   }
 
   const handleDetailAddressChange = (event) => {
     const detailAddress = event.target.value
 
     // Cập nhật room với địa chỉ chi tiết
-    setRoom((prevRoom) => ({
+    setBulletinBoard((prevRoom) => ({
       ...prevRoom,
       detailAddress,
-      address: createAddress({ ...prevRoom, detailAddress }),
+      address: createAddress({ ...prevRoom, address })
     }))
   }
   const createAddress = ({ province, district, ward, detailAddress }) => {
@@ -202,21 +218,21 @@ const PostModal = ({ open, handleClose }) => {
   }
 
   const handleProvinceChange = (newProvince) => {
-    setRoom((prevRoom) => {
+    setBulletinBoard((prevRoom) => {
       const updatedRoom = { ...prevRoom, province: newProvince }
       return { ...updatedRoom, address: createAddress(updatedRoom) }
     })
   }
 
   const handleDistrictChange = (newDistrict) => {
-    setRoom((prevRoom) => {
+    setBulletinBoard((prevRoom) => {
       const updatedRoom = { ...prevRoom, district: newDistrict }
       return { ...updatedRoom, address: createAddress(updatedRoom) }
     })
   }
 
   const handleWardChange = (newWard) => {
-    setRoom((prevRoom) => {
+    setBulletinBoard((prevRoom) => {
       const updatedRoom = { ...prevRoom, ward: newWard }
       return { ...updatedRoom, address: createAddress(updatedRoom) }
     })
@@ -224,38 +240,6 @@ const PostModal = ({ open, handleClose }) => {
 
   const handleImageRemove = (indexToRemove) => {
     setSelectedImages((prevImages) => prevImages.filter((_, index) => index !== indexToRemove))
-  }
-
-  const handleChangeOpenHour = (event) => {
-    const newOpenHour = event.target.value
-    setRoom((prevRoom) => {
-      const updatedRoom = { ...prevRoom, openHour: newOpenHour }
-
-      const newHours =
-        newOpenHour && prevRoom.closeHour
-          ? `${newOpenHour} - ${prevRoom.closeHour}`
-          : newOpenHour || prevRoom.closeHour
-          ? newOpenHour || prevRoom.closeHour
-          : 'Tự do'
-
-      return { ...updatedRoom, hours: newHours }
-    })
-  }
-
-  const handleChangeCloseHour = (event) => {
-    const newCloseHour = event.target.value
-    setRoom((prevRoom) => {
-      const updatedRoom = { ...prevRoom, closeHour: newCloseHour }
-
-      const newHours =
-        prevRoom.openHour && newCloseHour
-          ? `${prevRoom.openHour} - ${newCloseHour}`
-          : prevRoom.openHour || newCloseHour
-          ? prevRoom.openHour || newCloseHour
-          : 'Tự do'
-
-      return { ...updatedRoom, hours: newHours }
-    })
   }
 
   const handleImageChange = async (event) => {
@@ -287,10 +271,10 @@ const PostModal = ({ open, handleClose }) => {
     if (selectedImages && selectedImages.length > 0) {
       const uploadPromises = selectedImages.map((image) => {
         const imageName = v4()
-        const storageRef = ref(storage, `images/room-images/${imageName}`)
+        const storageRef = ref(storage, `images/bulletin-board-images/${imageName}`)
 
         const metadata = {
-          contentType: image.type,
+          contentType: image.type
         }
 
         const uploadTask = uploadBytesResumable(storageRef, image, metadata)
@@ -324,32 +308,38 @@ const PostModal = ({ open, handleClose }) => {
 
       Promise.all(uploadPromises)
         .then((downloadURLs) => {
-          const updatedRoom = { ...room, roomImages: downloadURLs }
-          postRoom(updatedRoom).then((res) => {
-            if (res.data.code === 400) {
-              toast.error(res.data.message)
+          const formattedImages = downloadURLs.map((url) => ({ imageLink: url }))
+          const updatedRoom = { ...bulletinBoard, bulletinBoardImages: formattedImages }
+          postBulletinBoard(updatedRoom).then((res) => {
+            if (res.code === 400) {
+              toast.error(res.message)
             }
           })
           toast.success('Đăng tin thành công!')
           handleClose(true)
-          setRoom({
-            available: false,
-            nameRoom: '',
-            typeRoomName: '',
+          setBulletinBoard({
+            username: 'admin',
+            title: '',
+            rentalCategory: '',
             description: '',
-            price: 0,
+            rentPrice: 0,
+            promotionalRentalPrice: 0,
             deposit: 0,
-            roomArea: 0,
-            censor: false,
-            priceElectric: 0,
-            priceWater: 0,
-            maxPerson: 0,
-            rentalStartTime: '',
-            hours: 'Tự do',
-            roomServices: [],
-            roomImages: [],
-            rules: [],
+            area: 0,
+            electricityPrice: 0,
+            waterPrice: 0,
+            maxPerson: '',
+            moveInDate: '',
+            openingHours: '',
+            closeHours: '',
             address: '',
+            longitude: 0,
+            latitude: 0,
+            status: false,
+            isActive: false,
+            bulletinBoardImages: [],
+            bulletinBoardRules: [],
+            bulletinBoards_RentalAm: []
           })
         })
         .catch((error) => {
@@ -357,24 +347,14 @@ const PostModal = ({ open, handleClose }) => {
           toast.error('Có lỗi xảy ra khi tải lên hình ảnh.')
         })
     } else {
-      console.log('Room without images:', room)
-      postRoom(room).then((res) => {
-        if (res.data.code === 400) {
-          toast.error(res.data.message)
+      console.log('Room without images:', bulletinBoard)
+      postBulletinBoard(bulletinBoard).then((res) => {
+        if (res.code === 400) {
+          toast.error(res.message)
         }
       })
       handleClose(true)
     }
-  }
-
-  const handleCheckboxChange = (service) => {
-    setRoom((prevRoom) => {
-      const newServices = prevRoom.roomServices.includes(service)
-        ? prevRoom.roomServices.filter((s) => s !== service)
-        : [...prevRoom.roomServices, service]
-
-      return { ...prevRoom, roomServices: newServices }
-    })
   }
 
   return (
@@ -392,7 +372,7 @@ const PostModal = ({ open, handleClose }) => {
         </Box>
         <Divider sx={{ bgcolor: '#333' }} />
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3, mt: 1 }}>
-          <Switch {...label} onChange={(e) => setRoom({ ...room, available: event.target.checked })} />
+          <Switch {...label} onChange={(e) => setBulletinBoard({ ...bulletinBoard, status: event.target.checked })} />
           <Box>
             <Typography variant="inherit" component="h2">
               Cho thuê
@@ -415,35 +395,37 @@ const PostModal = ({ open, handleClose }) => {
           <Grid item xs={12} sx={{ my: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <TextField
               onChange={(event) => {
-                setRoom({ ...room, nameRoom: event.target.value })
-                formik.handleChange
+                setBulletinBoard({ ...bulletinBoard, title: event.target.value })
+                //  formik.handleChange
               }}
-              onBlur={formik.handleBlur}
+              // onBlur={formik.handleBlur}
               name="nameRoom"
               required
               variant="filled"
               id="outlined-basic"
               label="Tiêu đề"
-              error={formik.touched.nameRoom && Boolean(formik.errors.nameRoom)}
-              helperText={formik.touched.nameRoom && formik.errors.nameRoom}
+              // error={formik.touched.title && Boolean(formik.errors.title)}
+              // helperText={formik.touched.title && formik.errors.title}
               sx={{ minWidth: 350 }}
             />
             <FormControl
               required
               variant="filled"
               sx={{ minWidth: 350 }}
-              error={formik.touched.typeRoomName && Boolean(formik.errors.typeRoomName)}>
+              //  error={formik.touched.rentalCategory && Boolean(formik.errors.rentalCategory)}
+            >
               <InputLabel id="demo-simple-select-filled-label">Danh mục thuê</InputLabel>
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                name="typeRoomName"
-                value={formik.values.typeRoomName}
+                name="rentalCategory"
+                //   value={formik.values.rentalCategory}
                 onChange={(event) => {
-                  setRoom({ ...room, typeRoomName: event.target.value })
-                  formik.handleChange
+                  setBulletinBoard({ ...bulletinBoard, rentalCategory: event.target.value })
+                  //    formik.handleChange
                 }}
-                onBlur={formik.handleBlur}>
+                //   onBlur={formik.handleBlur}
+              >
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
@@ -458,7 +440,7 @@ const PostModal = ({ open, handleClose }) => {
                 <MenuItem value={'Căn hộ studio'}>Căn hộ studio</MenuItem>
                 <MenuItem value={'Officetel'}>Officetel</MenuItem>
               </Select>
-              <FormHelperText>{formik.touched.typeRoomName && formik.errors.typeRoomName}</FormHelperText>
+              {/* <FormHelperText>{formik.touched.rentalCategory && formik.errors.rentalCategory}</FormHelperText> */}
             </FormControl>
           </Grid>
           {/* <Grid item xs={12} sx={{ my: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -498,10 +480,10 @@ const PostModal = ({ open, handleClose }) => {
           required
           minRows={4}
           onChange={(event) => {
-            setRoom({ ...room, description: event.target.value })
-            formik.handleChange
+            setBulletinBoard({ ...bulletinBoard, description: event.target.value })
+            // formik.handleChange
           }}
-          onBlur={formik.handleBlur}
+          // onBlur={formik.handleBlur}
           name="description"
           style={{
             borderRadius: '10px',
@@ -509,58 +491,58 @@ const PostModal = ({ open, handleClose }) => {
             padding: '10px',
             overflow: 'hidden',
             resize: 'none',
-            width: '715px',
+            width: '715px'
           }}
           placeholder="Nhập mô tả"
         />
-        {formik.touched.description && formik.errors.description && (
+        {/* {formik.touched.description && formik.errors.description && (
           <div style={{ color: 'red', marginTop: '5px' }}>{formik.errors.description}</div>
-        )}
+        )} */}
         <TitleAttribute title="Thông tin cơ bản & giá" description="Nhập các thông tin về phòng cho thuê" />
         <Grid container spacing={1} sx={{ my: 1 }}>
           <Grid item xs={4}>
             <TextField
               onChange={(event) => {
-                setRoom({ ...room, price: event.target.value })
-                formik.handleChange
+                setBulletinBoard({ ...bulletinBoard, rentPrice: event.target.value })
+                // formik.handleChange
               }}
-              onBlur={formik.handleBlur}
-              name="price"
+              // onBlur={formik.handleBlur}
+              name="rentPrice"
               required
               id="outlined-basic"
               label="Giá thuê"
               variant="filled"
               type="number"
               sx={{ width: '100%' }}
-              error={formik.touched.price && Boolean(formik.errors.price)}
-              helperText={formik.touched.price && formik.errors.price}
+              // error={formik.touched.rentPrice && Boolean(formik.errors.rentPrice)}
+              // helperText={formik.touched.rentPrice && formik.errors.rentPrice}
             />
           </Grid>
           <Grid item xs={4}>
             <TextField
               required
               onChange={(event) => {
-                setRoom({ ...room, promotionalPrice: event.target.value })
-                formik.handleChange
+                setBulletinBoard({ ...bulletinBoard, promotionalRentalPrice: event.target.value })
+                // formik.handleChange
               }}
-              onBlur={formik.handleBlur}
-              name="promotionalPrice"
+              // onBlur={formik.handleBlur}
+              name="promotionalRentalPrice"
               id="outlined-basic"
               label="Giá thuê khuyến mãi"
               variant="filled"
               type="number"
               sx={{ width: '100%' }}
-              error={formik.touched.promotionalPrice && Boolean(formik.errors.promotionalPrice)}
-              helperText={formik.touched.promotionalPrice && formik.errors.promotionalPrice}
+              // error={formik.touched.promotionalRentalPrice && Boolean(formik.errors.promotionalRentalPrice)}
+              // helperText={formik.touched.promotionalRentalPrice && formik.errors.promotionalRentalPrice}
             />
           </Grid>
           <Grid item xs={4}>
             <TextField
               onChange={(event) => {
-                setRoom({ ...room, deposit: event.target.value })
-                formik.handleChange
+                setBulletinBoard({ ...bulletinBoard, deposit: event.target.value })
+                // formik.handleChange
               }}
-              onBlur={formik.handleBlur}
+              // onBlur={formik.handleBlur}
               name="deposit"
               required
               id="outlined-basic"
@@ -568,35 +550,35 @@ const PostModal = ({ open, handleClose }) => {
               variant="filled"
               type="number"
               sx={{ width: '100%' }}
-              error={formik.touched.deposit && Boolean(formik.errors.deposit)}
-              helperText={formik.touched.deposit && formik.errors.deposit}
+              // error={formik.touched.deposit && Boolean(formik.errors.deposit)}
+              // helperText={formik.touched.deposit && formik.errors.deposit}
             />
           </Grid>
           <Grid item xs={4}>
             <TextField
               onChange={(event) => {
-                setRoom({ ...room, roomArea: event.target.value })
-                formik.handleChange
+                setBulletinBoard({ ...bulletinBoard, area: event.target.value })
+                // formik.handleChange
               }}
-              onBlur={formik.handleBlur}
-              name="roomArea"
+              // onBlur={formik.handleBlur}
+              name="area"
               required
               id="outlined-basic"
               label="Diện tích"
               variant="filled"
               type="number"
               sx={{ width: '100%' }}
-              error={formik.touched.roomArea && Boolean(formik.errors.roomArea)}
-              helperText={formik.touched.roomArea && formik.errors.roomArea}
+              // error={formik.touched.area && Boolean(formik.errors.area)}
+              // helperText={formik.touched.area && formik.errors.area}
             />
           </Grid>
           <Grid item xs={4}>
             <TextField
               onChange={(event) => {
-                setRoom({ ...room, priceElectric: event.target.value })
-                formik.handleChange
+                setBulletinBoard({ ...bulletinBoard, electricityPrice: event.target.value })
+                // formik.handleChange
               }}
-              onBlur={formik.handleBlur}
+              // onBlur={formik.handleBlur}
               name="priceElectric"
               required
               id="outlined-basic"
@@ -604,17 +586,17 @@ const PostModal = ({ open, handleClose }) => {
               variant="filled"
               type="number"
               sx={{ width: '100%' }}
-              error={formik.touched.priceElectric && Boolean(formik.errors.priceElectric)}
-              helperText={formik.touched.priceElectric && formik.errors.priceElectric}
+              // error={formik.touched.electricityPrice && Boolean(formik.errors.electricityPrice)}
+              // helperText={formik.touched.electricityPrice && formik.errors.electricityPrice}
             />
           </Grid>
           <Grid item xs={4}>
             <TextField
               onChange={(event) => {
-                setRoom({ ...room, priceWater: event.target.value })
-                formik.handleChange
+                setBulletinBoard({ ...bulletinBoard, waterPrice: event.target.value })
+                // formik.handleChange
               }}
-              onBlur={formik.handleBlur}
+              // onBlur={formik.handleBlur}
               name="priceWater"
               required
               id="outlined-basic"
@@ -622,8 +604,8 @@ const PostModal = ({ open, handleClose }) => {
               variant="filled"
               type="number"
               sx={{ width: '100%' }}
-              error={formik.touched.priceWater && Boolean(formik.errors.priceWater)}
-              helperText={formik.touched.priceWater && formik.errors.priceWater}
+              // error={formik.touched.waterPrice && Boolean(formik.errors.waterPrice)}
+              // helperText={formik.touched.waterPrice && formik.errors.waterPrice}
             />
           </Grid>
           <Grid item xs={6}>
@@ -631,52 +613,52 @@ const PostModal = ({ open, handleClose }) => {
               required
               variant="filled"
               sx={{ minWidth: 350 }}
-              error={formik.touched.maxPerson && Boolean(formik.errors.maxPerson)}>
+              // error={formik.touched.maxPerson && Boolean(formik.errors.maxPerson)}
+            >
               <InputLabel id="demo-simple-select-filled-label">Tối đa người ở / phòng</InputLabel>
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
                 name="maxPerson"
-                value={formik.values.maxPerson}
+                // value={formik.values.maxPerson}
                 onChange={(event) => {
-                  setRoom({ ...room, maxPerson: event.target.value })
-                  formik.handleChange
+                  setBulletinBoard({ ...bulletinBoard, maxPerson: event.target.value })
+                  // formik.handleChange
                 }}
-                onBlur={formik.handleBlur}>
+                // onBlur={formik.handleBlur}
+              >
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                <MenuItem value={2}>2</MenuItem>
-                <MenuItem value={3}>3</MenuItem>
-                <MenuItem value={4}>4</MenuItem>
-                <MenuItem value={5}>5</MenuItem>
-                <MenuItem value={6}>6</MenuItem>
-                <MenuItem value={7}>7</MenuItem>
-                <MenuItem value={8}>8</MenuItem>
-                <MenuItem value={9}>9</MenuItem>
-                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={'2 người'}>2 người</MenuItem>
+                <MenuItem value={'3 người'}>3 người</MenuItem>
+                <MenuItem value={'4 người'}>4 người</MenuItem>
+                <MenuItem value={'5-6 người'}>5-6 người</MenuItem>
+                <MenuItem value={'6-7 người'}>6-8 người</MenuItem>
+                <MenuItem value={'9-10 người'}>9-10 người</MenuItem>
+                <MenuItem value={'Không giới hạn'}>Không giới hạn</MenuItem>
               </Select>
-              <FormHelperText>{formik.touched.maxPerson && formik.errors.maxPerson}</FormHelperText>
+              {/* <FormHelperText>{formik.touched.maxPerson && formik.errors.maxPerson}</FormHelperText> */}
             </FormControl>
           </Grid>
           <Grid item xs={6}>
             <TextField
               onChange={(event) => {
-                setRoom({ ...room, rentalStartTime: event.target.value })
-                formik.handleChange
+                setBulletinBoard({ ...bulletinBoard, moveInDate: event.target.value })
+                // formik.handleChange
               }}
-              onBlur={formik.handleBlur}
-              name="rentalStartTime"
+              // onBlur={formik.handleBlur}
+              name="moveInDate"
               required
               variant="filled"
               label="Ngày có thể vào ở"
               fullWidth
               type="date"
               InputLabelProps={{
-                shrink: true,
+                shrink: true
               }}
-              error={formik.touched.rentalStartTime && Boolean(formik.errors.rentalStartTime)}
-              helperText={formik.touched.rentalStartTime && formik.errors.rentalStartTime}
+              // error={formik.touched.moveInDate && Boolean(formik.errors.moveInDate)}
+              // helperText={formik.touched.moveInDate && formik.errors.moveInDate}
             />
           </Grid>
         </Grid>
@@ -693,19 +675,27 @@ const PostModal = ({ open, handleClose }) => {
             'Có camera an ninh',
             'Được nuôi thú cưng',
             'Có ban công',
-            'Có nơi sinh hoạt',
+            'Có nơi sinh hoạt'
           ].map((service) => (
             <Grid item xs={4} key={service}>
               <FormControlLabel
-                checked={room.roomServices.includes(service)}
+                checked={bulletinBoard.bulletinBoards_RentalAm.some((s) => s.rentalAmenities.name === service)}
                 onChange={() => {
-                  const newServices = room.roomServices.includes(service)
-                    ? room.roomServices.filter((s) => s !== service)
-                    : [...room.roomServices, service]
-                  setRoom({ ...room, roomServices: newServices })
-                  formik.setFieldValue('roomServices', newServices)
+                  const serviceObject = { rentalAmenities: { name: service } }
+
+                  const newServices = bulletinBoard.bulletinBoards_RentalAm.some(
+                    (s) => s.rentalAmenities.name === service
+                  )
+                    ? bulletinBoard.bulletinBoards_RentalAm.filter((s) => s.rentalAmenities.name !== service)
+                    : [...bulletinBoard.bulletinBoards_RentalAm, serviceObject]
+                  setBulletinBoard({ ...bulletinBoard, bulletinBoards_RentalAm: newServices })
+                  // formik.setFieldValue('bulletinBoards_RentalAm', newServices)
                 }}
-                control={<Checkbox checked={room.roomServices.includes(service)} />}
+                control={
+                  <Checkbox
+                    checked={bulletinBoard.bulletinBoards_RentalAm.some((s) => s.rentalAmenities.name === service)}
+                  />
+                }
                 label={service}
               />
             </Grid>
@@ -715,12 +705,19 @@ const PostModal = ({ open, handleClose }) => {
         <Box sx={{ my: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <FormControl
             variant="filled"
-            value={openHour}
-            onChange={handleChangeOpenHour}
+            name="openingHours"
             sx={{ minWidth: 350 }}
-            error={formik.touched.openHour && Boolean(formik.errors.openHour)}>
+            // error={formik.touched.openingHours && Boolean(formik.errors.openingHours)}
+          >
             <InputLabel id="demo-simple-select-filled-label">Giờ mở cửa</InputLabel>
-            <Select labelId="demo-simple-select-filled-label" id="demo-simple-select-filled" name="openHour">
+            <Select
+              labelId="demo-simple-select-filled-label"
+              id="demo-simple-select-filled"
+              name="openingHours"
+              onChange={(event) => {
+                setBulletinBoard({ ...bulletinBoard, openingHours: event.target.value })
+                // formik.handleChange
+              }}>
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
@@ -728,16 +725,22 @@ const PostModal = ({ open, handleClose }) => {
               <MenuItem value={'5 SA'}>5 SA</MenuItem>
               <MenuItem value={'6 SA'}>6 SA</MenuItem>
             </Select>
-            <FormHelperText>{formik.touched.openHour && formik.errors.openHour}</FormHelperText>
+            {/* <FormHelperText>{formik.touched.openingHours && formik.errors.openingHours}</FormHelperText> */}
           </FormControl>
           <FormControl
             variant="filled"
-            value={closeHour}
-            onChange={handleChangeCloseHour}
             sx={{ minWidth: 350 }}
-            error={formik.touched.closeHour && Boolean(formik.errors.closeHour)}>
+            // error={formik.touched.closeHours && Boolean(formik.errors.closeHours)}
+          >
             <InputLabel id="demo-simple-select-filled-label">Giờ đóng cửa</InputLabel>
-            <Select labelId="demo-simple-select-filled-label" id="demo-simple-select-filled" name="closeHour">
+            <Select
+              labelId="demo-simple-select-filled-label"
+              id="demo-simple-select-filled"
+              name="closeHour"
+              onChange={(event) => {
+                setBulletinBoard({ ...bulletinBoard, closeHours: event.target.value })
+                // formik.handleChange
+              }}>
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
@@ -745,7 +748,7 @@ const PostModal = ({ open, handleClose }) => {
               <MenuItem value={'23 CH'}>23 CH</MenuItem>
               <MenuItem value={'00 SA'}>00 SA</MenuItem>
             </Select>
-            <FormHelperText>{formik.touched.closeHour && formik.errors.closeHour}</FormHelperText>
+            {/* <FormHelperText>{formik.touched.closeHours && formik.errors.closeHours}</FormHelperText> */}
           </FormControl>
         </Box>
         {/* <Box>
@@ -804,18 +807,46 @@ const PostModal = ({ open, handleClose }) => {
           <TextField
             onChange={(event) => {
               handleDetailAddressChange(event)
-              formik.handleChange
+              // formik.handleChange
             }}
-            onBlur={formik.handleBlur}
+            // onBlur={formik.handleBlur}
             name="address"
             required
             id="outlined-basic"
             label="Địa chỉ chi tiết"
             variant="filled"
             sx={{ width: '100%', mt: -2 }}
-            error={formik.touched.address && Boolean(formik.errors.address)}
-            helperText={formik.touched.address && formik.errors.address}
+            // error={formik.touched.address && Boolean(formik.errors.address)}
+            // helperText={formik.touched.address && formik.errors.address}
           />
+        </Box>
+        <TitleAttribute title="Tọa độ" description="Chọn vị trí trên bản đồ để lấy tọa độ của bạn" />
+        <Box sx={{ my: 2 }}>
+          <Box sx={{ my: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <TextField
+              value={position?.lng}
+              id="outlined-basic"
+              label="Kinh độ"
+              variant="filled"
+              type="text"
+              sx={{ width: '49%' }}
+              InputLabelProps={{
+                shrink: true
+              }}
+            />
+            <TextField
+              value={position?.lat}
+              id="outlined-basic"
+              label="Vĩ độ"
+              variant="filled"
+              type="text"
+              sx={{ width: '49%' }}
+              InputLabelProps={{
+                shrink: true
+              }}
+            />
+          </Box>
+          <MapComponent setPosition={setPosition} position={position} />
         </Box>
         <Box>
           <TitleAttribute title="Hình ảnh" description="Hình ảnh về phòng cho thuê" />
@@ -826,7 +857,7 @@ const PostModal = ({ open, handleClose }) => {
               display: 'flex',
               justifyContent: 'center',
               flexDirection: 'column',
-              alignItems: 'center',
+              alignItems: 'center'
             }}>
             <IconButton
               component="label"
@@ -839,7 +870,7 @@ const PostModal = ({ open, handleClose }) => {
                 width: 30,
                 height: 30,
                 padding: 0,
-                '&:hover': { backgroundColor: '#f0f0f0' },
+                '&:hover': { backgroundColor: '#f0f0f0' }
               }}>
               <CloudUploadIcon fontSize="medium" />
               <VisuallyHiddenInput
@@ -848,7 +879,7 @@ const PostModal = ({ open, handleClose }) => {
                 multiple
                 onChange={(event) => {
                   handleImageChange(event)
-                  formik.setFieldValue('roomImages', event.currentTarget.files)
+                  // formik.setFieldValue('roomImages', event.currentTarget.files)
                 }}
               />
             </IconButton>
@@ -866,7 +897,7 @@ const PostModal = ({ open, handleClose }) => {
                 flexWrap: 'wrap',
                 maxWidth: '100%',
                 alignItems: 'center',
-                justifyContent: 'center',
+                justifyContent: 'center'
               }}>
               {selectedImages &&
                 Array.from(selectedImages).map((image, i) => (
