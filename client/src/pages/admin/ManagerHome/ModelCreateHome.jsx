@@ -282,8 +282,8 @@ const ModelCreateHome = ({ username, MotelId }) => {
                   text: 'Motel created successfully!'
                 })
                 setMotel(response)
+                log
                 handleCreateServices(response.data.result.motelId)
-
                 setTimeout(() => {
                   window.location.reload()
                 }, 1400)
