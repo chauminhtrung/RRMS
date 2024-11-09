@@ -229,14 +229,14 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
                         {item1.account?.username || 'Người dùng không có sẵn'}, 2 ngày trước
                       </Typography>
                       <IconButton
-                        onClick={() => handleHeartClick(item1.bulletinBoardRules[0].bulletinBoardRuleId)} // Here we access the bulletinBoardRuleId of the first rule (adjust as necessary)
+                        onClick={() => handleHeartClick(item1?.bulletinBoardRules[0].bulletinBoardRuleId)} // Here we access the bulletinBoardRuleId of the first rule (adjust as necessary)
                         sx={{
                           ml: 'auto',
-                          color: favorites[item1.bulletinBoardRules[0].bulletinBoardRuleId] ? 'red' : 'gray',
-                          transition: 'color 0.3s ease, border 0.3s ease',
-                          border: favorites[item1.bulletinBoardRules[0].bulletinBoardRuleId]
-                            ? '2px solid red'
-                            : '1px solid transparent',
+                          // color: favorites[item1?.bulletinBoardRules[0]?.bulletinBoardRuleId] ? 'red' : 'gray',
+                          // transition: 'color 0.3s ease, border 0.3s ease',
+                          // border: favorites[item1?.bulletinBoardRules[0].bulletinBoardRuleId]
+                          //   ? '2px solid red'
+                          //   : '1px solid transparent',
                           borderRadius: '50%',
                           padding: '5px',
                           mx: 3,
