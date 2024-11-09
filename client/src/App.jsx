@@ -13,6 +13,7 @@ import Register from './pages/Register/Register'
 import Forgot_Password from './pages/Forgot-Password/Forgot_Password'
 import Support from './pages/Support/Support'
 import AdminStatis from './pages/admin/statistical'
+import DetailRoom from './pages/admin/ManagerHome/DetailRoom/DetailRoom'
 import MainManagement from './pages/admin/ManagerHome/MainManagement'
 import ManagerMyAccount from './pages/admin/ManagerMyAccount/ManagerMyAccount'
 import ManagerCompanyAT from './pages/admin/ManagerCompanyAT/ManagerCompanyAT'
@@ -320,6 +321,21 @@ function App() {
             path="/quanlytro/:motelId/import-data-from-file"
             element={
               <ImportFileExcel
+                motels={motels}
+                setmotels={setmotels}
+                setIsAdmin={setIsAdmin}
+                isNavAdmin={isNavAdmin}
+                setIsNavAdmin={setIsNavAdmin}
+              />
+            }
+          />
+
+          {/* detaiROoom */}
+
+          <Route
+            path="/quanlytro/:motelId/Chi-tiet-phong/:roomId"
+            element={
+              <DetailRoom
                 motels={motels}
                 setmotels={setmotels}
                 setIsAdmin={setIsAdmin}
