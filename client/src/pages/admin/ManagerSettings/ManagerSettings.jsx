@@ -90,7 +90,7 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
     if (username && motelId) {
       try {
         const dataMotel = await getMotelById(motelId)
-        setmotel(dataMotel.data.result[0])
+        setmotel(dataMotel.data.result)
       } catch (error) {
         console.log(error)
       }
@@ -118,7 +118,9 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
             title: 'Thông báo',
             text: isExistingData ? 'Cập nhật thông tin thành công.' : 'Lưu thông tin thành công.'
           })
-          window.location.reload()
+          setTimeout(() => {
+            window.location.reload()
+          }, 1400)
         } else {
           console.error('Lỗi khi lưu thông tin:', response.message)
         }
