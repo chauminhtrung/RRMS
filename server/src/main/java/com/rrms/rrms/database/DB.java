@@ -207,6 +207,7 @@ public class DB {
             customerPermissions.add(createPermission("VIEW_CONTRACT", "View contracts", permissionRepository));
             customerPermissions.add(createPermission("SUPPORT", "Support requests", permissionRepository));
             customerPermissions.add(createPermission("PAYMENT", "Handle payments", permissionRepository));
+            customerPermissions.add(createPermission("REVIEWS", "Reviews bulletin board", permissionRepository));
             // Define GUEST permissions
             Set<Permission> guestPermissions = new HashSet<>();
             guestPermissions.add(createPermission("VIEW_SEARCH_MOTEL", "View and search motels", permissionRepository));
