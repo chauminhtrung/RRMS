@@ -5,9 +5,8 @@ import { useParams } from 'react-router-dom'
 import 'react-tabulator/lib/styles.css' // required styles
 import 'react-tabulator/lib/css/tabulator.min.css' // theme
 import { ReactTabulator } from 'react-tabulator'
-import { createRoom } from '~/apis/apiClient'
 import Swal from 'sweetalert2'
-import { getRoomByMotelId } from '~/apis/roomAPI'
+import { getRoomByMotelId, createRoom } from '~/apis/roomAPI'
 
 const HomeWData = ({ Motel }) => {
   const { motelId } = useParams()

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
-import { getRoomById } from '~/apis/apiClient'
+import { getRoomById } from '~/apis/roomAPI'
 import { useParams } from 'react-router-dom'
 
 const DetailRoom = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
