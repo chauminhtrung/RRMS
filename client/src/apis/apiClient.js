@@ -106,18 +106,22 @@ export const getMotelByUsername = async (username) => {
 }
 
 export const getMotelById = async (Id) => {
-  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   if (!Id) {
-    console.log(Id);
-    
-    throw new Error('ID không hợp ')
+    return;
   }
-  return await axios.get(`${env.API_URL}/motels/get-motel-id?id=${Id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
-}
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;
+  try {
+    return await axios.get(`${env.API_URL}/motels/get-motel-id?id=${Id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  } catch (error) {
+    console.error('Lỗi khi gọi API:', error);
+    throw error;
+  }
+};
+
 
 //account
 export const getAccountByUsername = async (username) => {
