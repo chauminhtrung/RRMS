@@ -5,8 +5,9 @@ import { useDebounce } from '@uidotdev/usehooks'
 import ModalSearch from './ModalSearch'
 import MicIcon from '@mui/icons-material/Mic'
 import './SearchWHome.css'
-import { searchByName } from '~/apis/apiClient'
+
 import AudioRecorderModal from '../AI/Audio'
+import { searchByName } from '~/apis/searchAPI'
 
 function FilterSearch({ setSearchData }) {
   const [open, setOpen] = useState(false)

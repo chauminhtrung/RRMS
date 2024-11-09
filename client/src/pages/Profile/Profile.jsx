@@ -11,17 +11,17 @@ import {
   Paper,
   styled,
   Tab,
-  Typography,
+  Typography
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import ProfileTab from './ProfileTab'
 import imageCompression from 'browser-image-compression'
 import CameraAltIcon from '@mui/icons-material/CameraAlt'
-import { getProfile } from '~/apis/apiClient'
 import BillingTab from './BillingTab'
 import SecurityTab from './SecurityTab'
 import NotificationTab from './NotificationTab'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import { getProfile } from '~/apis/profileAPI'
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -32,7 +32,7 @@ const VisuallyHiddenInput = styled('input')({
   bottom: 0,
   left: 0,
   whiteSpace: 'nowrap',
-  width: 1,
+  width: 1
 })
 const Profile = ({ setIsAdmin, username }) => {
   const [tabIndex, setTabIndex] = useState('1')
@@ -61,7 +61,7 @@ const Profile = ({ setIsAdmin, username }) => {
         const options = {
           maxSizeMB: 1,
           maxWidthOrHeight: 800,
-          useWebWorker: true,
+          useWebWorker: true
         }
 
         const compressedImage = await imageCompression(image, options)
@@ -97,7 +97,7 @@ const Profile = ({ setIsAdmin, username }) => {
                     width: 30,
                     height: 30,
                     padding: 0,
-                    '&:hover': { backgroundColor: '#f0f0f0' },
+                    '&:hover': { backgroundColor: '#f0f0f0' }
                   }}>
                   <CameraAltIcon fontSize="small" />
                   <VisuallyHiddenInput type="file" accept="image/*" onChange={(event) => handleImageChange(event)} />

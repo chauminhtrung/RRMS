@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom'
 import './Button.css'
+import { useTranslation } from 'react-i18next'
 
 const GoBackButton = () => {
   const navigate = useNavigate() // Khởi tạo useNavigate để dùng điều hướng
+  const { t } = useTranslation() // Dùng từ i18n
 
   // Hàm xử lý khi người dùng nhấn nút
   const handleGoBack = () => {
@@ -11,7 +13,7 @@ const GoBackButton = () => {
 
   return (
     <button className="cssbuttons-io-button" onClick={handleGoBack}>
-      Quay về
+      {t('quay-ve')}
       <div className="icon">
         <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" version="1.1">
           <path d="M0 0h24v24H0z" fill="none"></path>

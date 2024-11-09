@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Editor } from '@tinymce/tinymce-react'
 import { useEffect, useRef, useState } from 'react'
 
-import { createContractTemplate, getContractTemplateById, updateContractTemplate } from '~/apis/apiClient'
 import Swal from 'sweetalert2'
+import { createContractTemplate, getContractTemplateById, updateContractTemplate } from '~/apis/contractTemplateAPI'
 
 const ModelDeposit = ({ motel, username, templatecontractRouteId, fetchDataTemlateContract }) => {
   const editorRef = useRef()

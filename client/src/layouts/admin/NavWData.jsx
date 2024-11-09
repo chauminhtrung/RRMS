@@ -2,8 +2,8 @@ import { Link, useParams, useLocation } from 'react-router-dom'
 import { Tooltip } from 'react-tooltip'
 import { useEffect, useState } from 'react'
 import ModalCreateHome from '~/pages/admin/ManagerHome/ModelCreateHome'
-import { getMotelById, deleteMotel } from '~/apis/apiClient'
 import Swal from 'sweetalert2'
+import { deleteMotel, getMotelById } from '~/apis/motelAPI'
 const NavWData = ({ motels }) => {
   const username = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).username : null
   const { motelId } = useParams() // Lấy tham số motelName từ URL

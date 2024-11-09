@@ -2,9 +2,10 @@ import { Link, useParams, useLocation, useNavigate } from 'react-router-dom'
 import './NavbarAdmin.css'
 import { useEffect, useState } from 'react'
 import NavWData from './NavWData'
-import { getMotelById } from '~/apis/apiClient'
+
 import Swal from 'sweetalert2'
 import { env } from '~/configs/environment'
+import { getMotelById } from '~/apis/motelAPI'
 
 const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, setUsername, setAvatar, setToken }) => {
   const { motelId } = useParams() // Lấy tham số motelId từ URL
@@ -191,7 +192,10 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, se
                     className={`nav-item menu-item ${
                       location.pathname === (motel ? `/dang-tin/${motel.motelId}` : '#') ? 'active' : ''
                     }`}>
-                    <Link to={motel ? `/dang-tin/${motel.motelId}` : '#'} className="nav-link" onClick={() => setIsNavAdmin(true)}>
+                    <Link
+                      to={motel ? `/dang-tin/${motel.motelId}` : '#'}
+                      className="nav-link"
+                      onClick={() => setIsNavAdmin(true)}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
