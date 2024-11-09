@@ -39,7 +39,7 @@ public class SecurityConfig {
             "/detail",
             "/bulletin-board/*",
             "/api-accounts/**",
-            "/motels/get-motel-id"
+            "/motels/get-motel-id",
     };
 
     @Value("${jwt.signer-key}")
