@@ -11,4 +11,5 @@ import lombok.experimental.FieldDefaults;
 public class ChangePasswordByEmail {
     String email;
     String newPassword;
+    String code;
 }

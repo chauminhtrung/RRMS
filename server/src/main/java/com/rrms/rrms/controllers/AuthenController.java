@@ -210,8 +210,10 @@ public class AuthenController {
 
     @PostMapping("/acceptChangePassword")
     public ResponseEntity<Boolean> acceptChangePassword(@RequestBody ChangePasswordByEmail changePasswordByEmail) {
+        if(!changePasswordByEmail.getCode().equals(String.valueOf(randomNumber))){
+            return ResponseEntity.badRequest().body(false);
+        }
         if (!accountService.existsByEmail(changePasswordByEmail.getEmail())) {
-            System.out.println("sai email");
             return ResponseEntity.badRequest().body(false);
         }
         boolean result = accountService.changePasswordByEmail(changePasswordByEmail);
