@@ -7,11 +7,11 @@ import 'flatpickr/dist/plugins/monthSelect/style.css'
 import 'react-tabulator/lib/styles.css' 
 import 'react-tabulator/lib/css/tabulator.min.css' 
 
-const ModelCreateService = ({motelId }) => {
+const ModelCreateService = ({motelId, refreshServices  }) => {
   const [formData, setFormData] = useState({  
-    nameService: '',  
-    chargetype: '',  
-    price: '',  
+    nameService: 'Dịch vụ 1',  
+    chargetype: 'kwh',  
+    price: '10000',  
     subtraction: false,  
   });  
 
@@ -53,7 +53,7 @@ const ModelCreateService = ({motelId }) => {
           title: 'Thành công',  
           text: 'Thêm dịch vụ thành công!',  
         });  
-
+        refreshServices();  
         // Reset form sau khi thêm thành công  
         setFormData({  
           nameService: '',  
@@ -64,18 +64,7 @@ const ModelCreateService = ({motelId }) => {
       }  
     } catch (error) {
       console.error('Error creating service:', error);
-      if (error.response) {
-          // Server phản hồi với mã lỗi khác 200
-          console.log("Data:", error.response.data); // Nội dung phản hồi từ server
-          console.log("Status:", error.response.status); // Mã trạng thái HTTP
-          console.log("Headers:", error.response.headers); // Headers của phản hồi
-      } else if (error.request) {
-          // Yêu cầu được gửi đi nhưng không nhận được phản hồi
-          console.log("Request:", error.request);
-      } else {
-          // Một lỗi xảy ra trong quá trình thiết lập yêu cầu
-          console.log("Error Message:", error.message);
-      }
+      
       Swal.fire({
           icon: 'error',
           title: 'Lỗi',
@@ -249,7 +238,7 @@ const ModelCreateService = ({motelId }) => {
                   <button type="button" className="btn btn-secondary m-1" data-bs-dismiss="modal">
                     Đóng
                   </button>
-                  <button type="button" id="submit-add-price-item" className="btn btn-primary" onClick={handleSubmit}>
+                  <button type="button" id="submit-add-price-item" className="btn btn-primary" onClick={handleSubmit} data-bs-dismiss="modal">
                     Thêm mới
                   </button>
                 </div>

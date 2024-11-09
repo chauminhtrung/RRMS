@@ -70,7 +70,7 @@ export const listMotel = async () => {
 }
 export const createMotel = async (Motel) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-  return await axios.post(`${env.API_URL}/motels`, Motel, {
+  return await axios.post(`${env.API_URL}/motels/create`, Motel, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -259,7 +259,7 @@ export const getAllTypeRoom = async () => {
 //Motel-Service
 export const createSerivceMotel = async (data) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-  const response = await axios.post(`${env.API_URL}/motel-services`, data, {
+  const response = await axios.post(`${env.API_URL}/motel-services/create`, data, {
     headers: {
       Authorization: `Bearer ${token}`
     }
