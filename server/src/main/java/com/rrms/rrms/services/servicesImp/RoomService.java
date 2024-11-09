@@ -231,6 +231,8 @@ public class RoomService implements IRoom {
         response.setMotelId(room.getMotel().getMotelId());
         response.setName(room.getName());
         response.setGroup(room.getGroup());
+        response.setPrioritize(room.getPrioritize());
+        response.setArea(room.getArea());
         response.setPrice(room.getPrice());
         response.setDeposit(room.getDeposit());
         response.setDebt(room.getDebt());
@@ -250,6 +252,8 @@ public class RoomService implements IRoom {
         room.setName(roomRequest.getName());
         room.setGroup(roomRequest.getGroup());
         room.setPrice(roomRequest.getPrice());
+        room.setPrioritize(roomRequest.getPrioritize());
+        room.setArea(roomRequest.getArea());
         room.setDeposit(roomRequest.getDeposit());
         room.setDebt(roomRequest.getDebt());
         room.setCountTenant(roomRequest.getCountTenant());
@@ -267,6 +271,8 @@ public class RoomService implements IRoom {
         if (roomRequest.getName() != null) room.setName(roomRequest.getName());
         if (roomRequest.getGroup() != null) room.setGroup(roomRequest.getGroup());
         if (roomRequest.getPrice() != null) room.setPrice(roomRequest.getPrice());
+        if (roomRequest.getPrioritize() != null) room.setPrioritize(roomRequest.getPrioritize());
+        if (roomRequest.getArea() != null) room.setArea(roomRequest.getArea());
         if (roomRequest.getDeposit() != null) room.setDeposit(roomRequest.getDeposit());
         if (roomRequest.getDebt() != null) room.setDebt(roomRequest.getDebt());
         if (roomRequest.getCountTenant() != null) room.setCountTenant(roomRequest.getCountTenant());

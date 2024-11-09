@@ -491,6 +491,44 @@
     font-weight: 600;
   }
 
+  
+  .content-room-info .item {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.deposit-temp-info .item {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+.container {
+position: relative;
+}
+
+.image {
+width: 100%;
+max-width: 400px;
+cursor: pointer;
+}
+
+.zoomed-img {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.7);
+display: none;
+justify-content: center;
+align-items: center;
+}
+
+.zoomed-img img {
+max-width: 90%;
+max-height: 90%;
+}
+
+
 
   /* ben in hoa don admin */
   .nav-tabs.progressbar{

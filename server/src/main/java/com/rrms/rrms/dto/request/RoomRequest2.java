@@ -17,6 +17,8 @@ public class RoomRequest2 {
     private String name;
     private String group;
     private Double price;
+    private String prioritize;
+    private Integer area;
     private Double deposit;
     private Double debt;
     private Integer countTenant;
