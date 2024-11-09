@@ -1,15 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react'
-import {
-  getPhuongXa,
-  getQuanHuyen,
-  getTinhThanh,
-  getAllTypeRoom,
-  createMotel,
-  getMotelById,
-  updateMotel,
-  createSerivceMotel
-} from '~/apis/apiClient'
+
 import Swal from 'sweetalert2'
+import { getPhuongXa, getQuanHuyen, getTinhThanh } from '~/apis/addressAPI'
+import { createMotel, getMotelById, updateMotel } from '~/apis/motelAPI'
+import { createSerivceMotel } from '~/apis/motelServiceAPI'
+import { getAllTypeRoom } from '~/apis/typeRoomAPI'
 const ModelCreateHome = ({ username, MotelId }) => {
   const [selectedOption, setSelectedOption] = useState('')
   const [FileName, setFileName] = useState('')
@@ -56,7 +52,7 @@ const ModelCreateHome = ({ username, MotelId }) => {
 
   useEffect(() => {
     if (MotelId && MotelId !== 'Create') {
-      fetchDataWhenEdit(MotelId);
+      fetchDataWhenEdit(MotelId)
     } else {
       setMotel({
         typeRoom: '',
@@ -69,10 +65,9 @@ const ModelCreateHome = ({ username, MotelId }) => {
         maxperson: 1,
         invoicedate: '',
         paymentdeadline: ''
-      });
+      })
     }
-  }, [MotelId]);
-  
+  }, [MotelId])
 
   //tao service
   const handleCreateServices = async (id) => {
@@ -124,6 +119,7 @@ const ModelCreateHome = ({ username, MotelId }) => {
       // Gửi từng dịch vụ đến API
       for (const service of services) {
         await createSerivceMotel(service)
+        console.log('createSerivceMotel')
       }
       // Xử lý phản hồi từ API (như thông báo thành công)
     } catch (error) {
@@ -282,8 +278,8 @@ const ModelCreateHome = ({ username, MotelId }) => {
                   text: 'Motel created successfully!'
                 })
                 setMotel(response)
-                console.log(response);
-                
+                console.log(response)
+
                 handleCreateServices(response.data.result.motelId)
                 setTimeout(() => {
                   window.location.reload()
