@@ -3,7 +3,7 @@ import { env } from '~/configs/environment'
 
 export const createMotel = async (Motel) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-  return await axios.post(`${env.API_URL}/motels`, Motel, {
+  return await axios.post(`${env.API_URL}/motels/create`, Motel, {
     headers: {
       Authorization: `Bearer ${token}`
     }
