@@ -63,6 +63,7 @@ public class MailService implements IMailService {
         try {
             return sendMail(to, subject, content);
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
