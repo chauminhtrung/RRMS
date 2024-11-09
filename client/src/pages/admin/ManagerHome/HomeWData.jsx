@@ -1,10 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Tooltip } from 'react-tooltip'
 import { useEffect, useState, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import 'react-tabulator/lib/styles.css' // required styles
 import 'react-tabulator/lib/css/tabulator.min.css' // theme
 import { ReactTabulator } from 'react-tabulator'
-import { getRoomByMotelId } from '~/apis/apiClient'
+import { getRoomByMotelId } from '~/apis/roomAPI'
+
 const HomeWData = ({ Motel }) => {
   const { motelId } = useParams()
   const [rooms, setRooms] = useState([])
@@ -22,7 +24,7 @@ const HomeWData = ({ Motel }) => {
         console.log('set null ')
       }
     }
-    
+
     document.addEventListener('click', handleClickOutside)
     return () => {
       document.removeEventListener('click', handleClickOutside)
@@ -38,7 +40,6 @@ const HomeWData = ({ Motel }) => {
     if (motelId) {
       try {
         const dataRoom = await getRoomByMotelId(motelId)
-        console.log(dataRoom)
         setRooms(dataRoom)
       } catch (error) {
         console.log(error)
@@ -46,7 +47,6 @@ const HomeWData = ({ Motel }) => {
     } else {
       try {
         const dataRoom = await getRoomByMotelId(Motel[0].motelId)
-        console.log(dataRoom)
         setRooms(dataRoom)
       } catch (error) {
         console.log(error)

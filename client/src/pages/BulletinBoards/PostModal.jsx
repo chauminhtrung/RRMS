@@ -23,7 +23,7 @@ import ViewInArIcon from '@mui/icons-material/ViewInAr'
 import { useEffect, useState } from 'react'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import LocationSelect from '~/components/ProvinceSelect'
-import { getAccountByUsername, introspect, postBulletinBoard } from '~/apis/apiClient'
+
 import { toast } from 'react-toastify'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { storage } from '~/configs/firebaseConfig'
@@ -33,6 +33,8 @@ import * as Yup from 'yup'
 import TitleAttribute from './TitleAttribute'
 import { processImage } from '~/utils/processImage'
 import MapComponent from './MapComponent'
+import { getAccountByUsername, introspect } from '~/apis/accountAPI'
+import { postBulletinBoard } from '~/apis/bulletinBoardAPI'
 
 const style = {
   position: 'absolute',

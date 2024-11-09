@@ -6,7 +6,7 @@ import Swal from 'sweetalert2'
 import LanguageSelect from './Options/LanguageSelect'
 import ModeSelect from './Options/ModeSelect'
 
-const Header = ({ username, avatar, setUsername, setAvatar, setToken }) => {
+const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLanguage, currentLanguage }) => {
   const [IsDanhmuc, setIsDanhmuc] = useState(false)
   const [IsMuaban, setIsMuaban] = useState(false)
   const [IsTaikhoan, setIsTaikhoan] = useState(false)
@@ -156,7 +156,13 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken }) => {
             <div className="aw__l152mft9">
               <a className="aw__l1l4rfje leftWrapperCss" href="/RRMS" style={{ justifyContent: 'unset' }}>
                 <picture>
-                  <img height="35" width="188" className="aw__ldrazpr" src="./logo.png" alt="Nhà trọ" />
+                  <img
+                    height="35"
+                    width="188"
+                    className="aw__ldrazpr"
+                    src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Flogo.png?alt=media&token=719c4675-1dc4-42d2-af36-ec52626519e4"
+                    alt="Nhà trọ"
+                  />
                 </picture>
               </a>
             </div>
@@ -365,7 +371,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken }) => {
               </div>
 
               <div className="aw__njogxfr">
-                <LanguageSelect />
+                <LanguageSelect toggleLanguage={toggleLanguage} currentLanguage={currentLanguage} />
                 {/* <a className="aw__n1u3b0ub" href="https://chat.chotot.com/chat" rel="nofollow" aria-label="chat">
                   <svg
                     width="24"

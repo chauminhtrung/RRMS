@@ -2,35 +2,35 @@ import { Link, useParams, useLocation, useNavigate } from 'react-router-dom'
 import './NavbarAdmin.css'
 import { useEffect, useState } from 'react'
 import NavWData from './NavWData'
-import { getMotelById } from '~/apis/apiClient'
+
 import Swal from 'sweetalert2'
 import { env } from '~/configs/environment'
+import { getMotelById } from '~/apis/motelAPI'
 
 const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, setUsername, setAvatar, setToken }) => {
-  const { motelId } = useParams() // Lấy tham số motelId từ URL
+  const { motelId } = useParams(); // Lấy tham số motelId từ URL
   const location = useLocation()
   const [motel, setmotel] = useState(null)
   const navigate = useNavigate()
 
   useEffect(() => {
-    // Nếu có danh sách nhà trọ và không có tên cụ thể từ URL
+    // Kiểm tra xem có giá trị hợp lệ cho motelId hay không
     if (motels && motels.length > 0 && !motelId) {
-      setmotel(motels[0]) // Cập nhật phòng trọ đầu tiên nếu tồn tại dữ liệu
-    } else {
-      // Nếu có tên nhà trọ từ URL, lấy dữ liệu bằng API
-      console.log('co id ben NavBarAdmin', motelId)
+      setmotel(motels);
+    } else if (motelId) {
       getMotelById(motelId).then((res) => {
-        setmotel(res.data.result)
-      })
+        setmotel(res.data.result);
+      }).catch(error => {
+        console.error('Không thể lấy thông tin motel:', error);
+      });
+    } else {
+      console.error('ID từ URL không hợp lệ hoặc không tồn tại.');
     }
-  }, [motels, motelId]) // Thêm các dependencies cần thiết vào mảng dependencies
+  }, [motels, motelId]);
 
   // Theo dõi khi motel thay đổi để kiểm tra giá trị
   useEffect(() => {
-    if (motel) {
-      console.log('Motel đã được cập nhật:')
-      console.log(motel)
-    }
+
   }, [motel]) // Chỉ chạy khi motel thay đổi
 
   const handleLogout = async () => {
@@ -191,7 +191,10 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, se
                     className={`nav-item menu-item ${
                       location.pathname === (motel ? `/dang-tin/${motel.motelId}` : '#') ? 'active' : ''
                     }`}>
-                    <Link to={motel ? `/dang-tin/${motel.motelId}` : '#'} className="nav-link" onClick={() => setIsNavAdmin(true)}>
+                    <Link
+                      to={motel ? `/dang-tin/${motel.motelId}` : '#'}
+                      className="nav-link"
+                      onClick={() => setIsNavAdmin(true)}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
