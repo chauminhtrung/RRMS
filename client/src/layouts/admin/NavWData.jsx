@@ -18,10 +18,7 @@ const NavWData = ({ motels }) => {
     } else {
       // Nếu có tên nhà trọ từ URL, lấy dữ liệu bằng API
       if (motelId) {
-        console.log('co id ben NawDate', motelId)
         getMotelById(motelId).then((res) => {
-          console.log(res)
-
           setmotel(res.data.result)
         })
       }
@@ -30,11 +27,15 @@ const NavWData = ({ motels }) => {
 
   // Theo dõi khi motel thay đổi để kiểm tra giá trị
   useEffect(() => {
-    if (motel) {
-      console.log('Motel đã được cập nhật:')
-      console.log(motel)
+    if (motelId) {
+      getMotelById(motelId)
+        .then((res) => setmotel(res.data.result))
+        .catch((error) => console.error("Error fetching motel:", error));
+    } else if (motels && motels.length > 0) {
+      setmotel(motels[0]); // Cập nhật nhà trọ đầu tiên nếu không có `motelId` trong URL
     }
-  }, [motel]) // Chỉ chạy khi motel thay đổi
+  }, [motels, motelId]);
+  
 
   //nhan vao nut edit
   //ham xoa template Contract

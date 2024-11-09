@@ -50,8 +50,8 @@ const ModelCreateHome = ({ username, MotelId }) => {
   }, [])
 
   useEffect(() => {
-    if (MotelId !== 'Create') {
-      fetchDataWhenEdit(MotelId)
+    if (MotelId && MotelId !== 'Create') {
+      fetchDataWhenEdit(MotelId);
     } else {
       setMotel({
         typeRoom: '',
@@ -64,9 +64,10 @@ const ModelCreateHome = ({ username, MotelId }) => {
         maxperson: 1,
         invoicedate: '',
         paymentdeadline: ''
-      })
+      });
     }
-  }, [MotelId]) // Thêm templatecontractRouteId vào dependency array
+  }, [MotelId]);
+  
 
   //tao service
   const handleCreateServices = async (id) => {
@@ -119,7 +120,6 @@ const ModelCreateHome = ({ username, MotelId }) => {
       for (const service of services) {
         await createSerivceMotel(service)
       }
-      console.log('All services created successfully.')
       // Xử lý phản hồi từ API (như thông báo thành công)
     } catch (error) {
       console.error('Error creating services:', error)
@@ -220,8 +220,6 @@ const ModelCreateHome = ({ username, MotelId }) => {
     if (username) {
       try {
         const response = await getAllTypeRoom()
-        console.log(response)
-
         setTyperooms(response.result)
       } catch (error) {
         console.log(error)

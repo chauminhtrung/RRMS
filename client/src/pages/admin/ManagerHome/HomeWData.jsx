@@ -40,7 +40,6 @@ const HomeWData = ({ Motel }) => {
     if (motelId) {
       try {
         const dataRoom = await getRoomByMotelId(motelId)
-        console.log(dataRoom)
         setRooms(dataRoom)
       } catch (error) {
         console.log(error)
@@ -48,7 +47,6 @@ const HomeWData = ({ Motel }) => {
     } else {
       try {
         const dataRoom = await getRoomByMotelId(Motel[0].motelId)
-        console.log(dataRoom)
         setRooms(dataRoom)
       } catch (error) {
         console.log(error)
