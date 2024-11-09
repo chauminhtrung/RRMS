@@ -1,6 +1,6 @@
 import { Avatar, Box, Button, Rating, TextareaAutosize, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { getBulletinBoardReviewByBulletinBoardIdAndUsername, postBulletinBoardReview } from '~/apis/apiClient'
+import { getBulletinBoardReviewByBulletinBoardIdAndUsername, postBulletinBoardReview } from '~/apis/bulletinBoardAPI'
 
 const UserRating = ({ roomId, username, setReview, review, refreshBulletinBoards }) => {
   const [account, setAccount] = useState(null)

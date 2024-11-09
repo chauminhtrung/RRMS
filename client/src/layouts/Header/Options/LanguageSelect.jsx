@@ -1,17 +1,6 @@
 import { Box } from '@mui/material'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
-const LanguageSelect = () => {
-  const { i18n } = useTranslation()
-  const [currentLanguage, setCurrentLanguage] = useState(i18n.language)
-
-  const toggleLanguage = () => {
-    const newLanguage = currentLanguage === 'vi' ? 'en' : 'vi'
-    i18n.changeLanguage(newLanguage)
-    setCurrentLanguage(newLanguage)
-  }
-
+const LanguageSelect = ({ toggleLanguage, currentLanguage }) => {
   return (
     <Box
       onClick={toggleLanguage}
