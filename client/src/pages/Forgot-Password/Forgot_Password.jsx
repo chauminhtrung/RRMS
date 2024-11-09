@@ -13,7 +13,7 @@ const Forgot_Password = ({ setIsAdmin }) => {
         background: ' url(./login-background.webp) no-repeat',
         backgroundSize: 'contain',
         backgroundPositionY: '60%',
-        justifyContent: 'center',
+        justifyContent: 'center'
       }}>
       <div className="container mb-5">
         <div className="login-container d-flex" id="login">
@@ -25,7 +25,7 @@ const Forgot_Password = ({ setIsAdmin }) => {
                     borderRadius: '100%',
                     border: '2px solid #4bcffa',
                     margin: '15px 0px',
-                    boxShadow: ' 0 1rem 2rem 0 rgb(0 0 0 / 3%), 0 0.5rem 1rem 0 rgb(0 0 0 / 5%)',
+                    boxShadow: ' 0 1rem 2rem 0 rgb(0 0 0 / 3%), 0 0.5rem 1rem 0 rgb(0 0 0 / 5%)'
                   }}
                   width="80px"
                   className="custom-logo img-responsive"
@@ -48,7 +48,7 @@ const Forgot_Password = ({ setIsAdmin }) => {
                         <div className="col-12">
                           <div className="form-group mb-2">
                             <label htmlFor="phone" className="form-label">
-                              Số điện thoại <span className="text-danger">*</span>
+                              Nhập gmail gắn với tài khoản <span className="text-danger">*</span>
                             </label>
                             <input
                               type="text"
@@ -63,7 +63,7 @@ const Forgot_Password = ({ setIsAdmin }) => {
                         <div className="col-6">
                           <div className="form-group mb-2">
                             <label htmlFor="name" className="form-label">
-                              Mật khẩu mới <span className="text-danger">*</span>
+                              Nhập mật khẩu mới <span className="text-danger">*</span>
                             </label>
                             <input
                               type="password"
@@ -77,7 +77,7 @@ const Forgot_Password = ({ setIsAdmin }) => {
                         <div className="col-6">
                           <div className="form-group mb-2">
                             <label htmlFor="confirm_password" className="form-label">
-                              Nhập lại mật khẩu <span className="text-danger">*</span>
+                              Nhập lại mật khẩu mới <span className="text-danger">*</span>
                             </label>
                             <input
                               type="password"
@@ -91,8 +91,8 @@ const Forgot_Password = ({ setIsAdmin }) => {
                       </div>
                       <div style={{ marginTop: '20px' }}>
                         <p>
-                          Chúng tôi sẽ gữi một mã xác nhận về tài khoản Zalo qua số điện thoại bạn nhập. Để xác minh
-                          tính hợp lệ trước khi yêu cầu đổi mật khẩu
+                          Chúng tôi sẽ gữi một mã xác nhận về Gmail qua Gmail bạn nhập. Để xác minh tính hợp lệ trước
+                          khi yêu cầu đổi mật khẩu
                         </p>
                       </div>
                       <div className="d-block mt-4">

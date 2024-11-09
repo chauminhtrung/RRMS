@@ -49,7 +49,7 @@ public class DB {
             BulletinBoardImageRepository bulletinBoardImageRepository,
             BulletinBoards_RentalAmRepository bulletinBoards_rentalAmRepository) {
         return args -> {
-            int roomsLength = 500;
+            int roomsLength = 5;
             log.info("Starting to create data... length: {}", roomsLength);
 
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
@@ -207,6 +207,7 @@ public class DB {
             customerPermissions.add(createPermission("VIEW_CONTRACT", "View contracts", permissionRepository));
             customerPermissions.add(createPermission("SUPPORT", "Support requests", permissionRepository));
             customerPermissions.add(createPermission("PAYMENT", "Handle payments", permissionRepository));
+            customerPermissions.add(createPermission("REVIEWS", "Reviews bulletin board", permissionRepository));
             // Define GUEST permissions
             Set<Permission> guestPermissions = new HashSet<>();
             guestPermissions.add(createPermission("VIEW_SEARCH_MOTEL", "View and search motels", permissionRepository));

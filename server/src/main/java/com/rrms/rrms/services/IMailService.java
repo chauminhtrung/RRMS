@@ -1,5 +1,5 @@
 package com.rrms.rrms.services;
 
 public interface IMailService {
-    public void sendMail(String to, String subject, String text);
+    public boolean Send_ForgetPassword(String to, String subject, String text);
 }

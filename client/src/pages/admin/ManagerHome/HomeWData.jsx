@@ -1,11 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Tooltip } from 'react-tooltip'
 import { useEffect, useState, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import 'react-tabulator/lib/styles.css' // required styles
 import 'react-tabulator/lib/css/tabulator.min.css' // theme
 import { ReactTabulator } from 'react-tabulator'
-import { getRoomByMotelId, createRoom } from '~/apis/apiClient'
+import { createRoom } from '~/apis/apiClient'
 import Swal from 'sweetalert2'
+import { getRoomByMotelId } from '~/apis/roomAPI'
+
 const HomeWData = ({ Motel }) => {
   const { motelId } = useParams()
   const [rooms, setRooms] = useState([])
@@ -112,7 +115,6 @@ const HomeWData = ({ Motel }) => {
     if (motelId) {
       try {
         const dataRoom = await getRoomByMotelId(motelId)
-        console.log(dataRoom)
         setRooms(dataRoom)
       } catch (error) {
         console.log(error)
@@ -120,7 +122,6 @@ const HomeWData = ({ Motel }) => {
     } else {
       try {
         const dataRoom = await getRoomByMotelId(Motel[0].motelId)
-        console.log(dataRoom)
         setRooms(dataRoom)
       } catch (error) {
         console.log(error)
@@ -405,7 +406,7 @@ const HomeWData = ({ Motel }) => {
           <div className="row g-3 row-box-home" style={{ marginTop: '0px' }}>
             <div className="col-sm-3" style={{ marginTop: '0px' }}>
               <div className="item-home " data-bs-toggle="modal" data-bs-target="#reportBillDebt">
-                <a href="javascript:," className="create-home">
+                <a href="#" className="create-home">
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -423,7 +424,7 @@ const HomeWData = ({ Motel }) => {
                     </svg>
                   </span>
                 </a>
-                <a href="javascript:," className="box-home span-red-white">
+                <a href="#" className="box-home span-red-white">
                   <div className="d-flex align-items-center">
                     <span className="icon-home">
                       <img
@@ -441,7 +442,7 @@ const HomeWData = ({ Motel }) => {
             </div>
             <div className="col-sm-3" style={{ marginTop: '0px' }}>
               <div className="item-home" data-bs-toggle="modal" data-bs-target="#reportContractDeposit">
-                <a href="javascript:;" className="create-home">
+                <a href="#" className="create-home">
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -459,7 +460,7 @@ const HomeWData = ({ Motel }) => {
                     </svg>
                   </span>
                 </a>
-                <a href="javascript:;" className="box-home span-primary-white">
+                <a href="#" className="box-home span-primary-white">
                   <div className="d-flex align-items-center">
                     <span className="icon-home">
                       <img
@@ -479,7 +480,7 @@ const HomeWData = ({ Motel }) => {
             </div>
             <div className="col-sm-3" style={{ marginTop: '0px' }}>
               <div className="item-home" data-bs-toggle="modal" data-bs-target="#reportDepositTemp">
-                <a href="javascript:;" className="create-home">
+                <a href="#" className="create-home">
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -497,7 +498,7 @@ const HomeWData = ({ Motel }) => {
                     </svg>
                   </span>
                 </a>
-                <a href="javascript:;" className="box-home span-primary-white">
+                <a href="#" className="box-home span-primary-white">
                   <div className="d-flex align-items-center">
                     <span className="icon-home">
                       <img
@@ -517,7 +518,7 @@ const HomeWData = ({ Motel }) => {
             </div>
             <div className="col-sm-3" style={{ marginTop: '0px' }}>
               <div className="item-home report">
-                <a href="javascript:;" className="create-home">
+                <a href="#" className="create-home">
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -535,7 +536,7 @@ const HomeWData = ({ Motel }) => {
                     </svg>
                   </span>
                 </a>
-                <a href="javascript:;" className="box-home span-red-white">
+                <a href="#" className="box-home span-red-white">
                   <div className="d-flex align-items-center">
                     <span className="icon-home">
                       <img
@@ -664,7 +665,7 @@ const HomeWData = ({ Motel }) => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="group_id"
                             value="group_id"
@@ -676,7 +677,7 @@ const HomeWData = ({ Motel }) => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="deposit_contract_amount"
                             value="deposit_contract_amount"
@@ -688,7 +689,7 @@ const HomeWData = ({ Motel }) => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="debt_amount"
                             value="debt_amount"
@@ -700,7 +701,7 @@ const HomeWData = ({ Motel }) => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="customers"
                             value="customers"
@@ -712,7 +713,7 @@ const HomeWData = ({ Motel }) => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="circle_day"
                             value="circle_day/"
@@ -724,7 +725,7 @@ const HomeWData = ({ Motel }) => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="circle_month"
                             value="circle_month"
@@ -736,7 +737,7 @@ const HomeWData = ({ Motel }) => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="date_join"
                             value="date_join"
@@ -748,7 +749,7 @@ const HomeWData = ({ Motel }) => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="date_terminate"
                             value="date_terminate"

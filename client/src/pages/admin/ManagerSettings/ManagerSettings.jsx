@@ -4,15 +4,11 @@ import Flatpickr from 'react-flatpickr'
 import 'flatpickr/dist/themes/material_blue.css'
 import { useParams } from 'react-router-dom'
 import ModelDeposit from './ModelDeposit'
-import {
-  CreateTRC,
-  getTRCByusername,
-  updateTRCById,
-  getContractTemplatesByMotelId,
-  deleteContractTemplate,
-  getMotelById
-} from '~/apis/apiClient'
+
 import Swal from 'sweetalert2'
+import { CreateTRC, getTRCByusername, updateTRCById } from '~/apis/TRCAPI'
+import { deleteContractTemplate, getContractTemplatesByMotelId } from '~/apis/contractTemplateAPI'
+import { getMotelById } from '~/apis/motelAPI'
 
 const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
   // Khởi tạo một đối tượng trạng thái cho tất cả các trường
