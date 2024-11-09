@@ -1,7 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react'
+import { getAccountByUsername } from '~/apis/accountAPI'
 
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
-import { getAccountByUsername } from '~/apis/apiClient'
+
 const ManagerMyAccount = ({ setIsAdmin, TaiKhoan }) => {
   const [account, setAccount] = useState([])
 
@@ -97,7 +99,7 @@ const ManagerMyAccount = ({ setIsAdmin, TaiKhoan }) => {
                             cursor: 'pointer!important',
                             width: '100px',
 
-                            margin: 'auto',
+                            margin: 'auto'
                           }}>
                           <img src="https://quanlytro.me/./images/avatar.png" width="100%" alt="avatar" />
                         </div>

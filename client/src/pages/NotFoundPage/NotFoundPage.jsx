@@ -2,8 +2,10 @@ import anime from 'animejs'
 import './NotFoundPage.css'
 import GoBackButton from './GoBackButton'
 import { Typography } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 const NotFoundPage = () => {
+  const { t } = useTranslation()
   anime({
     targets: '.row svg',
     translateY: 10,
@@ -1180,7 +1182,7 @@ const NotFoundPage = () => {
         </div>
       </a>
       <Typography variant="h6" component="body" sx={{ fontWeight: 'normal', fontSize: '20px', mx: 2 }}>
-        Trang này không tồn tại, vui lòng quay về trang chính
+        {t('404-xin-loi-khong-ton-tai')}
       </Typography>
       <GoBackButton />
     </div>

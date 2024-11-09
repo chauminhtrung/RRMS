@@ -1,8 +1,7 @@
-/* eslint-disable react/prop-types */
 // components/LocationSelect.js
 import { useState, useEffect } from 'react'
 import { MenuItem, FormControl, InputLabel, Select, Box } from '@mui/material'
-import { getPhuongXa, getQuanHuyen, getTinhThanh } from '~/apis/apiClient'
+import { getPhuongXa, getQuanHuyen, getTinhThanh } from '~/apis/addressAPI'
 
 const LocationSelect = ({ onChangeProvince, onChangeDistrict, onChangeWard }) => {
   const [provinces, setProvinces] = useState([])

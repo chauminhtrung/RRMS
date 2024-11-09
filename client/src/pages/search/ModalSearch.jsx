@@ -11,9 +11,9 @@ import {
   Select,
   Typography,
   useMediaQuery,
-  useTheme,
+  useTheme
 } from '@mui/material'
-import LoadingPage from '~/components/LoadingPage'
+import LoadingPage from '~/components/LoadingPage/LoadingPage'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import { useTranslation } from 'react-i18next'
 
@@ -94,7 +94,7 @@ const ModalSearch = ({ open, handleClose }) => {
             border: 'none',
             boxShadow: 24,
             borderRadius: 2,
-            p: isMobile ? 2 : 4, // Giảm padding cho mobile
+            p: isMobile ? 2 : 4 // Giảm padding cho mobile
           }}>
           <Paper elevation={3} sx={{ maxWidth: '100%', padding: isMobile ? 2 : 3, borderRadius: 2 }}>
             {/* Tiêu đề */}
@@ -106,7 +106,7 @@ const ModalSearch = ({ open, handleClose }) => {
                 color: 'white',
                 padding: 1,
                 textAlign: 'center',
-                borderRadius: 1,
+                borderRadius: 1
               }}>
               TIÊU CHÍ TÌM KIẾM
             </Typography>
@@ -186,7 +186,7 @@ const ModalSearch = ({ open, handleClose }) => {
                         justifyContent: 'flex-start', // Đẩy nội dung của Button ra sát lề trái
                         backgroundColor: propertyType === type ? '#1e90ff' : 'white',
                         color: propertyType === type ? 'white' : 'black',
-                        fontSize: isMobile ? '0.75rem' : '1rem', // Điều chỉnh font cho mobile
+                        fontSize: isMobile ? '0.75rem' : '1rem' // Điều chỉnh font cho mobile
                       }}>
                       {t(type)}
                     </Button>
@@ -213,7 +213,7 @@ const ModalSearch = ({ open, handleClose }) => {
                         justifyContent: 'flex-start',
                         backgroundColor: occupation === occ ? '#1e90ff' : 'white',
                         color: occupation === occ ? 'white' : 'black',
-                        fontSize: isMobile ? '0.75rem' : '1rem',
+                        fontSize: isMobile ? '0.75rem' : '1rem'
                       }}>
                       {t(occ)}
                     </Button>
@@ -233,7 +233,7 @@ const ModalSearch = ({ open, handleClose }) => {
                   marginBottom: isMobile ? 1 : 0,
                   backgroundColor: '#1e90ff',
                   border: '1px solid gray',
-                  color: '#ffffff',
+                  color: '#ffffff'
                 }}>
                 {t('dong-bo-loc')}
               </Button>
