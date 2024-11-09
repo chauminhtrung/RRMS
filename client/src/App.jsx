@@ -317,7 +317,7 @@ function App() {
           {/* detaiROoom */}
 
           <Route
-            path="/Chi-tiet-phong/:roomId"
+            path="/quanlytro/:motelId/Chi-tiet-phong/:roomId"
             element={
               <DetailRoom
                 motels={motels}

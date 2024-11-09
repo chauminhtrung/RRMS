@@ -511,6 +511,12 @@ max-width: 400px;
 cursor: pointer;
 }
 
+
+#list-customers .item-feature:hover{
+    border-color: #6caac9!important;
+}
+
+
 .zoomed-img {
 position: fixed;
 top: 0;

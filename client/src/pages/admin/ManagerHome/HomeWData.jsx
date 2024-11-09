@@ -236,6 +236,9 @@ const HomeWData = ({ Motel }) => {
   const handleItemClick = (label) => {
     if (label === 'Đóng menu') {
       setShowMenu(null) // Đóng menu
+    }
+    if (label === 'Chi tiết phòng') {
+      window.open(`/quanlytro/${motelId}/Chi-tiet-phong/${showMenu}`, '_blank') // Thay "https://example.com" bằng URL bạn muốn mở
     } else {
       alert(`Action: ${label} on room ${showMenu}`)
     }
