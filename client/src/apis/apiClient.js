@@ -106,26 +106,27 @@ export const getMotelByUsername = async (username) => {
 }
 
 export const getMotelById = async (Id) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   if (!Id) {
-    return;
-  }
-  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;
-  try {
-    return await axios.get(`${env.API_URL}/motels/get-motel-id?id=${Id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-  } catch (error) {
-    console.error('Lỗi khi gọi API:', error);
-    throw error;
-  }
-};
+    console.log(Id)
 
+    throw new Error('ID không hợp ')
+  }
+  return await axios.get(`${env.API_URL}/motels/get-motel-id?id=${Id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
 
 //account
 export const getAccountByUsername = async (username) => {
-  return await axios.get(`http://localhost:8080/api-accounts/get-account/${username}`)
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  return await axios.get(`http://localhost:8080/api-accounts/${username}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
 }
 
 //TRC
@@ -331,5 +332,28 @@ export const postBulletinBoard = async (data) => {
       Authorization: `Bearer ${token}`
     }
   })
+  return response.data
+}
+
+export const postBulletinBoardReview = async (data) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  const response = await axios.post(`${env.API_URL}/bulletin-board-reviews`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  return response.data
+}
+
+export const getBulletinBoardReviewByBulletinBoardIdAndUsername = async (bulletinBoardId, username) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  const response = await axios.get(
+    `${env.API_URL}/bulletin-board-reviews?bulletinBoardId=${bulletinBoardId}&username=${username}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  )
   return response.data
 }

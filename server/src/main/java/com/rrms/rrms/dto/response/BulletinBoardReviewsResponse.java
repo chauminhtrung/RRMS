@@ -1,10 +1,11 @@
 package com.rrms.rrms.dto.response;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -15,8 +16,7 @@ public class BulletinBoardReviewsResponse implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
-
-    String bulletinBoardReviewsId;
+    UUID bulletinBoardReviewsId;
     String content;
     Integer rating;
     AccountResponse account;

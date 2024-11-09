@@ -1,5 +1,7 @@
 import anime from 'animejs'
 import './NotFoundPage.css'
+import GoBackButton from './GoBackButton'
+import { Typography } from '@mui/material'
 
 const NotFoundPage = () => {
   anime({
@@ -23,7 +25,7 @@ const NotFoundPage = () => {
   })
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
       <a target="_blank" href="https://rrms.vercel.app/">
         <div className="container">
           <div className="row">
@@ -1177,6 +1179,10 @@ const NotFoundPage = () => {
           </div>
         </div>
       </a>
+      <Typography variant="h6" component="body" sx={{ fontWeight: 'normal', fontSize: '20px', mx: 2 }}>
+        Trang này không tồn tại, vui lòng quay về trang chính
+      </Typography>
+      <GoBackButton />
     </div>
   )
 }
