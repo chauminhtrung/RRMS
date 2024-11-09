@@ -152,6 +152,9 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
         });  
     }  
 };
+  const refreshServices = () => {  
+    fetchMotelServices(motelId);  
+  };  
 
   // Gọi hàm fetchMotelServices mỗi khi motelId thay đổi  
   useEffect(() => {  
@@ -299,7 +302,8 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
         </div>
       </div>
       {/* Modal them dich vu  */}
-      <ModelCreateService motelId={motelId} />
+      <ModelCreateService motelId={motelId} refreshServices={refreshServices} /> 
+
       {isUpdateModalOpen && (
       <ModelUpdateService
         serviceData={selectedService}

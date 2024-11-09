@@ -3,12 +3,18 @@ import {
   getPhuongXa,
   getQuanHuyen,
   getTinhThanh,
+} from '~/apis/addressAPI'
+import {
   getAllTypeRoom,
+} from '~/apis/typeRoomAPI'
+import {
   createMotel,
   getMotelById,
-  updateMotel,
+  updateMotel
+} from '~/apis/motelAPI'
+import {
   createSerivceMotel
-} from '~/apis/apiClient'
+} from '~/apis/motelService'
 import Swal from 'sweetalert2'
 const ModelCreateHome = ({ username, MotelId }) => {
   const [selectedOption, setSelectedOption] = useState('')
@@ -55,8 +61,8 @@ const ModelCreateHome = ({ username, MotelId }) => {
   }, [])
 
   useEffect(() => {
-    if (MotelId && MotelId !== 'Create') {
-      fetchDataWhenEdit(MotelId);
+    if (MotelId !== 'Create') {
+      fetchDataWhenEdit(MotelId)
     } else {
       setMotel({
         typeRoom: '',
@@ -69,68 +75,66 @@ const ModelCreateHome = ({ username, MotelId }) => {
         maxperson: 1,
         invoicedate: '',
         paymentdeadline: ''
-      });
+      })
     }
-  }, [MotelId]);
-  
+  }, [MotelId]) // Thêm templatecontractRouteId vào dependency array
 
   //tao service
-  const handleCreateServices = async (id) => {
-    const motelId = id // Thay thế bằng ID của Motel thực tế
+  // Tạo service
+const handleCreateServices = async (id) => {
+  const motelId = id; // Thay thế bằng ID của Motel thực tế
 
-    // Tạo mảng chứa các dịch vụ
-    const services = [
-      {
-        motelId: motelId,
-        nameService: 'Dịch vụ điện',
-        price: parseFloat(1700), // Chuyển đổi giá thành số Long
-        chargetype:
-          priceItemEle === '0'
-            ? 'Miễn phí'
-            : priceItemEle === '1'
-            ? 'Theo người'
-            : priceItemEle === '2'
-            ? 'Theo tháng'
-            : 'Theo đồng hồ'
-      },
-      {
-        motelId: motelId,
-        nameService: 'Dịch vụ nước',
-        price: parseFloat(18000),
-        chargetype:
-          priceItemWater === '0'
-            ? 'Miễn phí'
-            : priceItemWater === '1'
-            ? 'Theo người'
-            : priceItemWater === '2'
-            ? 'Theo tháng'
-            : 'Theo đồng hồ'
-      },
-      {
-        motelId: motelId,
-        nameService: 'Dịch vụ rác',
-        price: parseFloat(15000),
-        chargetype: priceItemTrash === '0' ? 'Miễn phí' : priceItemTrash === '1' ? 'Theo người' : 'Theo tháng'
-      },
-      {
-        motelId: motelId,
-        nameService: 'Dịch vụ wifi/internet',
-        price: parseFloat(50000),
-        chargetype: priceItemWifi === '0' ? 'Miễn phí' : priceItemWifi === '1' ? 'Theo người' : 'Theo tháng'
-      }
-    ]
+  // Tạo mảng chứa các dịch vụ chỉ khi dịch vụ không là "Miễn phí/Không sử dụng"
+  const services = [
+    priceItemEle !== '0' && {
+      motelId: motelId,
+      nameService: 'Dịch vụ điện',
+      price: parseFloat(1700),
+      chargetype:
+        priceItemEle === '1'
+          ? 'Theo người'
+          : priceItemEle === '2'
+          ? 'Theo tháng'
+          : 'Theo đồng hồ',
+    },
+    priceItemWater !== '0' && {
+      motelId: motelId,
+      nameService: 'Dịch vụ nước',
+      price: parseFloat(18000),
+      chargetype:
+        priceItemWater === '1'
+          ? 'Theo người'
+          : priceItemWater === '2'
+          ? 'Theo tháng'
+          : 'Theo đồng hồ',
+    },
+    priceItemTrash !== '0' && {
+      motelId: motelId,
+      nameService: 'Dịch vụ rác',
+      price: parseFloat(15000),
+      chargetype: priceItemTrash === '1' ? 'Theo người' : 'Theo tháng',
+    },
+    priceItemWifi !== '0' && {
+      motelId: motelId,
+      nameService: 'Dịch vụ wifi/internet',
+      price: parseFloat(50000),
+      chargetype: priceItemWifi === '1' ? 'Theo người' : 'Theo tháng',
+    },
+  ].filter(Boolean); // Lọc bỏ các dịch vụ không sử dụng (giá trị "0")
 
-    try {
-      // Gửi từng dịch vụ đến API
-      for (const service of services) {
-        await createSerivceMotel(service)
-      }
-      // Xử lý phản hồi từ API (như thông báo thành công)
-    } catch (error) {
-      console.error('Error creating services:', error)
-      // Xử lý lỗi (như thông báo lỗi)
+  try {
+    // Gửi từng dịch vụ đến API
+    for (const service of services) {
+      await createSerivceMotel(service);
     }
+    console.log('All services created successfully.');
+    // Xử lý phản hồi từ API (như thông báo thành công)
+  } catch (error) {
+    console.error('Error creating services:', error);
+    // Xử lý lỗi (như thông báo lỗi)
   }
+};
+
 
   //nhan vao nut edit
   const fetchDataWhenEdit = async (id) => {
@@ -225,6 +229,8 @@ const ModelCreateHome = ({ username, MotelId }) => {
     if (username) {
       try {
         const response = await getAllTypeRoom()
+        console.log(response)
+
         setTyperooms(response.result)
       } catch (error) {
         console.log(error)
@@ -282,9 +288,8 @@ const ModelCreateHome = ({ username, MotelId }) => {
                   text: 'Motel created successfully!'
                 })
                 setMotel(response)
-                console.log(response);
-                
                 handleCreateServices(response.data.result.motelId)
+
                 setTimeout(() => {
                   window.location.reload()
                 }, 1400)

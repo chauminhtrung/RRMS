@@ -82,7 +82,7 @@ public class MotelController {
     }
 
     @Operation(summary = "Add motel by id")
-    @PostMapping()
+    @PostMapping("/create")
     public ApiResponse<MotelResponse> insertMotel(@RequestBody MotelRequest motelRequest) {
         MotelResponse motelResponse = motelService.insert(motelRequest);
         log.info("Insert motel successfully");
