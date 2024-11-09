@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import com.rrms.rrms.dto.request.ChangePasswordByEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -330,5 +332,27 @@ public class AccountService implements IAccountService {
         accountRepository.save(account);
 
         return "Password changed successfully";
+    }
+
+    @Override
+    public boolean changePasswordByEmail(ChangePasswordByEmail changePasswordByEmail) {
+        if (!accountRepository.existsAccountByEmail(changePasswordByEmail.getEmail())) {
+            return false;
+        }
+        try {
+            Account account = accountRepository.findByEmail(changePasswordByEmail.getEmail()).orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+            BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
+            String hashedNewPassword = pe.encode(changePasswordByEmail.getNewPassword());
+            account.setPassword(hashedNewPassword);
+            accountRepository.save(account);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return accountRepository.existsAccountByEmail(email);
     }
 }

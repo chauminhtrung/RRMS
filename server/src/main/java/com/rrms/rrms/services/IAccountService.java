@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.rrms.rrms.dto.request.AccountRequest;
+import com.rrms.rrms.dto.request.ChangePasswordByEmail;
 import com.rrms.rrms.dto.request.ChangePasswordRequest;
 import com.rrms.rrms.dto.request.RegisterRequest;
 import com.rrms.rrms.dto.response.AccountResponse;
@@ -42,4 +43,6 @@ public interface IAccountService {
     AccountResponse update(AccountRequest accountRequest);
 
     String changePassword(ChangePasswordRequest changePasswordRequest);
+    boolean changePasswordByEmail(ChangePasswordByEmail changePasswordByEmail);
+    boolean existsByEmail(String email);
 }
