@@ -1,5 +1,11 @@
 package com.rrms.rrms.models;
 
+<<<<<<< HEAD
+=======
+
+import com.rrms.rrms.enums.Gender;
+import com.rrms.rrms.enums.Unit;
+>>>>>>> 5335406fe75dde3185682a62d41154e3daded24a
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +28,10 @@ public class MotelDevice {
 
     @Column(columnDefinition = "VARCHAR(255)")
     private String deviceName;
+<<<<<<< HEAD
+=======
+    private String icon;
+>>>>>>> 5335406fe75dde3185682a62d41154e3daded24a
     private Double value;
     private Double valueInput;
     private int totalQuantity;

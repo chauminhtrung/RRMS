@@ -1,6 +1,11 @@
 package com.rrms.rrms.dto.request;
 
 import com.rrms.rrms.dto.response.MotelResponse;
+<<<<<<< HEAD
+=======
+
+import com.rrms.rrms.enums.Unit;
+>>>>>>> 5335406fe75dde3185682a62d41154e3daded24a
 import com.rrms.rrms.models.Motel;
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
