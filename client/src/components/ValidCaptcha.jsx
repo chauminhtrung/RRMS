@@ -2,7 +2,8 @@
 import { Turnstile } from '@marsidev/react-turnstile'
 import axios from 'axios'
 import { useState } from 'react'
-import { ValidCaptchaAPI } from '~/apis/apiClient'
+import { ValidCaptchaAPI } from '~/apis/captchaAPI'
+
 import { env } from '~/configs/environment'
 
 const ValidCaptcha = ({ setValidCaptcha }) => {

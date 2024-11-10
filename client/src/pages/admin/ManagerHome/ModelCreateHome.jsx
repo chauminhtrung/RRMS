@@ -1,21 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react'
-import {
-  getPhuongXa,
-  getQuanHuyen,
-  getTinhThanh,
-} from '~/apis/addressAPI'
-import {
-  getAllTypeRoom,
-} from '~/apis/typeRoomAPI'
-import {
-  createMotel,
-  getMotelById,
-  updateMotel
-} from '~/apis/motelAPI'
-import {
-  createSerivceMotel
-} from '~/apis/motelService'
+import { getPhuongXa, getQuanHuyen, getTinhThanh } from '~/apis/addressAPI'
+import { getAllTypeRoom } from '~/apis/typeRoomAPI'
+import { createMotel, getMotelById, updateMotel } from '~/apis/motelAPI'
+import { createSerivceMotel } from '~/apis/motelServiceAPI'
 import Swal from 'sweetalert2'
+
 const ModelCreateHome = ({ username, MotelId }) => {
   const [selectedOption, setSelectedOption] = useState('')
   const [FileName, setFileName] = useState('')
@@ -81,60 +71,49 @@ const ModelCreateHome = ({ username, MotelId }) => {
 
   //tao service
   // Tạo service
-const handleCreateServices = async (id) => {
-  const motelId = id; // Thay thế bằng ID của Motel thực tế
+  const handleCreateServices = async (id) => {
+    const motelId = id // Thay thế bằng ID của Motel thực tế
 
-  // Tạo mảng chứa các dịch vụ chỉ khi dịch vụ không là "Miễn phí/Không sử dụng"
-  const services = [
-    priceItemEle !== '0' && {
-      motelId: motelId,
-      nameService: 'Dịch vụ điện',
-      price: parseFloat(1700),
-      chargetype:
-        priceItemEle === '1'
-          ? 'Theo người'
-          : priceItemEle === '2'
-          ? 'Theo tháng'
-          : 'Theo đồng hồ',
-    },
-    priceItemWater !== '0' && {
-      motelId: motelId,
-      nameService: 'Dịch vụ nước',
-      price: parseFloat(18000),
-      chargetype:
-        priceItemWater === '1'
-          ? 'Theo người'
-          : priceItemWater === '2'
-          ? 'Theo tháng'
-          : 'Theo đồng hồ',
-    },
-    priceItemTrash !== '0' && {
-      motelId: motelId,
-      nameService: 'Dịch vụ rác',
-      price: parseFloat(15000),
-      chargetype: priceItemTrash === '1' ? 'Theo người' : 'Theo tháng',
-    },
-    priceItemWifi !== '0' && {
-      motelId: motelId,
-      nameService: 'Dịch vụ wifi/internet',
-      price: parseFloat(50000),
-      chargetype: priceItemWifi === '1' ? 'Theo người' : 'Theo tháng',
-    },
-  ].filter(Boolean); // Lọc bỏ các dịch vụ không sử dụng (giá trị "0")
+    // Tạo mảng chứa các dịch vụ chỉ khi dịch vụ không là "Miễn phí/Không sử dụng"
+    const services = [
+      priceItemEle !== '0' && {
+        motelId: motelId,
+        nameService: 'Dịch vụ điện',
+        price: parseFloat(1700),
+        chargetype: priceItemEle === '1' ? 'Theo người' : priceItemEle === '2' ? 'Theo tháng' : 'Theo đồng hồ'
+      },
+      priceItemWater !== '0' && {
+        motelId: motelId,
+        nameService: 'Dịch vụ nước',
+        price: parseFloat(18000),
+        chargetype: priceItemWater === '1' ? 'Theo người' : priceItemWater === '2' ? 'Theo tháng' : 'Theo đồng hồ'
+      },
+      priceItemTrash !== '0' && {
+        motelId: motelId,
+        nameService: 'Dịch vụ rác',
+        price: parseFloat(15000),
+        chargetype: priceItemTrash === '1' ? 'Theo người' : 'Theo tháng'
+      },
+      priceItemWifi !== '0' && {
+        motelId: motelId,
+        nameService: 'Dịch vụ wifi/internet',
+        price: parseFloat(50000),
+        chargetype: priceItemWifi === '1' ? 'Theo người' : 'Theo tháng'
+      }
+    ].filter(Boolean) // Lọc bỏ các dịch vụ không sử dụng (giá trị "0")
 
-  try {
-    // Gửi từng dịch vụ đến API
-    for (const service of services) {
-      await createSerivceMotel(service);
+    try {
+      // Gửi từng dịch vụ đến API
+      for (const service of services) {
+        await createSerivceMotel(service)
+      }
+      console.log('All services created successfully.')
+      // Xử lý phản hồi từ API (như thông báo thành công)
+    } catch (error) {
+      console.error('Error creating services:', error)
+      // Xử lý lỗi (như thông báo lỗi)
     }
-    console.log('All services created successfully.');
-    // Xử lý phản hồi từ API (như thông báo thành công)
-  } catch (error) {
-    console.error('Error creating services:', error);
-    // Xử lý lỗi (như thông báo lỗi)
   }
-};
-
 
   //nhan vao nut edit
   const fetchDataWhenEdit = async (id) => {

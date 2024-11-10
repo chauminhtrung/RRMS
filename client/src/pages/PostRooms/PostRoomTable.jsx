@@ -10,7 +10,7 @@ import {
   TableFooter,
   TableHead,
   TablePagination,
-  TableRow,
+  TableRow
 } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useTheme } from '@emotion/react'
@@ -19,7 +19,7 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
 import LastPageIcon from '@mui/icons-material/LastPage'
 import { useEffect, useState } from 'react'
-import { getPostRoomTable } from '~/apis/apiClient'
+import { getPostRoomTable } from '~/apis/roomAPI'
 function TablePaginationActions(props) {
   const theme = useTheme()
   const { count, page, rowsPerPage, onPageChange } = props
@@ -68,7 +68,7 @@ TablePaginationActions.propTypes = {
   count: PropTypes.number.isRequired,
   onPageChange: PropTypes.func.isRequired,
   page: PropTypes.number.isRequired,
-  rowsPerPage: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired
 }
 
 function createData(nameRoom, typeRoom, address, price, roomArea, available) {
@@ -146,18 +146,18 @@ const PostRoomTable = () => {
                 slotProps={{
                   select: {
                     inputProps: {
-                      'aria-label': 'rows per page',
+                      'aria-label': 'rows per page'
                     },
-                    native: true,
-                  },
+                    native: true
+                  }
                 }}
                 sx={{
                   '& .MuiTablePagination-selectLabel': {
-                    mb: 0,
+                    mb: 0
                   },
                   '& .MuiTablePagination-displayedRows': {
-                    mb: 0,
-                  },
+                    mb: 0
+                  }
                 }}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
