@@ -3,8 +3,9 @@ import { useState, useEffect } from 'react'
 import { getPhuongXa, getQuanHuyen, getTinhThanh } from '~/apis/addressAPI'
 import { getAllTypeRoom } from '~/apis/typeRoomAPI'
 import { createMotel, getMotelById, updateMotel } from '~/apis/motelAPI'
-import { createSerivceMotel } from '~/apis/motelService'
+import { createSerivceMotel } from '~/apis/motelServiceAPI'
 import Swal from 'sweetalert2'
+
 const ModelCreateHome = ({ username, MotelId }) => {
   const [selectedOption, setSelectedOption] = useState('')
   const [FileName, setFileName] = useState('')

@@ -50,6 +50,7 @@ public class DB {
             BulletinBoards_RentalAmRepository bulletinBoards_rentalAmRepository) {
         return args -> {
             int roomsLength = 5;
+            int bulletinBoardsLength = 50;
             log.info("Starting to create data... length: {}", roomsLength);
 
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
@@ -115,7 +116,7 @@ public class DB {
                 createNameMotelService(nameMotelServiceRepository);
 
                 BulletinBoard bulletinBoard = null;
-                for (int i = 0; i < roomsLength; i++) {
+                for (int i = 0; i < bulletinBoardsLength; i++) {
 
                     // Tạo và lưu BulletinBoard
                     bulletinBoard = createBulletinBoard(faker, accountRepository);
