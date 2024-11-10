@@ -1,4 +1,6 @@
 package com.rrms.rrms.repositories;
+
+
 import com.rrms.rrms.models.Motel;
 import com.rrms.rrms.models.MotelDevice;
 import org.springframework.data.jpa.repository.JpaRepository;

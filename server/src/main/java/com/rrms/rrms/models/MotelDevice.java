@@ -1,7 +1,10 @@
 package com.rrms.rrms.models;
 
 
+import com.rrms.rrms.enums.Gender;
+import com.rrms.rrms.enums.Unit;
 import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,4 +33,6 @@ public class MotelDevice {
     private int totalUsing;
     private int totalNull;
     private String supplier;
+    @Enumerated(EnumType.STRING)
+    private Unit unit;
 }
