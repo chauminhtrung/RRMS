@@ -1,17 +1,12 @@
 package com.rrms.rrms.dto.response;
 
-import com.rrms.rrms.models.Motel;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import java.util.UUID;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.io.Serial;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor

@@ -44,18 +44,18 @@ public class Room {
     @Column(name = "area", columnDefinition = "INT")
     private Integer area;
 
-    //cai nay thuong nam o hop dong
+    // cai nay thuong nam o hop dong
     @Column(columnDefinition = "DECIMAL(10, 2)")
     private Double debt;
 
-    //cai nay thuong nam o hop dong
+    // cai nay thuong nam o hop dong
     @Column(name = "count_tenant", columnDefinition = "TEXT")
     private Integer countTenant;
 
     @Column(name = "invoice_date", columnDefinition = "TEXT")
     private Integer invoiceDate;
 
-    //cai nay thuong nam o hop dong
+    // cai nay thuong nam o hop dong
     @Column(name = "payment_circle", columnDefinition = "INT")
     private Integer paymentCircle;
 

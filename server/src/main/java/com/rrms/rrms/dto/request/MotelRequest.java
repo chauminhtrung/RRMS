@@ -1,9 +1,10 @@
 package com.rrms.rrms.dto.request;
 
+import java.util.List;
+
 import com.rrms.rrms.dto.response.MotelServiceResponse;
 import com.rrms.rrms.models.TypeRoom;
 
-import java.util.List;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

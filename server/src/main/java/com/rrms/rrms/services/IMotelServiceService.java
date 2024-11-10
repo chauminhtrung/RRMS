@@ -1,10 +1,10 @@
 package com.rrms.rrms.services;
 
-import com.rrms.rrms.dto.request.MotelServiceUpdateRequest;
 import java.util.List;
 import java.util.UUID;
 
 import com.rrms.rrms.dto.request.MotelServiceRequest;
+import com.rrms.rrms.dto.request.MotelServiceUpdateRequest;
 import com.rrms.rrms.dto.response.MotelServiceResponse;
 
 public interface IMotelServiceService {

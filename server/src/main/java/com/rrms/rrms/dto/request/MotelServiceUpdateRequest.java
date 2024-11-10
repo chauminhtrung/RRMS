@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MotelServiceUpdateRequest {
-  String nameService;
-  Long price;
-  String chargetype;
+    String nameService;
+    Long price;
+    String chargetype;
 }

@@ -43,6 +43,8 @@ public interface IAccountService {
     AccountResponse update(AccountRequest accountRequest);
 
     String changePassword(ChangePasswordRequest changePasswordRequest);
+
     boolean changePasswordByEmail(ChangePasswordByEmail changePasswordByEmail);
+
     boolean existsByEmail(String email);
 }

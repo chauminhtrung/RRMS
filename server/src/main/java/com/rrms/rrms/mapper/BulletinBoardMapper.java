@@ -1,11 +1,12 @@
 package com.rrms.rrms.mapper;
 
+import org.mapstruct.Mapper;
+
 import com.rrms.rrms.dto.request.BulletinBoardRequest;
 import com.rrms.rrms.dto.response.BulletinBoardResponse;
 import com.rrms.rrms.dto.response.BulletinBoardSearchResponse;
 import com.rrms.rrms.dto.response.BulletinBoardTableResponse;
 import com.rrms.rrms.models.BulletinBoard;
-import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface BulletinBoardMapper {
