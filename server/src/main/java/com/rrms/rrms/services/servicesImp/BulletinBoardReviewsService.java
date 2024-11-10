@@ -1,5 +1,10 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+
 import com.rrms.rrms.dto.request.BulletinBoardReviewsRequest;
 import com.rrms.rrms.dto.response.BulletinBoardReviewsResponse;
 import com.rrms.rrms.enums.ErrorCode;
@@ -12,13 +17,10 @@ import com.rrms.rrms.repositories.AccountRepository;
 import com.rrms.rrms.repositories.BulletinBoardRepository;
 import com.rrms.rrms.repositories.BulletinBoardReviewsRepository;
 import com.rrms.rrms.services.IBulletinBoardReviews;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Service;
-
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -42,8 +44,8 @@ public class BulletinBoardReviewsService implements IBulletinBoardReviews {
                 .orElseThrow(() -> new AppException(ErrorCode.BULLETIN_BOARD_NOT_FOUND));
 
         // Kiểm tra xem đánh giá đã tồn tại hay chưa
-        Optional<BulletinBoardReviews> existingReview = bulletinBoardReviewsRepository
-                .findByAccountAndBulletinBoard(account, bulletinBoard);
+        Optional<BulletinBoardReviews> existingReview =
+                bulletinBoardReviewsRepository.findByAccountAndBulletinBoard(account, bulletinBoard);
 
         BulletinBoardReviews bulletinBoardReviews;
 
@@ -63,9 +65,9 @@ public class BulletinBoardReviewsService implements IBulletinBoardReviews {
         return bulletinBoardReviewMapper.toBulletinBoardReviewsResponse(bulletinBoardReviews);
     }
 
-
     @Override
-    public BulletinBoardReviewsResponse getBulletinBoardReviewsByBulletinBoardIdAndUsername(UUID bulletinBoardId, String username) {
+    public BulletinBoardReviewsResponse getBulletinBoardReviewsByBulletinBoardIdAndUsername(
+            UUID bulletinBoardId, String username) {
 
         Account account = accountRepository
                 .findByUsername(username)
@@ -75,7 +77,8 @@ public class BulletinBoardReviewsService implements IBulletinBoardReviews {
                 .findById(bulletinBoardId)
                 .orElseThrow(() -> new AppException(ErrorCode.BULLETIN_BOARD_NOT_FOUND));
 
-        BulletinBoardReviews bulletinBoardReviews = bulletinBoardReviewsRepository.findByBulletinBoardAndAccount(bulletinBoard, account);
+        BulletinBoardReviews bulletinBoardReviews =
+                bulletinBoardReviewsRepository.findByBulletinBoardAndAccount(bulletinBoard, account);
 
         return bulletinBoardReviewMapper.toBulletinBoardReviewsResponse(bulletinBoardReviews);
     }

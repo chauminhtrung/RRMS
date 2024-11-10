@@ -15,13 +15,13 @@ public interface IRoom {
 
     RoomDetailResponse createRoom(RoomRequest roomRequest);
 
-//    List<BulletinBoardSearchResponse> getRooms();
+    //    List<BulletinBoardSearchResponse> getRooms();
 
     List<PostRoomTableResponse> getPostRoomTable(String username);
 
     String deleteRoom(UUID id);
 
-    //phan do xoa duoc ma lam bieng
+    // phan do xoa duoc ma lam bieng
     RoomResponse2 createRoom2(RoomRequest2 roomRequest);
 
     RoomResponse2 getRoomById2(UUID roomId);

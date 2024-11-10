@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.rrms.rrms.models.Motel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.rrms.rrms.models.Account;
+import com.rrms.rrms.models.Motel;
 import com.rrms.rrms.models.Room;
 
 public interface RoomRepository extends JpaRepository<Room, UUID> {
@@ -26,11 +26,10 @@ public interface RoomRepository extends JpaRepository<Room, UUID> {
 
     List<Room> findAllByMotel_Account(Account account);
 
-//        List<Room> findAllByAuthenIs(Boolean authenIs);
+    //        List<Room> findAllByAuthenIs(Boolean authenIs);
 
     //    @Query("SELECT r FROM Room r ORDER BY r.datenew DESC")
     //    List<Room> findAllByDatenew();
 
     List<Room> findByMotel(Motel motel); // Thêm phương thức truy vấn theo Motel
-
 }

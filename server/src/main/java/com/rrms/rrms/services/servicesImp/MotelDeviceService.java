@@ -1,21 +1,24 @@
 package com.rrms.rrms.services.servicesImp;
 
+
 import com.rrms.rrms.dto.request.MotelDeviceRequest;
 import com.rrms.rrms.dto.response.MotelDeviceResponse;
 import com.rrms.rrms.enums.Unit;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import com.rrms.rrms.mapper.MotelDeviceMapper;
 import com.rrms.rrms.models.Motel;
 import com.rrms.rrms.models.MotelDevice;
 import com.rrms.rrms.repositories.MotelDeviceRepository;
 import com.rrms.rrms.repositories.MotelRepository;
 import com.rrms.rrms.services.IMotelDeviceService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 @Service
 public class MotelDeviceService implements IMotelDeviceService {
     @Autowired
@@ -35,7 +38,9 @@ public class MotelDeviceService implements IMotelDeviceService {
 
     @Override
     public MotelDeviceResponse insertMotelDevice(MotelDeviceRequest motelDeviceRequest) {
-        Motel find = motelRepository.findById(motelDeviceRequest.getMotel().getMotelId()).orElse(null);
+        Motel find = motelRepository
+                .findById(motelDeviceRequest.getMotel().getMotelId())
+                .orElse(null);
         if (find != null) {
             MotelDevice motelDevice = new MotelDevice();
             motelDevice.setMotel(find);

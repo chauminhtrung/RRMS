@@ -1,6 +1,5 @@
 package com.rrms.rrms.services.servicesImp;
 
-import com.rrms.rrms.dto.request.MotelServiceUpdateRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.request.MotelServiceRequest;
+import com.rrms.rrms.dto.request.MotelServiceUpdateRequest;
 import com.rrms.rrms.dto.response.MotelServiceResponse;
 import com.rrms.rrms.models.Motel;
 import com.rrms.rrms.models.MotelService;
@@ -17,7 +17,6 @@ import com.rrms.rrms.repositories.MotelRepository;
 import com.rrms.rrms.repositories.MotelServiceRepository;
 import com.rrms.rrms.repositories.NameMotelServiceRepository;
 import com.rrms.rrms.services.IMotelServiceService;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MotelServiceService implements IMotelServiceService {
