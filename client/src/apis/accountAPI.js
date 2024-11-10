@@ -16,3 +16,15 @@ export const introspect = async () => {
     token: token
   })
 }
+export const email_valid = async (email) => {
+  const response = await axios.get(`${env.API_URL}/authen/checkMail?email=${email}`)
+  return response.data
+}
+export const sendOTP = async (data) => {
+  const response = await axios.post(`${env.API_URL}/authen/forgetpassword`, data)
+  return response.data
+}
+export const acceptChangePassword = async (data) => {
+  const response = await axios.post(`${env.API_URL}/authen/acceptChangePassword`, data)
+  return response.data
+}
