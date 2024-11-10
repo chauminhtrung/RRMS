@@ -1,13 +1,14 @@
 package com.rrms.rrms.services;
 
+import com.rrms.rrms.dto.request.MotelDeviceRequest;
+import com.rrms.rrms.dto.response.MotelDeviceResponse;
+import com.rrms.rrms.models.Motel;
+
 import java.util.List;
 import java.util.UUID;
 
-import com.rrms.rrms.dto.request.MotelDeviceRequest;
-import com.rrms.rrms.dto.response.MotelDeviceResponse;
-
 public interface IMotelDeviceService {
-    List<MotelDeviceResponse> getAllMotelDevices();
+    List<MotelDeviceResponse> getAllMotelDevicesByMotel(UUID motelId);
 
     MotelDeviceResponse insertMotelDevice(MotelDeviceRequest motelDeviceRequest);
 
