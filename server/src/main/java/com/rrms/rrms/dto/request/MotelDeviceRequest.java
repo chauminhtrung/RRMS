@@ -2,11 +2,6 @@ package com.rrms.rrms.dto.request;
 
 import com.rrms.rrms.dto.response.MotelResponse;
 
-import com.rrms.rrms.enums.Unit;
-import com.rrms.rrms.models.Motel;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -11,4 +11,3 @@ import java.util.UUID;
 public interface MotelDeviceRepository extends JpaRepository<MotelDevice, UUID> {
     List<MotelDevice> findAllByMotel(Motel motel);
 }
-
