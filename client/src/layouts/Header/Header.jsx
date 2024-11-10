@@ -12,6 +12,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
   const [IsTaikhoan, setIsTaikhoan] = useState(false)
   const [IsThongbao, setIsThongbao] = useState(false)
   const [IsMobileTaikhoan, setIsMobileTaikhoan] = useState(false)
+  
   const navigate = useNavigate()
   const handleMenuItemClick = () => {
     setIsTaikhoan(false) // Đóng menu khi click vào bất kỳ mục nào
@@ -72,6 +73,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
     }
   }
   const tokenExists = sessionStorage.getItem('user') !== null
+  
   return (
     <header>
       <div className="ct-appwrapper aw__sa4yob3" style={{ '--sa4yob3-0': '#fff', '--sa4yob3-1': 'inherit' }}>
@@ -794,7 +796,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                             <div className="clearfix"></div>
                           </a>
                         </div>
-                        {tokenExists && ( // Only show logout if user is logged in
+                        {tokenExists && (
                           <div className="aw__l1txzw95">
                             <a className="aw__iys36jq" target="_self" rel="noreferrer" onClick={handleLogout}>
                               <div className="aw__l1uq3g0v">

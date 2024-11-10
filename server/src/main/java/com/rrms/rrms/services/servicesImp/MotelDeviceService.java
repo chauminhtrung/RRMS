@@ -2,7 +2,6 @@ package com.rrms.rrms.services.servicesImp;
 
 import com.rrms.rrms.dto.request.MotelDeviceRequest;
 import com.rrms.rrms.dto.response.MotelDeviceResponse;
-import com.rrms.rrms.enums.Unit;
 import com.rrms.rrms.mapper.MotelDeviceMapper;
 import com.rrms.rrms.models.Motel;
 import com.rrms.rrms.models.MotelDevice;
@@ -26,11 +25,9 @@ public class MotelDeviceService implements IMotelDeviceService {
     MotelRepository motelRepository;
 
 
-
     @Override
-    public List<MotelDeviceResponse> getAllMotelDevicesByMotel(UUID motelId) {
-        Motel find = motelRepository.findById(motelId).orElse(null);
-        return motelDeviceRepository.findAllByMotel(find).stream().map(mapper::motelDeviceToMotelDeviceResponse).toList();
+    public List<MotelDeviceResponse> getAllMotelDevices() {
+        return motelDeviceRepository.findAll().stream().map(mapper::motelDeviceToMotelDeviceResponse).toList();
     }
 
     @Override
@@ -40,30 +37,12 @@ public class MotelDeviceService implements IMotelDeviceService {
             MotelDevice motelDevice = new MotelDevice();
             motelDevice.setMotel(find);
             motelDevice.setDeviceName(motelDeviceRequest.getDeviceName());
-            motelDevice.setIcon(motelDeviceRequest.getIcon());
             motelDevice.setValue(motelDeviceRequest.getValue());
             motelDevice.setValueInput(motelDeviceRequest.getValueInput());
             motelDevice.setTotalQuantity(motelDeviceRequest.getTotalQuantity());
             motelDevice.setTotalUsing(motelDeviceRequest.getTotalUsing());
             motelDevice.setTotalNull(motelDeviceRequest.getTotalNull());
             motelDevice.setSupplier(motelDeviceRequest.getSupplier());
-            switch (motelDeviceRequest.getUnit()) {
-                case "cai" -> {
-                    motelDevice.setUnit(Unit.CAI);
-                }
-                case "chiec" -> {
-                    motelDevice.setUnit(Unit.CHIEC);
-                }
-                case "bo" -> {
-                    motelDevice.setUnit(Unit.BO);
-                }
-                case "cap" -> {
-                    motelDevice.setUnit(Unit.CAP);
-                }
-                default -> {
-                    motelDevice.setUnit(Unit.CAI);
-                }
-            }
             return mapper.motelDeviceToMotelDeviceResponse(motelDeviceRepository.save(motelDevice));
         }
         return null;

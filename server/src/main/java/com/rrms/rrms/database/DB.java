@@ -1,20 +1,22 @@
 package com.rrms.rrms.database;
 
-import com.rrms.rrms.enums.Gender;
-import com.rrms.rrms.enums.Roles;
-import com.rrms.rrms.models.*;
-import com.rrms.rrms.repositories.*;
-import com.rrms.rrms.services.ISearchService;
-import lombok.extern.slf4j.Slf4j;
-import net.datafaker.Faker;
+import java.time.LocalDate;
+import java.util.*;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.*;
+import com.rrms.rrms.enums.Gender;
+import com.rrms.rrms.enums.Roles;
+import com.rrms.rrms.models.*;
+import com.rrms.rrms.repositories.*;
+import com.rrms.rrms.services.ISearchService;
+
+import lombok.extern.slf4j.Slf4j;
+import net.datafaker.Faker;
 
 @Configuration
 @Slf4j
@@ -47,8 +49,7 @@ public class DB {
             RentalAmenitiesRepository rentalAmenitiesRepository,
             BulletinBoardReviewsRepository bulletinBoardReviewsRepository,
             BulletinBoardImageRepository bulletinBoardImageRepository,
-            BulletinBoards_RentalAmRepository bulletinBoards_rentalAmRepository
-    ) {
+            BulletinBoards_RentalAmRepository bulletinBoards_rentalAmRepository) {
         return args -> {
             int roomsLength = 5;
             int bulletinBoardsLength = 10;
@@ -323,7 +324,7 @@ public class DB {
                     .username("host")
                     .password(pe.encode("123")) // Encode the password
                     .fullname("KienQuoc")
-                    .email("quoc@gmail.com")
+                    .email("quockkps31817@fpt.edu.vn")
                     .phone("0919925302")
                     .cccd("012345678900")
                     .gender(Gender.FEMALE)
@@ -429,7 +430,7 @@ public class DB {
                         // ngày
                         // trước
                         new Date() // Ngày hiện tại
-                );
+                        );
         room.setDeposit(faker.number().randomDouble(2, 500000, 5000000));
         room.setMotel(motel);
         room.setPrice(faker.number().randomDouble(2, 500000, 5000000));
@@ -510,7 +511,6 @@ public class DB {
         }
     }
 
-
     private void bulletinBoardRule(
             Faker faker,
             List<BulletinBoardRule> bulletinBoardRuleList,
@@ -547,9 +547,7 @@ public class DB {
         bulletinBoardReviewsRepository.saveAll(bulletinBoardReviewList);
     }
 
-    private BulletinBoard createBulletinBoard(
-            Faker faker,
-            AccountRepository accountRepository) {
+    private BulletinBoard createBulletinBoard(Faker faker, AccountRepository accountRepository) {
         BulletinBoard bulletinBoard = new BulletinBoard();
         bulletinBoard.setAccount(accountRepository.findByUsername("admin").get());
         bulletinBoard.setTitle(faker.address().city());
@@ -561,7 +559,15 @@ public class DB {
         bulletinBoard.setArea(faker.number().numberBetween(50, 200));
         bulletinBoard.setElectricityPrice(faker.number().randomDouble(2, 500000, 5000000));
         bulletinBoard.setWaterPrice(faker.number().randomDouble(2, 500000, 5000000));
-        bulletinBoard.setMaxPerson(faker.options().option("1 người ở", "2 người ở", "3 người ở", "4 người ở", "5-6 người ở", "7-10 người ở", "Không giới hạn"));
+        bulletinBoard.setMaxPerson(faker.options()
+                .option(
+                        "1 người ở",
+                        "2 người ở",
+                        "3 người ở",
+                        "4 người ở",
+                        "5-6 người ở",
+                        "7-10 người ở",
+                        "Không giới hạn"));
         bulletinBoard.setMoveInDate(new Date());
         bulletinBoard.setOpeningHours(faker.options().option("4 sáng", "5 sáng", "6 sáng"));
         bulletinBoard.setCloseHours(faker.options().option("22 tối", "23 tối", "24 tối"));
