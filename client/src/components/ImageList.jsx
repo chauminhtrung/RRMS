@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getImages } from '~/apis/apiClient'
+import { getImages } from '~/apis/uploadImageAPI'
 
 const ImageList = () => {
   const [images, setImages] = useState([])
