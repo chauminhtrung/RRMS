@@ -18,13 +18,13 @@ import {
   Switch,
   TextareaAutosize,
   TextField,
-  Typography,
+  Typography
 } from '@mui/material'
 import ViewInArIcon from '@mui/icons-material/ViewInAr'
 import { useEffect, useState } from 'react'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import LocationSelect from '~/components/ProvinceSelect'
-import { postRoom } from '~/apis/apiClient'
+
 import { toast } from 'react-toastify'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { storage } from '~/configs/firebaseConfig'
@@ -33,6 +33,7 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import TitleAttribute from './TitleAttribute'
 import { processImage } from '~/utils/processImage'
+import { postRoom } from '~/apis/roomAPI'
 
 const style = {
   position: 'absolute',
@@ -47,11 +48,11 @@ const style = {
   overflowY: 'scroll',
   scrollbarWidth: 'none',
   '&::-webkit-scrollbar': {
-    display: 'none',
+    display: 'none'
   },
   scrollBehavior: 'smooth',
   '.MuiSelect-select': { bgcolor: 'white', border: '0.5px solid #dcdcdc', borderRadius: '5px' },
-  '.MuiInputBase-input': { bgcolor: 'white', border: '0.5px solid #dcdcdc', borderRadius: '5px' },
+  '.MuiInputBase-input': { bgcolor: 'white', border: '0.5px solid #dcdcdc', borderRadius: '5px' }
 }
 
 const VisuallyHiddenInput = styled('input')({
@@ -62,7 +63,7 @@ const VisuallyHiddenInput = styled('input')({
   bottom: 0,
   left: 0,
   whiteSpace: 'nowrap',
-  width: 1,
+  width: 1
 })
 
 const validationSchema = Yup.object({
@@ -96,7 +97,7 @@ const validationSchema = Yup.object({
   rules: Yup.array()
     .of(Yup.string().required('Quy định là bắt buộc.'))
     .required('Ít nhất một quy định phải được cung cấp.'),
-  address: Yup.string().required('Địa chỉ là bắt buộc.'),
+  address: Yup.string().required('Địa chỉ là bắt buộc.')
 })
 const PostModal = ({ open, handleClose }) => {
   const label = { inputProps: { 'aria-label': 'Switch demo' } }
@@ -125,7 +126,7 @@ const PostModal = ({ open, handleClose }) => {
     roomServices: [],
     roomImages: [],
     rules: [],
-    address: '',
+    address: ''
   })
 
   const formik = useFormik({
@@ -145,12 +146,12 @@ const PostModal = ({ open, handleClose }) => {
       roomServices: room.roomServices,
       roomImages: room.roomImages,
       rules: room.rules,
-      address: room.address,
+      address: room.address
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       console.log(values)
-    },
+    }
   })
 
   useEffect(() => {
@@ -169,7 +170,7 @@ const PostModal = ({ open, handleClose }) => {
       roomServices: room.roomServices,
       roomImages: room.roomImages,
       rules: room.rules,
-      address: room.address,
+      address: room.address
     })
   }, [room])
 
@@ -194,7 +195,7 @@ const PostModal = ({ open, handleClose }) => {
     setRoom((prevRoom) => ({
       ...prevRoom,
       detailAddress,
-      address: createAddress({ ...prevRoom, detailAddress }),
+      address: createAddress({ ...prevRoom, detailAddress })
     }))
   }
   const createAddress = ({ province, district, ward, detailAddress }) => {
@@ -290,7 +291,7 @@ const PostModal = ({ open, handleClose }) => {
         const storageRef = ref(storage, `images/room-images/${imageName}`)
 
         const metadata = {
-          contentType: image.type,
+          contentType: image.type
         }
 
         const uploadTask = uploadBytesResumable(storageRef, image, metadata)
@@ -349,7 +350,7 @@ const PostModal = ({ open, handleClose }) => {
             roomServices: [],
             roomImages: [],
             rules: [],
-            address: '',
+            address: ''
           })
         })
         .catch((error) => {
@@ -509,7 +510,7 @@ const PostModal = ({ open, handleClose }) => {
             padding: '10px',
             overflow: 'hidden',
             resize: 'none',
-            width: '715px',
+            width: '715px'
           }}
           placeholder="Nhập mô tả"
         />
@@ -673,7 +674,7 @@ const PostModal = ({ open, handleClose }) => {
               fullWidth
               type="date"
               InputLabelProps={{
-                shrink: true,
+                shrink: true
               }}
               error={formik.touched.rentalStartTime && Boolean(formik.errors.rentalStartTime)}
               helperText={formik.touched.rentalStartTime && formik.errors.rentalStartTime}
@@ -693,7 +694,7 @@ const PostModal = ({ open, handleClose }) => {
             'Có camera an ninh',
             'Được nuôi thú cưng',
             'Có ban công',
-            'Có nơi sinh hoạt',
+            'Có nơi sinh hoạt'
           ].map((service) => (
             <Grid item xs={4} key={service}>
               <FormControlLabel
@@ -826,7 +827,7 @@ const PostModal = ({ open, handleClose }) => {
               display: 'flex',
               justifyContent: 'center',
               flexDirection: 'column',
-              alignItems: 'center',
+              alignItems: 'center'
             }}>
             <IconButton
               component="label"
@@ -839,7 +840,7 @@ const PostModal = ({ open, handleClose }) => {
                 width: 30,
                 height: 30,
                 padding: 0,
-                '&:hover': { backgroundColor: '#f0f0f0' },
+                '&:hover': { backgroundColor: '#f0f0f0' }
               }}>
               <CloudUploadIcon fontSize="medium" />
               <VisuallyHiddenInput
@@ -866,7 +867,7 @@ const PostModal = ({ open, handleClose }) => {
                 flexWrap: 'wrap',
                 maxWidth: '100%',
                 alignItems: 'center',
-                justifyContent: 'center',
+                justifyContent: 'center'
               }}>
               {selectedImages &&
                 Array.from(selectedImages).map((image, i) => (
