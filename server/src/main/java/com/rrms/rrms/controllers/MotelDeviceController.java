@@ -28,10 +28,10 @@ import java.util.UUID;
 public class MotelDeviceController {
     MotelDeviceService motelDeviceService;
 
-    @Operation(summary = "get All moteldevice")
-    @GetMapping()
-    public ApiResponse<List<MotelDeviceResponse>> getMotelDevices() {
-        List<MotelDeviceResponse> motelResponses = motelDeviceService.getAllMotelDevices();
+    @Operation(summary = "get All moteldevice by motelid")
+    @GetMapping("/{motelId}")
+    public ApiResponse<List<MotelDeviceResponse>> getMotelDevices(@PathVariable("motelId") UUID motelId) {
+        List<MotelDeviceResponse> motelResponses = motelDeviceService.getAllMotelDevicesByMotel(motelId);
         log.info("Get all moteldevices successfully");
         return ApiResponse.<List<MotelDeviceResponse>>builder()
                 .code(HttpStatus.OK.value())
@@ -43,6 +43,7 @@ public class MotelDeviceController {
     @Operation(summary = "insert moteldevice")
     @PostMapping()
     public ApiResponse<MotelDeviceResponse> insertMotelDevice(@RequestBody MotelDeviceRequest motelDeviceRequest) {
+        System.out.println(motelDeviceRequest.getUnit());
         MotelDeviceResponse motelResponses = motelDeviceService.insertMotelDevice(motelDeviceRequest);
         if (motelResponses != null) {
             log.info("Insert moteldevices successfully");
