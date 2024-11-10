@@ -47,10 +47,11 @@ public class DB {
             RentalAmenitiesRepository rentalAmenitiesRepository,
             BulletinBoardReviewsRepository bulletinBoardReviewsRepository,
             BulletinBoardImageRepository bulletinBoardImageRepository,
-            BulletinBoards_RentalAmRepository bulletinBoards_rentalAmRepository) {
+            BulletinBoards_RentalAmRepository bulletinBoards_rentalAmRepository
+    ) {
         return args -> {
             int roomsLength = 5;
-            int bulletinBoardsLength = 50;
+            int bulletinBoardsLength = 10;
             log.info("Starting to create data... length: {}", roomsLength);
 
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
@@ -142,7 +143,6 @@ public class DB {
                         accountRepository.findByUsername("admin").get(),
                         bulletinBoardReviewsRepository);
             }
-
             log.info("All data created");
             log.info(searchService.syncRoom(roomRepository.findAll()));
         };

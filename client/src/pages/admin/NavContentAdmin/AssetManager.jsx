@@ -1,63 +1,67 @@
 import { useEffect } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
-import { Box} from '@mui/material';
-import { ReactTabulator } from 'react-tabulator';
-import { useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Box } from '@mui/material'
+import { ReactTabulator } from 'react-tabulator'
+import { useState } from 'react'
+import { Modal, Button, Form } from 'react-bootstrap'
 
 const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
-
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(false)
   const [asset, setAsset] = useState({
     name: '',
     icon: null,
     value: '',
     quantity: '',
     unit: 'Cái',
-    supplier: '',
-  });
+    supplier: ''
+  })
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
 
   const handleChange = (e) => {
-    setAsset({ ...asset, [e.target.name]: e.target.value });
-  };
+    setAsset({ ...asset, [e.target.name]: e.target.value })
+  }
 
-  const [selectedIcon, setSelectedIcon] = useState(null); //tạo bảng chọn icon
+  const [selectedIcon, setSelectedIcon] = useState(null) //tạo bảng chọn icon
 
   const icons = [
-    { id: 'icon-ban', icon: <img src="\icon-ban.png" style={{ width: '24px' }} /> },
-    { id: 'icon-banan', icon: <img src="\icon-banan.png" style={{ width: '24px' }} /> },
-    { id: 'icon-bed', icon: <img src="\icon-bed.png" style={{ width: '24px' }} /> },
-    { id: 'icon-chiakhoa', icon: <img src="\icon-chiakhoa.png" style={{ width: '24px' }} /> },
-    { id: 'icon-denngu', icon: <img src="\icon-denngu.png" style={{ width: '24px' }} /> },
-    { id: 'icon-maygiat', icon: <img src="\icon-maygiat.png" style={{ width: '24px' }} /> },
-    { id: 'icon-maylanh', icon: <img src="\icon-maylanh.png" style={{ width: '24px' }} /> },
-    { id: 'icon-okhoa', icon: <img src="\icon-okhoa.png" style={{ width: '24px' }} /> },
-    { id: 'icon-sofa', icon: <img src="\icon-sofa.png" style={{ width: '24px' }} /> },
-    { id: 'icon-tuao', icon: <img src="\icon-tuao.png" style={{ width: '24px' }} /> },
-    { id: 'icon-tusach', icon: <img src="\icon-tusach.png" style={{ width: '24px' }} /> },
-  ];
+    { id: 'ban', icon: <img src="\icon-ban.png" style={{ width: '24px' }} /> },
+    { id: 'banan', icon: <img src="\icon-banan.png" style={{ width: '24px' }} /> },
+    { id: 'bed', icon: <img src="\icon-bed.png" style={{ width: '24px' }} /> },
+    { id: 'chiakhoa', icon: <img src="\icon-chiakhoa.png" style={{ width: '24px' }} /> },
+    { id: 'denngu', icon: <img src="\icon-denngu.png" style={{ width: '24px' }} /> },
+    { id: 'maygiat', icon: <img src="\icon-maygiat.png" style={{ width: '24px' }} /> },
+    { id: 'maylanh', icon: <img src="\icon-maylanh.png" style={{ width: '24px' }} /> },
+    { id: 'okhoa', icon: <img src="\icon-okhoa.png" style={{ width: '24px' }} /> },
+    { id: 'sofa', icon: <img src="\icon-sofa.png" style={{ width: '24px' }} /> },
+    { id: 'tuao', icon: <img src="\icon-tuao.png" style={{ width: '24px' }} /> },
+    { id: 'tusach', icon: <img src="\icon-tusach.png" style={{ width: '24px' }} /> }
+  ]
 
   const handleIconClick = (iconId) => {
-    setSelectedIcon(iconId);
-  };
+    console.log(iconId)
+
+    setSelectedIcon(iconId)
+  }
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    console.log('cl')
+    console.log(selectedIcon)
+
+    e.preventDefault()
     // Xử lý logic lưu trữ tài sản mới
-    console.log('New asset:', asset);
+    console.log('New asset:', asset)
     setAsset({
       name: '',
       icon: null,
       value: '',
       quantity: '',
       unit: 'Cái',
-      supplier: '',
-    });
-    handleClose();
-  };
+      supplier: ''
+    })
+    // handleClose()
+  }
 
   const columns = [
     { title: 'STT', field: 'STT', hozAlign: 'center', minWidth: 40, editor: 'input' }, // Đặt minWidth để tránh cột bị quá nhỏ
@@ -66,7 +70,7 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
     { title: 'Giá Trị Nhập Vào', field: 'mucgiathue', hozAlign: 'center', minWidth: 40, editor: 'input' },
     { title: 'Tổng Số Lượng', field: 'chukythu', hozAlign: 'center', minWidth: 40, editor: 'input' },
     { title: 'Đơn Vị', field: 'mauhopdong', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Đơn Vị Cung Cấp', field: 'ngaylap', hozAlign: 'center', minWidth: 40, editor: 'input' },
+    { title: 'Đơn Vị Cung Cấp', field: 'ngaylap', hozAlign: 'center', minWidth: 40, editor: 'input' }
   ]
 
   const data = [
@@ -77,8 +81,8 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
       mucgiathue: '400,000 VND',
       chukythu: '1',
       mauhopdong: 'Cái',
-      ngaylap: 'Điện máy xanh',
-    },
+      ngaylap: 'Điện máy xanh'
+    }
   ]
 
   const options = {
@@ -96,8 +100,8 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
       minWidth: 30,
       hozAlign: 'center',
       resizable: false,
-      headerSort: false,
-    },
+      headerSort: false
+    }
   }
 
   useEffect(() => {
@@ -117,7 +121,7 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
           backgroundColor: '#fff',
           padding: '15px 15px 15px 15px',
           borderRadius: '10px',
-          margin: '0 10px 10px 10px',
+          margin: '0 10px 10px 10px'
         }}></div>
 
       <div style={{ marginLeft: '15px', marginRight: '10px' }}>
@@ -126,13 +130,13 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
             Tất Cả Tài Sản
             <i className="des">Danh sách tài sản đang có</i>
           </h4>
-          <Box display="flex" alignItems="center" style={{ width: '20%' }}>
-
-          </Box>
+          <Box display="flex" alignItems="center" style={{ width: '20%' }}></Box>
         </Box>
       </div>
 
-      <div className="header-table header-item" style={{ padding: '10px 10px', marginLeft: '15px', marginRight: '10px' }}>
+      <div
+        className="header-table header-item"
+        style={{ padding: '10px 10px', marginLeft: '15px', marginRight: '10px' }}>
         <div className="d-flex">
           <div className="icon">
             <svg
@@ -150,16 +154,13 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
             </svg>
             <span id="filter-count">0</span>
           </div>
-
         </div>
         <Box display="flex" justifyContent="flex-end">
-
           <Button variant="primary" onClick={handleShow}>
             Thêm tài sản
           </Button>
 
-          <Modal show={show} onHide={handleClose} dialogClassName="custom-modal"
-            size="lg">
+          <Modal show={show} onHide={handleClose} dialogClassName="custom-modal" size="lg">
             {/* size modal*/}
             <Modal.Header closeButton>
               <Modal.Title>Thêm tài sản</Modal.Title>
@@ -168,21 +169,17 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="assetName">
                   <Form.Label>Tên tài sản</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="name"
-                    value={asset.name}
-                    onChange={handleChange}
-                    required
-                  />
+                  <Form.Control type="text" name="name" value={asset.name} onChange={handleChange} />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="assetIcon">
                   <Form.Label>Chọn icon</Form.Label>
-                  <div className="icon-table" style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(5, 1fr)',
-                    gridGap: '10px',
-                  }}>
+                  <div
+                    className="icon-table"
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(5, 1fr)',
+                      gridGap: '10px'
+                    }}>
                     {icons.map((icon) => (
                       <div
                         key={icon.id}
@@ -196,9 +193,8 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
                           border: '1px solid #ccc',
                           cursor: 'pointer',
                           backgroundColor: selectedIcon === icon.id ? '#e6f2ff' : 'transparent',
-                          borderColor: selectedIcon === icon.id ? '#007bff' : '#ccc',
-                        }}
-                      >
+                          borderColor: selectedIcon === icon.id ? '#007bff' : '#ccc'
+                        }}>
                         <span className="icon" style={{ fontSize: '24px' }}>
                           {icon.icon}
                         </span>
@@ -214,7 +210,6 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
                       name="giatritaisan"
                       value={asset.giatritaisan}
                       onChange={handleChange}
-                      required
                     />
                   </Form.Group>
                   <Form.Group className="mb-3 col-6" controlId="giatrinhapvao">
@@ -224,28 +219,15 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
                       name="giatrinhapvao"
                       value={asset.giatrinhapvao}
                       onChange={handleChange}
-                      required
                     />
                   </Form.Group>
                   <Form.Group className="mb-3 col-6" controlId="tongsoluong">
                     <Form.Label>Tổng số lượng</Form.Label>
-                    <Form.Control
-                      type="number"
-                      name="tongsoluong"
-                      value={asset.tongsoluong}
-                      onChange={handleChange}
-                      required
-                    />
+                    <Form.Control type="number" name="tongsoluong" value={asset.tongsoluong} onChange={handleChange} />
                   </Form.Group>
                   <Form.Group className="mb-3 col-6" controlId="donvinhapvao">
                     <Form.Label>Đơn vị nhập vào</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="donvinhapvao"
-                      value={asset.giatrinhapvao}
-                      onChange={handleChange}
-                      required
-                    />
+                    <Form.Control type="text" name="donvinhapvao" value={asset.giatrinhapvao} onChange={handleChange} />
                   </Form.Group>
                 </div>
                 <Box display="flex" justifyContent="flex-end">
@@ -257,9 +239,8 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
             </Modal.Body>
           </Modal>
         </Box>
-
       </div>
-      <div className='mt-3' style={{ marginLeft: '15px', marginRight: '10px' }}>
+      <div className="mt-3" style={{ marginLeft: '15px', marginRight: '10px' }}>
         <ReactTabulator
           className="my-custom-table rounded" // Thêm lớp tùy chỉnh nếu cần
           columns={columns}
@@ -271,6 +252,5 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
     </div>
   )
 }
-
 
 export default AssetManager
