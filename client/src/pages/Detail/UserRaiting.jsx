@@ -1,24 +1,31 @@
 import { Avatar, Box, Button, Rating, TextareaAutosize, Typography } from '@mui/material'
-import { useState } from 'react'
-import { postReview } from '~/apis/apiClient'
+import { useEffect, useState } from 'react'
+import { getBulletinBoardReviewByBulletinBoardIdAndUsername, postBulletinBoardReview } from '~/apis/bulletinBoardAPI'
 
-const UserRating = ({ roomId, setReviews, username, fullname, avatar }) => {
-  const [review, setReview] = useState({
-    username: username,
-    roomId: roomId,
-    fullname: fullname,
-    avatar: avatar,
-    comment: '',
-    rating: 1,
-  })
+const UserRating = ({ roomId, username, setReview, review, refreshBulletinBoards }) => {
+  const [account, setAccount] = useState(null)
+
+  useEffect(() => {
+    getBulletinBoardReviewByBulletinBoardIdAndUsername(roomId, username).then((res) => {
+      const result = res.result
+      setAccount(result)
+      // Khởi tạo review từ dữ liệu đã có nếu tồn tại
+      if (result) {
+        setReview({
+          username: username,
+          bulletinBoardId: roomId,
+          rating: result.rating || 1,
+          content: result.content || ''
+        })
+      }
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleComment = () => {
-    postReview(review)
-      .then((response) => {
-        const newReview = response.data.result // Lấy dữ liệu bình luận mới từ phản hồi
-        setReviews(newReview) // Cập nhật danh sách bình luận trong component cha
-        // Reset lại form
-        setReview({ username: 'dung', roomId: roomId, comment: '', rating: 1 })
+    postBulletinBoardReview(review)
+      .then(() => {
+        refreshBulletinBoards()
       })
       .catch((error) => {
         console.error('Lỗi khi đăng bình luận:', error)
@@ -31,8 +38,8 @@ const UserRating = ({ roomId, setReviews, username, fullname, avatar }) => {
         Đánh giá của bạn:
       </Typography>
       <Box sx={{ display: 'flex' }}>
-        <Avatar sx={{ mr: 1 }} src={avatar}>
-          {fullname[0]}
+        <Avatar sx={{ mr: 1 }} src={account?.account.avatar}>
+          {account?.account.fullname[0]}
         </Avatar>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Rating
@@ -40,8 +47,8 @@ const UserRating = ({ roomId, setReviews, username, fullname, avatar }) => {
             name="simple-controlled"
             value={review.rating}
             size="medium"
-            onChange={(event) => {
-              setReview({ ...review, rating: parseInt(event.target.value) })
+            onChange={(event, newValue) => {
+              setReview({ ...review, rating: newValue })
             }}
           />
           <TextareaAutosize
@@ -52,11 +59,11 @@ const UserRating = ({ roomId, setReviews, username, fullname, avatar }) => {
               padding: '10px',
               overflow: 'hidden',
               resize: 'none',
-              width: '715px',
+              width: '715px'
             }}
-            value={review.comment}
+            value={review.content}
             placeholder="Vui lòng đánh giá: "
-            onChange={(e) => setReview({ ...review, comment: e.target.value })}
+            onChange={(e) => setReview({ ...review, content: e.target.value })}
           />
         </Box>
       </Box>

@@ -5,6 +5,7 @@ import java.util.UUID;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,16 +13,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "devices")
-public class Device {
+@Table(name = "rental_amenities")
+@Builder
+public class RentalAmenities {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID deviceId;
+    private UUID RentalAmenitiesId;
 
-    @Column(columnDefinition = "VARCHAR(255)")
-    private String deviceName;
-
-    @Column(columnDefinition = "BOOLEAN")
-    private Boolean available;
+    @Column(columnDefinition = "VARCHAR(255)", unique = true)
+    private String name;
 }

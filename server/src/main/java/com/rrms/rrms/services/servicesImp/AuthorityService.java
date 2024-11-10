@@ -13,12 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.JWSObject;
-import com.nimbusds.jose.JWSVerifier;
-import com.nimbusds.jose.Payload;
+import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
@@ -167,7 +162,7 @@ public class AuthorityService implements IAuthorityService {
                 .issuer(account.getUsername()) // Người phát hành (issuer)
                 .issueTime(new Date()) // Thời gian phát hành JWT
                 .expirationTime(new Date(
-                        Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli())) // Thời gian hết hạn của JWT là 1 giờ
+                        Instant.now().plus(24, ChronoUnit.HOURS).toEpochMilli())) // Thời gian hết hạn của JWT là 1 giờ
                 .claim("roles", roles) // Thêm danh sách roles vào claim
                 .jwtID(UUID.randomUUID().toString())
                 .claim("permissions", permissions) // Thêm danh sách permissions vào claim

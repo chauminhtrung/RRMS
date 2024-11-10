@@ -1,15 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react'
-import {
-  getPhuongXa,
-  getQuanHuyen,
-  getTinhThanh,
-  getAllTypeRoom,
-  createMotel,
-  getMotelById,
-  updateMotel,
-  createSerivceMotel
-} from '~/apis/apiClient'
+import { getPhuongXa, getQuanHuyen, getTinhThanh } from '~/apis/addressAPI'
+import { getAllTypeRoom } from '~/apis/typeRoomAPI'
+import { createMotel, getMotelById, updateMotel } from '~/apis/motelAPI'
+import { createSerivceMotel } from '~/apis/motelServiceAPI'
 import Swal from 'sweetalert2'
+
 const ModelCreateHome = ({ username, MotelId }) => {
   const [selectedOption, setSelectedOption] = useState('')
   const [FileName, setFileName] = useState('')
@@ -74,50 +70,37 @@ const ModelCreateHome = ({ username, MotelId }) => {
   }, [MotelId]) // Thêm templatecontractRouteId vào dependency array
 
   //tao service
+  // Tạo service
   const handleCreateServices = async (id) => {
     const motelId = id // Thay thế bằng ID của Motel thực tế
 
-    // Tạo mảng chứa các dịch vụ
+    // Tạo mảng chứa các dịch vụ chỉ khi dịch vụ không là "Miễn phí/Không sử dụng"
     const services = [
-      {
+      priceItemEle !== '0' && {
         motelId: motelId,
         nameService: 'Dịch vụ điện',
-        price: parseFloat(1700), // Chuyển đổi giá thành số Long
-        chargetype:
-          priceItemEle === '0'
-            ? 'Miễn phí'
-            : priceItemEle === '1'
-            ? 'Theo người'
-            : priceItemEle === '2'
-            ? 'Theo tháng'
-            : 'Theo đồng hồ'
+        price: parseFloat(1700),
+        chargetype: priceItemEle === '1' ? 'Theo người' : priceItemEle === '2' ? 'Theo tháng' : 'Theo đồng hồ'
       },
-      {
+      priceItemWater !== '0' && {
         motelId: motelId,
         nameService: 'Dịch vụ nước',
         price: parseFloat(18000),
-        chargetype:
-          priceItemWater === '0'
-            ? 'Miễn phí'
-            : priceItemWater === '1'
-            ? 'Theo người'
-            : priceItemWater === '2'
-            ? 'Theo tháng'
-            : 'Theo đồng hồ'
+        chargetype: priceItemWater === '1' ? 'Theo người' : priceItemWater === '2' ? 'Theo tháng' : 'Theo đồng hồ'
       },
-      {
+      priceItemTrash !== '0' && {
         motelId: motelId,
         nameService: 'Dịch vụ rác',
         price: parseFloat(15000),
-        chargetype: priceItemTrash === '0' ? 'Miễn phí' : priceItemTrash === '1' ? 'Theo người' : 'Theo tháng'
+        chargetype: priceItemTrash === '1' ? 'Theo người' : 'Theo tháng'
       },
-      {
+      priceItemWifi !== '0' && {
         motelId: motelId,
         nameService: 'Dịch vụ wifi/internet',
         price: parseFloat(50000),
-        chargetype: priceItemWifi === '0' ? 'Miễn phí' : priceItemWifi === '1' ? 'Theo người' : 'Theo tháng'
+        chargetype: priceItemWifi === '1' ? 'Theo người' : 'Theo tháng'
       }
-    ]
+    ].filter(Boolean) // Lọc bỏ các dịch vụ không sử dụng (giá trị "0")
 
     try {
       // Gửi từng dịch vụ đến API
@@ -138,19 +121,19 @@ const ModelCreateHome = ({ username, MotelId }) => {
       try {
         const response = await getMotelById(id)
         setMotel({
-          typeRoom: { typeRoomId: response.data.result[0].typeRoom.typeRoomId },
-          account: { username: response.data.result[0].account.username },
-          motelName: response.data.result[0].motelName,
-          methodofcreation: response.data.result[0].methodofcreation,
-          address: response.data.result[0].address,
-          area: response.data.result[0].area,
-          averagePrice: response.data.result[0].averagePrice,
-          maxperson: response.data.result[0].maxperson,
-          invoicedate: response.data.result[0].invoicedate,
-          paymentdeadline: response.data.result[0].paymentdeadline
+          typeRoom: { typeRoomId: response.data.result.typeRoom.typeRoomId },
+          account: { username: response.data.result.account.username },
+          motelName: response.data.result.motelName,
+          methodofcreation: response.data.result.methodofcreation,
+          address: response.data.result.address,
+          area: response.data.result.area,
+          averagePrice: response.data.result.averagePrice,
+          maxperson: response.data.result.maxperson,
+          invoicedate: response.data.result.invoicedate,
+          paymentdeadline: response.data.result.paymentdeadline
         })
-        setSelectedOption(response.data.result[0].methodofcreation)
-        const [addressDetail, ward, district, province] = response.data.result[0].address.split(', ')
+        setSelectedOption(response.data.result.methodofcreation)
+        const [addressDetail, ward, district, province] = response.data.result.address.split(', ')
         setaddressDetail(addressDetail)
         setSelectedWard(Number(ward)) // Đảm bảo ward là số nếu cần
         setSelectedDistrict(Number(district))

@@ -21,12 +21,8 @@ public class Invoice {
     private UUID invoiceId;
 
     @ManyToOne
-    @JoinColumn(name = "username")
-    private Account account;
-
-    @ManyToOne
-    @JoinColumn(name = "room_id")
-    private Room room;
+    @JoinColumn(name = "tenant_id")
+    private Tenant tenant;
 
     @ManyToOne
     @JoinColumn(name = "payment_id")

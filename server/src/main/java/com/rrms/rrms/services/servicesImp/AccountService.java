@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rrms.rrms.dto.request.AccountRequest;
+import com.rrms.rrms.dto.request.ChangePasswordByEmail;
 import com.rrms.rrms.dto.request.ChangePasswordRequest;
 import com.rrms.rrms.dto.request.RegisterRequest;
 import com.rrms.rrms.dto.response.AccountResponse;
@@ -62,7 +63,6 @@ public class AccountService implements IAccountService {
         return accounts.stream().map(accountMapper::toAccountResponse).collect(Collectors.toList());
     }
 
-    @Override
     public List<AccountResponse> searchAccounts(String search) {
         List<Account> searchResults = accountRepository.searchAccounts(search);
         return searchResults.stream().map(accountMapper::toAccountResponse).collect(Collectors.toList());
@@ -164,29 +164,43 @@ public class AccountService implements IAccountService {
         // Khởi tạo danh sách authorities để tránh NullPointerException
         account.setAuthorities(new ArrayList<>());
 
-        // Lưu tài khoản vào cơ sở dữ liệu
+        // Lưu tài khoản trước
         Account savedAccount = accountRepository.save(account);
 
-        // Lấy vai trò HOST
-        Optional<Role> hostRoleOptional = roleRepository.findByRoleName(Roles.HOST);
-        if (hostRoleOptional.isPresent()) {
-            Role hostRole = hostRoleOptional.get();
+        // Xử lý danh sách vai trò
+        if (accountRequest.getRole() != null && !accountRequest.getRole().isEmpty()) {
+            for (String roleName : accountRequest.getRole()) {
+                // Chuyển đổi roleName thành Roles enum
+                Roles roleEnum;
+                try {
+                    roleEnum = Roles.valueOf(roleName.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    throw new AppException(ErrorCode.ROLE_NOT_FOUND);
+                }
 
-            // Tạo đối tượng Auth mới để liên kết tài khoản với vai trò
-            Auth auth = new Auth();
-            auth.setAccount(savedAccount);
-            auth.setRole(hostRole);
+                Optional<Role> roleOptional = roleRepository.findByRoleName(roleEnum);
+                if (roleOptional.isPresent()) {
+                    Role role = roleOptional.get();
 
-            // Lưu dữ liệu quyền vào cơ sở dữ liệu
-            authRepository.save(auth);
+                    // Tạo đối tượng Auth mới cho mỗi vai trò và liên kết tài khoản với vai trò
+                    Auth auth = new Auth();
+                    auth.setAccount(savedAccount); // Sử dụng savedAccount
+                    auth.setRole(role);
 
-            // Thêm quyền vào danh sách authorities của tài khoản
-            savedAccount.getAuthorities().add(auth); // Đảm bảo authorities không null
+                    // Thêm quyền vào danh sách authorities của tài khoản
+                    savedAccount.getAuthorities().add(auth);
+
+                    // Lưu dữ liệu quyền vào cơ sở dữ liệu
+                    authRepository.save(auth);
+                } else {
+                    throw new AppException(ErrorCode.ROLE_NOT_FOUND);
+                }
+            }
         } else {
-            throw new AppException(ErrorCode.ROLE_NOT_FOUND);
+            throw new AppException(ErrorCode.ROLE_NOT_PROVIDED);
         }
 
-        return convertToAccountResponse(savedAccount); // Trả về AccountResponse cho tài khoản đã lưu
+        return convertToAccountResponse(savedAccount);
     }
 
     private AccountResponse convertToAccountResponse(Account account) {
@@ -218,7 +232,7 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public AccountResponse updateHostAccount(String username, AccountRequest accountRequest) {
+    public AccountResponse updateAccount(String username, AccountRequest accountRequest) {
         // Kiểm tra xem tài khoản có tồn tại hay không
         Optional<Account> accountOptional = accountRepository.findById(username);
         if (!accountOptional.isPresent()) {
@@ -270,7 +284,7 @@ public class AccountService implements IAccountService {
         return accountRepository.save(account);
     }
 
-    //    @Cacheable(value = "account", key = "#username")
+    // @Cacheable(value = "account", key = "#username")
     @Override
     public AccountResponse findByUsername(String username) {
         Account account = accountRepository
@@ -320,5 +334,29 @@ public class AccountService implements IAccountService {
         accountRepository.save(account);
 
         return "Password changed successfully";
+    }
+
+    @Override
+    public boolean changePasswordByEmail(ChangePasswordByEmail changePasswordByEmail) {
+        if (!accountRepository.existsAccountByEmail(changePasswordByEmail.getEmail())) {
+            return false;
+        }
+        try {
+            Account account = accountRepository
+                    .findByEmail(changePasswordByEmail.getEmail())
+                    .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+            BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
+            String hashedNewPassword = pe.encode(changePasswordByEmail.getNewPassword());
+            account.setPassword(hashedNewPassword);
+            accountRepository.save(account);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return accountRepository.existsAccountByEmail(email);
     }
 }

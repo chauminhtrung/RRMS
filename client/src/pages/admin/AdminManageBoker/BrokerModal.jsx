@@ -12,7 +12,7 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { createBroker } from '~/apis/apiClient'
+import { createBroker } from '~/apis/brokerAPI'
 
 const BrokerModal = ({ handleClose, open, refreshBrokers }) => {
   const { motelId } = useParams()

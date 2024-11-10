@@ -5,8 +5,9 @@ import { useDebounce } from '@uidotdev/usehooks'
 import ModalSearch from './ModalSearch'
 import MicIcon from '@mui/icons-material/Mic'
 import './SearchWHome.css'
-import { searchByName } from '~/apis/apiClient'
+
 import AudioRecorderModal from '../AI/Audio'
+import { searchByName } from '~/apis/searchAPI'
 
 function FilterSearch({ setSearchData }) {
   const [open, setOpen] = useState(false)
@@ -30,6 +31,14 @@ function FilterSearch({ setSearchData }) {
 
   useEffect(() => {
     if (debouncedKeyword) {
+      searchByName(debouncedKeyword)
+        .then((searchResult) => {
+          setSearchData(searchResult.data.result)
+        })
+        .catch((error) => {
+          console.error('Error fetching search results:', error)
+        })
+    } else {
       searchByName(debouncedKeyword).then((searchResult) => {
         setSearchData(searchResult.data.result)
       })

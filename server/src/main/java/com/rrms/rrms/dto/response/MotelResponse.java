@@ -2,6 +2,7 @@ package com.rrms.rrms.dto.response;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 import com.rrms.rrms.models.TypeRoom;
@@ -31,4 +32,5 @@ public class MotelResponse implements Serializable {
     int paymentdeadline;
     TypeRoom typeRoom;
     AccountResponse account;
+    List<MotelServiceResponse> motelServices;
 }

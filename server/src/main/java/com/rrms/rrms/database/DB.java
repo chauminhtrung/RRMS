@@ -22,6 +22,12 @@ import net.datafaker.Faker;
 @Slf4j
 @Transactional
 public class DB {
+    private final BulletinBoardRuleRepository bulletinBoardRuleRepository;
+
+    public DB(BulletinBoardRuleRepository bulletinBoardRuleRepository) {
+        this.bulletinBoardRuleRepository = bulletinBoardRuleRepository;
+    }
+
     int imageIndex = 0;
 
     @Bean
@@ -32,15 +38,22 @@ public class DB {
             MotelRepository motelRepository,
             TypeRoomRepository typeRoomRepository,
             RoomImageRepository roomImageRepository,
-            RoomReviewRepository roomReviewRepository,
             ServiceRepository serviceRepository,
             RoomServiceRepository roomServiceRepository,
             ISearchService searchService,
             RoleRepository roleRepository,
             PermissionRepository permissionRepository,
-            NameMotelServiceRepository nameMotelServiceRepository) {
+            NameMotelServiceRepository nameMotelServiceRepository,
+            BulletinBoardRepository bulletinBoardRepository,
+            RuleRepository ruleRepository,
+            RentalAmenitiesRepository rentalAmenitiesRepository,
+            BulletinBoardReviewsRepository bulletinBoardReviewsRepository,
+            BulletinBoardImageRepository bulletinBoardImageRepository,
+            BulletinBoards_RentalAmRepository bulletinBoards_rentalAmRepository) {
         return args -> {
             int roomsLength = 5;
+            int bulletinBoardsLength = 10;
+            log.info("Starting to create data... length: {}", roomsLength);
 
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
 
@@ -53,7 +66,6 @@ public class DB {
             createHostAccount(accountRepository, pe, roleRepository, authRepository);
 
             if (roomRepository.findAll().isEmpty()) {
-                log.info("Starting to create data...");
                 TypeRoom typeRoom = new TypeRoom();
                 typeRoom.setName("Trọ");
                 typeRoomRepository.save(typeRoom);
@@ -71,7 +83,6 @@ public class DB {
                 createNameMotelService(nameMotelServiceRepository);
 
                 for (int i = 0; i < roomsLength; i++) {
-                    log.info("Creating data: {}/{}", i + 1, roomsLength);
                     // Tạo và lưu motel
                     Motel motel = createMotel(faker, accountRepository, typeRoom);
                     motels.add(motel);
@@ -94,6 +105,45 @@ public class DB {
                 roomImageRepository.saveAll(roomImages);
             }
 
+            if (bulletinBoardRepository.findAll().isEmpty()) {
+
+                // Khởi tạo Faker một lần
+                Faker faker = new Faker(new Locale("vi"));
+                List<RentalAmenities> rentalAmenities = new ArrayList<>();
+                List<BulletinBoard> bulletinBoards = new ArrayList<>();
+                List<BulletinBoardImage> bulletinBoardImages = new ArrayList<>();
+                List<BulletinBoardRule> bulletinBoardRule = new ArrayList<>();
+                List<BulletinBoardReviews> bulletinBoardReviews = new ArrayList<>();
+
+                createNameMotelService(nameMotelServiceRepository);
+
+                BulletinBoard bulletinBoard = null;
+                for (int i = 0; i < bulletinBoardsLength; i++) {
+
+                    // Tạo và lưu BulletinBoard
+                    bulletinBoard = createBulletinBoard(faker, accountRepository);
+                    bulletinBoardRepository.save(bulletinBoard);
+
+                    for (int j = 0; j < 5; j++) {
+                        imageIndex++;
+                        String imageUrl = "https://picsum.photos/1280/720?random=" + imageIndex;
+                        BulletinBoardImage bulletinBoardImage = new BulletinBoardImage();
+                        bulletinBoardImage.setBulletinBoard(bulletinBoard);
+                        bulletinBoardImage.setImageLink(imageUrl);
+                        bulletinBoardImages.add(bulletinBoardImage);
+                    }
+                    bulletinBoardRule(faker, bulletinBoardRule, ruleRepository, bulletinBoard);
+                    createRentalAmenities(
+                            faker, rentalAmenitiesRepository, bulletinBoard, bulletinBoards_rentalAmRepository);
+                    bulletinBoardImageRepository.saveAll(bulletinBoardImages);
+                }
+                bulletinBoardReviews(
+                        faker,
+                        bulletinBoardReviews,
+                        bulletinBoard,
+                        accountRepository.findByUsername("admin").get(),
+                        bulletinBoardReviewsRepository);
+            }
             log.info("All data created");
             log.info(searchService.syncRoom(roomRepository.findAll()));
         };
@@ -159,6 +209,7 @@ public class DB {
             customerPermissions.add(createPermission("VIEW_CONTRACT", "View contracts", permissionRepository));
             customerPermissions.add(createPermission("SUPPORT", "Support requests", permissionRepository));
             customerPermissions.add(createPermission("PAYMENT", "Handle payments", permissionRepository));
+            customerPermissions.add(createPermission("REVIEWS", "Reviews bulletin board", permissionRepository));
             // Define GUEST permissions
             Set<Permission> guestPermissions = new HashSet<>();
             guestPermissions.add(createPermission("VIEW_SEARCH_MOTEL", "View and search motels", permissionRepository));
@@ -381,18 +432,8 @@ public class DB {
                         new Date() // Ngày hiện tại
                         );
         room.setDeposit(faker.number().randomDouble(2, 500000, 5000000));
-        room.setHours(faker.options().option("Tự do", "6:00 AM - 12:00 PM", "1:00 PM - 6:00 PM"));
-        room.setRentalStartTime(LocalDate.now());
         room.setMotel(motel);
-        room.setAuthen(faker.options().option(true, false));
-        room.setDatenew(randomDate);
-
-        room.setNameRoom(faker.address().city());
-        room.setDescription(faker.lorem().paragraph());
-        room.setAvailable(faker.bool().bool());
-        room.setRoomArea(faker.number().numberBetween(50, 200));
         room.setPrice(faker.number().randomDouble(2, 500000, 5000000));
-        room.setMaxPerson(faker.number().numberBetween(1, 5));
         return room;
     }
 
@@ -449,5 +490,100 @@ public class DB {
             String imageUrl = "https://picsum.photos/1280/720?random=" + imageIndex;
             roomImages.add(new RoomImage(UUID.randomUUID(), room, imageUrl));
         }
+    }
+
+    private void createRentalAmenities(
+            Faker faker,
+            RentalAmenitiesRepository rentalAmenitiesRepository,
+            BulletinBoard bulletinBoard,
+            BulletinBoards_RentalAmRepository bulletinBoards_RentalAmRepository) {
+
+        for (int i = 0; i < 5; i++) {
+            String name = faker.address().city();
+
+            Optional<RentalAmenities> existingRentalAmenities = rentalAmenitiesRepository.findByName(name);
+
+            RentalAmenities rentalAmenities;
+            rentalAmenities = existingRentalAmenities.orElseGet(() -> rentalAmenitiesRepository.save(
+                    RentalAmenities.builder().name(name).build()));
+
+            bulletinBoards_RentalAmRepository.save(createBulletinBoards_RentalAm(bulletinBoard, rentalAmenities));
+        }
+    }
+
+    private void bulletinBoardRule(
+            Faker faker,
+            List<BulletinBoardRule> bulletinBoardRuleList,
+            RuleRepository ruleRepository,
+            BulletinBoard bulletinBoard) {
+        for (int j = 0; j < 5; j++) {
+            Rule rule = ruleRepository.save(
+                    Rule.builder().ruleName(faker.address().city()).build());
+            bulletinBoardRuleList = new ArrayList<>();
+            bulletinBoardRuleList.add(bulletinBoardRuleRepository.save(BulletinBoardRule.builder()
+                    .rule(rule)
+                    .bulletinBoard(bulletinBoard)
+                    .build()));
+        }
+        bulletinBoardRuleRepository.saveAll(bulletinBoardRuleList);
+    }
+
+    private void bulletinBoardReviews(
+            Faker faker,
+            List<BulletinBoardReviews> bulletinBoardReviewList,
+            BulletinBoard bulletinBoard,
+            Account account,
+            BulletinBoardReviewsRepository bulletinBoardReviewsRepository) {
+
+        BulletinBoardReviews bulletinBoardReviews = new BulletinBoardReviews();
+        bulletinBoardReviewList.add(bulletinBoardReviewsRepository.save(bulletinBoardReviews
+                .builder()
+                .account(account)
+                .bulletinBoard(bulletinBoard)
+                .rating(faker.number().numberBetween(1, 5))
+                .content(faker.lorem().paragraph())
+                .build()));
+
+        bulletinBoardReviewsRepository.saveAll(bulletinBoardReviewList);
+    }
+
+    private BulletinBoard createBulletinBoard(Faker faker, AccountRepository accountRepository) {
+        BulletinBoard bulletinBoard = new BulletinBoard();
+        bulletinBoard.setAccount(accountRepository.findByUsername("admin").get());
+        bulletinBoard.setTitle(faker.address().city());
+        bulletinBoard.setRentalCategory(faker.options().option("Phòng đặt", "Phòng khách"));
+        bulletinBoard.setDescription(faker.lorem().paragraph());
+        bulletinBoard.setRentPrice(faker.number().randomDouble(2, 500000, 5000000));
+        bulletinBoard.setPromotionalRentalPrice(faker.number().randomDouble(2, 500000, 5000000));
+        bulletinBoard.setDeposit(faker.number().randomDouble(2, 500000, 5000000));
+        bulletinBoard.setArea(faker.number().numberBetween(50, 200));
+        bulletinBoard.setElectricityPrice(faker.number().randomDouble(2, 500000, 5000000));
+        bulletinBoard.setWaterPrice(faker.number().randomDouble(2, 500000, 5000000));
+        bulletinBoard.setMaxPerson(faker.options()
+                .option(
+                        "1 người ở",
+                        "2 người ở",
+                        "3 người ở",
+                        "4 người ở",
+                        "5-6 người ở",
+                        "7-10 người ở",
+                        "Không giới hạn"));
+        bulletinBoard.setMoveInDate(new Date());
+        bulletinBoard.setOpeningHours(faker.options().option("4 sáng", "5 sáng", "6 sáng"));
+        bulletinBoard.setCloseHours(faker.options().option("22 tối", "23 tối", "24 tối"));
+        bulletinBoard.setAddress(faker.address().fullAddress());
+        bulletinBoard.setLongitude(faker.number().randomDouble(2, 50, 50000));
+        bulletinBoard.setLatitude(faker.number().randomDouble(2, 50, 5000));
+        bulletinBoard.setStatus(faker.random().nextBoolean());
+        bulletinBoard.setIsActive(faker.random().nextBoolean());
+        return bulletinBoard;
+    }
+
+    private BulletinBoards_RentalAm createBulletinBoards_RentalAm(
+            BulletinBoard bulletinBoard, RentalAmenities rentalAmenities) {
+        BulletinBoards_RentalAm bulletinBoards_RentalAm = new BulletinBoards_RentalAm();
+        bulletinBoards_RentalAm.setBulletinBoard(bulletinBoard);
+        bulletinBoards_RentalAm.setRentalAmenities(rentalAmenities);
+        return bulletinBoards_RentalAm;
     }
 }

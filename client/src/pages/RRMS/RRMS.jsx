@@ -7,7 +7,7 @@ import { wards_list } from '~/utils/wards_list'
 import { useEffect, useState } from 'react'
 import 'swiper/css'
 import axios from 'axios'
-import LoadingPage from '~/components/LoadingPage'
+import LoadingPage from '~/components/LoadingPage/LoadingPage'
 import { formatterAmount } from '~/utils/formatterAmount'
 import { Pagination } from '@mui/material'
 const RRMS = ({ setIsAdmin }) => {

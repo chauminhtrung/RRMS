@@ -9,7 +9,7 @@ import {
   Rating,
   TextField,
   Typography,
-  useMediaQuery,
+  useMediaQuery
 } from '@mui/material'
 import { Link, useParams } from 'react-router-dom'
 import Item from './Item'
@@ -28,8 +28,7 @@ import GroupIcon from '@mui/icons-material/Group'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined'
 import LanguageIcon from '@mui/icons-material/Language'
-import { getDetail } from '~/apis/apiClient'
-import { roomOrder } from '~/apis/mock-data-room-order'
+import { roomOrder } from '~/apis/mock/mock-data-room-order'
 import RoomOther from './RoomOther'
 import RaitingAvg from './RaitingAvg'
 import Comment from './Comment'
@@ -37,20 +36,29 @@ import BannerHorizontal from '~/components/BannerHorizontal'
 import Slider from 'react-slick'
 import NextArrow from './NextArrow'
 import PrevArrow from './PrevArrow'
-import LoadingPage from '~/components/LoadingPage'
+import LoadingPage from '~/components/LoadingPage/LoadingPage'
 import { formatterAmount } from '~/utils/formatterAmount'
 import { useEffect, useState } from 'react'
 import UserRaiting from './UserRaiting'
 import { useTranslation } from 'react-i18next'
+import { getBulletinBoard } from '~/apis/bulletinBoardAPI'
+import { getAccountByUsername, introspect } from '~/apis/accountAPI'
 
 const Detail = ({ setIsAdmin }) => {
   const { t } = useTranslation()
   const [detail, setDetail] = useState(null)
   const [showArrows, setShowArrows] = useState(false)
   const [roomRating, setRoomRating] = useState(0)
-  const { roomId } = useParams()
+  const { bulletinBoardId } = useParams()
   const [currentPage, setCurrentPage] = useState(1)
   const [commentsPerPage] = useState(5)
+  const [account, setAccount] = useState()
+  const [review, setReview] = useState({
+    username: account?.username || '',
+    bulletinBoardId: bulletinBoardId,
+    rating: 1,
+    content: ''
+  })
 
   useEffect(() => {
     setIsAdmin(false)
@@ -58,37 +66,46 @@ const Detail = ({ setIsAdmin }) => {
   }, [])
 
   const calculateAvgRating = () => {
-    if (detail && detail.roomReviews && detail.roomReviews.length > 0) {
+    if (detail && detail.bulletinBoardReviews && detail.bulletinBoardReviews.length > 0) {
       let sum = 0
-      detail.roomReviews.forEach((item) => {
+      detail.bulletinBoardReviews.forEach((item) => {
         sum += item.rating
       })
-      const avgRating = (sum / detail.roomReviews.length).toFixed(2)
+      const avgRating = (sum / detail.bulletinBoardReviews.length).toFixed(2)
       setRoomRating(Number(avgRating))
     } else {
       setRoomRating(0)
     }
   }
 
+  const refreshBulletinBoards = () => {
+    Promise.all([getBulletinBoard(bulletinBoardId), introspect().then((res) => getAccountByUsername(res.data.issuer))])
+      .then(([bulletinRes, accountRes]) => {
+        setDetail(bulletinRes.result)
+        setAccount(accountRes.data)
+      })
+      .catch((error) => {
+        console.error('Lỗi khi lấy dữ liệu:', error)
+      })
+  }
+
   useEffect(() => {
-    getDetail(roomId).then((res) => {
-      setDetail(res.data.result)
-    })
-  }, [roomId])
+    Promise.all([getBulletinBoard(bulletinBoardId), introspect().then((res) => getAccountByUsername(res.data.issuer))])
+      .then(([bulletinRes, accountRes]) => {
+        setDetail(bulletinRes.result)
+        setAccount(accountRes.data)
+      })
+      .catch((error) => {
+        console.error('Lỗi khi lấy dữ liệu:', error)
+      })
+  }, [bulletinBoardId])
 
   const indexOfLastComment = currentPage * commentsPerPage
   const indexOfFirstComment = indexOfLastComment - commentsPerPage
-  const currentComments = detail?.roomReviews.slice(indexOfFirstComment, indexOfLastComment)
+  const currentComments = detail?.bulletinBoardReviews.slice(indexOfFirstComment, indexOfLastComment)
 
   const paginate = (event, value) => {
     setCurrentPage(value)
-  }
-
-  const setReviews = (newReview) => {
-    setDetail((prevDetail) => ({
-      ...prevDetail,
-      roomReviews: [...prevDetail.roomReviews, newReview], // Thêm bình luận mới
-    }))
   }
 
   useEffect(() => {
@@ -100,7 +117,7 @@ const Detail = ({ setIsAdmin }) => {
       await navigator.share({
         title: detail.title,
         text: detail.name,
-        url: window.location.href,
+        url: window.location.href
       })
     } catch (error) {
       console.log(error)
@@ -131,10 +148,10 @@ const Detail = ({ setIsAdmin }) => {
       if (isMobile) return <Box sx={{ display: 'none' }}></Box>
       return (
         <a>
-          <img className="image-paging" src={detail.roomImages[i].image}></img>
+          <img className="image-paging" src={detail.bulletinBoardImages[i].imageLink}></img>
         </a>
       )
-    },
+    }
   }
 
   return (
@@ -144,10 +161,10 @@ const Detail = ({ setIsAdmin }) => {
           {t('trang-chu')}
         </Link>
         <Link color="inherit" to="/">
-          {detail.motel.motelName}
+          {detail.title}
         </Link>
         <Link color="inherit" to="/">
-          {detail.typeRoom.name}
+          {detail.rentalCategory}
         </Link>
         <Typography sx={{ color: 'text.primary' }}>{detail.nameRoom}</Typography>
       </Breadcrumbs>
@@ -161,39 +178,40 @@ const Detail = ({ setIsAdmin }) => {
           sx={{
             '.slick-dots.slick-thumb': {
               position: 'relative',
-              ml: -3,
+              ml: -3
             },
             '.slick-dots.slick-thumb li': {
-              mx: '30px',
+              mx: '30px'
             },
             '.image-paging': {
               width: '50px',
               height: '50px',
               transition: 'all 0.1s ease-in-out',
+              borderRadius: '5px'
             },
             '.slick-dots.slick-thumb li.slick-active a img': {
-              transform: 'scale(1.2)',
-            },
+              transform: 'scale(1.2)'
+            }
           }}>
           <Slider {...settings} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {detail.roomImages.map((item, i) => (
+            {detail.bulletinBoardImages.map((item, i) => (
               <Item
                 key={i}
                 index={i}
                 item={item}
-                addressDetail={detail.motel.address}
-                totalItems={detail.roomImages.length}
+                addressDetail={detail.address}
+                totalItems={detail.bulletinBoardImages.length}
               />
             ))}
           </Slider>
 
           <Typography variant="h5" sx={{ mt: 8 }}>
-            {detail.nameRoom}
+            {detail.title}
           </Typography>
-          <Typography variant="h6">{detail.motel.address}</Typography>
+          <Typography variant="h6">{detail.address}</Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography variant="h5" sx={{ my: 2, color: 'red' }}>
-              {formatterAmount(detail.price)}/{t('thang')}
+              {formatterAmount(detail.rentPrice)}/{t('thang')}
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', ml: 0 }}>
               <Rating
@@ -212,17 +230,17 @@ const Detail = ({ setIsAdmin }) => {
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <TagIcon sx={{ mr: 0.5 }} />
                 <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>{t('chuyen-muc')}: </Typography>
-                {detail.typeRoom.name}
+                {detail.rentalCategory}
               </Typography>
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <LanguageIcon sx={{ mr: 0.5 }} />
                 <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>{t('tinh-trang')}: </Typography>
-                {detail.available ? 'Đang cho thuê' : 'Đã có người thuê'}
+                {detail.status ? 'Đang cho thuê' : 'Đã có người thuê'}
               </Typography>
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <CalendarMonthIcon sx={{ mr: 0.5 }} />
                 <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>{t('gio-giac')}: </Typography>
-                {detail.hours}
+                {detail.openingHours} - {detail.closeHours}
               </Typography>
             </Grid>
             <Grid item xs={6}>
@@ -238,11 +256,11 @@ const Detail = ({ setIsAdmin }) => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'flex-start',
-                  color: detail.censor ? 'lime' : 'red',
+                  color: detail.censor ? 'lime' : 'red'
                 }}>
                 <ShieldOutlinedIcon sx={{ mr: 0.5, color: '#6B6B6B' }} />
                 <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>{t('kiem-duyet')}: </Typography>
-                {detail.censor ? 'Đã kiểm duyệt' : 'Chưa kiểm duyệt'}
+                {detail.isActive ? 'Đã kiểm duyệt' : 'Chưa kiểm duyệt'}
               </Typography>
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <GroupIcon sx={{ mr: 0.5 }} />
@@ -266,7 +284,7 @@ const Detail = ({ setIsAdmin }) => {
                 <CropIcon />
                 <Box>
                   <Typography>{t('dien-tich')}</Typography>
-                  <Typography>{detail.roomArea} m2</Typography>
+                  <Typography>{detail.area} m2</Typography>
                 </Box>
               </Box>
             </Grid>
@@ -275,12 +293,7 @@ const Detail = ({ setIsAdmin }) => {
                 <ElectricBoltIcon />
                 <Box>
                   <Typography>{t('tien-dien')}</Typography>
-                  {detail.roomServices.map(
-                    (item, i) =>
-                      item.service.nameService === 'Điện' && (
-                        <Typography key={i}>{formatterAmount(item.service.price)}/Kw</Typography>
-                      )
-                  )}
+                  <Typography>{formatterAmount(detail.electricityPrice)}/Kw</Typography>
                 </Box>
               </Box>
             </Grid>
@@ -289,30 +302,20 @@ const Detail = ({ setIsAdmin }) => {
                 <WaterDropOutlinedIcon />
                 <Box>
                   <Typography>{t('tien-nuoc')}</Typography>
-                  {detail.roomServices.map(
-                    (item, i) =>
-                      item.service.nameService === 'Nước' && (
-                        <Typography key={i}>{formatterAmount(item.service.price)}/Khối</Typography>
-                      )
-                  )}
+                  <Typography>{formatterAmount(detail.waterPrice)}/Khối</Typography>
                 </Box>
               </Box>
             </Grid>
           </Grid>
           <Typography variant="h5">{t('diem')} (+)</Typography>
           <Grid container sx={{ gap: 2, justifyContent: isMobile ? 'center' : 'start', my: 2 }}>
-            {detail.roomServices.map(
-              (item, i) =>
-                item.service.nameService !== 'Điện' &&
-                item.service.nameService !== 'Nước' && (
-                  <Grid item md={3.8} xs={5} key={i}>
-                    <Box
-                      sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', borderRadius: '5px', p: '10px' }}>
-                      {item.service.nameService}
-                    </Box>
-                  </Grid>
-                )
-            )}
+            {detail.bulletinBoards_RentalAm.map((item, i) => (
+              <Grid item md={3.8} xs={5} key={i}>
+                <Box sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', borderRadius: '5px', p: '10px' }}>
+                  {item.rentalAmenities.name}
+                </Box>
+              </Grid>
+            ))}
           </Grid>
           <Box sx={{ mb: 2, display: isMobile ? 'block' : 'none' }}>
             <UserDetail item={detail} />
@@ -339,14 +342,14 @@ const Detail = ({ setIsAdmin }) => {
             container
             sx={{
               justifyContent: 'center',
-              gap: 2,
+              gap: 2
             }}>
             <Grid item md={3.8} sx={{ display: 'flex', justifyContent: 'center' }}>
               <Button
                 variant="contained"
                 sx={{
                   width: '200px',
-                  bgcolor: (theme) => (theme.palette.mode === 'light' ? '#2ed573' : '#7bed9f'),
+                  bgcolor: (theme) => (theme.palette.mode === 'light' ? '#2ed573' : '#7bed9f')
                 }}
                 startIcon={<BookmarkIcon />}>
                 {t('luu-xem-sau')}
@@ -357,7 +360,7 @@ const Detail = ({ setIsAdmin }) => {
                 variant="contained"
                 sx={{
                   width: '200px',
-                  bgcolor: (theme) => (theme.palette.mode === 'light' ? '#1e90ff' : '#70a1ff'),
+                  bgcolor: (theme) => (theme.palette.mode === 'light' ? '#1e90ff' : '#70a1ff')
                 }}
                 startIcon={<FacebookIcon />}>
                 {t('chia-se')} facebook
@@ -368,7 +371,7 @@ const Detail = ({ setIsAdmin }) => {
                 variant="contained"
                 sx={{
                   width: '200px',
-                  bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffa502' : '#eccc68'),
+                  bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffa502' : '#eccc68')
                 }}
                 startIcon={<SendIcon />}
                 onClick={share}>
@@ -377,10 +380,10 @@ const Detail = ({ setIsAdmin }) => {
             </Grid>
           </Grid>
           <BannerHorizontal />
-          <RaitingAvg reviews={detail.roomReviews} rating={roomRating} />
+          <RaitingAvg reviews={detail.bulletinBoardReviews} rating={roomRating} />
           <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
             <Pagination
-              count={Math.ceil(detail.roomReviews.length / commentsPerPage)} // Tổng số trang
+              count={Math.ceil(detail.bulletinBoardReviews.length / commentsPerPage)} // Tổng số trang
               page={currentPage} // Trang hiện tại
               onChange={paginate} // Hàm xử lý sự kiện khi chuyển trang
               color="primary.main"
@@ -388,32 +391,40 @@ const Detail = ({ setIsAdmin }) => {
             />
           </Box>
           {currentComments.map((item, i) => (
-            <Comment key={i} item={item} roomId={detail.roomId} />
+            <Comment key={i} item={item} roomId={bulletinBoardId} />
           ))}
-          <UserRaiting roomId={detail.roomId} setReviews={setReviews} username={'dung'} fullname={'Trí Dũng'} />
+          {account && (
+            <UserRaiting
+              roomId={bulletinBoardId}
+              refreshBulletinBoards={refreshBulletinBoards}
+              username={account.username}
+              review={review}
+              setReview={setReview}
+            />
+          )}
           {/* Giới thiệu trọ khác */}
           <Box
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
               my: 2,
-              alignItems: 'center',
+              alignItems: 'center'
             }}>
             <Box
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'center',
+                justifyContent: 'center'
               }}>
               <Box
                 sx={{
                   display: 'flex',
                   justifyContent: 'space-between',
-                  flexWrap: 'wrap',
+                  flexWrap: 'wrap'
                 }}>
                 <Typography variant="h5">{t('phong-tro-cung-dia-chi')}</Typography>
                 <Typography variant="subtitle1">
-                  {t('xem-them')} {detail.typeRoom.name}, {t('nha-tro-tai')} {detail.motelName}
+                  {t('xem-them')} {detail.rentalCategory} {detail.title}
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -421,7 +432,7 @@ const Detail = ({ setIsAdmin }) => {
                   sx={{
                     width: isMobile ? '325px' : '756px',
                     mb: 2,
-                    mx: 'auto',
+                    mx: 'auto'
                   }}>
                   <RoomOther items={roomOrder} />
                 </Box>

@@ -92,8 +92,9 @@ const AddUsers = () => {
   }, [accountId]);
   
   const createAccount = async () => {  
+    // Kiểm tra xem tất cả các trường bắt buộc có được điền hay không  
     if (!form.username || !form.password || !form.fullname ||   
-        !form.phone || !form.email || !form.cccd || !form.birthday || !form.gender) {  
+        !form.phone || !form.email || !form.cccd || !form.birthday || !form.gender || !form.role) {  
       Swal.fire({  
         icon: 'warning',  
         title: 'Thông báo',  
@@ -101,7 +102,6 @@ const AddUsers = () => {
       });  
       return;  
     }  
-  
     try {  
       const response = await axios.post(`${env.API_URL}/api-accounts/createAccount`, {  
         username: form.username,  
@@ -112,9 +112,10 @@ const AddUsers = () => {
         avatar: form.avatar,  
         birthday: form.birthday,  
         gender: form.gender,  
-        cccd: form.cccd  
-      });  
-      
+        cccd: form.cccd,  
+        role: [form.role],  
+      });
+
       if (response.data.status) {  
         Swal.fire({  
           icon: 'success',  
@@ -131,13 +132,21 @@ const AddUsers = () => {
       }  
     } catch (error) {  
       console.error('Error creating account:', error);  
-      Swal.fire({  
-        icon: 'error',  
-        title: 'Lỗi',  
-        text: 'Đã xảy ra lỗi. Vui lòng thử lại sau.',  
-      });  
+      if (error.response) {  
+        Swal.fire({  
+          icon: 'error',  
+          title: 'Lỗi',  
+          text: error.response.data.message || 'Đã xảy ra lỗi. Vui lòng thử lại sau.',  
+        });  
+      } else {  
+        Swal.fire({  
+          icon: 'error',  
+          title: 'Lỗi',  
+          text: 'Đã xảy ra lỗi. Vui lòng thử lại sau.',  
+        });  
+      }  
     }  
-  };  
+  };
   
   const updateAccount = async () => {  
     if (!form.username || !form.fullname || !form.phone || !form.email || !form.cccd ||   
@@ -160,7 +169,8 @@ const AddUsers = () => {
         avatar: form.avatar,  
         birthday: form.birthday,  
         gender: form.gender,  
-        cccd: form.cccd  
+        cccd: form.cccd,
+        role: [form.role],  
       });  
   
       if (response.data.status) {  
@@ -247,7 +257,8 @@ const AddUsers = () => {
       avatar: '',  
       birthday: '',  
       gender: '',  
-      cccd: '',  
+      cccd: '', 
+      role: '', 
     });  
     setPhoneError('');  
     setEmailError('');  
@@ -324,7 +335,7 @@ const AddUsers = () => {
 
 
   return (
-    <Box sx={{backgroundColor: '#fff', borderRadius: '5px',marginTop:'17px',height:'665px'}}>
+    <Box sx={{backgroundColor: '#fff', borderRadius: '5px',marginTop:'17px'}}>
       <Grid container spacing={2} sx={{paddingLeft:'30px',paddingTop:'15px', marginBottom:'15px' }}> 
         <Grid container sx={{backgroundColor:'rgb(236, 242, 255)',marginBottom:'10px',borderRadius: '5px',padding:'10px',marginRight:'15px'}}>  
           <Grid item xs={12} sm={6} lg={8}>  

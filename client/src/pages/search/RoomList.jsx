@@ -10,7 +10,7 @@ import {
   Avatar,
   Pagination,
   IconButton,
-  Snackbar,
+  Snackbar
 } from '@mui/material'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import axios from 'axios'
@@ -20,7 +20,7 @@ import { formatterAmount } from '~/utils/formatterAmount'
 import MuiAlert from '@mui/material/Alert'
 import SearchList from './SearchList'
 import FilterSearch from './FilterSearch'
-import LoadingPage from '~/components/LoadingPage'
+import LoadingPage from '~/components/LoadingPage/LoadingPage'
 
 const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
   const [favorites, setFavorites] = useState({})
@@ -35,7 +35,7 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
   const handleToggle = (id) => {
     setVisiblePhoneNumbers((prev) => ({
       ...prev,
-      [id]: !prev[id],
+      [id]: !prev[id]
     }))
   }
 
@@ -64,7 +64,7 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
     setFavorites((prevFavorites) => {
       const newFavorites = {
         ...prevFavorites,
-        [cardId]: !prevFavorites[cardId],
+        [cardId]: !prevFavorites[cardId]
       }
       console.log('Updated favorites:', newFavorites)
       return newFavorites
@@ -108,7 +108,7 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             {currentItems.length > 0 ? (
-              currentItems.map((item, i) => (
+              currentItems.map((item1, i) => (
                 <Card
                   key={i}
                   sx={{
@@ -123,13 +123,13 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
                     border: '1px solid #ccc',
                     borderRadius: '8px',
                     mt: 1,
-                    transition: 'transform 0.3s, box-shadow 0.3s',
+                    transition: 'transform 0.3s, box-shadow 0.3s'
                   }}>
                   <CardMedia
                     component="img"
-                    image={item.roomImages[0].image}
+                    image={item1.bulletinBoardImages?.[0]?.imageLink || 'default_image_url.jpg'}
                     alt="Chung cư"
-                    onClick={() => handlePageChange(item.roomId)}
+                    onClick={() => handlePageChange(item1.bulletinBoardId)}
                     sx={{
                       width: { xs: '100%', sm: 200 },
                       height: { xs: 200, sm: 150 },
@@ -137,8 +137,8 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
                       borderRadius: '8px',
                       transition: 'transform 0.3s',
                       '&:hover': {
-                        transform: 'scale(1.05)',
-                      },
+                        transform: 'scale(1.05)'
+                      }
                     }}
                   />
 
@@ -151,8 +151,8 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
                       textAlign: { xs: 'center', sm: 'left' },
                       transition: 'color 0.3s',
                       '&:hover': {
-                        color: 'primary.main',
-                      },
+                        color: 'primary.main'
+                      }
                     }}>
                     <Typography
                       variant="h5"
@@ -161,10 +161,10 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
                         transition: 'color 0.3s',
                         fontWeight: 'bold',
                         '&:hover': {
-                          color: 'primary.main',
-                        },
+                          color: 'primary.main'
+                        }
                       }}>
-                      {item.nameRoom}
+                      {item1.title}
                     </Typography>
 
                     <Typography
@@ -177,10 +177,10 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
                         transition: 'color 0.3s, font-weight 0.3s',
                         '&:hover': {
                           color: 'primary.main',
-                          fontWeight: 500,
-                        },
+                          fontWeight: 500
+                        }
                       }}>
-                      {item.motel.address}
+                      {item1.address}
                     </Typography>
 
                     <Typography
@@ -191,48 +191,52 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
                         transition: 'color 0.3s, transform 0.3s',
                         '&:hover': {
                           color: 'primary.main',
-                          transform: 'scale(1.05)',
-                        },
+                          transform: 'scale(1.05)'
+                        }
                       }}>
-                      {formatterAmount(item.price)} /Tháng
+                      {formatterAmount(item1.rentPrice)} /Tháng
                     </Typography>
 
                     <Typography
                       variant="body2"
                       sx={{ mt: 1, display: 'flex', alignItems: 'center', flexWrap: 'nowrap' }}>
                       <Box component="span" sx={{ mr: 2 }}>
-                        {item.roomArea} m²
+                        {item1.area} m²
                       </Box>
                       <Box sx={{ display: 'flex', flexWrap: 'nowrap', alignItems: 'center' }}>
-                        {item.roomServices.map((service, index) => (
-                          <Box key={index} sx={{ display: 'flex', alignItems: 'center', mr: 2, mx: 1 }}>
-                            {service.service.typeService === 'Điện nước' && (
-                              <>
-                                {service.service.nameService === 'Nước' && (
-                                  <Box component="span">{formatterAmount(service.service.price)}/khối</Box>
-                                )}
-                                {service.service.nameService === 'Điện' && (
-                                  <Box component="span">{formatterAmount(service.service.price)}/Kw</Box>
-                                )}
-                              </>
-                            )}
+                        {/* Hiển thị giá Nước nếu có */}
+                        {item1.waterPrice && (
+                          <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+                            <Box component="span">{formatterAmount(item1.waterPrice)}/khối</Box>
                           </Box>
-                        ))}
+                        )}
+
+                        {/* Hiển thị giá Điện nếu có */}
+                        {item1.electricityPrice && (
+                          <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+                            <Box component="span">{formatterAmount(item1.electricityPrice)}/Kw</Box>
+                          </Box>
+                        )}
                       </Box>
                     </Typography>
 
                     <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                      <Avatar src={item.motel.account.avatar} sx={{ mr: 1 }} />
+                      <Avatar
+                        src={item1.account?.avatar || '/path/to/default-avatar.png'} // Dùng ảnh mặc định nếu avatar không có
+                        sx={{ mr: 1 }}
+                      />
                       <Typography variant="caption" color="textSecondary" noWrap>
-                        {item.motel.account.username}, 2 ngày trước
+                        {item1.account?.username || 'Người dùng không có sẵn'}, 2 ngày trước
                       </Typography>
                       <IconButton
-                        onClick={() => handleHeartClick(item.roomId)}
+                        onClick={() => handleHeartClick(item1?.bulletinBoardRules[0].bulletinBoardRuleId)} // Here we access the bulletinBoardRuleId of the first rule (adjust as necessary)
                         sx={{
                           ml: 'auto',
-                          color: favorites[item.roomId] ? 'red' : 'gray',
-                          transition: 'color 0.3s ease, border 0.3s ease',
-                          border: favorites[item.roomId] ? '2px solid red' : '1px solid transparent',
+                          // color: favorites[item1?.bulletinBoardRules[0]?.bulletinBoardRuleId] ? 'red' : 'gray',
+                          // transition: 'color 0.3s ease, border 0.3s ease',
+                          // border: favorites[item1?.bulletinBoardRules[0].bulletinBoardRuleId]
+                          //   ? '2px solid red'
+                          //   : '1px solid transparent',
                           borderRadius: '50%',
                           padding: '5px',
                           mx: 3,
@@ -241,7 +245,7 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
                           height: '40px',
                           display: 'flex',
                           alignItems: 'center',
-                          justifyContent: 'center',
+                          justifyContent: 'center'
                         }}>
                         <FavoriteIcon sx={{ fontSize: '35px' }} />
                       </IconButton>
@@ -255,7 +259,7 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
                       alignItems: { xs: 'center', sm: 'flex-end' },
                       gap: 1.75,
                       width: { xs: '100%', sm: 'auto' },
-                      mt: { xs: 2, sm: 0 },
+                      mt: { xs: 2, sm: 0 }
                     }}>
                     <Button
                       variant="outlined"
@@ -264,7 +268,7 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
                       onClick={handleClick} // Gọi hàm khi click vào nút
                       sx={{
                         textTransform: 'none',
-                        padding: '8px 16px',
+                        padding: '8px 16px'
                       }}>
                       Zalo
                     </Button>
@@ -273,17 +277,17 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
                       variant="outlined"
                       color="primary"
                       fullWidth
-                      onClick={() => handleToggle(item.roomId)}
+                      onClick={() => handleToggle(item1.roomId)}
                       sx={{
                         textTransform: 'none',
                         ml: { xs: 2, sm: 0 },
                         transition: 'background-color 0.3s, color 0.3s',
                         '&:hover': {
                           backgroundColor: 'primary.main',
-                          color: '#fff',
-                        },
+                          color: '#fff'
+                        }
                       }}>
-                      {visiblePhoneNumbers[item.roomId] ? item.motel.account.phone : 'Xem SĐT'}
+                      {visiblePhoneNumbers[item1.roomId] ? item1.motel.account.phone : 'Xem SĐT'}
                     </Button>
                   </Box>
                 </Card>

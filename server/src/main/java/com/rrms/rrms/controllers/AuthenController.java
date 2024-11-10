@@ -14,17 +14,13 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import com.nimbusds.jose.JOSEException;
-import com.rrms.rrms.dto.request.IntrospecTokenRequest;
-import com.rrms.rrms.dto.request.LoginRequest;
-import com.rrms.rrms.dto.request.LogoutRequest;
-import com.rrms.rrms.dto.request.RegisterRequest;
-import com.rrms.rrms.dto.response.LoginResponse;
-import com.rrms.rrms.dto.response.MessageTokenResponse;
-import com.rrms.rrms.dto.response.RegisterResponse;
+import com.rrms.rrms.dto.request.*;
+import com.rrms.rrms.dto.response.*;
 import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.services.IAccountService;
 import com.rrms.rrms.services.IAuthorityService;
+import com.rrms.rrms.services.IMailService;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +38,8 @@ public class AuthenController {
 
     @Autowired
     private IAuthorityService authorityService;
+
+    private IMailService mailService;
 
     @GetMapping("/login/oauth2")
     public ResponseEntity<?> loginWithGoogle(@AuthenticationPrincipal OAuth2User oauthUser) throws ParseException {
@@ -181,8 +179,83 @@ public class AuthenController {
         }
     }
 
+    private static int randomNumber = 0;
+
+    @GetMapping("/checkMail")
+    public ApiResponse<Boolean> forget(@RequestParam("email") String email) {
+        boolean result = accountService.existsByEmail(email);
+        if (result) {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("success")
+                    .result(true)
+                    .build();
+        } else {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("error")
+                    .result(false)
+                    .build();
+        }
+    }
+
     @PostMapping("/forgetpassword")
-    public ResponseEntity<RegisterResponse> forget(@RequestBody RegisterRequest registerRequest) {
-        return null;
+    public ApiResponse<Boolean> forget(@RequestBody ChangePasswordByEmail changePasswordByEmail) {
+        if (changePasswordByEmail == null) {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("error")
+                    .result(false)
+                    .build();
+        }
+        randomNumber = (int) (Math.random() * 90000) + 10000;
+        try {
+            boolean result = mailService.Send_ForgetPassword(
+                    changePasswordByEmail.getEmail(), "Yêu cầu thay đổi mật khẩu", String.valueOf(randomNumber));
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("success")
+                    .result(result)
+                    .build();
+        } catch (Exception e) {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("error")
+                    .result(false)
+                    .build();
+        }
+    }
+
+    @PostMapping("/acceptChangePassword")
+    public ApiResponse<Boolean> acceptChangePassword(@RequestBody ChangePasswordByEmail changePasswordByEmail) {
+        if (!changePasswordByEmail.getCode().equals(String.valueOf(randomNumber))) {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("error")
+                    .result(false)
+                    .build();
+        }
+        if (!accountService.existsByEmail(changePasswordByEmail.getEmail())) {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("error")
+                    .result(false)
+                    .build();
+        }
+        boolean result = accountService.changePasswordByEmail(changePasswordByEmail);
+        randomNumber = 0;
+        if (result) {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("success")
+                    .result(true)
+                    .build();
+        } else {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("error")
+                    .result(false)
+                    .build();
+        }
     }
 }

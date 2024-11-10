@@ -9,19 +9,20 @@ import {
   MenuItem,
   Select,
   TextField,
-  Typography,
+  Typography
 } from '@mui/material'
 import { useEffect } from 'react'
-import { updateProfile } from '~/apis/apiClient'
+
 import { v4 } from 'uuid'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { storage } from '~/configs/firebaseConfig'
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
+import { updateProfile } from '~/apis/profileAPI'
 
 const validationSchema = Yup.object({
-  email: Yup.string().email('Email không hợp lệ').required('Bắt buộc nhập email'),
+  email: Yup.string().email('Email không hợp lệ').required('Bắt buộc nhập email')
 })
 
 const ProfileTab = ({ profile, setProfile, selectedImage }) => {
@@ -67,17 +68,17 @@ const ProfileTab = ({ profile, setProfile, selectedImage }) => {
 
   const formik = useFormik({
     initialValues: {
-      email: profile.email,
+      email: profile.email
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       console.log(values)
-    },
+    }
   })
 
   useEffect(() => {
     formik.setValues({
-      email: profile.email,
+      email: profile.email
     })
   }, [profile])
 
@@ -95,7 +96,7 @@ const ProfileTab = ({ profile, setProfile, selectedImage }) => {
               disabled
               value={profile.username}
               InputLabelProps={{
-                shrink: !!profile.username,
+                shrink: !!profile.username
               }}
             />
           </Grid>
@@ -106,7 +107,7 @@ const ProfileTab = ({ profile, setProfile, selectedImage }) => {
               value={profile.fullname}
               onChange={(e) => setProfile({ ...profile, fullname: e.target.value })}
               InputLabelProps={{
-                shrink: !!profile.fullname,
+                shrink: !!profile.fullname
               }}
             />
           </Grid>
@@ -137,7 +138,7 @@ const ProfileTab = ({ profile, setProfile, selectedImage }) => {
               }}
               onBlur={formik.handleBlur}
               InputLabelProps={{
-                shrink: !!profile.email,
+                shrink: !!profile.email
               }}
               error={formik.touched.email && Boolean(formik.errors.email)}
               helperText={formik.touched.email && formik.errors.email}
@@ -150,7 +151,7 @@ const ProfileTab = ({ profile, setProfile, selectedImage }) => {
               value={profile.phone}
               onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
               InputLabelProps={{
-                shrink: !!profile.phone,
+                shrink: !!profile.phone
               }}
             />
           </Grid>
@@ -160,7 +161,7 @@ const ProfileTab = ({ profile, setProfile, selectedImage }) => {
               fullWidth
               type="date"
               InputLabelProps={{
-                shrink: true,
+                shrink: true
               }}
               value={profile.birthday}
               onChange={(e) => setProfile({ ...profile, birthday: e.target.value })}
@@ -173,7 +174,7 @@ const ProfileTab = ({ profile, setProfile, selectedImage }) => {
               value={profile.cccd}
               onChange={(e) => setProfile({ ...profile, cccd: e.target.value })}
               InputLabelProps={{
-                shrink: !!profile.cccd,
+                shrink: !!profile.cccd
               }}
             />
           </Grid>

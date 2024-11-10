@@ -34,7 +34,7 @@ public class Account {
     @Column(columnDefinition = "VARCHAR(20)", unique = true)
     private String phone;
 
-    @Column(columnDefinition = "VARCHAR(255)")
+    @Column(columnDefinition = "VARCHAR(255)", unique = true) // unique = true để trường này là duy nhất
     private String email;
 
     @Column(columnDefinition = "VARCHAR(255)")

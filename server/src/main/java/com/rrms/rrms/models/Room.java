@@ -1,13 +1,9 @@
 package com.rrms.rrms.models;
 
-import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,8 +26,11 @@ public class Room {
     @JoinColumn(name = "motel_id", nullable = false)
     private Motel motel;
 
-    @Column(name = "name_room", columnDefinition = "VARCHAR(255)", nullable = false)
-    private String nameRoom;
+    @Column(name = "room_group", columnDefinition = "NVARCHAR(255)")
+    private String group;
+
+    @Column(name = "name_room", columnDefinition = "NVARCHAR(255)")
+    private String name;
 
     @Column(columnDefinition = "DECIMAL(10, 2)")
     private Double price;
@@ -39,42 +38,36 @@ public class Room {
     @Column(columnDefinition = "DECIMAL(10, 2)")
     private Double deposit;
 
-    @Column(name = "room_area", columnDefinition = "INT")
-    private Integer roomArea;
+    @Column(name = "prioritize", columnDefinition = "TEXT")
+    private String prioritize;
 
-    @Column(name = "max_person", columnDefinition = "INT")
-    private Integer maxPerson;
+    @Column(name = "area", columnDefinition = "INT")
+    private Integer area;
 
-    @Column(name = "rental_start_time", columnDefinition = "DATE")
-    private LocalDate rentalStartTime;
+    // cai nay thuong nam o hop dong
+    @Column(columnDefinition = "DECIMAL(10, 2)")
+    private Double debt;
 
-    @Column(name = "available", columnDefinition = "BOOLEAN")
-    private Boolean available;
+    // cai nay thuong nam o hop dong
+    @Column(name = "count_tenant", columnDefinition = "TEXT")
+    private Integer countTenant;
 
-    @Column(name = "censor", columnDefinition = "BOOLEAN")
-    private Boolean censor;
+    @Column(name = "invoice_date", columnDefinition = "TEXT")
+    private Integer invoiceDate;
 
-    @Column(name = "authen", columnDefinition = "BOOLEAN")
-    private Boolean authen;
+    // cai nay thuong nam o hop dong
+    @Column(name = "payment_circle", columnDefinition = "INT")
+    private Integer paymentCircle;
 
-    @Column(name = "datenew", columnDefinition = "DATE")
-    private Date datenew;
+    @Column(name = "move_in_date", columnDefinition = "DATE")
+    private Date moveInDate;
 
-    @Column(name = "hours", columnDefinition = "NVARCHAR(255)")
-    private String hours;
+    @Column(name = "contract_duration", columnDefinition = "DATE")
+    private Date contractduration;
 
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
+    @Column(name = "status", columnDefinition = "BOOLEAN")
+    private Boolean status;
 
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore // Thêm @JsonIgnore để bỏ qua ánh xạ này khi tuần tự hóa
-    private List<RoomService> roomServices;
-
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore // Thêm @JsonIgnore để bỏ qua ánh xạ này khi tuần tự hóa
-    private List<RoomImage> roomImages;
-
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore // Thêm @JsonIgnore để bỏ qua ánh xạ này khi tuần tự hóa
-    private List<RoomReview> roomReviews;
+    @Column(name = "finance", columnDefinition = "TEXT")
+    private String finance;
 }

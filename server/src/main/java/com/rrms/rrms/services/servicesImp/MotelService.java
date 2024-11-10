@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rrms.rrms.dto.request.MotelRequest;
 import com.rrms.rrms.dto.response.MotelResponse;
@@ -33,11 +34,16 @@ public class MotelService implements IMotelService {
         return motelMapper.motelToMotelResponse(motelRepository.save(motelMapper.motelRequestToMotel(motel)));
     }
 
+    @Transactional
     @Override
-    public List<MotelResponse> findById(UUID id) {
-        return motelRepository.findById(id).stream()
-                .map(motelMapper::motelToMotelResponse)
-                .collect(Collectors.toList());
+    public MotelResponse findById(UUID id) {
+        return motelRepository
+                .findById(id)
+                .map(motel -> {
+                    MotelResponse response = motelMapper.motelToMotelResponse(motel);
+                    return response;
+                })
+                .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
     }
 
     @Override

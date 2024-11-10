@@ -18,24 +18,29 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@Slf4j
 public class SecurityConfig {
 
     private static final String[] PUBLIC_ENDPOINTS = {
         "/",
-        "/authen/login",
-        "/authen/introspect",
-        "/authen/register",
-        "/authen/forgetpassword",
-        "/authen/logout",
-        "/authen/login/oauth2",
+        "/authen/**",
         "/swagger-ui/*",
         "/v3/api-docs/*",
-        "/searchs/*",
+        "/searchs/**",
+        "/search/**",
+        "/search/*",
+        "/search",
+        "/detail/**",
         "/detail/*",
-        "/api-accounts/**"
+        "/detail",
+        "/bulletin-board/*",
+        "/api-accounts/**",
+        "/motels/get-motel-id",
     };
 
     @Value("${jwt.signer-key}")

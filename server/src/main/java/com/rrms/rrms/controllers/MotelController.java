@@ -61,12 +61,12 @@ public class MotelController {
 
     @Operation(summary = "Get motel by id")
     @GetMapping("/get-motel-id")
-    public ApiResponse<List<MotelResponse>> getMotelbyid(@RequestParam UUID id) {
-        List<MotelResponse> motelResponses = motelService.findById(id);
-        return ApiResponse.<List<MotelResponse>>builder()
+    public ApiResponse<MotelResponse> getMotelbyid(@RequestParam UUID id) {
+        MotelResponse motelResponse = motelService.findById(id);
+        return ApiResponse.<MotelResponse>builder()
                 .code(HttpStatus.OK.value())
                 .message("success")
-                .result(motelResponses)
+                .result(motelResponse)
                 .build();
     }
 
@@ -81,7 +81,7 @@ public class MotelController {
     }
 
     @Operation(summary = "Add motel by id")
-    @PostMapping()
+    @PostMapping("/create")
     public ApiResponse<MotelResponse> insertMotel(@RequestBody MotelRequest motelRequest) {
         MotelResponse motelResponse = motelService.insert(motelRequest);
         log.info("Insert motel successfully");
@@ -119,7 +119,7 @@ public class MotelController {
             motelService.delete(id);
             log.info("Delete motel successfully");
             return ApiResponse.<Boolean>builder()
-                    .code(HttpStatus.BAD_REQUEST.value())
+                    .code(HttpStatus.OK.value())
                     .message("success")
                     .result(true)
                     .build();

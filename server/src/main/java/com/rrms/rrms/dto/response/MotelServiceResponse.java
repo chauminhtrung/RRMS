@@ -1,18 +1,22 @@
 package com.rrms.rrms.dto.response;
 
+import java.io.Serializable;
 import java.util.UUID;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MotelServiceResponse {
-    private UUID motelServiceId; // ID của MotelService
-    private UUID motelId; // ID của Motel (liên kết với bảng Motel)
-    private String nameService;
-    private Long price; // Giá của dịch vụ
-    private String chargetype; // Kiểu tính phí (vd: theo tháng, theo người)
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class MotelServiceResponse implements Serializable {
+    UUID motelServiceId;
+    UUID motelId;
+    String nameService;
+    Long price;
+    String chargetype;
 }

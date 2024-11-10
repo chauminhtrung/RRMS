@@ -11,20 +11,20 @@ import {
   Radio,
   RadioGroup,
   TextField,
-  Typography,
+  Typography
 } from '@mui/material'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 import InputAdornment from '@mui/material/InputAdornment'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
-import { changePassword } from '~/apis/apiClient'
+import { changePassword } from '~/apis/profileAPI'
 
 const SecurityTab = () => {
   const [passwordData, setPasswordData] = useState({
     oldPassword: '',
     newPassword: '',
-    confirmPassword: '',
+    confirmPassword: ''
   })
 
   const handleChange = (e) => {
@@ -65,8 +65,8 @@ const SecurityTab = () => {
                   width: '100%',
                   '.MuiInputBase-input': {
                     border: 'none',
-                    height: 'auto',
-                  },
+                    height: 'auto'
+                  }
                 }}
                 variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-password">Mật khẩu hiện tại</InputLabel>
@@ -91,8 +91,8 @@ const SecurityTab = () => {
                   my: 3,
                   '.MuiInputBase-input': {
                     border: 'none',
-                    height: 'auto',
-                  },
+                    height: 'auto'
+                  }
                 }}
                 variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-password">Mật khẩu mới</InputLabel>
@@ -118,8 +118,8 @@ const SecurityTab = () => {
                   mb: 3,
                   '.MuiInputBase-input': {
                     border: 'none',
-                    height: 'auto',
-                  },
+                    height: 'auto'
+                  }
                 }}
                 variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-password">Nhập lại mật khẩu</InputLabel>

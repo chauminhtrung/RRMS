@@ -4,6 +4,6 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.rrms.rrms.models.Device;
+import com.rrms.rrms.models.MotelDevice;
 
-public interface DeviceRepository extends JpaRepository<Device, UUID> {}
+public interface MotelDeviceRepository extends JpaRepository<MotelDevice, UUID> {}

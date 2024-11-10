@@ -1,39 +1,416 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Tooltip } from 'react-tooltip'
+import { useEffect, useState, useRef } from 'react'
+import { useParams } from 'react-router-dom'
 import 'react-tabulator/lib/styles.css' // required styles
 import 'react-tabulator/lib/css/tabulator.min.css' // theme
 import { ReactTabulator } from 'react-tabulator'
+import axios from 'axios';
+import { env } from '~/configs/environment';
+import Swal from 'sweetalert2'
+import { getRoomByMotelId, createRoom } from '~/apis/roomAPI'
 
-const HomeWData = () => {
-  const columns = [
-    { title: 'Tên phòng', field: 'nameroom', hozAlign: 'center', minWidth: 40, editor: 'input' }, // Đặt minWidth để tránh cột bị quá nhỏ
-    { title: 'Nhóm', field: 'group', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Giá thuê', field: 'rent', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Mức giá tiền cọc', field: 'depositprice', hozAlign: 'center', minWidth: 150, editor: 'input' },
-    { title: 'Tiền nợ', field: 'moneyowed', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Khách thuê', field: 'tenants', hozAlign: 'center', minWidth: 150, editor: 'input' },
-    { title: 'Ngày lập hóa đơn', field: 'invoicedate', hozAlign: 'center', minWidth: 150, editor: 'input' },
-    { title: 'Chu kỳ thu tiền', field: 'collectioncycle', hozAlign: 'center', minWidth: 150, editor: 'input' },
-    { title: 'Ngày vào ở', field: 'dateofmovingin', hozAlign: 'center', minWidth: 150, editor: 'input' },
-    { title: 'Thời hạn hợp đồng', field: 'contractterm', hozAlign: 'center', minWidth: 150, editor: 'input' },
-    { title: 'Tình trạng', field: 'status', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Tài chính', field: 'finance', hozAlign: 'center', minWidth: 40, editor: 'input' },
+const HomeWData = ({ Motel }) => {
+  const { motelId } = useParams()
+  const [rooms, setRooms] = useState([])
+  const [motelServices, setMotelServices] = useState([]); 
+  const [showMenu, setShowMenu] = useState(null) // Trạng thái của menu hiện tại
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 })
+  const menuRef = useRef(null) // Tham chiếu đến menu
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;
+  const [formData, setFormData] = useState({
+    motelId: motelId ? motelId : Motel[0].motelId,
+    deposit: null,
+    debt: null,
+    moveInDate: null,
+    contractDuration: null,
+    status: false,
+    finance: 'wait',
+    countTenant: 0,
+    paymentCircle: 1,
+    name: '',
+    group: 'a',
+    area: '',
+    price: '',
+    invoiceDate: '',
+    prioritize: '',
+    selectedServices: [] // Thêm trường này để lưu các dịch vụ đã chọn
+  });
+  
+
+  // Hàm xử lý nhấn ngoài menu
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      // Kiểm tra xem nhấn ngoài menu hay không
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setShowMenu(null)
+        console.log('ngoai menu')
+      } else {
+        console.log('set null ')
+      }
+    }
+
+    document.addEventListener('click', handleClickOutside)
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchRooms()
+  }, [])
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target
+    if (type === 'checkbox') {
+      setFormData((prevData) => ({
+        ...prevData,
+        priceItems: {
+          ...prevData.priceItems,
+          [name]: checked ? value : ''
+        }
+      }))
+    } else {
+      setFormData({
+        ...formData,
+        [name]:
+          name === 'price'
+            ? parseFloat(value) // chuyển đổi 'price' thành float
+            : ['area', 'invoiceDate'].includes(name)
+            ? parseInt(value, 10) // chuyển đổi 'area' và 'invoiceDate' thành integer
+            : value // các trường còn lại là chuỗi
+      })
+    }
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = document.getElementById('add-room-form');
+    if (!form.checkValidity()) {
+      form.classList.add('was-validated');
+    } else {
+      createRoom({ ...formData, selectedServices: formData.selectedServices })
+        .then((response) => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Thông báo',
+            text: 'Room created successfully!'
+          });
+          setFormData(response);
+          setTimeout(() => {
+            window.location.reload();
+          }, 1400);
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Thông báo',
+            text: 'Error Room motel.'
+          });
+          console.error('Error creating motel:', error);
+        });
+    }
+  };
+  
+
+  const fetchRooms = async () => {
+    //neu co motelId tren URL
+    if (motelId) {
+      try {
+        const dataRoom = await getRoomByMotelId(motelId)
+        setRooms(dataRoom)
+      } catch (error) {
+        console.log(error)
+      }
+    } else {
+      try {
+        const dataRoom = await getRoomByMotelId(Motel[0].motelId)
+        setRooms(dataRoom)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
+  const fetchMotelServices = async (id) => {  
+    try {  
+      const response = await axios.get(`${env.API_URL}/motels/get-motel-id?id=${id}`, {  
+        headers: {  
+          Authorization: `Bearer ${token}` 
+        }  
+      });  
+      if (response.data && response.data.code === 200 && response.data.result && response.data.result.motelServices) {  
+        setMotelServices(response.data.result.motelServices);  
+      } else {  
+        setMotelServices([]);  
+      }  
+    } catch (error) {  
+      console.error('Error fetching motel services:', error);  
+      setMotelServices([]);  
+    }  
+  };
+
+  const handleServiceSelection = (serviceId) => {
+    setFormData((prevData) => {
+      const selectedServices = prevData.selectedServices.includes(serviceId)
+        ? prevData.selectedServices.filter((id) => id !== serviceId)
+        : [...prevData.selectedServices, serviceId];
+  
+      return {
+        ...prevData,
+        selectedServices
+      };
+    });
+  };
+  
+  // Call this function when opening the "Add Room" modal
+  useEffect(() => {
+    if (motelId) {
+      fetchMotelServices(motelId);
+    }
+  }, [motelId]);
+
+  // Định dạng tiền tệ Việt Nam (VND)
+  const currencyFormatter = (cell) => {
+    const value = cell.getValue()
+    if (value !== null && value !== undefined) {
+      return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+      }).format(value)
+    }
+    if (value === null || value === undefined) {
+      return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+      }).format(0)
+    }
+    return value
+  }
+
+  // Định dạng thêm "/1 người" vào cột countTenant
+  const tenantFormatter = (cell) => {
+    const countTenant = cell.getValue()
+    const svgiconuser = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" strokeLinecap="round" strokeLinejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`
+    if (countTenant !== null && countTenant !== undefined) {
+      return `${svgiconuser} ${countTenant} / 4 người`
+    }
+    return countTenant
+  }
+
+  // Hàm định dạng ngày
+  const formatDate = (dateString) => {
+    if (dateString === null) {
+      return `Không xác định`
+    }
+    const date = new Date(dateString)
+    const day = String(date.getDate()).padStart(2, '0')
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const year = date.getFullYear()
+    return `${day}/${month}/${year}`
+  }
+
+  //ham dinh dang ngay lap hoa don
+  const invoicedateFormatter = (cell) => {
+    const countTenant = cell.getValue()
+    if (countTenant !== null && countTenant !== undefined) {
+      return `Ngày ${countTenant}`
+    }
+    return countTenant
+  }
+
+  //ham dinh dang chu ky thu tien
+  const paymentCircleFormatter = (cell) => {
+    const countTenant = cell.getValue()
+    if (countTenant !== null && countTenant !== undefined) {
+      return `${countTenant} tháng`
+    }
+    return countTenant
+  }
+
+  // Formatter cho cột "finance"
+  const financeFormatter = (cell) => {
+    const financeValue = cell.getValue()
+
+    // Nếu giá trị tài chính là "Đang trống", hiển thị badge với màu cam
+    if (financeValue === 'wait') {
+      return `<span class="badge mt-2 " style="background-color: #7dc242; white-space: break-spaces;">Chờ kỳ thu tới</span>`
+    }
+
+    // Nếu không phải "Đang trống", hiển thị giá trị tài chính
+    return financeValue
+  }
+
+  // Formatter cho cột "Status"
+  const StatusFormatter = (cell) => {
+    const financeValue = cell.getValue()
+    // Nếu giá trị tài chính là "Đang trống", hiển thị badge với màu cam
+    if (financeValue === true) {
+      return `<span class="badge mt-2 " style="background-color: #7dc242; white-space: break-spaces;">Đang ở</span>`
+    }
+    if (financeValue === false) {
+      return `<span class="badge mt-2 " style="background-color: #ED6004; white-space: break-spaces;">Đang trống</span>`
+    }
+
+    // Nếu không phải "Đang trống", hiển thị giá trị tài chính
+    return financeValue
+  }
+
+  const handleActionClick = (e, roomId) => {
+    const { clientX, clientY } = e
+    e.stopPropagation() // Ngừng sự kiện click để không bị bắt bởi sự kiện ngoài
+    // In ra tọa độ
+    console.log('Tọa độ click:', { clientX, clientY })
+
+    // Sử dụng getBoundingClientRect để lấy vị trí chính xác của phần tử được nhấn
+    const targetElement = e.currentTarget
+    const rect = targetElement.getBoundingClientRect()
+
+    // Cập nhật vị trí của menu sao cho hiển thị gần biểu tượng Action
+    setMenuPosition({
+      x: rect.left + window.scrollX + rect.width / 2, // Centered horizontally
+      y: rect.top + window.scrollY + rect.height // Below the icon
+    })
+    setShowMenu(roomId) // Hiển thị menu cho hàng với roomId tương ứng
+  }
+
+  // Hàm xử lý khi người dùng chọn một mục trong menu
+  const handleItemClick = (label) => {
+    if (label === 'Đóng menu') {
+      setShowMenu(null) // Đóng menu
+    }
+    if (label === 'Chi tiết phòng') {
+      window.open(`/quanlytro/${motelId}/Chi-tiet-phong/${showMenu}`, '_blank') // Thay "https://example.com" bằng URL bạn muốn mở
+    } else {
+      alert(`Action: ${label} on room ${showMenu}`)
+    }
+  }
+
+  const menuItems = [
+    { id: 1, label: 'Lập hóa đơn', icon: 'dollar-sign' },
+    { id: 2, label: 'Chi tiết phòng', icon: 'arrow-right-circle' },
+    { id: 3, label: 'Danh sách khách thuê', icon: 'user' },
+    { id: 4, label: 'Chuyển phòng', icon: 'refresh-ccw' },
+    { id: 5, label: 'Báo kết thúc hợp đồng phòng', icon: 'bell' },
+    { id: 6, label: 'Cài đặt dịch vụ', icon: 'settings' },
+    { id: 7, label: 'Kết thúc hợp đồng phòng', icon: 'log-out' },
+    { id: 8, label: 'Thiết lập tài sản', icon: 'trello' },
+    { id: 9, label: 'Xem văn bản hợp đồng', icon: 'arrow-right-circle' },
+    { id: 10, label: 'Quản lý xe', icon: 'truck' },
+    { id: 11, label: 'In văn bản hợp đồng', icon: 'printer' },
+    { id: 12, label: 'Ghi chú', icon: 'edit-3', textClass: 'text-success' },
+    { id: 13, label: 'Chia sẻ văn bản hợp đồng', icon: 'share' },
+    { id: 14, label: 'Xóa phòng', icon: 'trash-2', textClass: 'text-danger' },
+    { id: 15, label: 'Chia sẻ mã kết nối', icon: 'share-2' },
+    { id: 16, label: 'Đóng menu', icon: 'x-circle', textClass: 'close-menu-action' }
   ]
-
-  const data = [
+  const columns = [
+    { title: 'id', field: 'roomId', hozAlign: 'center', minWidth: 40, visible: false },
+    { title: 'Tên phòng', field: 'name', hozAlign: 'center', minWidth: 40, editor: 'input' }, // Đặt minWidth để tránh cột bị quá nhỏ
+    { title: 'Nhóm', field: 'group', hozAlign: 'center', minWidth: 40, editor: 'input' },
     {
-      nameroom: 'Phòng A101',
-      group: 'Nhóm 1',
-      rent: '5,000,000 VND',
-      depositprice: '2,000,000 VND',
-      moneyowed: 'Không',
-      tenants: 'Nguyễn Văn A',
-      invoicedate: '01/10/2023',
-      collectioncycle: 'Hàng tháng',
-      dateofmovingin: '01/09/2023',
-      contractterm: '12 tháng',
-      status: 'Đang thuê',
-      finance: 'Ổn định',
+      title: 'Giá thuê',
+      field: 'price',
+      hozAlign: 'center',
+      minWidth: 40,
+      editor: 'input',
+      formatter: currencyFormatter,
+      cssClass: 'bold-text'
     },
+    {
+      title: 'Mức giá tiền cọc',
+      field: 'deposit',
+      hozAlign: 'center',
+      minWidth: 150,
+      editor: 'input',
+      formatter: currencyFormatter,
+      cssClass: 'bold-text'
+    },
+    {
+      title: 'Tiền nợ',
+      field: 'debt',
+      hozAlign: 'center',
+      minWidth: 40,
+      editor: 'input',
+      formatter: currencyFormatter,
+      cssClass: 'bold-text'
+    },
+    {
+      title: 'Khách thuê',
+      field: 'countTenant',
+      hozAlign: 'center',
+      minWidth: 150,
+      editor: 'input',
+      formatter: tenantFormatter
+    },
+    {
+      title: 'Ngày lập hóa đơn',
+      field: 'invoiceDate',
+      hozAlign: 'center',
+      minWidth: 150,
+      editor: 'input',
+      formatter: invoicedateFormatter
+    },
+    {
+      title: 'Chu kỳ thu tiền',
+      field: 'paymentCircle',
+      hozAlign: 'center',
+      minWidth: 150,
+      editor: 'input',
+      formatter: paymentCircleFormatter
+    },
+    {
+      title: 'Ngày vào ở',
+      field: 'moveInDate',
+      hozAlign: 'center',
+      minWidth: 150,
+      editor: 'input',
+      formatter: (cell) => formatDate(cell.getValue())
+    },
+    {
+      title: 'Thời hạn hợp đồng',
+      field: 'contractDuration',
+      hozAlign: 'center',
+      minWidth: 150,
+      editor: 'input',
+      formatter: (cell) => formatDate(cell.getValue())
+    },
+    {
+      title: 'Tình trạng',
+      field: 'status',
+      hozAlign: 'center',
+      minWidth: 40,
+      editor: 'input',
+      formatter: StatusFormatter
+    },
+    {
+      title: 'Tài chính',
+      field: 'finance',
+      hozAlign: 'center',
+      minWidth: 40,
+      editor: 'input',
+      formatter: financeFormatter
+    },
+    {
+      title: 'Action',
+      field: 'Action',
+      hozAlign: 'center',
+      formatter: (cell) => {
+        const rowId = cell.getRow().getData().roomId
+        const element = document.createElement('div')
+        element.classList.add('icon-menu-action')
+        element.innerHTML = `
+          <svg    xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" class="feather feather-more-vertical">
+            <circle cx="12" cy="12" r="1"></circle>
+            <circle cx="12" cy="5" r="1"></circle>
+            <circle cx="12" cy="19" r="1"></circle>
+          </svg>
+        `
+
+        element.addEventListener('click', (e) => handleActionClick(e, rowId))
+        return element
+      }
+    }
   ]
 
   const options = {
@@ -51,8 +428,8 @@ const HomeWData = () => {
       minWidth: 30,
       hozAlign: 'center',
       resizable: false,
-      headerSort: false,
-    },
+      headerSort: false
+    }
   }
 
   return (
@@ -61,15 +438,16 @@ const HomeWData = () => {
         backgroundColor: '#fff',
         padding: '15px 15px 15px 15px',
         borderRadius: '10px',
-        margin: '0 10px 10px 10px',
+        margin: '0 10px 10px 10px'
       }}>
       <div className="page-home">
         {/* report */}
+
         <div>
           <div className="row g-3 row-box-home" style={{ marginTop: '0px' }}>
             <div className="col-sm-3" style={{ marginTop: '0px' }}>
-              <div className="item-home " data-bs-toggle="modal" data-bs-target="#reportBillDebt" >
-                <a href="javascript:," className="create-home">
+              <div className="item-home " data-bs-toggle="modal" data-bs-target="#reportBillDebt">
+                <a href="#" className="create-home">
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -87,7 +465,7 @@ const HomeWData = () => {
                     </svg>
                   </span>
                 </a>
-                <a href="javascript:," className="box-home span-red-white">
+                <a href="#" className="box-home span-red-white">
                   <div className="d-flex align-items-center">
                     <span className="icon-home">
                       <img
@@ -105,7 +483,7 @@ const HomeWData = () => {
             </div>
             <div className="col-sm-3" style={{ marginTop: '0px' }}>
               <div className="item-home" data-bs-toggle="modal" data-bs-target="#reportContractDeposit">
-                <a href="javascript:;" className="create-home">
+                <a href="#" className="create-home">
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -123,7 +501,7 @@ const HomeWData = () => {
                     </svg>
                   </span>
                 </a>
-                <a href="javascript:;" className="box-home span-primary-white">
+                <a href="#" className="box-home span-primary-white">
                   <div className="d-flex align-items-center">
                     <span className="icon-home">
                       <img
@@ -143,7 +521,7 @@ const HomeWData = () => {
             </div>
             <div className="col-sm-3" style={{ marginTop: '0px' }}>
               <div className="item-home" data-bs-toggle="modal" data-bs-target="#reportDepositTemp">
-                <a href="javascript:;" className="create-home">
+                <a href="#" className="create-home">
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -161,7 +539,7 @@ const HomeWData = () => {
                     </svg>
                   </span>
                 </a>
-                <a href="javascript:;" className="box-home span-primary-white">
+                <a href="#" className="box-home span-primary-white">
                   <div className="d-flex align-items-center">
                     <span className="icon-home">
                       <img
@@ -181,7 +559,7 @@ const HomeWData = () => {
             </div>
             <div className="col-sm-3" style={{ marginTop: '0px' }}>
               <div className="item-home report">
-                <a href="javascript:;" className="create-home">
+                <a href="#" className="create-home">
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -199,7 +577,7 @@ const HomeWData = () => {
                     </svg>
                   </span>
                 </a>
-                <a href="javascript:;" className="box-home span-red-white">
+                <a href="#" className="box-home span-red-white">
                   <div className="d-flex align-items-center">
                     <span className="icon-home">
                       <img
@@ -237,7 +615,7 @@ const HomeWData = () => {
                     height: '50px',
                     boxShadow: '0 0.5rem 1rem rgba(0, 0, 0, .15)',
                     borderRadius: '50px',
-                    marginRight: '15px',
+                    marginRight: '15px'
                   }}
                   data-bs-original-title="Video tổng quan phần mềm"
                   data-tooltip-id="my-tooltipTongquan"
@@ -276,6 +654,7 @@ const HomeWData = () => {
                     </svg>
                   </span>
                 </button>
+
                 <div className="d-flex" style={{ marginLeft: '40px' }}>
                   <div className="dropdown">
                     <button
@@ -317,7 +696,7 @@ const HomeWData = () => {
                           alignItems: 'center',
                           justifyContent: 'center',
                           borderRadius: '5px',
-                          color: '#fff',
+                          color: '#fff'
                         }}>
                         12
                       </span>
@@ -327,7 +706,7 @@ const HomeWData = () => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="group_id"
                             value="group_id"
@@ -339,7 +718,7 @@ const HomeWData = () => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="deposit_contract_amount"
                             value="deposit_contract_amount"
@@ -351,7 +730,7 @@ const HomeWData = () => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="debt_amount"
                             value="debt_amount"
@@ -363,7 +742,7 @@ const HomeWData = () => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="customers"
                             value="customers"
@@ -375,7 +754,7 @@ const HomeWData = () => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="circle_day"
                             value="circle_day/"
@@ -387,7 +766,7 @@ const HomeWData = () => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="circle_month"
                             value="circle_month"
@@ -399,7 +778,7 @@ const HomeWData = () => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="date_join"
                             value="date_join"
@@ -411,7 +790,7 @@ const HomeWData = () => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="date_terminate"
                             value="date_terminate"
@@ -601,12 +980,12 @@ const HomeWData = () => {
               <ReactTabulator
                 className="my-custom-table" // Thêm lớp tùy chỉnh nếu cần
                 columns={columns}
-                data={data}
+                data={rooms}
                 options={options}
                 placeholder={<h1></h1>} // Sử dụng placeholder tùy chỉnh
               />
               {/* Thêm div cho hình ảnh và chữ nếu không có dữ liệu */}
-              {data.length === 0 && (
+              {rooms.length === 0 && (
                 <div className="custom-placeholder">
                   <img
                     src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Fempty-box-4085812-3385481.webp?alt=media&token=eaf37b59-00e3-4d16-8463-5441f54fb60e"
@@ -616,6 +995,397 @@ const HomeWData = () => {
                   <div className="placeholder-text">Không tìm thấy dữ liệu!</div>
                 </div>
               )}
+
+              {showMenu && (
+                <div
+                  className="tabulator-menu tabulator-popup-container "
+                  ref={menuRef} // Gán ref đúng cách cho menu
+                  style={{
+                    position: 'absolute',
+                    top: menuPosition.y - 910,
+                    left: menuPosition.x - 350,
+                    transform: 'translateX(-50%)'
+                  }}>
+                  {menuItems.map((item) => (
+                    <div
+                      key={item.id}
+                      className={`tabulator-menu-item ${item.textClass || ''}`}
+                      onClick={() => handleItemClick(item.label)} // Đóng menu khi chọn item
+                    >
+                      {item.icon && (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className={`feather feather-${item.icon}`}>
+                          {item.icon === 'dollar-sign' && (
+                            <>
+                              <line x1="12" y1="1" x2="12" y2="23" />
+                              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                            </>
+                          )}
+                          {item.icon === 'arrow-right-circle' && (
+                            <>
+                              <circle cx="12" cy="12" r="10" />
+                              <polyline points="12 16 16 12 12 8" />
+                              <line x1="8" y1="12" x2="16" y2="12" />
+                            </>
+                          )}
+                          {item.icon === 'user' && (
+                            <>
+                              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                              <circle cx="12" cy="7" r="4" />
+                            </>
+                          )}
+                          {item.icon === 'refresh-ccw' && (
+                            <>
+                              <polyline points="1 4 1 10 7 10" />
+                              <polyline points="23 20 23 14 17 14" />
+                              <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" />
+                            </>
+                          )}
+                          {item.icon === 'bell' && (
+                            <>
+                              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                            </>
+                          )}
+                          {item.icon === 'settings' && (
+                            <>
+                              <circle cx="12" cy="12" r="3" />
+                              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                            </>
+                          )}
+                          {item.icon === 'log-out' && (
+                            <>
+                              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                              <polyline points="16 17 21 12 16 7"></polyline>
+                              <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </>
+                          )}
+                          {item.icon === 'trello' && (
+                            <>
+                              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                              <rect x="7" y="7" width="3" height="9"></rect>
+                              <rect x="14" y="7" width="3" height="5"></rect>
+                            </>
+                          )}
+                          {item.icon === 'printer' && (
+                            <>
+                              <polyline points="6 9 6 2 18 2 18 9" />
+                              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                              <rect x="6" y="14" width="12" height="8" />
+                            </>
+                          )}
+                          {item.icon === 'edit-3' && (
+                            <>
+                              <path d="M12 20h9" />
+                              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                            </>
+                          )}
+                          {item.icon === 'share' && (
+                            <>
+                              <path d="M4 12v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4" />
+                              <polyline points="16 6 12 2 8 6" />
+                              <line x1="12" y1="2" x2="12" y2="15" />
+                            </>
+                          )}
+                          {item.icon === 'trash-2' && (
+                            <>
+                              <polyline points="3 6 5 6 21 6" />
+                              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m5 0V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" />
+                              <line x1="10" y1="11" x2="10" y2="17" />
+                              <line x1="14" y1="11" x2="14" y2="17" />
+                            </>
+                          )}
+                          {item.icon === 'share-2' && (
+                            <>
+                              <circle cx="18" cy="5" r="3" />
+                              <circle cx="6" cy="12" r="3" />
+                              <circle cx="18" cy="19" r="3" />
+                              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                            </>
+                          )}
+                          {item.icon === 'x-circle' && (
+                            <>
+                              <circle cx="12" cy="12" r="10" />
+                              <line x1="15" y1="9" x2="9" y2="15" />
+                              <line x1="9" y1="9" x2="15" y2="15" />
+                            </>
+                          )}
+                          {item.icon === 'truck' && (
+                            <>
+                              <rect x="1" y="3" width="15" height="13" />
+                              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                              <circle cx="5.5" cy="18.5" r="2.5" />
+                              <circle cx="18.5" cy="18.5" r="2.5" />
+                            </>
+                          )}
+                          {/* Thêm các biểu tượng khác nếu cần */}
+                        </svg>
+                      )}
+
+                      {item.label}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* modal add rom */}
+      <div
+        className="modal fade"
+        data-bs-backdrop="static"
+        id="addRoom"
+        tabIndex={-1}
+        aria-labelledby="addRoomLabel"
+        aria-modal="true"
+        role="dialog"
+        style={{ display: 'none', paddingLeft: '0px' }}>
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <div
+                style={{
+                  marginRight: '15px',
+                  outline: '0',
+                  boxShadow: '0 0 0 .25rem rgb(112 175 237 / 16%)',
+                  opacity: '1',
+                  borderRadius: '100%',
+                  width: '36px',
+                  height: '36px',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  display: 'flex',
+                  backgroundColor: 'rgb(111 171 232)'
+                }}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="feather feather-box">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </div>
+              <h5 className="modal-title" id="addRoomLabel">
+                Thêm phòng
+              </h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                {' '}
+              </button>
+            </div>
+            <div className="modal-body">
+              <form className="needs-validation" id="add-room-form" noValidate>
+                <input type="hidden" name="_token" value="UFyRMEJwSNwvskI0nQa8dSfJdpC5VhNUzzfW4bfW" />
+                <div className="row g-2">
+                  <div className="col-12">
+                    <div className="title-item-small">
+                      <b>Thông tin phòng</b>
+                      <i className="des">Nhập các thông tin cơ bản của phòng</i>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="form-floating">
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="name"
+                        id="name"
+                        required
+                        placeholder="Tên phòng"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                      />
+                      <label htmlFor="name">
+                        Tên phòng <span style={{ color: 'red' }}>*</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div className="col-6">
+                    <div className="form-floating">
+                      <select
+                        id="group"
+                        name="group"
+                        className="form-select form-control"
+                        required
+                        value={formData.group}
+                        onChange={handleInputChange}>
+                        <option value="a">Tầng A</option>
+                        <option value="b">Tầng B</option>
+                      </select>
+                      <label htmlFor="group">Tầng/dãy</label>
+                    </div>
+                  </div>
+                  <div className="col-6" style={{ display: 'block' }}>
+                    <div className="form-floating">
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="area"
+                        id="area"
+                        required
+                        placeholder="Nhập diện tích"
+                        value={formData.area}
+                        onChange={handleInputChange}
+                      />
+                      <label htmlFor="area">Diện tích (m2)</label>
+                    </div>
+                  </div>
+                  <div className="col-6">
+                    <div className="form-floating">
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="price"
+                        id="price"
+                        required
+                        placeholder="Giá thuê"
+                        value={formData.price}
+                        onChange={handleInputChange}
+                      />
+                      <label htmlFor="room_amount">Giá thuê (đ)</label>
+                    </div>
+                  </div>
+                  <div className="col-12">
+                    <div className="form-floating">
+                      <select
+                        id="invoiceDate"
+                        name="invoiceDate"
+                        className="form-select form-control"
+                        value={formData.invoiceDate}
+                        onChange={handleInputChange}>
+                        {Array.from({ length: 31 }, (_, i) => (
+                          <option key={i + 1} value={i + 1}>
+                            Ngày {i + 1}
+                          </option>
+                        ))}
+                      </select>
+                      <label htmlFor="circle_day">Ngày lập hóa đơn hàng tháng</label>
+                    </div>
+                  </div>
+                  <div className="col-12">
+                    <div className="form-floating">
+                      <select
+                        id="prioritize"
+                        name="prioritize"
+                        className="form-select form-control"
+                        value={formData.prioritize}
+                        onChange={handleInputChange}>
+                        <option value="Tất cả">Tất cả</option>
+                        <option value="Ưu tiên nữ">Ưu tiên nữ</option>
+                        <option value="Ưu tiên nam">Ưu tiên nam</option>
+                        <option value="Ưu tiên gia đình">Ưu tiên gia đình</option>
+                      </select>
+                      <label htmlFor="prioritize">Ưu tiên người thuê</label>
+                    </div>
+                  </div>
+                  <div className="col-12">
+                    <div className="title-item-small">
+                      <b>Dịch vụ sử dụng</b>
+                      <i className="des">Thêm dịch vụ sử dụng như: điện, nước, rác, wifi...</i>
+                    </div>
+                  </div>
+
+
+                  <div className="price-items-checkout-layout">
+                    {motelServices.length > 0 ? (
+                      motelServices.map((service) => (
+                        <div key={service.motelServiceId} className="item mt-2">
+                          <div className="item-check-name">
+                            <input
+                              type="checkbox"
+                              className="form-check-input"
+                              checked={formData.selectedServices.includes(service.motelServiceId)}
+                              onChange={() => handleServiceSelection(service.motelServiceId)}
+                            />
+                            <label htmlFor={`service_${service.motelServiceId}`}>
+                              <b>{service.nameService}</b>
+                              <p>
+                                Giá: <b>{service.price}đ</b> / {service.chargetype}
+                              </p>
+                            </label>
+                          </div>
+                          
+                          <div className="item-value">
+                            <div className="input-group">
+                              <input
+                                className="form-control"
+                                min="0"
+                                type="number"
+                                placeholder="Nhập giá trị"
+                                name="price_items"
+                              />
+                              <label
+                                style={{ fontSize: '12px' }}
+                                className="input-group-text"
+                              >
+                                {service.chargetype}
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p>Chưa có dịch vụ nào.</p>
+                    )}
+                  </div>
+
+
+                </div>
+              </form>
+            </div>
+            <div className="modal-footer modal-footer--sticky">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="feather feather-x">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                Đóng
+              </button>
+              <button type="button" id="submit-room" className="btn btn-primary" onClick={handleSubmit}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="feather feather-plus">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Thêm phòng
+              </button>
             </div>
           </div>
         </div>

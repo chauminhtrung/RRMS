@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api-accounts")
 public class AccountController {
-
+    // test
     IAccountService accountService;
 
     @Operation(summary = "Get all account")
@@ -108,9 +108,8 @@ public class AccountController {
         }
     }
 
-    @Operation(summary = "Create a new host account")
     @PostMapping("/createAccount")
-    public ResponseEntity<Map<String, Object>> createAccount(@RequestBody AccountRequest accountRequest) {
+    public ResponseEntity<?> createAccount(@RequestBody AccountRequest accountRequest) {
         Map<String, Object> response = new HashMap<>();
         try {
             AccountResponse accountResponse = accountService.createAccount(accountRequest);
@@ -137,7 +136,7 @@ public class AccountController {
             @PathVariable String username, @RequestBody AccountRequest accountRequest) {
         Map<String, Object> response = new HashMap<>();
         try {
-            AccountResponse accountResponse = accountService.updateHostAccount(username, accountRequest);
+            AccountResponse accountResponse = accountService.updateAccount(username, accountRequest);
             response.put("status", true);
             response.put("message", "Account updated successfully");
             response.put("data", accountResponse);

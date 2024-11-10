@@ -29,7 +29,7 @@ public class Contract {
 
     @ManyToOne
     @JoinColumn(name = "username_tenant")
-    private Account tenant;
+    private Tenant tenant;
 
     @ManyToOne
     @JoinColumn(name = "username_landlord")

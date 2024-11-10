@@ -9,8 +9,6 @@ const MainManagement = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
     setIsAdmin(true)
   }, [])
 
-  console.log(isNavAdmin)
-
   return (
     <div style={{ backgroundColor: ' #e4eef5' }}>
       <NavAdmin
@@ -20,7 +18,7 @@ const MainManagement = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
         setIsNavAdmin={setIsNavAdmin}
         isNavAdmin={isNavAdmin}
       />
-      {motels.length == 0 ? <HomeNData /> : <HomeWData />}
+      {motels.length == 0 ? <HomeNData /> : <HomeWData Motel={motels} />}
     </div>
   )
 }
