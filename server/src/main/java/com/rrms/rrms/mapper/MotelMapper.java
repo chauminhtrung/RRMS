@@ -1,16 +1,17 @@
 package com.rrms.rrms.mapper;
 
-import com.rrms.rrms.dto.response.MotelServiceResponse;
-import com.rrms.rrms.models.MotelService;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import com.rrms.rrms.dto.request.MotelRequest;
 import com.rrms.rrms.dto.response.MotelResponse;
+import com.rrms.rrms.dto.response.MotelServiceResponse;
 import com.rrms.rrms.models.Motel;
-import org.mapstruct.Mapping;
+import com.rrms.rrms.models.MotelService;
 
 @Mapper(componentModel = "spring")
 public interface MotelMapper {
@@ -28,9 +29,7 @@ public interface MotelMapper {
             return Collections.emptyList();
         }
         return motelServices.stream()
-            .map(this::motelServiceToMotelServiceResponse)
-            .collect(Collectors.toList());
+                .map(this::motelServiceToMotelServiceResponse)
+                .collect(Collectors.toList());
     }
 }
-
-

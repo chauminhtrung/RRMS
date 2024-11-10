@@ -4,25 +4,24 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
+
+import com.rrms.rrms.dto.request.RoomRequest;
 import com.rrms.rrms.dto.request.RoomRequest2;
+import com.rrms.rrms.dto.response.PostRoomTableResponse;
+import com.rrms.rrms.dto.response.RoomDetailResponse;
 import com.rrms.rrms.dto.response.RoomResponse2;
+import com.rrms.rrms.enums.ErrorCode;
+import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.mapper.BulletinBoardMapper;
+import com.rrms.rrms.mapper.RoomMapper;
+import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Motel;
+import com.rrms.rrms.models.Room;
 import com.rrms.rrms.repositories.AccountRepository;
 import com.rrms.rrms.repositories.MotelRepository;
 import com.rrms.rrms.repositories.RoomRepository;
 import com.rrms.rrms.repositories.ServiceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.rrms.rrms.dto.request.RoomRequest;
-import com.rrms.rrms.dto.response.PostRoomTableResponse;
-import com.rrms.rrms.dto.response.RoomDetailResponse;
-import com.rrms.rrms.enums.ErrorCode;
-import com.rrms.rrms.exceptions.AppException;
-import com.rrms.rrms.mapper.RoomMapper;
-import com.rrms.rrms.models.Account;
-import com.rrms.rrms.models.Room;
 import com.rrms.rrms.services.IRoom;
 
 import lombok.AccessLevel;
@@ -40,7 +39,6 @@ public class RoomService implements IRoom {
     ServiceRepository serviceRepository;
     AccountRepository accountRepository;
 
-
     RoomMapper roomMapper;
 
     BulletinBoardMapper bulletinBoardMapper;
@@ -54,84 +52,87 @@ public class RoomService implements IRoom {
     @Override
     public RoomDetailResponse createRoom(RoomRequest roomRequest) {
 
-        //        Account account = accountRepository
-        //                .findByUsername(roomRequest.getUsername())
-        //                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+        // Account account = accountRepository
+        // .findByUsername(roomRequest.getUsername())
+        // .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
         //
-        //        Motel motel = motelRepository.save(Motel.builder()
-        //                .account(account)
-        //                .motelName(roomRequest.getNameRoom())
-        //                .address(roomRequest.getAddress())
-        //                .build());
+        // Motel motel = motelRepository.save(Motel.builder()
+        // .account(account)
+        // .motelName(roomRequest.getNameRoom())
+        // .address(roomRequest.getAddress())
+        // .build());
         //
-        //        Room room = roomMapper.toRoom(roomRequest);
-        //        room.setMotel(motel);
+        // Room room = roomMapper.toRoom(roomRequest);
+        // room.setMotel(motel);
         //
-        //        List<com.rrms.rrms.models.RoomService> roomServices =
-        //                new ArrayList<>(roomMapper.mapRoomServices(roomRequest.getRoomServices()));
+        // List<com.rrms.rrms.models.RoomService> roomServices =
+        // new ArrayList<>(roomMapper.mapRoomServices(roomRequest.getRoomServices()));
         //
-        //        if (roomRequest.getPriceElectric() != 0) {
-        //            com.rrms.rrms.models.Service newService = new com.rrms.rrms.models.Service();
-        //            //            log.info("Price electric: {}", roomRequest.getPriceElectric());
+        // if (roomRequest.getPriceElectric() != 0) {
+        // com.rrms.rrms.models.Service newService = new com.rrms.rrms.models.Service();
+        // // log.info("Price electric: {}", roomRequest.getPriceElectric());
         //
-        //            newService.setNameService("Điện");
-        //            serviceRepository.save(newService);
-        //            roomServices.add(com.rrms.rrms.models.RoomService.builder()
-        //                    .room(room)
-        //                    .service(newService)
-        //                    .build());
-        //        }
+        // newService.setNameService("Điện");
+        // serviceRepository.save(newService);
+        // roomServices.add(com.rrms.rrms.models.RoomService.builder()
+        // .room(room)
+        // .service(newService)
+        // .build());
+        // }
         //
-        //        if (roomRequest.getPriceWater() != 0) {
-        //            com.rrms.rrms.models.Service newService = new com.rrms.rrms.models.Service();
-        //            //            log.info("Price water: {}", roomRequest.getPriceWater());
+        // if (roomRequest.getPriceWater() != 0) {
+        // com.rrms.rrms.models.Service newService = new com.rrms.rrms.models.Service();
+        // // log.info("Price water: {}", roomRequest.getPriceWater());
         //
-        //            newService.setNameService("Nước");
-        //            serviceRepository.save(newService);
-        //            roomServices.add(com.rrms.rrms.models.RoomService.builder()
-        //                    .room(room)
-        //                    .service(newService)
-        //                    .build());
-        //        }
+        // newService.setNameService("Nước");
+        // serviceRepository.save(newService);
+        // roomServices.add(com.rrms.rrms.models.RoomService.builder()
+        // .room(room)
+        // .service(newService)
+        // .build());
+        // }
         //
-        //        Room finalRoom1 = room;
-        //        roomServices.forEach(roomService -> {
-        //            if (roomService.getService() != null && roomService.getService().getServiceId() != null) {
+        // Room finalRoom1 = room;
+        // roomServices.forEach(roomService -> {
+        // if (roomService.getService() != null &&
+        // roomService.getService().getServiceId() != null) {
         //
-        //                com.rrms.rrms.models.Service service = serviceRepository
-        //                        .findById(roomService.getService().getServiceId())
-        //                        .orElseThrow(() -> new AppException(ErrorCode.SERVICE_NOT_FOUND));
-        //                roomService.setService(service);
-        //            } else {
+        // com.rrms.rrms.models.Service service = serviceRepository
+        // .findById(roomService.getService().getServiceId())
+        // .orElseThrow(() -> new AppException(ErrorCode.SERVICE_NOT_FOUND));
+        // roomService.setService(service);
+        // } else {
         //
-        //                com.rrms.rrms.models.Service newService = new com.rrms.rrms.models.Service();
-        //                newService.setNameService(roomService.getService().getNameService());
+        // com.rrms.rrms.models.Service newService = new com.rrms.rrms.models.Service();
+        // newService.setNameService(roomService.getService().getNameService());
         //
-        //                newService = serviceRepository.save(newService);
-        //                roomService.setService(newService);
-        //            }
+        // newService = serviceRepository.save(newService);
+        // roomService.setService(newService);
+        // }
         //
-        //            roomService.setRoom(finalRoom1);
-        //        });
+        // roomService.setRoom(finalRoom1);
+        // });
         //
-        //        room.setRoomServices(roomServices);
+        // room.setRoomServices(roomServices);
         //
-        //        List<RoomImage> roomImages = roomMapper.mapRoomImages(roomRequest.getRoomImages());
-        //        Room finalRoom = room;
-        //        roomImages.forEach(image -> image.setRoom(finalRoom));
-        //        room.setRoomImages(roomImages);
+        // List<RoomImage> roomImages =
+        // roomMapper.mapRoomImages(roomRequest.getRoomImages());
+        // Room finalRoom = room;
+        // roomImages.forEach(image -> image.setRoom(finalRoom));
+        // room.setRoomImages(roomImages);
         //
-        //        room = roomRepository.save(room);
+        // room = roomRepository.save(room);
         //
-        //        return roomMapper.toRoomDetailResponse(room);
+        // return roomMapper.toRoomDetailResponse(room);
         return null;
     }
 
-//    @Override
-//    public List<BulletinBoardSearchResponse> getRooms() {
-//        return bulletinBoardRepository.findAll().stream().map(bulletinBoardMapper::toBulletinBoardSearchResponse)
-//                .toList();
-//    }
+    // @Override
+    // public List<BulletinBoardSearchResponse> getRooms() {
+    // return
+    // bulletinBoardRepository.findAll().stream().map(bulletinBoardMapper::toBulletinBoardSearchResponse)
+    // .toList();
+    // }
 
     @Override
     public List<PostRoomTableResponse> getPostRoomTable(String username) {
@@ -161,7 +162,8 @@ public class RoomService implements IRoom {
 
     @Override
     public RoomResponse2 createRoom2(RoomRequest2 roomRequest) {
-        Motel motel = motelRepository.findById(roomRequest.getMotelId())
+        Motel motel = motelRepository
+                .findById(roomRequest.getMotelId())
                 .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
         Room room = convertToEntity(roomRequest);
         room.setMotel(motel);
@@ -171,28 +173,25 @@ public class RoomService implements IRoom {
 
     @Override
     public RoomResponse2 getRoomById2(UUID roomId) {
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new IllegalArgumentException("Room not found"));
+        Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("Room not found"));
         return convertToResponse(room);
     }
 
     @Override
     public List<RoomResponse2> getAllRooms() {
         List<Room> rooms = roomRepository.findAll();
-        return rooms.stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
+        return rooms.stream().map(this::convertToResponse).collect(Collectors.toList());
     }
 
     @Override
     public RoomResponse2 updateRoom2(UUID roomId, RoomRequest2 roomRequest) {
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new IllegalArgumentException("Room not found"));
+        Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("Room not found"));
 
         updateEntityFromRequest(room, roomRequest);
 
         if (roomRequest.getMotelId() != null) {
-            Motel motel = motelRepository.findById(roomRequest.getMotelId())
+            Motel motel = motelRepository
+                    .findById(roomRequest.getMotelId())
                     .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
             room.setMotel(motel);
         }
@@ -212,16 +211,14 @@ public class RoomService implements IRoom {
     @Override
     public List<RoomResponse2> getRoomsByMotelId(UUID motelId) {
         // Kiểm tra xem Motel có tồn tại không
-        Motel motel = motelRepository.findById(motelId)
-                .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
+        Motel motel =
+                motelRepository.findById(motelId).orElseThrow(() -> new IllegalArgumentException("Motel not found"));
 
         // Lấy danh sách phòng theo motelId
         List<Room> rooms = roomRepository.findByMotel(motel);
 
         // Chuyển đổi danh sách Room sang RoomResponse
-        return rooms.stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
+        return rooms.stream().map(this::convertToResponse).collect(Collectors.toList());
     }
 
     // Chuyển đổi từ Room sang RoomResponse
@@ -283,6 +280,4 @@ public class RoomService implements IRoom {
         if (roomRequest.getStatus() != null) room.setStatus(roomRequest.getStatus());
         if (roomRequest.getFinance() != null) room.setFinance(roomRequest.getFinance());
     }
-
-
 }

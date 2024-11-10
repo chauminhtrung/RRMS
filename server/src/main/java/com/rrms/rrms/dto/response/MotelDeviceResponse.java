@@ -2,9 +2,6 @@ package com.rrms.rrms.dto.response;
 
 import java.util.UUID;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Document;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,12 +12,14 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Document(indexName = "rooms")
-public class SearchResponse {
-    @Id
-    UUID roomId;
-
-    String nameRoom;
-    MotelResponse motel;
-    String chargetype;
+public class MotelDeviceResponse {
+    private UUID motel_device_id;
+    private MotelResponse motel;
+    private String deviceName;
+    private Double value;
+    private Double valueInput;
+    private int totalQuantity;
+    private int totalUsing;
+    private int totalNull;
+    private String supplier;
 }

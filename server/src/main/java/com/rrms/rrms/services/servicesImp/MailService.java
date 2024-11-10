@@ -20,7 +20,6 @@ public class MailService implements IMailService {
         this.sender = sender;
     }
 
-
     private boolean sendMail(String to, String subject, String text) {
         MimeMessage mimeMessage = sender.createMimeMessage();
         try {

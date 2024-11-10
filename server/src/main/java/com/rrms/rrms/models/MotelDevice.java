@@ -1,6 +1,9 @@
 package com.rrms.rrms.models;
 
+import java.util.UUID;
+
 import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,14 +15,16 @@ import lombok.NoArgsConstructor;
 @Table(name = "motel_device")
 public class MotelDevice {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String motel_device_id;
+    @GeneratedValue(generator = "UUID")
+    private UUID motel_device_id;
+
     @ManyToOne
     @JoinColumn(name = "motel_id")
     private Motel motel;
 
     @Column(columnDefinition = "VARCHAR(255)")
     private String deviceName;
+
     private Double value;
     private Double valueInput;
     private int totalQuantity;

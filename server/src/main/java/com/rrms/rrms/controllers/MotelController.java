@@ -64,12 +64,11 @@ public class MotelController {
     public ApiResponse<MotelResponse> getMotelbyid(@RequestParam UUID id) {
         MotelResponse motelResponse = motelService.findById(id);
         return ApiResponse.<MotelResponse>builder()
-            .code(HttpStatus.OK.value())
-            .message("success")
-            .result(motelResponse)
-            .build();
+                .code(HttpStatus.OK.value())
+                .message("success")
+                .result(motelResponse)
+                .build();
     }
-
 
     @GetMapping("/get-motel-account")
     public ApiResponse<List<MotelResponse>> getMotelbyaccount(@RequestParam String username) {
@@ -120,7 +119,7 @@ public class MotelController {
             motelService.delete(id);
             log.info("Delete motel successfully");
             return ApiResponse.<Boolean>builder()
-                    .code(HttpStatus.BAD_REQUEST.value())
+                    .code(HttpStatus.OK.value())
                     .message("success")
                     .result(true)
                     .build();

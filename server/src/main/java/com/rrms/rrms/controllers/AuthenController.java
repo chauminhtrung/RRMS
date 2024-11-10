@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import com.rrms.rrms.dto.request.*;
-import com.rrms.rrms.dto.response.*;
-import com.rrms.rrms.services.IMailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +14,13 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import com.nimbusds.jose.JOSEException;
+import com.rrms.rrms.dto.request.*;
+import com.rrms.rrms.dto.response.*;
 import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.services.IAccountService;
 import com.rrms.rrms.services.IAuthorityService;
+import com.rrms.rrms.services.IMailService;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -210,7 +210,8 @@ public class AuthenController {
         }
         randomNumber = (int) (Math.random() * 90000) + 10000;
         try {
-            boolean result = mailService.Send_ForgetPassword(changePasswordByEmail.getEmail(), "Yêu cầu thay đổi mật khẩu", String.valueOf(randomNumber));
+            boolean result = mailService.Send_ForgetPassword(
+                    changePasswordByEmail.getEmail(), "Yêu cầu thay đổi mật khẩu", String.valueOf(randomNumber));
             return ApiResponse.<Boolean>builder()
                     .code(HttpStatus.OK.value())
                     .message("success")
