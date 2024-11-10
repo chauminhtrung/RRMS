@@ -1,7 +1,9 @@
 package com.rrms.rrms.dto.request;
 
+import com.rrms.rrms.dto.response.MotelServiceResponse;
 import com.rrms.rrms.models.TypeRoom;
 
+import java.util.List;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -20,4 +22,5 @@ public class MotelRequest {
     int paymentdeadline;
     TypeRoom typeRoom;
     AccountRequest account;
+    List<MotelServiceResponse> motelServices;
 }

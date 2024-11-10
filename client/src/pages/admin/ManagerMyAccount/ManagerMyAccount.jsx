@@ -11,7 +11,7 @@ const ManagerMyAccount = ({ setIsAdmin, TaiKhoan }) => {
     setIsAdmin(true)
 
     fetchAccountByUsername(TaiKhoan)
-  }, [TaiKhoan]) // Thêm dependency array cho TaiKhoan
+  }, [TaiKhoan]) 
 
   const fetchAccountByUsername = async (username) => {
     try {
