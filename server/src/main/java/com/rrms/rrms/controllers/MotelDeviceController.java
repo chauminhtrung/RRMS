@@ -35,7 +35,7 @@ public class MotelDeviceController {
     @Operation(summary = "get All moteldevice by motelid")
     @GetMapping("/{motelId}")
     public ApiResponse<List<MotelDeviceResponse>> getMotelDevices(@PathVariable("motelId") UUID motelId) {
-        List<MotelDeviceResponse> motelResponses = motelDeviceServicegit.getAllMotelDevicesByMotel(motelId);
+        List<MotelDeviceResponse> motelResponses = motelDeviceService.getAllMotelDevicesByMotel(motelId);
         log.info("Get all moteldevices successfully");
         return ApiResponse.<List<MotelDeviceResponse>>builder()
                 .code(HttpStatus.OK.value())
