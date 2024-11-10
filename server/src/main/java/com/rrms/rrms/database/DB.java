@@ -323,7 +323,7 @@ public class DB {
                     .username("host")
                     .password(pe.encode("123")) // Encode the password
                     .fullname("KienQuoc")
-                    .email("quoc@gmail.com")
+                    .email("quockkps31817@fpt.edu.vn")
                     .phone("0919925302")
                     .cccd("012345678900")
                     .gender(Gender.FEMALE)
