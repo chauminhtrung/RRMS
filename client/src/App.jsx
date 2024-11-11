@@ -189,6 +189,13 @@ function App() {
               />
             }
           />
+          <Route path="/AdminManagerBoard" element={<AdminManagerBoard
+            motels={motels}
+            setmotels={setmotels}
+            setIsAdmin={setIsAdmin}
+            isNavAdmin={isNavAdmin}
+            setIsNavAdmin={setIsNavAdmin}
+          />} />
 
           <Route path="/adminManage/*" element={<AdminManage setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminStatis" element={<AdminStatis setIsAdmin={setIsAdmin} />} />

@@ -67,7 +67,7 @@ const ModelCreateHome = ({ username, MotelId }) => {
         paymentdeadline: ''
       })
     }
-  }, [MotelId]) // Thêm templatecontractRouteId vào dependency array
+  }, [MotelId])
 
   //tao service
   // Tạo service

@@ -7,7 +7,7 @@ import com.rrms.rrms.dto.request.MotelDeviceRequest;
 import com.rrms.rrms.dto.response.MotelDeviceResponse;
 
 public interface IMotelDeviceService {
-    List<MotelDeviceResponse> getAllMotelDevices();
+    List<MotelDeviceResponse> getAllMotelDevicesByMotel(UUID motelId);
 
     MotelDeviceResponse insertMotelDevice(MotelDeviceRequest motelDeviceRequest);
 

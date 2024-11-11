@@ -29,10 +29,10 @@ import lombok.extern.slf4j.Slf4j;
 public class MotelDeviceController {
     MotelDeviceService motelDeviceService;
 
-    @Operation(summary = "get All moteldevice")
-    @GetMapping()
-    public ApiResponse<List<MotelDeviceResponse>> getMotelDevices() {
-        List<MotelDeviceResponse> motelResponses = motelDeviceService.getAllMotelDevices();
+    @Operation(summary = "get All moteldevice by motelid")
+    @GetMapping("/{motelId}")
+    public ApiResponse<List<MotelDeviceResponse>> getMotelDevices(@PathVariable("motelId") UUID motelId) {
+        List<MotelDeviceResponse> motelResponses = motelDeviceService.getAllMotelDevicesByMotel(motelId);
         log.info("Get all moteldevices successfully");
         return ApiResponse.<List<MotelDeviceResponse>>builder()
                 .code(HttpStatus.OK.value())

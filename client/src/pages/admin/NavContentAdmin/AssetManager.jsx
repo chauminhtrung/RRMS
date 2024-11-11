@@ -4,27 +4,17 @@ import { Box } from '@mui/material'
 import { ReactTabulator } from 'react-tabulator'
 import { useState } from 'react'
 import { Modal, Button, Form } from 'react-bootstrap'
+import { getAllMotelDevices, insertMotelDevice } from '~/apis/deviceAPT'
+import { useParams } from 'react-router-dom'
+import Swal from 'sweetalert2'
 
 const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
   const [show, setShow] = useState(false)
-  const [asset, setAsset] = useState({
-    name: '',
-    icon: null,
-    value: '',
-    quantity: '',
-    unit: 'Cái',
-    supplier: ''
-  })
-
+  const [device, setDevice] = useState([])
+  const { motelId } = useParams('motelId')
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
-
-  const handleChange = (e) => {
-    setAsset({ ...asset, [e.target.name]: e.target.value })
-  }
-
-  const [selectedIcon, setSelectedIcon] = useState(null) //tạo bảng chọn icon
-
+  const [selectedIcon, setSelectedIcon] = useState('') //tạo bảng chọn icon
   const icons = [
     { id: 'ban', icon: <img src="\icon-ban.png" style={{ width: '24px' }} /> },
     { id: 'banan', icon: <img src="\icon-banan.png" style={{ width: '24px' }} /> },
@@ -38,53 +28,79 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
     { id: 'tuao', icon: <img src="\icon-tuao.png" style={{ width: '24px' }} /> },
     { id: 'tusach', icon: <img src="\icon-tusach.png" style={{ width: '24px' }} /> }
   ]
-
   const handleIconClick = (iconId) => {
     console.log(iconId)
-
     setSelectedIcon(iconId)
   }
-
-  const handleSubmit = (e) => {
-    console.log('cl')
-    console.log(selectedIcon)
-
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Xử lý logic lưu trữ tài sản mới
-    console.log('New asset:', asset)
-    setAsset({
-      name: '',
-      icon: null,
-      value: '',
-      quantity: '',
-      unit: 'Cái',
-      supplier: ''
-    })
-    // handleClose()
+    const datarequest = {
+      motel: {
+        motelId: motelId
+      },
+      deviceName: deviceName,
+      value: value,
+      icon: 'ban',
+      valueInput: valueInput,
+      totalQuantity: quantity,
+      supplier: supplier,
+      unit: 'cai'
+    }
+    console.log(datarequest)
+
+    const statusInsert = await insertMotelDevice(datarequest)
+      .then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Thêm thành công',
+          text: 'Đã thêm thành công!'
+        })
+        getAllMotelDevice()
+      })
+      .catch(() => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Thêm thất bại',
+          text: 'Thử lại sau!'
+        })
+      })
+
+    handleClose()
   }
-
+  const [deviceName, setdeviceName] = useState('')
+  const [value, setvalue] = useState('')
+  const [quantity, setquantity] = useState('')
+  const [valueInput, setvalueInput] = useState('')
+  const [supplier, setsupplier] = useState('')
   const columns = [
-    { title: 'STT', field: 'STT', hozAlign: 'center', minWidth: 40, editor: 'input' }, // Đặt minWidth để tránh cột bị quá nhỏ
-    { title: 'Tên Tài Sản', field: 'name', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Giá Trị Tài Sản', field: 'giathue', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Giá Trị Nhập Vào', field: 'mucgiathue', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Tổng Số Lượng', field: 'chukythu', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Đơn Vị', field: 'mauhopdong', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Đơn Vị Cung Cấp', field: 'ngaylap', hozAlign: 'center', minWidth: 40, editor: 'input' }
-  ]
-
-  const data = [
     {
-      STT: '1',
-      name: 'Máy Lạnh',
-      giathue: '5,000,000 VND',
-      mucgiathue: '400,000 VND',
-      chukythu: '1',
-      mauhopdong: 'Cái',
-      ngaylap: 'Điện máy xanh'
+      title: '',
+      field: 'icon',
+      hozAlign: 'center',
+      width: 40,
+      formatter: function () {
+        return 'a'
+      }
+    },
+    ,
+    { title: 'STT', field: 'STT', hozAlign: 'center', minWidth: 40, editor: 'input' },
+    { title: 'Tên Tài Sản', field: 'deviceName', hozAlign: 'center', minWidth: 40, editor: 'input' },
+    { title: 'Giá Trị Tài Sản', field: 'value', hozAlign: 'center', minWidth: 40, editor: 'input' },
+    { title: 'Giá Trị Nhập Vào', field: 'valueInput', hozAlign: 'center', minWidth: 40, editor: 'input' },
+    { title: 'Tổng Số Lượng', field: 'totalQuantity', hozAlign: 'center', minWidth: 40, editor: 'input' },
+    { title: 'Đơn Vị', field: 'unitDescription', hozAlign: 'center', minWidth: 40, editor: 'input' },
+    { title: 'Đơn Vị Cung Cấp', field: 'supplier', hozAlign: 'center', minWidth: 40, editor: 'input' },
+    {
+      title: '',
+      field: 'delete',
+      hozAlign: 'center',
+      width: 40,
+      editor: 'button'
     }
   ]
-
+  const remove = (data) => {
+    console.log(data)
+  }
   const options = {
     height: '500px', // Chiều cao của bảng
     movableColumns: true, // Cho phép di chuyển cột
@@ -103,9 +119,19 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
       headerSort: false
     }
   }
-
+  const getAllMotelDevice = async () => {
+    const response = await getAllMotelDevices(motelId)
+    const customdata = response.result.map((item, index) => ({
+      ...item,
+      STT: index + 1,
+      unitDescription: item.unit == 'CAI' ? 'Cái' : item.unit == 'CHIEC' ? 'Chiếc' : item.unit == 'BO' ? 'Bộ' : 'Cặp',
+      delete: 'Xóa'
+    }))
+    setDevice(customdata)
+  }
   useEffect(() => {
     setIsAdmin(true)
+    getAllMotelDevice()
   }, [])
   return (
     <div>
@@ -133,7 +159,6 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
           <Box display="flex" alignItems="center" style={{ width: '20%' }}></Box>
         </Box>
       </div>
-
       <div
         className="header-table header-item"
         style={{ padding: '10px 10px', marginLeft: '15px', marginRight: '10px' }}>
@@ -152,7 +177,7 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
               className="feather feather-filter">
               <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
             </svg>
-            <span id="filter-count">0</span>
+            <span id="filter-count">{device.length}</span>
           </div>
         </div>
         <Box display="flex" justifyContent="flex-end">
@@ -169,7 +194,12 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="assetName">
                   <Form.Label>Tên tài sản</Form.Label>
-                  <Form.Control type="text" name="name" value={asset.name} onChange={handleChange} />
+                  <Form.Control
+                    type="text"
+                    name="name"
+                    value={deviceName}
+                    onChange={(e) => setdeviceName(e.target.value)}
+                  />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="assetIcon">
                   <Form.Label>Chọn icon</Form.Label>
@@ -208,8 +238,8 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
                     <Form.Control
                       type="number"
                       name="giatritaisan"
-                      value={asset.giatritaisan}
-                      onChange={handleChange}
+                      value={value}
+                      onChange={(e) => setvalue(e.target.value)}
                     />
                   </Form.Group>
                   <Form.Group className="mb-3 col-6" controlId="giatrinhapvao">
@@ -217,17 +247,22 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
                     <Form.Control
                       type="number"
                       name="giatrinhapvao"
-                      value={asset.giatrinhapvao}
-                      onChange={handleChange}
+                      value={valueInput}
+                      onChange={(e) => setvalueInput(e.target.value)}
                     />
                   </Form.Group>
                   <Form.Group className="mb-3 col-6" controlId="tongsoluong">
                     <Form.Label>Tổng số lượng</Form.Label>
-                    <Form.Control type="number" name="tongsoluong" value={asset.tongsoluong} onChange={handleChange} />
+                    <Form.Control
+                      type="number"
+                      name="tongsoluong"
+                      value={quantity}
+                      onChange={(e) => setquantity(e.target.value)}
+                    />
                   </Form.Group>
                   <Form.Group className="mb-3 col-6" controlId="donvinhapvao">
                     <Form.Label>Đơn vị nhập vào</Form.Label>
-                    <Form.Control type="text" name="donvinhapvao" value={asset.giatrinhapvao} onChange={handleChange} />
+                    <Form.Control type="text" name="donvinhapvao" />
                   </Form.Group>
                 </div>
                 <Box display="flex" justifyContent="flex-end">
@@ -242,11 +277,11 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
       </div>
       <div className="mt-3" style={{ marginLeft: '15px', marginRight: '10px' }}>
         <ReactTabulator
-          className="my-custom-table rounded" // Thêm lớp tùy chỉnh nếu cần
+          className="my-custom-table rounded"
           columns={columns}
-          data={data}
+          data={device}
           options={options}
-          placeholder={<h1></h1>} // Sử dụng placeholder tùy chỉnh
+          placeholder={<h1></h1>}
         />
       </div>
     </div>
