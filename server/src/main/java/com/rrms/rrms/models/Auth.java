@@ -2,6 +2,7 @@ package com.rrms.rrms.models;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -24,6 +25,7 @@ public class Auth {
 
     @ManyToOne
     @JoinColumn(name = "username")
+    @JsonBackReference(value = "Auth-Acc") // Đặt tên cho tham chiếu ngược
     private Account account;
 
     @ManyToOne

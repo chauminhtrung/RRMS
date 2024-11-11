@@ -27,16 +27,7 @@ public interface RoomMapper {
 
     RoomImage toRoomImage(RoomImageRequest roomImageRequest);
 
-    default List<RoomService> mapRoomServices(List<String> roomServices) {
-        return roomServices.stream()
-                .map(serviceName -> {
-                    RoomService roomService = new RoomService();
-                    roomService.setService(
-                            Service.builder().nameService(serviceName).build());
-                    return roomService;
-                })
-                .toList();
-    }
+
 
     default List<RoomImage> mapRoomImages(List<String> roomImages) {
         return roomImages.stream()
