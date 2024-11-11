@@ -3,21 +3,14 @@ package com.rrms.rrms.controllers;
 import java.util.List;
 import java.util.UUID;
 
-import com.rrms.rrms.dto.request.RoomRequest2;
-import com.rrms.rrms.dto.response.RoomResponse2;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.rrms.rrms.dto.request.RoomRequest;
-import com.rrms.rrms.dto.response.ApiResponse;
-import com.rrms.rrms.dto.response.PostRoomTableResponse;
-import com.rrms.rrms.dto.response.RoomDetailResponse;
+import com.rrms.rrms.dto.request.RoomRequest2;
+import com.rrms.rrms.dto.response.RoomResponse2;
 import com.rrms.rrms.services.IRoom;
-import com.rrms.rrms.utils.CacheChecked;
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 public class RoomController {
 
     IRoom roomService;
-
 
     // API tạo mới một phòng
     @PostMapping
@@ -59,9 +51,7 @@ public class RoomController {
 
     // API cập nhật thông tin phòng theo roomId
     @PutMapping("/{roomId}")
-    public ResponseEntity<RoomResponse2> updateRoom2(
-            @PathVariable UUID roomId,
-            @RequestBody RoomRequest2 roomRequest) {
+    public ResponseEntity<RoomResponse2> updateRoom2(@PathVariable UUID roomId, @RequestBody RoomRequest2 roomRequest) {
         RoomResponse2 updatedRoom = roomService.updateRoom2(roomId, roomRequest);
         return ResponseEntity.ok(updatedRoom);
     }
@@ -79,7 +69,4 @@ public class RoomController {
         List<RoomResponse2> rooms = roomService.getRoomsByMotelId(motelId);
         return ResponseEntity.ok(rooms);
     }
-
-
-
 }

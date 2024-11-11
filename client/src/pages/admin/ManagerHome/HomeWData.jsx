@@ -5,16 +5,19 @@ import { useParams } from 'react-router-dom'
 import 'react-tabulator/lib/styles.css' // required styles
 import 'react-tabulator/lib/css/tabulator.min.css' // theme
 import { ReactTabulator } from 'react-tabulator'
+import axios from 'axios';
+import { env } from '~/configs/environment';
 import Swal from 'sweetalert2'
 import { getRoomByMotelId, createRoom } from '~/apis/roomAPI'
 
 const HomeWData = ({ Motel }) => {
   const { motelId } = useParams()
   const [rooms, setRooms] = useState([])
+  const [motelServices, setMotelServices] = useState([]); 
   const [showMenu, setShowMenu] = useState(null) // Trạng thái của menu hiện tại
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 })
   const menuRef = useRef(null) // Tham chiếu đến menu
-
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;
   const [formData, setFormData] = useState({
     motelId: motelId ? motelId : Motel[0].motelId,
     deposit: null,
@@ -30,9 +33,10 @@ const HomeWData = ({ Motel }) => {
     area: '',
     price: '',
     invoiceDate: '',
-    prioritize: ''
-    //priceItems: {}
-  })
+    prioritize: '',
+    selectedServices: [] // Thêm trường này để lưu các dịch vụ đã chọn
+  });
+  
 
   // Hàm xử lý nhấn ngoài menu
   useEffect(() => {
@@ -77,34 +81,34 @@ const HomeWData = ({ Motel }) => {
   }
 
   const handleSubmit = (e) => {
-    const form = document.getElementById('add-room-form')
+    e.preventDefault();
+    const form = document.getElementById('add-room-form');
     if (!form.checkValidity()) {
-      e.preventDefault()
-      form.classList.add('was-validated')
+      form.classList.add('was-validated');
     } else {
-      createRoom(formData)
+      createRoom({ ...formData, selectedServices: formData.selectedServices })
         .then((response) => {
           Swal.fire({
             icon: 'success',
             title: 'Thông báo',
             text: 'Room created successfully!'
-          })
-          setFormData(response)
+          });
+          setFormData(response);
           setTimeout(() => {
-            window.location.reload()
-          }, 1400)
+            window.location.reload();
+          }, 1400);
         })
         .catch((error) => {
           Swal.fire({
             icon: 'error',
             title: 'Thông báo',
             text: 'Error Room motel.'
-          })
-          console.error('Error creating motel:', error)
-        })
+          });
+          console.error('Error creating motel:', error);
+        });
     }
-    // Xử lý form submit và gửi formData
-  }
+  };
+  
 
   const fetchRooms = async () => {
     //neu co motelId tren URL
@@ -124,6 +128,44 @@ const HomeWData = ({ Motel }) => {
       }
     }
   }
+
+  const fetchMotelServices = async (id) => {  
+    try {  
+      const response = await axios.get(`${env.API_URL}/motels/get-motel-id?id=${id}`, {  
+        headers: {  
+          Authorization: `Bearer ${token}` 
+        }  
+      });  
+      if (response.data && response.data.code === 200 && response.data.result && response.data.result.motelServices) {  
+        setMotelServices(response.data.result.motelServices);  
+      } else {  
+        setMotelServices([]);  
+      }  
+    } catch (error) {  
+      console.error('Error fetching motel services:', error);  
+      setMotelServices([]);  
+    }  
+  };
+
+  const handleServiceSelection = (serviceId) => {
+    setFormData((prevData) => {
+      const selectedServices = prevData.selectedServices.includes(serviceId)
+        ? prevData.selectedServices.filter((id) => id !== serviceId)
+        : [...prevData.selectedServices, serviceId];
+  
+      return {
+        ...prevData,
+        selectedServices
+      };
+    });
+  };
+  
+  // Call this function when opening the "Add Room" modal
+  useEffect(() => {
+    if (motelId) {
+      fetchMotelServices(motelId);
+    }
+  }, [motelId]);
 
   // Định dạng tiền tệ Việt Nam (VND)
   const currencyFormatter = (cell) => {
@@ -1257,44 +1299,52 @@ const HomeWData = ({ Motel }) => {
                       <i className="des">Thêm dịch vụ sử dụng như: điện, nước, rác, wifi...</i>
                     </div>
                   </div>
-                  <div className="price-items-checkout-layout">
-                    <div className="item">
-                      <div className="item-check-name">
-                        <input
-                          type="checkbox"
-                          className="form-check-input"
-                          id="room_check_price_item_23660"
-                          name="price_items[23660][is_selected]"
-                          value="1"
-                        />
 
-                        <label htmlFor="room_check_price_item_23660">
-                          <b>Tiền điện (người)</b>
-                          <p>
-                            Giá: <b>1.700đ</b> / KWh
-                          </p>
-                        </label>
-                      </div>
-                      <div className="item-value">
-                        <div className="input-group">
-                          <input
-                            className="form-control"
-                            id="room_form_room_price_item_23660"
-                            min="0"
-                            type="number"
-                            placeholder="Nhập giá trị"
-                            name="price_items[23660][value][]"
-                          />
-                          <label
-                            style={{ fontSize: '12px' }}
-                            className="input-group-text"
-                            htmlFor="room_form_room_price_item_23660">
-                            KWh
-                          </label>
+
+                  <div className="price-items-checkout-layout">
+                    {motelServices.length > 0 ? (
+                      motelServices.map((service) => (
+                        <div key={service.motelServiceId} className="item mt-2">
+                          <div className="item-check-name">
+                            <input
+                              type="checkbox"
+                              className="form-check-input"
+                              checked={formData.selectedServices.includes(service.motelServiceId)}
+                              onChange={() => handleServiceSelection(service.motelServiceId)}
+                            />
+                            <label htmlFor={`service_${service.motelServiceId}`}>
+                              <b>{service.nameService}</b>
+                              <p>
+                                Giá: <b>{service.price}đ</b> / {service.chargetype}
+                              </p>
+                            </label>
+                          </div>
+                          
+                          <div className="item-value">
+                            <div className="input-group">
+                              <input
+                                className="form-control"
+                                min="0"
+                                type="number"
+                                placeholder="Nhập giá trị"
+                                name="price_items"
+                              />
+                              <label
+                                style={{ fontSize: '12px' }}
+                                className="input-group-text"
+                              >
+                                {service.chargetype}
+                              </label>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
+                      ))
+                    ) : (
+                      <p>Chưa có dịch vụ nào.</p>
+                    )}
                   </div>
+
+
                 </div>
               </form>
             </div>

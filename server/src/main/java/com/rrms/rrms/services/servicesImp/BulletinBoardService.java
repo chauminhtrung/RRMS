@@ -1,5 +1,12 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.data.elasticsearch.ResourceNotFoundException;
+import org.springframework.stereotype.Service;
+
 import com.rrms.rrms.dto.request.BulletinBoardRequest;
 import com.rrms.rrms.dto.response.BulletinBoardResponse;
 import com.rrms.rrms.dto.response.BulletinBoardTableResponse;
@@ -9,15 +16,11 @@ import com.rrms.rrms.mapper.BulletinBoardMapper;
 import com.rrms.rrms.models.*;
 import com.rrms.rrms.repositories.*;
 import com.rrms.rrms.services.IBulletinBoard;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -86,9 +89,9 @@ public class BulletinBoardService implements IBulletinBoard {
             bulletinBoardRuleRepository.save(bulletinBoardRule);
         }
 
-
         for (BulletinBoards_RentalAm rentalAm : bulletinBoardRequest.getBulletinBoards_RentalAm()) {
-            Optional<RentalAmenities> rentalAmenitiesOptional = rentalAmenitiesRepository.findByName(rentalAm.getRentalAmenities().getName());
+            Optional<RentalAmenities> rentalAmenitiesOptional = rentalAmenitiesRepository.findByName(
+                    rentalAm.getRentalAmenities().getName());
 
             RentalAmenities rentalAmenities;
             if (rentalAmenitiesOptional.isPresent()) {
@@ -121,4 +124,23 @@ public class BulletinBoardService implements IBulletinBoard {
                 .toList();
     }
 
+    @Override
+    public List<BulletinBoardResponse> getBulletinBoard() {
+        List<BulletinBoard> bulletinBoards = bulletinBoardRepository.findAllByIsActive(false);
+        return bulletinBoards.stream()
+                .map(bulletinBoardMapper::toBulletinBoardResponse)
+                .toList();
+    }
+
+    public BulletinBoard approveBulletinBoard(UUID id) {
+        BulletinBoard bulletinBoard = bulletinBoardRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("BulletinBoard not found"));
+        bulletinBoard.setIsActive(true);
+        return bulletinBoardRepository.save(bulletinBoard);
+    }
+
+    public void deleteBulletinBoard(UUID id) {
+        bulletinBoardRepository.deleteById(id);
+    }
 }

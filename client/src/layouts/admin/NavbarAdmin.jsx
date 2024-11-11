@@ -2,12 +2,11 @@ import { Link, useParams, useLocation, useNavigate } from 'react-router-dom'
 import './NavbarAdmin.css'
 import { useEffect, useState } from 'react'
 import NavWData from './NavWData'
-
 import Swal from 'sweetalert2'
 import { env } from '~/configs/environment'
 import { getMotelById } from '~/apis/motelAPI'
 
-const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, setUsername, setAvatar, setToken }) => {
+const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) => {
   const { motelId } = useParams(); // Lấy tham số motelId từ URL
   const location = useLocation()
   const [motel, setmotel] = useState(null)
@@ -32,6 +31,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, se
   useEffect(() => {
 
   }, [motel]) // Chỉ chạy khi motel thay đổi
+
 
   const handleLogout = async () => {
     const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
@@ -60,9 +60,6 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, se
       if (response.ok) {
         // Xoá thông tin người dùng sau khi đăng xuất thành công
         sessionStorage.removeItem('user')
-        setToken(null) // Xóa token khỏi state
-        setUsername('') // Cập nhật username về trống
-        setAvatar('') // Cập nhật avatar về mặc định
         navigate('/login')
         Swal.fire({
           icon: 'success',
@@ -87,6 +84,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, se
       })
     }
   }
+  const tokenExists = sessionStorage.getItem('user') !== null
 
   return (
     <header>
@@ -351,15 +349,12 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, se
                       </span>
                     </Link>
                   </li>
+                  {tokenExists && (
                   <li className={`nav-item menu-item`}>
                     <Link
-                      to="/login"
+                      to=""
                       className="nav-link"
-                      onClick={async (e) => {
-                        e.preventDefault() // Ngăn chặn hành vi điều hướng mặc định của Link
-
-                        await handleLogout() // Gọi hàm handleLogout
-                      }}>
+                      onClick={handleLogout}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -380,6 +375,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, se
                       </span>
                     </Link>
                   </li>
+                   )}
                 </ul>
               </nav>
             </div>

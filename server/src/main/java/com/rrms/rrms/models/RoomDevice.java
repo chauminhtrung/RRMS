@@ -24,8 +24,8 @@ public class RoomDevice {
     private Room room;
 
     @ManyToOne
-    @JoinColumn(name = "device_id")
-    private Device device;
+    @JoinColumn(name = "motelDevice_id")
+    private MotelDevice motelDevice;
 
     @Column(columnDefinition = "INT")
     private int quantity;

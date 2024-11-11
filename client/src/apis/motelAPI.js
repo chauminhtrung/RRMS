@@ -3,7 +3,7 @@ import { env } from '~/configs/environment'
 
 export const createMotel = async (Motel) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-  return await axios.post(`${env.API_URL}/motels`, Motel, {
+  return await axios.post(`${env.API_URL}/motels/create`, Motel, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -40,11 +40,6 @@ export const getMotelByUsername = async (username) => {
 
 export const getMotelById = async (Id) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-  if (!Id) {
-    console.log(Id)
-
-    throw new Error('ID không hợp ')
-  }
   return await axios.get(`${env.API_URL}/motels/get-motel-id?id=${Id}`, {
     headers: {
       Authorization: `Bearer ${token}`

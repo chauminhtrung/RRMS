@@ -1,15 +1,17 @@
 package com.rrms.rrms.mapper;
 
-import com.rrms.rrms.dto.response.MotelServiceResponse;
-import com.rrms.rrms.models.MotelService;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import com.rrms.rrms.dto.request.MotelRequest;
 import com.rrms.rrms.dto.response.MotelResponse;
+import com.rrms.rrms.dto.response.MotelServiceResponse;
 import com.rrms.rrms.models.Motel;
-import org.mapstruct.Mapping;
+import com.rrms.rrms.models.MotelService;
 
 @Mapper(componentModel = "spring")
 public interface MotelMapper {
@@ -23,8 +25,11 @@ public interface MotelMapper {
 
     // Phương thức mặc định để ánh xạ danh sách motel services
     default List<MotelServiceResponse> mapMotelServices(List<MotelService> motelServices) {
+        if (motelServices == null) {
+            return Collections.emptyList();
+        }
         return motelServices.stream()
-            .map(this::motelServiceToMotelServiceResponse) // sử dụng phương thức ánh xạ mới
-            .collect(Collectors.toList());
+                .map(this::motelServiceToMotelServiceResponse)
+                .collect(Collectors.toList());
     }
 }

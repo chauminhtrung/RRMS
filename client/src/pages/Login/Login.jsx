@@ -69,7 +69,7 @@ const Login = ({ setUsername, setAvatar }) => {
         setAvatar(avtFromResponse)
   
         //navigate('/') // Điều hướng về trang chính
-        window.location.href = '/'
+        window.location.href = '/RRMS'
       }
     } catch (error) {
       if (error.response) {

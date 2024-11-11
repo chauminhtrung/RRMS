@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import com.rrms.rrms.dto.request.*;
-import com.rrms.rrms.services.IMailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +14,13 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import com.nimbusds.jose.JOSEException;
-import com.rrms.rrms.dto.response.LoginResponse;
-import com.rrms.rrms.dto.response.MessageTokenResponse;
-import com.rrms.rrms.dto.response.RegisterResponse;
+import com.rrms.rrms.dto.request.*;
+import com.rrms.rrms.dto.response.*;
 import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.services.IAccountService;
 import com.rrms.rrms.services.IAuthorityService;
+import com.rrms.rrms.services.IMailService;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -184,44 +182,80 @@ public class AuthenController {
     private static int randomNumber = 0;
 
     @GetMapping("/checkMail")
-    public ResponseEntity<Boolean> forget(@RequestParam String email) {
+    public ApiResponse<Boolean> forget(@RequestParam("email") String email) {
         boolean result = accountService.existsByEmail(email);
         if (result) {
-            return ResponseEntity.ok(true);
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("success")
+                    .result(true)
+                    .build();
         } else {
-            return ResponseEntity.badRequest().body(false);
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("error")
+                    .result(false)
+                    .build();
         }
-
     }
 
     @PostMapping("/forgetpassword")
-    public ResponseEntity<Boolean> forget(@RequestBody RegisterRequest registerRequest) {
-        if (registerRequest == null) {
-            return ResponseEntity.badRequest().body(false);
+    public ApiResponse<Boolean> forget(@RequestBody ChangePasswordByEmail changePasswordByEmail) {
+        if (changePasswordByEmail == null) {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("error")
+                    .result(false)
+                    .build();
         }
         randomNumber = (int) (Math.random() * 90000) + 10000;
         try {
-            mailService.Send_ForgetPassword(registerRequest.getGmail(), "Yêu cầu thay đổi mật khẩu", String.valueOf(randomNumber));
-            return ResponseEntity.ok(true);
+            boolean result = mailService.Send_ForgetPassword(
+                    changePasswordByEmail.getEmail(), "Yêu cầu thay đổi mật khẩu", String.valueOf(randomNumber));
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("success")
+                    .result(result)
+                    .build();
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(false);
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("error")
+                    .result(false)
+                    .build();
         }
     }
 
     @PostMapping("/acceptChangePassword")
-    public ResponseEntity<Boolean> acceptChangePassword(@RequestBody ChangePasswordByEmail changePasswordByEmail) {
-        if(!changePasswordByEmail.getCode().equals(String.valueOf(randomNumber))){
-            return ResponseEntity.badRequest().body(false);
+    public ApiResponse<Boolean> acceptChangePassword(@RequestBody ChangePasswordByEmail changePasswordByEmail) {
+        if (!changePasswordByEmail.getCode().equals(String.valueOf(randomNumber))) {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("error")
+                    .result(false)
+                    .build();
         }
         if (!accountService.existsByEmail(changePasswordByEmail.getEmail())) {
-            return ResponseEntity.badRequest().body(false);
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("error")
+                    .result(false)
+                    .build();
         }
         boolean result = accountService.changePasswordByEmail(changePasswordByEmail);
-        System.out.println(result);
+        randomNumber = 0;
         if (result) {
-            return ResponseEntity.ok(true);
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("success")
+                    .result(true)
+                    .build();
         } else {
-            return ResponseEntity.badRequest().body(false);
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("error")
+                    .result(false)
+                    .build();
         }
     }
 }

@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 import { v4 } from 'uuid'
-import { uploadImage } from '~/apis/apiClient'
+
 import { storage } from '~/configs/firebaseConfig'
+import { uploadImage } from '~/apis/uploadImageAPI'
 
 const ImageUpload = () => {
   const [image, setImage] = useState(null)

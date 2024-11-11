@@ -1,15 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react'
-import {
-  getPhuongXa,
-  getQuanHuyen,
-  getTinhThanh,
-  getAllTypeRoom,
-  createMotel,
-  getMotelById,
-  updateMotel,
-  createSerivceMotel
-} from '~/apis/apiClient'
+import { getPhuongXa, getQuanHuyen, getTinhThanh } from '~/apis/addressAPI'
+import { getAllTypeRoom } from '~/apis/typeRoomAPI'
+import { createMotel, getMotelById, updateMotel } from '~/apis/motelAPI'
+import { createSerivceMotel } from '~/apis/motelServiceAPI'
 import Swal from 'sweetalert2'
+
 const ModelCreateHome = ({ username, MotelId }) => {
   const [selectedOption, setSelectedOption] = useState('')
   const [FileName, setFileName] = useState('')
@@ -55,7 +51,7 @@ const ModelCreateHome = ({ username, MotelId }) => {
   }, [])
 
   useEffect(() => {
-    if (MotelId && MotelId !== 'Create') {
+    if (MotelId !== 'Create') {
       fetchDataWhenEdit(MotelId)
     } else {
       setMotel({
@@ -74,56 +70,44 @@ const ModelCreateHome = ({ username, MotelId }) => {
   }, [MotelId])
 
   //tao service
+  // Tạo service
   const handleCreateServices = async (id) => {
     const motelId = id // Thay thế bằng ID của Motel thực tế
 
-    // Tạo mảng chứa các dịch vụ
+    // Tạo mảng chứa các dịch vụ chỉ khi dịch vụ không là "Miễn phí/Không sử dụng"
     const services = [
-      {
+      priceItemEle !== '0' && {
         motelId: motelId,
         nameService: 'Dịch vụ điện',
-        price: parseFloat(1700), // Chuyển đổi giá thành số Long
-        chargetype:
-          priceItemEle === '0'
-            ? 'Miễn phí'
-            : priceItemEle === '1'
-            ? 'Theo người'
-            : priceItemEle === '2'
-            ? 'Theo tháng'
-            : 'Theo đồng hồ'
+        price: parseFloat(1700),
+        chargetype: priceItemEle === '1' ? 'Theo người' : priceItemEle === '2' ? 'Theo tháng' : 'Theo đồng hồ'
       },
-      {
+      priceItemWater !== '0' && {
         motelId: motelId,
         nameService: 'Dịch vụ nước',
         price: parseFloat(18000),
-        chargetype:
-          priceItemWater === '0'
-            ? 'Miễn phí'
-            : priceItemWater === '1'
-            ? 'Theo người'
-            : priceItemWater === '2'
-            ? 'Theo tháng'
-            : 'Theo đồng hồ'
+        chargetype: priceItemWater === '1' ? 'Theo người' : priceItemWater === '2' ? 'Theo tháng' : 'Theo đồng hồ'
       },
-      {
+      priceItemTrash !== '0' && {
         motelId: motelId,
         nameService: 'Dịch vụ rác',
         price: parseFloat(15000),
-        chargetype: priceItemTrash === '0' ? 'Miễn phí' : priceItemTrash === '1' ? 'Theo người' : 'Theo tháng'
+        chargetype: priceItemTrash === '1' ? 'Theo người' : 'Theo tháng'
       },
-      {
+      priceItemWifi !== '0' && {
         motelId: motelId,
         nameService: 'Dịch vụ wifi/internet',
         price: parseFloat(50000),
-        chargetype: priceItemWifi === '0' ? 'Miễn phí' : priceItemWifi === '1' ? 'Theo người' : 'Theo tháng'
+        chargetype: priceItemWifi === '1' ? 'Theo người' : 'Theo tháng'
       }
-    ]
+    ].filter(Boolean) // Lọc bỏ các dịch vụ không sử dụng (giá trị "0")
 
     try {
       // Gửi từng dịch vụ đến API
       for (const service of services) {
         await createSerivceMotel(service)
       }
+      console.log('All services created successfully.')
       // Xử lý phản hồi từ API (như thông báo thành công)
     } catch (error) {
       console.error('Error creating services:', error)
@@ -224,6 +208,8 @@ const ModelCreateHome = ({ username, MotelId }) => {
     if (username) {
       try {
         const response = await getAllTypeRoom()
+        console.log(response)
+
         setTyperooms(response.result)
       } catch (error) {
         console.log(error)
@@ -282,6 +268,7 @@ const ModelCreateHome = ({ username, MotelId }) => {
                 })
                 setMotel(response)
                 handleCreateServices(response.data.result.motelId)
+
                 setTimeout(() => {
                   window.location.reload()
                 }, 1400)

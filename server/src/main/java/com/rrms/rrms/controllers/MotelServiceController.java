@@ -1,8 +1,5 @@
 package com.rrms.rrms.controllers;
 
-import com.rrms.rrms.dto.request.MotelServiceUpdateRequest;
-import com.rrms.rrms.exceptions.AppException;
-import io.swagger.v3.oas.annotations.Operation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +12,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.rrms.rrms.dto.request.MotelServiceRequest;
+import com.rrms.rrms.dto.request.MotelServiceUpdateRequest;
 import com.rrms.rrms.dto.response.MotelServiceResponse;
+import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.services.IMotelServiceService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -95,5 +95,4 @@ public class MotelServiceController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-
 }

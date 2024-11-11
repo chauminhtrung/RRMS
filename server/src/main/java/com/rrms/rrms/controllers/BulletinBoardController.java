@@ -1,20 +1,24 @@
 package com.rrms.rrms.controllers;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import com.rrms.rrms.dto.request.BulletinBoardRequest;
 import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.dto.response.BulletinBoardResponse;
 import com.rrms.rrms.dto.response.BulletinBoardTableResponse;
+import com.rrms.rrms.models.BulletinBoard;
 import com.rrms.rrms.services.IBulletinBoard;
+
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -50,7 +54,8 @@ public class BulletinBoardController {
 
     @Operation(summary = "Create bulletin board")
     @PostMapping("")
-    public ApiResponse<BulletinBoardResponse> createBulletinBoard(@RequestBody BulletinBoardRequest bulletinBoardRequest) {
+    public ApiResponse<BulletinBoardResponse> createBulletinBoard(
+            @RequestBody BulletinBoardRequest bulletinBoardRequest) {
         BulletinBoardResponse bulletinBoardResponse = bulletinBoardService.createBulletinBoard(bulletinBoardRequest);
         log.info("Create bulletin board successfully");
         return ApiResponse.<BulletinBoardResponse>builder()
@@ -70,5 +75,23 @@ public class BulletinBoardController {
                 .code(HttpStatus.OK.value())
                 .result(bulletinBoardResponse)
                 .build();
+    }
+
+    @GetMapping("/inactive")
+    public ResponseEntity<List<BulletinBoardResponse>> getBulletinBoard() {
+        List<BulletinBoardResponse> inactiveBulletinBoards = bulletinBoardService.getBulletinBoard();
+        return ResponseEntity.ok(inactiveBulletinBoards);
+    }
+
+    @PutMapping("/{id}/approve")
+    public ResponseEntity<BulletinBoard> approveBulletinBoard(@PathVariable UUID id) {
+        BulletinBoard updatedBoard = bulletinBoardService.approveBulletinBoard(id);
+        return ResponseEntity.ok(updatedBoard);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBulletinBoard(@PathVariable UUID id) {
+        bulletinBoardService.deleteBulletinBoard(id);
+        return ResponseEntity.noContent().build();
     }
 }

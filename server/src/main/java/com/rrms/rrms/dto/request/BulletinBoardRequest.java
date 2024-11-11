@@ -1,13 +1,14 @@
 package com.rrms.rrms.dto.request;
 
+import java.util.Date;
+import java.util.List;
+
 import com.rrms.rrms.models.BulletinBoardImage;
 import com.rrms.rrms.models.BulletinBoardRule;
 import com.rrms.rrms.models.BulletinBoards_RentalAm;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Date;
-import java.util.List;
 
 @Data
 @NoArgsConstructor

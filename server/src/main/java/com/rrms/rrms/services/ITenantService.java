@@ -1,4 +1,3 @@
 package com.rrms.rrms.services;
 
-public interface ITenantService {
-}
+public interface ITenantService {}

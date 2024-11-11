@@ -73,15 +73,15 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
     columnHeaderVertAlign: 'bottom', 
   }
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;
+  
   const fetchMotelServices = async (id) => {  
     
     try {  
       const response = await axios.get(`${env.API_URL}/motels/get-motel-id?id=${id}`, {  
         headers: {  
-          Authorization: `Bearer ${token}` // Nhớ thay thế token bằng giá trị đúng  
+          Authorization: `Bearer ${token}` 
         }  
       });  
-      // Kiểm tra chính xác kết quả từ API.  
       if (response.data && response.data.code === 200 && response.data.result && response.data.result.motelServices) {  
         setMotelServices(response.data.result.motelServices);  
       } else {  
@@ -151,7 +151,11 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
             text: 'Đã xảy ra lỗi khi xóa dịch vụ. Vui lòng thử lại sau.',  
         });  
     }  
-};
+  };
+
+  const refreshServices = () => {  
+    fetchMotelServices(motelId);  
+  };  
 
   // Gọi hàm fetchMotelServices mỗi khi motelId thay đổi  
   useEffect(() => {  
@@ -201,6 +205,7 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
                   </span>
                 </button>
               </div>  
+              
               <div className="list-price-item">  
                 {motelServices.length > 0 ? (  // Duyệt nếu list tồn tại và có dịch vụ  
                   motelServices.map((service) => (  
@@ -299,7 +304,8 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
         </div>
       </div>
       {/* Modal them dich vu  */}
-      <ModelCreateService motelId={motelId} />
+      <ModelCreateService motelId={motelId} refreshServices={refreshServices} /> 
+
       {isUpdateModalOpen && (
       <ModelUpdateService
         serviceData={selectedService}
