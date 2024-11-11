@@ -4,11 +4,13 @@ import { env } from '~/configs/environment';
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
+import Swal from 'sweetalert2'
 import {
   Typography,
 } from '@mui/material'
+import { green } from '@mui/material/colors';
 
-const AdminManagerBoard = ({ setIsAdmin }) => {
+const AdminManagerBoard = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
 
   const [bulletinBoards, setBulletinBoards] = useState([]);
   const userData = JSON.parse(sessionStorage.getItem('user')); // Lấy dữ liệu người dùng từ session storage
@@ -19,7 +21,11 @@ const AdminManagerBoard = ({ setIsAdmin }) => {
   const fetchBulletinBoards = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${env.API_URL}/bulletin-board/inactive`);
+      const response = await axios.get(`${env.API_URL}/bulletin-board/inactive`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Thêm token vào header
+        },
+      });
       setBulletinBoards(response.data);
       console.log(response.data);
     } catch (err) {
@@ -53,38 +59,62 @@ const AdminManagerBoard = ({ setIsAdmin }) => {
   }
 
   const handleApprove = async (boardId) => {
-    try {
 
-      await axios.put(`${env.API_URL}/bulletin-board/${boardId}/approve`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Thêm token vào header
-        },
-      });
-      alert('Bảng tin đã được xét duyệt!');
-      // Cập nhật lại danh sách bảng tin sau khi xét duyệt
-      const updatedBoards = bulletinBoards.map(board =>
-        board.bulletinBoardId === boardId ? { ...board, isActive: true } : board
-      );
-      setBulletinBoards(updatedBoards);
-      await fetchBulletinBoards();
+    const { isConfirmed } = await Swal.fire({
+      title: 'Xác nhận',
+      text: "Bạn có muốn duyệt bảng tin này không?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Duyệt',
+      cancelButtonText: 'Hủy'
+    });
+    if (isConfirmed) {
+      try {
 
-    } catch (error) {
-      console.error('Lỗi khi xét duyệt:', error);
+        await axios.put(`${env.API_URL}/bulletin-board/${boardId}/approve`, {}, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Thêm token vào header
+          },
+        });
+        Swal.fire('Thành công!', 'Bảng tin đã được xét duyệt!', 'success');
+        // Cập nhật lại danh sách bảng tin sau khi xét duyệt
+        const updatedBoards = bulletinBoards.map(board =>
+          board.bulletinBoardId === boardId ? { ...board, isActive: true } : board
+        );
+        setBulletinBoards(updatedBoards);
+        await fetchBulletinBoards();
+
+      } catch (error) {
+        console.error('Lỗi khi xét duyệt:', error);
+      }
     }
   };
 
   const handleDelete = async (boardId) => {
+    const { isConfirmed } = await Swal.fire({
+      title: 'Xác nhận',
+      text: "Bạn có muốn hủy bảng tin này không?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Oke',
+      cancelButtonText: 'Hủy'
+    });
 
-    try {
-      await axios.delete(`${env.API_URL}/bulletin-board/${boardId}`);
-      alert('Bảng tin đã bị xóa!');
-      // Cập nhật lại danh sách bảng tin sau khi xóa
-      setBulletinBoards(bulletinBoards.filter(board => board.bulletinBoardId !== boardId));
-      await fetchBulletinBoards();
-    } catch (error) {
-      console.error('Lỗi khi xóa:', error);
+    if (isConfirmed) {
+      try {
+        await axios.delete(`${env.API_URL}/bulletin-board/${boardId}`);
+        Swal.fire('Thành công!', 'Bảng tin đã bị hủy!', 'success');
+
+        // Cập nhật lại danh sách bảng tin sau khi xóa
+        setBulletinBoards(bulletinBoards.filter(board => board.bulletinBoardId !== boardId));
+        await fetchBulletinBoards();
+      } catch (error) {
+        console.error('Lỗi khi xóa:', error);
+        Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa bảng tin.', 'error');
+      }
+    } else {
+      Swal.fire('Hành động đã bị hủy.');
     }
-
   };
   return (
     <>
@@ -201,6 +231,19 @@ const AdminManagerBoard = ({ setIsAdmin }) => {
                       </Typography>
                     </div>
                   </div>
+                  <Typography sx={{ fontSize: '13px' }} className='mt-2'>
+                    <div className="d-inline-flex  focus-ring py-1 px-2 text-decoration-none border rounded-2 me-2">
+                      <b>Tiền điện: </b> {formatCurrency(board.electricityPrice)}/klw
+                    </div>
+                    <div className="d-inline-flex  focus-ring py-1 px-2 text-decoration-none border rounded-2">
+                      <b>Tiền nước: </b> {formatCurrency(board.waterPrice)}/m3
+                    </div>
+                  </Typography>
+                  <Typography sx={{ fontSize: '13px' }} className='mt-2'>
+                    <div>
+                      <i>Tiền cọc: </i><span style={{ color: 'green', fontSize: '14px' }}>{formatCurrency(board.waterPrice)}</span>
+                    </div>
+                  </Typography>
                 </div>
                 <div className="col-lg-4 text-center mt-2">
                   <img

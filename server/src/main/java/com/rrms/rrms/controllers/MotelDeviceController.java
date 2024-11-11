@@ -1,9 +1,15 @@
 package com.rrms.rrms.controllers;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
 import com.rrms.rrms.dto.request.MotelDeviceRequest;
 import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.dto.response.MotelDeviceResponse;
-import com.rrms.rrms.dto.response.MotelResponse;
 import com.rrms.rrms.services.servicesImp.MotelDeviceService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,14 +18,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
-
 
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -30,7 +28,6 @@ import java.util.UUID;
 @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
 public class MotelDeviceController {
     MotelDeviceService motelDeviceService;
-
 
     @Operation(summary = "get All moteldevice by motelid")
     @GetMapping("/{motelId}")

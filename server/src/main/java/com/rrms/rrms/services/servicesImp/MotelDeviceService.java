@@ -1,14 +1,15 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.request.MotelDeviceRequest;
 import com.rrms.rrms.dto.response.MotelDeviceResponse;
 import com.rrms.rrms.enums.Unit;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.rrms.rrms.mapper.MotelDeviceMapper;
 import com.rrms.rrms.models.Motel;
 import com.rrms.rrms.models.MotelDevice;
@@ -16,24 +17,23 @@ import com.rrms.rrms.repositories.MotelDeviceRepository;
 import com.rrms.rrms.repositories.MotelRepository;
 import com.rrms.rrms.services.IMotelDeviceService;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 @Service
 public class MotelDeviceService implements IMotelDeviceService {
     @Autowired
     private MotelDeviceRepository motelDeviceRepository;
+
     @Autowired
     private MotelDeviceMapper mapper;
+
     @Autowired
     MotelRepository motelRepository;
-
-
 
     @Override
     public List<MotelDeviceResponse> getAllMotelDevicesByMotel(UUID motelId) {
         Motel find = motelRepository.findById(motelId).orElse(null);
-        return motelDeviceRepository.findAllByMotel(find).stream().map(mapper::motelDeviceToMotelDeviceResponse).toList();
+        return motelDeviceRepository.findAllByMotel(find).stream()
+                .map(mapper::motelDeviceToMotelDeviceResponse)
+                .toList();
     }
 
     @Override
