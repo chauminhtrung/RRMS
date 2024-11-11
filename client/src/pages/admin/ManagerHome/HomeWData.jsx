@@ -40,9 +40,6 @@ const HomeWData = ({ Motel }) => {
       // Kiểm tra xem nhấn ngoài menu hay không
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setShowMenu(null)
-        console.log('ngoai menu')
-      } else {
-        console.log('set null ')
       }
     }
 

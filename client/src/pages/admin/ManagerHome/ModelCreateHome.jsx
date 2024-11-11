@@ -56,7 +56,7 @@ const ModelCreateHome = ({ username, MotelId }) => {
 
   useEffect(() => {
     if (MotelId && MotelId !== 'Create') {
-      fetchDataWhenEdit(MotelId);
+      fetchDataWhenEdit(MotelId)
     } else {
       setMotel({
         typeRoom: '',
@@ -69,10 +69,9 @@ const ModelCreateHome = ({ username, MotelId }) => {
         maxperson: 1,
         invoicedate: '',
         paymentdeadline: ''
-      });
+      })
     }
-  }, [MotelId]);
-  
+  }, [MotelId])
 
   //tao service
   const handleCreateServices = async (id) => {
@@ -282,8 +281,6 @@ const ModelCreateHome = ({ username, MotelId }) => {
                   text: 'Motel created successfully!'
                 })
                 setMotel(response)
-                console.log(response);
-                
                 handleCreateServices(response.data.result.motelId)
                 setTimeout(() => {
                   window.location.reload()
