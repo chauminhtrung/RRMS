@@ -99,7 +99,7 @@ public class AccountService implements IAccountService {
         account.setUsername(request.getUsername());
         account.setPhone(request.getPhone());
         account.setPassword(encodedPassword);
-
+        account.setEmail(request.getEmail());
         // Lưu tài khoản vào cơ sở dữ liệu
         Account savedAccount = accountRepository.save(account);
 
@@ -184,7 +184,7 @@ public class AccountService implements IAccountService {
 
                     // Tạo đối tượng Auth mới cho mỗi vai trò và liên kết tài khoản với vai trò
                     Auth auth = new Auth();
-                    auth.setAccount(savedAccount); // Sử dụng savedAccount
+                    auth.setAccount(savedAccount);
                     auth.setRole(role);
 
                     // Thêm quyền vào danh sách authorities của tài khoản
