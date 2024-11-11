@@ -13,13 +13,15 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MotelDeviceResponse {
-    private UUID motel_device_id;
-    private MotelResponse motel;
-    private String deviceName;
-    private Double value;
-    private Double valueInput;
-    private int totalQuantity;
-    private int totalUsing;
-    private int totalNull;
-    private String supplier;
+    UUID motel_device_id;
+    MotelResponse motel;
+    String deviceName;
+    String icon;
+    Double value;
+    Double valueInput;
+    int totalQuantity;
+    int totalUsing;
+    int totalNull;
+    String supplier;
+    String unit;
 }

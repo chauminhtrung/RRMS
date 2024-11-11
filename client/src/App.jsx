@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-
 import Detail from './pages/Detail/Detail'
 import Home from './pages/Homes/Home'
 import Chart from './pages/Charts/Chart'
@@ -52,7 +51,7 @@ import i18n from './i18n/i18n'
 function App() {
   const [username, setUsername] = useState('')
   const [avatar, setAvatar] = useState('')
-  const [token, setToken] = useState(null)
+  const [token, setToken] = useState(null);
   //lay thong tin tro cua tk account truyen xuong cho trang chu tro
   const [isAdmin, setIsAdmin] = useState(false)
   const [isNavAdmin, setIsNavAdmin] = useState(true)
