@@ -92,7 +92,7 @@ public class DB {
                     rooms.add(room);
 
                     // Tạo và lưu dịch vụ Room
-                    createServicesRoom(faker, roomServices, room, serviceRepository);
+                    //createServicesRoom(faker, roomServices, room, serviceRepository);
 
                     // Tạo hình ảnh cho phòng
                     createRoomImages(faker, roomImages, room);
@@ -437,32 +437,32 @@ public class DB {
         return room;
     }
 
-    private void createServicesRoom(
-            Faker faker, List<RoomService> roomServices, Room room, ServiceRepository serviceRepository) {
-
-        List<Service> ListService = serviceRepository.findAll();
-
-        roomServices.add(RoomService.builder()
-                .room(room)
-                .service(ListService.get(0))
-                .chargetype("theo tháng")
-                .build());
-        roomServices.add(RoomService.builder()
-                .room(room)
-                .service(ListService.get(1))
-                .chargetype("theo đồng hồ")
-                .build());
-        roomServices.add(RoomService.builder()
-                .room(room)
-                .service(ListService.get(2))
-                .chargetype("theo đồng hồ")
-                .build());
-        roomServices.add(RoomService.builder()
-                .room(room)
-                .service(ListService.get(3))
-                .chargetype("theo người")
-                .build());
-    }
+//    private void createServicesRoom(
+//            Faker faker, List<RoomService> roomServices, Room room, ServiceRepository serviceRepository) {
+//
+//        List<Service> ListService = serviceRepository.findAll();
+//
+//        roomServices.add(RoomService.builder()
+//                .room(room)
+//                .service(ListService.get(0))
+//                .quantity(1)
+//                .build());
+//        roomServices.add(RoomService.builder()
+//                .room(room)
+//                .service(ListService.get(1))
+//                .quantity(1)
+//                .build());
+//        roomServices.add(RoomService.builder()
+//                .room(room)
+//                .service(ListService.get(2))
+//                .quantity(1)
+//                .build());
+//        roomServices.add(RoomService.builder()
+//                .room(room)
+//                .service(ListService.get(3))
+//                .quantity(1)
+//                .build());
+//    }
 
     private void createServices(Faker faker, ServiceRepository serviceRepository) {
         Service service1 = Service.builder()

@@ -3,6 +3,8 @@ package com.rrms.rrms.models;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -56,5 +58,6 @@ public class Motel {
 
     // de xoa motell xoa luon dich vu
     @OneToMany(mappedBy = "motel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference(value = "motel-service") // Đặt tên cho tham chiếu quản lý
     private List<MotelService> motelServices;
 }

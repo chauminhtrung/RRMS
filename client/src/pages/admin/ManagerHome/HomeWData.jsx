@@ -5,19 +5,28 @@ import { useParams } from 'react-router-dom'
 import 'react-tabulator/lib/styles.css' // required styles
 import 'react-tabulator/lib/css/tabulator.min.css' // theme
 import { ReactTabulator } from 'react-tabulator'
-import axios from 'axios';
-import { env } from '~/configs/environment';
+import axios from 'axios'
+import { env } from '~/configs/environment'
 import Swal from 'sweetalert2'
-import { getRoomByMotelId, createRoom } from '~/apis/roomAPI'
-
+import {
+  getRoomByMotelId,
+  createRoom,
+  createRoomService,
+  getServiceRoombyRoomId,
+  getRoomById,
+  DeleteRoomServiceByid,
+  DeleteRoomByid,
+  updateSerivceRoom
+} from '~/apis/roomAPI'
+import { Modal } from 'bootstrap' // Import Bootstrap Modal API
 const HomeWData = ({ Motel }) => {
   const { motelId } = useParams()
   const [rooms, setRooms] = useState([])
-  const [motelServices, setMotelServices] = useState([]); 
+  const [motelServices, setMotelServices] = useState([])
   const [showMenu, setShowMenu] = useState(null) // Trạng thái của menu hiện tại
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 })
   const menuRef = useRef(null) // Tham chiếu đến menu
-  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   const [formData, setFormData] = useState({
     motelId: motelId ? motelId : Motel[0].motelId,
     deposit: null,
@@ -32,11 +41,12 @@ const HomeWData = ({ Motel }) => {
     group: 'a',
     area: '',
     price: '',
-    invoiceDate: '',
-    prioritize: '',
+    invoiceDate: 1,
+    prioritize: 'Tất cả',
     selectedServices: [] // Thêm trường này để lưu các dịch vụ đã chọn
-  });
-  
+  })
+  const [roomSerivces, setRoomSerivces] = useState([])
+  const [room, setRoom] = useState()
 
   // Hàm xử lý nhấn ngoài menu
   useEffect(() => {
@@ -56,6 +66,45 @@ const HomeWData = ({ Motel }) => {
   useEffect(() => {
     fetchRooms()
   }, [])
+
+  // Hàm xử lý thay đổi trạng thái checkbox
+  const handleCheckboxChange = (serviceId) => {
+    // Cập nhật lại trạng thái của `isSelected` cho dịch vụ với `serviceId`
+    setRoomSerivces((prevState) =>
+      prevState.map((service) =>
+        service.service.motelServiceId === serviceId
+          ? { ...service, isSelected: !service.isSelected } // Đảo ngược trạng thái
+          : service
+      )
+    )
+  }
+
+  //ham lay dich vu phong
+  const fetchDataServiceRooms = async (id) => {
+    try {
+      const response = await getServiceRoombyRoomId(id)
+      // Thêm trường `isSelected` vào từng dịch vụ
+      const updatedServices = response.map((service) => ({
+        ...service,
+        isSelected: true // Mặc định là chọn (checked)
+      }))
+
+      // Cập nhật lại trạng thái với danh sách dịch vụ đã có trường `isSelected`
+      setRoomSerivces(updatedServices)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  //ham lay phong
+  const fetchDataRooms = async (id) => {
+    try {
+      const response = await getRoomById(id)
+      setRoom(response)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -80,35 +129,122 @@ const HomeWData = ({ Motel }) => {
     }
   }
 
+  //tao phong
   const handleSubmit = (e) => {
-    e.preventDefault();
-    const form = document.getElementById('add-room-form');
+    e.preventDefault()
+    const form = document.getElementById('add-room-form')
+
     if (!form.checkValidity()) {
-      form.classList.add('was-validated');
+      form.classList.add('was-validated')
     } else {
       createRoom({ ...formData, selectedServices: formData.selectedServices })
         .then((response) => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Thông báo',
-            text: 'Room created successfully!'
-          });
-          setFormData(response);
-          setTimeout(() => {
-            window.location.reload();
-          }, 1400);
+          const roomId = response.roomId // Lấy roomId từ phản hồi
+
+          // Cập nhật lại selectedServices với roomId và lưu từng dịch vụ
+          const saveSelectedServices = formData.selectedServices.map((service) =>
+            createRoomService({
+              roomId: roomId, // Gán roomId vào từng dịch vụ
+              serviceId: service.serviceId,
+              quantity: service.quantity
+            })
+          )
+          // Chờ tất cả các lời gọi `createRoomService` hoàn thành
+          Promise.all(saveSelectedServices)
+            .then(() => {
+              Swal.fire({
+                icon: 'success',
+                title: 'Thông báo',
+                text: 'Room created successfully!'
+              })
+              fetchRooms()
+              // Sử dụng Bootstrap Modal API để đóng modal
+              const modalElement = document.getElementById('addRoom')
+              const modal = Modal.getInstance(modalElement) // Lấy instance của modal
+              modal.hide() // Đóng modal
+              // Xóa toàn bộ backdrop (nếu có)
+              // Xóa tất cả các backdrop (nếu có nhiều backdrop)
+              const backdropElements = document.querySelectorAll('.modal-backdrop')
+              backdropElements.forEach((backdrop) => backdrop.remove()) // Xóa tất cả các backdrop
+            })
+            .catch((error) => {
+              Swal.fire({
+                icon: 'error',
+                title: 'Thông báo',
+                text: 'Error saving services for the room.'
+              })
+              console.error('Error creating services:', error)
+            })
         })
         .catch((error) => {
           Swal.fire({
             icon: 'error',
             title: 'Thông báo',
             text: 'Error Room motel.'
-          });
-          console.error('Error creating motel:', error);
-        });
+          })
+          console.error('Error creating motel:', error)
+        })
     }
-  };
-  
+  }
+
+  //sua dich vu phong handleSubmitServiceRoom
+  // Hàm để xử lý khi người dùng nhấn nút "Áp dụng dịch vụ"
+  const handleApplyServices = async () => {
+    // Lọc các dịch vụ không được chọn
+    const servicesToDelete = roomSerivces.filter((service) => !service.isSelected)
+    const servicesToUpdate = roomSerivces.filter((service) => service.isSelected)
+
+    // Gọi API để xóa các dịch vụ không được chọn
+    for (const service of servicesToDelete) {
+      console.log(service)
+      DeleteRoomServiceByid(service.roomServiceId)
+    }
+
+    for (const service of servicesToUpdate) {
+      let SerivceUpdate = {
+        roomServiceId: service.roomServiceId,
+        roomId: service.room.roomId,
+        serviceId: service.service.motelServiceId,
+        quantity: service.quantity
+      }
+      console.log(SerivceUpdate)
+
+      updateSerivceRoom(service.roomServiceId, SerivceUpdate)
+      console.log('Service can update', service)
+    }
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Thông báo',
+      text: 'All Serivce Room updated successfully!'
+    })
+    const modalElement = document.getElementById('priceItemSelect')
+    const modal = Modal.getInstance(modalElement) // Lấy instance của modal
+    modal.hide() // Đóng modal
+    // Xóa toàn bộ backdrop (nếu có)
+    // Xóa tất cả các backdrop (nếu có nhiều backdrop)
+    const backdropElements = document.querySelectorAll('.modal-backdrop')
+    backdropElements.forEach((backdrop) => backdrop.remove()) // Xóa tất cả các backdrop
+    fetchDataServiceRooms(room.roomId)
+  }
+
+  //ham input khi ng dung thay doi so luong
+  const handleInputChangeService = (e, motelServiceId) => {
+    const newQuantity = e.target.value // Lấy giá trị mới từ input
+    // Cập nhật lại trạng thái của roomSerivces
+    const updatedRoomServices = roomSerivces.map((roomService) => {
+      if (roomService.service.motelServiceId === motelServiceId) {
+        return {
+          ...roomService,
+          quantity: newQuantity // Cập nhật số lượng
+        }
+      }
+      return roomService
+    })
+
+    // Cập nhật lại state hoặc dữ liệu của bạn
+    setRoomSerivces(updatedRoomServices) // Giả sử setRoomServices là hàm setState của bạn
+  }
 
   const fetchRooms = async () => {
     //neu co motelId tren URL
@@ -129,43 +265,61 @@ const HomeWData = ({ Motel }) => {
     }
   }
 
-  const fetchMotelServices = async (id) => {  
-    try {  
-      const response = await axios.get(`${env.API_URL}/motels/get-motel-id?id=${id}`, {  
-        headers: {  
-          Authorization: `Bearer ${token}` 
-        }  
-      });  
-      if (response.data && response.data.code === 200 && response.data.result && response.data.result.motelServices) {  
-        setMotelServices(response.data.result.motelServices);  
-      } else {  
-        setMotelServices([]);  
-      }  
-    } catch (error) {  
-      console.error('Error fetching motel services:', error);  
-      setMotelServices([]);  
-    }  
-  };
+  const fetchMotelServices = async (id) => {
+    try {
+      const response = await axios.get(`${env.API_URL}/motels/get-motel-id?id=${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      if (response.data && response.data.code === 200 && response.data.result && response.data.result.motelServices) {
+        setMotelServices(response.data.result.motelServices)
+      } else {
+        setMotelServices([])
+      }
+    } catch (error) {
+      console.error('Error fetching motel services:', error)
+      setMotelServices([])
+    }
+  }
 
-  const handleServiceSelection = (serviceId) => {
+  const handleServiceSelection = (serviceId, isChecked) => {
     setFormData((prevData) => {
-      const selectedServices = prevData.selectedServices.includes(serviceId)
-        ? prevData.selectedServices.filter((id) => id !== serviceId)
-        : [...prevData.selectedServices, serviceId];
-  
+      let updatedServices = [...prevData.selectedServices]
+
+      if (isChecked) {
+        // Nếu checkbox được chọn, thêm dịch vụ vào mảng với quantity = 1
+        updatedServices.push({ serviceId, quantity: 1 })
+      } else {
+        // Nếu checkbox bị bỏ chọn, xóa dịch vụ khỏi mảng
+        updatedServices = updatedServices.filter((service) => service.serviceId !== serviceId)
+      }
+
       return {
         ...prevData,
-        selectedServices
-      };
-    });
-  };
-  
+        selectedServices: updatedServices
+      }
+    })
+  }
+
+  const handleQuantityChange = (serviceId, quantity) => {
+    setFormData((prevData) => {
+      const updatedServices = prevData.selectedServices.map((service) =>
+        service.serviceId === serviceId ? { ...service, quantity } : service
+      )
+
+      return {
+        ...prevData,
+        selectedServices: updatedServices
+      }
+    })
+  }
   // Call this function when opening the "Add Room" modal
   useEffect(() => {
     if (motelId) {
-      fetchMotelServices(motelId);
+      fetchMotelServices(motelId)
     }
-  }, [motelId]);
+  }, [motelId])
 
   // Định dạng tiền tệ Việt Nam (VND)
   const currencyFormatter = (cell) => {
@@ -254,11 +408,8 @@ const HomeWData = ({ Motel }) => {
   }
 
   const handleActionClick = (e, roomId) => {
-    const { clientX, clientY } = e
     e.stopPropagation() // Ngừng sự kiện click để không bị bắt bởi sự kiện ngoài
     // In ra tọa độ
-    console.log('Tọa độ click:', { clientX, clientY })
-
     // Sử dụng getBoundingClientRect để lấy vị trí chính xác của phần tử được nhấn
     const targetElement = e.currentTarget
     const rect = targetElement.getBoundingClientRect()
@@ -271,13 +422,57 @@ const HomeWData = ({ Motel }) => {
     setShowMenu(roomId) // Hiển thị menu cho hàng với roomId tương ứng
   }
 
+  //delete Room
+  const handleDeleteRoom = async (RoomId) => {
+    const result = await Swal.fire({
+      title: 'Bạn có chắc muốn xóa không?',
+      text: 'Bạn sẽ không thể hoàn tác hành động này!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Xóa'
+    })
+
+    if (result.isConfirmed) {
+      try {
+        console.log(RoomId)
+        // Call your API to delete the room here
+        await DeleteRoomByid(RoomId) // Uncomment when API is implemented
+        Swal.fire('Đã xóa!', 'Room đã được xóa.', 'success')
+
+        // Sau khi xóa thành công, cập nhật lại danh sách template hoặc làm mới trang
+        fetchRooms()
+      } catch (error) {
+        console.error('Lỗi khi xóa Room:', error)
+        Swal.fire('Lỗi', 'Không thể xóa Room.', 'error')
+      }
+    }
+  }
+
   // Hàm xử lý khi người dùng chọn một mục trong menu
   const handleItemClick = (label) => {
     if (label === 'Đóng menu') {
       setShowMenu(null) // Đóng menu
-    }
-    if (label === 'Chi tiết phòng') {
-      window.open(`/quanlytro/${motelId}/Chi-tiet-phong/${showMenu}`, '_blank') // Thay "https://example.com" bằng URL bạn muốn mở
+    } else if (label === 'Chi tiết phòng') {
+      window.open(`/quanlytro/${motelId}/Chi-tiet-phong/${showMenu}`, '_blank')
+    } else if (label === 'Cài đặt dịch vụ') {
+      fetchDataServiceRooms(showMenu)
+      fetchDataRooms(showMenu)
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'Xóa phòng') {
+      setShowMenu(null) // Đóng menu
+      handleDeleteRoom(showMenu) // Gọi hàm xóa phòng
+    } else if (label === 'Thiết lập tài sản') {
+      setShowMenu(null) // Đóng menu
+      //ham o duoi dung de xac dinh dang nhan vao phong nao
+      fetchDataRooms(showMenu)
+      //ham thuan fetch tai san cua phong o duoi (giong trung o cai dat dich vu)
+    } else if (label === 'Ghi chú') {
+      setShowMenu(null) // Đóng menu
+      //ham o duoi dung de xac dinh dang nhan vao phong nao
+      fetchDataRooms(showMenu)
+      //ham thuan fetch tai san cua phong o duoi (giong trung o cai dat dich vu)
     } else {
       alert(`Action: ${label} on room ${showMenu}`)
     }
@@ -1006,9 +1201,21 @@ const HomeWData = ({ Motel }) => {
                   {menuItems.map((item) => (
                     <div
                       key={item.id}
+                      // Gắn ref vào tag này
                       className={`tabulator-menu-item ${item.textClass || ''}`}
                       onClick={() => handleItemClick(item.label)} // Đóng menu khi chọn item
-                    >
+                      {...(item.label === 'Cài đặt dịch vụ' && {
+                        'data-bs-toggle': 'modal',
+                        'data-bs-target': '#priceItemSelect'
+                      })}
+                      {...(item.label === 'Thiết lập tài sản' && {
+                        'data-bs-toggle': 'modal',
+                        'data-bs-target': '#assetSelect'
+                      })}
+                      {...(item.label === 'Ghi chú' && {
+                        'data-bs-toggle': 'modal',
+                        'data-bs-target': '#noteModal'
+                      })}>
                       {item.icon && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -1300,7 +1507,6 @@ const HomeWData = ({ Motel }) => {
                     </div>
                   </div>
 
-
                   <div className="price-items-checkout-layout">
                     {motelServices.length > 0 ? (
                       motelServices.map((service) => (
@@ -1309,30 +1515,33 @@ const HomeWData = ({ Motel }) => {
                             <input
                               type="checkbox"
                               className="form-check-input"
-                              checked={formData.selectedServices.includes(service.motelServiceId)}
-                              onChange={() => handleServiceSelection(service.motelServiceId)}
+                              checked={formData.selectedServices.some(
+                                (item) => item.serviceId === service.motelServiceId
+                              )}
+                              onChange={(e) => handleServiceSelection(service.motelServiceId, e.target.checked)}
                             />
                             <label htmlFor={`service_${service.motelServiceId}`}>
                               <b>{service.nameService}</b>
                               <p>
-                                Giá: <b>{service.price}đ</b> / {service.chargetype}
+                                Giá: <b>{service.price.toLocaleString('vi-VN')}đ</b> / {service.chargetype}
                               </p>
                             </label>
                           </div>
-                          
+
                           <div className="item-value">
                             <div className="input-group">
                               <input
                                 className="form-control"
                                 min="0"
                                 type="number"
-                                placeholder="Nhập giá trị"
-                                name="price_items"
+                                name="quantity"
+                                value={
+                                  formData.selectedServices.find((item) => item.serviceId === service.motelServiceId)
+                                    ?.quantity || 0
+                                }
+                                onChange={(e) => handleQuantityChange(service.motelServiceId, parseInt(e.target.value))}
                               />
-                              <label
-                                style={{ fontSize: '12px' }}
-                                className="input-group-text"
-                              >
+                              <label style={{ fontSize: '12px' }} className="input-group-text">
                                 {service.chargetype}
                               </label>
                             </div>
@@ -1343,8 +1552,6 @@ const HomeWData = ({ Motel }) => {
                       <p>Chưa có dịch vụ nào.</p>
                     )}
                   </div>
-
-
                 </div>
               </form>
             </div>
@@ -1387,6 +1594,352 @@ const HomeWData = ({ Motel }) => {
           </div>
         </div>
       </div>
+      {/* Modal hiển thị khi showServiceModal */}
+      {roomSerivces && room ? (
+        <div
+          className="modal fade"
+          data-bs-backdrop="static"
+          id="priceItemSelect"
+          tabIndex={-1}
+          aria-labelledby="addRoomLabel"
+          aria-modal="true"
+          role="dialog"
+          style={{ display: 'none', paddingLeft: '0px' }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <div
+                  style={{
+                    marginRight: '15px',
+                    outline: '0',
+                    boxShadow: '0 0 0 .25rem rgb(112 175 237 / 16%)',
+                    opacity: '1',
+                    borderRadius: '100%',
+                    width: '36px',
+                    height: '36px',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    display: 'flex',
+                    backgroundColor: 'rgb(111 171 232)'
+                  }}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-inbox">
+                    <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
+                    <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+                  </svg>
+                </div>
+                <h5 className="modal-title" id="addRoomLabel">
+                  Chỉnh sửa dịch vụ sử dụng
+                  <span className="room-name"> &quot;{room.name}&quot;</span>
+                </h5>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                  {' '}
+                </button>
+              </div>
+              <div className="modal-body">
+                <form method="POST" className="needs-validation" id="price-item-selec-form" noValidate>
+                  <div className="list-price-item-render price-items-checkout-layout">
+                    {roomSerivces.map((roomSerivce, index) => (
+                      <div className="item" key={index}>
+                        <div className="item-check-name">
+                          <input
+                            className="form-check-input"
+                            type="hidden"
+                            value="23660"
+                            name="price_items[23660][id]"
+                          />
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            id={`check_price_item_select_${roomSerivce.service.motelServiceId}`}
+                            checked={roomSerivce.isSelected}
+                            onChange={() => handleCheckboxChange(roomSerivce.service.motelServiceId)} // Cập nhật trạng thái khi thay đổi checkbox
+                            name={`price_items[${roomSerivce.service.id}][is_selected]`}
+                          />
+                          <label htmlFor="check_price_item_select_23660">
+                            <b>{roomSerivce.service.nameService}</b>{' '}
+                            <p>
+                              Giá: <b>{roomSerivce.service.price.toLocaleString('vi-VN')}&nbsp;₫</b> /{' '}
+                              {roomSerivce.service.chargetype}
+                            </p>{' '}
+                          </label>
+                        </div>
+                        <div className="item-value">
+                          <div className="input-group">
+                            <input
+                              className="form-control"
+                              min="0"
+                              type="number"
+                              id={`price_item_select_${roomSerivce.service.motelServiceId}`}
+                              placeholder="Nhập giá trị"
+                              value={roomSerivce.quantity}
+                              name="price_items[23660][value][]"
+                              onChange={(e) => handleInputChangeService(e, roomSerivce.service.motelServiceId)} // Xử lý thay đổi input
+                            />{' '}
+                            <label className="input-group-text" htmlFor="bill_price_item_23660">
+                              {roomSerivce.service.chargetype}
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </form>
+              </div>
+              <div className="modal-footer modal-footer--sticky">
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-x">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                  Đóng
+                </button>
+                <button type="button" id="submit-room" className="btn btn-primary" onClick={handleApplyServices}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-plus">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  Áp dụng dịch vụ
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <></>
+      )}
+      {/* Modal hiển thị tai san */}
+      {/* them 1 dieu kien nhu da co tai san r moi duoc mo*/}
+      {room ? (
+        <div
+          className="modal fade"
+          data-bs-backdrop="static"
+          id="assetSelect"
+          tabIndex={-1}
+          aria-labelledby="assetSelect"
+          aria-modal="true"
+          role="dialog"
+          style={{ display: 'none', paddingLeft: '0px' }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <div
+                  style={{
+                    marginRight: '15px',
+                    outline: '0',
+                    boxShadow: '0 0 0 .25rem rgb(112 175 237 / 16%)',
+                    opacity: '1',
+                    borderRadius: '100%',
+                    width: '36px',
+                    height: '36px',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    display: 'flex',
+                    backgroundColor: 'rgb(111 171 232)'
+                  }}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-inbox">
+                    <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
+                    <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+                  </svg>
+                </div>
+                <h5 className="modal-title" id="addRoomLabel">
+                  Thông tin tài sản
+                  <span className="room-name"> &quot;{room.name}&quot;</span>
+                </h5>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                  {' '}
+                </button>
+              </div>
+              <div className="modal-body">{/* lam trong form de hon  */}</div>
+              <div className="modal-footer modal-footer--sticky">
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-x">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                  Đóng
+                </button>
+                {/* su kien onclick khi submit form cua thuan (nho thay doi)  */}
+                <button type="button" id="submit-room" className="btn btn-primary" onClick={handleApplyServices}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-plus">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  Áp dụng tài sản
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <> </>
+      )}
+      {/* Modal hiển thị ghi chu */}
+      {/* them 1 dieu kien nhu da co tai san r moi duoc mo*/}
+      {room ? (
+        <div
+          className="modal fade"
+          data-bs-backdrop="static"
+          id="noteModal"
+          tabIndex={-1}
+          aria-labelledby="noteModal"
+          aria-modal="true"
+          role="dialog"
+          style={{ display: 'none', paddingLeft: '0px' }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <div
+                  style={{
+                    marginRight: '15px',
+                    outline: '0',
+                    boxShadow: '0 0 0 .25rem rgb(112 175 237 / 16%)',
+                    opacity: '1',
+                    borderRadius: '100%',
+                    width: '36px',
+                    height: '36px',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    display: 'flex',
+                    backgroundColor: 'rgb(111 171 232)'
+                  }}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-inbox">
+                    <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
+                    <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+                  </svg>
+                </div>
+                <h5 className="modal-title" id="addRoomLabel">
+                  Ghi chú
+                  <span className="room-name"> &quot;{room.name}&quot;</span>
+                </h5>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                  {' '}
+                </button>
+              </div>
+              <div className="modal-body">
+                <form method="POST" className="needs-validation" id="note-form" noValidate>
+                  <textarea
+                    type="text"
+                    rows="10"
+                    style={{ minHeight: '100px', height: '100px' }}
+                    className="form-control"
+                    name="note"
+                    id="input_note"
+                    placeholder="Ghi chú"
+                    spellCheck="false"></textarea>
+                </form>
+              </div>
+              <div className="modal-footer modal-footer--sticky">
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-x">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                  Đóng
+                </button>
+                <button type="button" id="submit-room" className="btn btn-primary" onClick={handleApplyServices}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-plus">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  Lưu
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <> </>
+      )}
     </div>
   )
 }

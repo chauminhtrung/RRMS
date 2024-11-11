@@ -6,20 +6,20 @@ import java.util.UUID;
 
 import com.rrms.rrms.models.Service;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 public class RoomServiceResponse implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    UUID roomServiceId;
-    Service service;
+    private UUID roomServiceId;
+    private UUID roomId; // Thay vì đối tượng Room, chỉ trả về ID
+    private UUID serviceId; // Thay vì đối tượng Service, chỉ trả về ID
+    private Integer quantity;
 }

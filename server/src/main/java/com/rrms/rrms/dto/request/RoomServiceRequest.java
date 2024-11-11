@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoomServiceRequest {
-    UUID roomId;
-    UUID serviceId;
-    String chargetype;
+    private UUID roomId;
+    private UUID serviceId;
+    private Integer quantity;
 }

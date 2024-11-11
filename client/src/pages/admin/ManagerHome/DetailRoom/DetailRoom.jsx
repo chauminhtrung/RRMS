@@ -1,24 +1,37 @@
 import { useEffect, useState } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
-import { getRoomById } from '~/apis/roomAPI'
+import { getRoomById, getServiceRoombyRoomId } from '~/apis/roomAPI'
 import { useParams } from 'react-router-dom'
 
 const DetailRoom = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
   const { roomId } = useParams()
   const [room, setRoom] = useState({})
-
+  const [roomSerivces, setRoomSerivces] = useState([])
   useEffect(() => {
-    fetchDataRoom()
+    fetchDataRoom(roomId)
+    fetchDataRoomServices(roomId)
     setIsAdmin(true)
   }, [])
 
   //ham lay all typeroom
-  const fetchDataRoom = async () => {
-    if (roomId) {
+  const fetchDataRoom = async (Id) => {
+    if (Id) {
       try {
-        const response = await getRoomById(roomId)
-        console.log('du lieu phong o day', response)
+        const response = await getRoomById(Id)
         setRoom(response)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
+  const fetchDataRoomServices = async (Id) => {
+    if (Id) {
+      try {
+        const response = await getServiceRoombyRoomId(Id)
+        console.log(response)
+
+        setRoomSerivces(response)
       } catch (error) {
         console.log(error)
       }
@@ -147,6 +160,35 @@ const DetailRoom = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }
                           <b>Đơn giá</b>
                         </td>
                       </tr>
+                      {roomSerivces ? (
+                        roomSerivces.map((roomservice, key) => (
+                          <tr key={key}>
+                            <td>
+                              <b>{roomservice.service.nameService}</b>
+                            </td>
+                            <td>
+                              <b>
+                                {roomservice.quantity}{' '}
+                                {roomservice.service.chargetype === 'Theo người'
+                                  ? 'người'
+                                  : roomservice.service.chargetype}{' '}
+                              </b>
+                            </td>
+                            <td>Cố định</td>
+
+                            <td>
+                              <b>
+                                {roomservice.service.price.toLocaleString('vi-VN')}đ/
+                                {roomservice.service.chargetype === 'Theo người'
+                                  ? 'người'
+                                  : roomservice.service.chargetype}
+                              </b>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <></>
+                      )}
                     </tbody>
                   </table>
                 </div>
