@@ -15,11 +15,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("${cors.allowed-origins}")
     private String[] allowedOrigins;
 
-    @PostConstruct
-    public void init() {
-        System.out.println("CORS allowed origins: " + Arrays.toString(allowedOrigins));
-    }
-
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")

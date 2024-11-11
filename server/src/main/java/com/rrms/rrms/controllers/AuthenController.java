@@ -1,10 +1,14 @@
 package com.rrms.rrms.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,30 +46,45 @@ public class AuthenController {
 
     private IMailService mailService;
 
-    @GetMapping("/login/oauth2")
-    public ResponseEntity<?> loginWithGoogle(@AuthenticationPrincipal OAuth2User oauthUser) throws ParseException {
-        // Lấy thông tin người dùng từ Google
+    @GetMapping("/login/error")
+    public ResponseEntity<String> loginFailure() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Đăng nhập thất bại!");
+    }
+
+    @GetMapping("/login/success")
+    public void loginSuccess(HttpServletRequest request, HttpServletResponse response, @AuthenticationPrincipal OAuth2User oauthUser)
+        throws IOException, ParseException {
         String email = oauthUser.getAttribute("email");
         String name = oauthUser.getAttribute("name");
 
-        // Kiểm tra tài khoản có tồn tại hay không
-        Optional<Account> accountOptional = accountService.findByEmail(email);
-        if (accountOptional.isPresent()) {
-            Account account = accountOptional.get();
-            // Tạo token JWT nếu tài khoản đã tồn tại
-            String token = authorityService.generateToken(account);
+        log.info("Google login success: email={}, name={}", email, name);
 
-            // Trả về thông tin đăng nhập thành công cùng token
-            return ResponseEntity.ok(LoginResponse.builder()
-                    .authenticated(true)
-                    .username(name)
-                    .email(email)
-                    .token(token)
-                    .build());
+        // Kiểm tra nếu tài khoản đã tồn tại trong cơ sở dữ liệu, nếu không thì tạo tài khoản mới.
+        Optional<Account> accountOptional = accountService.findByEmail(email);
+        Account account;
+        if (accountOptional.isPresent()) {
+            account = accountOptional.get();
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Tài khoản không tồn tại.");
+            RegisterRequest registerRequest = RegisterRequest.builder()
+                .username(name)
+                .phone("")
+                .email(email)
+                .password(UUID.randomUUID().toString())
+                .userType("CUSTOMER")
+                .build();
+            account = accountService.register(registerRequest);
+            log.info("New account created: {}", account);
         }
+
+        // Tạo JWT token
+        String token = authorityService.generateToken(account);
+        log.info("Generated JWT token: {}", token);
+
+        // Chuyển hướng người dùng đến frontend với token trong URL
+        String redirectUrl = "http://localhost:5173/oauth2/redirect?token=" + token;
+        response.sendRedirect(redirectUrl);
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {

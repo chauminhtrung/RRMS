@@ -11,3 +11,6 @@ export const env = {
   FPT_AI_KEY: import.meta.env.VITE_FPT_AI_KEY,
   FPT_APP_CODE: import.meta.env.VITE_FPT_APP_CODE,
 }
+export const redirectUri = "http://localhost:5173/oauth2/redirect";
+export const apiBaseUrl = "http://localhost:8080";
+
