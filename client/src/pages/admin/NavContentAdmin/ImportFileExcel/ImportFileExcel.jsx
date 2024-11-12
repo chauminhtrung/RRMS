@@ -8,6 +8,7 @@ import FileDownloadModal from './FileDownloadModal'
 import { useEffect } from 'react'
 import { createRoom, getRoomByMotelId } from '~/apis/roomAPI'
 import { useParams } from 'react-router-dom'
+import * as Papa from 'papaparse'
 
 const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
   const fileInputRef = useRef(null) // Tạo reference cho input file
@@ -24,7 +25,7 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
   }
 
   const columns = [
-    { title: 'STT', field: 'STT', hozAlign: 'center', minWidth: 40, editor: 'input' }, // Đặt minWidth để tránh cột bị quá nhỏ
+    { title: 'STT', field: 'STT', hozAlign: 'center', minWidth: 40, editor: 'input' },
     { title: 'Tên phòng', field: 'name', hozAlign: 'center', minWidth: 40, editor: 'input' },
     { title: 'Ưu tiên', field: 'prioritize', hozAlign: 'center', minWidth: 40, editor: 'input' },
     { title: 'Trạng thái', field: 'status', hozAlign: 'center', minWidth: 40, editor: 'input' }
@@ -138,40 +139,35 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
   const handleFileExcelUpload = (file) => {
     if (file) {
       const reader = new FileReader()
-      // Đọc file khi đã chọn
       reader.onload = (e) => {
         const binaryStr = e.target.result
-        // Đọc dữ liệu từ file và chuyển sang sheet
         const wb = XLSX.read(binaryStr, { type: 'binary' })
 
-        // Giả sử file có một sheet đầu tiên
         const ws = wb.Sheets[wb.SheetNames[0]]
 
-        // Chuyển sheet thành JSON với header ở dòng đầu tiên
         const data = XLSX.utils.sheet_to_json(ws, { header: 1 })
 
-        // Xử lý dữ liệu để có định dạng như yêu cầu
         const formattedData = data.slice(1).map((row) => {
           return {
             motelId: motelId,
-            group: row[0] || '', // Cột 1
-            name: row[1] || '', // Cột 2
-            price: row[2] || '', // Cột 3
-            prioritize: row[3] || '', // Cột 4
-            area: row[4] || '', // Cột 5
-            deposit: row[5] || '', // Cột 6
-            debt: row[6] || '', // Cột 7
-            countTenant: row[7] || '', // Cột 8
-            invoiceDate: row[8] || '', // Cột 9
-            paymentCircle: row[9] || '', // Cột 10
-            moveInDate: row[10] || '', // Cột 11
-            contractDuration: row[11] || '', // Cột 12
-            status: row[12] || '', // Cột 13
-            finance: row[13] || '' // Cột 14
+            group: row[0] || '',
+            name: row[1] || '',
+            price: row[2] || '',
+            prioritize: row[3] || '',
+            area: row[4] || '',
+            deposit: row[5] || '',
+            debt: row[6] || '',
+            countTenant: row[7] || '',
+            invoiceDate: row[8] || '',
+            paymentCircle: row[9] || '',
+            moveInDate: row[10] || '',
+            contractDuration: row[11] || '',
+            status: row[12] || '',
+            finance: row[13] || ''
           }
         })
 
-        setJsonData(formattedData) // Lưu dữ liệu vào state
+        setJsonData(formattedData)
       }
 
       reader.readAsBinaryString(file)
@@ -184,17 +180,50 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
       reader.onload = (event) => {
         try {
           const jsonData = JSON.parse(event.target.result)
-          // Thêm trường motelId vào từng phần tử trong mảng JSON
           const formattedData = jsonData.map((item) => ({
             ...item,
             motelId: motelId
           }))
-          setJsonData(formattedData) // Cập nhật state với dữ liệu đã chỉnh sửa
+          setJsonData(formattedData)
         } catch (error) {
           console.error('Error parsing JSON file:', error)
         }
       }
-      reader.readAsText(file) // Đọc tệp dưới dạng văn bản
+      reader.readAsText(file)
+    }
+  }
+
+  const handleFileCsvUpload = (file) => {
+    if (file) {
+      const reader = new FileReader()
+
+      reader.onload = (event) => {
+        const csvData = event.target.result
+        Papa.parse(csvData, {
+          header: true,
+          skipEmptyLines: true,
+          complete: (results) => {
+            console.log(results.data)
+
+            try {
+              const data = results.data
+              const formattedData = data.map((item) => ({
+                ...item,
+                motelId: motelId
+              }))
+              setJsonData(formattedData)
+            } catch (error) {
+              console.error('Error processing CSV file:', error)
+            }
+          },
+          error: (error) => {
+            console.error('Error parsing CSV file:', error)
+          }
+        })
+      }
+
+      // Đọc file
+      reader.readAsText(file)
     }
   }
 
@@ -205,11 +234,10 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
       if (fileName.endsWith('.json')) {
         handleFileJsonUpload(file)
       } else if (fileName.endsWith('.csv')) {
-        console.log('Đây là file CSV')
+        handleFileCsvUpload(file)
       } else if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls')) {
         handleFileExcelUpload(file)
       }
-      // Reset input file sau khi chọn file
       event.target.value = null
     }
   }
@@ -218,19 +246,18 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     jsonData.map((item, index) => {
       try {
         createRoom(item).then((res) => {})
-        refrestRooms()
       } catch (error) {
         console.log('Lỗi tại dòng', index + 2)
       }
     })
+    refrestRooms()
   }
 
-  //Lắng nghe sự thay đổi của jsonData và log nó
   useEffect(() => {
     if (jsonData?.length > 0) {
       console.log('Dữ liệu JSON đã được cập nhật:', jsonData)
     }
-  }, [jsonData]) // Khi jsonData thay đổi, useEffect sẽ được gọi
+  }, [jsonData])
 
   useEffect(() => {
     getRoomByMotelId(motelId).then((res) => {
@@ -293,7 +320,7 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
         <div className="header-item">
           <h4 className="title-item">
             Nhập liệu từ file
-            <i className="des">Chuẩn bị file json, xlsx &quot;Tải file&quot; để nhập liệu</i>
+            <i className="des">Chuẩn bị file json, xlsx hoặc csv &quot;Tải file&quot; để nhập liệu</i>
           </h4>
           <div className="d-flex">
             <div className="d-flex" style={{ marginLeft: '40px' }}>
@@ -301,7 +328,7 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
                 onClick={handleOpen}
                 id="download-excel"
                 style={{ marginLeft: '10px' }}
-                className="ml-2 btn btn-primary">
+                className="ml-2 btn btn-success">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -331,7 +358,7 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
               <button
                 id="download-excel"
                 style={{ marginLeft: '10px' }}
-                className="ml-2 btn btn-primary"
+                className="ml-2 btn btn-warning"
                 onClick={handleFileInputClick} // Khi click, mở hộp thoại tải file
               >
                 <svg

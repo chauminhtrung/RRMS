@@ -1,2 +1,6 @@
-Nhóm,Tên phòng,Giá phòng,Ưu tiên,Diện tích,Mức cọc,Số tiền cọc đã thu,Số lượng thành viên,Chu kỳ đóng tiền,Ngày vào ở,Ngày hợp đồng,Ngày kết thúc hợp đồng,Trạng thái,Tài chính,
-
+group,name,price,prioritize,area,deposit,debt,countTenant,invoiceDate,paymentCircle,moveInDate,contractDuration,status,finance
+Nhóm A,Phòng 101,5000000,Cao,25,1000000,500000,2,30,2,2024-01-01,2024-12-31,true,Hoàn thành
+Nhóm B,Phòng 102,4500000,Thấp,20,800000,400000,1,30,3,2024-02-01,2024-11-30,true,Chưa thanh toán
+Nhóm C,Phòng 201,6000000,Trung bình,30,1200000,600000,3,30,5,2024-03-01,2025-02-28,false,Hoàn thành
+Nhóm D,Phòng 202,7000000,Cao,35,1500000,750000,4,30,6,2024-04-01,2025-03-31,true,Chưa thanh toán
+Nhóm E,Phòng 301,8000000,Thấp,40,2000000,1000000,5,30,8,2024-05-01,2025-04-30,false,Hoàn thành
