@@ -19,7 +19,7 @@ const ImageUpload = () => {
 
   const handleUpload = () => {
     if (image) {
-      const storageRef = ref(storage, `images/${imageName}`)
+      const storageRef = ref(storage, `images/${imageName}`) //thư mục chưa ảnh
       const uploadTask = uploadBytesResumable(storageRef, image)
 
       uploadTask.on(

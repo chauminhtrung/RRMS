@@ -1,14 +1,12 @@
 package com.rrms.rrms.models;
 
-import java.util.UUID;
-
-import jakarta.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.UUID;
 
 @Entity
 @Data
@@ -19,11 +17,11 @@ import lombok.NoArgsConstructor;
 public class BulletinBoardImage {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID bulletinBoardImageId;
 
     @ManyToOne
-    @JoinColumn(name = "bulletin_board_id", nullable = false)
+    @JoinColumn(name = "bulletin_board_id")
     private BulletinBoard bulletinBoard;
 
     @Column(columnDefinition = "VARCHAR(255)")

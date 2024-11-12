@@ -1,5 +1,6 @@
 import {
   Box,
+  Chip,
   IconButton,
   Paper,
   Table,
@@ -18,6 +19,10 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
 import LastPageIcon from '@mui/icons-material/LastPage'
 import { useState } from 'react'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { deleteBulletinBoard } from '~/apis/bulletinBoardAPI'
+import Swal from 'sweetalert2'
 function TablePaginationActions(props) {
   const theme = useTheme()
   const { count, page, rowsPerPage, onPageChange } = props
@@ -69,7 +74,7 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired
 }
 
-const PostRoomTable = ({ rows }) => {
+const PostRoomTable = ({ rows, handleOpen, setBulletinBoardId, refreshBulletinBoards }) => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0
@@ -85,8 +90,14 @@ const PostRoomTable = ({ rows }) => {
 
   return (
     <>
-      <TableContainer component={Paper}>
-        <Table stickyHeader sx={{ minWidth: 500 }} aria-label="custom pagination table">
+      <TableContainer
+        component={Paper}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: 'calc(100vh - 200px)'
+        }}>
+        <Table stickyHeader sx={{ minWidth: 500 }}>
           <TableHead>
             <TableRow>
               <TableCell>STT</TableCell>
@@ -95,20 +106,85 @@ const PostRoomTable = ({ rows }) => {
               <TableCell>Địa chỉ</TableCell>
               <TableCell>Giá phòng</TableCell>
               <TableCell>Diện tích</TableCell>
+              <TableCell>Tình trạng</TableCell>
               <TableCell>Trạng thái</TableCell>
+              <TableCell>Hành động</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
+          <TableBody
+            sx={{
+              flex: 1,
+              overflow: 'auto'
+            }}>
             {(rowsPerPage > 0 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : rows).map(
               (row, i) => (
                 <TableRow hover key={row.name}>
                   <TableCell>{i + 1}</TableCell>
-                  <TableCell>{row.nameRoom}</TableCell>
+                  <TableCell
+                    sx={{
+                      maxWidth: 150,
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}>
+                    {row.nameRoom}
+                  </TableCell>
                   <TableCell>{row.typeRoom}</TableCell>
-                  <TableCell>{row.address}</TableCell>
+                  <TableCell
+                    sx={{
+                      maxWidth: 150,
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}>
+                    {row.address}
+                  </TableCell>
                   <TableCell>{row.price}</TableCell>
                   <TableCell>{row.roomArea}</TableCell>
-                  <TableCell>{row.available ? 'Đang cho thuê' : 'Đã cho thuê'}</TableCell>
+                  <TableCell>
+                    <Chip
+                      variant="outlined"
+                      sx={{ color: row.available ? '#7bed9f' : '#ff6b81' }}
+                      label={row.available ? 'Đang cho thuê' : 'Đã cho thuê'}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Chip
+                      variant="outlined"
+                      sx={{ color: row.isActive ? '#7bed9f' : '#ff6b81' }}
+                      label={row.isActive ? 'Đã phê duyệt' : 'Chưa phê duyệt'}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Box>
+                      <EditIcon
+                        sx={{ cursor: 'pointer', color: '#1e90ff' }}
+                        onClick={() => {
+                          handleOpen()
+                          setBulletinBoardId(row.bulletinBoardId)
+                        }}
+                      />
+                      <DeleteIcon
+                        sx={{ cursor: 'pointer', color: '#ff4757' }}
+                        onClick={() => {
+                          Swal.fire({
+                            icon: 'warning',
+                            title: 'Thông báo',
+                            text: 'Bạn có muốn xóa tin này?',
+                            showCancelButton: true,
+                            confirmButtonText: 'Xóa',
+                            cancelButtonText: 'Hủy',
+                            reverseButtons: true
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              deleteBulletinBoard(row.bulletinBoardId)
+                              refreshBulletinBoards()
+                            }
+                          })
+                        }}
+                      />
+                    </Box>
+                  </TableCell>
                 </TableRow>
               )
             )}
@@ -129,12 +205,16 @@ const PostRoomTable = ({ rows }) => {
                 slotProps={{
                   select: {
                     inputProps: {
-                      'aria-label': 'rows per page'
-                    },
-                    native: true
+                      'aria-label': 'rows per page2'
+                    }
                   }
                 }}
+                labelRowsPerPage="Số dòng mỗi trang:"
                 sx={{
+                  '&.MuiTablePagination-root': {
+                    overflow: 'visible',
+                    border: 'none'
+                  },
                   '& .MuiTablePagination-selectLabel': {
                     mb: 0
                   },

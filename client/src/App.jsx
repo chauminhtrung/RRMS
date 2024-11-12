@@ -41,7 +41,7 @@ import IncomeSummary from './pages/admin/NavContentAdmin/IncomeSummary/IncomeSum
 import Zalo_history from './pages/admin/NavContentAdmin/Zalo_history'
 import SettingMotel from './pages/admin/NavContentAdmin/SettingMotel/SettingMotel'
 import ImageComparison from './pages/AI/ImageComparison'
-import ImportFileExcel from './pages/admin/NavContentAdmin/ImportFileExcel'
+import ImportFileExcel from './pages/admin/NavContentAdmin/ImportFileExcel/ImportFileExcel'
 import MotelSetting from './pages/admin/MotelSettings/MotelSetting'
 import PassportRecognition from './pages/AI/PassportRecognition'
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage.jsx'
@@ -112,10 +112,7 @@ function App() {
             path="/login"
             element={<Login setUsername={setUsername} setAvatar={setAvatar} setIsAdmin={setIsAdmin} />}
           />
-          <Route
-            path="/google-redirect"
-            element={<GoogleLoginRedirect setUsername={setUsername} setAvatar={setAvatar} />}
-          />
+          <Route path="/oauth2/redirect" element={<GoogleLoginRedirect />} />
           <Route path="/forgot-password" element={<Forgot_Password setIsAdmin={setIsAdmin} />} />
           <Route path="/chart" element={<Chart setIsAdmin={setIsAdmin} />} />
           <Route path="/audio" element={<Audio setIsAdmin={setIsAdmin} />} />

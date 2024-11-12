@@ -8,6 +8,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import './Login.css'
 import { env } from '~/configs/environment'
+import { GOOGLE_AUTH_URL } from '~/apis/oauth2'
 // import ValidCaptcha from '~/components/ValidCaptcha'
 // import { toast } from 'react-toastify'
 
@@ -103,6 +104,9 @@ const Login = ({ setUsername, setAvatar }) => {
       }
     }
   }
+  const handleGoogleLogin = () => {
+    window.location.href = GOOGLE_AUTH_URL // Chuyển hướng người dùng đến Google OAuth2
+  }
 
   return (
     <div
@@ -173,20 +177,21 @@ const Login = ({ setUsername, setAvatar }) => {
                   </div>
                   <hr className="my-2" />
                   <div className="mt-2 text-center">
-                    <a href="#" className="btn-social btn-social-outline btn-facebook">
+                    <button type="button" className="btn-social btn-social-outline btn-facebook">
                       <FacebookIcon />
-                    </a>
-                    <a
-                      href={`${env.API_URL}/authen/login/oauth2`}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleGoogleLogin}
                       className="btn-social btn-social-outline btn-googleplus">
                       <GoogleIcon />
-                    </a>
-                    <a href="#" className="btn-social btn-social-outline btn-twitter">
+                    </button>
+                    <button type="button" className="btn-social btn-social-outline btn-twitter">
                       <TwitterIcon />
-                    </a>
-                    <a href="#" className="btn-social btn-social-outline btn-Instagram">
+                    </button>
+                    <button type="button" className="btn-social btn-social-outline btn-Instagram">
                       <InstagramIcon />
-                    </a>
+                    </button>
                   </div>
                   <div className="form-group d-flex justify-content-between">
                     <Link className="btn btn-link" to="/register">

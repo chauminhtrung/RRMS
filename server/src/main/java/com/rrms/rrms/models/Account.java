@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import com.rrms.rrms.enums.Gender;
@@ -54,6 +55,7 @@ public class Account {
     private int commissionRate;
 
     @OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
+    @JsonManagedReference(value = "Auth-Acc") // Đặt tên cho tham chiếu quản lý
     List<Auth> authorities;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

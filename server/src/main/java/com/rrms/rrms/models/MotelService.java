@@ -2,6 +2,7 @@ package com.rrms.rrms.models;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ public class MotelService {
 
     @ManyToOne
     @JoinColumn(name = "motelId")
+    @JsonBackReference(value = "motel-service") // Đặt tên cho tham chiếu ngược
     private Motel motel;
 
     @Column(columnDefinition = "NVARCHAR(255)")

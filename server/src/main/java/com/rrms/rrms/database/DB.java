@@ -1,22 +1,20 @@
 package com.rrms.rrms.database;
 
-import java.time.LocalDate;
-import java.util.*;
-
+import com.rrms.rrms.enums.Gender;
+import com.rrms.rrms.enums.Roles;
+import com.rrms.rrms.models.*;
+import com.rrms.rrms.repositories.*;
+import com.rrms.rrms.services.ISearchService;
+import lombok.extern.slf4j.Slf4j;
+import net.datafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rrms.rrms.enums.Gender;
-import com.rrms.rrms.enums.Roles;
-import com.rrms.rrms.models.*;
-import com.rrms.rrms.repositories.*;
-import com.rrms.rrms.services.ISearchService;
-
-import lombok.extern.slf4j.Slf4j;
-import net.datafaker.Faker;
+import java.time.LocalDate;
+import java.util.*;
 
 @Configuration
 @Slf4j
@@ -93,7 +91,7 @@ public class DB {
                     rooms.add(room);
 
                     // Tạo và lưu dịch vụ Room
-                    createServicesRoom(faker, roomServices, room, serviceRepository);
+                    //createServicesRoom(faker, roomServices, room, serviceRepository);
 
                     // Tạo hình ảnh cho phòng
                     createRoomImages(faker, roomImages, room);
@@ -433,39 +431,39 @@ public class DB {
                         // ngày
                         // trước
                         new Date() // Ngày hiện tại
-                        );
+                );
         room.setDeposit(faker.number().randomDouble(2, 500000, 5000000));
         room.setMotel(motel);
         room.setPrice(faker.number().randomDouble(2, 500000, 5000000));
         return room;
     }
 
-    private void createServicesRoom(
-            Faker faker, List<RoomService> roomServices, Room room, ServiceRepository serviceRepository) {
-
-        List<Service> ListService = serviceRepository.findAll();
-
-        roomServices.add(RoomService.builder()
-                .room(room)
-                .service(ListService.get(0))
-                .chargetype("theo tháng")
-                .build());
-        roomServices.add(RoomService.builder()
-                .room(room)
-                .service(ListService.get(1))
-                .chargetype("theo đồng hồ")
-                .build());
-        roomServices.add(RoomService.builder()
-                .room(room)
-                .service(ListService.get(2))
-                .chargetype("theo đồng hồ")
-                .build());
-        roomServices.add(RoomService.builder()
-                .room(room)
-                .service(ListService.get(3))
-                .chargetype("theo người")
-                .build());
-    }
+//    private void createServicesRoom(
+//            Faker faker, List<RoomService> roomServices, Room room, ServiceRepository serviceRepository) {
+//
+//        List<Service> ListService = serviceRepository.findAll();
+//
+//        roomServices.add(RoomService.builder()
+//                .room(room)
+//                .service(ListService.get(0))
+//                .quantity(1)
+//                .build());
+//        roomServices.add(RoomService.builder()
+//                .room(room)
+//                .service(ListService.get(1))
+//                .quantity(1)
+//                .build());
+//        roomServices.add(RoomService.builder()
+//                .room(room)
+//                .service(ListService.get(2))
+//                .quantity(1)
+//                .build());
+//        roomServices.add(RoomService.builder()
+//                .room(room)
+//                .service(ListService.get(3))
+//                .quantity(1)
+//                .build());
+//    }
 
     private void createServices(Faker faker, ServiceRepository serviceRepository) {
         Service service1 = Service.builder()
@@ -502,7 +500,7 @@ public class DB {
             BulletinBoards_RentalAmRepository bulletinBoards_RentalAmRepository) {
 
         for (int i = 0; i < 5; i++) {
-            String name = faker.address().city();
+            String name = faker.options().option("Có gác lửng", "Có chỗ giữ xe", "Toilet riêng", "Riêng với chủ", "Có wifi", "Có camera an ninh", "Được nuôi thú cưng", "Có ban công", "Có nơi sinh hoạt");
 
             Optional<RentalAmenities> existingRentalAmenities = rentalAmenitiesRepository.findByName(name);
 
@@ -521,7 +519,14 @@ public class DB {
             BulletinBoard bulletinBoard) {
         for (int j = 0; j < 5; j++) {
             Rule rule = ruleRepository.save(
-                    Rule.builder().ruleName(faker.address().city()).build());
+                    Rule.builder().ruleName(faker.options()
+                            .option(
+                                    "Nhà trọ có giờ giấc không về quá khuya",
+                                    "Đóng tiền trọ đúng ngày",
+                                    "Không hút thuốc, say xỉn",
+                                    "Không chứa chấp tội phạm",
+                                    "Không hát karaoke, nhậu nhặt ảnh hưởng tới phòng kế bên",
+                                    "Cư xử văn hóa")).build());
             bulletinBoardRuleList = new ArrayList<>();
             bulletinBoardRuleList.add(bulletinBoardRuleRepository.save(BulletinBoardRule.builder()
                     .rule(rule)
@@ -554,7 +559,18 @@ public class DB {
         BulletinBoard bulletinBoard = new BulletinBoard();
         bulletinBoard.setAccount(accountRepository.findByUsername("admin").get());
         bulletinBoard.setTitle(faker.address().city());
-        bulletinBoard.setRentalCategory(faker.options().option("Phòng đặt", "Phòng khách"));
+        bulletinBoard.setRentalCategory(faker.options()
+                .option(
+                        "Nhà trọ",
+                        "Chung cư mini",
+                        "Ký túc xá",
+                        "Căn hộ dịch vụ",
+                        "Phòng trọ có gác lửng",
+                        "Nhà nguyên căn",
+                        "Biệt thự",
+                        "Homestay",
+                        "Căn hộ studio",
+                        "Officetel"));
         bulletinBoard.setDescription(faker.lorem().paragraph());
         bulletinBoard.setRentPrice(faker.number().randomDouble(2, 500000, 5000000));
         bulletinBoard.setPromotionalRentalPrice(faker.number().randomDouble(2, 500000, 5000000));
@@ -572,8 +588,8 @@ public class DB {
                         "7-10 người ở",
                         "Không giới hạn"));
         bulletinBoard.setMoveInDate(new Date());
-        bulletinBoard.setOpeningHours(faker.options().option("4 sáng", "5 sáng", "6 sáng"));
-        bulletinBoard.setCloseHours(faker.options().option("22 tối", "23 tối", "24 tối"));
+        bulletinBoard.setOpeningHours(faker.options().option("4 SA", "5 SA", "6 SA"));
+        bulletinBoard.setCloseHours(faker.options().option("22 CH", "23 CH", "24 SA"));
         bulletinBoard.setAddress(faker.address().fullAddress());
         bulletinBoard.setLongitude(faker.number().randomDouble(2, 50, 50000));
         bulletinBoard.setLatitude(faker.number().randomDouble(2, 50, 5000));

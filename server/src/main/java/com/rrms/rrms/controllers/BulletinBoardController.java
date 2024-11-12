@@ -1,24 +1,22 @@
 package com.rrms.rrms.controllers;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.rrms.rrms.dto.request.BulletinBoardRequest;
 import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.dto.response.BulletinBoardResponse;
 import com.rrms.rrms.dto.response.BulletinBoardTableResponse;
 import com.rrms.rrms.models.BulletinBoard;
 import com.rrms.rrms.services.IBulletinBoard;
-
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -29,7 +27,7 @@ public class BulletinBoardController {
 
     IBulletinBoard bulletinBoardService;
 
-    @RequestMapping("")
+    @GetMapping("")
     public ApiResponse<List<BulletinBoardResponse>> getAllBulletinBoards() {
         List<BulletinBoardResponse> bulletinBoardResponse = bulletinBoardService.getAllBulletinBoards();
         log.info("Get all bulletin board successfully");
@@ -60,6 +58,21 @@ public class BulletinBoardController {
         log.info("Create bulletin board successfully");
         return ApiResponse.<BulletinBoardResponse>builder()
                 .message("Create bulletin board successfully")
+                .code(HttpStatus.CREATED.value())
+                .result(bulletinBoardResponse)
+                .build();
+    }
+
+    @Operation(summary = "Update bulletin board")
+    @PutMapping("/{id}")
+    public ApiResponse<BulletinBoardResponse> updateBulletinBoard(
+            @RequestBody BulletinBoardRequest bulletinBoardRequest, @PathVariable("id") UUID id) {
+        log.info("Update bulletin board with id: {}", id);
+        BulletinBoardResponse bulletinBoardResponse =
+                bulletinBoardService.updateBulletinBoard(id, bulletinBoardRequest);
+        log.info("Update bulletin board successfully");
+        return ApiResponse.<BulletinBoardResponse>builder()
+                .message("Update bulletin board successfully")
                 .code(HttpStatus.OK.value())
                 .result(bulletinBoardResponse)
                 .build();
@@ -92,6 +105,7 @@ public class BulletinBoardController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBulletinBoard(@PathVariable UUID id) {
         bulletinBoardService.deleteBulletinBoard(id);
+        log.info("Delete bulletin board with id: " + id);
         return ResponseEntity.noContent().build();
     }
 }
