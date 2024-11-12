@@ -1,26 +1,18 @@
-package com.rrms.rrms.dto.response;
-
-import java.io.Serial;
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.UUID;
+package com.rrms.rrms.dto.request;
 
 import com.rrms.rrms.enums.Gender;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TenantResponse implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
-    UUID tenantId;
+public class TenantRequest {
+    String avata;
     String fullname;
     String phone;
     String cccd;
@@ -34,8 +26,6 @@ public class TenantResponse implements Serializable {
     String frontPhoto;
     String backPhoto;
     Boolean role;
-    String relationship;
-    Boolean type_of_tenant;
     Boolean temporaryResidence;
     Boolean informationVerify;
 }

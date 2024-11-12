@@ -1,16 +1,11 @@
 package com.rrms.rrms.models;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import com.rrms.rrms.enums.Gender;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,14 +19,20 @@ import lombok.NoArgsConstructor;
 @Table(name = "tenant")
 public class Tenant {
     @Id
+    @GeneratedValue(generator = "UUID")
+    private UUID tenantId;
+
+    @Column(columnDefinition = "VARCHAR(255)")
+    private String avata;
+
     @Column(columnDefinition = "VARCHAR(255)", nullable = false)
     private String fullname;
 
     @Column(columnDefinition = "VARCHAR(12)")
     private String phone;
 
-    @Column(columnDefinition = "VARCHAR(20)", unique = true)
-    private String CCCD;
+    @Column(name = "CCCD", columnDefinition = "VARCHAR(20)", unique = true)
+    private String cccd;
 
     @Column(columnDefinition = "VARCHAR(255)")
     private String email;
@@ -49,24 +50,31 @@ public class Tenant {
     @Column(columnDefinition = "VARCHAR(255)")
     private String job;
 
-    @Column(columnDefinition = "DATE")
-    private LocalDate License_date;
+    @Column(name = "license_date", columnDefinition = "DATE")
+    private LocalDate licenseDate;
 
-    @Column(columnDefinition = "VARCHAR(255)")
-    private String Place_of_license;
+    @Column(name = "place_of_license", columnDefinition = "VARCHAR(255)")
+    private String placeOfLicense;
 
-    @Column(columnDefinition = "VARCHAR(255)")
-    private String front_photo;
+    @Column(name = "front_photo", columnDefinition = "VARCHAR(255)")
+    private String frontPhoto;
 
-    @Column(columnDefinition = "VARCHAR(255)")
-    private String back_photo;
+    @Column(name = "back_photo", columnDefinition = "VARCHAR(255)")
+    private String backPhoto;
 
     @Column(columnDefinition = "BOOLEAN")
     private Boolean role;
 
-    @Column(columnDefinition = "BOOLEAN")
-    private Boolean temporary_residence;
+    @Column(name = "relationship",columnDefinition = "VARCHAR(255)")
+    private String relationship;
 
-    @Column(columnDefinition = "BOOLEAN")
-    private Boolean information_verify;
+    @Column(name = "Type_of_tenant", columnDefinition = "VARCHAR(255)")
+    private String  type_of_tenant;
+
+
+    @Column(name = "temporary_residence", columnDefinition = "BOOLEAN")
+    private Boolean temporaryResidence;
+
+    @Column(name = "information_verify", columnDefinition = "BOOLEAN")
+    private Boolean informationVerify;
 }
