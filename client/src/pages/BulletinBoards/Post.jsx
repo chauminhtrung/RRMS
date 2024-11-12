@@ -11,27 +11,46 @@ const Post = () => {
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const [rows, setRows] = useState([])
+  const [bulletinBoardId, setBulletinBoardId] = useState()
 
   const refreshBulletinBoards = () => {
     introspect().then((res) => {
       getBulletinBoardTable(res.data.issuer).then((res) => {
         const newRows = Array.from(res.result).map((item) =>
-          createData(item.title, item.rentalCategory, item.address, item.rentPrice, item.area, item.status)
+          createData(
+            item.title,
+            item.rentalCategory,
+            item.address,
+            item.rentPrice,
+            item.area,
+            item.status,
+            item.isActive,
+            item.bulletinBoardId
+          )
         )
         setRows(newRows)
       })
     })
   }
 
-  function createData(nameRoom, typeRoom, address, price, roomArea, available) {
-    return { nameRoom, typeRoom, address, price, roomArea, available }
+  function createData(nameRoom, typeRoom, address, price, roomArea, available, isActive, bulletinBoardId) {
+    return { nameRoom, typeRoom, address, price, roomArea, available, isActive, bulletinBoardId }
   }
 
   useEffect(() => {
     introspect().then((res) => {
       getBulletinBoardTable(res.data.issuer).then((res) => {
         const newRows = Array.from(res.result).map((item) =>
-          createData(item.title, item.rentalCategory, item.address, item.rentPrice, item.area, item.status)
+          createData(
+            item.title,
+            item.rentalCategory,
+            item.address,
+            item.rentPrice,
+            item.area,
+            item.status,
+            item.isActive,
+            item.bulletinBoardId
+          )
         )
         setRows(newRows)
       })
@@ -46,13 +65,16 @@ const Post = () => {
           <Typography variant="subtitle1">Danh sách tin đăng tìm kiếm khách thuê</Typography>
         </Box>
         <Fab
-          color="success"
           aria-label="add"
-          onClick={handleOpen}
+          onClick={() => {
+            setBulletinBoardId(null)
+            handleOpen()
+          }}
           sx={{
             boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
             width: '52px',
-            height: '52px'
+            height: '52px',
+            bgcolor: '#ffa502'
           }}>
           <AddIcon />
         </Fab>
@@ -61,10 +83,17 @@ const Post = () => {
           handleClose={handleClose}
           setOpen={setOpen}
           refreshBulletinBoards={refreshBulletinBoards}
+          bulletinBoardId={bulletinBoardId}
         />
       </Box>
 
-      <PostRoomTable rows={rows} createData={createData} />
+      <PostRoomTable
+        rows={rows}
+        createData={createData}
+        handleOpen={handleOpen}
+        setBulletinBoardId={setBulletinBoardId}
+        refreshBulletinBoards={refreshBulletinBoards}
+      />
     </Box>
   )
 }
