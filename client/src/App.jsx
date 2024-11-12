@@ -47,7 +47,6 @@ import PassportRecognition from './pages/AI/PassportRecognition'
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage.jsx'
 import { getMotelByUsername } from './apis/motelAPI'
 import i18n from './i18n/i18n'
-
 function App() {
   const [username, setUsername] = useState('')
   const [avatar, setAvatar] = useState('')
@@ -112,10 +111,7 @@ function App() {
             path="/login"
             element={<Login setUsername={setUsername} setAvatar={setAvatar} setIsAdmin={setIsAdmin} />}
           />
-          <Route
-            path="/google-redirect"
-            element={<GoogleLoginRedirect setUsername={setUsername} setAvatar={setAvatar} />}
-          />
+          <Route path="/oauth2/redirect" element={<GoogleLoginRedirect />} />
           <Route path="/forgot-password" element={<Forgot_Password setIsAdmin={setIsAdmin} />} />
           <Route path="/chart" element={<Chart setIsAdmin={setIsAdmin} />} />
           <Route path="/audio" element={<Audio setIsAdmin={setIsAdmin} />} />
