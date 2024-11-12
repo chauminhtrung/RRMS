@@ -96,20 +96,20 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
 
   const rows = [
     {
-      Nhóm: '',
-      'Tên phòng': '',
-      'Giá phòng': '',
-      'Ưu tiên': '',
-      'Diện tích': '',
-      'Mức cọc': '',
-      'Số tiền cọc đã thu': '',
-      'Số lượng thành viên': '',
-      'Chu kỳ đóng tiền': '',
-      'Ngày vào ở': '',
-      'Ngày hợp đồng': '',
-      'Ngày kết thúc hợp đồng': '',
-      'Trạng thái': '',
-      'Tài chính': ''
+      group: 'Nhóm',
+      name: 'Tên',
+      price: 0,
+      prioritize: 'Ưu tiên',
+      area: 0,
+      deposit: 0,
+      debt: 0,
+      countTenant: 0,
+      invoiceDate: 0,
+      paymentCircle: 0,
+      moveInDate: '1970-01-01',
+      contractDuration: '1970-01-01',
+      status: false,
+      finance: 'Thanh toán'
     }
   ]
   const downloadExcel = () => {
@@ -135,7 +135,7 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     link.click()
   }
 
-  const handleFileUpload = (file) => {
+  const handleFileExcelUpload = (file) => {
     if (file) {
       const reader = new FileReader()
       // Đọc file khi đã chọn
@@ -178,18 +178,37 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     }
   }
 
+  const handleFileJsonUpload = (file) => {
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        try {
+          const jsonData = JSON.parse(event.target.result)
+          // Thêm trường motelId vào từng phần tử trong mảng JSON
+          const formattedData = jsonData.map((item) => ({
+            ...item,
+            motelId: motelId
+          }))
+          setJsonData(formattedData) // Cập nhật state với dữ liệu đã chỉnh sửa
+        } catch (error) {
+          console.error('Error parsing JSON file:', error)
+        }
+      }
+      reader.readAsText(file) // Đọc tệp dưới dạng văn bản
+    }
+  }
+
   const handleFileChange = (event) => {
     const file = event.target.files[0]
     if (file) {
       const fileName = file.name.toLowerCase()
       if (fileName.endsWith('.json')) {
-        console.log('Đây là file JSON')
+        handleFileJsonUpload(file)
       } else if (fileName.endsWith('.csv')) {
         console.log('Đây là file CSV')
       } else if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls')) {
-        handleFileUpload(file)
+        handleFileExcelUpload(file)
       }
-
       // Reset input file sau khi chọn file
       event.target.value = null
     }
@@ -199,6 +218,7 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     jsonData.map((item, index) => {
       try {
         createRoom(item).then((res) => {})
+        refrestRooms()
       } catch (error) {
         console.log('Lỗi tại dòng', index + 2)
       }
@@ -221,6 +241,16 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
       setRooms(dataWithSTT)
     })
   }, [motelId])
+
+  const refrestRooms = () => {
+    getRoomByMotelId(motelId).then((res) => {
+      const dataWithSTT = res.map((room, index) => ({
+        STT: index + 1,
+        ...room
+      }))
+      setRooms(dataWithSTT)
+    })
+  }
 
   const options = {
     height: '500px',
