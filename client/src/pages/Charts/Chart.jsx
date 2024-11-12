@@ -10,7 +10,7 @@ import {
   Select,
   TextField,
   Button,
-  Divider,
+  Divider
 } from '@mui/material'
 import './Chart.css'
 import { BarChart } from '@mui/x-charts/BarChart'
@@ -112,7 +112,7 @@ const RealEstateBanner = ({ setIsAdmin }) => {
             series={[{ data: [100, 44, 24, 34, 35, 44, 24, 34, 35, 44, 24, 34] }]}
             height={390}
             xAxis={[
-              { data: ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10', 'Q11', 'Q12'], scaleType: 'band' },
+              { data: ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10', 'Q11', 'Q12'], scaleType: 'band' }
             ]}
             margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
             colors={['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']}

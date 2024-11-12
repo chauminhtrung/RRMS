@@ -37,6 +37,7 @@
     "formik": "2.4.6",
     "i18next": "23.15.1",
     "leaflet": "^1.9.4",
+    "papaparse": "5.4.1",
     "pixelmatch": "6.0.0",
     "react": "18.3.1",
     "react-beautiful-dnd": "13.1.1",

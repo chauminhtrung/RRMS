@@ -41,7 +41,7 @@ import IncomeSummary from './pages/admin/NavContentAdmin/IncomeSummary/IncomeSum
 import Zalo_history from './pages/admin/NavContentAdmin/Zalo_history'
 import SettingMotel from './pages/admin/NavContentAdmin/SettingMotel/SettingMotel'
 import ImageComparison from './pages/AI/ImageComparison'
-import ImportFileExcel from './pages/admin/NavContentAdmin/ImportFileExcel'
+import ImportFileExcel from './pages/admin/NavContentAdmin/ImportFileExcel/ImportFileExcel'
 import MotelSetting from './pages/admin/MotelSettings/MotelSetting'
 import PassportRecognition from './pages/AI/PassportRecognition'
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage.jsx'
@@ -50,7 +50,7 @@ import i18n from './i18n/i18n'
 function App() {
   const [username, setUsername] = useState('')
   const [avatar, setAvatar] = useState('')
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(null)
   //lay thong tin tro cua tk account truyen xuong cho trang chu tro
   const [isAdmin, setIsAdmin] = useState(false)
   const [isNavAdmin, setIsNavAdmin] = useState(true)
@@ -189,13 +189,18 @@ function App() {
               />
             }
           />
-          <Route path="/AdminManagerBoard" element={<AdminManagerBoard
-            motels={motels}
-            setmotels={setmotels}
-            setIsAdmin={setIsAdmin}
-            isNavAdmin={isNavAdmin}
-            setIsNavAdmin={setIsNavAdmin}
-          />} />
+          <Route
+            path="/AdminManagerBoard"
+            element={
+              <AdminManagerBoard
+                motels={motels}
+                setmotels={setmotels}
+                setIsAdmin={setIsAdmin}
+                isNavAdmin={isNavAdmin}
+                setIsNavAdmin={setIsNavAdmin}
+              />
+            }
+          />
 
           <Route path="/adminManage/*" element={<AdminManage setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminStatis" element={<AdminStatis setIsAdmin={setIsAdmin} />} />

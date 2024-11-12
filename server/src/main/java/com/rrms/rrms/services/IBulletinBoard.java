@@ -15,6 +15,8 @@ public interface IBulletinBoard {
 
     BulletinBoardResponse createBulletinBoard(BulletinBoardRequest bulletinBoardRequest);
 
+    BulletinBoardResponse updateBulletinBoard(UUID bulletinBoardId, BulletinBoardRequest bulletinBoardRequest);
+
     List<BulletinBoardTableResponse> getBulletinBoardTable(String username);
 
     List<BulletinBoardResponse> getBulletinBoard();
