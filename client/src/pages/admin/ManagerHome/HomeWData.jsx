@@ -1,16 +1,43 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Tooltip } from 'react-tooltip'
 import { useEffect, useState, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import 'react-tabulator/lib/styles.css' // required styles
 import 'react-tabulator/lib/css/tabulator.min.css' // theme
 import { ReactTabulator } from 'react-tabulator'
-import { getRoomByMotelId } from '~/apis/apiClient'
+import axios from 'axios';
+import { env } from '~/configs/environment';
+import Swal from 'sweetalert2'
+import { getRoomByMotelId, createRoom } from '~/apis/roomAPI'
+
 const HomeWData = ({ Motel }) => {
   const { motelId } = useParams()
   const [rooms, setRooms] = useState([])
+  const [motelServices, setMotelServices] = useState([]); 
   const [showMenu, setShowMenu] = useState(null) // Trạng thái của menu hiện tại
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 })
   const menuRef = useRef(null) // Tham chiếu đến menu
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;
+  const [formData, setFormData] = useState({
+    motelId: motelId ? motelId : Motel[0].motelId,
+    deposit: null,
+    debt: null,
+    moveInDate: null,
+    contractDuration: null,
+    status: false,
+    finance: 'wait',
+    countTenant: 0,
+    paymentCircle: 1,
+    name: '',
+    group: 'a',
+    area: '',
+    price: '',
+    invoiceDate: '',
+    prioritize: '',
+    selectedServices: [] // Thêm trường này để lưu các dịch vụ đã chọn
+  });
+  
+
   // Hàm xử lý nhấn ngoài menu
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -22,7 +49,7 @@ const HomeWData = ({ Motel }) => {
         console.log('set null ')
       }
     }
-    
+
     document.addEventListener('click', handleClickOutside)
     return () => {
       document.removeEventListener('click', handleClickOutside)
@@ -33,12 +60,64 @@ const HomeWData = ({ Motel }) => {
     fetchRooms()
   }, [])
 
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target
+    if (type === 'checkbox') {
+      setFormData((prevData) => ({
+        ...prevData,
+        priceItems: {
+          ...prevData.priceItems,
+          [name]: checked ? value : ''
+        }
+      }))
+    } else {
+      setFormData({
+        ...formData,
+        [name]:
+          name === 'price'
+            ? parseFloat(value) // chuyển đổi 'price' thành float
+            : ['area', 'invoiceDate'].includes(name)
+            ? parseInt(value, 10) // chuyển đổi 'area' và 'invoiceDate' thành integer
+            : value // các trường còn lại là chuỗi
+      })
+    }
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = document.getElementById('add-room-form');
+    if (!form.checkValidity()) {
+      form.classList.add('was-validated');
+    } else {
+      createRoom({ ...formData, selectedServices: formData.selectedServices })
+        .then((response) => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Thông báo',
+            text: 'Room created successfully!'
+          });
+          setFormData(response);
+          setTimeout(() => {
+            window.location.reload();
+          }, 1400);
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Thông báo',
+            text: 'Error Room motel.'
+          });
+          console.error('Error creating motel:', error);
+        });
+    }
+  };
+  
+
   const fetchRooms = async () => {
     //neu co motelId tren URL
     if (motelId) {
       try {
         const dataRoom = await getRoomByMotelId(motelId)
-        console.log(dataRoom)
         setRooms(dataRoom)
       } catch (error) {
         console.log(error)
@@ -46,13 +125,50 @@ const HomeWData = ({ Motel }) => {
     } else {
       try {
         const dataRoom = await getRoomByMotelId(Motel[0].motelId)
-        console.log(dataRoom)
         setRooms(dataRoom)
       } catch (error) {
         console.log(error)
       }
     }
   }
+
+  const fetchMotelServices = async (id) => {  
+    try {  
+      const response = await axios.get(`${env.API_URL}/motels/get-motel-id?id=${id}`, {  
+        headers: {  
+          Authorization: `Bearer ${token}` 
+        }  
+      });  
+      if (response.data && response.data.code === 200 && response.data.result && response.data.result.motelServices) {  
+        setMotelServices(response.data.result.motelServices);  
+      } else {  
+        setMotelServices([]);  
+      }  
+    } catch (error) {  
+      console.error('Error fetching motel services:', error);  
+      setMotelServices([]);  
+    }  
+  };
+
+  const handleServiceSelection = (serviceId) => {
+    setFormData((prevData) => {
+      const selectedServices = prevData.selectedServices.includes(serviceId)
+        ? prevData.selectedServices.filter((id) => id !== serviceId)
+        : [...prevData.selectedServices, serviceId];
+  
+      return {
+        ...prevData,
+        selectedServices
+      };
+    });
+  };
+  
+  // Call this function when opening the "Add Room" modal
+  useEffect(() => {
+    if (motelId) {
+      fetchMotelServices(motelId);
+    }
+  }, [motelId]);
 
   // Định dạng tiền tệ Việt Nam (VND)
   const currencyFormatter = (cell) => {
@@ -62,6 +178,12 @@ const HomeWData = ({ Motel }) => {
         style: 'currency',
         currency: 'VND'
       }).format(value)
+    }
+    if (value === null || value === undefined) {
+      return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+      }).format(0)
     }
     return value
   }
@@ -78,6 +200,9 @@ const HomeWData = ({ Motel }) => {
 
   // Hàm định dạng ngày
   const formatDate = (dateString) => {
+    if (dateString === null) {
+      return `Không xác định`
+    }
     const date = new Date(dateString)
     const day = String(date.getDate()).padStart(2, '0')
     const month = String(date.getMonth() + 1).padStart(2, '0')
@@ -153,6 +278,9 @@ const HomeWData = ({ Motel }) => {
   const handleItemClick = (label) => {
     if (label === 'Đóng menu') {
       setShowMenu(null) // Đóng menu
+    }
+    if (label === 'Chi tiết phòng') {
+      window.open(`/quanlytro/${motelId}/Chi-tiet-phong/${showMenu}`, '_blank') // Thay "https://example.com" bằng URL bạn muốn mở
     } else {
       alert(`Action: ${label} on room ${showMenu}`)
     }
@@ -319,7 +447,7 @@ const HomeWData = ({ Motel }) => {
           <div className="row g-3 row-box-home" style={{ marginTop: '0px' }}>
             <div className="col-sm-3" style={{ marginTop: '0px' }}>
               <div className="item-home " data-bs-toggle="modal" data-bs-target="#reportBillDebt">
-                <a href="javascript:," className="create-home">
+                <a href="#" className="create-home">
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -337,7 +465,7 @@ const HomeWData = ({ Motel }) => {
                     </svg>
                   </span>
                 </a>
-                <a href="javascript:," className="box-home span-red-white">
+                <a href="#" className="box-home span-red-white">
                   <div className="d-flex align-items-center">
                     <span className="icon-home">
                       <img
@@ -355,7 +483,7 @@ const HomeWData = ({ Motel }) => {
             </div>
             <div className="col-sm-3" style={{ marginTop: '0px' }}>
               <div className="item-home" data-bs-toggle="modal" data-bs-target="#reportContractDeposit">
-                <a href="javascript:;" className="create-home">
+                <a href="#" className="create-home">
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -373,7 +501,7 @@ const HomeWData = ({ Motel }) => {
                     </svg>
                   </span>
                 </a>
-                <a href="javascript:;" className="box-home span-primary-white">
+                <a href="#" className="box-home span-primary-white">
                   <div className="d-flex align-items-center">
                     <span className="icon-home">
                       <img
@@ -393,7 +521,7 @@ const HomeWData = ({ Motel }) => {
             </div>
             <div className="col-sm-3" style={{ marginTop: '0px' }}>
               <div className="item-home" data-bs-toggle="modal" data-bs-target="#reportDepositTemp">
-                <a href="javascript:;" className="create-home">
+                <a href="#" className="create-home">
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -411,7 +539,7 @@ const HomeWData = ({ Motel }) => {
                     </svg>
                   </span>
                 </a>
-                <a href="javascript:;" className="box-home span-primary-white">
+                <a href="#" className="box-home span-primary-white">
                   <div className="d-flex align-items-center">
                     <span className="icon-home">
                       <img
@@ -431,7 +559,7 @@ const HomeWData = ({ Motel }) => {
             </div>
             <div className="col-sm-3" style={{ marginTop: '0px' }}>
               <div className="item-home report">
-                <a href="javascript:;" className="create-home">
+                <a href="#" className="create-home">
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -449,7 +577,7 @@ const HomeWData = ({ Motel }) => {
                     </svg>
                   </span>
                 </a>
-                <a href="javascript:;" className="box-home span-red-white">
+                <a href="#" className="box-home span-red-white">
                   <div className="d-flex align-items-center">
                     <span className="icon-home">
                       <img
@@ -526,6 +654,7 @@ const HomeWData = ({ Motel }) => {
                     </svg>
                   </span>
                 </button>
+
                 <div className="d-flex" style={{ marginLeft: '40px' }}>
                   <div className="dropdown">
                     <button
@@ -577,7 +706,7 @@ const HomeWData = ({ Motel }) => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="group_id"
                             value="group_id"
@@ -589,7 +718,7 @@ const HomeWData = ({ Motel }) => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="deposit_contract_amount"
                             value="deposit_contract_amount"
@@ -601,7 +730,7 @@ const HomeWData = ({ Motel }) => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="debt_amount"
                             value="debt_amount"
@@ -613,7 +742,7 @@ const HomeWData = ({ Motel }) => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="customers"
                             value="customers"
@@ -625,7 +754,7 @@ const HomeWData = ({ Motel }) => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="circle_day"
                             value="circle_day/"
@@ -637,7 +766,7 @@ const HomeWData = ({ Motel }) => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="circle_month"
                             value="circle_month"
@@ -649,7 +778,7 @@ const HomeWData = ({ Motel }) => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="date_join"
                             value="date_join"
@@ -661,7 +790,7 @@ const HomeWData = ({ Motel }) => {
                         <label className="dropdown-item">
                           <input
                             type="checkbox"
-                            checked
+                            defaultChecked
                             className="form-check-input"
                             name="date_terminate"
                             value="date_terminate"
@@ -1008,6 +1137,255 @@ const HomeWData = ({ Motel }) => {
                   ))}
                 </div>
               )}
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* modal add rom */}
+      <div
+        className="modal fade"
+        data-bs-backdrop="static"
+        id="addRoom"
+        tabIndex={-1}
+        aria-labelledby="addRoomLabel"
+        aria-modal="true"
+        role="dialog"
+        style={{ display: 'none', paddingLeft: '0px' }}>
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <div
+                style={{
+                  marginRight: '15px',
+                  outline: '0',
+                  boxShadow: '0 0 0 .25rem rgb(112 175 237 / 16%)',
+                  opacity: '1',
+                  borderRadius: '100%',
+                  width: '36px',
+                  height: '36px',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  display: 'flex',
+                  backgroundColor: 'rgb(111 171 232)'
+                }}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="feather feather-box">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </div>
+              <h5 className="modal-title" id="addRoomLabel">
+                Thêm phòng
+              </h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                {' '}
+              </button>
+            </div>
+            <div className="modal-body">
+              <form className="needs-validation" id="add-room-form" noValidate>
+                <input type="hidden" name="_token" value="UFyRMEJwSNwvskI0nQa8dSfJdpC5VhNUzzfW4bfW" />
+                <div className="row g-2">
+                  <div className="col-12">
+                    <div className="title-item-small">
+                      <b>Thông tin phòng</b>
+                      <i className="des">Nhập các thông tin cơ bản của phòng</i>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="form-floating">
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="name"
+                        id="name"
+                        required
+                        placeholder="Tên phòng"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                      />
+                      <label htmlFor="name">
+                        Tên phòng <span style={{ color: 'red' }}>*</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div className="col-6">
+                    <div className="form-floating">
+                      <select
+                        id="group"
+                        name="group"
+                        className="form-select form-control"
+                        required
+                        value={formData.group}
+                        onChange={handleInputChange}>
+                        <option value="a">Tầng A</option>
+                        <option value="b">Tầng B</option>
+                      </select>
+                      <label htmlFor="group">Tầng/dãy</label>
+                    </div>
+                  </div>
+                  <div className="col-6" style={{ display: 'block' }}>
+                    <div className="form-floating">
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="area"
+                        id="area"
+                        required
+                        placeholder="Nhập diện tích"
+                        value={formData.area}
+                        onChange={handleInputChange}
+                      />
+                      <label htmlFor="area">Diện tích (m2)</label>
+                    </div>
+                  </div>
+                  <div className="col-6">
+                    <div className="form-floating">
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="price"
+                        id="price"
+                        required
+                        placeholder="Giá thuê"
+                        value={formData.price}
+                        onChange={handleInputChange}
+                      />
+                      <label htmlFor="room_amount">Giá thuê (đ)</label>
+                    </div>
+                  </div>
+                  <div className="col-12">
+                    <div className="form-floating">
+                      <select
+                        id="invoiceDate"
+                        name="invoiceDate"
+                        className="form-select form-control"
+                        value={formData.invoiceDate}
+                        onChange={handleInputChange}>
+                        {Array.from({ length: 31 }, (_, i) => (
+                          <option key={i + 1} value={i + 1}>
+                            Ngày {i + 1}
+                          </option>
+                        ))}
+                      </select>
+                      <label htmlFor="circle_day">Ngày lập hóa đơn hàng tháng</label>
+                    </div>
+                  </div>
+                  <div className="col-12">
+                    <div className="form-floating">
+                      <select
+                        id="prioritize"
+                        name="prioritize"
+                        className="form-select form-control"
+                        value={formData.prioritize}
+                        onChange={handleInputChange}>
+                        <option value="Tất cả">Tất cả</option>
+                        <option value="Ưu tiên nữ">Ưu tiên nữ</option>
+                        <option value="Ưu tiên nam">Ưu tiên nam</option>
+                        <option value="Ưu tiên gia đình">Ưu tiên gia đình</option>
+                      </select>
+                      <label htmlFor="prioritize">Ưu tiên người thuê</label>
+                    </div>
+                  </div>
+                  <div className="col-12">
+                    <div className="title-item-small">
+                      <b>Dịch vụ sử dụng</b>
+                      <i className="des">Thêm dịch vụ sử dụng như: điện, nước, rác, wifi...</i>
+                    </div>
+                  </div>
+
+
+                  <div className="price-items-checkout-layout">
+                    {motelServices.length > 0 ? (
+                      motelServices.map((service) => (
+                        <div key={service.motelServiceId} className="item mt-2">
+                          <div className="item-check-name">
+                            <input
+                              type="checkbox"
+                              className="form-check-input"
+                              checked={formData.selectedServices.includes(service.motelServiceId)}
+                              onChange={() => handleServiceSelection(service.motelServiceId)}
+                            />
+                            <label htmlFor={`service_${service.motelServiceId}`}>
+                              <b>{service.nameService}</b>
+                              <p>
+                                Giá: <b>{service.price}đ</b> / {service.chargetype}
+                              </p>
+                            </label>
+                          </div>
+                          
+                          <div className="item-value">
+                            <div className="input-group">
+                              <input
+                                className="form-control"
+                                min="0"
+                                type="number"
+                                placeholder="Nhập giá trị"
+                                name="price_items"
+                              />
+                              <label
+                                style={{ fontSize: '12px' }}
+                                className="input-group-text"
+                              >
+                                {service.chargetype}
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p>Chưa có dịch vụ nào.</p>
+                    )}
+                  </div>
+
+
+                </div>
+              </form>
+            </div>
+            <div className="modal-footer modal-footer--sticky">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="feather feather-x">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                Đóng
+              </button>
+              <button type="button" id="submit-room" className="btn btn-primary" onClick={handleSubmit}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="feather feather-plus">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Thêm phòng
+              </button>
             </div>
           </div>
         </div>

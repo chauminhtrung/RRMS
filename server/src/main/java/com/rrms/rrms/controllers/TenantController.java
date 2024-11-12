@@ -1,18 +1,15 @@
 package com.rrms.rrms.controllers;
 
-import com.rrms.rrms.dto.request.MotelRequest;
 import com.rrms.rrms.dto.request.TenantRequest;
 import com.rrms.rrms.dto.response.ApiResponse;
-import com.rrms.rrms.dto.response.BulletinBoardResponse;
 import com.rrms.rrms.dto.response.MotelResponse;
 import com.rrms.rrms.dto.response.TenantResponse;
-import com.rrms.rrms.services.ITenant;
+import com.rrms.rrms.services.ITenantService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +23,7 @@ import java.util.UUID;
 @RequestMapping("/tenant")
 public class TenantController {
 
-    ITenant tenantService;
+    ITenantService tenantService;
 
     @RequestMapping("")
     public ApiResponse<List<TenantResponse>> getAllTenants() {
@@ -39,8 +36,19 @@ public class TenantController {
                 .build();
     }
 
+    @Operation(summary = "Get motel by id")
+    @GetMapping("/tenant-id")
+    public ApiResponse<TenantResponse> getMotelbyid(@RequestParam UUID id) {
+        TenantResponse tennantResponse = tenantService.findById(id);
+        return ApiResponse.<TenantResponse>builder()
+                .code(HttpStatus.OK.value())
+                .message("success")
+                .result(tennantResponse)
+                .build();
+    }
+
     @Operation(summary = "Add tenant by id")
-    @PostMapping()
+    @PostMapping("/insert")
     public ApiResponse<TenantResponse> insertTenant(@RequestBody TenantRequest tenantRequest) {
         TenantResponse tenantResponse = tenantService.insert(tenantRequest);
         log.info("Insert tenant successfully");

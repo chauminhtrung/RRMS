@@ -1,6 +1,9 @@
 package com.rrms.rrms.configs;
 
-import lombok.extern.slf4j.Slf4j;
+import static org.springframework.security.config.Customizer.withDefaults;
+
+import javax.crypto.spec.SecretKeySpec;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,9 +18,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
-import javax.crypto.spec.SecretKeySpec;
-
-import static org.springframework.security.config.Customizer.withDefaults;
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @EnableWebSecurity
@@ -26,20 +27,20 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     private static final String[] PUBLIC_ENDPOINTS = {
-            "/",
-            "/authen/**",
-            "/swagger-ui/*",
-            "/v3/api-docs/*",
-            "/searchs/**",
-            "/search/**",
-            "/search/*",
-            "/search",
-            "/detail/**",
-            "/detail/*",
-            "/detail",
-            "/bulletin-board/*",
-            "/api-accounts/**",
-            "/motels/get-motel-id"
+        "/",
+        "/authen/**",
+        "/swagger-ui/*",
+        "/v3/api-docs/*",
+        "/searchs/**",
+        "/search/**",
+        "/search/*",
+        "/search",
+        "/detail/**",
+        "/detail/*",
+        "/detail",
+        "/bulletin-board/*",
+        "/api-accounts/**",
+        "/motels/get-motel-id",
     };
 
     @Value("${jwt.signer-key}")
@@ -62,7 +63,7 @@ public class SecurityConfig {
                         // công
                         .failureUrl("/authen/login?error=true") // trang chuyển hướng khi đăng
                 // nhập thất bại
-        );
+                );
 
         // Cấu hình OAuth2 Login với Google
         http.oauth2Login(
@@ -71,7 +72,7 @@ public class SecurityConfig {
                         // công
                         .failureUrl("/authen/login?error=true") // trang chuyển hướng khi đăng
                 // nhập thất bại
-        );
+                );
 
         http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer ->
                 jwtConfigurer.decoder(jwtDecoder()).jwtAuthenticationConverter(jwtAuthenticationConverter())));

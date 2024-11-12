@@ -13,7 +13,7 @@ const Comment = ({ item }) => {
         </Box>
       </CardContent>
       <CardContent sx={{ pt: 0, '&:last-child': { pb: 1 } }}>
-        <Typography variant="body1">{item.comment}</Typography>
+        <Typography variant="body1">{item.content}</Typography>
       </CardContent>
     </Card>
   )

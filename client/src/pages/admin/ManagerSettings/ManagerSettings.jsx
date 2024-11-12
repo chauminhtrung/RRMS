@@ -4,15 +4,11 @@ import Flatpickr from 'react-flatpickr'
 import 'flatpickr/dist/themes/material_blue.css'
 import { useParams } from 'react-router-dom'
 import ModelDeposit from './ModelDeposit'
-import {
-  CreateTRC,
-  getTRCByusername,
-  updateTRCById,
-  getContractTemplatesByMotelId,
-  deleteContractTemplate,
-  getMotelById
-} from '~/apis/apiClient'
+
 import Swal from 'sweetalert2'
+import { CreateTRC, getTRCByusername, updateTRCById } from '~/apis/TRCAPI'
+import { deleteContractTemplate, getContractTemplatesByMotelId } from '~/apis/contractTemplateAPI'
+import { getMotelById } from '~/apis/motelAPI'
 
 const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
   // Khởi tạo một đối tượng trạng thái cho tất cả các trường
@@ -90,7 +86,7 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
     if (username && motelId) {
       try {
         const dataMotel = await getMotelById(motelId)
-        setmotel(dataMotel.data.result[0])
+        setmotel(dataMotel.data.result)
       } catch (error) {
         console.log(error)
       }
@@ -118,7 +114,9 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
             title: 'Thông báo',
             text: isExistingData ? 'Cập nhật thông tin thành công.' : 'Lưu thông tin thành công.'
           })
-          window.location.reload()
+          setTimeout(() => {
+            window.location.reload()
+          }, 1400)
         } else {
           console.error('Lỗi khi lưu thông tin:', response.message)
         }

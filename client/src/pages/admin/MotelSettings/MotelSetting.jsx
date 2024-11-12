@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
 import 'flatpickr/dist/themes/material_blue.css'
 import ModelDeposit from '../ManagerSettings/ModelDeposit'

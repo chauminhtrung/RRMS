@@ -20,7 +20,7 @@ public class MotelService {
     private UUID motelServiceId;
 
     @ManyToOne
-    @JoinColumn(name = "motel_id")
+    @JoinColumn(name = "motelId")
     private Motel motel;
 
     @Column(columnDefinition = "NVARCHAR(255)")

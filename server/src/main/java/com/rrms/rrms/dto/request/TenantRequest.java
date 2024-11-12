@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TenantRequest {
+    String avata;
     String fullname;
     String phone;
     String cccd;

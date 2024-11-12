@@ -1,19 +1,19 @@
-import { useState } from 'react'
-
+import { useState } from 'react';
+import { env } from '~/configs/environment';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 import 'flatpickr/dist/themes/material_blue.css'
-import 'flatpickr/dist/plugins/monthSelect/style.css' // Thêm CSS của plugin monthSelect
-import 'react-tabulator/lib/styles.css' // required styles
-import 'react-tabulator/lib/css/tabulator.min.css' // theme
+import 'flatpickr/dist/plugins/monthSelect/style.css'
+import 'react-tabulator/lib/styles.css' 
+import 'react-tabulator/lib/css/tabulator.min.css' 
 
-const ModelCreateService = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    type: 'constant',
-    unit: 'kwh',
-    price: '',
-    subtraction: false,
-    roomCheckAll: false,
-  })
+const ModelCreateService = ({motelId, refreshServices  }) => {
+  const [formData, setFormData] = useState({  
+    nameService: 'Dịch vụ 1',  
+    chargetype: 'kwh',  
+    price: '10000',  
+    subtraction: false,  
+  });  
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -23,37 +23,59 @@ const ModelCreateService = () => {
     }))
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit = async (e) => {  
+    e.preventDefault();  
+    const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;  
+    if (!motelId) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Lỗi',
+        text: 'ID nhà trọ không hợp lệ!',
+      });
+      return;
+    }  
 
-    // Kiểm tra tính hợp lệ của dữ liệu
-    if (!formData.name || !formData.price) {
-      alert('Vui lòng điền đầy đủ thông tin!')
-      return
-    }
+    try {  
+      const response = await axios.post(`${env.API_URL}/motel-services/create`, {  
+        motelId: motelId, // sử dụng motelId từ props  
+        nameService: formData.nameService,  
+        price: Number(formData.price),  
+        chargetype: formData.chargetype, 
+      },
+      {  
+        headers: { Authorization: `Bearer ${token}` },  
+      }  
+      );   
 
-    // Xử lý dữ liệu (ví dụ: gửi đến server)
-    console.log('Dữ liệu biểu mẫu:', formData)
-
-    // Xóa form sau khi gửi (nếu cần)
-    setFormData({
-      name: '',
-      unit: 'kwh',
-      price: '',
-      subtraction: false,
-      roomCheckAll: false,
-    })
-
-    // Nếu bạn sử dụng Bootstrap Modal, có thể đóng modal ở đây
-    // Ví dụ:
-    // const modal = document.getElementById('yourModalId');
-    // const modalInstance = bootstrap.Modal.getInstance(modal);
-    // modalInstance.hide();
+      if (response.status === 200) {  
+        Swal.fire({  
+          icon: 'success',  
+          title: 'Thành công',  
+          text: 'Thêm dịch vụ thành công!',  
+        });  
+        refreshServices();  
+        // Reset form sau khi thêm thành công  
+        setFormData({  
+          nameService: '',  
+          chargetype: '',  
+          price: '',  
+          subtraction: false,  
+        });  
+      }  
+    } catch (error) {
+      console.error('Error creating service:', error);
+      
+      Swal.fire({
+          icon: 'error',
+          title: 'Lỗi',
+          text: 'Có lỗi xảy ra, vui lòng thử lại!',
+      });
   }
+  
+  };  
 
   return (
     <div>
-      {/* Modal them dich vu  */}
       <div
         className="modal fade"
         data-bs-backdrop="static"
@@ -107,14 +129,14 @@ const ModelCreateService = () => {
                       <input
                         type="text"
                         className="form-control"
-                        name="name"
-                        id="name"
+                        name="nameService"
+                        id="nameService"
                         required
                         placeholder="Tên dịch vụ"
-                        value={formData.name}
+                        value={formData.nameService}
                         onChange={handleChange}
                       />
-                      <label htmlFor="name">Tên dịch vụ</label>
+                      <label htmlFor="nameService">Tên dịch vụ</label>
                       <div className="invalid-feedback">Vui lòng nhập tên dịch vụ</div>
                     </div>
                   </div>
@@ -128,12 +150,7 @@ const ModelCreateService = () => {
 
                   <div className="col-6">
                     <div className="form-floating">
-                      <select
-                        id="unit"
-                        name="unit"
-                        className="form-select form-control"
-                        value={formData.unit}
-                        onChange={handleChange}>
+                      <select name="chargetype" className="form-select" value={formData.chargetype} onChange={handleChange}>
                         <option value="kwh">kWh</option>
                         <option value="khoi">Khối</option>
                         <option value="thang">Tháng</option>
@@ -142,7 +159,7 @@ const ModelCreateService = () => {
                         <option value="lan">Lần</option>
                         <option value="cai">Cái</option>
                       </select>
-                      <label htmlFor="unit">Đơn vị</label>
+                      <label htmlFor="chargetype">Đơn vị</label>
                     </div>
                   </div>
 
@@ -221,7 +238,7 @@ const ModelCreateService = () => {
                   <button type="button" className="btn btn-secondary m-1" data-bs-dismiss="modal">
                     Đóng
                   </button>
-                  <button type="button" id="submit-add-price-item" className="btn btn-primary" onClick={handleSubmit}>
+                  <button type="button" id="submit-add-price-item" className="btn btn-primary" onClick={handleSubmit} data-bs-dismiss="modal">
                     Thêm mới
                   </button>
                 </div>

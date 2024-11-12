@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.rrms.rrms.dto.request.AccountRequest;
+import com.rrms.rrms.dto.request.ChangePasswordByEmail;
 import com.rrms.rrms.dto.request.ChangePasswordRequest;
 import com.rrms.rrms.dto.request.RegisterRequest;
 import com.rrms.rrms.dto.response.AccountResponse;
@@ -24,6 +27,7 @@ import com.rrms.rrms.repositories.AccountRepository;
 import com.rrms.rrms.repositories.AuthRepository;
 import com.rrms.rrms.repositories.RoleRepository;
 import com.rrms.rrms.services.IAccountService;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -330,5 +334,29 @@ public class AccountService implements IAccountService {
         accountRepository.save(account);
 
         return "Password changed successfully";
+    }
+
+    @Override
+    public boolean changePasswordByEmail(ChangePasswordByEmail changePasswordByEmail) {
+        if (!accountRepository.existsAccountByEmail(changePasswordByEmail.getEmail())) {
+            return false;
+        }
+        try {
+            Account account = accountRepository
+                    .findByEmail(changePasswordByEmail.getEmail())
+                    .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+            BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
+            String hashedNewPassword = pe.encode(changePasswordByEmail.getNewPassword());
+            account.setPassword(hashedNewPassword);
+            accountRepository.save(account);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return accountRepository.existsAccountByEmail(email);
     }
 }

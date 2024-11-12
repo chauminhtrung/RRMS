@@ -3,15 +3,14 @@ package com.rrms.rrms.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.rrms.rrms.dto.response.*;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rrms.rrms.dto.response.*;
 import com.rrms.rrms.services.IRoom;
 import com.rrms.rrms.services.ISearchService;
 
@@ -34,30 +33,29 @@ public class SearchController {
 
     IRoom roomService;
 
+    //        @Operation(summary = "Get all rooms authen")
+    //        @GetMapping("/roomNews")
+    //        @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')") // su dung phân quền phù hop theo role
+    //        public ApiResponse<List<RoomDetailResponse>> getRoomHomeDateNew() {
+    //            ApiResponse<List<RoomDetailResponse>> apiResponse = new ApiResponse<>();
+    //            List<RoomDetailResponse> rooms = searchService.findAllByDatenew();
+    //            apiResponse.setCode(HttpStatus.OK.value());
+    //            apiResponse.setMessage("Tìm kiếm thành công");
+    //            apiResponse.setResult(rooms);
+    //            return apiResponse;
+    //        }
 
-//        @Operation(summary = "Get all rooms authen")
-//        @GetMapping("/roomNews")
-//        @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')") // su dung phân quền phù hop theo role
-//        public ApiResponse<List<RoomDetailResponse>> getRoomHomeDateNew() {
-//            ApiResponse<List<RoomDetailResponse>> apiResponse = new ApiResponse<>();
-//            List<RoomDetailResponse> rooms = searchService.findAllByDatenew();
-//            apiResponse.setCode(HttpStatus.OK.value());
-//            apiResponse.setMessage("Tìm kiếm thành công");
-//            apiResponse.setResult(rooms);
-//            return apiResponse;
-//        }
-
-//        @Operation(summary = "Get all rooms authen")
-//        @GetMapping("/rooms")
-//        @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')") // su dung phân quền phù hop theo role
-//        public ApiResponse<List<RoomDetailResponse>> getRoomHome() {
-//            ApiResponse<List<RoomDetailResponse>> apiResponse = new ApiResponse<>();
-//            List<RoomDetailResponse> rooms = searchService.findByAuthenIs(true);
-//            apiResponse.setCode(HttpStatus.OK.value());
-//            apiResponse.setMessage("Tìm kiếm thành công");
-//            apiResponse.setResult(rooms);
-//            return apiResponse;
-//        }
+    //        @Operation(summary = "Get all rooms authen")
+    //        @GetMapping("/rooms")
+    //        @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')") // su dung phân quền phù hop theo role
+    //        public ApiResponse<List<RoomDetailResponse>> getRoomHome() {
+    //            ApiResponse<List<RoomDetailResponse>> apiResponse = new ApiResponse<>();
+    //            List<RoomDetailResponse> rooms = searchService.findByAuthenIs(true);
+    //            apiResponse.setCode(HttpStatus.OK.value());
+    //            apiResponse.setMessage("Tìm kiếm thành công");
+    //            apiResponse.setResult(rooms);
+    //            return apiResponse;
+    //        }
 
     @Operation(summary = "Get all rooms")
     @GetMapping
@@ -69,8 +67,6 @@ public class SearchController {
         apiResponse.setResult(rooms);
         return apiResponse;
     }
-
-
 
     @Operation(summary = "Search room by name")
     @GetMapping("/addressBullet")
@@ -89,7 +85,6 @@ public class SearchController {
         apiResponse.setResult(rooms);
         return apiResponse;
     }
-
 
     //    @GetMapping("/price")
     //    public ApiResponse<List<Room>> searchPrice(

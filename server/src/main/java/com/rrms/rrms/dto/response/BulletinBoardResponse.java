@@ -1,16 +1,17 @@
 package com.rrms.rrms.dto.response;
 
-import com.rrms.rrms.models.BulletinBoardImage;
-import com.rrms.rrms.models.BulletinBoardRule;
-import com.rrms.rrms.models.BulletinBoards_RentalAm;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import com.rrms.rrms.models.BulletinBoardImage;
+import com.rrms.rrms.models.BulletinBoardRule;
+import com.rrms.rrms.models.BulletinBoards_RentalAm;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor

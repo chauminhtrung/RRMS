@@ -7,7 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
 import BrokerModal from './BrokerModal'
 import { useParams } from 'react-router-dom'
-import { getBrokers } from '~/apis/apiClient'
+import { getBrokers } from '~/apis/brokerAPI'
 
 const AdminManageBoker = ({ setIsAdmin, motels, setmotels }) => {
   const [open, setOpen] = useState(false)

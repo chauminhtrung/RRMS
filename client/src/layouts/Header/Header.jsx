@@ -6,12 +6,13 @@ import Swal from 'sweetalert2'
 import LanguageSelect from './Options/LanguageSelect'
 import ModeSelect from './Options/ModeSelect'
 
-const Header = ({ username, avatar, setUsername, setAvatar, setToken }) => {
+const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLanguage, currentLanguage }) => {
   const [IsDanhmuc, setIsDanhmuc] = useState(false)
   const [IsMuaban, setIsMuaban] = useState(false)
   const [IsTaikhoan, setIsTaikhoan] = useState(false)
   const [IsThongbao, setIsThongbao] = useState(false)
   const [IsMobileTaikhoan, setIsMobileTaikhoan] = useState(false)
+
   const navigate = useNavigate()
   const handleMenuItemClick = () => {
     setIsTaikhoan(false) // Đóng menu khi click vào bất kỳ mục nào
@@ -72,6 +73,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken }) => {
     }
   }
   const tokenExists = sessionStorage.getItem('user') !== null
+
   return (
     <header>
       <div className="ct-appwrapper aw__sa4yob3" style={{ '--sa4yob3-0': '#fff', '--sa4yob3-1': 'inherit' }}>
@@ -154,11 +156,17 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken }) => {
         <div className="aw__co22znp">
           <div className="leftWrapperContainerCss aw__l8p27ky" style={{ '--l8p27ky-0': '20%', '--l8p27ky-2': 'unset' }}>
             <div className="aw__l152mft9">
-              <a className="aw__l1l4rfje leftWrapperCss" href="/RRMS" style={{ justifyContent: 'unset' }}>
+              <Link className="aw__l1l4rfje leftWrapperCss" to="/RRMS" style={{ justifyContent: 'unset' }}>
                 <picture>
-                  <img height="35" width="188" className="aw__ldrazpr" src="./logo.png" alt="Nhà trọ" />
+                  <img
+                    height="35"
+                    width="188"
+                    className="aw__ldrazpr"
+                    src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Flogo.png?alt=media&token=719c4675-1dc4-42d2-af36-ec52626519e4"
+                    alt="Nhà trọ"
+                  />
                 </picture>
-              </a>
+              </Link>
             </div>
 
             <div
@@ -365,7 +373,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken }) => {
               </div>
 
               <div className="aw__njogxfr">
-                <LanguageSelect />
+                <LanguageSelect toggleLanguage={toggleLanguage} currentLanguage={currentLanguage} />
                 {/* <a className="aw__n1u3b0ub" href="https://chat.chotot.com/chat" rel="nofollow" aria-label="chat">
                   <svg
                     width="24"
@@ -788,7 +796,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken }) => {
                             <div className="clearfix"></div>
                           </a>
                         </div>
-                        {tokenExists && ( // Only show logout if user is logged in
+                        {tokenExists && (
                           <div className="aw__l1txzw95">
                             <a className="aw__iys36jq" target="_self" rel="noreferrer" onClick={handleLogout}>
                               <div className="aw__l1uq3g0v">
@@ -809,9 +817,9 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken }) => {
 
               {/* con them 1 icon o day  */}
             </div>
-            <a
+            <Link
               className="aw__b1358qut primary r-normal medium w-bold i-left aw__h1gb9yk aw__p1hqie6d"
-              href="/quanlytro"
+              to="/quanlytro"
               rel="nofollow">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -825,7 +833,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken }) => {
                   fill="currentColor"></path>
               </svg>
               ĐĂNG TIN
-            </a>
+            </Link>
           </div>
         </div>
         <div className="init aw__s1bb4p92">

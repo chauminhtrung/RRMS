@@ -1,20 +1,22 @@
 package com.rrms.rrms.database;
 
-import com.rrms.rrms.enums.Gender;
-import com.rrms.rrms.enums.Roles;
-import com.rrms.rrms.models.*;
-import com.rrms.rrms.repositories.*;
-import com.rrms.rrms.services.ISearchService;
-import lombok.extern.slf4j.Slf4j;
-import net.datafaker.Faker;
+import java.time.LocalDate;
+import java.util.*;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.*;
+import com.rrms.rrms.enums.Gender;
+import com.rrms.rrms.enums.Roles;
+import com.rrms.rrms.models.*;
+import com.rrms.rrms.repositories.*;
+import com.rrms.rrms.services.ISearchService;
+
+import lombok.extern.slf4j.Slf4j;
+import net.datafaker.Faker;
 
 @Configuration
 @Slf4j
@@ -47,9 +49,11 @@ public class DB {
             RentalAmenitiesRepository rentalAmenitiesRepository,
             BulletinBoardReviewsRepository bulletinBoardReviewsRepository,
             BulletinBoardImageRepository bulletinBoardImageRepository,
-            BulletinBoards_RentalAmRepository bulletinBoards_rentalAmRepository) {
+            BulletinBoards_RentalAmRepository bulletinBoards_rentalAmRepository,
+            TenantRepository tenantRepository) {
         return args -> {
             int roomsLength = 5;
+            int bulletinBoardsLength = 10;
             log.info("Starting to create data... length: {}", roomsLength);
 
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
@@ -115,7 +119,7 @@ public class DB {
                 createNameMotelService(nameMotelServiceRepository);
 
                 BulletinBoard bulletinBoard = null;
-                for (int i = 0; i < roomsLength; i++) {
+                for (int i = 0; i < bulletinBoardsLength; i++) {
 
                     // Tạo và lưu BulletinBoard
                     bulletinBoard = createBulletinBoard(faker, accountRepository);
@@ -141,7 +145,8 @@ public class DB {
                         accountRepository.findByUsername("admin").get(),
                         bulletinBoardReviewsRepository);
             }
-
+            Tenant tenant = generateFakeTenant();
+            tenantRepository.save(tenant);
             log.info("All data created");
             log.info(searchService.syncRoom(roomRepository.findAll()));
         };
@@ -207,6 +212,7 @@ public class DB {
             customerPermissions.add(createPermission("VIEW_CONTRACT", "View contracts", permissionRepository));
             customerPermissions.add(createPermission("SUPPORT", "Support requests", permissionRepository));
             customerPermissions.add(createPermission("PAYMENT", "Handle payments", permissionRepository));
+            customerPermissions.add(createPermission("REVIEWS", "Reviews bulletin board", permissionRepository));
             // Define GUEST permissions
             Set<Permission> guestPermissions = new HashSet<>();
             guestPermissions.add(createPermission("VIEW_SEARCH_MOTEL", "View and search motels", permissionRepository));
@@ -321,7 +327,7 @@ public class DB {
                     .username("host")
                     .password(pe.encode("123")) // Encode the password
                     .fullname("KienQuoc")
-                    .email("quoc@gmail.com")
+                    .email("quockkps31817@fpt.edu.vn")
                     .phone("0919925302")
                     .cccd("012345678900")
                     .gender(Gender.FEMALE)
@@ -427,7 +433,7 @@ public class DB {
                         // ngày
                         // trước
                         new Date() // Ngày hiện tại
-                );
+                        );
         room.setDeposit(faker.number().randomDouble(2, 500000, 5000000));
         room.setMotel(motel);
         room.setPrice(faker.number().randomDouble(2, 500000, 5000000));
@@ -508,7 +514,6 @@ public class DB {
         }
     }
 
-
     private void bulletinBoardRule(
             Faker faker,
             List<BulletinBoardRule> bulletinBoardRuleList,
@@ -545,9 +550,7 @@ public class DB {
         bulletinBoardReviewsRepository.saveAll(bulletinBoardReviewList);
     }
 
-    private BulletinBoard createBulletinBoard(
-            Faker faker,
-            AccountRepository accountRepository) {
+    private BulletinBoard createBulletinBoard(Faker faker, AccountRepository accountRepository) {
         BulletinBoard bulletinBoard = new BulletinBoard();
         bulletinBoard.setAccount(accountRepository.findByUsername("admin").get());
         bulletinBoard.setTitle(faker.address().city());
@@ -559,7 +562,15 @@ public class DB {
         bulletinBoard.setArea(faker.number().numberBetween(50, 200));
         bulletinBoard.setElectricityPrice(faker.number().randomDouble(2, 500000, 5000000));
         bulletinBoard.setWaterPrice(faker.number().randomDouble(2, 500000, 5000000));
-        bulletinBoard.setMaxPerson(faker.options().option("1 người ở", "2 người ở", "3 người ở", "4 người ở", "5-6 người ở", "7-10 người ở", "Không giới hạn"));
+        bulletinBoard.setMaxPerson(faker.options()
+                .option(
+                        "1 người ở",
+                        "2 người ở",
+                        "3 người ở",
+                        "4 người ở",
+                        "5-6 người ở",
+                        "7-10 người ở",
+                        "Không giới hạn"));
         bulletinBoard.setMoveInDate(new Date());
         bulletinBoard.setOpeningHours(faker.options().option("4 sáng", "5 sáng", "6 sáng"));
         bulletinBoard.setCloseHours(faker.options().option("22 tối", "23 tối", "24 tối"));
@@ -578,4 +589,59 @@ public class DB {
         bulletinBoards_RentalAm.setRentalAmenities(rentalAmenities);
         return bulletinBoards_RentalAm;
     }
+
+    private Tenant generateFakeTenant() {
+        Faker faker = new Faker();
+
+        // Tạo giá trị giả cho các trường
+        String fullname = faker.name().fullName();
+        String phone = faker.phoneNumber().cellPhone();
+
+        // Đảm bảo phone không vượt quá độ dài 12 ký tự
+        if (phone.length() > 10) {
+            phone = phone.substring(0, 10);
+        }
+
+        String CCCD = faker.idNumber().valid();
+        String email = faker.internet().emailAddress();
+        LocalDate birthday = faker.date().birthday().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+        Gender gender = faker.bool().bool() ? Gender.MALE : Gender.FEMALE;
+        String address = faker.address().fullAddress();
+        String job = faker.job().title();
+        LocalDate licenseDate = faker.date().birthday().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+        String placeOfLicense = faker.address().city();
+        String frontPhoto = "front_" + faker.internet().uuid() + ".jpg";
+        String backPhoto = "back_" + faker.internet().uuid() + ".jpg";
+        Boolean role = faker.bool().bool();
+        String relationship = faker.options().option("Chủ hộ", "Bạn bè", "Người thân");
+        String typeOfTenant = faker.bool().bool() ? "Người liên hệ" : "Thành viên";
+        Boolean temporaryResidence = faker.bool().bool(); // 2 option: true (Đã đầy đủ) hoặc false (Chưa đầy đủ)
+        Boolean informationVerify = faker.bool().bool(); // 2 option: true (Đã có tạm trú) hoặc false (Chưa có tạm trú)
+
+        // Tạo đối tượng Tenant
+        Tenant tenant = Tenant.builder()
+                .tenantId(UUID.randomUUID())
+                .fullname(fullname)
+                .phone(phone)  // Đảm bảo phone không vượt quá 12 ký tự
+                .cccd(CCCD)
+                .email(email)
+                .birthday(birthday)
+                .gender(gender)
+                .address(address)
+                .job(job)
+                .licenseDate(licenseDate)
+                .placeOfLicense(placeOfLicense)
+                .frontPhoto(frontPhoto)
+                .backPhoto(backPhoto)
+                .role(role)
+                .relationship(relationship)
+                .type_of_tenant(typeOfTenant)
+                .temporaryResidence(temporaryResidence)
+                .informationVerify(informationVerify)
+                .build();
+
+        return tenant;
+    }
+
+
 }

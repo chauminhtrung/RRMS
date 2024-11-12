@@ -1,6 +1,7 @@
 package com.rrms.rrms.services.servicesImp;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.request.MotelServiceRequest;
+import com.rrms.rrms.dto.request.MotelServiceUpdateRequest;
 import com.rrms.rrms.dto.response.MotelServiceResponse;
 import com.rrms.rrms.models.Motel;
 import com.rrms.rrms.models.MotelService;
@@ -44,16 +46,11 @@ public class MotelServiceService implements IMotelServiceService {
     }
 
     @Override
-    public MotelServiceResponse updateMotelService(UUID id, MotelServiceRequest request) {
+    public MotelServiceResponse updateMotelService(UUID id, MotelServiceUpdateRequest request) {
         MotelService motelService = motelServiceRepository
                 .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("MotelService not found"));
 
-        Motel motel = motelRepository
-                .findById(request.getMotelId())
-                .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
-
-        motelService.setMotel(motel);
         motelService.setNameService(request.getNameService());
         motelService.setPrice(request.getPrice());
         motelService.setChargetype(request.getChargetype());
@@ -66,6 +63,16 @@ public class MotelServiceService implements IMotelServiceService {
         if (!motelServiceRepository.existsById(id)) {
             throw new IllegalArgumentException("MotelService not found");
         }
+        // Bạn có thể cần cập nhật danh sách dịch vụ của motel
+        Optional<MotelService> motelServiceOpt = motelServiceRepository.findById(id);
+        motelServiceOpt.ifPresent(motelService -> {
+            Motel motel = motelService.getMotel(); // tùy thuộc vào cách bạn có mối quan hệ
+            if (motel != null) {
+                motel.getMotelServices().remove(motelService); // Xoá dịch vụ khỏi danh sách của motel
+                motelRepository.save(motel); // Lưu lại motel sau khi đã cập nhật
+            }
+        });
+
         motelServiceRepository.deleteById(id);
     }
 
@@ -85,22 +92,16 @@ public class MotelServiceService implements IMotelServiceService {
     }
 
     @Override
-    public MotelServiceResponse updateMotelServiceById(UUID motelId, MotelServiceRequest request) {
+    public MotelServiceResponse updateMotelServiceById(UUID motelId, MotelServiceUpdateRequest request) {
         // Tìm bản ghi MotelService đầu tiên theo motelId
         MotelService motelService = motelServiceRepository
                 .findFirstByMotel_MotelId(motelId)
                 .orElseThrow(() -> new IllegalArgumentException("MotelService not found for given motelId"));
 
-        // Kiểm tra xem motel có tồn tại không
-        Motel motel = motelRepository
-                .findById(request.getMotelId())
-                .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
-
         // Cập nhật các thuộc tính
         motelService.setNameService(request.getNameService());
         motelService.setPrice(request.getPrice());
         motelService.setChargetype(request.getChargetype());
-        motelService.setMotel(motel); // Gán lại motel
 
         // Lưu và trả về response
         MotelService updatedService = motelServiceRepository.save(motelService);

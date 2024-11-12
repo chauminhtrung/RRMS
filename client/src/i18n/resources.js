@@ -59,7 +59,10 @@ export const resources = {
       'sinh-vien': 'Sinh viên',
       'nhan-vien-van-phong': 'Nhân viên văn phòng',
       'nhan-vien-xi-nghiep': 'Nhân viên xí nghiệp',
-      'nganh-nghe-khac': 'Ngành nghề khác'
+      'nganh-nghe-khac': 'Ngành nghề khác',
+      //
+      'quay-ve': 'Quay về',
+      '404-xin-loi-khong-ton-tai': 'Xin lỗi, trang bạn tìm kiếm không tồn tại. Vui lòng trở về trang chủ để tiếp tục.'
     }
   },
   en: {
@@ -122,7 +125,11 @@ export const resources = {
       'sinh-vien': 'Student',
       'nhan-vien-van-phong': 'Office worker',
       'nhan-vien-xi-nghiep': 'Factory worker',
-      'nganh-nghe-khac': 'Other professions'
+      'nganh-nghe-khac': 'Other professions',
+      //
+      'quay-ve': 'Go back',
+      '404-xin-loi-khong-ton-tai':
+        'Sorry, the page you are looking for does not exist. Please go back to the homepage to continue.'
     }
   }
 }

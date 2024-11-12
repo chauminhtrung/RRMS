@@ -3,7 +3,8 @@ import AddIcon from '@mui/icons-material/Add'
 import { useEffect, useState } from 'react'
 import PostModal from './PostModal'
 import PostRoomTable from './PostBulletinBoardTable'
-import { getBulletinBoardTable, introspect } from '~/apis/apiClient'
+import { getBulletinBoardTable } from '~/apis/bulletinBoardAPI'
+import { introspect } from '~/apis/accountAPI'
 
 const Post = () => {
   const [open, setOpen] = useState(false)

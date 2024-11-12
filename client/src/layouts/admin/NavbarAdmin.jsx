@@ -2,35 +2,36 @@ import { Link, useParams, useLocation, useNavigate } from 'react-router-dom'
 import './NavbarAdmin.css'
 import { useEffect, useState } from 'react'
 import NavWData from './NavWData'
-import { getMotelById } from '~/apis/apiClient'
 import Swal from 'sweetalert2'
 import { env } from '~/configs/environment'
+import { getMotelById } from '~/apis/motelAPI'
 
-const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, setUsername, setAvatar, setToken }) => {
-  const { motelId } = useParams() // Lấy tham số motelId từ URL
+const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) => {
+  const { motelId } = useParams(); // Lấy tham số motelId từ URL
   const location = useLocation()
   const [motel, setmotel] = useState(null)
   const navigate = useNavigate()
 
   useEffect(() => {
-    // Nếu có danh sách nhà trọ và không có tên cụ thể từ URL
+    // Kiểm tra xem có giá trị hợp lệ cho motelId hay không
     if (motels && motels.length > 0 && !motelId) {
-      setmotel(motels[0]) // Cập nhật phòng trọ đầu tiên nếu tồn tại dữ liệu
-    } else {
-      // Nếu có tên nhà trọ từ URL, lấy dữ liệu bằng API
+      setmotel(motels);
+    } else if (motelId) {
       getMotelById(motelId).then((res) => {
-        setmotel(res.data.result[0])
-      })
+        setmotel(res.data.result);
+      }).catch(error => {
+        console.error('Không thể lấy thông tin motel:', error);
+      });
+    } else {
+      console.error('ID từ URL không hợp lệ hoặc không tồn tại.');
     }
-  }, [motels, motelId]) // Thêm các dependencies cần thiết vào mảng dependencies
+  }, [motels, motelId]);
 
   // Theo dõi khi motel thay đổi để kiểm tra giá trị
   useEffect(() => {
-    if (motel) {
-      console.log('Motel đã được cập nhật:')
-      console.log(motel)
-    }
+
   }, [motel]) // Chỉ chạy khi motel thay đổi
+
 
   const handleLogout = async () => {
     const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
@@ -59,9 +60,6 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, se
       if (response.ok) {
         // Xoá thông tin người dùng sau khi đăng xuất thành công
         sessionStorage.removeItem('user')
-        setToken(null) // Xóa token khỏi state
-        setUsername('') // Cập nhật username về trống
-        setAvatar('') // Cập nhật avatar về mặc định
         navigate('/login')
         Swal.fire({
           icon: 'success',
@@ -86,6 +84,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, se
       })
     }
   }
+  const tokenExists = sessionStorage.getItem('user') !== null
 
   return (
     <header>
@@ -192,8 +191,8 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, se
                     }`}>
                     <Link
                       to={motel ? `/dang-tin/${motel.motelId}` : '#'}
-                      className="nav-link "
-                      setIsNavAdmin={setIsNavAdmin}>
+                      className="nav-link"
+                      onClick={() => setIsNavAdmin(true)}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -290,7 +289,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, se
                   </li>
                   <li className="nav-item btn-group menu-item">
                     <Link
-                      to="javascript:;"
+                      to="#"
                       className={`nav-link ${location.pathname === '/thong-bao' ? 'active' : ''}`}
                       data-bs-toggle="dropdown"
                       aria-expanded="false">
@@ -350,15 +349,12 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, se
                       </span>
                     </Link>
                   </li>
+                  {tokenExists && (
                   <li className={`nav-item menu-item`}>
                     <Link
-                      to="/login"
+                      to=""
                       className="nav-link"
-                      onClick={async (e) => {
-                        e.preventDefault() // Ngăn chặn hành vi điều hướng mặc định của Link
-
-                        await handleLogout() // Gọi hàm handleLogout
-                      }}>
+                      onClick={handleLogout}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -379,6 +375,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, se
                       </span>
                     </Link>
                   </li>
+                   )}
                 </ul>
               </nav>
             </div>
@@ -386,7 +383,6 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels, se
         </div>
       </div>
 
-      {/* neu co du lieu moi co cai nay */}
       {isNavAdmin && motels.length > 0 ? <NavWData motels={motels} setmotels={setmotels} /> : null}
     </header>
   )

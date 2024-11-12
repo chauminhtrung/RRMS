@@ -1,11 +1,10 @@
 package com.rrms.rrms.dto.response;
 
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
-
 import java.util.Date;
 import java.util.UUID;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
@@ -18,6 +17,8 @@ public class RoomResponse2 {
     private String name;
     private String group;
     private Double price;
+    private String prioritize;
+    private Integer area;
     private Double deposit;
     private Double debt;
     private Integer countTenant;

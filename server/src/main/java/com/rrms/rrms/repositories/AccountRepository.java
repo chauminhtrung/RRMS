@@ -24,6 +24,8 @@ public interface AccountRepository extends JpaRepository<Account, String> {
 
     boolean existsByPhone(String phone);
 
+    boolean existsAccountByEmail(String email);
+
     @Query("SELECT a FROM Account a WHERE " + "(LOWER(a.username) LIKE LOWER(CONCAT('%', :search, '%')) OR "
             + "LOWER(a.fullname) LIKE LOWER(CONCAT('%', :search, '%')) OR "
             + "LOWER(a.phone) LIKE LOWER(CONCAT('%', :search, '%')) OR "

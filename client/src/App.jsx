@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { getMotelByUsername } from '~/apis/apiClient'
 import Detail from './pages/Detail/Detail'
 import Home from './pages/Homes/Home'
 import Chart from './pages/Charts/Chart'
@@ -13,6 +12,7 @@ import Register from './pages/Register/Register'
 import Forgot_Password from './pages/Forgot-Password/Forgot_Password'
 import Support from './pages/Support/Support'
 import AdminStatis from './pages/admin/statistical'
+import DetailRoom from './pages/admin/ManagerHome/DetailRoom/DetailRoom'
 import MainManagement from './pages/admin/ManagerHome/MainManagement'
 import ManagerMyAccount from './pages/admin/ManagerMyAccount/ManagerMyAccount'
 import ManagerCompanyAT from './pages/admin/ManagerCompanyAT/ManagerCompanyAT'
@@ -41,12 +41,13 @@ import IncomeSummary from './pages/admin/NavContentAdmin/IncomeSummary/IncomeSum
 import Zalo_history from './pages/admin/NavContentAdmin/Zalo_history'
 import SettingMotel from './pages/admin/NavContentAdmin/SettingMotel/SettingMotel'
 import ImageComparison from './pages/AI/ImageComparison'
-// import TestPage from './pages/TestPage'
-// import ValidCaptcha from './components/ValidCaptcha'
 import ImportFileExcel from './pages/admin/NavContentAdmin/ImportFileExcel'
 import MotelSetting from './pages/admin/MotelSettings/MotelSetting'
 import PassportRecognition from './pages/AI/PassportRecognition'
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage.jsx'
+import { getMotelByUsername } from './apis/motelAPI'
+import i18n from './i18n/i18n'
+import ResidenceForm from './pages/admin/NavContentAdmin/ResidenceForm'
 
 function App() {
   const [username, setUsername] = useState('')
@@ -56,11 +57,22 @@ function App() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [isNavAdmin, setIsNavAdmin] = useState(true)
   const [motels, setmotels] = useState([])
-
+  const [currentLanguage, setCurrentLanguage] = useState(localStorage.getItem('language') || i18n.language)
   const fetchMotelsByUsername = async (username) => {
     getMotelByUsername(username).then((res) => {
       setmotels(res.data.result)
     })
+  }
+
+  useEffect(() => {
+    localStorage.setItem('language', currentLanguage)
+    i18n.changeLanguage(currentLanguage)
+  }, [currentLanguage])
+
+  const toggleLanguage = () => {
+    const newLanguage = currentLanguage === 'vi' ? 'en' : 'vi'
+    i18n.changeLanguage(newLanguage)
+    setCurrentLanguage(newLanguage)
   }
 
   //Muốn mất header thì thêm props setIsAdmin={setIsAdmin}
@@ -87,6 +99,8 @@ function App() {
             setUsername={setUsername}
             setAvatar={setAvatar}
             setToken={setToken}
+            toggleLanguage={toggleLanguage}
+            currentLanguage={currentLanguage}
           />
         ) : (
           <></>
@@ -179,6 +193,19 @@ function App() {
               />
             }
           />
+          <Route
+            path="/AdminManagerBoard"
+            element={
+              <AdminManagerBoard
+                motels={motels}
+                setmotels={setmotels}
+                setIsAdmin={setIsAdmin}
+                isNavAdmin={isNavAdmin}
+                setIsNavAdmin={setIsNavAdmin}
+              />
+            }
+          />
+          <Route path="/residenceForm/:tenantId" element={<ResidenceForm />} />
 
           <Route path="/adminManage/*" element={<AdminManage setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminStatis" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
@@ -306,6 +333,21 @@ function App() {
             path="/quanlytro/:motelId/import-data-from-file"
             element={
               <ImportFileExcel
+                motels={motels}
+                setmotels={setmotels}
+                setIsAdmin={setIsAdmin}
+                isNavAdmin={isNavAdmin}
+                setIsNavAdmin={setIsNavAdmin}
+              />
+            }
+          />
+
+          {/* detaiROoom */}
+
+          <Route
+            path="/quanlytro/:motelId/Chi-tiet-phong/:roomId"
+            element={
+              <DetailRoom
                 motels={motels}
                 setmotels={setmotels}
                 setIsAdmin={setIsAdmin}

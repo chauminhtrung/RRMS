@@ -28,8 +28,7 @@ import GroupIcon from '@mui/icons-material/Group'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined'
 import LanguageIcon from '@mui/icons-material/Language'
-import { getBulletinBoard } from '~/apis/apiClient'
-import { roomOrder } from '~/apis/mock-data-room-order'
+import { roomOrder } from '~/apis/mock/mock-data-room-order'
 import RoomOther from './RoomOther'
 import RaitingAvg from './RaitingAvg'
 import Comment from './Comment'
@@ -37,11 +36,13 @@ import BannerHorizontal from '~/components/BannerHorizontal'
 import Slider from 'react-slick'
 import NextArrow from './NextArrow'
 import PrevArrow from './PrevArrow'
-import LoadingPage from '~/components/LoadingPage'
+import LoadingPage from '~/components/LoadingPage/LoadingPage'
 import { formatterAmount } from '~/utils/formatterAmount'
 import { useEffect, useState } from 'react'
 import UserRaiting from './UserRaiting'
 import { useTranslation } from 'react-i18next'
+import { getBulletinBoard } from '~/apis/bulletinBoardAPI'
+import { getAccountByUsername, introspect } from '~/apis/accountAPI'
 
 const Detail = ({ setIsAdmin }) => {
   const { t } = useTranslation()
@@ -51,6 +52,13 @@ const Detail = ({ setIsAdmin }) => {
   const { bulletinBoardId } = useParams()
   const [currentPage, setCurrentPage] = useState(1)
   const [commentsPerPage] = useState(5)
+  const [account, setAccount] = useState()
+  const [review, setReview] = useState({
+    username: account?.username || '',
+    bulletinBoardId: bulletinBoardId,
+    rating: 1,
+    content: ''
+  })
 
   useEffect(() => {
     setIsAdmin(false)
@@ -70,10 +78,26 @@ const Detail = ({ setIsAdmin }) => {
     }
   }
 
+  const refreshBulletinBoards = () => {
+    Promise.all([getBulletinBoard(bulletinBoardId), introspect().then((res) => getAccountByUsername(res.data.issuer))])
+      .then(([bulletinRes, accountRes]) => {
+        setDetail(bulletinRes.result)
+        setAccount(accountRes.data)
+      })
+      .catch((error) => {
+        console.error('Lỗi khi lấy dữ liệu:', error)
+      })
+  }
+
   useEffect(() => {
-    getBulletinBoard(bulletinBoardId).then((res) => {
-      setDetail(res.result)
-    })
+    Promise.all([getBulletinBoard(bulletinBoardId), introspect().then((res) => getAccountByUsername(res.data.issuer))])
+      .then(([bulletinRes, accountRes]) => {
+        setDetail(bulletinRes.result)
+        setAccount(accountRes.data)
+      })
+      .catch((error) => {
+        console.error('Lỗi khi lấy dữ liệu:', error)
+      })
   }, [bulletinBoardId])
 
   const indexOfLastComment = currentPage * commentsPerPage
@@ -82,13 +106,6 @@ const Detail = ({ setIsAdmin }) => {
 
   const paginate = (event, value) => {
     setCurrentPage(value)
-  }
-
-  const setReviews = (newReview) => {
-    setDetail((prevDetail) => ({
-      ...prevDetail,
-      roomReviews: [...prevDetail.roomReviews, newReview] // Thêm bình luận mới
-    }))
   }
 
   useEffect(() => {
@@ -374,9 +391,17 @@ const Detail = ({ setIsAdmin }) => {
             />
           </Box>
           {currentComments.map((item, i) => (
-            <Comment key={i} item={item} roomId={detail.roomId} />
+            <Comment key={i} item={item} roomId={bulletinBoardId} />
           ))}
-          <UserRaiting roomId={detail.roomId} setReviews={setReviews} username={'dung'} fullname={'Trí Dũng'} />
+          {account && (
+            <UserRaiting
+              roomId={bulletinBoardId}
+              refreshBulletinBoards={refreshBulletinBoards}
+              username={account.username}
+              review={review}
+              setReview={setReview}
+            />
+          )}
           {/* Giới thiệu trọ khác */}
           <Box
             sx={{

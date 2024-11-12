@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import  { useState } from 'react'
 import { Avatar, Grid, Button, AppBar, Toolbar, Tabs, Tab } from '@mui/material'
 const Navbar = () => {
   const [select, setSelect] = useState(0)

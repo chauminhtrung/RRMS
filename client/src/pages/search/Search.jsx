@@ -9,11 +9,11 @@ import DistrictList from './DistrictList'
 import BannerHorizontal from '~/components/BannerHorizontal'
 import Text from './Text'
 import ItemSearch from './ItemSearch'
-import { getTinhThanh } from '~/apis/apiClient'
-import LoadingPage from '~/components/LoadingPage'
+import LoadingPage from '~/components/LoadingPage/LoadingPage'
 import FilterSearch from './FilterSearch'
 import axios from 'axios'
 import ChatAI from '../AI/ChatAI'
+import { getTinhThanh } from '~/apis/addressAPI'
 
 const Search = ({ setIsAdmin }) => {
   const [provinces, setProvinces] = useState([])

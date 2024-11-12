@@ -9,8 +9,6 @@ const MainManagement = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
     setIsAdmin(true)
   }, [])
 
-  console.log(isNavAdmin)
-
   return (
     <div style={{ backgroundColor: ' #e4eef5' }}>
       <NavAdmin

@@ -1,73 +1,87 @@
 package com.rrms.rrms.services.servicesImp;
 
-import com.rrms.rrms.dto.request.MotelRequest;
 import com.rrms.rrms.dto.request.TenantRequest;
-import com.rrms.rrms.dto.response.MotelResponse;
 import com.rrms.rrms.dto.response.TenantResponse;
 import com.rrms.rrms.mapper.TenantMapper;
-import com.rrms.rrms.models.Motel;
 import com.rrms.rrms.models.Tenant;
 import com.rrms.rrms.repositories.TenantRepository;
-import com.rrms.rrms.services.ITenant;
+import com.rrms.rrms.services.ITenantService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
-public class TenantService implements ITenant {
-    TenantRepository tenantRepository;
-    TenantMapper tenantMapper;
+public class TenantService implements ITenantService {
+    @Autowired
+    private TenantRepository tenantRepository;
+    @Autowired
+    private TenantMapper tenantMapper;
+
     @Override
-    public List<TenantResponse> getAllTenants() {
-        return tenantRepository.findAll().stream()
-                .map(tenantMapper::toTenantResponse)
-                .toList();
+    public TenantResponse insert(TenantRequest tenant) {
+        return tenantMapper.toTenantResponse(tenantRepository.save(tenantMapper.tenantRequestToTenant(tenant)));
     }
 
     @Override
     public TenantResponse findById(UUID id) {
-        return tenantRepository.findById(id)
-                .map(motel -> {
-                    TenantResponse response = tenantMapper.toTenantResponse(motel);
+        return tenantRepository
+                .findById(id)
+                .map(tenant -> {
+                    TenantResponse response = tenantMapper.toTenantResponse(tenant);
                     return response;
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Tenant not found"));
     }
 
+
     @Override
-    public TenantResponse insert(TenantRequest tenantRequest) {
-        return tenantMapper.toTenantResponse(tenantRepository.save(tenantMapper.toTenant(tenantRequest)));
+    public List<TenantResponse> getAllTenants() {
+        return tenantRepository.findAll().stream()
+                .map(tenantMapper::toTenantResponse)
+                .collect(Collectors.toList());
     }
+
+
     @Override
-    public TenantResponse update(UUID id, TenantRequest tenant) {
-        Optional<Tenant> tenantfind = tenantRepository.findById(id);
-        if (tenantfind.isPresent()) {
-            tenantfind.get().setFullname(tenant.getFullname());
-            tenantfind.get().setAddress(tenant.getAddress());
-            tenantfind.get().setBirthday(tenant.getBirthday());
-            tenantfind.get().setEmail(tenant.getEmail());
-            tenantfind.get().setBack_photo(tenant.getBackPhoto());
-            tenantfind.get().setFront_photo(tenant.getFrontPhoto());
-            tenantfind.get().setJob(tenant.getJob());
-            tenantfind.get().setGender(tenant.getGender());
-            tenantfind.get().setPhone(tenant.getPhone());
-            tenantfind.get().setCCCD(tenant.getCccd());
-            return tenantMapper.toTenantResponse(tenantRepository.save(tenantfind.get()));
+    public TenantResponse update(UUID id, TenantRequest tenantRequest) {
+        // Tìm tenant theo id
+        Optional<Tenant> tenantFind = tenantRepository.findById(id);
+        if (tenantFind.isPresent()) {
+            Tenant tenant = tenantFind.get();
+
+            // Cập nhật thông tin từ tenantRequest vào tenant entity
+            tenant.setFullname(tenantRequest.getFullname());
+            tenant.setPhone(tenantRequest.getPhone());
+            tenant.setCccd(tenantRequest.getCccd());
+            tenant.setEmail(tenantRequest.getEmail());
+            tenant.setBirthday(tenantRequest.getBirthday());
+            tenant.setGender(tenantRequest.getGender());
+            tenant.setAddress(tenantRequest.getAddress());
+            tenant.setJob(tenantRequest.getJob());
+            tenant.setLicenseDate(tenantRequest.getLicenseDate());
+            tenant.setPlaceOfLicense(tenantRequest.getPlaceOfLicense());
+            tenant.setFrontPhoto(tenantRequest.getFrontPhoto());
+            tenant.setBackPhoto(tenantRequest.getBackPhoto());
+            tenant.setRole(tenantRequest.getRole());
+            tenant.setTemporaryResidence(tenantRequest.getTemporaryResidence());
+            tenant.setInformationVerify(tenantRequest.getInformationVerify());
+
+            // Lưu lại và trả về response
+            return tenantMapper.toTenantResponse(tenantRepository.save(tenant));
         }
         return null;
     }
 
-
-
-
     @Override
     public void delete(UUID id) {
-        Optional<Tenant> tenantfind = tenantRepository.findById(id);
-        if (tenantfind.isPresent()) {
+        Optional<Tenant> tenant = tenantRepository.findById(id);
+        if (tenant.isPresent()) {
             tenantRepository.deleteById(id);
         }
     }
+
 }

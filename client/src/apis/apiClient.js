@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import axios from 'axios'
 import { env } from '~/configs/environment'
 
@@ -69,7 +70,7 @@ export const listMotel = async () => {
 }
 export const createMotel = async (Motel) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-  return await axios.post(`${env.API_URL}/motels`, Motel, {
+  return await axios.post(`${env.API_URL}/motels/create`, Motel, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -107,9 +108,6 @@ export const getMotelByUsername = async (username) => {
 
 export const getMotelById = async (Id) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-  if (!Id) {
-    throw new Error('ID không hợp lệ')
-  }
   return await axios.get(`${env.API_URL}/motels/get-motel-id?id=${Id}`, {
     headers: {
       Authorization: `Bearer ${token}`
@@ -256,7 +254,7 @@ export const getAllTypeRoom = async () => {
 //Motel-Service
 export const createSerivceMotel = async (data) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-  const response = await axios.post(`${env.API_URL}/motel-services`, data, {
+  const response = await axios.post(`${env.API_URL}/motel-services/create`, data, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -288,6 +286,26 @@ export const updateSerivceMotelbyMotelId = async (id, data) => {
 export const getRoomByMotelId = async (id) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   const response = await axios.get(`${env.API_URL}/room/motel/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  return response.data
+}
+
+export const createRoom = async (data) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  const response = await axios.post(`${env.API_URL}/room`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  return response.data
+}
+
+export const getRoomById = async (id) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  const response = await axios.get(`${env.API_URL}/room/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
