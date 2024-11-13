@@ -23,38 +23,38 @@ import {
   Snackbar,
   Alert,
   Tooltip,
-  Chip,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  ListItemText
+  Chip
 } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import PrintIcon from '@mui/icons-material/Print'
 import * as XLSX from 'xlsx'
 import AddTenantModal from './ModalTenant'
-import DeleteIcon from '@mui/icons-material/Delete'
 import axios from 'axios'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
-
-import VisibilityIcon from '@mui/icons-material/Visibility'
-import ShareIcon from '@mui/icons-material/Share'
-import PersonAddIcon from '@mui/icons-material/PersonAdd'
-import CloseIcon from '@mui/icons-material/Close'
 import { useNavigate } from 'react-router-dom'
-const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
+import Swal from 'sweetalert2'
+import TenantMenuUpdate from './TenantMenuUpdate'
+const TenantManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   const [open, setOpen] = useState(false)
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [avatar, setAvatar] = useState(true)
   const [snackbarMessage, setSnackbarMessage] = useState('')
   const [rows, setRows] = useState([])
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [editId, setEditId] = useState()
 
   const [anchorEl, setAnchorEl] = useState(null)
   const navigate = useNavigate()
 
+  const handleOpen = (tenantId) => {
+    setOpen(true)
+    setEditId(tenantId)
+  }
+  const handleClose = () => {
+    setEditId(null)
+    setOpen(false)
+    setAvatar(true)
+  }
   // Hàm mở menu khi nhấn vào icon
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
@@ -81,6 +81,7 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
     setRowsPerPage(+event.target.value)
     setPage(0)
   }
+
   const loadData = async () => {
     try {
       const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
@@ -99,20 +100,46 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
       if (response.status === 200) {
         const fetchedData = response.data?.result
         console.log('Fetched Data:', fetchedData)
-        console.log('Full fetched data:', response.data)
 
         if (Array.isArray(fetchedData)) {
           setRows(fetchedData)
           console.log('State rows set to:', fetchedData)
-          fetchedData.forEach((item, index) => {
-            console.log(`Item ${index} inf:`, item.type_of_tenant)
-            console.log(`Item ${index} inf:`, item.temporaryResidence)
-            console.log(`Item ${index} inf:`, item.informationVerify)
-          })
         }
       }
     } catch (error) {
       console.error('Error fetching data:', error.response?.data || error.message || error)
+    }
+  }
+  const deleteTenant = async (id, e) => {
+    e.preventDefault()
+
+    const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+    if (!token) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Lỗi',
+        text: 'Token is missing, please login again.'
+      })
+      return
+    }
+
+    try {
+      const response = await axios.delete(`http://localhost:8080/tenant/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      console.log('Tenant deleted successfully:', response.data)
+      Swal.fire({ icon: 'success', title: 'Thành công', text: 'Xóa tenant thành công!' })
+      reloadData() // Gọi lại hàm reloadData sau khi xóa thành công
+    } catch (error) {
+      console.error('Error deleting tenant:', error)
+      Swal.fire({
+        icon: 'error',
+        title: 'Lỗi',
+        text: 'Xóa tenant không thành công!'
+      })
     }
   }
 
@@ -147,7 +174,7 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
           motels={motels}
           setIsAdmin={setIsAdmin}
           setIsNavAdmin={setIsNavAdmin}
-          isNavAdmin={isNavAdmin}
+          isNavAdmin={true}
         />
         <div
           style={{
@@ -518,7 +545,7 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
                             </Typography>
                           </TableCell>
 
-                          <TableCell sx={{ borderRight: '1px solid #ddd' }}>{row.cccd}</TableCell>
+                          <TableCell sx={{ borderRight: '1px solid #ddd' }}>{row.tenantId}</TableCell>
                           <TableCell sx={{ borderRight: '1px solid #ddd' }}>{row.licenseDate}</TableCell>
                           <TableCell sx={{ borderRight: '1px solid #ddd' }}>{row.placeOfLicense}</TableCell>
                           <TableCell sx={{ borderRight: '1px solid #ddd', padding: 1 }}>
@@ -552,61 +579,19 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
                             />
                           </TableCell>
                           <TableCell sx={{ width: '60px', textAlign: 'center' }}>
-                            <IconButton
-                              onClick={handleClick}
-                              style={{
-                                border: '1px solid black',
-                                borderRadius: '50%'
-                              }}>
-                              <MoreVertIcon />
-                            </IconButton>
-
-                            <Menu
+                            <TenantMenuUpdate
+                              handleClick={handleClick}
                               anchorEl={anchorEl}
-                              open={Boolean(anchorEl)}
-                              onClose={handleCloseMenu}
-                              PaperProps={{
-                                style: {
-                                  width: '280px'
-                                }
-                              }}>
-                              <MenuItem onClick={() => handleClickDoc(row.tenantId)}>
-                                <ListItemIcon>
-                                  <VisibilityIcon fontSize="small" />
-                                </ListItemIcon>
-                                <ListItemText>Xem mẫu văn bản tạm trú</ListItemText>
-                              </MenuItem>
-                              <MenuItem onClick={handleCloseMenu}>
-                                <ListItemIcon>
-                                  <PrintIcon fontSize="small" />
-                                </ListItemIcon>
-                                <ListItemText>In mẫu văn bản tạm trú</ListItemText>
-                              </MenuItem>
-                              <MenuItem onClick={handleCloseMenu}>
-                                <ListItemIcon>
-                                  <ShareIcon fontSize="small" />
-                                </ListItemIcon>
-                                <ListItemText>Chia sẻ mẫu văn bản tạm trú</ListItemText>
-                              </MenuItem>
-                              <MenuItem onClick={handleCloseMenu}>
-                                <ListItemIcon>
-                                  <PersonAddIcon fontSize="small" />
-                                </ListItemIcon>
-                                <ListItemText>Khách thuê tự nhập</ListItemText>
-                              </MenuItem>
-                              <MenuItem onClick={handleCloseMenu} sx={{ color: 'red' }}>
-                                <ListItemIcon>
-                                  <DeleteIcon fontSize="small" color="error" />
-                                </ListItemIcon>
-                                <ListItemText>Xóa khách thuê</ListItemText>
-                              </MenuItem>
-                              <MenuItem onClick={handleCloseMenu}>
-                                <ListItemIcon>
-                                  <CloseIcon fontSize="small" />
-                                </ListItemIcon>
-                                <ListItemText>Đóng menu</ListItemText>
-                              </MenuItem>
-                            </Menu>
+                              handleCloseMenu={handleCloseMenu}
+                              handleClickDoc={handleClickDoc}
+                              tenantId={row.tenantId}
+                              handleOpen={handleOpen}
+                              setEditId={setEditId}
+                              setAvatar={setAvatar}
+                              handleClose={handleClose}
+                              reloadData={reloadData}
+                              deleteTenant={deleteTenant}
+                            />
                           </TableCell>
                         </TableRow>
                       ))
@@ -631,7 +616,7 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
             {snackbarMessage}
           </Alert>
         </Snackbar>
-        <AddTenantModal open={open} onClose={handleClose} reloadData={reloadData} />
+        <AddTenantModal avatar={avatar} editId={editId} open={open} onClose={handleClose} reloadData={reloadData} />
       </Box>
     </div>
   )

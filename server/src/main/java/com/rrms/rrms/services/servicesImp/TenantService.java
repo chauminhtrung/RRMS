@@ -52,26 +52,7 @@ public class TenantService implements ITenantService {
         Optional<Tenant> tenantFind = tenantRepository.findById(id);
         if (tenantFind.isPresent()) {
             Tenant tenant = tenantFind.get();
-
-            // Cập nhật thông tin từ tenantRequest vào tenant entity
-            tenant.setFullname(tenantRequest.getFullname());
-            tenant.setPhone(tenantRequest.getPhone());
-            tenant.setCccd(tenantRequest.getCccd());
-            tenant.setEmail(tenantRequest.getEmail());
-            tenant.setBirthday(tenantRequest.getBirthday());
-            tenant.setGender(tenantRequest.getGender());
-            tenant.setAddress(tenantRequest.getAddress());
-            tenant.setJob(tenantRequest.getJob());
-            tenant.setLicenseDate(tenantRequest.getLicenseDate());
-            tenant.setPlaceOfLicense(tenantRequest.getPlaceOfLicense());
-            tenant.setFrontPhoto(tenantRequest.getFrontPhoto());
-            tenant.setBackPhoto(tenantRequest.getBackPhoto());
-            tenant.setRole(tenantRequest.getRole());
-            tenant.setType_of_tenant(tenantRequest.getType_of_tenant());
-            tenant.setTemporaryResidence(tenantRequest.getTemporaryResidence());
-            tenant.setInformationVerify(tenantRequest.getInformationVerify());
-
-            // Lưu lại và trả về response
+            tenant = tenantMapper.tenantRequestToTenant(tenantRequest);
             return tenantMapper.toTenantResponse(tenantRepository.save(tenant));
         }
         return null;
