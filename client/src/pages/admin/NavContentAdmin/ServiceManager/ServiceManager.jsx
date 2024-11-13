@@ -16,7 +16,7 @@ import 'flatpickr/dist/plugins/monthSelect/style.css'
 import 'react-tabulator/lib/styles.css'
 import 'react-tabulator/lib/css/tabulator.min.css'
 
-const ServiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
+const ServiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   const { motelId } = useParams() // Lấy motelId từ URL
   const [motelServices, setMotelServices] = useState([])
   const [selectedService, setSelectedService] = useState(null)
@@ -179,7 +179,7 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
         motels={motels}
         setIsAdmin={setIsAdmin}
         setIsNavAdmin={setIsNavAdmin}
-        isNavAdmin={isNavAdmin}
+        isNavAdmin={true}
       />
       <div
         style={{
