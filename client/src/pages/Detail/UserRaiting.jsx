@@ -8,6 +8,7 @@ const UserRating = ({ roomId, username, setReview, review, refreshBulletinBoards
   useEffect(() => {
     getBulletinBoardReviewByBulletinBoardIdAndUsername(roomId, username).then((res) => {
       const result = res.result
+      console.log(username)
       setAccount(result)
       // Khởi tạo review từ dữ liệu đã có nếu tồn tại
       if (result) {
@@ -19,10 +20,12 @@ const UserRating = ({ roomId, username, setReview, review, refreshBulletinBoards
         })
       }
     })
+    setReview({ ...review, username: username })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleComment = () => {
+    setReview({ ...review, username: username })
     postBulletinBoardReview(review)
       .then(() => {
         refreshBulletinBoards()

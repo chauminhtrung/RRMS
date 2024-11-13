@@ -630,7 +630,7 @@ public class DB {
         String backPhoto = "back_" + faker.internet().uuid() + ".jpg";
         Boolean role = faker.bool().bool();
         String relationship = faker.options().option("Chủ hộ", "Bạn bè", "Người thân");
-        String typeOfTenant = faker.bool().bool() ? "Người liên hệ" : "Thành viên";
+        Boolean typeOfTenant = faker.bool().bool();
         Boolean temporaryResidence = faker.bool().bool(); // 2 option: true (Đã đầy đủ) hoặc false (Chưa đầy đủ)
         Boolean informationVerify = faker.bool().bool(); // 2 option: true (Đã có tạm trú) hoặc false (Chưa có tạm trú)
 

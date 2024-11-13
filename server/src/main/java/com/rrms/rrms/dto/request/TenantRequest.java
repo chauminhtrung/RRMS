@@ -26,6 +26,8 @@ public class TenantRequest {
     String frontPhoto;
     String backPhoto;
     Boolean role;
+    String relationship;
+    Boolean type_of_tenant;
     Boolean temporaryResidence;
     Boolean informationVerify;
 }

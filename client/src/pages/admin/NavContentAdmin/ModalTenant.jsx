@@ -39,12 +39,13 @@ const VisuallyHiddenInput = styled('input')({
   whiteSpace: 'nowrap',
   width: 1
 })
-const AddTenantModal = ({ open, onClose }) => {
+const AddTenantModal = ({ open, onClose, reloadData }) => {
   const [provinces, setProvinces] = useState([])
   const [selectedProvince, setSelectedProvince] = useState('')
   const [districts, setDistricts] = useState([])
   const [selectedDistrict, setSelectedDistrict] = useState('')
   const [wards, setWards] = useState([])
+  const [addressDetail, setAddressDetail] = useState('')
   const [selectedWard, setSelectedWard] = useState('')
   const [checkedStates, setCheckedStates] = useState([false, false, false])
   const [avatarImage, setAvatarImage] = useState(null)
@@ -219,9 +220,9 @@ const AddTenantModal = ({ open, onClose }) => {
     district: '',
     ward: '',
     address: '',
-    type_of_tenant: '',
-    temporaryResidence: '',
-    informationVerify: ''
+    type_of_tenant: false,
+    temporaryResidence: false,
+    informationVerify: false
   })
   const handleIdTypeChange = (e) => {
     setTenant({
@@ -235,6 +236,23 @@ const AddTenantModal = ({ open, onClose }) => {
       gender: e.target.value
     })
   }
+
+  const handleAddressDetailChange = (event) => {
+    setAddressDetail(event.target.value)
+    updateAddress(selectedProvince, selectedDistrict, selectedWard, event.target.value)
+  }
+
+  const updateAddress = (provinceId, districtId, wardId, addressDetailValue) => {
+    const provinceName = provinces.find((p) => p.id === provinceId)?.full_name || ''
+    const districtName = districts.find((d) => d.id === districtId)?.full_name || ''
+    const wardName = wards.find((w) => w.id === wardId)?.full_name || ''
+    const fullAddress = `${addressDetailValue}, ${wardName}, ${districtName}, ${provinceName}`.replace(
+      /(^, )|( ,$)/g,
+      ''
+    )
+    setTenant({ ...tenant, address: fullAddress })
+  }
+
   const saveTenant = async (e) => {
     e.preventDefault()
 
@@ -271,10 +289,11 @@ const AddTenantModal = ({ open, onClose }) => {
 
       console.log('Tenant saved successfully:', response.data)
       Swal.fire({ icon: 'success', title: 'Thành công', text: 'Thêm dịch vụ thành công!' })
+      reloadData()
       onClose()
     } catch (error) {
       console.error('Error saving tenant:', error)
-      toast.info('dd')
+      toast.info('Error saving tenant:')
     }
   }
 
@@ -462,7 +481,7 @@ const AddTenantModal = ({ open, onClose }) => {
             <Grid container spacing={1} sx={{ mt: 1 }}>
               <Grid item xs={6} sm={6}>
                 <FormControl fullWidth>
-                  <InputLabel>Chọn Tỉnh/Thành phố</InputLabel>
+                  <InputLabel id="province-label">Chọn Tỉnh/Thành phố</InputLabel>
                   <Select
                     labelId="province-label"
                     id="province"
@@ -473,7 +492,7 @@ const AddTenantModal = ({ open, onClose }) => {
                     <MenuItem value=""></MenuItem>
                     {provinces.map((province) => (
                       <MenuItem key={province.id} value={province.id}>
-                        {province.address}
+                        {province.full_name}
                       </MenuItem>
                     ))}
                   </Select>
@@ -481,7 +500,7 @@ const AddTenantModal = ({ open, onClose }) => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <FormControl fullWidth>
-                  <InputLabel>Chọn Quận/Huyện</InputLabel>
+                  <InputLabel id="province-label">Chọn Quận/Huyện</InputLabel>
                   <Select
                     labelId="district-label"
                     id="quan"
@@ -492,7 +511,7 @@ const AddTenantModal = ({ open, onClose }) => {
                     <MenuItem value=""></MenuItem>
                     {districts.map((district) => (
                       <MenuItem key={district.id} value={district.id}>
-                        {district.address}
+                        {district.full_name}
                       </MenuItem>
                     ))}
                   </Select>
@@ -511,7 +530,7 @@ const AddTenantModal = ({ open, onClose }) => {
                   fullWidth>
                   {wards.map((ward) => (
                     <MenuItem key={ward.id} value={ward.id}>
-                      {ward.address}
+                      {ward.full_name}
                     </MenuItem>
                   ))}
                 </Select>
@@ -520,9 +539,19 @@ const AddTenantModal = ({ open, onClose }) => {
             <Grid item xs={12} sx={{ mt: 1 }}>
               <TextField
                 label="Địa chỉ chi tiết. Ví dụ: 122 - Đường Phan Chu Trinh"
-                value={tenant.address || ''}
-                onChange={(e) => setTenant({ ...tenant, address: e.target.value })}
+                value={addressDetail} // Hiển thị địa chỉ chi tiết mà người dùng nhập
+                onChange={handleAddressDetailChange} // Cập nhật địa chỉ chi tiết riêng biệt
                 fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sx={{ mt: 1 }}>
+              <TextField
+                label="Địa chỉ đầy đủ"
+                value={tenant.address} // Hiển thị địa chỉ đầy đủ
+                fullWidth
+                InputProps={{
+                  readOnly: true
+                }}
               />
             </Grid>
             <Grid item xs={12} sx={{ mt: 1 }}>
@@ -685,8 +714,12 @@ const AddTenantModal = ({ open, onClose }) => {
                   <Switch
                     checked={checkedStates[0]}
                     onChange={(e) => {
-                      handleCheckboxChange(0)(e) // Gọi hàm handleCheckboxChange
-                      setTenant({ ...tenant, type_of_tenant: e.target.checked }) // Cập nhật tenant
+                      const isChecked = event.target.checked
+                      handleCheckboxChange(0)(e) // Gọi hàm handleCheckboxChange nếu cần
+                      setTenant({
+                        ...tenant,
+                        type_of_tenant: isChecked
+                      })
                     }}
                     value={tenant.type_of_tenant}
                     color="primary"
@@ -703,14 +736,19 @@ const AddTenantModal = ({ open, onClose }) => {
                   </Box>
                 }
               />
+
               <Divider />
               <FormControlLabel
                 control={
                   <Switch
                     checked={checkedStates[1]}
                     onChange={(e) => {
-                      handleCheckboxChange(1)(e) // Gọi hàm handleCheckboxChange
-                      setTenant({ ...tenant, temporaryResidence: e.target.checked }) // Cập nhật tenant
+                      const isChecked = event.target.checked
+                      handleCheckboxChange(1)(e) // Gọi hàm handleCheckboxChange nếu cần
+                      setTenant({
+                        ...tenant,
+                        temporaryResidence: isChecked
+                      })
                     }}
                     value={tenant.temporaryResidence}
                     color="primary"
@@ -733,8 +771,12 @@ const AddTenantModal = ({ open, onClose }) => {
                   <Switch
                     checked={checkedStates[2]}
                     onChange={(e) => {
-                      handleCheckboxChange(2)(e) // Gọi hàm handleCheckboxChange
-                      setTenant({ ...tenant, informationVerify: e.target.checked }) // Cập nhật tenant
+                      const isChecked = event.target.checked
+                      handleCheckboxChange(2)(e) // Gọi hàm handleCheckboxChange nếu cần
+                      setTenant({
+                        ...tenant,
+                        informationVerify: isChecked
+                      })
                     }}
                     value={tenant.informationVerify}
                     color="primary"

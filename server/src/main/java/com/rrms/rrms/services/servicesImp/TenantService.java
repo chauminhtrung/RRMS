@@ -67,6 +67,7 @@ public class TenantService implements ITenantService {
             tenant.setFrontPhoto(tenantRequest.getFrontPhoto());
             tenant.setBackPhoto(tenantRequest.getBackPhoto());
             tenant.setRole(tenantRequest.getRole());
+            tenant.setType_of_tenant(tenantRequest.getType_of_tenant());
             tenant.setTemporaryResidence(tenantRequest.getTemporaryResidence());
             tenant.setInformationVerify(tenantRequest.getInformationVerify());
 

@@ -68,8 +68,8 @@ public class Tenant {
     @Column(name = "relationship",columnDefinition = "VARCHAR(255)")
     private String relationship;
 
-    @Column(name = "Type_of_tenant", columnDefinition = "VARCHAR(255)")
-    private String  type_of_tenant;
+    @Column(name = "type_of_tenant",  columnDefinition = "BOOLEAN")
+    private Boolean  type_of_tenant;
 
 
     @Column(name = "temporary_residence", columnDefinition = "BOOLEAN")

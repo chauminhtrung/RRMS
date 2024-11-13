@@ -119,6 +119,9 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
   useEffect(() => {
     loadData()
   }, [])
+  const reloadData = () => {
+    loadData()
+  }
 
   // Hàm xuất file Excel
   const exportToExcel = () => {
@@ -393,96 +396,62 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
                       </TableCell>
 
                       <Tooltip title="Tên khách hàng" placement="top">
-                        <TableCell style={{ height: '50px', borderRight: '1px solid rgba(224, 224, 224, 1)' }}>
-                          Tên KH
-                        </TableCell>
+                        <TableCell style={{ borderRight: '1px solid rgba(224, 224, 224, 1)' }}>Tên KH</TableCell>
                       </Tooltip>
 
                       <Tooltip title="Số điện thoại" placement="top">
-                        <TableCell style={{ height: '50px', borderRight: '1px solid rgba(224, 224, 224, 1)' }}>
-                          SĐT
-                        </TableCell>
+                        <TableCell style={{ borderRight: '1px solid rgba(224, 224, 224, 1)' }}>SĐT</TableCell>
                       </Tooltip>
 
                       <Tooltip title="Ngày sinh" placement="top">
-                        <TableCell style={{ height: '50px', borderRight: '1px solid rgba(224, 224, 224, 1)' }}>
-                          NS
-                        </TableCell>
+                        <TableCell style={{ borderRight: '1px solid rgba(224, 224, 224, 1)' }}>NS</TableCell>
                       </Tooltip>
 
                       <Tooltip title="Giới tính" placement="top">
-                        <TableCell style={{ height: '50px', borderRight: '1px solid rgba(224, 224, 224, 1)' }}>
-                          GT
-                        </TableCell>
+                        <TableCell style={{ borderRight: '1px solid rgba(224, 224, 224, 1)' }}>GT</TableCell>
                       </Tooltip>
 
                       <Tooltip title="Địa chỉ & Nghề nghiệp" placement="top">
-                        <TableCell style={{ height: '50px', borderRight: '1px solid rgba(224, 224, 224, 1)' }}>
-                          ĐC & NN
-                        </TableCell>
+                        <TableCell style={{ borderRight: '1px solid rgba(224, 224, 224, 1)' }}>ĐC & NN</TableCell>
                       </Tooltip>
 
                       <Tooltip title="Số CMND & CCCD" placement="top">
-                        <TableCell style={{ height: '50px', borderRight: '1px solid rgba(224, 224, 224, 1)' }}>
-                          CCCD
-                        </TableCell>
+                        <TableCell style={{ borderRight: '1px solid rgba(224, 224, 224, 1)' }}>CCCD</TableCell>
                       </Tooltip>
 
                       <Tooltip title="Ngày cấp CMND/CCCD" placement="top">
-                        <TableCell style={{ height: '50px', borderRight: '1px solid rgba(224, 224, 224, 1)' }}>
-                          NgC
-                        </TableCell>
+                        <TableCell style={{ borderRight: '1px solid rgba(224, 224, 224, 1)' }}>NgC</TableCell>
                       </Tooltip>
 
                       <Tooltip title="Nơi cấp CMND/CCCD" placement="top">
-                        <TableCell style={{ height: '50px', borderRight: '1px solid rgba(224, 224, 224, 1)' }}>
-                          NC
-                        </TableCell>
+                        <TableCell style={{ borderRight: '1px solid rgba(224, 224, 224, 1)' }}>NC</TableCell>
                       </Tooltip>
 
                       <Tooltip title="Ảnh mặt trước CCCD" placement="top">
-                        <TableCell style={{ height: '50px', borderRight: '1px solid rgba(224, 224, 224, 1)' }}>
-                          Ảnh MT
-                        </TableCell>
+                        <TableCell style={{ borderRight: '1px solid rgba(224, 224, 224, 1)' }}>Ảnh MT</TableCell>
                       </Tooltip>
 
                       <Tooltip title="Ảnh mặt sau CCCD" placement="top">
-                        <TableCell style={{ height: '50px', borderRight: '1px solid rgba(224, 224, 224, 1)' }}>
-                          Ảnh MS
-                        </TableCell>
+                        <TableCell style={{ borderRight: '1px solid rgba(224, 224, 224, 1)' }}>Ảnh MS</TableCell>
                       </Tooltip>
 
                       <Tooltip title="Quan hệ" placement="top">
-                        <TableCell style={{ height: '50px', borderRight: '1px solid rgba(224, 224, 224, 1)' }}>
-                          QH
-                        </TableCell>
+                        <TableCell style={{ borderRight: '1px solid rgba(224, 224, 224, 1)' }}>QH</TableCell>
                       </Tooltip>
 
                       <Tooltip title="Loại người thuê" placement="top">
-                        <TableCell style={{ height: '50px', borderRight: '1px solid rgba(224, 224, 224, 1)' }}>
-                          Loại NT
-                        </TableCell>
+                        <TableCell style={{ borderRight: '1px solid rgba(224, 224, 224, 1)' }}>Loại NT</TableCell>
                       </Tooltip>
 
                       <Tooltip title="Trạng thái giấy tờ" placement="top">
-                        <TableCell style={{ height: '50px', borderRight: '1px solid rgba(224, 224, 224, 1)' }}>
-                          TTGT
-                        </TableCell>
+                        <TableCell style={{ borderRight: '1px solid rgba(224, 224, 224, 1)' }}>TTGT</TableCell>
                       </Tooltip>
 
                       <Tooltip title="Trạng thái tạm trú" placement="top">
-                        <TableCell style={{ height: '50px' }} sx={{ borderRight: '1px solid #ddd' }}>
-                          TTTT
-                        </TableCell>
+                        <TableCell sx={{ borderRight: '1px solid #ddd' }}>TTTT</TableCell>
                       </Tooltip>
 
-                      <TableCell
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '57px'
-                        }}></TableCell>
+                      <TableCell></TableCell>
                     </TableRow>
                   </TableHead>
 
@@ -563,15 +532,15 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
                           </TableCell>
                           <TableCell sx={{ borderRight: '1px solid #ddd' }}>
                             <Chip
-                              label={row.type_of_tenant === 'Người liên hệ' ? 'Người liên hệ' : 'Thành viên'}
-                              color={row.informationVerify ? 'success' : 'warning'}
+                              label={row.type_of_tenant ? 'Người liên hệ' : 'Thành viên'}
+                              color={row.type_of_tenant ? 'success' : 'warning'}
                               size="small"
                             />
                           </TableCell>
                           <TableCell sx={{ borderRight: '1px solid #ddd' }}>
                             <Chip
                               label={row.temporaryResidence ? 'Đã đầy đủ' : 'Chưa đầy đủ'}
-                              color={row.informationVerify ? 'success' : 'warning'}
+                              color={row.temporaryResidence ? 'success' : 'warning'}
                               size="small"
                             />
                           </TableCell>
@@ -662,7 +631,7 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
             {snackbarMessage}
           </Alert>
         </Snackbar>
-        <AddTenantModal open={open} onClose={handleClose} />
+        <AddTenantModal open={open} onClose={handleClose} reloadData={reloadData} />
       </Box>
     </div>
   )
