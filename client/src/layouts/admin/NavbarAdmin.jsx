@@ -7,31 +7,33 @@ import { env } from '~/configs/environment'
 import { getMotelById } from '~/apis/motelAPI'
 
 const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) => {
-  const { motelId } = useParams(); // Lấy tham số motelId từ URL
+  const { motelId } = useParams() // Lấy tham số motelId từ URL
   const location = useLocation()
   const [motel, setmotel] = useState(null)
   const navigate = useNavigate()
 
   useEffect(() => {
     // Kiểm tra xem có giá trị hợp lệ cho motelId hay không
+    // console.log(motels.length)
+    // console.log(isNavAdmin)
+
     if (motels && motels.length > 0 && !motelId) {
-      setmotel(motels);
+      setmotel(motels)
     } else if (motelId) {
-      getMotelById(motelId).then((res) => {
-        setmotel(res.data.result);
-      }).catch(error => {
-        console.error('Không thể lấy thông tin motel:', error);
-      });
+      getMotelById(motelId)
+        .then((res) => {
+          setmotel(res.data.result)
+        })
+        .catch((error) => {
+          console.error('Không thể lấy thông tin motel:', error)
+        })
     } else {
-      console.error('ID từ URL không hợp lệ hoặc không tồn tại.');
+      console.error('ID từ URL không hợp lệ hoặc không tồn tại.')
     }
-  }, [motels, motelId]);
+  }, [motels, motelId])
 
   // Theo dõi khi motel thay đổi để kiểm tra giá trị
-  useEffect(() => {
-
-  }, [motel]) // Chỉ chạy khi motel thay đổi
-
+  useEffect(() => {}, [motel]) // Chỉ chạy khi motel thay đổi
 
   const handleLogout = async () => {
     const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
@@ -350,32 +352,29 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) 
                     </Link>
                   </li>
                   {tokenExists && (
-                  <li className={`nav-item menu-item`}>
-                    <Link
-                      to=""
-                      className="nav-link"
-                      onClick={handleLogout}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="feather feather-log-out">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                        <polyline points="16 17 21 12 16 7"></polyline>
-                        <line x1="21" y1="12" x2="9" y2="12"></line>
-                      </svg>
-                      <span style={{ marginTop: '5px' }} className="text">
-                        Đăng xuất
-                      </span>
-                    </Link>
-                  </li>
-                   )}
+                    <li className={`nav-item menu-item`}>
+                      <Link to="" className="nav-link" onClick={handleLogout}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="feather feather-log-out">
+                          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                          <polyline points="16 17 21 12 16 7"></polyline>
+                          <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        <span style={{ marginTop: '5px' }} className="text">
+                          Đăng xuất
+                        </span>
+                      </Link>
+                    </li>
+                  )}
                 </ul>
               </nav>
             </div>
@@ -383,7 +382,7 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) 
         </div>
       </div>
 
-      {isNavAdmin && motels.length > 0 ? <NavWData motels={motels} setmotels={setmotels} /> : null}
+      {isNavAdmin && motels.length > 0 ? <NavWData motels={motels} setmotels={setmotels} /> : <></>}
     </header>
   )
 }

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import Detail from './pages/Detail/Detail'
 import Home from './pages/Homes/Home'
@@ -48,6 +48,7 @@ import NotFoundPage from './pages/NotFoundPage/NotFoundPage.jsx'
 import { getMotelByUsername } from './apis/motelAPI'
 import i18n from './i18n/i18n'
 import ResidenceForm from './pages/admin/NavContentAdmin/ResidenceForm'
+import { Box } from '@mui/material'
 
 function App() {
   const [username, setUsername] = useState('')
@@ -56,6 +57,7 @@ function App() {
   //lay thong tin tro cua tk account truyen xuong cho trang chu tro
   const [isAdmin, setIsAdmin] = useState(false)
   const [isNavAdmin, setIsNavAdmin] = useState(false)
+  const location = useLocation()
 
   const [motels, setmotels] = useState([])
   const [currentLanguage, setCurrentLanguage] = useState(localStorage.getItem('language') || i18n.language)
@@ -85,12 +87,14 @@ function App() {
       setAvatar(user.avatar)
       setToken(user.token)
       fetchMotelsByUsername(user.username)
+      console.log(motels.length)
     }
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location])
 
   return (
     <>
-      <Router>
+      <Box>
         {/* <ValidCaptcha /> */}
         {!isAdmin ? (
           <Header
@@ -102,6 +106,7 @@ function App() {
             setToken={setToken}
             toggleLanguage={toggleLanguage}
             currentLanguage={currentLanguage}
+            motelId={motels[0]?.motelId}
           />
         ) : (
           <></>
@@ -356,7 +361,7 @@ function App() {
           />
         </Routes>
         {!isAdmin ? <Footer /> : <></>}
-      </Router>
+      </Box>
     </>
   )
 }

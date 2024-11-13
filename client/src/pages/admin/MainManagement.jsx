@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { Box, Button } from '@mui/material'
 import { Grid } from '@mui/material'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
-const MainManagement = ({ setIsAdmin }) => {
+const MainManagement = ({ setIsAdmin, motels }) => {
   useEffect(() => {
     setIsAdmin(true)
   }, [])
@@ -16,7 +16,7 @@ const MainManagement = ({ setIsAdmin }) => {
   // }
   return (
     <div>
-      <NavAdmin setIsAdmin={setIsAdmin} />
+      <NavAdmin setIsAdmin={setIsAdmin} motels={motels} />
       <Box sx={{ margin: '15px' }}>
         <Grid container spacing={0} className="mx-2">
           <Grid container spacing={1} className="mt-3">
@@ -31,7 +31,7 @@ const MainManagement = ({ setIsAdmin }) => {
                   color: 'black',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
+                  justifyContent: 'space-between'
                 }}>
                 <i className="bi bi-bar-chart fs-3 text-danger me-2 fw-bold"></i>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
@@ -53,7 +53,7 @@ const MainManagement = ({ setIsAdmin }) => {
                   color: 'black',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
+                  justifyContent: 'space-between'
                 }}>
                 <i className="bi bi-bar-chart fs-3 text-success me-2 fw-bold"></i>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
@@ -75,7 +75,7 @@ const MainManagement = ({ setIsAdmin }) => {
                   color: 'black',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
+                  justifyContent: 'space-between'
                 }}>
                 <i className="bi bi-bar-chart fs-3 text-warning me-2 fw-bold"></i>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
@@ -97,7 +97,7 @@ const MainManagement = ({ setIsAdmin }) => {
                   color: 'black',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
+                  justifyContent: 'space-between'
                 }}>
                 <i className="bi bi-exclamation-square fs-3 text-warning-emphasis me-2 fw-bold"></i>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
@@ -126,7 +126,7 @@ const MainManagement = ({ setIsAdmin }) => {
                       background: 'red',
                       width: '50px',
                       height: '62px',
-                      borderRadius: '50%',
+                      borderRadius: '50%'
                     }}>
                     <i className="bi bi-caret-right-fill fs-3"></i>
                   </Button>
@@ -137,7 +137,7 @@ const MainManagement = ({ setIsAdmin }) => {
                       background: '#28a745',
                       width: '50px',
                       height: '62px',
-                      borderRadius: '50%',
+                      borderRadius: '50%'
                     }}>
                     <i className="bi bi-plus-lg fs-3"></i>
                   </Button>

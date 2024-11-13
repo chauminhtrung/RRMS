@@ -6,7 +6,7 @@ import Swal from 'sweetalert2'
 import LanguageSelect from './Options/LanguageSelect'
 import ModeSelect from './Options/ModeSelect'
 
-const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLanguage, currentLanguage }) => {
+const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLanguage, currentLanguage, motelId }) => {
   const [IsDanhmuc, setIsDanhmuc] = useState(false)
   const [IsMuaban, setIsMuaban] = useState(false)
   const [IsTaikhoan, setIsTaikhoan] = useState(false)
@@ -819,7 +819,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
             </div>
             <Link
               className="aw__b1358qut primary r-normal medium w-bold i-left aw__h1gb9yk aw__p1hqie6d"
-              to="/quanlytro"
+              to={`/quanlytro/${motelId}`}
               rel="nofollow">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

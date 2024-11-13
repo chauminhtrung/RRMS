@@ -9,13 +9,16 @@ import theme from './theme.js'
 import './i18n/i18n.js'
 import { ToastContainer } from 'react-toastify'
 import ChatAI from './pages/AI/ChatAI.jsx'
+import { BrowserRouter } from 'react-router-dom'
 
 createRoot(document.getElementById('root')).render(
   <>
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <ChatAI />
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
       <ToastContainer />
     </ThemeProvider>
   </>
