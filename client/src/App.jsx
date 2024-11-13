@@ -47,13 +47,15 @@ import PassportRecognition from './pages/AI/PassportRecognition'
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage.jsx'
 import { getMotelByUsername } from './apis/motelAPI'
 import i18n from './i18n/i18n'
+import ChatAI from './pages/AI/ChatAI.jsx'
 function App() {
   const [username, setUsername] = useState('')
   const [avatar, setAvatar] = useState('')
   const [token, setToken] = useState(null)
   //lay thong tin tro cua tk account truyen xuong cho trang chu tro
   const [isAdmin, setIsAdmin] = useState(false)
-  const [isNavAdmin, setIsNavAdmin] = useState(true)
+  const [isNavAdmin, setIsNavAdmin] = useState(false)
+
   const [motels, setmotels] = useState([])
   const [currentLanguage, setCurrentLanguage] = useState(localStorage.getItem('language') || i18n.language)
 
