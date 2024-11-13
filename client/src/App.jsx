@@ -47,7 +47,8 @@ import PassportRecognition from './pages/AI/PassportRecognition'
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage.jsx'
 import { getMotelByUsername } from './apis/motelAPI'
 import i18n from './i18n/i18n'
-import ChatAI from './pages/AI/ChatAI.jsx'
+import ResidenceForm from './pages/admin/NavContentAdmin/ResidenceForm'
+
 function App() {
   const [username, setUsername] = useState('')
   const [avatar, setAvatar] = useState('')
@@ -58,7 +59,6 @@ function App() {
 
   const [motels, setmotels] = useState([])
   const [currentLanguage, setCurrentLanguage] = useState(localStorage.getItem('language') || i18n.language)
-
   const fetchMotelsByUsername = async (username) => {
     getMotelByUsername(username).then((res) => {
       setmotels(res.data.result)
@@ -203,6 +203,7 @@ function App() {
               />
             }
           />
+          <Route path="/residenceForm/:tenantId" element={<ResidenceForm />} />
 
           <Route path="/adminManage/*" element={<AdminManage setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminStatis" element={<AdminStatis setIsAdmin={setIsAdmin} />} />

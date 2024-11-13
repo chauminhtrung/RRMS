@@ -47,7 +47,8 @@ public class DB {
             RentalAmenitiesRepository rentalAmenitiesRepository,
             BulletinBoardReviewsRepository bulletinBoardReviewsRepository,
             BulletinBoardImageRepository bulletinBoardImageRepository,
-            BulletinBoards_RentalAmRepository bulletinBoards_rentalAmRepository) {
+            BulletinBoards_RentalAmRepository bulletinBoards_rentalAmRepository,
+            TenantRepository tenantRepository) {
         return args -> {
             int roomsLength = 5;
             int bulletinBoardsLength = 10;
@@ -142,6 +143,8 @@ public class DB {
                         accountRepository.findByUsername("admin").get(),
                         bulletinBoardReviewsRepository);
             }
+            Tenant tenant = generateFakeTenant();
+            tenantRepository.save(tenant);
             log.info("All data created");
             log.info(searchService.syncRoom(roomRepository.findAll()));
         };
@@ -602,4 +605,59 @@ public class DB {
         bulletinBoards_RentalAm.setRentalAmenities(rentalAmenities);
         return bulletinBoards_RentalAm;
     }
+
+    private Tenant generateFakeTenant() {
+        Faker faker = new Faker();
+
+        // Tạo giá trị giả cho các trường
+        String fullname = faker.name().fullName();
+        String phone = faker.phoneNumber().cellPhone();
+
+        // Đảm bảo phone không vượt quá độ dài 12 ký tự
+        if (phone.length() > 10) {
+            phone = phone.substring(0, 10);
+        }
+
+        String CCCD = faker.idNumber().valid();
+        String email = faker.internet().emailAddress();
+        LocalDate birthday = faker.date().birthday().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+        Gender gender = faker.bool().bool() ? Gender.MALE : Gender.FEMALE;
+        String address = faker.address().fullAddress();
+        String job = faker.job().title();
+        LocalDate licenseDate = faker.date().birthday().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+        String placeOfLicense = faker.address().city();
+        String frontPhoto = "front_" + faker.internet().uuid() + ".jpg";
+        String backPhoto = "back_" + faker.internet().uuid() + ".jpg";
+        Boolean role = faker.bool().bool();
+        String relationship = faker.options().option("Chủ hộ", "Bạn bè", "Người thân");
+        String typeOfTenant = faker.bool().bool() ? "Người liên hệ" : "Thành viên";
+        Boolean temporaryResidence = faker.bool().bool(); // 2 option: true (Đã đầy đủ) hoặc false (Chưa đầy đủ)
+        Boolean informationVerify = faker.bool().bool(); // 2 option: true (Đã có tạm trú) hoặc false (Chưa có tạm trú)
+
+        // Tạo đối tượng Tenant
+        Tenant tenant = Tenant.builder()
+                .tenantId(UUID.randomUUID())
+                .fullname(fullname)
+                .phone(phone)  // Đảm bảo phone không vượt quá 12 ký tự
+                .cccd(CCCD)
+                .email(email)
+                .birthday(birthday)
+                .gender(gender)
+                .address(address)
+                .job(job)
+                .licenseDate(licenseDate)
+                .placeOfLicense(placeOfLicense)
+                .frontPhoto(frontPhoto)
+                .backPhoto(backPhoto)
+                .role(role)
+                .relationship(relationship)
+                .type_of_tenant(typeOfTenant)
+                .temporaryResidence(temporaryResidence)
+                .informationVerify(informationVerify)
+                .build();
+
+        return tenant;
+    }
+
+
 }
