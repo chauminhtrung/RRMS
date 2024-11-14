@@ -1,5 +1,7 @@
 package com.rrms.rrms.services.servicesImp;
 
+import com.rrms.rrms.dto.response.RoomServiceResponse;
+import com.rrms.rrms.repositories.RoomServiceRepository;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -38,6 +40,7 @@ public class RoomService implements IRoom {
     MotelRepository motelRepository;
     ServiceRepository serviceRepository;
     AccountRepository accountRepository;
+    RoomServiceRepository roomServiceRepository;
 
     RoomMapper roomMapper;
 
@@ -211,14 +214,16 @@ public class RoomService implements IRoom {
     @Override
     public List<RoomResponse2> getRoomsByMotelId(UUID motelId) {
         // Kiểm tra xem Motel có tồn tại không
-        Motel motel =
-                motelRepository.findById(motelId).orElseThrow(() -> new IllegalArgumentException("Motel not found"));
+        Motel motel = motelRepository.findById(motelId)
+            .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
 
         // Lấy danh sách phòng theo motelId
         List<Room> rooms = roomRepository.findByMotel(motel);
 
         // Chuyển đổi danh sách Room sang RoomResponse
-        return rooms.stream().map(this::convertToResponse).collect(Collectors.toList());
+        return rooms.stream()
+            .map(this::convertToResponse)
+            .collect(Collectors.toList());
     }
 
     // Chuyển đổi từ Room sang RoomResponse
@@ -240,6 +245,21 @@ public class RoomService implements IRoom {
         response.setContractDuration(room.getContractduration());
         response.setStatus(room.getStatus());
         response.setFinance(room.getFinance());
+
+        // Lấy danh sách dịch vụ cho phòng
+        List<com.rrms.rrms.models.RoomService> roomServices = roomServiceRepository.findByRoom(room); // Thay đổi phương thức cho phù hợp
+
+        // Chuyển đổi danh sách dịch vụ sang RoomServiceResponse
+        List<RoomServiceResponse> serviceResponses = roomServices.stream()
+            .map(service -> new RoomServiceResponse(
+                service.getRoomServiceId(),
+                service.getRoom().getRoomId(),
+                service.getService().getServiceId(),
+                service.getQuantity()))
+            .collect(Collectors.toList());
+
+        response.setServices(serviceResponses); // Thiết lập dịch vụ vào phản hồi
+
         return response;
     }
 

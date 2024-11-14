@@ -1,7 +1,12 @@
 package com.rrms.rrms.services.servicesImp;
 
+import com.rrms.rrms.models.Room;
+import com.rrms.rrms.repositories.RoomRepository;
+import com.rrms.rrms.repositories.RoomServiceRepository;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -26,15 +31,17 @@ public class MotelServiceService implements IMotelServiceService {
 
     @Autowired
     private MotelRepository motelRepository;
+    @Autowired
+    private RoomRepository roomRepository;
 
     @Autowired
-    private NameMotelServiceRepository nameMotelServiceRepository;
+    private RoomServiceRepository roomServiceRepository;
 
     @Override
     public MotelServiceResponse createMotelService(MotelServiceRequest request) {
         Motel motel = motelRepository
-                .findById(request.getMotelId())
-                .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
+            .findById(request.getMotelId())
+            .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
 
         MotelService motelService = new MotelService();
         motelService.setMotel(motel);
@@ -42,21 +49,86 @@ public class MotelServiceService implements IMotelServiceService {
         motelService.setPrice(request.getPrice());
         motelService.setChargetype(request.getChargetype());
         MotelService savedMotelService = motelServiceRepository.save(motelService);
+
+        List<UUID> selectedRooms = request.getSelectedRooms();
+        if (selectedRooms != null && !selectedRooms.isEmpty()) {
+            for (UUID roomId : selectedRooms) {
+                Room room = roomRepository.findById(roomId)
+                    .orElseThrow(() -> new IllegalArgumentException("Room not found with ID: " + roomId));
+
+                com.rrms.rrms.models.RoomService roomService = new com.rrms.rrms.models.RoomService();
+                roomService.setRoom(room);
+                roomService.setService(savedMotelService);
+                roomService.setQuantity(1);
+
+                roomServiceRepository.save(roomService);
+            }
+        }
+
         return mapToResponse(savedMotelService);
     }
 
     @Override
     public MotelServiceResponse updateMotelService(UUID id, MotelServiceUpdateRequest request) {
+        // Tìm dịch vụ theo ID
         MotelService motelService = motelServiceRepository
-                .findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("MotelService not found"));
+            .findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("MotelService not found"));
 
+        // Cập nhật các thuộc tính của dịch vụ
         motelService.setNameService(request.getNameService());
         motelService.setPrice(request.getPrice());
         motelService.setChargetype(request.getChargetype());
+
+        // Lưu cập nhật dịch vụ
         MotelService updatedMotelService = motelServiceRepository.save(motelService);
+
+        // Lấy danh sách các phòng đã chọn từ request
+        List<UUID> selectedRooms = request.getSelectedRooms();
+
+        // Lấy tất cả các dịch vụ phòng hiện tại cho dịch vụ này
+        List<com.rrms.rrms.models.RoomService> currentRoomServices = roomServiceRepository.findByService(motelService);
+
+        // Tạo danh sách các phòng ID đã có dịch vụ
+        Set<UUID> currentRoomIds = currentRoomServices.stream()
+            .map(roomService -> roomService.getRoom().getRoomId())
+            .collect(Collectors.toSet());
+
+        // Lọc ra các phòng mới để thêm và các phòng không còn trong selectedRooms để xóa
+        Set<UUID> newRoomIds = new HashSet<>(selectedRooms);
+        newRoomIds.removeAll(currentRoomIds); // Chỉ giữ các phòng mới cần thêm
+
+        Set<UUID> removedRoomIds = new HashSet<>(currentRoomIds);
+        removedRoomIds.removeAll(selectedRooms); // Chỉ giữ các phòng cần xóa
+
+        // Thêm dịch vụ cho các phòng mới
+        for (UUID roomId : newRoomIds) {
+            Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("Room not found with ID: " + roomId));
+
+            com.rrms.rrms.models.RoomService roomService = new com.rrms.rrms.models.RoomService();
+            roomService.setRoom(room);
+            roomService.setService(updatedMotelService);
+            roomService.setQuantity(1);
+
+            roomServiceRepository.save(roomService);
+        }
+
+        // Xóa dịch vụ khỏi các phòng không còn trong danh sách selectedRooms
+        for (UUID roomId : removedRoomIds) {
+            com.rrms.rrms.models.RoomService roomServiceToDelete = currentRoomServices.stream()
+                .filter(rs -> rs.getRoom().getRoomId().equals(roomId))
+                .findFirst()
+                .orElse(null);
+
+            if (roomServiceToDelete != null) {
+                roomServiceRepository.delete(roomServiceToDelete);
+            }
+        }
+
         return mapToResponse(updatedMotelService);
     }
+
 
     @Override
     public void deleteMotelService(UUID id) {
