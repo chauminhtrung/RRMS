@@ -11,8 +11,15 @@ export const getByIdTenant = async (editId) => {
   })
   return response.data
 }
-export const updateTenant = async (id) => {
+export const updateTenant = async (id, tenant) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+
+  if (!token) {
+    console.error('No token found, unable to authenticate')
+    throw new Error('Unauthorized')
+  }
+
+  console.log('Updating tenant with data:', tenant) // Kiểm tra dữ liệu tenant trước khi gửi
 
   try {
     const response = await axios.put(`${env.API_URL}/tenant/${id}`, {

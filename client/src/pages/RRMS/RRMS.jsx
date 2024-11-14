@@ -16,7 +16,7 @@ const RRMS = ({ setIsAdmin }) => {
   const [searchData, setSearchData] = useState([])
 
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 8 // Số lượng item hiển thị mỗi trang
+  const itemsPerPage = 4 // Số lượng item hiển thị mỗi trang
 
   const [currentPageNew, setCurrentPageNew] = useState(1)
   const itemsPerPageNew = 4 // Số lượng item hiển thị mỗi trang
@@ -57,25 +57,54 @@ const RRMS = ({ setIsAdmin }) => {
     loadDataDateNew()
   }, [])
 
+  // const loadData = async () => {
+  //   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+
+  //   try {
+  //     const result = await axios.get(`${env.API_URL}/searchs/rooms`, {
+  //       validateStatus: () => true,
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //         'ngrok-skip-browser-warning': '69420'
+  //       }
+  //     })
+
+  //     // Kiểm tra trạng thái phản hồi
+  //     if (result.status === 200) {
+  //       const fetchedData = result.data.result
+
+  //       if (Array.isArray(fetchedData) && fetchedData.length > 0) {
+  //         console.log('Data fetched:', fetchedData)
+  //         setSearchData(fetchedData)
+  //       } else {
+  //         console.log('No results found or data is null')
+  //         setSearchData([])
+  //       }
+  //     } else {
+  //       console.log('Error: Status', result.status)
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error)
+  //   }
+  // }
   const loadData = async () => {
     const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
 
     try {
-      const result = await axios.get(`${env.API_URL}/searchs/rooms`, {
+      const result = await axios.get(`${env.API_URL}/searchs/roomNews`, {
         validateStatus: () => true,
         headers: {
           Authorization: `Bearer ${token}`,
           'ngrok-skip-browser-warning': '69420'
         }
       })
-
       // Kiểm tra trạng thái phản hồi
       if (result.status === 200) {
-        const fetchedData = result.data.result
+        const fetchedDataDateNew = result.data.result
 
-        if (Array.isArray(fetchedData) && fetchedData.length > 0) {
-          console.log('Data fetched:', fetchedData)
-          setSearchData(fetchedData)
+        if (Array.isArray(fetchedDataDateNew) && fetchedDataDateNew.length > 0) {
+          console.log('Data fetched:', fetchedDataDateNew)
+          setSearchData(fetchedDataDateNew)
         } else {
           console.log('No results found or data is null')
           setSearchData([])
@@ -538,7 +567,7 @@ const RRMS = ({ setIsAdmin }) => {
                         }}>
                         <img
                           alt="Cho thuê phòng trọ full nội thất, giá sinh viên Tam Đảo, Quận 10"
-                          src={item.roomImages[0].image}
+                          src={item.bulletinBoardImages?.[0]?.imageLink || 'default_image_url.jpg'}
                           style={{
                             width: '100%',
                             height: '100%',
@@ -565,7 +594,7 @@ const RRMS = ({ setIsAdmin }) => {
 
                       <div className="read">
                         <div className="title cut-text-2" style={{ fontSize: '14px', marginTop: 10 }}>
-                          <span className="lable-now">NOW</span> {item.motel.address}
+                          <span className="lable-now">NOW</span> {item?.address}
                         </div>
                         <div className="address cut-text">
                           <span className="icon-user-small">
@@ -583,11 +612,11 @@ const RRMS = ({ setIsAdmin }) => {
                             </svg>
                           </span>
                           <strong style={{ textTransform: 'capitalize', paddingLeft: '5px' }}>
-                            {item.motel.account.username}
+                            {item.account.username}
                           </strong>
                           <span className="zone" style={{ fontSize: '11px' }}>
                             {' '}
-                            {item.nameRoom}
+                            {item?.title}
                           </span>
                         </div>
                       </div>
@@ -599,11 +628,11 @@ const RRMS = ({ setIsAdmin }) => {
                           display: 'flex',
                           padding: '5px'
                         }}>
-                        <b className="text-danger"> {formatterAmount(item.price)} /Tháng</b>
+                        <b className="text-danger"> {formatterAmount(item.rentPrice)} /Tháng</b>
                         <div
                           className="i area"
                           style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
-                          <b> {item.roomArea}</b> m²
+                          <b> {item?.area}</b> m²
                         </div>
                       </div>
                     </Link>
@@ -770,10 +799,14 @@ const RRMS = ({ setIsAdmin }) => {
                             height: '100%'
                           }}
                           target="_blank"
-                          title={room.name}
+                          title={room.title}
                           to="#"
                           className="is-adss">
-                          <img alt={room.name} src={room.roomImages[0].image} className="lazy" />
+                          <img
+                            alt={room.title}
+                            src={room.bulletinBoardImages?.[0]?.imageLink || 'default_image_url.jpg'}
+                            className="lazy"
+                          />
                         </Link>
 
                         <div className="images-count">3</div>
@@ -797,12 +830,12 @@ const RRMS = ({ setIsAdmin }) => {
                       <div>
                         <div className="title">
                           <Link
-                            title={room.nameRoom}
+                            title={room.title}
                             target="_blank"
                             to="#"
                             className="cut-text-2"
                             style={{ textDecoration: 'none', color: 'black' }}>
-                            <span>{room.nameRoom}</span>
+                            <span>{room.title}</span>
                           </Link>
                         </div>
                         <div className="adress cut-text">
@@ -819,17 +852,17 @@ const RRMS = ({ setIsAdmin }) => {
                             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                             <circle cx="12" cy="10" r="3"></circle>
                           </svg>
-                          {room.motel.address}
+                          {room.address}
                         </div>
                         <div className="mf">
                           <div className="i price">
-                            <b className="text-danger">{formatterAmount(room.price)}</b>
+                            <b className="text-danger">{formatterAmount(room.rentPrice)}</b>
                           </div>
                           <div className="i are">
                             <i className="fa fa-area-chart hidden" aria-hidden="true">
                               {' '}
                             </i>
-                            <b> {room.roomArea} m²</b>
+                            <b> {room.area} m²</b>
                           </div>
                         </div>
                       </div>
@@ -838,7 +871,7 @@ const RRMS = ({ setIsAdmin }) => {
                           <img width="30px" src="./default-user.webp" alt="icon user" />
                           <div style={{ color: '#666', fontSize: '12px' }}>
                             <strong className="author-name" style={{ textTransform: 'capitalize' }}>
-                              {room.motel.account.username}
+                              {room.account.username}
                             </strong>
                             <div style={{ fontSize: '11px' }} data-time="1 ngày trước">
                               1 ngày trước

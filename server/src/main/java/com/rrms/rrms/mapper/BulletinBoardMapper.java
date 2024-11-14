@@ -8,6 +8,9 @@ import com.rrms.rrms.models.BulletinBoard;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface BulletinBoardMapper {
@@ -25,6 +28,7 @@ public interface BulletinBoardMapper {
         // Không ghi đè tài khoản
     void updateBulletinBoardFromRequest(
             BulletinBoardRequest bulletinBoardRequest, @MappingTarget BulletinBoard bulletinBoard);
+
 
 
 }

@@ -548,7 +548,7 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                             </Typography>
                           </TableCell>
 
-                          <TableCell sx={{ borderRight: '1px solid #ddd' }}>{row.tenantId}</TableCell>
+                          <TableCell sx={{ borderRight: '1px solid #ddd' }}>{row.cccd}</TableCell>
                           <TableCell sx={{ borderRight: '1px solid #ddd' }}>{row.licenseDate}</TableCell>
                           <TableCell sx={{ borderRight: '1px solid #ddd' }}>{row.placeOfLicense}</TableCell>
                           <TableCell sx={{ borderRight: '1px solid #ddd', padding: 1 }}>
