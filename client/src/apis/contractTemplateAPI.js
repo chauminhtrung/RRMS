@@ -7,7 +7,8 @@ export const createContractTemplate = async (data) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   const response = await axios.post(`${env.API_URL}/contract-templates`, data, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      'ngrok-skip-browser-warning': '69420'
     }
   })
   return response.data
@@ -18,7 +19,8 @@ export const getContractTemplateById = async (id) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   const response = await axios.get(`${env.API_URL}/contract-templates/${id}`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      'ngrok-skip-browser-warning': '69420'
     }
   })
   return response.data
@@ -29,7 +31,8 @@ export const getAllContractTemplates = async () => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   const response = await axios.get(`${env.API_URL}/contract-templates`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      'ngrok-skip-browser-warning': '69420'
     }
   })
   return response.data
@@ -40,7 +43,8 @@ export const getContractTemplatesByMotelId = async (motelId) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   const response = await axios.get(`${env.API_URL}/contract-templates/motel/${motelId}`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      'ngrok-skip-browser-warning': '69420'
     }
   })
   return response.data
@@ -51,7 +55,8 @@ export const updateContractTemplate = async (id, data) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   const response = await axios.put(`${env.API_URL}/contract-templates/${id}`, data, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      'ngrok-skip-browser-warning': '69420'
     }
   })
   return response.data
@@ -62,7 +67,8 @@ export const deleteContractTemplate = async (id) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   await axios.delete(`${env.API_URL}/contract-templates/${id}`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      'ngrok-skip-browser-warning': '69420'
     }
   })
 }
