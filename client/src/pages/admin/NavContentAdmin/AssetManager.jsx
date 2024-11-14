@@ -35,38 +35,26 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
   const handleSubmit = async (e) => {
     e.preventDefault()
     const datarequest = {
-      motel: {
-        motelId: motelId
-      },
-      deviceName: deviceName,
-      value: value,
-      icon: 'ban',
-      valueInput: valueInput,
+      motel: { motelId },
+      deviceName,
+      value,
+      icon: selectedIcon,
+      valueInput,
       totalQuantity: quantity,
-      supplier: supplier,
+      supplier,
       unit: 'cai'
     }
-    console.log(datarequest)
 
-    const statusInsert = await insertMotelDevice(datarequest)
-      .then(() => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Thêm thành công',
-          text: 'Đã thêm thành công!'
-        })
-        getAllMotelDevice()
-      })
-      .catch(() => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Thêm thất bại',
-          text: 'Thử lại sau!'
-        })
-      })
-
+    try {
+      await insertMotelDevice(datarequest)
+      Swal.fire('Thêm thành công', 'Đã thêm thành công!', 'success')
+      getAllMotelDevice()
+    } catch (error) {
+      Swal.fire('Thêm thất bại', 'Thử lại sau!', 'error')
+    }
     handleClose()
   }
+
   const [deviceName, setdeviceName] = useState('')
   const [value, setvalue] = useState('')
   const [quantity, setquantity] = useState('')
@@ -78,11 +66,10 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
       field: 'icon',
       hozAlign: 'center',
       width: 40,
-      formatter: function () {
-        return 'a'
+      formatter: function (e) {
+        return `<img style='width: 30px; height: 30px;' src='\\icon-${'ban'}.png' />`
       }
     },
-    ,
     { title: 'STT', field: 'STT', hozAlign: 'center', minWidth: 40, editor: 'input' },
     { title: 'Tên Tài Sản', field: 'deviceName', hozAlign: 'center', minWidth: 40, editor: 'input' },
     { title: 'Giá Trị Tài Sản', field: 'value', hozAlign: 'center', minWidth: 40, editor: 'input' },
@@ -94,8 +81,14 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
       title: '',
       field: 'delete',
       hozAlign: 'center',
-      width: 40,
-      editor: 'button'
+      minWidth: 40,
+      formatter: function (cell) {
+        const button = document.createElement('button')
+        button.className = 'btn btn-danger btn-sm'
+        button.innerText = 'Remove'
+        button.onclick = () => remove(cell.getRow().getData())
+        return button
+      }
     }
   ]
   const remove = (data) => {
@@ -149,7 +142,6 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
           borderRadius: '10px',
           margin: '0 10px 10px 10px'
         }}></div>
-
       <div style={{ marginLeft: '15px', marginRight: '10px' }}>
         <Box className="header-item">
           <h4 className="title-item">
