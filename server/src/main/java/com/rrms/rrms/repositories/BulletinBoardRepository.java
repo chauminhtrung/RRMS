@@ -16,4 +16,5 @@ public interface BulletinBoardRepository extends JpaRepository<BulletinBoard, UU
     List<BulletinBoard> findByAddress(String address);
 
     List<BulletinBoard> findAllByIsActive(Boolean isActive);
+
 }

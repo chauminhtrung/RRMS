@@ -49,6 +49,7 @@ import { getMotelByUsername } from './apis/motelAPI'
 import i18n from './i18n/i18n'
 import ResidenceForm from './pages/admin/NavContentAdmin/ResidenceForm'
 import { Box } from '@mui/material'
+import AppPromo from './pages/admin/NavContentAdmin/AppPromo'
 import RatingHistory from './pages/RatingHistory/RatingHistory'
 
 function App() {
@@ -210,7 +211,12 @@ function App() {
               />
             }
           />
-          <Route path="/residenceForm/:tenantId" element={<ResidenceForm />} />
+
+          <Route path="/AppPromo" element={<AppPromo />} setIsAdmin={setIsAdmin} />
+          <Route
+            path="/residenceForm/:tenantId"
+            element={<ResidenceForm setIsAdmin={setIsAdmin} isNavAdmin={isNavAdmin} />}
+          />
 
           <Route path="/adminManage/*" element={<AdminManage setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminStatis" element={<AdminStatis setIsAdmin={setIsAdmin} />} />

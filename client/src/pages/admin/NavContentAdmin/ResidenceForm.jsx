@@ -8,10 +8,12 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
+  Button
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { env } from '~/configs/environment'
 
 const ResidenceForm = () => {
   const { tenantId } = useParams() // Lấy tenantId từ URL
@@ -31,9 +33,10 @@ const ResidenceForm = () => {
       }
 
       try {
-        const response = await fetch(`http://localhost:8080/tenant/tenant-id?id=${tenantId}`, {
+        const response = await fetch(`${env.API_URL}/tenant/tenant-id?id=${tenantId}`, {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
+            'ngrok-skip-browser-warning': '69420'
           }
         })
 
@@ -68,6 +71,11 @@ const ResidenceForm = () => {
 
   if (error) {
     return <div style={{ color: 'red' }}>{error}</div> // Display error message
+  }
+
+  // Handle the print action
+  const handlePrint = () => {
+    window.print() // sẽ mở ra cửa sổ in của trình duyệt, cho phép người dùng in trang hiện tại.
   }
 
   return (
@@ -139,7 +147,7 @@ const ResidenceForm = () => {
             </Grid>
             <Grid item xs={6}>
               <Typography variant="body1">
-                6. Email: <strong>{tenant?.email}</strong>
+                6. Email: <strong>{tenant?.email || 'Không có'}</strong>
               </Typography>
             </Grid>
           </Grid>
@@ -148,7 +156,7 @@ const ResidenceForm = () => {
               <Typography variant="body1">7. Họ, chữ đệm và tên chủ hộ: ...............................</Typography>
             </Grid>
             <Grid item xs={6}>
-              <Typography variant="body1">8. Quan hệ với chủ hộ: {tenant.relationship}</Typography>
+              <Typography variant="body1">8. Quan hệ với chủ hộ: {tenant.relationship || 'Không có'}</Typography>
             </Grid>
           </Grid>
           <Grid container spacing={2} sx={{ marginBottom: 2 }}>
@@ -160,8 +168,7 @@ const ResidenceForm = () => {
             </Grid>
           </Grid>
           <Typography variant="body1">
-            10. Nội dung đề nghị(2): Xin đăng ký tạm trú đến địa chỉ 122 nguyễn duy trinh, Tân Hưng Thuận, Quận 12,
-            Thành phố Hồ Chí Minh
+            10. Nội dung đề nghị(2): Xin đăng ký tạm trú đến địa chỉ {tenant.address}
           </Typography>
           <Typography variant="body1">11. Những thành viên trong hộ gia đình cùng thay đổi:</Typography>
         </Box>
@@ -234,6 +241,13 @@ const ResidenceForm = () => {
               <Typography variant="body2">Ngày....tháng....năm.....</Typography>
             </Grid>
           </Grid>
+        </Box>
+
+        {/* Print Button */}
+        <Box sx={{ textAlign: 'center', marginTop: 3 }}>
+          <Button variant="contained" color="primary" onClick={handlePrint}>
+            In
+          </Button>
         </Box>
       </Box>
     </Container>

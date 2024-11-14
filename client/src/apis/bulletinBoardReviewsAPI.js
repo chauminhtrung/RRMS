@@ -5,7 +5,8 @@ export const postBulletinBoardReview = async (data) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   const response = await axios.post(`${env.API_URL}/bulletin-board-reviews`, data, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      'ngrok-skip-browser-warning': '69420'
     }
   })
   return response.data
@@ -17,7 +18,8 @@ export const getBulletinBoardReviewByBulletinBoardIdAndUsername = async (bulleti
     `${env.API_URL}/bulletin-board-reviews?bulletinBoardId=${bulletinBoardId}&username=${username}`,
     {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
+        'ngrok-skip-browser-warning': '69420'
       }
     }
   )
@@ -28,7 +30,8 @@ export const getRatingHistory = async (username) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   const response = await axios.get(`${env.API_URL}/bulletin-board-reviews/rating-history?username=${username}`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      'ngrok-skip-browser-warning': '69420'
     }
   })
   return response.data
