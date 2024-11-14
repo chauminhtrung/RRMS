@@ -2,6 +2,7 @@ import { Link, useParams, useLocation } from 'react-router-dom'
 import { Tooltip } from 'react-tooltip'
 import { useEffect, useState } from 'react'
 import ModalCreateHome from '~/pages/admin/ManagerHome/ModelCreateHome'
+
 import Swal from 'sweetalert2'
 import { deleteMotel, getMotelById } from '~/apis/motelAPI'
 const NavWData = ({ motels }) => {
@@ -30,15 +31,14 @@ const NavWData = ({ motels }) => {
     if (motelId) {
       getMotelById(motelId)
         .then((res) => setmotel(res.data.result))
-        .catch((error) => console.error("Error fetching motel:", error));
+        .catch((error) => console.error('Error fetching motel:', error))
     } else if (motels && motels.length > 0) {
-      setmotel(motels[0]); // Cập nhật nhà trọ đầu tiên nếu không có `motelId` trong URL
+      setmotel(motels[0]) // Cập nhật nhà trọ đầu tiên nếu không có `motelId` trong URL
     }
-  }, [motels, motelId]);
-  
+  }, [motels, motelId])
 
   //nhan vao nut edit
-  //ham xoa template Contract
+  //ham xoa
   const handleDelete = async (motelId) => {
     const result = await Swal.fire({
       title: 'Bạn có chắc muốn xóa không?',
@@ -382,8 +382,8 @@ const NavWData = ({ motels }) => {
       <div
         className="modal fade"
         id="manageBlock"
+        data-bs-backdrop="static"
         tabIndex="-1"
-        aria-labelledby="manageBlockLabel"
         aria-hidden="true"
         style={{ display: 'none' }}>
         <div className="modal-dialog">

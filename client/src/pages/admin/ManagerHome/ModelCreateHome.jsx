@@ -138,12 +138,20 @@ const ModelCreateHome = ({ username, MotelId }) => {
         setSelectedWard(Number(ward)) // Đảm bảo ward là số nếu cần
         setSelectedDistrict(Number(district))
         setSelectedProvince(Number(province))
-        console.log(ward)
-        console.log(fetchDistricts(province))
-        console.log(fetchWards(district))
+        const backdropElements = document.querySelectorAll('.modal-backdrop')
+        for (let index = 0; index < 2; index++) {
+          backdropElements[index].remove()
+        }
       } catch (error) {
         console.log(error)
       }
+    }
+  }
+
+  const CloseAllBackUpModal = async () => {
+    const backdropElements = document.querySelectorAll('.modal-backdrop')
+    for (let index = 0; index < backdropElements.length; index++) {
+      backdropElements[index].remove()
     }
   }
 
@@ -352,7 +360,12 @@ const ModelCreateHome = ({ username, MotelId }) => {
             </div>
 
             <h5 className="modal-title">Thêm nhà trọ</h5>
-            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <button
+              type="button"
+              className="btn-close"
+              onClick={CloseAllBackUpModal}
+              data-bs-dismiss="modal"
+              aria-label="Close">
               {' '}
             </button>
           </div>

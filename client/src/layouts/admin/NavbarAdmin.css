@@ -848,12 +848,13 @@ div.navbar-brand {
     border: 1px solid #000;
     border-radius: 100%;
     cursor: pointer;
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 35px;
+    margin-left: 24px;
+    margin-top: 3px;
 }
 
 .tabulator-tableholder::-webkit-scrollbar {
@@ -868,16 +869,17 @@ div.navbar-brand {
 }
 
 .icon-first{
-    background-color: #7dc242;
+    background-color: #548eec;
     border-radius: 100%;
     padding: 3px;
     text-align: center;
     cursor: pointer;
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     color: #fff;
     margin: auto;
     position: relative;
+    margin-top: 3px;
 }
 
 .icon-note-on-list{
@@ -1596,7 +1598,7 @@ a.item-menu.active, a.item-menu:hover {
 }
 
 .task-item .icon.done{
-    background-color: #4caf50;
+    background-color: #4f9ed6;
 }
 
 .task-item .data {
@@ -1620,7 +1622,7 @@ a.item-menu.active, a.item-menu:hover {
 }
 
 .room-list .room-item.active .room-item-inner{
-    border: 1px solid #7dc242;
+    border: 1px solid #679dde;
 }
 
 .room-list .room-item .icon-room {
@@ -1638,7 +1640,7 @@ a.item-menu.active, a.item-menu:hover {
 }
 
 .room-list .room-item.active .icon-room {
-    background-color: #7dc242;
+    background-color: #4a96dd;
 }
 
 .asset-checkout-layout .item{

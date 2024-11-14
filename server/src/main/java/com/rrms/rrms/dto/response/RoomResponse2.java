@@ -28,4 +28,5 @@ public class RoomResponse2 {
     private Date contractDuration;
     private Boolean status;
     private String finance;
+    private String description;
 }

@@ -55,9 +55,9 @@ public class Room {
     @Column(name = "invoice_date", columnDefinition = "TEXT")
     private Integer invoiceDate;
 
-    // cai nay thuong nam o hop dong
-    @Column(name = "payment_circle", columnDefinition = "INT")
-    private Integer paymentCircle;
+    //chu ky thu
+    @Column(columnDefinition = "TEXT")
+    private String collection_cycle;
 
     @Column(name = "move_in_date", columnDefinition = "DATE")
     private Date moveInDate;
@@ -70,4 +70,7 @@ public class Room {
 
     @Column(name = "finance", columnDefinition = "TEXT")
     private String finance;
+
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
 }

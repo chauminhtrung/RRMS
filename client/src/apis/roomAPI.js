@@ -32,6 +32,17 @@ export const getRoomById = async (id) => {
   return response.data
 }
 
+
+export const updateRoom= async (id, data) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  const response = await axios.put(`${env.API_URL}/room/${id}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  return response.data
+}
+
 export const postRoom = async (data) => {
   return await axios.post(`${env.API_URL}/room`, data)
 }
