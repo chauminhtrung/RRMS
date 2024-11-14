@@ -11,6 +11,7 @@ import LoadingPage from '~/components/LoadingPage/LoadingPage'
 import { formatterAmount } from '~/utils/formatterAmount'
 import { Pagination } from '@mui/material'
 import { Link } from 'react-router-dom'
+import { env } from '~/configs/environment'
 const RRMS = ({ setIsAdmin }) => {
   const [searchData, setSearchData] = useState([])
 
@@ -60,12 +61,14 @@ const RRMS = ({ setIsAdmin }) => {
     const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
 
     try {
-      const result = await axios.get(`http://localhost:8080/searchs/rooms`, {
+      const result = await axios.get(`${env.API_URL}/searchs/rooms`, {
         validateStatus: () => true,
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'ngrok-skip-browser-warning': '69420'
         }
       })
+
       // Kiểm tra trạng thái phản hồi
       if (result.status === 200) {
         const fetchedData = result.data.result
@@ -89,10 +92,11 @@ const RRMS = ({ setIsAdmin }) => {
     const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
 
     try {
-      const result = await axios.get(`http://localhost:8080/searchs/roomNews`, {
+      const result = await axios.get(`${env.API_URL}/searchs/roomNews`, {
         validateStatus: () => true,
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'ngrok-skip-browser-warning': '69420'
         }
       })
       // Kiểm tra trạng thái phản hồi
