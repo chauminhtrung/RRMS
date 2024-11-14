@@ -27,29 +27,6 @@ public class TenantController {
 
     ITenantService tenantService;
 
-    @Operation(summary = "Get all rooms authen")
-    @GetMapping("/roomNews")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')") // su dung phân quền phù hop theo role
-    public ApiResponse<List<TenantResponse>> getRoomHomeDateNew() {
-        ApiResponse<List<TenantResponse>> apiResponse = new ApiResponse<>();
-        List<TenantResponse> rooms = tenantService.findAllByDatenew();
-        apiResponse.setCode(HttpStatus.OK.value());
-        apiResponse.setMessage("Tìm kiếm thành công");
-        apiResponse.setResult(rooms);
-        return apiResponse;
-    }
-
-    @Operation(summary = "Get all rooms authen")
-    @GetMapping("/rooms")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')") // su dung phân quền phù hop theo role
-    public ApiResponse<List<TenantResponse>> getRoomHome() {
-        ApiResponse<List<TenantResponse>> apiResponse = new ApiResponse<>();
-        List<TenantResponse> rooms = tenantService.findByAuthenIs(true);
-        apiResponse.setCode(HttpStatus.OK.value());
-        apiResponse.setMessage("Tìm kiếm thành công");
-        apiResponse.setResult(rooms);
-        return apiResponse;
-    }
 
     @RequestMapping("")
     public ApiResponse<List<TenantResponse>> getAllTenants() {

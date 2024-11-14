@@ -13,6 +13,7 @@ import {
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { env } from '~/configs/environment'
 
 const ResidenceForm = () => {
   const { tenantId } = useParams() // Lấy tenantId từ URL
@@ -32,9 +33,10 @@ const ResidenceForm = () => {
       }
 
       try {
-        const response = await fetch(`http://localhost:8080/tenant/tenant-id?id=${tenantId}`, {
+        const response = await fetch(`${env.API_URL}/tenant/tenant-id?id=${tenantId}`, {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
+            'ngrok-skip-browser-warning': '69420'
           }
         })
 

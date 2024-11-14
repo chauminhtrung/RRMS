@@ -1,6 +1,7 @@
 package com.rrms.rrms.services;
 
 import com.rrms.rrms.dto.request.TenantRequest;
+import com.rrms.rrms.dto.response.BulletinBoardResponse;
 import com.rrms.rrms.dto.response.MotelResponse;
 import com.rrms.rrms.dto.response.TenantResponse;
 
@@ -14,7 +15,5 @@ public interface ITenantService {
     TenantResponse update(UUID id, TenantRequest tenantRequest);
     void delete(UUID id);
 
-    List<TenantResponse> findByAuthenIs(Boolean authenis);
 
-    List<TenantResponse> findAllByDatenew();
 }

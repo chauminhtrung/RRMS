@@ -1,7 +1,9 @@
 package com.rrms.rrms.services;
 
+import java.util.Date;
 import java.util.List;
 
+import com.rrms.rrms.dto.response.BulletinBoardResponse;
 import com.rrms.rrms.dto.response.BulletinBoardSearchResponse;
 import com.rrms.rrms.dto.response.RoomSearchResponse;
 import com.rrms.rrms.models.Room;
@@ -21,5 +23,8 @@ public interface ISearchService {
 
     List<RoomSearchResponse> findByAddressFuzzy(String keyword);
 
+//    List<BulletinBoardSearchResponse> findByMoveInDateLessThanEqual(Date moveInDate);
+
+    List<BulletinBoardSearchResponse> findAllByDatenew();
 
 }
