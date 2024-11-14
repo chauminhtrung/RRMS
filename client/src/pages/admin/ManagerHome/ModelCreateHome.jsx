@@ -5,6 +5,7 @@ import { getAllTypeRoom } from '~/apis/typeRoomAPI'
 import { createMotel, getMotelById, updateMotel } from '~/apis/motelAPI'
 import { createSerivceMotel } from '~/apis/motelServiceAPI'
 import Swal from 'sweetalert2'
+import { Link } from 'react-router-dom'
 
 const ModelCreateHome = ({ username, MotelId }) => {
   const [selectedOption, setSelectedOption] = useState('')
@@ -629,7 +630,7 @@ const ModelCreateHome = ({ username, MotelId }) => {
                         </div>
                       </div>
                       <div className="col-6 mt-2 download-template-excel">
-                        <a href="./template/template_excel.xlsx" style={{ color: 'inherit' }}>
+                        <Link to="./template/template_excel.xlsx" style={{ color: 'inherit' }}>
                           <div className="image-upload-simple" style={{ height: '100px' }}>
                             <div
                               className="container-upload "
@@ -669,7 +670,7 @@ const ModelCreateHome = ({ username, MotelId }) => {
                               </div>
                             </div>
                           </div>
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </div>

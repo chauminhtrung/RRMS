@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import './Support.css'
+import { Link } from 'react-router-dom'
 const Support = ({ setIsAdmin }) => {
   useEffect(() => {
     setIsAdmin(false)
@@ -15,7 +16,7 @@ const Support = ({ setIsAdmin }) => {
             color: '#444',
             fontWeight: '600',
             fontFamily: 'harmonia, Helvetica, Arial, sans-serif',
-            lineHeight: '125%',
+            lineHeight: '125%'
           }}>
           Dịch vụ hỗ trợ tìm phòng trọ tại RRMS
         </h1>
@@ -136,7 +137,7 @@ const Support = ({ setIsAdmin }) => {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    color: '#5f5f5f',
+                    color: '#5f5f5f'
                   }}>
                   <div
                     style={{ flex: '1', display: 'flex', alignItems: 'center', fontSize: '11px', marginRight: '5px' }}>
@@ -149,7 +150,7 @@ const Support = ({ setIsAdmin }) => {
                           backgroundColor: '#fff4e3',
                           display: 'flex',
                           alignItems: 'center',
-                          justifyContent: 'center',
+                          justifyContent: 'center'
                         }}>
                         <svg
                           viewBox="0 0 24 24"
@@ -172,10 +173,10 @@ const Support = ({ setIsAdmin }) => {
                         <b>
                           Với việc cung cấp thông tin là bạn đã chấp nhận chính sách giới thiệu thông tin của bạn tới
                           chủ nhà và chuyên viên hỗ trợ của RRMS <b>(</b>
-                          <a rel="nofollow, noindex" href="#">
+                          <Link rel="nofollow, noindex" to="#">
                             {' '}
                             Chính sách bảo mật
-                          </a>
+                          </Link>
                           )
                         </b>
                       </p>

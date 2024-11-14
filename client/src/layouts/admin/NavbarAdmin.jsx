@@ -94,9 +94,9 @@ const NavAdmin = ({ setIsAdmin, isNavAdmin, setIsNavAdmin, motels, setmotels }) 
         <div className="notification text-center" style={{ padding: '10px', backgroundColor: '#ffe8c8' }}>
           RRMS đã có thêm tính năng <strong>gửi hóa đơn tự động cho khách qua ZALO và APP dành riêng khách thuê</strong>
           . Liên hệ chuyên viên để thêm thông tin qua: <b style={{ color: '#0085ef' }}>HOTLINE: 0907474629</b> hoặc chat{' '}
-          <a href="#" target="_bank" style={{ color: '#0085ef' }}>
+          <Link to="#" target="_bank" style={{ color: '#0085ef' }}>
             <b>ZALO</b>
-          </a>
+          </Link>
         </div>
         <div className="header-sticky">
           <nav className="navbar navbar-expand-lg navbar-light">

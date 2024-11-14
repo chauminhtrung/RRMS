@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
 import YearMonthFilter from '../YearMonthFilter'
@@ -10,6 +11,7 @@ import AdditionItem from './AdditionItem'
 import 'react-tabulator/lib/styles.css' // required styles
 import 'react-tabulator/lib/css/tabulator.min.css' // theme
 import { ReactTabulator } from 'react-tabulator'
+import { Link } from 'react-router-dom'
 
 const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   const columns = []
@@ -129,8 +131,8 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                 </svg>
               </div>
             </div>
-            <a
-              href="/quan-ly/6891/cai-dat-nha-tro#bill_setting"
+            <Link
+              to="/quan-ly/6891/cai-dat-nha-tro#bill_setting"
               className="btn btn-primary"
               data-bs-toggle="tooltip"
               data-bs-placement="left"
@@ -156,7 +158,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
               </svg>
               <span>Cài đặt hóa đơn</span>
-            </a>
+            </Link>
             <div className="d-flex">
               <div style={{ width: '2px', borderLeft: '2px solid #ccc', margin: '3px 0px', marginLeft: '10px' }}></div>
               <button
@@ -395,23 +397,23 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                 <div className="tab" id="bill-series-tab" style={{ display: 'flex', justifyContent: 'center' }}>
                   <ul className="nav nav-tabs progressbar" role="tablist">
                     <li className="nav-item">
-                      <a
+                      <Link
                         className={`nav-link-item ${step === 1 ? 'active' : ''}`}
                         data-bs-toggle="tab"
-                        href="#list-room"
+                        to="#list-room"
                         id="tab-list-room"
                         aria-disabled>
                         Bước 1: Chốt dịch vụ
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a
+                      <Link
                         className={`nav-link-item ${step === 2 ? 'active' : ''}`}
                         data-bs-toggle="tab"
-                        href="#create-bill"
+                        to="#create-bill"
                         id="tab-create-bill">
                         Bước 2: Lập hóa đơn
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </div>
