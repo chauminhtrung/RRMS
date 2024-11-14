@@ -400,6 +400,7 @@ const Detail = ({ setIsAdmin }) => {
               username={account.username}
               review={review}
               setReview={setReview}
+              account={account}
             />
           )}
           {/* Giới thiệu trọ khác */}

@@ -1,0 +1,18 @@
+[
+  {
+    "group": "Nhóm",
+    "name": "Tên",
+    "price": 0,
+    "prioritize": "Ưu tiên",
+    "area": 0,
+    "deposit": 0,
+    "debt": 0,
+    "countTenant": 0,
+    "invoiceDate": 0,
+    "paymentCircle": 0,
+    "moveInDate": "1970-01-01",
+    "contractDuration": "1970-01-01",
+    "status": false,
+    "finance": "Thanh toán"
+  }
+]

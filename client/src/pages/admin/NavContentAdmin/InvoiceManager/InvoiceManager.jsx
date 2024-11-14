@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
 import YearMonthFilter from '../YearMonthFilter'
@@ -10,8 +11,9 @@ import AdditionItem from './AdditionItem'
 import 'react-tabulator/lib/styles.css' // required styles
 import 'react-tabulator/lib/css/tabulator.min.css' // theme
 import { ReactTabulator } from 'react-tabulator'
+import { Link } from 'react-router-dom'
 
-const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
+const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   const columns = []
 
   const data = []
@@ -31,8 +33,8 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
       minWidth: 30,
       hozAlign: 'center',
       resizable: false,
-      headerSort: false,
-    },
+      headerSort: false
+    }
   }
 
   //2 thang nay la cho chon tu ngay --> den ngay (tu tinh den 1 thang sau)
@@ -90,14 +92,14 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
         motels={motels}
         setIsAdmin={setIsAdmin}
         setIsNavAdmin={setIsNavAdmin}
-        isNavAdmin={isNavAdmin}
+        isNavAdmin={true}
       />
       <div
         style={{
           backgroundColor: '#fff',
           padding: '15px 15px 15px 15px',
           borderRadius: '10px',
-          margin: '0 10px 10px 10px',
+          margin: '0 10px 10px 10px'
         }}>
         <YearMonthFilter />
         <div className="header-item">
@@ -129,8 +131,8 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
                 </svg>
               </div>
             </div>
-            <a
-              href="/quan-ly/6891/cai-dat-nha-tro#bill_setting"
+            <Link
+              to="/quan-ly/6891/cai-dat-nha-tro#bill_setting"
               className="btn btn-primary"
               data-bs-toggle="tooltip"
               data-bs-placement="left"
@@ -138,7 +140,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
               style={{
                 boxShadow: '0 0.5rem 1rem rgba(0, 0, 0, .15) !important',
                 marginLeft: '25px',
-                padding: '11px 20px',
+                padding: '11px 20px'
               }}
               data-bs-original-title="Cài đặt hiển thị hóa đơn. Xuất, gửi hóa đơn tự động...">
               <svg
@@ -156,7 +158,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
               </svg>
               <span>Cài đặt hóa đơn</span>
-            </a>
+            </Link>
             <div className="d-flex">
               <div style={{ width: '2px', borderLeft: '2px solid #ccc', margin: '3px 0px', marginLeft: '10px' }}></div>
               <button
@@ -367,7 +369,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
                       justifyContent: 'center',
                       alignItems: 'center',
                       display: 'flex',
-                      backgroundColor: 'rgb(111, 171, 232)',
+                      backgroundColor: 'rgb(111, 171, 232)'
                     }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -395,23 +397,23 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
                 <div className="tab" id="bill-series-tab" style={{ display: 'flex', justifyContent: 'center' }}>
                   <ul className="nav nav-tabs progressbar" role="tablist">
                     <li className="nav-item">
-                      <a
+                      <Link
                         className={`nav-link-item ${step === 1 ? 'active' : ''}`}
                         data-bs-toggle="tab"
-                        href="#list-room"
+                        to="#list-room"
                         id="tab-list-room"
                         aria-disabled>
                         Bước 1: Chốt dịch vụ
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a
+                      <Link
                         className={`nav-link-item ${step === 2 ? 'active' : ''}`}
                         data-bs-toggle="tab"
-                        href="#create-bill"
+                        to="#create-bill"
                         id="tab-create-bill">
                         Bước 2: Lập hóa đơn
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </div>
@@ -434,7 +436,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
                                 backgroundColor: '#e8f8ff',
                                 border: '1px solid #e8f8ff',
                                 padding: '0 10px',
-                                borderradius: '10px',
+                                borderradius: '10px'
                               }}>
                               <div className="text-center" style={{ margin: '20px 0' }}>
                                 <svg
@@ -470,7 +472,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
                             alignItems: 'center',
                             backgroundColor: '#f2fffe',
                             border: '1px solid #dff8e0',
-                            borderRadius: '10px',
+                            borderRadius: '10px'
                           }}>
                           <div>
                             <div style={{ color: 'rgb(78, 188, 237)' }}>
@@ -510,9 +512,9 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
                                       plugins: [
                                         new monthSelectPlugin({
                                           shorthand: true, //defaults to false
-                                          dateFormat: 'm.y', //defaults to "F Y"
-                                        }),
-                                      ],
+                                          dateFormat: 'm.y' //defaults to "F Y"
+                                        })
+                                      ]
                                     }}
                                   />
                                   <label htmlFor="month-series">Tháng lập phiếu</label>

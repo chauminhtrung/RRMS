@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
 const ManagerCompanyAT = ({ setIsAdmin, motels, setmotels }) => {
   useEffect(() => {
@@ -24,7 +25,7 @@ const ManagerCompanyAT = ({ setIsAdmin, motels, setmotels }) => {
                 {/* Nav tabs  */}
                 <ul className="nav setting-tabs permission-tabs" role="tablist" style={{ display: 'unset' }}>
                   <li className="nav-item active">
-                    <a className="nav-link active " data-bs-toggle="tab" href="#company">
+                    <Link className="nav-link active " data-bs-toggle="tab" to="#company">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -40,7 +41,7 @@ const ManagerCompanyAT = ({ setIsAdmin, motels, setmotels }) => {
                         <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                       </svg>
                       Công ty / nhóm
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>

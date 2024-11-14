@@ -30,12 +30,11 @@ const NavWData = ({ motels }) => {
     if (motelId) {
       getMotelById(motelId)
         .then((res) => setmotel(res.data.result))
-        .catch((error) => console.error("Error fetching motel:", error));
+        .catch((error) => console.error('Error fetching motel:', error))
     } else if (motels && motels.length > 0) {
-      setmotel(motels[0]); // Cập nhật nhà trọ đầu tiên nếu không có `motelId` trong URL
+      setmotel(motels[0]) // Cập nhật nhà trọ đầu tiên nếu không có `motelId` trong URL
     }
-  }, [motels, motelId]);
-  
+  }, [motels, motelId])
 
   //nhan vao nut edit
   //ham xoa template Contract
@@ -525,12 +524,12 @@ const NavWData = ({ motels }) => {
                       </div>
                     </div>
                     {/* nut chuyen toi tro  */}
-                    <a
+                    <Link
                       className="btn-round btn-go-to"
                       data-bs-toggle="tooltip"
                       data-bs-placement="top"
                       title=""
-                      href={`/quanlytro/${motelinMap.motelId}`}
+                      to={`/quanlytro/${motelinMap.motelId}`}
                       data-bs-original-title="Tới quản lý Nhà trọ"
                       data-tooltip-id="my-tooltipManagerMotel"
                       data-tooltip-content="Tới quản lý Nhà trọ"
@@ -550,7 +549,7 @@ const NavWData = ({ motels }) => {
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                         <polyline points="12 5 19 12 12 19"></polyline>
                       </svg>
-                    </a>
+                    </Link>
                   </div>
                 ))
               ) : (

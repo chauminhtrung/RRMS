@@ -1,6 +1,7 @@
 import { Typography } from '@mui/material'
 import '../Contact/Contact.css'
 import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 const Introduce = ({ setIsAdmin }) => {
   useEffect(() => {
     setIsAdmin(false)
@@ -229,7 +230,7 @@ const Introduce = ({ setIsAdmin }) => {
       <div className="container">
         <div className="flex row" style={{ marginBlock: '35px' }}>
           <div className="col-md-6 mt-2">
-            <a href="#">
+            <Link to="#">
               <img
                 src="./banner1.png"
                 className="w-full lg:rounded-md"
@@ -237,10 +238,10 @@ const Introduce = ({ setIsAdmin }) => {
                 width="100%"
                 style={{ borderRadius: '5px' }}
               />
-            </a>
+            </Link>
           </div>
           <div className="col-md-6 mt-2">
-            <a href="#">
+            <Link to="#">
               <img
                 src="./banner2.png"
                 className="lg:rounded-md cursor-pointer"
@@ -248,7 +249,7 @@ const Introduce = ({ setIsAdmin }) => {
                 width="100%"
                 style={{ borderRadius: '5px' }}
               />
-            </a>
+            </Link>
           </div>
         </div>
 

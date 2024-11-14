@@ -29,9 +29,9 @@ public class RoomService {
     private Room room;
 
     @ManyToOne
-    @JoinColumn(name = "service_id")
-    private Service service;
+    @JoinColumn(name = "service_id", nullable = false)
+    private MotelService service;
 
-    @Column(columnDefinition = "VARCHAR(255)")
-    private String chargetype;
+    @Column(columnDefinition = "INT")
+    private Integer quantity;
 }

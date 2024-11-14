@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import {
   Box,
@@ -34,7 +35,8 @@ import TitleAttribute from './TitleAttribute'
 import { processImage } from '~/utils/processImage'
 import MapComponent from './MapComponent'
 import { getAccountByUsername, introspect } from '~/apis/accountAPI'
-import { postBulletinBoard } from '~/apis/bulletinBoardAPI'
+import { getBulletinBoard, postBulletinBoard, updateBulletinBoard } from '~/apis/bulletinBoardAPI'
+import { deleteImageFromApi } from '~/apis/bulletinBoardImageAPI'
 
 const style = {
   position: 'absolute',
@@ -99,37 +101,38 @@ const validationSchema = Yup.object({
     .required('Ít nhất một quy định phải được cung cấp.'),
   address: Yup.string().required('Địa chỉ là bắt buộc.')
 })
-const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
+const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }) => {
   const label = { inputProps: { 'aria-label': 'Switch demo' } }
   const [selectedImages, setSelectedImages] = useState([])
   const [address, setAddress] = useState('')
   const [position, setPosition] = useState(null)
   const [account, setAccount] = useState()
-
-  const [bulletinBoard, setBulletinBoard] = useState({
+  const defaultBulletinBoard = {
     username: '',
     title: '',
     rentalCategory: '',
     description: '',
-    rentPrice: 0,
-    promotionalRentalPrice: 0,
-    deposit: 0,
-    area: 0,
-    electricityPrice: 0,
-    waterPrice: 0,
+    rentPrice: '',
+    promotionalRentalPrice: '',
+    deposit: '',
+    area: '',
+    electricityPrice: '',
+    waterPrice: '',
     maxPerson: '',
-    moveInDate: '',
+    moveInDate: null,
     openingHours: '',
     closeHours: '',
     address: '',
-    longitude: 0,
-    latitude: 0,
+    longitude: '',
+    latitude: '',
     status: false,
     isActive: false,
     bulletinBoardImages: [],
     bulletinBoardRules: [],
     bulletinBoards_RentalAm: []
-  })
+  }
+
+  const [bulletinBoard, setBulletinBoard] = useState(defaultBulletinBoard)
 
   useEffect(() => {
     if (position) {
@@ -143,14 +146,30 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
   }, [position])
 
   useEffect(() => {
-    introspect().then((res) => {
-      getAccountByUsername(res.data.issuer).then((res) => {
-        setAccount(res.data)
-        setBulletinBoard({ ...bulletinBoard, username: res.data.username })
+    if (bulletinBoardId) {
+      // Khi có bulletinBoardId, lấy dữ liệu từ API và cập nhật bulletinBoard
+      setSelectedImages([]) // Đặt lại selectedImages
+      getBulletinBoard(bulletinBoardId).then((res) => {
+        setBulletinBoard(res.result) // Cập nhật bulletinBoard với dữ liệu từ API
       })
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    } else {
+      // Khi không có bulletinBoardId, đặt bulletinBoard với giá trị mặc định
+      setBulletinBoard(defaultBulletinBoard)
+
+      // Lấy thông tin tài khoản khi không có bulletinBoardId
+      introspect().then((res) => {
+        getAccountByUsername(res.data.issuer).then((accountRes) => {
+          setAccount(accountRes.data) // Set account từ API
+
+          // Cập nhật username sau khi có tài khoản
+          setBulletinBoard((prevBulletinBoard) => ({
+            ...prevBulletinBoard, // Giữ nguyên các giá trị cũ
+            username: accountRes.data.username // Chỉ thay đổi trường username
+          }))
+        })
+      })
+    }
+  }, [bulletinBoardId]) // Hook chỉ chạy khi bulletinBoardId thay đổi
 
   // const formik = useFormik({
   //   initialValues: {
@@ -250,10 +269,6 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
     })
   }
 
-  const handleImageRemove = (indexToRemove) => {
-    setSelectedImages((prevImages) => prevImages.filter((_, index) => index !== indexToRemove))
-  }
-
   const handleImageChange = async (event) => {
     const images = Array.from(event.target.files)
     console.log('Selected files:', images)
@@ -279,8 +294,15 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
     setSelectedImages((prevImages) => [...prevImages, ...processedImages.filter((img) => img !== null)])
   }
 
+  const createdURLs = []
+
   const handlePost = () => {
     if (selectedImages && selectedImages.length > 0) {
+      if (selectedImages.length + bulletinBoard.bulletinBoardImages.length < 2) {
+        toast.info('Chọn tối thiểu 2 ảnh')
+        return
+      }
+
       const uploadPromises = selectedImages.map((image) => {
         const imageName = v4()
         const storageRef = ref(storage, `images/bulletin-board-images/${imageName}`)
@@ -322,38 +344,24 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
         .then((downloadURLs) => {
           const formattedImages = downloadURLs.map((url) => ({ imageLink: url }))
           const updatedRoom = { ...bulletinBoard, bulletinBoardImages: formattedImages }
-          postBulletinBoard(updatedRoom).then((res) => {
+
+          const apiCall = bulletinBoardId
+            ? updateBulletinBoard(bulletinBoardId, updatedRoom)
+            : postBulletinBoard(updatedRoom)
+
+          apiCall.then((res) => {
+            refreshBulletinBoards()
             if (res.code === 400) {
               toast.error(res.message)
-            }
-          })
+            } else {
+              toast.success('Đăng tin thành công!')
+              handleClose(true)
+              setBulletinBoard(defaultBulletinBoard)
 
-          toast.success('Đăng tin thành công!')
-          refreshBulletinBoards()
-          handleClose(true)
-          setBulletinBoard({
-            username: 'admin',
-            title: '',
-            rentalCategory: '',
-            description: '',
-            rentPrice: 0,
-            promotionalRentalPrice: 0,
-            deposit: 0,
-            area: 0,
-            electricityPrice: 0,
-            waterPrice: 0,
-            maxPerson: '',
-            moveInDate: '',
-            openingHours: '',
-            closeHours: '',
-            address: '',
-            longitude: 0,
-            latitude: 0,
-            status: false,
-            isActive: false,
-            bulletinBoardImages: [],
-            bulletinBoardRules: [],
-            bulletinBoards_RentalAm: []
+              // Giải phóng URL đã tạo
+              createdURLs.forEach((url) => URL.revokeObjectURL(url))
+              createdURLs.length = 0 // Reset danh sách URL
+            }
           })
         })
         .catch((error) => {
@@ -362,13 +370,48 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
         })
     } else {
       console.log('Room without images:', bulletinBoard)
-      postBulletinBoard(bulletinBoard).then((res) => {
+      if (selectedImages.length + bulletinBoard.bulletinBoardImages.length < 2) {
+        toast.info('Chọn tối thiểu 2 ảnh')
+        return
+      }
+
+      const apiCall = bulletinBoardId
+        ? updateBulletinBoard(bulletinBoardId, bulletinBoard)
+        : postBulletinBoard(bulletinBoard)
+
+      apiCall.then((res) => {
+        refreshBulletinBoards()
         if (res.code === 400) {
           toast.error(res.message)
+        } else {
+          toast.success('Đăng tin thành công!')
+          handleClose(true)
         }
       })
-      refreshBulletinBoards()
-      handleClose(true)
+    }
+  }
+
+  // Sử dụng `handleImageRemove` trong JSX
+  // Hàm xử lý xóa ảnh
+  const handleImageRemove = (index, isFromApi) => {
+    if (isFromApi) {
+      // Nếu ảnh đến từ API, gọi API để xóa ảnh
+      const imageToRemove = bulletinBoard.bulletinBoardImages[index]
+      // Gọi API để xóa ảnh (giả sử có hàm xóa ảnh API là `deleteImageFromApi`)
+      deleteImageFromApi(imageToRemove.bulletinBoardImageId)
+        .then(() => {
+          // Sau khi xóa thành công, cập nhật lại danh sách ảnh
+          const updatedImages = bulletinBoard.bulletinBoardImages.filter((image, i) => i !== index)
+          setBulletinBoard((prevBoard) => ({
+            ...prevBoard,
+            bulletinBoardImages: updatedImages
+          }))
+        })
+        .catch((error) => console.error('Error deleting image:', error))
+    } else {
+      // Nếu ảnh đến từ selectedImages, chỉ cần xóa khỏi selectedImages
+      const updatedImages = selectedImages.filter((_, i) => i !== index)
+      setSelectedImages(updatedImages)
     }
   }
 
@@ -388,7 +431,11 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
           </Box>
           <Divider sx={{ bgcolor: '#333' }} />
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3, mt: 1 }}>
-            <Switch {...label} onChange={(e) => setBulletinBoard({ ...bulletinBoard, status: event.target.checked })} />
+            <Switch
+              {...label}
+              checked={bulletinBoard.status === true}
+              onChange={(event) => setBulletinBoard({ ...bulletinBoard, status: event.target.checked })}
+            />
             <Box>
               <Typography variant="inherit" component="h2">
                 Cho thuê
@@ -414,12 +461,16 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
                   setBulletinBoard({ ...bulletinBoard, title: event.target.value })
                   //  formik.handleChange
                 }}
+                value={bulletinBoard.title}
                 // onBlur={formik.handleBlur}
                 name="nameRoom"
                 required
                 variant="filled"
                 id="outlined-basic"
                 label="Tiêu đề"
+                InputLabelProps={{
+                  shrink: !!bulletinBoard.title
+                }}
                 // error={formik.touched.title && Boolean(formik.errors.title)}
                 // helperText={formik.touched.title && formik.errors.title}
                 sx={{ minWidth: 350 }}
@@ -435,7 +486,7 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
                   name="rentalCategory"
-                  //   value={formik.values.rentalCategory}
+                  value={bulletinBoard.rentalCategory}
                   onChange={(event) => {
                     setBulletinBoard({ ...bulletinBoard, rentalCategory: event.target.value })
                     //    formik.handleChange
@@ -509,6 +560,7 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
               setBulletinBoard({ ...bulletinBoard, description: event.target.value })
               // formik.handleChange
             }}
+            value={bulletinBoard.description}
             // onBlur={formik.handleBlur}
             name="description"
             style={{
@@ -533,6 +585,7 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
                   // formik.handleChange
                 }}
                 // onBlur={formik.handleBlur}
+                value={bulletinBoard.rentPrice}
                 name="rentPrice"
                 required
                 id="outlined-basic"
@@ -540,6 +593,9 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
                 variant="filled"
                 type="number"
                 sx={{ width: '100%' }}
+                InputLabelProps={{
+                  shrink: !!bulletinBoard.rentPrice
+                }}
                 // error={formik.touched.rentPrice && Boolean(formik.errors.rentPrice)}
                 // helperText={formik.touched.rentPrice && formik.errors.rentPrice}
               />
@@ -552,12 +608,17 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
                   // formik.handleChange
                 }}
                 // onBlur={formik.handleBlur}
+
                 name="promotionalRentalPrice"
                 id="outlined-basic"
                 label="Giá thuê khuyến mãi"
                 variant="filled"
                 type="number"
                 sx={{ width: '100%' }}
+                value={bulletinBoard.promotionalRentalPrice}
+                InputLabelProps={{
+                  shrink: !!bulletinBoard.promotionalRentalPrice
+                }}
                 // error={formik.touched.promotionalRentalPrice && Boolean(formik.errors.promotionalRentalPrice)}
                 // helperText={formik.touched.promotionalRentalPrice && formik.errors.promotionalRentalPrice}
               />
@@ -576,6 +637,10 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
                 variant="filled"
                 type="number"
                 sx={{ width: '100%' }}
+                value={bulletinBoard.deposit}
+                InputLabelProps={{
+                  shrink: !!bulletinBoard.deposit
+                }}
                 // error={formik.touched.deposit && Boolean(formik.errors.deposit)}
                 // helperText={formik.touched.deposit && formik.errors.deposit}
               />
@@ -594,6 +659,10 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
                 variant="filled"
                 type="number"
                 sx={{ width: '100%' }}
+                value={bulletinBoard.area}
+                InputLabelProps={{
+                  shrink: !!bulletinBoard.area
+                }}
                 // error={formik.touched.area && Boolean(formik.errors.area)}
                 // helperText={formik.touched.area && formik.errors.area}
               />
@@ -612,6 +681,10 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
                 variant="filled"
                 type="number"
                 sx={{ width: '100%' }}
+                value={bulletinBoard.electricityPrice}
+                InputLabelProps={{
+                  shrink: !!bulletinBoard.electricityPrice
+                }}
                 // error={formik.touched.electricityPrice && Boolean(formik.errors.electricityPrice)}
                 // helperText={formik.touched.electricityPrice && formik.errors.electricityPrice}
               />
@@ -630,6 +703,10 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
                 variant="filled"
                 type="number"
                 sx={{ width: '100%' }}
+                value={bulletinBoard.waterPrice}
+                InputLabelProps={{
+                  shrink: !!bulletinBoard.waterPrice
+                }}
                 // error={formik.touched.waterPrice && Boolean(formik.errors.waterPrice)}
                 // helperText={formik.touched.waterPrice && formik.errors.waterPrice}
               />
@@ -646,7 +723,7 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
                   name="maxPerson"
-                  // value={formik.values.maxPerson}
+                  value={bulletinBoard.maxPerson}
                   onChange={(event) => {
                     setBulletinBoard({ ...bulletinBoard, maxPerson: event.target.value })
                     // formik.handleChange
@@ -656,12 +733,12 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  <MenuItem value={'2 người'}>2 người</MenuItem>
-                  <MenuItem value={'3 người'}>3 người</MenuItem>
-                  <MenuItem value={'4 người'}>4 người</MenuItem>
-                  <MenuItem value={'5-6 người'}>5-6 người</MenuItem>
-                  <MenuItem value={'6-7 người'}>6-8 người</MenuItem>
-                  <MenuItem value={'9-10 người'}>9-10 người</MenuItem>
+                  <MenuItem value={'1 người ở'}>1 người ở</MenuItem>
+                  <MenuItem value={'2 người ở'}>2 người ở</MenuItem>
+                  <MenuItem value={'3 người ở'}>3 người ở</MenuItem>
+                  <MenuItem value={'4 người ở'}>4 người ở</MenuItem>
+                  <MenuItem value={'5-6 người ở'}>5-6 người ở</MenuItem>
+                  <MenuItem value={'7-10 người ở'}>7-10 người ở</MenuItem>
                   <MenuItem value={'Không giới hạn'}>Không giới hạn</MenuItem>
                 </Select>
                 {/* <FormHelperText>{formik.touched.maxPerson && formik.errors.maxPerson}</FormHelperText> */}
@@ -680,6 +757,7 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
                 label="Ngày có thể vào ở"
                 fullWidth
                 type="date"
+                value={bulletinBoard?.moveInDate ? bulletinBoard.moveInDate.split('T')[0] : ''}
                 InputLabelProps={{
                   shrink: true
                 }}
@@ -740,6 +818,7 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
                 name="openingHours"
+                value={bulletinBoard.openingHours}
                 onChange={(event) => {
                   setBulletinBoard({ ...bulletinBoard, openingHours: event.target.value })
                   // formik.handleChange
@@ -763,6 +842,7 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
                 name="closeHour"
+                value={bulletinBoard.closeHours}
                 onChange={(event) => {
                   setBulletinBoard({ ...bulletinBoard, closeHours: event.target.value })
                   // formik.handleChange
@@ -783,7 +863,7 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
           <Grid container>
             {[
               {
-                title: 'Có gác lửng',
+                title: 'Nhà trọ có giờ giấc không về quá khuya',
                 desciption: 'Không về sau 12h tối'
               },
               {
@@ -856,6 +936,10 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
                 handleDetailAddressChange(event)
                 // formik.handleChange
               }}
+              value={bulletinBoard.address}
+              InputLabelProps={{
+                shrink: !!bulletinBoard.address
+              }}
               // onBlur={formik.handleBlur}
               name="address"
               required
@@ -871,7 +955,7 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
           <Box sx={{ my: 2 }}>
             <Box sx={{ my: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <TextField
-                value={position?.lng}
+                value={position?.lng ?? bulletinBoard.longitude}
                 id="outlined-basic"
                 label="Kinh độ"
                 variant="filled"
@@ -882,7 +966,7 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
                 }}
               />
               <TextField
-                value={position?.lat}
+                value={position?.lat ?? bulletinBoard.latitude}
                 id="outlined-basic"
                 label="Vĩ độ"
                 variant="filled"
@@ -930,13 +1014,18 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
                   }}
                 />
               </IconButton>
-              <Box sx={{ display: selectedImages.length > 0 ? 'none' : 'block', textAlign: 'center' }}>
+              <Box
+                sx={{
+                  display: selectedImages.length > 0 || bulletinBoard.bulletinBoardImages ? 'none' : 'block',
+                  textAlign: 'center'
+                }}>
                 <Typography>Chọn tối đa 5 ảnh</Typography>
                 <Typography variant="body2">
                   Lưu ý ảnh sẽ được cắt theo tỉ lệ 16:9 để phù hợp với trang web, vui lòng chọn ảnh có tỉ lệ gần giống
                   để không làm mất thông tin quan trọng !
                 </Typography>
               </Box>
+
               <Box
                 sx={{
                   display: 'flex',
@@ -955,10 +1044,25 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards }) => {
                       alt={`Hình ảnh ${i + 1}`}
                       width={200}
                       height="auto"
-                      onLoad={() => URL.revokeObjectURL(image)}
+                      onLoad={() => URL.revokeObjectURL(image)} // Giải phóng URL sau khi tải xong
                       onError={() => console.log('Lỗi tải hình ảnh')}
                       sx={{ borderRadius: 1, boxShadow: 2 }}
-                      onClick={() => handleImageRemove(i)}
+                      onClick={() => handleImageRemove(i)} // Hàm này để xóa hình ảnh nếu cần
+                    />
+                  ))}
+
+                {bulletinBoard.bulletinBoardImages &&
+                  Array.from(bulletinBoard.bulletinBoardImages).map((image, i) => (
+                    <Box
+                      key={image.bulletinBoardImageId || i} // Sử dụng bulletinBoardImageId làm key
+                      component="img"
+                      src={image.imageLink} // Sử dụng imageLink từ API
+                      alt={`Hình ảnh ${i + 1}`}
+                      width={200}
+                      height="auto"
+                      onError={() => console.log('Lỗi tải hình ảnh')} // Log lỗi khi không tải được ảnh
+                      sx={{ borderRadius: 1, boxShadow: 2 }}
+                      onClick={() => handleImageRemove(i, true)} // Hàm này để xóa hình ảnh nếu cần
                     />
                   ))}
               </Box>

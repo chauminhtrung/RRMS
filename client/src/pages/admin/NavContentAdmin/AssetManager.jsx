@@ -8,7 +8,7 @@ import { getAllMotelDevices, insertMotelDevice } from '~/apis/deviceAPT'
 import { useParams } from 'react-router-dom'
 import Swal from 'sweetalert2'
 
-const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
+const AssetManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   const [show, setShow] = useState(false)
   const [device, setDevice] = useState([])
   const { motelId } = useParams('motelId')
@@ -133,7 +133,7 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
         motels={motels}
         setIsAdmin={setIsAdmin}
         setIsNavAdmin={setIsNavAdmin}
-        isNavAdmin={isNavAdmin}
+        isNavAdmin={true}
       />
       <div
         style={{

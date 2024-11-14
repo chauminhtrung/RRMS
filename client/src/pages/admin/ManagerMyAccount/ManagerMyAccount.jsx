@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { getAccountByUsername } from '~/apis/accountAPI'
 
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
@@ -11,7 +12,7 @@ const ManagerMyAccount = ({ setIsAdmin, TaiKhoan }) => {
     setIsAdmin(true)
 
     fetchAccountByUsername(TaiKhoan)
-  }, [TaiKhoan]) 
+  }, [TaiKhoan])
 
   const fetchAccountByUsername = async (username) => {
     try {
@@ -40,7 +41,7 @@ const ManagerMyAccount = ({ setIsAdmin, TaiKhoan }) => {
                 {/* Nav tabs  */}
                 <ul className="nav setting-tabs" role="tablist" style={{ display: 'unset' }}>
                   <li className="nav-item">
-                    <a className="nav-link active" data-bs-toggle="tab" href="#home">
+                    <Link className="nav-link active" data-bs-toggle="tab" to="#home">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -56,10 +57,10 @@ const ManagerMyAccount = ({ setIsAdmin, TaiKhoan }) => {
                         <circle cx="12" cy="7" r="4"></circle>
                       </svg>
                       Thông tin tài khoản
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" data-bs-toggle="tab" href="#devices">
+                    <Link className="nav-link" data-bs-toggle="tab" to="#devices">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -76,7 +77,7 @@ const ManagerMyAccount = ({ setIsAdmin, TaiKhoan }) => {
                         <line x1="12" y1="17" x2="12" y2="21"></line>
                       </svg>
                       Thiết bị đăng nhập
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>

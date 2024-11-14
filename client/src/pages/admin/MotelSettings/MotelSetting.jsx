@@ -5,6 +5,7 @@ import ModelDeposit from '../ManagerSettings/ModelDeposit'
 import AddIcon from '@mui/icons-material/Add'
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { Link } from 'react-router-dom'
 const initialItems = [
   { id: '1', name: 'Tầng trệt 1' },
   { id: '2', name: 'Tầng trệt 2' },
@@ -72,7 +73,7 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                 {/* Nav tabs  */}
                 <ul className="nav setting-tabs" role="tablist" style={{ display: 'unset' }}>
                   <li className="nav-item">
-                    <a className="nav-link active" data-bs-toggle="tab" href="#info">
+                    <Link className="nav-link active" data-bs-toggle="tab" to="#info">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -89,10 +90,10 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                         <line x1="12" y1="22.08" x2="12" y2="12" />
                       </svg>
                       Nhóm phòng
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" data-bs-toggle="tab" href="#contract_template">
+                    <Link className="nav-link" data-bs-toggle="tab" to="#contract_template">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -108,11 +109,11 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                         <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                       </svg>
                       Tăng giá thuê
-                    </a>
+                    </Link>
                   </li>
 
                   <li className="nav-item">
-                    <a className="nav-link" data-bs-toggle="tab" href="#on_off">
+                    <Link className="nav-link" data-bs-toggle="tab" to="#on_off">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -128,10 +129,10 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                       </svg>
                       Bật tắt tính năng
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" data-bs-toggle="tab" href="#invoice_setting">
+                    <Link className="nav-link" data-bs-toggle="tab" to="#invoice_setting">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -146,10 +147,10 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                         <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
                       </svg>
                       Cài đặt hóa đơn
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" data-bs-toggle="tab" href="#account_bank_setting">
+                    <Link className="nav-link" data-bs-toggle="tab" to="#account_bank_setting">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -165,10 +166,10 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                         <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                       </svg>
                       Cài đặt tài khoản ngân hàng
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" data-bs-toggle="tab" href="#app_book">
+                    <Link className="nav-link" data-bs-toggle="tab" to="#app_book">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -184,10 +185,10 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                         <line x1="12" y1="18" x2="12.01" y2="18" />
                       </svg>
                       Thiết lập cho app khách thuê
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" data-bs-toggle="tab" href="#extension_setting">
+                    <Link className="nav-link" data-bs-toggle="tab" to="#extension_setting">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -206,7 +207,7 @@ const MotelSetting = ({ setIsAdmin, motels, setmotels }) => {
                         <polyline points="10 9 9 9 8 9" />
                       </svg>
                       Nội quy, giờ giấc, tiện ích cho thuê
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>

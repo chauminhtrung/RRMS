@@ -1,14 +1,14 @@
-import { Avatar, Box, Button, Rating, TextareaAutosize, Typography } from '@mui/material'
-import { useEffect, useState } from 'react'
-import { getBulletinBoardReviewByBulletinBoardIdAndUsername, postBulletinBoardReview } from '~/apis/bulletinBoardAPI'
+import { Avatar, Box, Button, Rating, TextareaAutosize, Tooltip, Typography } from '@mui/material'
+import { useEffect } from 'react'
+import {
+  getBulletinBoardReviewByBulletinBoardIdAndUsername,
+  postBulletinBoardReview
+} from '~/apis/bulletinBoardReviewsAPI'
 
-const UserRating = ({ roomId, username, setReview, review, refreshBulletinBoards }) => {
-  const [account, setAccount] = useState(null)
-
+const UserRating = ({ roomId, username, setReview, review, refreshBulletinBoards, account }) => {
   useEffect(() => {
     getBulletinBoardReviewByBulletinBoardIdAndUsername(roomId, username).then((res) => {
       const result = res.result
-      setAccount(result)
       // Khởi tạo review từ dữ liệu đã có nếu tồn tại
       if (result) {
         setReview({
@@ -19,10 +19,13 @@ const UserRating = ({ roomId, username, setReview, review, refreshBulletinBoards
         })
       }
     })
+    setReview({ ...review, username: username })
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleComment = () => {
+    setReview({ ...review, username: username })
     postBulletinBoardReview(review)
       .then(() => {
         refreshBulletinBoards()
@@ -38,9 +41,11 @@ const UserRating = ({ roomId, username, setReview, review, refreshBulletinBoards
         Đánh giá của bạn:
       </Typography>
       <Box sx={{ display: 'flex' }}>
-        <Avatar sx={{ mr: 1 }} src={account?.account.avatar}>
-          {account?.account.fullname[0]}
-        </Avatar>
+        <Tooltip title={account?.fullname}>
+          <Avatar sx={{ mr: 1 }} src={account?.avatar}>
+            {account?.fullname[0]}
+          </Avatar>
+        </Tooltip>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Rating
             sx={{ my: 'auto' }}

@@ -1,12 +1,5 @@
 package com.rrms.rrms.services.servicesImp;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.springframework.data.elasticsearch.ResourceNotFoundException;
-import org.springframework.stereotype.Service;
-
 import com.rrms.rrms.dto.request.BulletinBoardRequest;
 import com.rrms.rrms.dto.response.BulletinBoardResponse;
 import com.rrms.rrms.dto.response.BulletinBoardTableResponse;
@@ -16,11 +9,17 @@ import com.rrms.rrms.mapper.BulletinBoardMapper;
 import com.rrms.rrms.models.*;
 import com.rrms.rrms.repositories.*;
 import com.rrms.rrms.services.IBulletinBoard;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.elasticsearch.ResourceNotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -109,6 +108,75 @@ public class BulletinBoardService implements IBulletinBoard {
             bulletinBoards_RentalAmRepository.save(bulletinBoards_RentalAm);
         }
 
+        return bulletinBoardMapper.toBulletinBoardResponse(bulletinBoard);
+    }
+
+    @Transactional
+    @Override
+    public BulletinBoardResponse updateBulletinBoard(UUID bulletinBoardId, BulletinBoardRequest bulletinBoardRequest) {
+        // Lấy BulletinBoard hiện tại
+        BulletinBoard bulletinBoard = bulletinBoardRepository
+                .findById(bulletinBoardId)
+                .orElseThrow(() -> new ResourceNotFoundException("BulletinBoard not found"));
+        System.out.println("bulletinBoard id " + bulletinBoard.getBulletinBoardId());
+
+        // Cập nhật các trường cơ bản
+        bulletinBoardMapper.updateBulletinBoardFromRequest(bulletinBoardRequest, bulletinBoard);
+
+        // Cập nhật danh sách hình ảnh
+        if (bulletinBoardRequest.getBulletinBoardImages() != null) {
+            bulletinBoardImageRepository.deleteAllByBulletinBoard(bulletinBoard);
+            for (BulletinBoardImage image : bulletinBoardRequest.getBulletinBoardImages()) {
+                BulletinBoardImage bulletinBoardImage = new BulletinBoardImage();
+                bulletinBoardImage.setBulletinBoard(bulletinBoard); // Đảm bảo rằng bulletinBoard được gán đúng
+                bulletinBoardImage.setImageLink(image.getImageLink());
+                bulletinBoardImageRepository.save(bulletinBoardImage);
+            }
+        }
+
+        // Cập nhật danh sách quy tắc
+        if (bulletinBoardRequest.getBulletinBoardRules() != null) {
+            bulletinBoardRuleRepository.deleteAllByBulletinBoard(bulletinBoard);
+            for (BulletinBoardRule bulletinRule : bulletinBoardRequest.getBulletinBoardRules()) {
+                Rule rule = bulletinRule.getRule();
+                if (rule != null) {
+                    rule = ruleRepository.save(rule);
+                } else {
+                    rule = new Rule();
+                    rule = ruleRepository.save(rule);
+                }
+
+                BulletinBoardRule bulletinBoardRule = new BulletinBoardRule();
+                bulletinBoardRule.setBulletinBoard(bulletinBoard); // Đảm bảo rằng bulletinBoard được gán đúng
+                bulletinBoardRule.setRule(rule);
+                bulletinBoardRuleRepository.save(bulletinBoardRule);
+            }
+        }
+
+        // Cập nhật danh sách tiện ích
+        if (bulletinBoardRequest.getBulletinBoards_RentalAm() != null) {
+            bulletinBoards_RentalAmRepository.deleteAllByBulletinBoard(bulletinBoard);
+            for (BulletinBoards_RentalAm rentalAm : bulletinBoardRequest.getBulletinBoards_RentalAm()) {
+                Optional<RentalAmenities> rentalAmenitiesOptional = rentalAmenitiesRepository.findByName(rentalAm.getRentalAmenities().getName());
+
+                RentalAmenities rentalAmenities;
+                if (rentalAmenitiesOptional.isPresent()) {
+                    rentalAmenities = rentalAmenitiesOptional.get();
+                } else {
+                    rentalAmenities = new RentalAmenities();
+                    rentalAmenities.setName(rentalAm.getRentalAmenities().getName());
+                    rentalAmenities = rentalAmenitiesRepository.save(rentalAmenities);
+                }
+
+                BulletinBoards_RentalAm bulletinBoards_RentalAm = new BulletinBoards_RentalAm();
+                bulletinBoards_RentalAm.setBulletinBoard(bulletinBoard); // Đảm bảo rằng bulletinBoard được gán đúng
+                bulletinBoards_RentalAm.setRentalAmenities(rentalAmenities);
+                bulletinBoards_RentalAmRepository.save(bulletinBoards_RentalAm);
+            }
+        }
+
+        // Lưu lại và trả về kết quả
+        bulletinBoard = bulletinBoardRepository.save(bulletinBoard); // Lưu lại bản cập nhật
         return bulletinBoardMapper.toBulletinBoardResponse(bulletinBoard);
     }
 
