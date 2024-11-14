@@ -115,7 +115,7 @@ Chúng tôi xin gửi lời cảm ơn đến những cá nhân đã tham gia ph�
 ## 📄 Tài liệu tham khảo
 
 - [Hướng dẫn cài đặt](link_to_installation_guide)
-- [Tài liệu API](link_to_api_documentation)
+- [Tài liệu API](https://decent-highly-bass.ngrok-free.app/swagger-ui/index.html)
 - [Hỗ trợ người dùng](link_to_user_support)
 
 ---

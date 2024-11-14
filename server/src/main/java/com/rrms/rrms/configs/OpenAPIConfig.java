@@ -2,6 +2,8 @@ package com.rrms.rrms.configs;
 
 import java.util.List;
 
+import io.swagger.v3.oas.models.parameters.Parameter;
+import org.springdoc.core.customizers.OperationCustomizer;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +31,7 @@ public class OpenAPIConfig implements WebMvcConfigurer {
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
-                .servers(List.of(new Server().url("http://localhost:8080")))
+                .servers(List.of(new Server().url("https://decent-highly-bass.ngrok-free.app")))
                 .info(new Info()
                         .title("RRMS API")
                         .description("API documents")
@@ -45,5 +47,33 @@ public class OpenAPIConfig implements WebMvcConfigurer {
                                         .scheme("bearer")
                                         .bearerFormat("JWT")))
                 .security(List.of(new SecurityRequirement().addList("bearerAuth")));
+    }
+
+    @Bean
+    public OperationCustomizer customGlobalHeaders() {
+        return (operation, handlerMethod) -> {
+            operation.addParametersItem(new Parameter()
+                    .in("header")
+                    .name("Cache-Control")
+                    .description("Control cache behavior")
+                    .required(false)
+                    .example("no-cache, no-store, max-age=0, must-revalidate"));
+
+            operation.addParametersItem(new Parameter()
+                    .in("header")
+                    .name("Pragma")
+                    .description("Cache control")
+                    .required(false)
+                    .example("no-cache"));
+
+            operation.addParametersItem(new Parameter()
+                    .in("header")
+                    .name("Expires")
+                    .description("Cache expiry")
+                    .required(false)
+                    .example("0"));
+
+            return operation;
+        };
     }
 }
