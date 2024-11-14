@@ -212,6 +212,7 @@ public class RoomService implements IRoom {
         Motel motel =
             motelRepository.findById(motelId).orElseThrow(() -> new IllegalArgumentException("Motel not found"));
 
+
         // Lấy danh sách phòng theo motelId
         List<Room> rooms = roomRepository.findByMotel(motel);
 
