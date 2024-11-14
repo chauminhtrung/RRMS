@@ -28,7 +28,6 @@ import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { storage } from '~/configs/firebaseConfig'
 import { v4 } from 'uuid'
 import { toast } from 'react-toastify'
-import { getByIdTenant, updateTenant } from '~/apis/tenantAPI'
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -40,7 +39,7 @@ const VisuallyHiddenInput = styled('input')({
   whiteSpace: 'nowrap',
   width: 1
 })
-const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
+const EditTenantModal = ({ open, onClose, reloadData }) => {
   const [provinces, setProvinces] = useState([])
   const [selectedProvince, setSelectedProvince] = useState('')
   const [districts, setDistricts] = useState([])
@@ -225,12 +224,6 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
     temporaryResidence: false,
     informationVerify: false
   })
-  const handleChange = (e) => {
-    setTenant({
-      ...tenant,
-      phone: e.target.value
-    })
-  }
   const handleIdTypeChange = (e) => {
     setTenant({
       ...tenant,
@@ -304,59 +297,6 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
     }
   }
 
-  useEffect(() => {
-    console.log(editId)
-    setTenant({
-      fullname: '',
-      phone: '',
-      idType: '',
-      cccd: '',
-      zalo: '',
-      gender: '',
-      birthday: '',
-      job: '',
-      licenseDate: '',
-      placeOfLicense: '',
-      frontPhoto: '',
-      backPhoto: '',
-      avatar: null,
-      province: '',
-      district: '',
-      ward: '',
-      address: '',
-      type_of_tenant: false,
-      temporaryResidence: false,
-      informationVerify: false
-    })
-    if (editId) {
-      getByIdTenant(editId).then((res) => {
-        console.log(res.result)
-        setTenant(res.result)
-      })
-    }
-  }, [editId])
-
-  const handleUpdateClick = () => {
-    if (!tenant || !editId) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Thất bại',
-        text: 'Vui lòng cung cấp đầy đủ thông tin khách hàng!'
-      })
-      return
-    }
-
-    updateTenant(editId, tenant)
-      .then((res) => {
-        setTenant(res.result) // Cập nhật lại dữ liệu sau khi lưu thành công
-        Swal.fire({ icon: 'success', title: 'Thành công', text: 'Cập nhật khách hàng thành công!' })
-      })
-      .catch((error) => {
-        console.error('Failed to update tenant:', error)
-        Swal.fire({ icon: 'error', title: 'Thất bại', text: 'Cập nhật khách hàng thất bại!' })
-      })
-  }
-
   return (
     <Modal open={open} onClose={onClose}>
       <Box
@@ -425,63 +365,56 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
                 <Typography variant="body2">Các thông tin về khách thuê và tiền cọc</Typography>
               </Box>
             </Box>
-
-            {avatar ? (
-              <Box
+            <Box
+              sx={{
+                textAlign: 'center',
+                border: '2px solid #1e90ff',
+                borderRadius: 2,
+                padding: 2,
+                width: 130,
+                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                backgroundColor: '#fafafa',
+                margin: 'auto',
+                mt: 1
+              }}>
+              <Avatar
                 sx={{
-                  textAlign: 'center',
-                  border: '2px solid #1e90ff',
-                  borderRadius: 2,
-                  padding: 2,
-                  width: 130,
-                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                  backgroundColor: '#fafafa',
-                  margin: 'auto',
-                  mt: 1
-                }}>
-                <Avatar
+                  width: 80,
+                  height: 70,
+                  bgcolor: '#e0e0e0',
+                  color: '#9e9e9e',
+                  cursor: 'pointer',
+                  margin: 'auto'
+                }}
+                src={avatarImage} // Hiển thị ảnh nếu có
+              >
+                <IconButton
+                  component="label"
                   sx={{
-                    width: 80,
-                    height: 70,
-                    bgcolor: '#e0e0e0',
-                    color: '#9e9e9e',
-                    cursor: 'pointer',
-                    margin: 'auto'
-                  }}
-                  src={avatarImage} // Hiển thị ảnh nếu có
-                >
-                  <IconButton
-                    component="label"
-                    sx={{
-                      bottom: 0,
-                      right: 0,
-                      backgroundColor: 'white',
-                      borderRadius: '50%',
-                      border: '2px solid #f0f0f0',
-                      width: 30,
-                      height: 30,
-                      padding: 0,
-                      '&:hover': { backgroundColor: '#f0f0f0' }
-                    }}>
-                    <CloudUploadIcon fontSize="medium" />
-                    <VisuallyHiddenInput type="file" accept="image/*" onChange={handleImageChange} />
-                  </IconButton>
-                </Avatar>
-                <Typography variant="body2" sx={{ mt: 1, color: '#9e9e9e' }}>
-                  Hình đại diện
-                </Typography>
-              </Box>
-            ) : (
-              <></>
-            )}
-
+                    bottom: 0,
+                    right: 0,
+                    backgroundColor: 'white',
+                    borderRadius: '50%',
+                    border: '2px solid #f0f0f0',
+                    width: 30,
+                    height: 30,
+                    padding: 0,
+                    '&:hover': { backgroundColor: '#f0f0f0' }
+                  }}>
+                  <CloudUploadIcon fontSize="medium" />
+                  <VisuallyHiddenInput type="file" accept="image/*" onChange={handleImageChange} />
+                </IconButton>
+              </Avatar>
+              <Typography variant="body2" sx={{ mt: 1, color: '#9e9e9e' }}>
+                Hình đại diện
+              </Typography>
+            </Box>
             <Grid container spacing={2} sx={{ mt: 1 }}>
               <Grid item xs={12} sm={6}>
                 <TextField
                   label="Tên khách thuê"
                   value={tenant.fullname || ''}
                   onChange={(e) => setTenant({ ...tenant, fullname: e.target.value })}
-                  name="fullname"
                   fullWidth
                   required
                 />
@@ -491,29 +424,18 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
                 <TextField
                   label="Số điện thoại khách thuê"
                   value={tenant.phone || ''}
-                  onChange={(e) => {
-                    const newPhone = e.target.value
-
-                    setTenant({ ...tenant, phone: newPhone })
-                  }}
-                  InputProps={{
-                    readOnly: !avatar
-                  }}
+                  onChange={(e) => setTenant({ ...tenant, phone: e.target.value })}
                   fullWidth
                 />
               </Grid>
             </Grid>
 
-            {avatar ? (
-              <Grid item xs={12}>
-                <RadioGroup row value={tenant.idType} onChange={handleIdTypeChange}>
-                  <FormControlLabel value="CCCD" control={<Radio />} label="Định dạng CCCD" />
-                  <FormControlLabel value="Passport" control={<Radio />} label="Định dạng Passport/Visa" />
-                </RadioGroup>
-              </Grid>
-            ) : (
-              <></>
-            )}
+            <Grid item xs={12}>
+              <RadioGroup row value={tenant.idType} onChange={handleIdTypeChange}>
+                <FormControlLabel value="CCCD" control={<Radio />} label="Định dạng CCCD" />
+                <FormControlLabel value="Passport" control={<Radio />} label="Định dạng Passport/Visa" />
+              </RadioGroup>
+            </Grid>
             <Grid item xs={12} sx={{ mt: 1 }}>
               <TextField
                 label="CMND/CCCD"
@@ -556,97 +478,82 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
                 </FormControl>
               </Grid>
             </Grid>
-            {avatar ? (
-              <Grid container spacing={1} sx={{ mt: 1 }}>
-                <Grid item xs={6} sm={6}>
-                  <FormControl fullWidth>
-                    <InputLabel id="province-label">Chọn Tỉnh/Thành phố</InputLabel>
-                    <Select
-                      labelId="province-label"
-                      id="province"
-                      fullWidth
-                      value={selectedProvince}
-                      onChange={handleProvinceChange}
-                      label="Chọn Tỉnh/Thành phố">
-                      <MenuItem value=""></MenuItem>
-                      {provinces.map((province) => (
-                        <MenuItem key={province.id} value={province.id}>
-                          {province.full_name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth>
-                    <InputLabel id="province-label">Chọn Quận/Huyện</InputLabel>
-                    <Select
-                      labelId="district-label"
-                      id="quan"
-                      fullWidth
-                      value={selectedDistrict}
-                      onChange={handleDistrictChange}
-                      label="Chọn Quận/Huyện">
-                      <MenuItem value=""></MenuItem>
-                      {districts.map((district) => (
-                        <MenuItem key={district.id} value={district.id}>
-                          {district.full_name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-            ) : (
-              <></>
-            )}
-            {avatar ? (
-              <Grid item xs={12} sx={{ mt: 2 }}>
+            <Grid container spacing={1} sx={{ mt: 1 }}>
+              <Grid item xs={6} sm={6}>
                 <FormControl fullWidth>
-                  <InputLabel>Chọn Phường/Xã</InputLabel>
+                  <InputLabel id="province-label">Chọn Tỉnh/Thành phố</InputLabel>
                   <Select
-                    value={selectedWard}
-                    onChange={handleWardChange}
-                    labelId="address-label"
-                    id="phuong"
-                    label="Chọn Phường/Xã"
-                    fullWidth>
-                    {wards.map((ward) => (
-                      <MenuItem key={ward.id} value={ward.id}>
-                        {ward.full_name}
+                    labelId="province-label"
+                    id="province"
+                    fullWidth
+                    value={selectedProvince}
+                    onChange={handleProvinceChange}
+                    label="Chọn Tỉnh/Thành phố">
+                    <MenuItem value=""></MenuItem>
+                    {provinces.map((province) => (
+                      <MenuItem key={province.id} value={province.id}>
+                        {province.full_name}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               </Grid>
-            ) : (
-              <></>
-            )}
-            {avatar ? (
-              <Grid item xs={12} sx={{ mt: 1 }}>
-                <TextField
-                  label="Địa chỉ chi tiết. Ví dụ: 122 - Đường Phan Chu Trinh"
-                  value={addressDetail || ''} // Hiển thị địa chỉ chi tiết mà người dùng nhập
-                  onChange={handleAddressDetailChange} // Cập nhật địa chỉ chi tiết riêng biệt
-                  fullWidth
-                />
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                  <InputLabel id="province-label">Chọn Quận/Huyện</InputLabel>
+                  <Select
+                    labelId="district-label"
+                    id="quan"
+                    fullWidth
+                    value={selectedDistrict}
+                    onChange={handleDistrictChange}
+                    label="Chọn Quận/Huyện">
+                    <MenuItem value=""></MenuItem>
+                    {districts.map((district) => (
+                      <MenuItem key={district.id} value={district.id}>
+                        {district.full_name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
-            ) : (
-              <></>
-            )}
-
+            </Grid>
+            <Grid item xs={12} sx={{ mt: 2 }}>
+              <FormControl fullWidth>
+                <InputLabel>Chọn Phường/Xã</InputLabel>
+                <Select
+                  value={selectedWard}
+                  onChange={handleWardChange}
+                  labelId="address-label"
+                  id="phuong"
+                  label="Chọn Phường/Xã"
+                  fullWidth>
+                  {wards.map((ward) => (
+                    <MenuItem key={ward.id} value={ward.id}>
+                      {ward.full_name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sx={{ mt: 1 }}>
+              <TextField
+                label="Địa chỉ chi tiết. Ví dụ: 122 - Đường Phan Chu Trinh"
+                value={addressDetail} // Hiển thị địa chỉ chi tiết mà người dùng nhập
+                onChange={handleAddressDetailChange} // Cập nhật địa chỉ chi tiết riêng biệt
+                fullWidth
+              />
+            </Grid>
             <Grid item xs={12} sx={{ mt: 1 }}>
               <TextField
                 label="Địa chỉ đầy đủ"
-                value={tenant.address}
-                onChange={(e) => setTenant({ ...tenant, address: e.target.value })}
+                value={tenant.address} // Hiển thị địa chỉ đầy đủ
                 fullWidth
                 InputProps={{
-                  readOnly: editId === null
+                  readOnly: true
                 }}
               />
             </Grid>
-
             <Grid item xs={12} sx={{ mt: 1 }}>
               <TextField
                 label="Nhập công việc"
@@ -699,7 +606,7 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
                       cursor: 'pointer',
                       margin: 'auto'
                     }}
-                    src={tenant.frontPhoto ?? frontUrl} // Hiển thị ảnh mặt trước nếu có
+                    src={frontUrl} // Hiển thị ảnh mặt trước nếu có
                   >
                     <progress value={frontProgress} max="100" />
                     <IconButton
@@ -752,7 +659,7 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
                       cursor: 'pointer',
                       margin: 'auto'
                     }}
-                    src={tenant.backPhoto ?? backUrl} // Hiển thị ảnh mặt sau nếu có
+                    src={backUrl} // Hiển thị ảnh mặt sau nếu có
                   >
                     <progress value={backProgress} max="100" />
                     <IconButton
@@ -916,31 +823,17 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
                   }}>
                   Đóng
                 </Button>
-                {avatar ? (
-                  <Button
-                    variant="contained"
-                    color="success"
-                    sx={{
-                      backgroundColor: '#1e90ff',
-                      boxShadow: '0px 4px 10px rgba(76, 175, 80, 0.3)', // Đổ bóng nhẹ cho nút Thêm
-                      '&:hover': { boxShadow: '0px 6px 12px rgba(76, 175, 80, 0.5)' } // Đổ bóng khi hover
-                    }}
-                    onClick={saveTenant}>
-                    Thêm thông tin khách thuê
-                  </Button>
-                ) : (
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    sx={{
-                      backgroundColor: '#4caf50',
-                      boxShadow: '0px 4px 10px rgba(76, 175, 80, 0.3)', // Đổ bóng nhẹ cho nút Lưu
-                      '&:hover': { boxShadow: '0px 6px 12px rgba(76, 175, 80, 0.5)' } // Đổ bóng khi hover
-                    }}
-                    onClick={handleUpdateClick}>
-                    Lưu
-                  </Button>
-                )}
+                <Button
+                  variant="contained"
+                  color="success"
+                  sx={{
+                    backgroundColor: '#1e90ff',
+                    boxShadow: '0px 4px 10px rgba(76, 175, 80, 0.3)', // Đổ bóng nhẹ cho nút Thêm
+                    '&:hover': { boxShadow: '0px 6px 12px rgba(76, 175, 80, 0.5)' } // Đổ bóng khi hover
+                  }}
+                  onClick={saveTenant}>
+                  Thêm thông tin khách thuê
+                </Button>
               </Grid>
             </Box>
           </Grid>
@@ -950,4 +843,4 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
   )
 }
 
-export default AddTenantModal
+export default EditTenantModal

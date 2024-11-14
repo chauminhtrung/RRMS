@@ -25,7 +25,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import { useEffect } from 'react'
 import MovingIcon from '@mui/icons-material/Moving'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
-const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
+const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   useEffect(() => {
     setIsAdmin(true)
   }, [])
@@ -39,7 +39,7 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotel
         motels={motels}
         setIsAdmin={setIsAdmin}
         setIsNavAdmin={setIsNavAdmin}
-        isNavAdmin={isNavAdmin}
+        isNavAdmin={true}
       />
       <Box
         sx={{

@@ -94,7 +94,7 @@ const Zalo_history = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
             variant="contained"
             color="primary"
             sx={{ marginLeft: 1 }}
-            to="/quan-ly/7040/cai-dat-nha-tro#bill_setting"
+            href="/quan-ly/7040/cai-dat-nha-tro#bill_setting"
             startIcon={<DescriptionIcon />}>
             Bật/tắt tính năng gửi hóa đơn qua ZALO
           </Button>

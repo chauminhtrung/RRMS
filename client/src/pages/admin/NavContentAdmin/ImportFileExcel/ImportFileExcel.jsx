@@ -10,7 +10,7 @@ import { createRoom, getRoomByMotelId } from '~/apis/roomAPI'
 import { useParams } from 'react-router-dom'
 import * as Papa from 'papaparse'
 
-const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
+const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   const fileInputRef = useRef(null) // Tạo reference cho input file
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
@@ -308,7 +308,7 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
         motels={motels}
         setIsAdmin={setIsAdmin}
         setIsNavAdmin={setIsNavAdmin}
-        isNavAdmin={isNavAdmin}
+        isNavAdmin={true}
       />
       <div
         style={{

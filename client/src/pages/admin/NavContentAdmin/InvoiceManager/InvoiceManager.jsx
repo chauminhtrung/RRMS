@@ -13,7 +13,7 @@ import 'react-tabulator/lib/css/tabulator.min.css' // theme
 import { ReactTabulator } from 'react-tabulator'
 import { Link } from 'react-router-dom'
 
-const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
+const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   const columns = []
 
   const data = []
@@ -92,7 +92,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
         motels={motels}
         setIsAdmin={setIsAdmin}
         setIsNavAdmin={setIsNavAdmin}
-        isNavAdmin={isNavAdmin}
+        isNavAdmin={true}
       />
       <div
         style={{
