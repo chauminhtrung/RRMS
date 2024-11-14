@@ -94,8 +94,7 @@ const PostRoomTable = ({ rows, handleOpen, setBulletinBoardId, refreshBulletinBo
         component={Paper}
         sx={{
           display: 'flex',
-          flexDirection: 'column',
-          height: 'calc(100vh - 200px)'
+          flexDirection: 'column'
         }}>
         <Table stickyHeader sx={{ minWidth: 500 }}>
           <TableHead>

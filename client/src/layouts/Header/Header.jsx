@@ -80,56 +80,56 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
         <div className="aw__s10g0md5" style={{ '--s10g0md5-0': '#22222' }}>
           <span className="aw__l3mdvjv">
             <span>
-              <a href="https://www.chotot.com" className="aw__i9tio1c">
-                Chợ Tốt
-              </a>
+              <Link to="/" className="aw__i9tio1c">
+                Trang chủ
+              </Link>
               <span className="aw__v1t61y1y"></span>
             </span>
             <span>
-              <a href="https://nhatot.com" className="aw__i9tio1c">
-                Nhà Tốt
-              </a>
+              <Link to="/search" className="aw__i9tio1c">
+                Tìm kiếm
+              </Link>
               <span className="aw__v1t61y1y"></span>
             </span>
             <span>
-              <a href="https://xe.chotot.com" className="aw__i9tio1c">
-                Chợ Tốt Xe
-              </a>
+              <Link to="/contact" className="aw__i9tio1c">
+                Liên hệ
+              </Link>
               <span className="aw__v1t61y1y"></span>
             </span>
             <span>
-              <a href="https://www.vieclamtot.com" className="aw__i9tio1c">
-                Việc Làm Tốt
-              </a>
+              <Link to="/support" className="aw__i9tio1c">
+                Trợ giúp
+              </Link>
             </span>
           </span>
           <span className="aw__r1pijacb">
-            <a
+            <Link
               className="aw__i9tio1c"
-              href="https://docs.google.com/forms/d/e/1FAIpQLSc5begvG3B5NE29iy3JnXya_6zY_DyHdIIfb3TnnQTNqr5ZVQ/viewform?vc=0&amp;c=0&amp;w=1&amp;flr=0"
+              to="https://docs.google.com/forms/d/e/1FAIpQLSc5begvG3B5NE29iy3JnXya_6zY_DyHdIIfb3TnnQTNqr5ZVQ/viewform?vc=0&amp;c=0&amp;w=1&amp;flr=0"
               rel="nofollow"
               profile="[object Object]"
               target="_blank">
               <span className="aw__nx3kzrx show-desktop aw__szp9uz0" color="#8C8C8C">
                 Đóng góp ý kiến
               </span>
-            </a>
-            <a className="aw__naoniqq" href="/" rel="nofollow">
+            </Link>
+            <Link className="aw__naoniqq" to="/" rel="nofollow">
               <span className="aw__nez25v5 show-desktop aw__szp9uz0" color="#8C8C8C">
                 Tải ứng dụng
               </span>
-            </a>
-            <a className="aw__i9tio1c" target="_blank">
+            </Link>
+            <Link to="/introduce" className="aw__i9tio1c">
               <span className="aw__n1rd4x1j show-desktop aw__szp9uz0" color="#8C8C8C">
-                Trợ giúp
+                Về chúng tôi
               </span>
-            </a>
+            </Link>
           </span>
         </div>
 
-        <div
+        <Link
           className="aw__fe17nfm"
-          href="https://www.nhatot.com/kenh-moi-gioi"
+          to="https://www.nhatot.com/kenh-moi-gioi"
           color="#222222"
           style={{
             '--fe17nfm-1': '190px',
@@ -143,7 +143,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
             />
           </span>
           <span>Dành cho môi giới</span>
-        </div>
+        </Link>
       </div>
 
       <header
@@ -237,7 +237,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                     onClick={() => {
                       !IsMuaban ? setIsMuaban(true) : setIsMuaban(false)
                     }}>
-                    <div className="drop-down--text">Mua bán</div>
+                    <div className="drop-down--text">Muốn thuê</div>
                     <span className="drop-down--icon">
                       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" viewBox="0 0 12 16">
                         <g fill="none" fillRule="evenodd">
@@ -256,7 +256,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                       <div>
                         <div className="aw__d66o4xd" style={{ '--d66o4xd-0': 'flex' }}>
                           <div className="aw__d1es5zbd">
-                            Mua bán{' '}
+                            Muốn thuê
                             <svg
                               data-type="monochrome"
                               xmlns="http://www.w3.org/2000/svg"
@@ -304,7 +304,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                         </div>
                         <input
                           autoComplete="off"
-                          placeholder="Bất động sản"
+                          placeholder="Nhập thông tin tìm kiếm"
                           id="__inputItemProps"
                           type="text"
                           className="aw__t16o28i7"
@@ -559,9 +559,9 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                           <span>Quản lí đơn hàng</span>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a
+                          <Link
                             className="aw__iys36jq"
-                            href="#"
+                            to="#"
                             target="_self"
                             rel="noreferrer"
                             onClick={handleMenuItemClick}>
@@ -570,12 +570,12 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                             </div>
                             <div className="aw__r1o9ejq6">Đơn mua</div>
                             <div className="clearfix"></div>
-                          </a>
+                          </Link>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a
+                          <Link
                             className="aw__iys36jq"
-                            href="#"
+                            to="#"
                             target="_self"
                             rel="noreferrer"
                             onClick={handleMenuItemClick}>
@@ -584,12 +584,12 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                             </div>
                             <div className="aw__r1o9ejq6">Đơn bán</div>
                             <div className="clearfix"></div>
-                          </a>
+                          </Link>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a
+                          <Link
                             className="aw__iys36jq aw__ibqb3a4"
-                            href="#"
+                            to="#"
                             target="_self"
                             rel="noreferrer"
                             onClick={handleMenuItemClick}>
@@ -602,62 +602,66 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                               <img src="./chervon_right_orange.svg" alt="chervon" />
                             </div>
                             <div className="clearfix"></div>
-                          </a>
+                          </Link>
                         </div>
                         {/* tien ich */}
-                        <div
-                          label="Quản lí tiện ích"
-                          className="aw__d15qd39x"
-                          style={{
-                            '--d15qd39x-0': '38px',
-                            '--d15qd39x-1': ' #f5f5f5',
-                            '--d15qd39x-2': '10px 0 10px 12px',
-                            '--d15qd39x-3': '0'
-                          }}>
-                          <span>Tiện ích</span>
-                        </div>
-                        <div className="aw__l1txzw95">
-                          <a
-                            className="aw__iys36jq"
-                            href="#"
-                            target="_self"
-                            rel="noreferrer"
-                            onClick={handleMenuItemClick}>
-                            <div className="aw__l1uq3g0v">
-                              <img className="aw__i1x7vrum" src="./menu-saved-ad.svg" alt="Đơn bán" />
+                        {tokenExists && (
+                          <>
+                            <div
+                              label="Quản lí tiện ích"
+                              className="aw__d15qd39x"
+                              style={{
+                                '--d15qd39x-0': '38px',
+                                '--d15qd39x-1': ' #f5f5f5',
+                                '--d15qd39x-2': '10px 0 10px 12px',
+                                '--d15qd39x-3': '0'
+                              }}>
+                              <span>Tiện ích</span>
                             </div>
-                            <div className="aw__r1o9ejq6">Tin đăng đã lưu</div>
-                            <div className="clearfix"></div>
-                          </a>
-                        </div>
-                        <div className="aw__l1txzw95">
-                          <a
-                            className="aw__iys36jq"
-                            href="#"
-                            target="_self"
-                            rel="noreferrer"
-                            onClick={handleMenuItemClick}>
-                            <div className="aw__l1uq3g0v">
-                              <img className="aw__i1x7vrum" src="./menu-saved-search.svg" alt="Đơn bán" />
+                            <div className="aw__l1txzw95">
+                              <Link
+                                className="aw__iys36jq"
+                                to="/heart"
+                                target="_self"
+                                rel="noreferrer"
+                                onClick={handleMenuItemClick}>
+                                <div className="aw__l1uq3g0v">
+                                  <img className="aw__i1x7vrum" src="./menu-saved-ad.svg" alt="Đơn bán" />
+                                </div>
+                                <div className="aw__r1o9ejq6">Tin đăng đã lưu</div>
+                                <div className="clearfix"></div>
+                              </Link>
                             </div>
-                            <div className="aw__r1o9ejq6">Tìm kiếm đã lưu</div>
-                            <div className="clearfix"></div>
-                          </a>
-                        </div>
-                        <div className="aw__l1txzw95">
-                          <a
-                            className="aw__iys36jq"
-                            href="#"
-                            target="_self"
-                            rel="noreferrer"
-                            onClick={handleMenuItemClick}>
-                            <div className="aw__l1uq3g0v">
-                              <img className="aw__i1x7vrum" src="./menu-rating-management.svg" alt="Đơn bán" />
+                            <div className="aw__l1txzw95">
+                              <Link
+                                className="aw__iys36jq"
+                                to="#"
+                                target="_self"
+                                rel="noreferrer"
+                                onClick={handleMenuItemClick}>
+                                <div className="aw__l1uq3g0v">
+                                  <img className="aw__i1x7vrum" src="./menu-saved-search.svg" alt="Đơn bán" />
+                                </div>
+                                <div className="aw__r1o9ejq6">Tìm kiếm đã lưu</div>
+                                <div className="clearfix"></div>
+                              </Link>
                             </div>
-                            <div className="aw__r1o9ejq6">Đánh giá từ tôi</div>
-                            <div className="clearfix"></div>
-                          </a>
-                        </div>
+                            <div className="aw__l1txzw95">
+                              <Link
+                                className="aw__iys36jq"
+                                to="/rating-history"
+                                target="_self"
+                                rel="noreferrer"
+                                onClick={handleMenuItemClick}>
+                                <div className="aw__l1uq3g0v">
+                                  <img className="aw__i1x7vrum" src="./menu-rating-management.svg" alt="Đơn bán" />
+                                </div>
+                                <div className="aw__r1o9ejq6">Đánh giá từ tôi</div>
+                                <div className="clearfix"></div>
+                              </Link>
+                            </div>
+                          </>
+                        )}
                         {/* dich vu tra phi */}
                         <div
                           label="Quản lí tiện ích"
@@ -671,9 +675,9 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                           <span>Dịch vụ trả phí</span>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a
+                          <Link
                             className="aw__iys36jq"
-                            href="#"
+                            to="#"
                             target="_self"
                             rel="noreferrer"
                             onClick={handleMenuItemClick}>
@@ -682,26 +686,29 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                             </div>
                             <div className="aw__r1o9ejq6">Gói PRO</div>
                             <div className="clearfix"></div>
-                          </a>
+                          </Link>
                         </div>
+                        {tokenExists && (
+                          <div className="aw__l1txzw95">
+                            <Link
+                              className="aw__iys36jq"
+                              to="#"
+                              target="_self"
+                              rel="noreferrer"
+                              onClick={handleMenuItemClick}>
+                              <div className="aw__l1uq3g0v">
+                                <img className="aw__i1x7vrum" src="./circle-list.svg" alt="Đơn bán" />
+                              </div>
+                              <div className="aw__r1o9ejq6">Lịch sử giao dịch</div>
+                              <div className="clearfix"></div>
+                            </Link>
+                          </div>
+                        )}
+
                         <div className="aw__l1txzw95">
-                          <a
-                            className="aw__iys36jq"
-                            href="#"
-                            target="_self"
-                            rel="noreferrer"
-                            onClick={handleMenuItemClick}>
-                            <div className="aw__l1uq3g0v">
-                              <img className="aw__i1x7vrum" src="./circle-list.svg" alt="Đơn bán" />
-                            </div>
-                            <div className="aw__r1o9ejq6">Lịch sử giao dịch</div>
-                            <div className="clearfix"></div>
-                          </a>
-                        </div>
-                        <div className="aw__l1txzw95">
-                          <a
+                          <Link
                             className="aw__iys36jq aw__ibqb3a4"
-                            href="#"
+                            to="#"
                             target="_self"
                             rel="noreferrer"
                             onClick={handleMenuItemClick}>
@@ -714,7 +721,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                               <img src="./chervon_right_orange.svg" alt="chervon" />
                             </div>
                             <div className="clearfix"></div>
-                          </a>
+                          </Link>
                         </div>
                         {/* Uu dai khuyen mai */}
                         <div
@@ -729,9 +736,9 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                           <span>Ưu đãi, khuyến mãi</span>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a
+                          <Link
                             className="aw__iys36jq"
-                            href="#"
+                            to="#"
                             target="_self"
                             rel="noreferrer"
                             onClick={handleMenuItemClick}>
@@ -740,12 +747,12 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                             </div>
                             <div className="aw__r1o9ejq6">RRMS ưu đãi</div>
                             <div className="clearfix"></div>
-                          </a>
+                          </Link>
                         </div>
                         <div className="aw__l1txzw95">
-                          <a
+                          <Link
                             className="aw__iys36jq"
-                            href="#"
+                            to="#"
                             target="_self"
                             rel="noreferrer"
                             onClick={handleMenuItemClick}>
@@ -754,7 +761,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                             </div>
                             <div className="aw__r1o9ejq6">Ưu đãi của tôi</div>
                             <div className="clearfix"></div>
-                          </a>
+                          </Link>
                         </div>
                         {/* khac */}
                         <div
@@ -768,24 +775,26 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                           }}>
                           <span>Khác</span>
                         </div>
+                        {tokenExists && (
+                          <div className="aw__l1txzw95">
+                            <Link
+                              className="aw__iys36jq"
+                              to="/profile"
+                              target="_self"
+                              rel="noreferrer"
+                              onClick={handleMenuItemClick}>
+                              <div className="aw__l1uq3g0v">
+                                <img className="aw__i1x7vrum" src="./setting.svg" alt="Đơn bán" />
+                              </div>
+                              <div className="aw__r1o9ejq6">Cài đặt tài khoản</div>
+                              <div className="clearfix"></div>
+                            </Link>
+                          </div>
+                        )}
                         <div className="aw__l1txzw95">
-                          <a
+                          <Link
                             className="aw__iys36jq"
-                            href="#"
-                            target="_self"
-                            rel="noreferrer"
-                            onClick={handleMenuItemClick}>
-                            <div className="aw__l1uq3g0v">
-                              <img className="aw__i1x7vrum" src="./setting.svg" alt="Đơn bán" />
-                            </div>
-                            <div className="aw__r1o9ejq6">Cài đặt tài khoản</div>
-                            <div className="clearfix"></div>
-                          </a>
-                        </div>
-                        <div className="aw__l1txzw95">
-                          <a
-                            className="aw__iys36jq"
-                            href="#"
+                            to="#"
                             target="_self"
                             rel="noreferrer"
                             onClick={handleMenuItemClick}>
@@ -794,7 +803,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                             </div>
                             <div className="aw__r1o9ejq6">Trợ giúp</div>
                             <div className="clearfix"></div>
-                          </a>
+                          </Link>
                         </div>
                         {tokenExists && (
                           <div className="aw__l1txzw95">
@@ -817,23 +826,25 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
 
               {/* con them 1 icon o day  */}
             </div>
-            <Link
-              className="aw__b1358qut primary r-normal medium w-bold i-left aw__h1gb9yk aw__p1hqie6d"
-              to={`/quanlytro/${motelId}`}
-              rel="nofollow">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                data-type="monochrome"
-                viewBox="0 0 23.228 23.227"
-                width="1em"
-                height="1em"
-                fill="none">
-                <path
-                  d="M13.288 0a.759.759 0 110 1.518H3.396a1.88 1.88 0 00-1.877 1.877v16.438a1.88 1.88 0 001.877 1.877h16.437a1.88 1.88 0 001.877-1.877V9.488a.76.76 0 011.518 0v10.344a3.399 3.399 0 01-3.395 3.395H3.396A3.4 3.4 0 010 19.832V3.395A3.4 3.4 0 013.396 0zm6.022.21c.273-.1.564-.078.835-.038.276.042.57.205.83.461l.54.54 1.117 1.117c.24.24.394.497.46.766a1.68 1.68 0 01-.4 1.545l-.058.062c-.344.352-.7.707-1.048 1.05l-.631.63-6.33 6.328-.488.493-.038.04c-.307.31-.621.628-.939.932-.153.148-.339.219-.619.236l-3.014.184h-.03a.719.719 0 01-.484-.218c-.158-.156-.249-.358-.24-.543l.135-3.097c.016-.253.095-.443.248-.598l.157-.16.003-.002.082-.081 5.416-5.415a719.16 719.16 0 011.747-1.745l1.68-1.682c.144-.146.27-.275.397-.396a1.8 1.8 0 01.672-.408zm.493 1.428l-.221.219c-.153.151-.306.305-.457.456l-.536.537-8.151 8.152-.086 1.957 1.906-.115.312-.312.226-.224.05-.049.385-.38 8.401-8.403-1.211-1.209a8.233 8.233 0 01-.172-.175l-.027-.029c-.065-.068-.13-.137-.2-.206l-.22-.219z"
-                  fill="currentColor"></path>
-              </svg>
-              ĐĂNG TIN
-            </Link>
+            {tokenExists && (
+              <Link
+                className="aw__b1358qut primary r-normal medium w-bold i-left aw__h1gb9yk aw__p1hqie6d"
+                to={`/quanlytro/${motelId}`}
+                rel="nofollow">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  data-type="monochrome"
+                  viewBox="0 0 23.228 23.227"
+                  width="1em"
+                  height="1em"
+                  fill="none">
+                  <path
+                    d="M13.288 0a.759.759 0 110 1.518H3.396a1.88 1.88 0 00-1.877 1.877v16.438a1.88 1.88 0 001.877 1.877h16.437a1.88 1.88 0 001.877-1.877V9.488a.76.76 0 011.518 0v10.344a3.399 3.399 0 01-3.395 3.395H3.396A3.4 3.4 0 010 19.832V3.395A3.4 3.4 0 013.396 0zm6.022.21c.273-.1.564-.078.835-.038.276.042.57.205.83.461l.54.54 1.117 1.117c.24.24.394.497.46.766a1.68 1.68 0 01-.4 1.545l-.058.062c-.344.352-.7.707-1.048 1.05l-.631.63-6.33 6.328-.488.493-.038.04c-.307.31-.621.628-.939.932-.153.148-.339.219-.619.236l-3.014.184h-.03a.719.719 0 01-.484-.218c-.158-.156-.249-.358-.24-.543l.135-3.097c.016-.253.095-.443.248-.598l.157-.16.003-.002.082-.081 5.416-5.415a719.16 719.16 0 011.747-1.745l1.68-1.682c.144-.146.27-.275.397-.396a1.8 1.8 0 01.672-.408zm.493 1.428l-.221.219c-.153.151-.306.305-.457.456l-.536.537-8.151 8.152-.086 1.957 1.906-.115.312-.312.226-.224.05-.049.385-.38 8.401-8.403-1.211-1.209a8.233 8.233 0 01-.172-.175l-.027-.029c-.065-.068-.13-.137-.2-.206l-.22-.219z"
+                    fill="currentColor"></path>
+                </svg>
+                ĐĂNG TIN
+              </Link>
+            )}
           </div>
         </div>
         <div className="init aw__s1bb4p92">
@@ -841,9 +852,9 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
             <li id="btn-home-app-wrapper" className="aw__m15ofxwr">
               <div className="hover aw__n1d92bwe hideIP5">
                 <span>
-                  <a
+                  <Link
                     className="aw__n1wd6yn1 aw__iwanj6m"
-                    href="#"
+                    to="#"
                     rel="nofollow"
                     color="#8C8C8C"
                     style={{
@@ -871,14 +882,14 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                       }}>
                       Trang chủ
                     </span>
-                  </a>
+                  </Link>
                 </span>
               </div>
             </li>
             <li className="aw__m15ofxwr">
               <div className="aw__n1d92bwe">
-                <a
-                  href="#"
+                <Link
+                  to="#"
                   color="#8C8C8C"
                   rel="nofollow"
                   className="aw__iwanj6m"
@@ -914,7 +925,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                     }}>
                     Quản lý tin
                   </span>
-                </a>
+                </Link>
               </div>
             </li>
             <li className="aw__m15ofxwr">
@@ -926,7 +937,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
               </div>
               <div className="aw__p1pzfxaa"></div>
               <div className="aw__n1d92bwe">
-                <a className="aw__irwb6u7" href="#">
+                <Link className="aw__irwb6u7" to="#">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     data-type="monochrome"
@@ -948,7 +959,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                     }}>
                     Đăng tin
                   </span>
-                </a>
+                </Link>
               </div>
             </li>
             <li className="aw__m15ofxwr">
@@ -1074,14 +1085,14 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                 <div className="nav-tabs" role="tablist">
                   <ul className="aw__tx9tvdd" aria-label="notification" role="tablist">
                     <li className="aw__t1if84jm active">
-                      <span className="aw__ix37719" tabIndex="-1" data-bs-toggle="tab" href="#hoatdong">
+                      <Link className="aw__ix37719" tabIndex="-1" data-bs-toggle="tab" to="#hoatdong">
                         HOẠT ĐỘNG
-                      </span>
+                      </Link>
                     </li>
                     <li className="aw__t1if84jm">
-                      <span className="aw__ix37719" tabIndex="-1" data-bs-toggle="tab" href="#tinmoi">
+                      <Link className="aw__ix37719" tabIndex="-1" data-bs-toggle="tab" to="#tinmoi">
                         TIN MỚI
-                      </span>
+                      </Link>
                     </li>
                   </ul>
 
@@ -1154,9 +1165,9 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                 <span>Quản lí đơn hàng</span>
               </div>
               <div className="aw__ma2dsz4">
-                <a
+                <Link
                   className="aw__iys36jq mobile"
-                  href="https://www.chotot.com/escrow/my-orders/identity/buyer?site=referrer&amp;continue=https%3A%2F%2Fwww.nhatot.com%2F%3Futm_medium%3Dpaid_search%26utm_source%3Dgoogle_search%26utm_campaign%3Dbrand_impr_pty_dsa_search%26utm_content%3Dnh%25C3%25A0%2520t%25E1%25BB%2591t%26gad_source%3D1%26%25243p%3Da_google_adwords%26%2524always_deeplink%3Dfalse%26gclid%3DCj0KCQjwr9m3BhDHARIsANut04ZOeCbP4ZubiLEHkdmEfbVDFzuioB_RLFElVlGG__Tyak-Ikg8YiisaAhAFEALw_wcB%26~branch_ad_format%3DCross-platform%2520Search%26~feature%3Dpaid%2520advertising%26~channel%3Dgoogle_search%26~campaign%3Dbrand_impr_pty_dsa_search%26~campaign_id%3D21605990100%26~ad_set_id%3D161563057130%26~keyword%3Dnh%25C3%25A0%2520t%25E1%25BB%2591t%26~placement%26%2524deeplink_path%3Dhttps%253A%252F%252Fwww.nhatot.com%252F%253Futm_medium%253Dpaid_search%2526utm_source%253Dgoogle_search%2526utm_campaign%253Dbrand_impr_pty_dsa_search%2526utm_content%253Dnh%2525C3%2525A0%252520t%2525E1%2525BB%252591t%2526gad_source%253D1%26_branch_match_id%3D1293117567127414303"
+                  to="https://www.chotot.com/escrow/my-orders/identity/buyer?site=referrer&amp;continue=https%3A%2F%2Fwww.nhatot.com%2F%3Futm_medium%3Dpaid_search%26utm_source%3Dgoogle_search%26utm_campaign%3Dbrand_impr_pty_dsa_search%26utm_content%3Dnh%25C3%25A0%2520t%25E1%25BB%2591t%26gad_source%3D1%26%25243p%3Da_google_adwords%26%2524always_deeplink%3Dfalse%26gclid%3DCj0KCQjwr9m3BhDHARIsANut04ZOeCbP4ZubiLEHkdmEfbVDFzuioB_RLFElVlGG__Tyak-Ikg8YiisaAhAFEALw_wcB%26~branch_ad_format%3DCross-platform%2520Search%26~feature%3Dpaid%2520advertising%26~channel%3Dgoogle_search%26~campaign%3Dbrand_impr_pty_dsa_search%26~campaign_id%3D21605990100%26~ad_set_id%3D161563057130%26~keyword%3Dnh%25C3%25A0%2520t%25E1%25BB%2591t%26~placement%26%2524deeplink_path%3Dhttps%253A%252F%252Fwww.nhatot.com%252F%253Futm_medium%253Dpaid_search%2526utm_source%253Dgoogle_search%2526utm_campaign%253Dbrand_impr_pty_dsa_search%2526utm_content%253Dnh%2525C3%2525A0%252520t%2525E1%2525BB%252591t%2526gad_source%253D1%26_branch_match_id%3D1293117567127414303"
                   target="_self"
                   rel="noreferrer">
                   <div className="aw__l1uq3g0v">
@@ -1164,19 +1175,19 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                   </div>
                   <div className="aw__r1o9ejq6">Đơn mua</div>
                   <div className="clearfix"></div>
-                </a>
+                </Link>
               </div>
               <div className="aw__ma2dsz4">
-                <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                <Link className="aw__iys36jq" to="#" target="_self" rel="noreferrer">
                   <div className="aw__l1uq3g0v">
                     <img className="aw__i1x7vrum" src="./escrow-orders.svg" alt="Đơn bán" />
                   </div>
                   <div className="aw__r1o9ejq6">Đơn bán</div>
                   <div className="clearfix"></div>
-                </a>
+                </Link>
               </div>
               <div className="aw__ma2dsz4">
-                <a className="aw__iys36jq aw__ibqb3a4" href="#" target="_self" rel="noreferrer">
+                <Link className="aw__iys36jq aw__ibqb3a4" to="#" target="_self" rel="noreferrer">
                   <div className="aw__l1uq3g0v">
                     <img className="aw__i1x7vrum" src="./escrow.svg" alt="Ví bán hàng" />
                   </div>
@@ -1186,7 +1197,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                     <img src="./chervon_right_orange.svg" alt="chervon" />
                   </div>
                   <div className="clearfix"></div>
-                </a>
+                </Link>
               </div>
               {/* tien ich */}
               <div
@@ -1201,31 +1212,31 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                 <span>Tiện ích</span>
               </div>
               <div className="aw__ma2dsz4">
-                <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                <Link className="aw__iys36jq" to="#" target="_self" rel="noreferrer">
                   <div className="aw__l1uq3g0v">
                     <img className="aw__i1x7vrum" src="./menu-saved-ad.svg" alt="Đơn bán" />
                   </div>
                   <div className="aw__r1o9ejq6">Tin đăng đã lưu</div>
                   <div className="clearfix"></div>
-                </a>
+                </Link>
               </div>
               <div className="aw__ma2dsz4">
-                <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                <Link className="aw__iys36jq" to="#" target="_self" rel="noreferrer">
                   <div className="aw__l1uq3g0v">
                     <img className="aw__i1x7vrum" src="./menu-saved-search.svg" alt="Đơn bán" />
                   </div>
                   <div className="aw__r1o9ejq6">Tìm kiếm đã lưu</div>
                   <div className="clearfix"></div>
-                </a>
+                </Link>
               </div>
               <div className="aw__ma2dsz4">
-                <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                <Link className="aw__iys36jq" to="#" target="_self" rel="noreferrer">
                   <div className="aw__l1uq3g0v">
                     <img className="aw__i1x7vrum" src="./menu-rating-management.svg" alt="Đơn bán" />
                   </div>
                   <div className="aw__r1o9ejq6">Đánh giá từ tôi</div>
                   <div className="clearfix"></div>
-                </a>
+                </Link>
               </div>
               {/* dich vu tra phi */}
               <div
@@ -1240,25 +1251,25 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                 <span>Dịch vụ trả phí</span>
               </div>
               <div className="aw__ma2dsz4">
-                <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                <Link className="aw__iys36jq" to="#" target="_self" rel="noreferrer">
                   <div className="aw__l1uq3g0v">
                     <img className="aw__i1x7vrum" src="./sub-pro.svg" alt="Đơn bán" />
                   </div>
                   <div className="aw__r1o9ejq6">Gói PRO</div>
                   <div className="clearfix"></div>
-                </a>
+                </Link>
               </div>
               <div className="aw__ma2dsz4">
-                <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                <Link className="aw__iys36jq" to="#" target="_self" rel="noreferrer">
                   <div className="aw__l1uq3g0v">
                     <img className="aw__i1x7vrum" src="./circle-list.svg" alt="Đơn bán" />
                   </div>
                   <div className="aw__r1o9ejq6">Lịch sử giao dịch</div>
                   <div className="clearfix"></div>
-                </a>
+                </Link>
               </div>
               <div className="aw__ma2dsz4">
-                <a className="aw__iys36jq aw__ibqb3a4" href="#" target="_self" rel="noreferrer">
+                <Link className="aw__iys36jq aw__ibqb3a4" to="#" target="_self" rel="noreferrer">
                   <div className="aw__l1uq3g0v">
                     <img className="aw__i1x7vrum" src="./shop-more.svg" alt="Ví bán hàng" />
                   </div>
@@ -1268,7 +1279,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                     <img src="./chervon_right_orange.svg" alt="chervon" />
                   </div>
                   <div className="clearfix"></div>
-                </a>
+                </Link>
               </div>
 
               {/* Uu dai khuyen mai */}
@@ -1284,22 +1295,22 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                 <span>Ưu đãi, khuyến mãi</span>
               </div>
               <div className="aw__ma2dsz4">
-                <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                <Link className="aw__iys36jq" to="#" target="_self" rel="noreferrer">
                   <div className="aw__l1uq3g0v">
                     <img className="aw__i1x7vrum" src="./reward-icon.svg" alt="Đơn bán" />
                   </div>
                   <div className="aw__r1o9ejq6">RRMS ưu đãi</div>
                   <div className="clearfix"></div>
-                </a>
+                </Link>
               </div>
               <div className="aw__ma2dsz4">
-                <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                <Link className="aw__iys36jq" to="#" target="_self" rel="noreferrer">
                   <div className="aw__l1uq3g0v">
                     <img className="aw__i1x7vrum" src="./voucher-icon.svg" alt="Đơn bán" />
                   </div>
                   <div className="aw__r1o9ejq6">Ưu đãi của tôi</div>
                   <div className="clearfix"></div>
-                </a>
+                </Link>
               </div>
               {/* khac */}
               <div
@@ -1314,31 +1325,31 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                 <span>Khác</span>
               </div>
               <div className="aw__ma2dsz4">
-                <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                <Link className="aw__iys36jq" to="#" target="_self" rel="noreferrer">
                   <div className="aw__l1uq3g0v">
                     <img className="aw__i1x7vrum" src="./setting.svg" alt="Đơn bán" />
                   </div>
                   <div className="aw__r1o9ejq6">Cài đặt tài khoản</div>
                   <div className="clearfix"></div>
-                </a>
+                </Link>
               </div>
               <div className="aw__ma2dsz4">
-                <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                <Link className="aw__iys36jq" to="#" target="_self" rel="noreferrer">
                   <div className="aw__l1uq3g0v">
                     <img className="aw__i1x7vrum" src="./setting.svg" alt="Đơn bán" />
                   </div>
                   <div className="aw__r1o9ejq6">Trợ giúp</div>
                   <div className="clearfix"></div>
-                </a>
+                </Link>
               </div>
               <div className="aw__ma2dsz4">
-                <a className="aw__iys36jq" href="#" target="_self" rel="noreferrer">
+                <Link className="aw__iys36jq" to="#" target="_self" rel="noreferrer">
                   <div className="aw__l1uq3g0v">
                     <img className="aw__i1x7vrum" src="./setting.svg" alt="Đơn bán" />
                   </div>
                   <div className="aw__r1o9ejq6">Đăng xuất</div>
                   <div className="clearfix"></div>
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -1367,7 +1378,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                               onClick={() => {
                                 !IsMuaban ? setIsMuaban(true) : setIsMuaban(false)
                               }}>
-                              <div className="drop-down--text">Mua bán</div>
+                              <div className="drop-down--text">Muốn thuê</div>
                               <span className="drop-down--icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" viewBox="0 0 12 16">
                                   <g fill="none" fillRule="evenodd">
@@ -1385,7 +1396,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                                 <div>
                                   <div className="aw__d66o4xd" style={{ '--d66o4xd-0': 'flex' }}>
                                     <div className="aw__d1es5zbd">
-                                      Mua bán{' '}
+                                      Muốn thuê
                                       <svg
                                         data-type="monochrome"
                                         xmlns="http://www.w3.org/2000/svg"
@@ -1432,7 +1443,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                           <input
                             type="text"
                             autoComplete="off"
-                            placeholder="Bất động sản"
+                            placeholder="Nhập thông tin tìm kiếm"
                             id="__inputItemProps"
                             className="aw__t16o28i7"
                             style={{
@@ -1449,7 +1460,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                 </div>
               </div>
               {/* icon chat và app o doi day */}
-              <a className="aw__n1u3b0ub" href="#" rel="nofollow" aria-label="chat">
+              <Link className="aw__n1u3b0ub" to="#" rel="nofollow" aria-label="chat">
                 <svg
                   width="24"
                   height="24"
@@ -1483,11 +1494,11 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                     0
                   </span>
                 </div>
-              </a>
+              </Link>
               <span>
-                <a
+                <Link
                   className="aw__n9c3wjq"
-                  href="#"
+                  to="#"
                   aria-label="Discover Chotot Verticals"
                   rel="nofollow"
                   data-bs-toggle="offcanvas"
@@ -1520,7 +1531,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                       d="M23 15.5H15.5V23H23V15.5ZM15.5 14.25C14.8096 14.25 14.25 14.8096 14.25 15.5V23C14.25 23.6904 14.8096 24.25 15.5 24.25H23C23.6904 24.25 24.25 23.6904 24.25 23V15.5C24.25 14.8096 23.6904 14.25 23 14.25H15.5Z"
                       fill="currentColor"></path>
                   </svg>
-                </a>
+                </Link>
               </span>
 
               <div className="offcanvas offcanvas-bottom" id="ButtonApp">
@@ -1551,20 +1562,20 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
           <span
             className="show aw__mxjwfwa"
             style={{ willChange: 'top, left, width, height', position: 'fixed', top: '92px', left: '170px' }}>
-            <a href="#" className="menuItem active">
+            <Link to="#" className="menuItem active">
               <span className="aw__ngv58n8">
                 <span className="aw__lza0u1">
                   <img src="./PTY_lv1_cat_muban.png" alt="" />
                 </span>
-                <span>Mua bán</span>
+                <span>Muốn thuê</span>
               </span>
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M6.1949 11.525C5.93598 11.2642 5.93672 10.8432 6.19657 10.5833L8.7799 8L6.19579 5.41026C5.93656 5.15046 5.93679 4.72977 6.19631 4.47026C6.45602 4.21054 6.8771 4.21054 7.13682 4.47026L9.95946 7.29289C10.35 7.68342 10.35 8.31658 9.95946 8.70711L7.1399 11.5267C6.87875 11.7878 6.45512 11.7871 6.1949 11.525Z"
                   fill="#222222"></path>
               </svg>
-            </a>
-            <a href="#" className="menuItem">
+            </Link>
+            <Link to="#" className="menuItem">
               <span className="aw__ngv58n8">
                 <span className="aw__lza0u1">
                   <img src="./PTY_lv1_cat_chothue.png" alt="" />
@@ -1576,8 +1587,8 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                   d="M6.1949 11.525C5.93598 11.2642 5.93672 10.8432 6.19657 10.5833L8.7799 8L6.19579 5.41026C5.93656 5.15046 5.93679 4.72977 6.19631 4.47026C6.45602 4.21054 6.8771 4.21054 7.13682 4.47026L9.95946 7.29289C10.35 7.68342 10.35 8.31658 9.95946 8.70711L7.1399 11.5267C6.87875 11.7878 6.45512 11.7871 6.1949 11.525Z"
                   fill="#222222"></path>
               </svg>
-            </a>
-            <a href="#" className="menuItem">
+            </Link>
+            <Link to="#" className="menuItem">
               <span className="aw__ngv58n8">
                 <span className="aw__lza0u1">
                   <img src="./PTY_lv1_cat_duan.png" alt="" />
@@ -1589,31 +1600,31 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                   d="M6.1949 11.525C5.93598 11.2642 5.93672 10.8432 6.19657 10.5833L8.7799 8L6.19579 5.41026C5.93656 5.15046 5.93679 4.72977 6.19631 4.47026C6.45602 4.21054 6.8771 4.21054 7.13682 4.47026L9.95946 7.29289C10.35 7.68342 10.35 8.31658 9.95946 8.70711L7.1399 11.5267C6.87875 11.7878 6.45512 11.7871 6.1949 11.525Z"
                   fill="#222222"></path>
               </svg>
-            </a>
-            <a href="#" className="menuItem">
+            </Link>
+            <Link to="#" className="menuItem">
               <span className="aw__ngv58n8">
                 <span className="aw__lza0u1">
                   <img src="./PTY_lv1_cat_timmoigioi.png" alt="" />
                 </span>
                 <span>Tìm môi giới</span>
               </span>
-            </a>
-            <a href="/chart" className="menuItem">
+            </Link>
+            <Link to="/chart" className="menuItem">
               <span className="aw__ngv58n8">
                 <span className="aw__lza0u1">
                   <img src="./PTY_lv1_cat_bieudogia.png" alt="" />
                 </span>
                 <span>Biểu đồ biến động giá</span>
               </span>
-            </a>
-            <a href="#" className="menuItem">
+            </Link>
+            <Link to="#" className="menuItem">
               <span className="aw__ngv58n8">
                 <span className="aw__lza0u1">
                   <img src="./PTY_lv1_cat_vaymuanha.png" alt="" />
                 </span>
                 <span>Vay mua nhà</span>
               </span>
-            </a>
+            </Link>
           </span>
         </div>
       ) : (
