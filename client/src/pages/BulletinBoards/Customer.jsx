@@ -1,11 +1,5 @@
-import MapComponent from './MapComponent'
-
 const Customer = () => {
-  return (
-    <div>
-      <MapComponent />
-    </div>
-  )
+  return <div>hello</div>
 }
 
 export default Customer

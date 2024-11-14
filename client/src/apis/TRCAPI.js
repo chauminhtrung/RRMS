@@ -5,7 +5,8 @@ export const CreateTRC = async (TRC) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   return await axios.post(`${env.API_URL}/TemRC/insert-TemRC`, TRC, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      'ngrok-skip-browser-warning': '69420'
     }
   })
 }
@@ -17,7 +18,8 @@ export const getTRCByusername = async (username) => {
   }
   return await axios.get(`${env.API_URL}/TemRC/get-TemRC-account?username=${username}`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      'ngrok-skip-browser-warning': '69420'
     }
   })
 }
@@ -29,7 +31,8 @@ export const updateTRCById = async (id, TRC) => {
   }
   return await axios.put(`${env.API_URL}/TemRC/update-TemRC/${id}`, TRC, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      'ngrok-skip-browser-warning': '69420'
     }
   })
 }

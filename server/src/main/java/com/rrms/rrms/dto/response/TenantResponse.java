@@ -1,11 +1,11 @@
 package com.rrms.rrms.dto.response;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
-
-import org.springframework.data.elasticsearch.annotations.Document;
+import java.util.UUID;
 
 import com.rrms.rrms.enums.Gender;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,8 +16,11 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Document(indexName = "tenant")
-public class TenantResponse {
+public class TenantResponse implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    UUID tenantId;
     String fullname;
     String phone;
     String cccd;
@@ -31,6 +34,8 @@ public class TenantResponse {
     String frontPhoto;
     String backPhoto;
     Boolean role;
+    String relationship;
+    Boolean type_of_tenant;
     Boolean temporaryResidence;
     Boolean informationVerify;
 }

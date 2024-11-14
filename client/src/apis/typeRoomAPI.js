@@ -7,7 +7,8 @@ export const getAllTypeRoom = async () => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   const response = await axios.get(`${env.API_URL}/type-rooms`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      'ngrok-skip-browser-warning': '69420'
     }
   })
   return response.data

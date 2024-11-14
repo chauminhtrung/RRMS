@@ -1,8 +1,11 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.rrms.rrms.dto.response.BulletinBoardResponse;
+import com.rrms.rrms.repositories.*;
 import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.response.BulletinBoardSearchResponse;
@@ -13,9 +16,6 @@ import com.rrms.rrms.mapper.BulletinBoardMapper;
 import com.rrms.rrms.mapper.RoomMapper;
 import com.rrms.rrms.models.BulletinBoard;
 import com.rrms.rrms.models.Room;
-import com.rrms.rrms.repositories.BulletinBoardRepository;
-import com.rrms.rrms.repositories.RoomRepository;
-import com.rrms.rrms.repositories.RoomRepositoryElasticsearch;
 import com.rrms.rrms.services.ISearchService;
 
 import lombok.AccessLevel;
@@ -33,6 +33,8 @@ public class SearchService implements ISearchService {
     BulletinBoardMapper bulletinBoardMapper;
     RoomMapper roomMapper;
     private final BulletinBoardRepository bulletinBoardRepository;
+
+    SearchRepository searchRepository;
 
     @Override
     public List<BulletinBoardSearchResponse> listRoomByAddress(String address) {
@@ -113,17 +115,19 @@ public class SearchService implements ISearchService {
         return roomRepositoryElasticsearch.findByAddressFuzzy(keyword);
     }
 
-    //        @Override
-    //        public List<RoomDetailResponse> findByAuthenIs(Boolean authenis) {
-    //            return roomRepository.findAllByAuthenIs(authenis).stream()
-    //                    .map(roomMapper::toRoomDetailResponse)
-    //                    .collect(Collectors.toList());
-    //        }
+//    @Override
+//    public List<BulletinBoardSearchResponse> findByMoveInDateLessThanEqual(Date moveInDate) {
+//        // Ensure the repository method accepts a Date parameter
+//        return searchRepository.findByMoveInDateLessThanEqual(moveInDate).stream()
+//                .map(bulletinBoardMapper::toBulletinBoardSearchResponse)
+//                .collect(Collectors.toList());
+//    }
 
-    //    @Override
-    //    public List<RoomDetailResponse> findAllByDatenew() {
-    //        return roomRepository.findAllByDatenew().stream()
-    //                .map(roomMapper::toRoomDetailResponse)
-    //                .collect(Collectors.toList());
-    //    }
+    @Override
+    public List<BulletinBoardSearchResponse> findAllByDatenew() {
+        return searchRepository.findAllByDatenew().stream()
+                .map(bulletinBoardMapper::toBulletinBoardSearchResponse)
+                .collect(Collectors.toList());
+    }
+
 }

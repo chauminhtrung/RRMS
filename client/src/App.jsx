@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import Detail from './pages/Detail/Detail'
 import Home from './pages/Homes/Home'
@@ -41,22 +41,28 @@ import IncomeSummary from './pages/admin/NavContentAdmin/IncomeSummary/IncomeSum
 import Zalo_history from './pages/admin/NavContentAdmin/Zalo_history'
 import SettingMotel from './pages/admin/NavContentAdmin/SettingMotel/SettingMotel'
 import ImageComparison from './pages/AI/ImageComparison'
-import ImportFileExcel from './pages/admin/NavContentAdmin/ImportFileExcel'
+import ImportFileExcel from './pages/admin/NavContentAdmin/ImportFileExcel/ImportFileExcel'
 import MotelSetting from './pages/admin/MotelSettings/MotelSetting'
 import PassportRecognition from './pages/AI/PassportRecognition'
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage.jsx'
 import { getMotelByUsername } from './apis/motelAPI'
 import i18n from './i18n/i18n'
+import ResidenceForm from './pages/admin/NavContentAdmin/ResidenceForm'
+import { Box } from '@mui/material'
+import AppPromo from './pages/admin/NavContentAdmin/AppPromo'
+import RatingHistory from './pages/RatingHistory/RatingHistory'
+
 function App() {
   const [username, setUsername] = useState('')
   const [avatar, setAvatar] = useState('')
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(null)
   //lay thong tin tro cua tk account truyen xuong cho trang chu tro
   const [isAdmin, setIsAdmin] = useState(false)
-  const [isNavAdmin, setIsNavAdmin] = useState(true)
+  const [isNavAdmin, setIsNavAdmin] = useState(false)
+  const location = useLocation()
+
   const [motels, setmotels] = useState([])
   const [currentLanguage, setCurrentLanguage] = useState(localStorage.getItem('language') || i18n.language)
-
   const fetchMotelsByUsername = async (username) => {
     getMotelByUsername(username).then((res) => {
       setmotels(res.data.result)
@@ -83,12 +89,14 @@ function App() {
       setAvatar(user.avatar)
       setToken(user.token)
       fetchMotelsByUsername(user.username)
+      console.log(motels.length)
     }
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location])
 
   return (
     <>
-      <Router>
+      <Box>
         {/* <ValidCaptcha /> */}
         {!isAdmin ? (
           <Header
@@ -100,6 +108,7 @@ function App() {
             setToken={setToken}
             toggleLanguage={toggleLanguage}
             currentLanguage={currentLanguage}
+            motelId={motels[0]?.motelId}
           />
         ) : (
           <></>
@@ -130,6 +139,7 @@ function App() {
           <Route path="/support" element={<Support setIsAdmin={setIsAdmin} />} />
           <Route path="/heart" element={<Heart setIsAdmin={setIsAdmin} />} />
           <Route path="/RRMS" element={<RRMS setIsAdmin={setIsAdmin} />} />
+          <Route path="/rating-history" element={<RatingHistory setIsAdmin={setIsAdmin} />} />
           {/* Admin page */}
           {/* route du lieu mac dinh khi ko nhan vao  */}
           <Route
@@ -189,13 +199,24 @@ function App() {
               />
             }
           />
-          <Route path="/AdminManagerBoard" element={<AdminManagerBoard
-            motels={motels}
-            setmotels={setmotels}
-            setIsAdmin={setIsAdmin}
-            isNavAdmin={isNavAdmin}
-            setIsNavAdmin={setIsNavAdmin}
-          />} />
+          <Route
+            path="/AdminManagerBoard"
+            element={
+              <AdminManagerBoard
+                motels={motels}
+                setmotels={setmotels}
+                setIsAdmin={setIsAdmin}
+                isNavAdmin={isNavAdmin}
+                setIsNavAdmin={setIsNavAdmin}
+              />
+            }
+          />
+
+          <Route path="/AppPromo" element={<AppPromo />} setIsAdmin={setIsAdmin} />
+          <Route
+            path="/residenceForm/:tenantId"
+            element={<ResidenceForm setIsAdmin={setIsAdmin} isNavAdmin={isNavAdmin} />}
+          />
 
           <Route path="/adminManage/*" element={<AdminManage setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminStatis" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
@@ -348,7 +369,7 @@ function App() {
           />
         </Routes>
         {!isAdmin ? <Footer /> : <></>}
-      </Router>
+      </Box>
     </>
   )
 }

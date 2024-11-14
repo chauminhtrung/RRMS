@@ -57,8 +57,11 @@ public class BulletinBoard {
     @Column(columnDefinition = "VARCHAR(255)")
     private String maxPerson;
 
-    @Column(columnDefinition = "Date")
+    @Column(name = "move_in_date", columnDefinition = "Date")
     private Date moveInDate;
+
+    @Column(columnDefinition = "Date")
+    private Date createdDate = new Date();
 
     @Column(columnDefinition = "VARCHAR(255)")
     private String openingHours;
