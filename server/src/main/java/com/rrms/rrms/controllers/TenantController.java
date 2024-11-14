@@ -3,6 +3,7 @@ package com.rrms.rrms.controllers;
 import com.rrms.rrms.dto.request.TenantRequest;
 import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.dto.response.MotelResponse;
+import com.rrms.rrms.dto.response.RoomDetailResponse;
 import com.rrms.rrms.dto.response.TenantResponse;
 import com.rrms.rrms.services.ITenantService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +26,30 @@ import java.util.UUID;
 public class TenantController {
 
     ITenantService tenantService;
+
+    @Operation(summary = "Get all rooms authen")
+    @GetMapping("/roomNews")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')") // su dung phân quền phù hop theo role
+    public ApiResponse<List<TenantResponse>> getRoomHomeDateNew() {
+        ApiResponse<List<TenantResponse>> apiResponse = new ApiResponse<>();
+        List<TenantResponse> rooms = tenantService.findAllByDatenew();
+        apiResponse.setCode(HttpStatus.OK.value());
+        apiResponse.setMessage("Tìm kiếm thành công");
+        apiResponse.setResult(rooms);
+        return apiResponse;
+    }
+
+    @Operation(summary = "Get all rooms authen")
+    @GetMapping("/rooms")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')") // su dung phân quền phù hop theo role
+    public ApiResponse<List<TenantResponse>> getRoomHome() {
+        ApiResponse<List<TenantResponse>> apiResponse = new ApiResponse<>();
+        List<TenantResponse> rooms = tenantService.findByAuthenIs(true);
+        apiResponse.setCode(HttpStatus.OK.value());
+        apiResponse.setMessage("Tìm kiếm thành công");
+        apiResponse.setResult(rooms);
+        return apiResponse;
+    }
 
     @RequestMapping("")
     public ApiResponse<List<TenantResponse>> getAllTenants() {

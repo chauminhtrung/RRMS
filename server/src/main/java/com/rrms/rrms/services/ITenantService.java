@@ -13,4 +13,8 @@ public interface ITenantService {
     TenantResponse insert(TenantRequest tenantRequest);
     TenantResponse update(UUID id, TenantRequest tenantRequest);
     void delete(UUID id);
+
+    List<TenantResponse> findByAuthenIs(Boolean authenis);
+
+    List<TenantResponse> findAllByDatenew();
 }

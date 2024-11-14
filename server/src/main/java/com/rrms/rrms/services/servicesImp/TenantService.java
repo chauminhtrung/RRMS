@@ -71,4 +71,14 @@ public class TenantService implements ITenantService {
         }
     }
 
+    @Override
+    public List<TenantResponse> findByAuthenIs(Boolean authenis) {
+        return List.of();
+    }
+
+    @Override
+    public List<TenantResponse> findAllByDatenew() {
+        return List.of();
+    }
+
 }
