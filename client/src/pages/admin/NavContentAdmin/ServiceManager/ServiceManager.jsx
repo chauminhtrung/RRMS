@@ -17,39 +17,29 @@ import 'react-tabulator/lib/styles.css'
 import 'react-tabulator/lib/css/tabulator.min.css'
 
 const ServiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
-  const { motelId } = useParams() // Lấy motelId từ URL
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  const { motelId } = useParams() 
   const [motelServices, setMotelServices] = useState([])
   const [selectedService, setSelectedService] = useState(null)
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
-  const columns = [
-    { title: 'Tên phòng', field: 'nameRoom', hozAlign: 'center', width: 160 },
-    {
-      title: 'Tiền điện (KWh)',
+  const [roomData, setRoomData] = useState([]);
+  const [tableWidth, setTableWidth] = useState(0);
+  const generateColumns = () => {
+    const dynamicColumns = motelServices.map(service => ({
+      title: service.nameService, // Tiêu đề là tên dịch vụ
       columns: [
-        { title: 'Số cũ', field: 'numberOld', hozAlign: 'right', sorter: 'number', width: 145 },
-        { title: 'Số mới', field: 'numberNew', hozAlign: 'center', width: 145 },
-        { title: 'Thành tiền', field: 'total', hozAlign: 'center', width: 170 }
+        { title: 'Sử dụng', field: `usage_${service.motelServiceId}`, hozAlign: 'right', sorter: 'number', width: 65 },
+        { title: 'Thành tiền', field: `total_${service.motelServiceId}`, hozAlign: 'center', width: 135 }
       ]
-    },
-    {
-      title: 'Tiền nước (Khối)',
-      columns: [
-        { title: 'Số cũ', field: 'numberOld', hozAlign: 'right', sorter: 'number', width: 145 },
-        { title: 'Số mới', field: 'numberNew', hozAlign: 'center', width: 145 },
-        { title: 'Thành tiền', field: 'total', hozAlign: 'center', width: 170 }
-      ]
-    },
-    {
-      title: '',
-      columns: [
-        { title: '', field: 'numberOld', hozAlign: 'right', sorter: 'number', width: 145 },
-        { title: '', field: 'numberNew', hozAlign: 'center', width: 145 },
-        { title: '0 ₫', field: 'total', hozAlign: 'center', width: 170 }
-      ]
-    }
-  ]
+    }));
+    
+    return [
+      { title: 'Tên phòng', field: 'nameRoom', hozAlign: 'center', width: 150 },
+      ...dynamicColumns
+    ];
+  };
 
-  const data = []
+  const columns = generateColumns();
 
   const options = {
     height: '400px', // Chiều cao của bảng
@@ -62,7 +52,7 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
     responsiveLayout: 'collapse',
     rowHeader: {
       formatter: 'responsiveCollapse',
-      width: 30,
+      width: 10,
       minWidth: 30,
       hozAlign: 'center',
       resizable: false,
@@ -70,25 +60,66 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
     },
     columnHeaderVertAlign: 'bottom'
   }
-  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  useEffect(() => {
+    const totalColumnWidth = columns.reduce((acc, column) => acc + (column.width || 200), 10); // Giả sử mỗi cột có width 150 nếu không có width nào khác được định nghĩa
+    setTableWidth(totalColumnWidth);
+  }, [columns]);
 
-  const fetchMotelServices = async (id) => {
+
+  const fetchMotelServicesWithCount = async (id) => {
     try {
-      const response = await axios.get(`${env.API_URL}/motels/get-motel-id?id=${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      if (response.data && response.data.code === 200 && response.data.result && response.data.result.motelServices) {
-        setMotelServices(response.data.result.motelServices)
+      const serviceResponse = await axios.get(`${env.API_URL}/motels/get-motel-id?id=${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const roomResponse = await axios.get(`${env.API_URL}/room/motel/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (serviceResponse.data?.code === 200 && serviceResponse.data.result.motelServices) {
+        const motelServices = serviceResponse.data.result.motelServices;
+        const rooms = roomResponse.data;
+
+        const serviceCounts = {};
+        rooms.forEach((room) => {
+          room.services.forEach((service) => {
+            serviceCounts[service.serviceId] = (serviceCounts[service.serviceId] || 0) + 1;
+          });
+        });
+
+        const servicesWithCount = motelServices.map((service) => ({
+          ...service,
+          count: serviceCounts[service.motelServiceId] || 0,
+        }));
+
+        setMotelServices(servicesWithCount);
+
+        // Chuẩn bị dữ liệu phòng cho bảng
+        const roomDataFormatted = rooms.map((room) => {
+          const roomServices = room.services.reduce((acc, service) => {
+            acc[`usage_${service.serviceId}`] = service.usage;
+            acc[`total_${service.serviceId}`] = service.total;
+            return acc;
+          }, {});
+
+          return {
+            nameRoom: room.name,
+            ...roomServices
+          };
+        });
+
+        setRoomData(roomDataFormatted);
       } else {
-        setMotelServices([])
+        setMotelServices([]);
+        setRoomData([]);
       }
     } catch (error) {
-      console.error('Lỗi khi gọi API:', error)
-      setMotelServices([])
+      console.error('Lỗi khi gọi API:', error);
+      setMotelServices([]);
+      setRoomData([]);
     }
-  }
+  };
+  
+  
 
   const deleteMotelService = async (serviceId) => {
     // Kiểm tra xem serviceId có tồn tại không
@@ -131,8 +162,7 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
           title: 'Thành công',
           text: 'Dịch vụ đã được xóa thành công!'
         })
-        // Cập nhật lại danh sách dịch vụ
-        fetchMotelServices(motelId) // Gọi lại hàm để cập nhật dịch vụ sau khi xóa
+        fetchMotelServicesWithCount(motelId)
       } else {
         Swal.fire({
           icon: 'error',
@@ -151,22 +181,20 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
   }
 
   const refreshServices = () => {
-    fetchMotelServices(motelId)
+    fetchMotelServicesWithCount(motelId)
   }
 
-  // Gọi hàm fetchMotelServices mỗi khi motelId thay đổi
   useEffect(() => {
     if (motelId) {
-      fetchMotelServices(motelId)
+      fetchMotelServicesWithCount(motelId)
     }
-  }, [motelId]) // Đảm bảo không gọi nếu motelId không hợp lệ
+  }, [motelId]) 
 
   const openEditModal = (service) => {
-    setSelectedService(service) // Set the selected service data
-    setIsUpdateModalOpen(true) // Open the modal
+    setSelectedService(service)
+    setIsUpdateModalOpen(true) 
   }
 
-  // Close modal handler
   const closeUpdateModal = () => {
     setIsUpdateModalOpen(false)
     setSelectedService(null)
@@ -218,10 +246,17 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
                               {service.price.toLocaleString('vi-VN')}đ/{service.chargetype}
                             </span>
                           </span>
-                          <i className="price-item-status">
-                            <span style={{ color: '#dc3545' }}>Không áp dụng cho phòng nào</span>
-                          </i>
+                          {service.count > 0 ? (
+                            <span className="price-item-status" style={{ color: '#28a745' }}>
+                              Đang áp dụng cho {service.count} phòng 
+                            </span>
+                          ) : (
+                            <i className="price-item-status">
+                              <span style={{ color: '#dc3545' }}>Không áp dụng cho phòng nào</span>
+                            </i>
+                          )}
                         </div>
+                        
                         <button
                           className="btn-round btn-edit"
                           style={{ border: 'none' }}
@@ -290,29 +325,28 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
                   Xuất excel
                 </button>
               </div>
-              <div className="">
-                <div style={{ position: 'relative', height: '100%' }}>
+
+              <div style={{ overflowX: 'auto' }}>
+                <div style={{ height: '100%', width: `${tableWidth}px` }}> 
                   <ReactTabulator
                     className="my-custom-table"
                     columns={columns}
-                    data={
-                      data.length > 0 ? data : [{ nameRoom: 'No data', numberOld: '-', numberNew: '-', total: '-' }]
-                    } // Thêm giá trị mặc định cho data
-                    options={{ ...options, responsiveLayout: data.length > 0 ? 'collapse' : false }} // Kiểm tra dữ liệu trước khi bật responsiveLayout
-                    placeholder={<h1>Không tìm thấy dữ liệu!</h1>}
+                    data={roomData.length > 0 ? roomData : [{ nameRoom: 'No data' }]}
+                    options={{ ...options, responsiveLayout: roomData.length > 0 ? 'collapse' : false }}
+                    placeholder={
+                      <div className="custom-placeholder">
+                        <img
+                          src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Fempty-box-4085812-3385481.webp?alt=media&token=eaf37b59-00e3-4d16-8463-5441f54fb60e"
+                          alt="Không có dữ liệu"
+                          className="placeholder-image"
+                        />
+                        <div className="placeholder-text">Không tìm thấy dữ liệu!</div>
+                      </div>
+                    }
                   />
-                  {data.length === 0 && (
-                    <div className="custom-placeholder">
-                      <img
-                        src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Fempty-box-4085812-3385481.webp?alt=media&token=eaf37b59-00e3-4d16-8463-5441f54fb60e"
-                        alt="Không có dữ liệu"
-                        className="placeholder-image"
-                      />
-                      <div className="placeholder-text">Không tìm thấy dữ liệu!</div>
-                    </div>
-                  )}
                 </div>
               </div>
+
             </div>
           </div>
         </div>
@@ -324,7 +358,7 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
         <ModelUpdateService
           serviceData={selectedService}
           closeModal={closeUpdateModal}
-          refreshServices={() => fetchMotelServices(motelId)}
+          refreshServices={() => fetchMotelServicesWithCount(motelId)}
         />
       )}
     </div>

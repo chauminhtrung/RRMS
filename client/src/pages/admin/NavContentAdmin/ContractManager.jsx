@@ -1,10 +1,8 @@
 import { useEffect } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
-import { Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import DescriptionIcon from '@mui/icons-material/Description';
+import { Box} from '@mui/material';
 import { ReactTabulator } from 'react-tabulator';
-import React, { useState } from 'react';
-import DatePicker from 'react-flatpickr';
+import { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
 
@@ -25,9 +23,9 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     setAsset({ ...asset, [e.target.name]: e.target.value });
   };
 
-  const handleIconSelect = (icon) => {
-    setAsset({ ...asset, icon });
-  };
+  // const handleIconSelect = (icon) => {
+  //   setAsset({ ...asset, icon });
+  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
