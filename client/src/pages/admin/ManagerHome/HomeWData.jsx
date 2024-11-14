@@ -19,6 +19,7 @@ import {
   updateSerivceRoom
 } from '~/apis/roomAPI'
 import { Modal } from 'bootstrap' // Import Bootstrap Modal API
+import { getAllMotelDevices } from '~/apis/deviceAPT'
 const HomeWData = ({ Motel }) => {
   const { motelId } = useParams()
   const [rooms, setRooms] = useState([])
@@ -47,6 +48,7 @@ const HomeWData = ({ Motel }) => {
   })
   const [roomSerivces, setRoomSerivces] = useState([])
   const [room, setRoom] = useState()
+  const [device, setdevice] = useState([])
 
   // Hàm xử lý nhấn ngoài menu
   useEffect(() => {
@@ -65,6 +67,7 @@ const HomeWData = ({ Motel }) => {
 
   useEffect(() => {
     fetchRooms()
+    fetchDevices()
   }, [])
 
   // Hàm xử lý thay đổi trạng thái checkbox
@@ -280,6 +283,15 @@ const HomeWData = ({ Motel }) => {
     } catch (error) {
       console.error('Error fetching motel services:', error)
       setMotelServices([])
+    }
+  }
+  const fetchDevices = async () => {
+    try {
+      const response = await getAllMotelDevices(motelId)
+      setdevice(response)
+    } catch (error) {
+      console.error('Error fetching device services:', error)
+      setdevice([])
     }
   }
 
@@ -1831,7 +1843,7 @@ const HomeWData = ({ Motel }) => {
           </div>
         </div>
       ) : (
-        <> </>
+        <></>
       )}
       {/* Modal hiển thị ghi chu */}
       {/* them 1 dieu kien nhu da co tai san r moi duoc mo*/}
