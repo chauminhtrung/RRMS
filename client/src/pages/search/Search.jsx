@@ -14,6 +14,7 @@ import FilterSearch from './FilterSearch'
 import axios from 'axios'
 import ChatAI from '../AI/ChatAI'
 import { getTinhThanh } from '~/apis/addressAPI'
+import { env } from '~/configs/environment'
 
 const Search = ({ setIsAdmin }) => {
   const [provinces, setProvinces] = useState([])
@@ -47,7 +48,11 @@ const Search = ({ setIsAdmin }) => {
   // Hàm để tải dữ liệu
   const loadData = async (searchValue) => {
     try {
-      const response = await axios.get(`http://localhost:8080/searchs`)
+      const response = await axios.get(`${env.API_URL}/searchs`, {
+        headers: {
+          'ngrok-skip-browser-warning': '69420'
+        }
+      })
 
       // Kiểm tra trạng thái phản hồi
       if (response.status === 200) {

@@ -1,7 +1,5 @@
-import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Link from '@mui/material/Link'
-import Grid from '@mui/material/Grid'
 import { Facebook, Instagram, Twitter } from '@mui/icons-material'
 import LinkedInIcon from '@mui/icons-material/LinkedIn'
 import YouTubeIcon from '@mui/icons-material/YouTube'
@@ -9,15 +7,13 @@ import SendIcon from '@mui/icons-material/Send'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import { Box, useMediaQuery } from '@mui/material'
 import './Footer.css'
-import { red } from '@mui/material/colors'
 export default function Footer() {
   const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'))
 
   return (
     <Box
       sx={{
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'light' ? theme.palette.grey[200] : theme.palette.grey[800],
+        backgroundColor: (theme) => (theme.palette.mode === 'light' ? theme.palette.grey[200] : theme.palette.grey[800])
       }}>
       <footer className="footer-section">
         <div className="container">
@@ -26,29 +22,29 @@ export default function Footer() {
               <div className="col-lg-4">
                 <div className="ft-about">
                   <div className="logo">
-                    <a href="#">
+                    <Link to="#">
                       <img src="./logo.png" alt="" />
-                    </a>
+                    </Link>
                   </div>
                   <Typography>
                     RRMS là kênh chuyên cung cấp giải pháp tìm kiếm nhà ở chất lượng và thuận tiện.
                   </Typography>
                   <div className="fa-social">
-                    <a href="#">
+                    <Link to="#">
                       <Facebook sx={{ color: '#3498db' }} />
-                    </a>
-                    <a href="#">
+                    </Link>
+                    <Link to="#">
                       <Twitter sx={{ color: '#2980b9' }} />
-                    </a>
-                    <a href="#">
+                    </Link>
+                    <Link to="#">
                       <Instagram sx={{ color: '#f8a5c2' }} />
-                    </a>
-                    <a href="#">
+                    </Link>
+                    <Link to="#">
                       <LinkedInIcon sx={{ color: '#2bcbba' }} />
-                    </a>
-                    <a href="#">
+                    </Link>
+                    <Link to="#">
                       <YouTubeIcon sx={{ color: '#eb3b5a' }} />
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -83,16 +79,16 @@ export default function Footer() {
               <div className="col-lg-7">
                 <ul>
                   <li>
-                    <a href="#">Contact</a>
+                    <Link to="#">Contact</Link>
                   </li>
                   <li>
-                    <a href="#">Terms of use</a>
+                    <Link to="#">Terms of use</Link>
                   </li>
                   <li>
-                    <a href="#">Privacy</a>
+                    <Link to="#">Privacy</Link>
                   </li>
                   <li>
-                    <a href="#">Environmental Policy</a>
+                    <Link to="#">Environmental Policy</Link>
                   </li>
                 </ul>
               </div>
@@ -103,13 +99,13 @@ export default function Footer() {
                       fontSize: '16px',
                       color: '#707079',
                       textAlign: isMobile ? 'center' : 'right',
-                      marginTop: isMobile ? '15px' : '',
+                      marginTop: isMobile ? '15px' : ''
                     }}>
                     Copyright ©<script>document.write(new Date().getFullYear());</script>
                     2024 All rights reserved | This template is made with <FavoriteIcon /> by{' '}
-                    <a href="https://colorlib.com" target="_blank">
+                    <Link to="https://colorlib.com" target="_blank">
                       RRMS
-                    </a>
+                    </Link>
                   </Typography>
                 </div>
               </div>

@@ -207,7 +207,7 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmote
         motels={motels}
         setIsAdmin={setIsAdmin}
         setIsNavAdmin={setIsNavAdmin}
-        isNavAdmin={isNavAdmin}
+        isNavAdmin={true}
       />
       <div
         style={{

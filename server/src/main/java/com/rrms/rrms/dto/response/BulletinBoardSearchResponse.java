@@ -2,6 +2,7 @@ package com.rrms.rrms.dto.response;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,6 +32,8 @@ public class BulletinBoardSearchResponse implements Serializable {
     Integer area;
     Double electricityPrice;
     Double waterPrice;
+    Date moveInDate;
+    Date createdDate;
     String address;
     Boolean isActive;
     List<BulletinBoardImage> bulletinBoardImages;

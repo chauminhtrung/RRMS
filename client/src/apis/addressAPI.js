@@ -5,8 +5,6 @@ export const getTinhThanh = async () => {
 }
 
 export const getQuanHuyen = async (selectedProvince) => {
-  console.log('selectedProvince', selectedProvince)
-
   return await axios.get(`https://esgoo.net/api-tinhthanh/2/${selectedProvince}.htm`)
 }
 

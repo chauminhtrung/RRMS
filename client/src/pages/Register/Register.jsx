@@ -1,60 +1,65 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Swal from 'sweetalert2';
-import { FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material';  
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import Swal from 'sweetalert2'
+import { FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material'
+import { env } from '~/configs/environment'
 
 const Register = ({ setIsAdmin }) => {
-  const [username, setUsername] = useState('');
-  const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
-  const [userType, setUserType] = useState('CUSTOMER'); 
+  const [username, setUsername] = useState('')
+  const [phone, setPhone] = useState('')
+  const [password, setPassword] = useState('')
+  const [userType, setUserType] = useState('CUSTOMER')
 
-  const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const [passwordConfirmation, setPasswordConfirmation] = useState('')
   const navigate = useNavigate()
 
   useEffect(() => {
-    setIsAdmin(false);
+    setIsAdmin(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [])
 
   const handleRegister = async (event) => {
-    event.preventDefault(); // Ngăn chặn hành vi mặc định của form
+    event.preventDefault() // Ngăn chặn hành vi mặc định của form
 
     // Kiểm tra xem tất cả các trường đều được điền
     if (!username || !phone || !password || !passwordConfirmation) {
       Swal.fire({
         icon: 'warning',
         title: 'Lỗi',
-        text: 'Vui lòng nhập đầy đủ thông tin.',
-      });
-      return;
+        text: 'Vui lòng nhập đầy đủ thông tin.'
+      })
+      return
     }
 
     if (password !== passwordConfirmation) {
       Swal.fire({
         icon: 'error',
         title: 'Lỗi',
-        text: 'Mật khẩu và xác nhận mật khẩu không khớp.',
-      });
-      return;
+        text: 'Mật khẩu và xác nhận mật khẩu không khớp.'
+      })
+      return
     }
 
     const account = {
       username,
       phone,
       password,
-      userType,
-    };
+      userType
+    }
 
     try {
-      const response = await axios.post('http://localhost:8080/authen/register', account);
+      const response = await axios.post(`${env.API_URL}/authen/register`, account, {
+        headers: {
+          'ngrok-skip-browser-warning': '69420'
+        }
+      })
 
       Swal.fire({
         icon: 'success',
         title: 'Thành công',
-        text: response.data.message || 'Đăng ký thành công',
-      });
+        text: response.data.message || 'Đăng ký thành công'
+      })
 
       navigate('/login')
     } catch (error) {
@@ -62,17 +67,17 @@ const Register = ({ setIsAdmin }) => {
         Swal.fire({
           icon: 'error',
           title: 'Lỗi',
-          text: error.response.data.message || 'Có lỗi xảy ra, vui lòng thử lại.',
-        });
+          text: error.response.data.message || 'Có lỗi xảy ra, vui lòng thử lại.'
+        })
       } else {
         Swal.fire({
           icon: 'error',
           title: 'Lỗi',
-          text: 'Có lỗi xảy ra, vui lòng thử lại.',
-        });
+          text: 'Có lỗi xảy ra, vui lòng thử lại.'
+        })
       }
     }
-  };
+  }
 
   return (
     <body
@@ -81,7 +86,7 @@ const Register = ({ setIsAdmin }) => {
         background: ' url(./login-background.webp) no-repeat',
         backgroundSize: 'contain',
         backgroundPositionY: '60%',
-        justifyContent: 'center',
+        justifyContent: 'center'
       }}>
       <div className="container mb-5">
         <div className="login-container d-flex" id="login">
@@ -93,7 +98,7 @@ const Register = ({ setIsAdmin }) => {
                     borderRadius: '100%',
                     border: '2px solid #4bcffa',
                     margin: '15px 0px',
-                    boxShadow: '0 1rem 2rem 0 rgb(0 0 0 / 3%), 0 0.5rem 1rem 0 rgb(0 0 0 / 5%)',
+                    boxShadow: '0 1rem 2rem 0 rgb(0 0 0 / 3%), 0 0.5rem 1rem 0 rgb(0 0 0 / 5%)'
                   }}
                   width="80px"
                   className="custom-logo img-responsive"
@@ -117,11 +122,11 @@ const Register = ({ setIsAdmin }) => {
             <div className="row login-form-container">
               <div className="col-12 login-form-1" style={{ backgroundColor: '#fff' }}>
                 <form onSubmit={handleRegister} method="POST" className="needs-validation" id="login-form" noValidate>
-                  <FormControl component="fieldset">  
-                    <RadioGroup row value={userType} onChange={(e) => setUserType(e.target.value)}>  
-                      <FormControlLabel value="HOST" control={<Radio />} label="Tôi là Chủ nhà, Nhân viên" />  
-                      <FormControlLabel value="CUSTOMER" control={<Radio />} label="Tôi tìm nhà trọ, phòng trọ" />  
-                    </RadioGroup>  
+                  <FormControl component="fieldset">
+                    <RadioGroup row value={userType} onChange={(e) => setUserType(e.target.value)}>
+                      <FormControlLabel value="HOST" control={<Radio />} label="Tôi là Chủ nhà, Nhân viên" />
+                      <FormControlLabel value="CUSTOMER" control={<Radio />} label="Tôi tìm nhà trọ, phòng trọ" />
+                    </RadioGroup>
                   </FormControl>
                   <div className="row g-2">
                     <div className="col-6">

@@ -1,16 +1,18 @@
+import { Link } from 'react-router-dom'
+
 const ListSearch = () => {
   return (
     <div className="container mt-3" style={{ maxWidth: '1180px' }}>
       <ol className="breadcrumb-container breadcrumb">
         <li className="breadcrumb-item">
-          <a href="/">
+          <Link to="/">
             <span>Trang chủ</span>
-          </a>
+          </Link>
         </li>
         <li className="breadcrumb-item">
-          <a href="/thue-phong-tro-ho-chi-minh-id-79">
+          <Link to="/thue-phong-tro-ho-chi-minh-id-79">
             <span>Hồ Chí Minh</span>
-          </a>
+          </Link>
         </li>
         <li className="breadcrumb-item breadcrumb-color">
           <span>Quận 1</span>
@@ -23,7 +25,7 @@ const ListSearch = () => {
           fontWeight: '500',
           lineHeight: '125%',
           marginBottom: '10px',
-          fontSize: '25px',
+          fontSize: '25px'
         }}>
         <b>Tìm phòng trọ gần Quận 1</b>
       </h1>

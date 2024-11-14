@@ -3,6 +3,7 @@ import './NotFoundPage.css'
 import GoBackButton from './GoBackButton'
 import { Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 
 const NotFoundPage = () => {
   const { t } = useTranslation()
@@ -28,7 +29,7 @@ const NotFoundPage = () => {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-      <a target="_blank" href="https://rrms.vercel.app/">
+      <Link target="_blank" to="https://rrms.vercel.app/">
         <div className="container">
           <div className="row">
             <div className="col-sm-12 col-md-12 mt-5 mb-5" style={{ width: '800px' }}>
@@ -1180,7 +1181,7 @@ const NotFoundPage = () => {
             </div>
           </div>
         </div>
-      </a>
+      </Link>
       <Typography variant="h6" component="body" sx={{ fontWeight: 'normal', fontSize: '20px', mx: 2 }}>
         {t('404-xin-loi-khong-ton-tai')}
       </Typography>

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
 import Flatpickr from 'react-flatpickr'
 import 'flatpickr/dist/themes/material_blue.css'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import ModelDeposit from './ModelDeposit'
 
 import Swal from 'sweetalert2'
@@ -185,7 +185,7 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
                 {/* Nav tabs  */}
                 <ul className="nav setting-tabs" role="tablist" style={{ display: 'unset' }}>
                   <li className="nav-item">
-                    <a className="nav-link active" data-bs-toggle="tab" href="#info">
+                    <Link className="nav-link active" data-bs-toggle="tab" to="#info">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -201,10 +201,10 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
                         <circle cx="12" cy="7" r="4"></circle>
                       </svg>
                       Thông tin đại điện cho hợp đồng
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" data-bs-toggle="tab" href="#contract_template">
+                    <Link className="nav-link" data-bs-toggle="tab" to="#contract_template">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -220,11 +220,11 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
                         <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                       </svg>
                       Cài đặt mẫu văn bản hợp đồng
-                    </a>
+                    </Link>
                   </li>
 
                   <li className="nav-item d-none">
-                    <a className="nav-link" data-bs-toggle="tab" href="#printer">
+                    <Link className="nav-link" data-bs-toggle="tab" to="#printer">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -241,10 +241,10 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
                         <rect x="6" y="14" width="12" height="8"></rect>
                       </svg>
                       Cài đặt máy in
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" data-bs-toggle="tab" href="#notification_setting">
+                    <Link className="nav-link" data-bs-toggle="tab" to="#notification_setting">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -260,7 +260,7 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
                         <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                       </svg>
                       Cài đặt thông báo
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
