@@ -119,7 +119,7 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
     { title: 'Đơn Vị', field: 'unitDescription', hozAlign: 'center', minWidth: 40, editor: 'input' },
     { title: 'Đơn Vị Cung Cấp', field: 'supplier', hozAlign: 'center', minWidth: 40, editor: 'input' },
     {
-      title: '',
+      title: 'Thao tác',
       field: 'delete',
       hozAlign: 'center',
       minWidth: 40,
