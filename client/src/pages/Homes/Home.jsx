@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react'
 import { Typography, Button, Box, Grid, Container, Paper, Tab, Tabs, CardContent, Card } from '@mui/material'
 import './Home.css'
+import { Link } from 'react-router-dom'
 
 // Define the tab components with unique content
 const Tab1 = () => {
@@ -306,9 +307,9 @@ export default function HomePage({ setIsAdmin }) {
             <Grid item xs={6} sm={6} md={4} lg={2}>
               <Box className="custom-box">
                 <Box display="flex" alignItems="center">
-                  <Typography component="a" href="#all-function" className="link">
+                  <Link component="a" to="#all-function" className="link">
                     Xem thêm
-                  </Typography>
+                  </Link>
                   <svg
                     className="svg-icon"
                     viewBox="0 0 24 24"
@@ -458,14 +459,14 @@ export default function HomePage({ setIsAdmin }) {
                         <Typography className="description mt-3">
                           Chúng tôi tư vấn cho khách hàng bằng kinh nghiệm vận hành thực tiễn tại{' '}
                           <strong>
-                            <a href="#" target="_blank" rel="noopener noreferrer">
+                            <Link to="#" target="_blank" rel="noopener noreferrer">
                               FPT SOFTWARE
-                            </a>
+                            </Link>
                           </strong>{' '}
                           và công nghệ từ đội ngũ phát triển
-                          <a href="#" target="_blank" rel="noopener noreferrer">
+                          <Link to="#" target="_blank" rel="noopener noreferrer">
                             <strong>RRMS GROUP</strong>.
-                          </a>
+                          </Link>
                         </Typography>
                       </CardContent>
                     </a>
@@ -608,24 +609,24 @@ export default function HomePage({ setIsAdmin }) {
 const features = [
   {
     img: 'https://quanlytro.me/images/home_feature/feature-1-app-danh-rieng-cho-khac-thue-doc.jpg',
-    title: 'App dành riêng cho khách thuê',
+    title: 'App dành riêng cho khách thuê'
   },
   {
     img: 'https://quanlytro.me/images/home_feature/feature-2-gui-hoa-don-tu-dong-doc.jpg',
-    title: 'Gửi hóa đơn tự động tới khách thuê ZALO/APP',
+    title: 'Gửi hóa đơn tự động tới khách thuê ZALO/APP'
   },
   {
     img: 'https://quanlytro.me/images/home_feature/feature-3-thanh-toan-online-doc.jpg',
-    title: 'Thanh toán hóa đơn online, gạch nợ tự động',
+    title: 'Thanh toán hóa đơn online, gạch nợ tự động'
   },
   {
     img: 'https://quanlytro.me/images/home_feature/feature-4-giao-dien-de-su-dung-doc.jpg',
-    title: 'Giao diện cực kỳ dễ sử dụng',
+    title: 'Giao diện cực kỳ dễ sử dụng'
   },
   {
     img: 'https://quanlytro.me/images/home_feature/feature-5-lap-day-phong-trong-doc.jpg',
-    title: 'Lấp phòng trống nhanh chóng',
-  },
+    title: 'Lấp phòng trống nhanh chóng'
+  }
 ]
 
 const features1 = [
@@ -634,22 +635,22 @@ const features1 = [
     title: 'Quản lý nhà tọ trên điện thoại',
     buttonLabel: 'Quản lý trên điện thoại',
     description:
-      'Quản lý ngay trên chiếc điện thoại. Nhẹ nhàng, thuận tiện, linh hoạt với đầy đủ tính năng và được đồng bộ với các nền tảng khác.',
+      'Quản lý ngay trên chiếc điện thoại. Nhẹ nhàng, thuận tiện, linh hoạt với đầy đủ tính năng và được đồng bộ với các nền tảng khác.'
   },
   {
     img: 'https://quanlytro.me/images/banner_ipad_flatform.webp',
     title: 'Quản lý nhà tọ trên iPad',
     buttonLabel: 'Quản lý trên máy tính bảng',
     description:
-      'Nếu bạn đang có chiếc máy tính bảng là một lợi thế. Bạn có thể kết hợp được sự linh hoạt giữa điện thoại và máy tính.',
+      'Nếu bạn đang có chiếc máy tính bảng là một lợi thế. Bạn có thể kết hợp được sự linh hoạt giữa điện thoại và máy tính.'
   },
   {
     img: 'https://quanlytro.me/images/banner_desktop_flatform.webp',
     title: 'Quản lý nhà tọ trên máy tính',
     buttonLabel: 'Quản lý trên máy tính',
     description:
-      'Quản lý ngay trên website mà không cần cài đặt app. Tất cả các tính năng sẽ rất chi tiết, sẽ giúp bạn quản lý thuận tiện đầy đủ.',
-  },
+      'Quản lý ngay trên website mà không cần cài đặt app. Tất cả các tính năng sẽ rất chi tiết, sẽ giúp bạn quản lý thuận tiện đầy đủ.'
+  }
 ]
 
 const testimonials = [
@@ -658,7 +659,7 @@ const testimonials = [
     rooms: '40 phòng',
     role: 'Chủ nhà',
     feedback: 'Ứng dụng dễ dàng sử dụng và miễn phí, đầy đủ chức năng giúp tôi có thể quản lý cùng lúc nhiều nhà trọ.',
-    image: 'https://quanlytro.me/images/owner_avatars/chu-tro-01-80x80.webp?version=29842',
+    image: 'https://quanlytro.me/images/owner_avatars/chu-tro-01-80x80.webp?version=29842'
   },
   {
     name: 'Chị Lê Thị Huyên',
@@ -666,7 +667,7 @@ const testimonials = [
     role: 'Chủ nhà',
     feedback:
       'Tôi rất thích ứng dụng vì rất tiện lợi, phòng của tôi không nhiều nhưng trước khi biết đến ứng dụng tôi phải quản lý sổ sách rất cực. Giờ thì khoẻ hơn nhiều. Cảm ơn LOZIDO!',
-    image: 'https://quanlytro.me/images/owner_avatars/chu-tro-02-80x80.webp?version=29842',
+    image: 'https://quanlytro.me/images/owner_avatars/chu-tro-02-80x80.webp?version=29842'
   },
   {
     name: 'Anh Lê Văn Tân',
@@ -674,7 +675,7 @@ const testimonials = [
     role: 'Chủ nhà',
     feedback:
       'Phòng trọ của mình tương đối nhiều. Trước đây mình thường rất mất nhiều thời gian trong công việc quản lý. Mình tốn thời gian ghi nhớ, tính toán sổ sách hàng tháng. Từ khi được bạn giới thiệu ứng dụng mọi việc tốt hơn.',
-    image: 'https://quanlytro.me/images/owner_avatars/chu-tro-03-80x80.webp?version=29842',
+    image: 'https://quanlytro.me/images/owner_avatars/chu-tro-03-80x80.webp?version=29842'
   },
   {
     name: 'Chị Đoàn Thị Hòa',
@@ -682,8 +683,8 @@ const testimonials = [
     role: 'Chủ nhà',
     feedback:
       'Tôi có nhiều thời gian cho bản thân hơn từ khi biết đến ứng dụng quản lý nhà trọ của LOZIDO. Thật sự cảm ơn các bạn đã giới thiệu và hỗ trợ tôi!',
-    image: 'https://quanlytro.me/images/owner_avatars/chu-tro-04-80x80.webp?version=29842',
-  },
+    image: 'https://quanlytro.me/images/owner_avatars/chu-tro-04-80x80.webp?version=29842'
+  }
 ]
 
 const logos = [
@@ -698,5 +699,5 @@ const logos = [
   'https://quanlytro.me/images/logo-customer/logo-9.png',
   'https://quanlytro.me/images/logo-customer/logo-10.png',
   'https://quanlytro.me/images/logo-customer/logo-11.png',
-  'https://quanlytro.me/images/logo-customer/logo-12.png',
+  'https://quanlytro.me/images/logo-customer/logo-12.png'
 ]

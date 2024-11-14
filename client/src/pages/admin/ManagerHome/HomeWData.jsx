@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Tooltip } from 'react-tooltip'
 import { useEffect, useState, useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import 'react-tabulator/lib/styles.css' // required styles
 import 'react-tabulator/lib/css/tabulator.min.css' // theme
 import { ReactTabulator } from 'react-tabulator'
@@ -639,7 +639,7 @@ const HomeWData = ({ Motel }) => {
           <div className="row g-3 row-box-home" style={{ marginTop: '0px' }}>
             <div className="col-sm-3" style={{ marginTop: '0px' }}>
               <div className="item-home " data-bs-toggle="modal" data-bs-target="#reportBillDebt">
-                <a href="#" className="create-home">
+                <Link to="#" className="create-home">
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -656,8 +656,8 @@ const HomeWData = ({ Motel }) => {
                       <polyline points="12 5 19 12 12 19"></polyline>
                     </svg>
                   </span>
-                </a>
-                <a href="#" className="box-home span-red-white">
+                </Link>
+                <Link to="#" className="box-home span-red-white">
                   <div className="d-flex align-items-center">
                     <span className="icon-home">
                       <img
@@ -670,12 +670,12 @@ const HomeWData = ({ Motel }) => {
                       <h3 className="text-danger">0đ</h3>
                     </div>
                   </div>
-                </a>
+                </Link>
               </div>
             </div>
             <div className="col-sm-3" style={{ marginTop: '0px' }}>
               <div className="item-home" data-bs-toggle="modal" data-bs-target="#reportContractDeposit">
-                <a href="#" className="create-home">
+                <Link to="#" className="create-home">
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -692,8 +692,8 @@ const HomeWData = ({ Motel }) => {
                       <polyline points="12 5 19 12 12 19"></polyline>
                     </svg>
                   </span>
-                </a>
-                <a href="#" className="box-home span-primary-white">
+                </Link>
+                <Link to="#" className="box-home span-primary-white">
                   <div className="d-flex align-items-center">
                     <span className="icon-home">
                       <img
@@ -708,12 +708,12 @@ const HomeWData = ({ Motel }) => {
                       <h3 style={{ color: '#20a9e7' }}>0đ</h3>
                     </div>
                   </div>
-                </a>
+                </Link>
               </div>
             </div>
             <div className="col-sm-3" style={{ marginTop: '0px' }}>
               <div className="item-home" data-bs-toggle="modal" data-bs-target="#reportDepositTemp">
-                <a href="#" className="create-home">
+                <Link tp="#" className="create-home">
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -730,8 +730,8 @@ const HomeWData = ({ Motel }) => {
                       <polyline points="12 5 19 12 12 19"></polyline>
                     </svg>
                   </span>
-                </a>
-                <a href="#" className="box-home span-primary-white">
+                </Link>
+                <Link to="#" className="box-home span-primary-white">
                   <div className="d-flex align-items-center">
                     <span className="icon-home">
                       <img
@@ -746,12 +746,12 @@ const HomeWData = ({ Motel }) => {
                       <h3 style={{ color: '#20a9e7' }}>0đ</h3>
                     </div>
                   </div>
-                </a>
+                </Link>
               </div>
             </div>
             <div className="col-sm-3" style={{ marginTop: '0px' }}>
               <div className="item-home report">
-                <a href="#" className="create-home">
+                <Link to="#" className="create-home">
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -768,8 +768,8 @@ const HomeWData = ({ Motel }) => {
                       <polyline points="12 5 19 12 12 19"></polyline>
                     </svg>
                   </span>
-                </a>
-                <a href="#" className="box-home span-red-white">
+                </Link>
+                <Link to="#" className="box-home span-red-white">
                   <div className="d-flex align-items-center">
                     <span className="icon-home">
                       <img
@@ -782,7 +782,7 @@ const HomeWData = ({ Motel }) => {
                       <h3 className="text-danger">0 Vấn đề</h3>
                     </div>
                   </div>
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -796,8 +796,8 @@ const HomeWData = ({ Motel }) => {
                 <i className="des">Tất cả danh sách phòng trong Nhà trọ Trung</i>
               </h4>
               <div className="d-flex">
-                <a
-                  href="https://www.youtube.com/watch?v=AH-YrGOP-zI"
+                <Link
+                  to="https://www.youtube.com/watch?v=AH-YrGOP-zI"
                   target="_blank"
                   data-bs-toggle="tooltip"
                   data-bs-placement="left"
@@ -819,7 +819,7 @@ const HomeWData = ({ Motel }) => {
                     height="50px"
                     src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Ficonadminql5.png?alt=media&token=4f52c0c9-ed2e-478f-911b-67df29e7208f"
                   />
-                </a>
+                </Link>
                 <button className="add-round" data-bs-toggle="modal" data-bs-target="#addRoom">
                   <span
                     data-bs-toggle="tooltip"

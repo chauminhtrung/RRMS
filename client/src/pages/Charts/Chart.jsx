@@ -15,6 +15,7 @@ import {
 import './Chart.css'
 import { BarChart } from '@mui/x-charts/BarChart'
 import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 //test
 const RealEstateBanner = ({ setIsAdmin }) => {
   useEffect(() => {
@@ -25,9 +26,9 @@ const RealEstateBanner = ({ setIsAdmin }) => {
     <div>
       <Container>
         <Breadcrumbs className="breadcrumb ms-5">
-          <a className="breadcrumb-item" href="/">
+          <Link className="breadcrumb-item" to="/">
             Home
-          </a>
+          </Link>
           <Typography className="breadcrumb-item active">Tham khảo giá</Typography>
         </Breadcrumbs>
         <Grid container spacing={2}>
