@@ -52,11 +52,16 @@ public class TenantService implements ITenantService {
         Optional<Tenant> tenantFind = tenantRepository.findById(id);
         if (tenantFind.isPresent()) {
             Tenant tenant = tenantFind.get();
-            tenant = tenantMapper.tenantRequestToTenant(tenantRequest);
+
+            // Cập nhật các trường từ tenantRequest vào tenant hiện có
+            tenantMapper.updateTenantFromRequest(tenantRequest, tenant);
+
+            // Lưu bản ghi sau khi cập nhật
             return tenantMapper.toTenantResponse(tenantRepository.save(tenant));
         }
         return null;
     }
+
 
     @Override
     public void delete(UUID id) {

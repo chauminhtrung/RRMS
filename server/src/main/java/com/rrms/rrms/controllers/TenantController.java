@@ -62,22 +62,23 @@ public class TenantController {
     @Operation(summary = "Update tenant by id")
     @PutMapping("/{id}")
     public ApiResponse<TenantResponse> updateTenant(@PathVariable("id") UUID id, @RequestBody TenantRequest tenantRequest) {
-        if (!id.equals(null) && !tenantRequest.equals(null)) {
+        if (id != null && tenantRequest != null) {
             TenantResponse tenantResponse = tenantService.update(id, tenantRequest);
-            log.info("Update motel successfully");
+            log.info("Update tenant successfully");
             return ApiResponse.<TenantResponse>builder()
                     .code(HttpStatus.OK.value())
                     .message("success")
                     .result(tenantResponse)
                     .build();
         }
-        log.error("Update tenant failed");
+        log.error("Update tenant failed due to null id or tenantRequest");
         return ApiResponse.<TenantResponse>builder()
                 .code(HttpStatus.BAD_REQUEST.value())
                 .message("error")
                 .result(null)
                 .build();
     }
+
 
     @Operation(summary = "Delete tenant by id")
     @DeleteMapping("/{id}")
