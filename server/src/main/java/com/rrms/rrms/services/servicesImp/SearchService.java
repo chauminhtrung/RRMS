@@ -127,4 +127,13 @@ public class SearchService implements ISearchService {
                 .map(bulletinBoardMapper::toBulletinBoardSearchResponse)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<BulletinBoardSearchResponse> findAllByDateVieux() {
+        return searchRepository.findAllByDateVieux().stream()
+                .map(bulletinBoardMapper::toBulletinBoardSearchResponse)
+                .collect(Collectors.toList());
+    }
+
+
 }

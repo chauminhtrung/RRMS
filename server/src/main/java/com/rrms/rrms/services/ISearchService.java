@@ -24,4 +24,7 @@ public interface ISearchService {
     //    List<BulletinBoardSearchResponse> findByMoveInDateLessThanEqual(Date moveInDate);
 
     List<BulletinBoardSearchResponse> findAllByDatenew();
+
+    List<BulletinBoardSearchResponse> findAllByDateVieux();
+
 }

@@ -19,7 +19,7 @@ const RRMS = ({ setIsAdmin }) => {
   const itemsPerPage = 4 // Số lượng item hiển thị mỗi trang
 
   const [currentPageNew, setCurrentPageNew] = useState(1)
-  const itemsPerPageNew = 4 // Số lượng item hiển thị mỗi trang
+  const itemsPerPageNew = 8 // Số lượng item hiển thị mỗi trang
 
   const indexOfLastItemNew = currentPageNew * itemsPerPageNew
   const indexOfFirstItemNew = indexOfLastItemNew - itemsPerPageNew
@@ -88,13 +88,10 @@ const RRMS = ({ setIsAdmin }) => {
   //   }
   // }
   const loadData = async () => {
-    const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-
     try {
-      const result = await axios.get(`${env.API_URL}/searchs/roomNews`, {
+      const result = await axios.get(`${env.API_URL}/searchs/roomVieux`, {
         validateStatus: () => true,
         headers: {
-          Authorization: `Bearer ${token}`,
           'ngrok-skip-browser-warning': '69420'
         }
       })
@@ -118,13 +115,10 @@ const RRMS = ({ setIsAdmin }) => {
   }
 
   const loadDataDateNew = async () => {
-    const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-
     try {
       const result = await axios.get(`${env.API_URL}/searchs/roomNews`, {
         validateStatus: () => true,
         headers: {
-          Authorization: `Bearer ${token}`,
           'ngrok-skip-browser-warning': '69420'
         }
       })
@@ -146,6 +140,7 @@ const RRMS = ({ setIsAdmin }) => {
       console.error('Error fetching data:', error)
     }
   }
+
   const renderList = (card, start, end) => {
     const listItems = []
     for (let i = start; i < end; i++) {
@@ -798,9 +793,8 @@ const RRMS = ({ setIsAdmin }) => {
                             overflow: 'hidden',
                             height: '100%'
                           }}
-                          target="_blank"
                           title={room.title}
-                          to="#"
+                          to={`/detail/${room.bulletinBoardId}`}
                           className="is-adss">
                           <img
                             alt={room.title}
@@ -831,8 +825,7 @@ const RRMS = ({ setIsAdmin }) => {
                         <div className="title">
                           <Link
                             title={room.title}
-                            target="_blank"
-                            to="#"
+                            to={`/detail/${room.bulletinBoardId}`}
                             className="cut-text-2"
                             style={{ textDecoration: 'none', color: 'black' }}>
                             <span>{room.title}</span>
@@ -881,8 +874,7 @@ const RRMS = ({ setIsAdmin }) => {
                         <div className="i info-author">
                           <Link
                             rel="nofollow, noindex"
-                            target="_blank"
-                            to="#"
+                            to={`/detail/${room.bulletinBoardId}`}
                             className="btn-quick-zalo"
                             style={{ textDecoration: 'none' }}>
                             Zalo

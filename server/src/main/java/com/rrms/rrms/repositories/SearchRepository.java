@@ -18,4 +18,7 @@ public interface SearchRepository extends JpaRepository<Search, UUID> {
 
     @Query("SELECT r FROM BulletinBoard r ORDER BY r.createdDate DESC")
     List<BulletinBoard> findAllByDatenew();
+
+    @Query("SELECT r FROM BulletinBoard r ORDER BY r.createdDate ASC")
+    List<BulletinBoard> findAllByDateVieux();
 }
