@@ -27,6 +27,16 @@ export const postBulletinBoard = async (data) => {
   return response.data
 }
 
+export const updateBulletinBoard = async (id, data) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  const response = await axios.put(`${env.API_URL}/bulletin-board/${id}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  return response.data
+}
+
 export const postBulletinBoardReview = async (data) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   const response = await axios.post(`${env.API_URL}/bulletin-board-reviews`, data, {
@@ -47,5 +57,15 @@ export const getBulletinBoardReviewByBulletinBoardIdAndUsername = async (bulleti
       }
     }
   )
+  return response.data
+}
+
+export const deleteBulletinBoard = async (id) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  const response = await axios.delete(`${env.API_URL}/bulletin-board/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
   return response.data
 }

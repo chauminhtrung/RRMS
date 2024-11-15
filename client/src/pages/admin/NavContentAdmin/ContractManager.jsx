@@ -1,86 +1,41 @@
 import { useEffect } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
-import { Box } from '@mui/material'
+import { Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material'
+import DescriptionIcon from '@mui/icons-material/Description'
 import { ReactTabulator } from 'react-tabulator'
-import { useState } from 'react'
+import React, { useState } from 'react'
+import DatePicker from 'react-flatpickr'
 import { Modal, Button, Form } from 'react-bootstrap'
 const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
   const [show, setShow] = useState(false)
-  const [tenant, setTenant] = useState({
-    fullname: '',
-    phone: '',
-    CCCD: '',
-    email: '',
-    birthday: null,
-    gender: '', // 'MALE', 'FEMALE', hoặc 'OTHER'
-    address: '',
-    job: '',
-    License_date: null,
-    Place_of_license: '',
-    front_photo: '',
-    back_photo: '',
-    role: false,
-    temporary_residence: false,
-    information_verify: false
+  const [asset, setAsset] = useState({
+    name: '',
+    icon: null,
+    value: '',
+    quantity: '',
+    unit: 'Cái',
+    supplier: ''
   })
-
-  const [contract, setContract] = useState({
-    contractId: null,
-    room: null,
-    tenant: null,
-    landlord: null,
-    contract_template: null,
-    broker: null,
-    moveinDate: '',
-    leaseTerm: '',
-    closeContract: '',
-    description: '',
-    debt: 0.0,
-    price: 0.0,
-    collection_cycle: '',
-    createdate: '',
-    Sign_contract: '',
-    language: 'Tiếng Việt',
-    countTenant: 1,
-    status: '' // Giá trị có thể là 'ACTIVE', 'ENDED', hoặc 'IATExpire'
-  })
-
-  const [selectedRoomId, setSelectedRoomId] = useState(null)
-  const rooms = [
-    { roomId: 1, roomName: 'Châu minh trung', address: 'Địa chỉ 1', price: 200000 },
-    { roomId: 2, roomName: 'Châu minh trung', address: 'Địa chỉ 2', price: 200000 }
-  ]
 
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
-  // Hàm onChange để cập nhật các trường trong tenant
-  const handleTenantChange = (event) => {
-    const { name, value } = event.target
-    setTenant((prevTenant) => ({
-      ...prevTenant,
-      [name]: value
-    }))
+  const handleChange = (e) => {
+    setAsset({ ...asset, [e.target.name]: e.target.value })
   }
 
-  // Hàm onChange để cập nhật các trường trong contract
-  const handleContractChange = (event) => {
-    const { name, value } = event.target
-    setContract((prevContract) => ({
-      ...prevContract,
-      [name]: value
-    }))
-  }
-
-  const handleRoomClick = (roomId) => {
-    setSelectedRoomId(roomId === selectedRoomId ? null : roomId) // Nếu phòng đã chọn thì bỏ chọn, nếu không thì chọn phòng mới
-    // Hiển thị ID của phòng khi chọn
-    alert(`ID phòng: ${roomId}`)
+  const handleIconSelect = (icon) => {
+    setAsset({ ...asset, icon })
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(contract)
+
+    console.log('New asset:', asset)
+    setAsset({
+      //setluu
+    })
+    handleClose()
   }
 
   const columns = [
@@ -144,7 +99,7 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
         motels={motels}
         setIsAdmin={setIsAdmin}
         setIsNavAdmin={setIsNavAdmin}
-        isNavAdmin={isNavAdmin}
+        isNavAdmin={true}
       />
       <div
         style={{
@@ -234,111 +189,11 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
             <Modal.Body style={{ maxHeight: '500px', overflowY: 'auto', padding: '20px' }}>
               <Form>
                 <div className="row">
-                  <div className="col-lg-7 col-sm-12">
-                    <div className="col-12 mb-2">
-                      <div className="title-item-small">
-                        <b>Danh sách phòng</b>
-                        <i className="des">Danh sách phòng có thể lập hợp đồng</i>
-                      </div>
-                    </div>
-                    <div style={{ position: 'sticky', top: '20px' }}>
-                      <div className="room-list row g-2">
-                        {rooms.map((room) => (
-                          <div
-                            key={room.roomId}
-                            className={`col-6 room-item ${selectedRoomId === room.roomId ? 'active' : ''}`}
-                            onClick={() => handleRoomClick(room.roomId)} // Chọn phòng khi click
-                          >
-                            <div className="d-flex room-item-inner align-items-center">
-                              <div className="flex-grow-0 icon-room">
-                                {selectedRoomId === room.roomId ? (
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="feather feather-check">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                  </svg>
-                                ) : (
-                                  <img
-                                    width="20px"
-                                    src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Froom.png?alt=media&token=9f1a69c1-ce2e-4586-ba90-94db53443d49"
-                                    alt=""
-                                  />
-                                )}
-                              </div>
-                              <div className="flex-grow-1">
-                                <div>
-                                  <b>{room.roomName}</b>
-                                  <span
-                                    style={{
-                                      backgroundColor: '#ED6004',
-                                      display: 'table',
-                                      fontSize: '12px',
-                                      borderRadius: '5px',
-                                      padding: '0 7px',
-                                      color: '#fff'
-                                    }}>
-                                    Đang trống
-                                  </span>
-                                </div>
-                                <div className="d-flex justify-content-between align-items-center mt-1">
-                                  <div>
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="18"
-                                      height="18"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      className="feather feather-dollar-sign">
-                                      <line x1="12" y1="1" x2="12" y2="23"></line>
-                                      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                    </svg>{' '}
-                                    {room.price.toLocaleString()}₫
-                                  </div>
-                                  <div>
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="18"
-                                      height="18"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      className="feather feather-user">
-                                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                      <circle cx="12" cy="7" r="4"></circle>
-                                    </svg>{' '}
-                                    0/1 người
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-lg-5 col-sm-12">
+                  <div className="col-lg-6 col-sm-12">{/* chỗ này thêm bảng */}</div>
+                  <div className="col-lg-6 col-sm-12">
                     <Form.Group className="mb-3" controlId="thoihanhopdong">
-                      <Form.Label>
-                        <div className="title-item-small">
-                          <b>Thời hạn hợp đồng:</b>
-                        </div>
-                      </Form.Label>
-                      <Form.Select name="leaseTerm" value={contract.leaseTerm} onChange={handleContractChange} required>
+                      <Form.Label>Thời hạn hợp đồng</Form.Label>
+                      <Form.Select name="thoihanhopdong" value={asset.thoihanhopdong} onChange={handleChange} required>
                         <option value="">--Thời hạn hợp đồng--</option>
                         {[
                           { value: '0', label: 'Tùy chỉnh' },
@@ -370,10 +225,10 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
                           <Form.Label>Ngày vào ở</Form.Label>
                           <Form.Control
                             type="date"
-                            name="moveinDate"
+                            name="dateIn"
+                            value={asset.dateIn}
                             placeholder="Ngày vào ở"
-                            value={contract.moveinDate}
-                            onChange={handleContractChange}
+                            onChange={handleChange}
                             required
                           />
                         </div>
@@ -381,10 +236,10 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
                           <Form.Label>Ngày kết thúc hợp đồng</Form.Label>
                           <Form.Control
                             type="date"
-                            name="closeContract"
+                            name="dateOut"
+                            value={asset.dateOut}
                             placeholder="Ngày vào ở"
-                            value={contract.closeContract}
-                            onChange={handleContractChange}
+                            onChange={handleChange}
                             required
                           />
                         </div>
@@ -397,18 +252,41 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
                           <Form.Control
                             type="number"
                             name="soluongthanhvien"
+                            value={asset.soluongthanhvien}
                             placeholder="Số lượng thành viên"
+                            onChange={handleChange}
                             required
                           />
                         </div>
                         <div className="col-6 mt-3">
-                          <Form.Control type="text" name="tennguoio" placeholder="Tên người ở" required />
+                          <Form.Control
+                            type="text"
+                            name="tennguoio"
+                            value={asset.tennguoio}
+                            placeholder="Tên người ở"
+                            onChange={handleChange}
+                            required
+                          />
                         </div>
                         <div className="col-6 mt-3">
-                          <Form.Control type="text" name="sodienthoai" placeholder="Số điện thoại" required />
+                          <Form.Control
+                            type="text"
+                            name="sodienthoai"
+                            value={asset.sodienthoai}
+                            placeholder="Số điện thoại"
+                            onChange={handleChange}
+                            required
+                          />
                         </div>
                         <div className="col-12 mt-3">
-                          <Form.Control type="text" name="cccd" placeholder="CMND/CCCD" required />
+                          <Form.Control
+                            type="text"
+                            name="cccd"
+                            value={asset.cccd}
+                            placeholder="CMND/CCCD"
+                            onChange={handleChange}
+                            required
+                          />
                         </div>
                         <div className="col-6 mt-3">
                           <Form.Label>Ngày Sinh</Form.Label>
@@ -416,32 +294,46 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
                         </div>
                         <div className="col-6 mt-3">
                           <Form.Label>Giới Tính</Form.Label>
-                          <Form.Select name="gioitinh" required>
+                          <Form.Select name="gioitinh" value={asset.gioitinh} onChange={handleChange} required>
                             <option value="">--Giới tính--</option>
                             <option value="nam">Nam</option>
                             <option value="nữ">Nữ</option>
                           </Form.Select>
                         </div>
                         <div className="col-6 mt-3">
-                          <Form.Select name="tinhTP" required>
+                          <Form.Select name="tinhTP" value={asset.tinhTP} onChange={handleChange} required>
                             <option value="">--Tỉnh/Thành Phố--</option>
                           </Form.Select>
                         </div>
                         <div className="col-6 mt-3">
-                          <Form.Select name="quanHuyen" required>
+                          <Form.Select name="quanHuyen" value={asset.quanHuyen} onChange={handleChange} required>
                             <option value="">--Quận/Huyện--</option>
                           </Form.Select>
                         </div>
                         <div className="col-12 mt-3">
-                          <Form.Select name="phuongXa" required>
+                          <Form.Select name="phuongXa" value={asset.phuongXa} onChange={handleChange} required>
                             <option value="">--Phường/Xã--</option>
                           </Form.Select>
                         </div>
                         <div className="col-12 mt-3">
-                          <Form.Control type="text" name="diachi" placeholder="Địa chỉ" required />
+                          <Form.Control
+                            type="text"
+                            name="diachi"
+                            value={asset.diachi}
+                            placeholder="Địa chỉ"
+                            onChange={handleChange}
+                            required
+                          />
                         </div>
                         <div className="col-12 mt-3">
-                          <Form.Control type="text" name="congviec" placeholder="Công việc hiện tại" required />
+                          <Form.Control
+                            type="text"
+                            name="congviec"
+                            value={asset.congviec}
+                            placeholder="Công việc hiện tại"
+                            onChange={handleChange}
+                            required
+                          />
                         </div>
                         <div className="col-6 mt-3">
                           <Form.Label>Ngày cấp</Form.Label>
@@ -465,16 +357,44 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
                       <Form.Label>Dịch Vụ Sử Dụng</Form.Label>
                       <div className="row">
                         <div className="col-6">
-                          <Form.Control type="number" name="tiendien" placeholder="Tiền điện" required />
+                          <Form.Control
+                            type="number"
+                            name="tiendien"
+                            placeholder="Tiền điện"
+                            value={asset.tiendien}
+                            onChange={handleChange}
+                            required
+                          />
                         </div>
                         <div className="col-6">
-                          <Form.Control type="number" name="sodienNow" placeholder="Số điện hiện tại" required />
+                          <Form.Control
+                            type="number"
+                            name="sodienNow"
+                            placeholder="Số điện hiện tại"
+                            value={asset.sodienNow}
+                            onChange={handleChange}
+                            required
+                          />
                         </div>
                         <div className="col-6 mt-3">
-                          <Form.Control type="number" name="tiennuoc" placeholder="Tiền nước" required />
+                          <Form.Control
+                            type="number"
+                            name="tiennuoc"
+                            placeholder="Tiền nước"
+                            value={asset.tiennuoc}
+                            onChange={handleChange}
+                            required
+                          />
                         </div>
                         <div className="col-6 mt-3">
-                          <Form.Control type="number" name="sonuocNow" placeholder="Số nước hiện tại" required />
+                          <Form.Control
+                            type="number"
+                            name="sonuocNow"
+                            placeholder="Số nước hiện tại"
+                            value={asset.sonuocNow}
+                            onChange={handleChange}
+                            required
+                          />
                         </div>
                       </div>
                     </Form.Group>
@@ -484,61 +404,35 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
                         <div className="col-6">
                           <Form.Control
                             type="number"
-                            name="price"
+                            name="giathue"
                             placeholder="Giá thuê"
-                            value={contract.price}
-                            onChange={handleContractChange}
+                            value={asset.giathue}
+                            onChange={handleChange}
                             required
                           />
                         </div>
                         <div className="col-6">
                           <Form.Control
                             type="number"
-                            name="debt"
+                            name="tiencoc"
                             placeholder="Tiền cọc"
-                            value={contract.debt}
-                            onChange={handleContractChange}
+                            value={asset.tiencoc}
+                            onChange={handleChange}
                             required
                           />
                         </div>
                         <div className="col-12 mt-3">
-                          <Form.Select
-                            name="collection_cycle"
-                            value={contract.collection_cycle}
-                            onChange={handleContractChange}
-                            required>
-                            <option value="">--Chu kỳ thu tiền--</option>
-                            {[
-                              { value: '0', label: 'Tùy chỉnh' },
-                              { value: '1', label: '1 tháng' },
-                              { value: '2', label: '2 tháng' },
-                              { value: '3', label: '3 tháng' },
-                              { value: '4', label: '4 tháng' },
-                              { value: '5', label: '5 tháng' },
-                              { value: '6', label: '6 tháng' },
-                              { value: '7', label: '7 tháng' },
-                              { value: '8', label: '8 tháng' },
-                              { value: '9', label: '9 tháng' },
-                              { value: '10', label: '10 tháng' },
-                              { value: '11', label: '11 tháng' },
-                              { value: '12', label: '1 năm' },
-                              { value: '18', label: '1 năm, 6 tháng' },
-                              { value: '24', label: '2 năm' },
-                              { value: '32', label: '3 năm' },
-                              { value: '48', label: '4 năm' },
-                              { value: '60', label: '5 năm' }
-                            ].map((option) => (
-                              <option key={option.value} value={option.value}>
-                                {option.label}
-                              </option>
-                            ))}
+                          <Form.Select name="chukithutien" value={asset.chukithutien} onChange={handleChange} required>
+                            <option value="">--Chu kì thu tiên--</option>
+                            <option value="0">1 tháng</option>
+                            <option value="1">1 năm</option>
                           </Form.Select>
                         </div>
                       </div>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="mauvanban">
                       <Form.Label>Mẫu văn bản hợp đồng</Form.Label>
-                      <Form.Select name="mauhopdong" required>
+                      <Form.Select name="mauhopdong" value={asset.mauhopdong} onChange={handleChange} required>
                         <option value="">--Mẫu văn bản hợp đồng--</option>
                         <option value="0">Hợp đồng điện tử</option>
                         <option value="1">Hợp đồng giấy</option>
@@ -546,26 +440,33 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="description">
                       <Form.Label>Ghi chú</Form.Label>
-                      <Form.Control as="textarea" rows={3} onChange={handleContractChange} required />
+                      <Form.Control as="textarea" rows={3} onChange={handleChange} required />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="moigioi">
                       <Form.Label>Môi giới</Form.Label>
                       <div className="row">
                         <div className="col-12">
-                          <Form.Select name="dsmoigioi" required>
+                          <Form.Select name="dsmoigioi" value={asset.dsmuagioi} onChange={handleChange} required>
                             <option value="">--Danh sách môi giới--</option>
                           </Form.Select>
                         </div>
                         <div className="col-6 mt-3">
-                          <Form.Select name="hoahong" required>
+                          <Form.Select name="hoahong" value={asset.hoahong} onChange={handleChange} required>
                             <option value="">--Mức hoa hồng--</option>
                           </Form.Select>
                         </div>
                         <div className="col-6 mt-3">
-                          <Form.Control type="number" name="tienhoahong" required />
+                          <Form.Control
+                            type="number"
+                            name="tienhoahong"
+                            placeholder="Tiền hoa hồng nhận được"
+                            value={asset.tienhoahong}
+                            onChange={handleChange}
+                            required
+                          />
                         </div>
                         <div className="mt-3">
-                          <Form.Check type="switch" id="custom-switch" label="Tạo phiếu chi" />
+                          <Form.Check type="switch" id="custom-switch" label="Tạo phiếu chi" onChange={handleChange} />
                         </div>
                       </div>
                     </Form.Group>

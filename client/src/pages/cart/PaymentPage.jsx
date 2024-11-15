@@ -13,7 +13,7 @@ import {
   Checkbox,
   FormControlLabel,
   Card,
-  CardContent,
+  CardContent
 } from '@mui/material'
 import CreditCardIcon from '@mui/icons-material/CreditCard'
 import HomeIcon from '@mui/icons-material/Home'
@@ -48,7 +48,7 @@ const PaymentPage = ({ setIsAdmin }) => {
       cardType,
       cardNumber,
       expiryDate,
-      cvc,
+      cvc
     })
   }
 
@@ -62,7 +62,7 @@ const PaymentPage = ({ setIsAdmin }) => {
         justifyContent: 'center',
         alignItems: 'center',
         bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542'),
-        color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894'),
+        color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894')
       }}>
       <Paper
         elevation={5}
@@ -70,7 +70,7 @@ const PaymentPage = ({ setIsAdmin }) => {
           maxWidth: 1200,
           borderRadius: '16px',
           overflow: 'hidden',
-          p: 4,
+          p: 4
           //   backgroundImage: 'linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)',
         }}>
         <Grid container spacing={4}>
@@ -84,7 +84,7 @@ const PaymentPage = ({ setIsAdmin }) => {
                   mb: 3,
                   color: (theme) => (theme.palette.mode === 'light' ? '#3498db' : '#00b894'),
                   textAlign: 'center',
-                  mr: 2,
+                  mr: 2
                 }}>
                 <DetailsIcon sx={{ gap: 2 }} />
                 Chi Tiết Đặt Phòng
@@ -154,7 +154,7 @@ const PaymentPage = ({ setIsAdmin }) => {
                   borderRadius: '12px',
                   boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                   bgcolor: (theme) => (theme.palette.mode === 'light' ? '#fff9f0' : '#2f3542'),
-                  color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894'),
+                  color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894')
                 }}>
                 <CardContent>
                   <Typography variant="h6" fontWeight="bold" color="#e17055">
@@ -184,7 +184,7 @@ const PaymentPage = ({ setIsAdmin }) => {
             <Box
               sx={{
                 px: 3,
-                color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894'),
+                color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894')
               }}>
               <Typography
                 variant="h4"
@@ -192,7 +192,7 @@ const PaymentPage = ({ setIsAdmin }) => {
                 sx={{
                   mb: 3,
                   textAlign: 'center',
-                  color: (theme) => (theme.palette.mode === 'light' ? '#3498db' : '#00b894'),
+                  color: (theme) => (theme.palette.mode === 'light' ? '#3498db' : '#00b894')
                 }}>
                 <CreditCardIcon sx={{ mr: 1 }} />
                 Thanh Toán
@@ -217,7 +217,7 @@ const PaymentPage = ({ setIsAdmin }) => {
                   sx={{
                     mb: 2,
                     bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542'),
-                    color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894'),
+                    color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894')
                   }}
                 />
 
@@ -229,7 +229,7 @@ const PaymentPage = ({ setIsAdmin }) => {
                   <Select
                     value={cardType}
                     sx={{
-                      bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542'),
+                      bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542')
                     }}
                     label="Loại thẻ"
                     onChange={(e) => setCardType(e.target.value)}>
@@ -258,11 +258,11 @@ const PaymentPage = ({ setIsAdmin }) => {
                     setCardNumber(formattedValue)
                   }}
                   inputProps={{
-                    maxLength: 19, // Giới hạn số ký tự tối đa là 19 (16 số + 3 khoảng trắng)
+                    maxLength: 19 // Giới hạn số ký tự tối đa là 19 (16 số + 3 khoảng trắng)
                   }}
                   sx={{
                     mb: 2,
-                    bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542'),
+                    bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542')
                   }}
                 />
 
@@ -285,12 +285,12 @@ const PaymentPage = ({ setIsAdmin }) => {
                     setExpiryDate(formattedValue)
                   }}
                   inputProps={{
-                    maxLength: 7, // Giới hạn ký tự tối đa là 7 (MM/YYYY)
+                    maxLength: 7 // Giới hạn ký tự tối đa là 7 (MM/YYYY)
                   }}
                   sx={{
                     mb: 2,
                     bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542'),
-                    color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#2f3542'),
+                    color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#2f3542')
                   }}
                 />
 
@@ -303,7 +303,7 @@ const PaymentPage = ({ setIsAdmin }) => {
                   onChange={(e) => setCvc(e.target.value)}
                   sx={{
                     mb: 2,
-                    bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542'),
+                    bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542')
                   }}
                 />
 

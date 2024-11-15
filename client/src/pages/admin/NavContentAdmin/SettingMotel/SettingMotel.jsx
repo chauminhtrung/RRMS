@@ -11,7 +11,7 @@ const initialItems = [
   { id: '3', name: 'Tầng trệt 3' },
   { id: '4  ', name: 'Tầng trệt 4' }
 ]
-const SettingMotel = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
+const SettingMotel = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   useEffect(() => {
     setIsAdmin(true)
   }, [])
@@ -54,7 +54,7 @@ const SettingMotel = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
         motels={motels}
         setIsAdmin={setIsAdmin}
         setIsNavAdmin={setIsNavAdmin}
-        isNavAdmin={isNavAdmin}
+        isNavAdmin={true}
       />
       <div
         style={{

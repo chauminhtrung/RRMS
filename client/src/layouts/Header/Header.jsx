@@ -6,13 +6,13 @@ import Swal from 'sweetalert2'
 import LanguageSelect from './Options/LanguageSelect'
 import ModeSelect from './Options/ModeSelect'
 
-const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLanguage, currentLanguage }) => {
+const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLanguage, currentLanguage, motelId }) => {
   const [IsDanhmuc, setIsDanhmuc] = useState(false)
   const [IsMuaban, setIsMuaban] = useState(false)
   const [IsTaikhoan, setIsTaikhoan] = useState(false)
   const [IsThongbao, setIsThongbao] = useState(false)
   const [IsMobileTaikhoan, setIsMobileTaikhoan] = useState(false)
-  
+
   const navigate = useNavigate()
   const handleMenuItemClick = () => {
     setIsTaikhoan(false) // Đóng menu khi click vào bất kỳ mục nào
@@ -73,7 +73,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
     }
   }
   const tokenExists = sessionStorage.getItem('user') !== null
-  
+
   return (
     <header>
       <div className="ct-appwrapper aw__sa4yob3" style={{ '--sa4yob3-0': '#fff', '--sa4yob3-1': 'inherit' }}>
@@ -156,7 +156,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
         <div className="aw__co22znp">
           <div className="leftWrapperContainerCss aw__l8p27ky" style={{ '--l8p27ky-0': '20%', '--l8p27ky-2': 'unset' }}>
             <div className="aw__l152mft9">
-              <a className="aw__l1l4rfje leftWrapperCss" href="/RRMS" style={{ justifyContent: 'unset' }}>
+              <Link className="aw__l1l4rfje leftWrapperCss" to="/RRMS" style={{ justifyContent: 'unset' }}>
                 <picture>
                   <img
                     height="35"
@@ -166,7 +166,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                     alt="Nhà trọ"
                   />
                 </picture>
-              </a>
+              </Link>
             </div>
 
             <div
@@ -817,9 +817,9 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
 
               {/* con them 1 icon o day  */}
             </div>
-            <a
+            <Link
               className="aw__b1358qut primary r-normal medium w-bold i-left aw__h1gb9yk aw__p1hqie6d"
-              href="/quanlytro"
+              to={`/quanlytro/${motelId}`}
               rel="nofollow">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -833,7 +833,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                   fill="currentColor"></path>
               </svg>
               ĐĂNG TIN
-            </a>
+            </Link>
           </div>
         </div>
         <div className="init aw__s1bb4p92">

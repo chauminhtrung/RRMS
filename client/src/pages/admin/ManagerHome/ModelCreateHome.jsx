@@ -216,7 +216,7 @@ const ModelCreateHome = ({ username, MotelId }) => {
     if (username) {
       try {
         const response = await getAllTypeRoom()
-        console.log(response)
+        // console.log(response)
 
         setTyperooms(response.result)
       } catch (error) {

@@ -4,10 +4,11 @@ import GoogleIcon from '@mui/icons-material/Google'
 import TwitterIcon from '@mui/icons-material/Twitter'
 import InstagramIcon from '@mui/icons-material/Instagram'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import './Login.css'
-import { env } from '~/configs/environment';
+import { env } from '~/configs/environment'
+import { GOOGLE_AUTH_URL } from '~/apis/oauth2'
 // import ValidCaptcha from '~/components/ValidCaptcha'
 // import { toast } from 'react-toastify'
 
@@ -16,60 +17,60 @@ const Login = ({ setUsername, setAvatar }) => {
   const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
   // const [validCaptcha, setValidCaptcha] = useState(false)
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    
+
     // if (!validCaptcha) {
     //   toast.error('Captcha xác thực không thành công!')
     //   return
     // }
-  
+
     if (!phone || !password) {
       Swal.fire({
         icon: 'warning',
         title: 'Thông báo',
-        text: 'Vui lòng nhập đầy đủ thông tin.',
+        text: 'Vui lòng nhập đầy đủ thông tin.'
       })
       return
     }
-  
+
     const account = { phone, password }
-    
+
     try {
       const response = await axios.post(`${env.API_URL}/authen/login`, account)
-      
+
       if (response.status === 200) {
         Swal.fire({
           icon: 'success',
           title: 'Đăng nhập thành công!',
-          text: 'Chào mừng bạn quay trở lại!',
+          text: 'Chào mừng bạn quay trở lại!'
         })
-  
+
         const usernameFromResponse = response.data.data.username
         const avtFromResponse = response.data.data.avatar
-        const token = response.data.data.token  
-  
+        const token = response.data.data.token
+
         if (!usernameFromResponse) {
           throw new Error('Username không tồn tại trong phản hồi từ server')
         }
-  
+
         const userData = {
           phone: phone,
           avatar: avtFromResponse,
           username: usernameFromResponse,
-          token: token,  // Lưu trữ token
+          token: token // Lưu trữ token
         }
-        
-        sessionStorage.setItem('user', JSON.stringify(userData))  // Lưu dữ liệu người dùng cùng với token
-  
+
+        sessionStorage.setItem('user', JSON.stringify(userData)) // Lưu dữ liệu người dùng cùng với token
+
         // Cập nhật trạng thái trong App
         setUsername(usernameFromResponse)
         setAvatar(avtFromResponse)
-  
-        //navigate('/') // Điều hướng về trang chính
-        window.location.href = '/RRMS'
+
+        navigate('/RRMS') // Điều hướng về trang chính
+        // window.location.href = '/RRMS'
       }
     } catch (error) {
       if (error.response) {
@@ -78,19 +79,19 @@ const Login = ({ setUsername, setAvatar }) => {
           Swal.fire({
             icon: 'error',
             title: 'Sai mật khẩu',
-            text: 'Vui lòng kiểm tra lại mật khẩu của bạn.',
+            text: 'Vui lòng kiểm tra lại mật khẩu của bạn.'
           })
         } else if (error.response.status === 404) {
           Swal.fire({
             icon: 'error',
             title: 'Tài khoản không tồn tại',
-            text: 'Vui lòng kiểm tra lại số điện thoại của bạn.',
+            text: 'Vui lòng kiểm tra lại số điện thoại của bạn.'
           })
         } else {
           Swal.fire({
             icon: 'error',
             title: 'Lỗi 1',
-            text: 'Đã xảy ra lỗi. Vui lòng thử lại sau.',
+            text: 'Đã xảy ra lỗi. Vui lòng thử lại sau.'
           })
         }
       } else {
@@ -98,12 +99,15 @@ const Login = ({ setUsername, setAvatar }) => {
         Swal.fire({
           icon: 'error',
           title: 'Lỗi 2',
-          text: 'Đã xảy ra lỗi. Vui lòng thử lại sau.',
+          text: 'Đã xảy ra lỗi. Vui lòng thử lại sau.'
         })
       }
     }
   }
-  
+  const handleGoogleLogin = () => {
+    window.location.href = GOOGLE_AUTH_URL // Chuyển hướng người dùng đến Google OAuth2
+  }
+
   return (
     <div
       style={{
@@ -111,7 +115,7 @@ const Login = ({ setUsername, setAvatar }) => {
         background: 'url(./login-background.webp) no-repeat',
         backgroundSize: 'contain',
         backgroundPositionY: '60%',
-        justifyContent: 'center',
+        justifyContent: 'center'
       }}>
       <div className="container mb-5">
         <div className="login-container d-flex" id="login">
@@ -123,7 +127,7 @@ const Login = ({ setUsername, setAvatar }) => {
                     borderRadius: '100%',
                     border: '2px solid #4bcffa',
                     margin: '15px 0px',
-                    boxShadow: '0 1rem 2rem 0 rgb(0 0 0 / 3%), 0 0.5rem 1rem 0 rgb(0 0 0 / 5%)',
+                    boxShadow: '0 1rem 2rem 0 rgb(0 0 0 / 3%), 0 0.5rem 1rem 0 rgb(0 0 0 / 5%)'
                   }}
                   width="80px"
                   src="./LOGO-NHATRO.png"
@@ -142,7 +146,6 @@ const Login = ({ setUsername, setAvatar }) => {
                 <h3>Đăng nhập tài khoản</h3>
 
                 <form onSubmit={handleSubmit} className="needs-validation" id="login-form">
-                  
                   <div className="container-input">
                     <div className="form-group">
                       <input
@@ -174,18 +177,21 @@ const Login = ({ setUsername, setAvatar }) => {
                   </div>
                   <hr className="my-2" />
                   <div className="mt-2 text-center">
-                    <a href="#" className="btn-social btn-social-outline btn-facebook">
+                    <button type="button" className="btn-social btn-social-outline btn-facebook">
                       <FacebookIcon />
-                    </a>
-                    <a href={`${env.API_URL}/authen/login/oauth2`} className="btn-social btn-social-outline btn-googleplus">
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleGoogleLogin}
+                      className="btn-social btn-social-outline btn-googleplus">
                       <GoogleIcon />
-                    </a>
-                    <a href="#" className="btn-social btn-social-outline btn-twitter">
+                    </button>
+                    <button type="button" className="btn-social btn-social-outline btn-twitter">
                       <TwitterIcon />
-                    </a>
-                    <a href="#" className="btn-social btn-social-outline btn-Instagram">
+                    </button>
+                    <button type="button" className="btn-social btn-social-outline btn-Instagram">
                       <InstagramIcon />
-                    </a>
+                    </button>
                   </div>
                   <div className="form-group d-flex justify-content-between">
                     <Link className="btn btn-link" to="/register">
@@ -204,7 +210,7 @@ const Login = ({ setUsername, setAvatar }) => {
                     width="110px"
                     style={{
                       borderRadius: '10px',
-                      border: '2px solid #1d6b1b',
+                      border: '2px solid #1d6b1b'
                     }}
                     src="./qr-code.png"
                     data-src="/images/qr-code.png"
