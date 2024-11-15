@@ -1,11 +1,8 @@
 package com.rrms.rrms.services.servicesImp;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.rrms.rrms.dto.response.BulletinBoardResponse;
-import com.rrms.rrms.repositories.*;
 import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.response.BulletinBoardSearchResponse;
@@ -16,6 +13,7 @@ import com.rrms.rrms.mapper.BulletinBoardMapper;
 import com.rrms.rrms.mapper.RoomMapper;
 import com.rrms.rrms.models.BulletinBoard;
 import com.rrms.rrms.models.Room;
+import com.rrms.rrms.repositories.*;
 import com.rrms.rrms.services.ISearchService;
 
 import lombok.AccessLevel;
@@ -115,13 +113,13 @@ public class SearchService implements ISearchService {
         return roomRepositoryElasticsearch.findByAddressFuzzy(keyword);
     }
 
-//    @Override
-//    public List<BulletinBoardSearchResponse> findByMoveInDateLessThanEqual(Date moveInDate) {
-//        // Ensure the repository method accepts a Date parameter
-//        return searchRepository.findByMoveInDateLessThanEqual(moveInDate).stream()
-//                .map(bulletinBoardMapper::toBulletinBoardSearchResponse)
-//                .collect(Collectors.toList());
-//    }
+    //    @Override
+    //    public List<BulletinBoardSearchResponse> findByMoveInDateLessThanEqual(Date moveInDate) {
+    //        // Ensure the repository method accepts a Date parameter
+    //        return searchRepository.findByMoveInDateLessThanEqual(moveInDate).stream()
+    //                .map(bulletinBoardMapper::toBulletinBoardSearchResponse)
+    //                .collect(Collectors.toList());
+    //    }
 
     @Override
     public List<BulletinBoardSearchResponse> findAllByDatenew() {
@@ -130,4 +128,10 @@ public class SearchService implements ISearchService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<BulletinBoardSearchResponse> findAllByDateVieux() {
+        return searchRepository.findAllByDateVieux().stream()
+                .map(bulletinBoardMapper::toBulletinBoardSearchResponse)
+                .collect(Collectors.toList());
+    }
 }

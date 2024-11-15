@@ -1,5 +1,6 @@
 import { Box, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const SearchList = ({ totalRooms }) => {
   const [sortByPrice, setSortByPrice] = useState('')
@@ -12,34 +13,35 @@ const SearchList = ({ totalRooms }) => {
   const handleAreaChange = (event) => {
     setSortByArea(event.target.value)
   }
+  const { t } = useTranslation()
   return (
     <Box>
       {/* Header Section */}
       <Grid container justifyContent="space-between" alignItems="center">
         <Typography variant="body1" sx={{ mt: 1 }}>
-          Có {totalRooms} Phòng trọ, nhà trọ
+          {t('co')} {totalRooms} {t('phong-tro-nha-tro')}
         </Typography>
 
         <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
           <FormControl sx={{ minWidth: 150 }}>
-            <InputLabel>Mức Giá</InputLabel>
-            <Select value={sortByPrice} label="Mức Giá" onChange={handlePriceChange}>
+            <InputLabel>{t('muc-gia')}</InputLabel>
+            <Select value={sortByPrice} label={t('muc-gia')} onChange={handlePriceChange}>
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value={10}>Từ thấp đến cao</MenuItem>
-              <MenuItem value={20}>Từ cao đến thấp</MenuItem>
+              <MenuItem value={10}>{t('tu-thap-den-cao')}</MenuItem>
+              <MenuItem value={20}>{t('tu-cao-den-thap')}</MenuItem>
             </Select>
           </FormControl>
 
           <FormControl sx={{ minWidth: 150 }}>
-            <InputLabel>Diện Tích</InputLabel>
-            <Select value={sortByArea} label="Diện Tích" onChange={handleAreaChange}>
+            <InputLabel>{t('dien-tich')}</InputLabel>
+            <Select value={sortByArea} label={t('dien-tich')} onChange={handleAreaChange}>
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value={10}>Nhỏ đến lớn</MenuItem>
-              <MenuItem value={20}>Lớn đến nhỏ</MenuItem>
+              <MenuItem value={10}>{t('nho-den-lon')}</MenuItem>
+              <MenuItem value={20}>{t('lon-den-nho')}</MenuItem>
             </Select>
           </FormControl>
         </Box>

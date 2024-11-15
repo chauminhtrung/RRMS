@@ -1,13 +1,10 @@
 package com.rrms.rrms.controllers;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import com.rrms.rrms.services.ITenantService;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,22 +33,32 @@ public class SearchController {
 
     IRoom roomService;
 
-//    @Operation(summary = "Get all rooms sorted by move-in date")
-//    @GetMapping("/rooms")
-//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
-//    public ApiResponse<List<BulletinBoardSearchResponse>> getRoomHome() {
-//        ApiResponse<List<BulletinBoardSearchResponse>> apiResponse = new ApiResponse<>();
-//        Date moveInDate = new Date();
-//        List<BulletinBoardSearchResponse> rooms = searchService.findByMoveInDateLessThanEqual(moveInDate);
-//        apiResponse.setCode(HttpStatus.OK.value());
-//        apiResponse.setMessage("Tìm kiếm thành công");
-//        apiResponse.setResult(rooms);
-//        return apiResponse;
-//    }
+    //    @Operation(summary = "Get all rooms sorted by move-in date")
+    //    @GetMapping("/rooms")
+    //    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
+    //    public ApiResponse<List<BulletinBoardSearchResponse>> getRoomHome() {
+    //        ApiResponse<List<BulletinBoardSearchResponse>> apiResponse = new ApiResponse<>();
+    //        Date moveInDate = new Date();
+    //        List<BulletinBoardSearchResponse> rooms = searchService.findByMoveInDateLessThanEqual(moveInDate);
+    //        apiResponse.setCode(HttpStatus.OK.value());
+    //        apiResponse.setMessage("Tìm kiếm thành công");
+    //        apiResponse.setResult(rooms);
+    //        return apiResponse;
+    //    }
+
+    @Operation(summary = "Get all rooms")
+    @GetMapping
+    public ApiResponse<List<BulletinBoardSearchResponse>> getRoom() {
+        ApiResponse<List<BulletinBoardSearchResponse>> apiResponse = new ApiResponse<>();
+        List<BulletinBoardSearchResponse> rooms = searchService.getRooms();
+        apiResponse.setCode(HttpStatus.OK.value());
+        apiResponse.setMessage("Tìm kiếm thành công");
+        apiResponse.setResult(rooms);
+        return apiResponse;
+    }
 
     @Operation(summary = "Get all rooms sorted by created date")
     @GetMapping("/roomNews")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
     public ApiResponse<List<BulletinBoardSearchResponse>> getRoomHomeDateNew() {
         ApiResponse<List<BulletinBoardSearchResponse>> apiResponse = new ApiResponse<>();
         List<BulletinBoardSearchResponse> rooms = searchService.findAllByDatenew();
@@ -61,18 +68,16 @@ public class SearchController {
         return apiResponse;
     }
 
-
-
-//    @Operation(summary = "Get all rooms")
-//    @GetMapping
-//    public ApiResponse<List<TenantResponse>> getRoom() {
-//        ApiResponse<List<TenantResponse>> apiResponse = new ApiResponse<>();
-//        List<TenantResponse> rooms = searchService.getRooms();
-//        apiResponse.setCode(HttpStatus.OK.value());
-//        apiResponse.setMessage("Tìm kiếm thành công");
-//        apiResponse.setResult(rooms);
-//        return apiResponse;
-//    }
+    @Operation(summary = "Get all rooms sorted by created date")
+    @GetMapping("/roomVieux")
+    public ApiResponse<List<BulletinBoardSearchResponse>> getRoomHomeDateNewVieux() {
+        ApiResponse<List<BulletinBoardSearchResponse>> apiResponse = new ApiResponse<>();
+        List<BulletinBoardSearchResponse> rooms = searchService.findAllByDateVieux();
+        apiResponse.setCode(HttpStatus.OK.value());
+        apiResponse.setMessage("Tìm kiếm thành công");
+        apiResponse.setResult(rooms);
+        return apiResponse;
+    }
 
     @Operation(summary = "Search room by name")
     @GetMapping("/addressBullet")

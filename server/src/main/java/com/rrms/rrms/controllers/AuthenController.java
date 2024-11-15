@@ -1,14 +1,15 @@
 package com.rrms.rrms.controllers;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
 import java.util.UUID;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,13 +49,13 @@ public class AuthenController {
 
     @GetMapping("/login/error")
     public ResponseEntity<String> loginFailure() {
-
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Đăng nhập thất bại!");
     }
 
     @GetMapping("/login/success")
-    public void loginSuccess(HttpServletResponse response, @AuthenticationPrincipal OAuth2User oauthUser)
-        throws IOException, ParseException {
+    public void loginSuccess(
+            HttpServletRequest request, HttpServletResponse response, @AuthenticationPrincipal OAuth2User oauthUser)
+            throws IOException, ParseException {
         String email = oauthUser.getAttribute("email");
         String name = oauthUser.getAttribute("name");
 
@@ -67,12 +68,12 @@ public class AuthenController {
             account = accountOptional.get();
         } else {
             RegisterRequest registerRequest = RegisterRequest.builder()
-                .username(name)
-                .phone("")
-                .email(email)
-                .password(UUID.randomUUID().toString())
-                .userType("CUSTOMER")
-                .build();
+                    .username(name)
+                    .phone("")
+                    .email(email)
+                    .password(UUID.randomUUID().toString())
+                    .userType("CUSTOMER")
+                    .build();
             account = accountService.register(registerRequest);
             log.info("New account created: {}", account);
         }
@@ -86,11 +87,15 @@ public class AuthenController {
         response.sendRedirect(redirectUrl);
     }
 
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         Map<String, Object> response = new HashMap<>();
         try {
+            var authen = SecurityContextHolder.getContext().getAuthentication();
+
+            log.info("Get all account {}", authen.getName());
+            authen.getAuthorities()
+                    .forEach(grantedAuthority -> log.info("GrantedAuthority: {}", grantedAuthority.getAuthority()));
             Optional<Account> accountOptional = accountService.findByPhone(loginRequest.getPhone());
             if (accountOptional.isEmpty()) {
                 response.put("status", false);

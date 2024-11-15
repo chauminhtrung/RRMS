@@ -16,10 +16,12 @@ import com.rrms.rrms.services.IPermissionService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
+@Slf4j
 public class PermissionService implements IPermissionService {
 
     @Autowired
@@ -38,6 +40,7 @@ public class PermissionService implements IPermissionService {
     public PermissionResponse createPermission(PermissionRequest permissionRequest) {
         Permission permission = permissionMapper.toPermission(permissionRequest);
         permission = permissionRepository.save(permission);
+        log.info("Permission saved: {}", permission.getName());
         return permissionMapper.toPermissionResponse(permission);
     }
 

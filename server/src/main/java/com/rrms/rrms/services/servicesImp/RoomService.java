@@ -1,5 +1,11 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import com.rrms.rrms.dto.request.RoomRequest;
 import com.rrms.rrms.dto.request.RoomRequest2;
 import com.rrms.rrms.dto.response.PostRoomTableResponse;
@@ -17,15 +23,11 @@ import com.rrms.rrms.repositories.MotelRepository;
 import com.rrms.rrms.repositories.RoomRepository;
 import com.rrms.rrms.repositories.ServiceRepository;
 import com.rrms.rrms.services.IRoom;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -135,12 +137,12 @@ public class RoomService implements IRoom {
     @Override
     public List<PostRoomTableResponse> getPostRoomTable(String username) {
         Account account = accountRepository
-            .findByUsername(username)
-            .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+                .findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
 
         return roomRepository.findAllByMotel_Account(account).stream()
-            .map(roomMapper::toPostRoomTableResponse)
-            .toList();
+                .map(roomMapper::toPostRoomTableResponse)
+                .toList();
     }
 
     @Override
@@ -161,8 +163,8 @@ public class RoomService implements IRoom {
     @Override
     public RoomResponse2 createRoom2(RoomRequest2 roomRequest) {
         Motel motel = motelRepository
-            .findById(roomRequest.getMotelId())
-            .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
+                .findById(roomRequest.getMotelId())
+                .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
         Room room = convertToEntity(roomRequest);
         room.setMotel(motel);
         Room savedRoom = roomRepository.save(room);
@@ -189,8 +191,8 @@ public class RoomService implements IRoom {
 
         if (roomRequest.getMotelId() != null) {
             Motel motel = motelRepository
-                .findById(roomRequest.getMotelId())
-                .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
+                    .findById(roomRequest.getMotelId())
+                    .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
             room.setMotel(motel);
         }
 
@@ -210,8 +212,7 @@ public class RoomService implements IRoom {
     public List<RoomResponse2> getRoomsByMotelId(UUID motelId) {
         // Kiểm tra xem Motel có tồn tại không
         Motel motel =
-            motelRepository.findById(motelId).orElseThrow(() -> new IllegalArgumentException("Motel not found"));
-
+                motelRepository.findById(motelId).orElseThrow(() -> new IllegalArgumentException("Motel not found"));
 
         // Lấy danh sách phòng theo motelId
         List<Room> rooms = roomRepository.findByMotel(motel);
@@ -234,11 +235,11 @@ public class RoomService implements IRoom {
         response.setDebt(room.getDebt());
         response.setCountTenant(room.getCountTenant());
         response.setInvoiceDate(room.getInvoiceDate());
-        response.setPaymentCircle(room.getPaymentCircle());
         response.setMoveInDate(room.getMoveInDate());
         response.setContractDuration(room.getContractduration());
         response.setStatus(room.getStatus());
         response.setFinance(room.getFinance());
+        response.setDescription(room.getDescription());
         return response;
     }
 
@@ -254,11 +255,11 @@ public class RoomService implements IRoom {
         room.setDebt(roomRequest.getDebt());
         room.setCountTenant(roomRequest.getCountTenant());
         room.setInvoiceDate(roomRequest.getInvoiceDate());
-        room.setPaymentCircle(roomRequest.getPaymentCircle());
         room.setMoveInDate(roomRequest.getMoveInDate());
         room.setContractduration(roomRequest.getContractDuration());
         room.setStatus(roomRequest.getStatus());
         room.setFinance(roomRequest.getFinance());
+        room.setDescription(roomRequest.getDescription());
         return room;
     }
 
@@ -273,10 +274,10 @@ public class RoomService implements IRoom {
         if (roomRequest.getDebt() != null) room.setDebt(roomRequest.getDebt());
         if (roomRequest.getCountTenant() != null) room.setCountTenant(roomRequest.getCountTenant());
         if (roomRequest.getInvoiceDate() != null) room.setInvoiceDate(roomRequest.getInvoiceDate());
-        if (roomRequest.getPaymentCircle() != null) room.setPaymentCircle(roomRequest.getPaymentCircle());
         if (roomRequest.getMoveInDate() != null) room.setMoveInDate(roomRequest.getMoveInDate());
         if (roomRequest.getContractDuration() != null) room.setContractduration(roomRequest.getContractDuration());
         if (roomRequest.getStatus() != null) room.setStatus(roomRequest.getStatus());
         if (roomRequest.getFinance() != null) room.setFinance(roomRequest.getFinance());
+        if (roomRequest.getDescription() != null) room.setDescription(roomRequest.getDescription());
     }
 }

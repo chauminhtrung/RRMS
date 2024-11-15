@@ -16,9 +16,11 @@ import {
   getRoomById,
   DeleteRoomServiceByid,
   DeleteRoomByid,
-  updateSerivceRoom
+  updateSerivceRoom,
+  updateRoom
 } from '~/apis/roomAPI'
 import { Modal } from 'bootstrap' // Import Bootstrap Modal API
+import { getAllMotelDevices } from '~/apis/deviceAPT'
 const HomeWData = ({ Motel }) => {
   const { motelId } = useParams()
   const [rooms, setRooms] = useState([])
@@ -36,7 +38,7 @@ const HomeWData = ({ Motel }) => {
     status: false,
     finance: 'wait',
     countTenant: 0,
-    paymentCircle: 1,
+    paymentCircle: null,
     name: '',
     group: 'a',
     area: '',
@@ -47,7 +49,8 @@ const HomeWData = ({ Motel }) => {
   })
   const [roomSerivces, setRoomSerivces] = useState([])
   const [room, setRoom] = useState()
-
+  const [note, setNote] = useState('') // Tạo state để lưu ghi chú
+  const [device, setdevice] = useState([])
   // Hàm xử lý nhấn ngoài menu
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -65,6 +68,7 @@ const HomeWData = ({ Motel }) => {
 
   useEffect(() => {
     fetchRooms()
+    fetchDevices()
   }, [])
 
   // Hàm xử lý thay đổi trạng thái checkbox
@@ -96,13 +100,19 @@ const HomeWData = ({ Motel }) => {
     }
   }
 
-  //ham lay phong
+  // Hàm lấy dữ liệu phòng từ server
   const fetchDataRooms = async (id) => {
     try {
-      const response = await getRoomById(id)
-      setRoom(response)
+      const response = await getRoomById(id) // Lấy dữ liệu phòng từ API
+      setRoom((prevRoom) => ({
+        ...prevRoom,
+        ...response, // Cập nhật thông tin phòng từ response
+        description: response.description || '' // Cập nhật description nếu có
+      }))
+      setNote(response.description || '') // Cập nhật note với description phòng
     } catch (error) {
       console.log(error)
+      console.log(note)
     }
   }
 
@@ -129,7 +139,7 @@ const HomeWData = ({ Motel }) => {
     }
   }
 
-  //tao phong
+  // Tạo phòng
   const handleSubmit = (e) => {
     e.preventDefault()
     const form = document.getElementById('add-room-form')
@@ -139,16 +149,17 @@ const HomeWData = ({ Motel }) => {
     } else {
       createRoom({ ...formData, selectedServices: formData.selectedServices })
         .then((response) => {
-          const roomId = response.roomId // Lấy roomId từ phản hồi
+          const roomId = response.roomId
 
           // Cập nhật lại selectedServices với roomId và lưu từng dịch vụ
           const saveSelectedServices = formData.selectedServices.map((service) =>
             createRoomService({
-              roomId: roomId, // Gán roomId vào từng dịch vụ
+              roomId: roomId,
               serviceId: service.serviceId,
               quantity: service.quantity
             })
           )
+
           // Chờ tất cả các lời gọi `createRoomService` hoàn thành
           Promise.all(saveSelectedServices)
             .then(() => {
@@ -157,15 +168,30 @@ const HomeWData = ({ Motel }) => {
                 title: 'Thông báo',
                 text: 'Room created successfully!'
               })
+
+              // Reset lại formData và trạng thái validation
+              setFormData({
+                name: '',
+                group: '',
+                area: '',
+                price: '',
+                invoiceDate: 1,
+                prioritize: 'Tất cả',
+                selectedServices: []
+              })
+              form.classList.remove('was-validated')
+
+              // Cập nhật danh sách phòng
               fetchRooms()
-              // Sử dụng Bootstrap Modal API để đóng modal
+
+              // Đóng modal bằng Bootstrap Modal API
               const modalElement = document.getElementById('addRoom')
-              const modal = Modal.getInstance(modalElement) // Lấy instance của modal
-              modal.hide() // Đóng modal
-              // Xóa toàn bộ backdrop (nếu có)
+              const modal = Modal.getInstance(modalElement)
+              modal.hide()
+
               // Xóa tất cả các backdrop (nếu có nhiều backdrop)
               const backdropElements = document.querySelectorAll('.modal-backdrop')
-              backdropElements.forEach((backdrop) => backdrop.remove()) // Xóa tất cả các backdrop
+              backdropElements.forEach((backdrop) => backdrop.remove())
             })
             .catch((error) => {
               Swal.fire({
@@ -228,6 +254,43 @@ const HomeWData = ({ Motel }) => {
     fetchDataServiceRooms(room.roomId)
   }
 
+  // Hàm xử lý khi textarea thay đổi, cập nhật trực tiếp description của room
+  const handleNoteChange = (event) => {
+    setRoom((prevRoom) => ({
+      ...prevRoom,
+      description: event.target.value // Cập nhật trực tiếp description trong room
+    }))
+  }
+
+  // Hàm xử lý khi người dùng nhấn "Lưu"
+  const handleAppNote = async () => {
+    try {
+      // Cập nhật phòng với description đã thay đổi
+      await updateRoom(room.roomId, room) // Gửi thông tin cập nhật lên server
+
+      // Hiển thị thông báo thành công
+      Swal.fire({
+        icon: 'success',
+        title: 'Thông báo',
+        text: 'Room updated successfully!'
+      })
+
+      // Đóng modal
+      const modalElement = document.getElementById('noteModal')
+      const modal = Modal.getInstance(modalElement)
+      modal.hide()
+
+      // Xóa tất cả backdrop
+      const backdropElements = document.querySelectorAll('.modal-backdrop')
+      backdropElements.forEach((backdrop) => backdrop.remove())
+
+      // Fetch lại danh sách phòng
+      fetchRooms()
+    } catch (error) {
+      console.log('Error updating room:', error)
+    }
+  }
+
   //ham input khi ng dung thay doi so luong
   const handleInputChangeService = (e, motelServiceId) => {
     const newQuantity = e.target.value // Lấy giá trị mới từ input
@@ -280,6 +343,15 @@ const HomeWData = ({ Motel }) => {
     } catch (error) {
       console.error('Error fetching motel services:', error)
       setMotelServices([])
+    }
+  }
+  const fetchDevices = async () => {
+    try {
+      const response = await getAllMotelDevices(motelId)
+      setdevice(response)
+    } catch (error) {
+      console.error('Error fetching device services:', error)
+      setdevice([])
     }
   }
 
@@ -344,8 +416,12 @@ const HomeWData = ({ Motel }) => {
     const countTenant = cell.getValue()
     const svgiconuser = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" strokeLinecap="round" strokeLinejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`
     if (countTenant !== null && countTenant !== undefined) {
-      return `${svgiconuser} ${countTenant} / 4 người`
+      return `${svgiconuser} ${countTenant} / 1 người`
     }
+    if (countTenant === null && countTenant === 0) {
+      return `Không xác định`
+    }
+
     return countTenant
   }
 
@@ -375,6 +451,9 @@ const HomeWData = ({ Motel }) => {
     const countTenant = cell.getValue()
     if (countTenant !== null && countTenant !== undefined) {
       return `${countTenant} tháng`
+    }
+    if (countTenant === null || countTenant === undefined) {
+      return `Không xác định`
     }
     return countTenant
   }
@@ -449,6 +528,9 @@ const HomeWData = ({ Motel }) => {
       }
     }
   }
+  const handleDetailClick = (e, rowId) => {
+    window.open(`/quanlytro/${motelId}/Chi-tiet-phong/${rowId}`, '_blank')
+  }
 
   // Hàm xử lý khi người dùng chọn một mục trong menu
   const handleItemClick = (label) => {
@@ -472,7 +554,6 @@ const HomeWData = ({ Motel }) => {
       setShowMenu(null) // Đóng menu
       //ham o duoi dung de xac dinh dang nhan vao phong nao
       fetchDataRooms(showMenu)
-      //ham thuan fetch tai san cua phong o duoi (giong trung o cai dat dich vu)
     } else {
       alert(`Action: ${label} on room ${showMenu}`)
     }
@@ -497,8 +578,42 @@ const HomeWData = ({ Motel }) => {
     { id: 16, label: 'Đóng menu', icon: 'x-circle', textClass: 'close-menu-action' }
   ]
   const columns = [
+    {
+      title: '',
+      field: 'drag',
+      hozAlign: 'center',
+      minWidth: 20,
+      rowHandle: true,
+      formatter: () => {
+        const element = document.createElement('div')
+        element.style.cursor = 'move' // Đổi con trỏ thành 4 hướng khi hover
+        element.innerHTML = `
+          <div class="tabulator-row-handle-bar" style="width: 50%;height: 3px;margin-top: 19px;background: #666;margin-left: 19px"></div>
+          <div class="tabulator-row-handle-bar" style="width: 50%;height: 3px;margin-top: 3px;background: #666;margin-left: 19px"></div>
+          <div class="tabulator-row-handle-bar" style="width: 50%;height: 3px;margin-top: 3px;background: #666;margin-left: 19px"></div>
+      `
+        return element
+      }
+    },
+    {
+      title: '',
+      field: 'detail',
+      hozAlign: 'center',
+      minWidth: 20,
+      formatter: (cell) => {
+        const rowId = cell.getRow().getData().roomId
+        const element = document.createElement('div')
+        element.innerHTML = `
+          <div class="icon-first" style="background-color: #ED6004;">
+            <img width="30px" src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Froom.png?alt=media&token=9f1a69c1-ce2e-4586-ba90-94db53443d49">
+          </div>
+        `
+        element.addEventListener('click', (e) => handleDetailClick(e, rowId))
+        return element
+      }
+    },
     { title: 'id', field: 'roomId', hozAlign: 'center', minWidth: 40, visible: false },
-    { title: 'Tên phòng', field: 'name', hozAlign: 'center', minWidth: 40, editor: 'input' }, // Đặt minWidth để tránh cột bị quá nhỏ
+    { title: 'Tên phòng', field: 'name', hozAlign: 'center', minWidth: 60, editor: 'input', cssClass: 'bold-text' }, // Đặt minWidth để tránh cột bị quá nhỏ
     { title: 'Nhóm', field: 'group', hozAlign: 'center', minWidth: 40, editor: 'input' },
     {
       title: 'Giá thuê',
@@ -531,7 +646,7 @@ const HomeWData = ({ Motel }) => {
       title: 'Khách thuê',
       field: 'countTenant',
       hozAlign: 'center',
-      minWidth: 150,
+      minWidth: 100,
       editor: 'input',
       formatter: tenantFormatter
     },
@@ -1831,7 +1946,7 @@ const HomeWData = ({ Motel }) => {
           </div>
         </div>
       ) : (
-        <> </>
+        <></>
       )}
       {/* Modal hiển thị ghi chu */}
       {/* them 1 dieu kien nhu da co tai san r moi duoc mo*/}
@@ -1895,6 +2010,8 @@ const HomeWData = ({ Motel }) => {
                     name="note"
                     id="input_note"
                     placeholder="Ghi chú"
+                    value={room.description || ''} // Sử dụng trực tiếp room.description
+                    onChange={handleNoteChange} // Cập nhật trực tiếp khi textarea thay đổi
                     spellCheck="false"></textarea>
                 </form>
               </div>
@@ -1916,7 +2033,7 @@ const HomeWData = ({ Motel }) => {
                   </svg>
                   Đóng
                 </button>
-                <button type="button" id="submit-room" className="btn btn-primary" onClick={handleApplyServices}>
+                <button type="button" id="submit-room" className="btn btn-primary" onClick={handleAppNote}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
