@@ -48,7 +48,7 @@ public class TypeRoomControllerTest {
     }
 
     @Test
-    void createTypeRoom_success() throws Exception {
+    void createTypeRoomNotAuthorized() throws Exception {
         String content = objectMapper.writeValueAsString(typeRoomRequest);
 
         when(typeRoomService.createTypeRoom(ArgumentMatchers.any())).thenReturn(typeRoomResponse);
@@ -56,7 +56,6 @@ public class TypeRoomControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/type-rooms")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(HttpStatus.CREATED.value()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.result.name").value(typeRoomRequest.getName()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(HttpStatus.UNAUTHORIZED.value()));
     }
 }

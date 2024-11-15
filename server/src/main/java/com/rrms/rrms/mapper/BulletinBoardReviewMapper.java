@@ -1,11 +1,12 @@
 package com.rrms.rrms.mapper;
 
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
 import com.rrms.rrms.dto.request.BulletinBoardReviewsRequest;
 import com.rrms.rrms.dto.response.BulletinBoardReviewsResponse;
 import com.rrms.rrms.dto.response.RatingHistoryResponse;
 import com.rrms.rrms.models.BulletinBoardReviews;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface BulletinBoardReviewMapper {

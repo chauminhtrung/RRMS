@@ -1,14 +1,14 @@
 package com.rrms.rrms.dto.response;
 
-import com.rrms.rrms.models.MotelService;
-import com.rrms.rrms.models.Room;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.UUID;
 
+import com.rrms.rrms.models.MotelService;
+import com.rrms.rrms.models.Room;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
@@ -23,5 +23,4 @@ public class RoomServiceRespone2 implements Serializable {
     private Room room; // Thay vì đối tượng Room, chỉ trả về ID
     private MotelService service; // Thay vì đối tượng Service, chỉ trả về ID
     private Integer quantity;
-
 }
