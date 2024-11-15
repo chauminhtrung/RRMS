@@ -48,11 +48,12 @@ public class AuthenController {
 
     @GetMapping("/login/error")
     public ResponseEntity<String> loginFailure() {
+
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Đăng nhập thất bại!");
     }
 
     @GetMapping("/login/success")
-    public void loginSuccess(HttpServletRequest request, HttpServletResponse response, @AuthenticationPrincipal OAuth2User oauthUser)
+    public void loginSuccess(HttpServletResponse response, @AuthenticationPrincipal OAuth2User oauthUser)
         throws IOException, ParseException {
         String email = oauthUser.getAttribute("email");
         String name = oauthUser.getAttribute("name");
@@ -90,11 +91,6 @@ public class AuthenController {
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         Map<String, Object> response = new HashMap<>();
         try {
-            var authen = SecurityContextHolder.getContext().getAuthentication();
-
-            log.info("Get all account {}", authen.getName());
-            authen.getAuthorities()
-                    .forEach(grantedAuthority -> log.info("GrantedAuthority: {}", grantedAuthority.getAuthority()));
             Optional<Account> accountOptional = accountService.findByPhone(loginRequest.getPhone());
             if (accountOptional.isEmpty()) {
                 response.put("status", false);
