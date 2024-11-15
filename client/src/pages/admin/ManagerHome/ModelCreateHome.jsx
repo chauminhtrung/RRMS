@@ -139,9 +139,10 @@ const ModelCreateHome = ({ username, MotelId }) => {
         setSelectedWard(Number(ward)) // Đảm bảo ward là số nếu cần
         setSelectedDistrict(Number(district))
         setSelectedProvince(Number(province))
-        console.log(ward)
-        console.log(fetchDistricts(province))
-        console.log(fetchWards(district))
+        const backdropElements = document.querySelectorAll('.modal-backdrop')
+        for (let index = 0; index < 2; index++) {
+          backdropElements[index].remove()
+        }
       } catch (error) {
         console.log(error)
       }
@@ -310,13 +311,7 @@ const ModelCreateHome = ({ username, MotelId }) => {
   }
 
   return (
-    <div
-      className="modal fade"
-      data-bs-backdrop="static"
-      id="addBlock"
-      tabIndex="-1"
-      style={{ display: 'none' }}
-      aria-hidden="true">
+    <div className="modal fade" id="addBlock" tabIndex="-1" aria-hidden="true">
       <div className="modal-dialog modal-dialog-centered modal-lg">
         <div className="modal-content">
           <div className="modal-header">

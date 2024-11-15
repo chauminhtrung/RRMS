@@ -51,3 +51,4 @@ export const getMotelById = async (Id) => {
     }
   })
 }
+
