@@ -49,9 +49,18 @@ public class SearchController {
 //        return apiResponse;
 //    }
 
+    @Operation(summary = "Get all rooms")
+    @GetMapping
+    public ApiResponse<List<BulletinBoardSearchResponse>> getRoom() {
+        ApiResponse<List<BulletinBoardSearchResponse>> apiResponse = new ApiResponse<>();
+        List<BulletinBoardSearchResponse> rooms = searchService.getRooms();
+        apiResponse.setCode(HttpStatus.OK.value());
+        apiResponse.setMessage("Tìm kiếm thành công");
+        apiResponse.setResult(rooms);
+        return apiResponse;
+    }
     @Operation(summary = "Get all rooms sorted by created date")
     @GetMapping("/roomNews")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
     public ApiResponse<List<BulletinBoardSearchResponse>> getRoomHomeDateNew() {
         ApiResponse<List<BulletinBoardSearchResponse>> apiResponse = new ApiResponse<>();
         List<BulletinBoardSearchResponse> rooms = searchService.findAllByDatenew();
@@ -61,18 +70,17 @@ public class SearchController {
         return apiResponse;
     }
 
+    @Operation(summary = "Get all rooms sorted by created date")
+    @GetMapping("/roomVieux")
+    public ApiResponse<List<BulletinBoardSearchResponse>> getRoomHomeDateNewVieux() {
+        ApiResponse<List<BulletinBoardSearchResponse>> apiResponse = new ApiResponse<>();
+        List<BulletinBoardSearchResponse> rooms = searchService.findAllByDateVieux();
+        apiResponse.setCode(HttpStatus.OK.value());
+        apiResponse.setMessage("Tìm kiếm thành công");
+        apiResponse.setResult(rooms);
+        return apiResponse;
+    }
 
-
-//    @Operation(summary = "Get all rooms")
-//    @GetMapping
-//    public ApiResponse<List<TenantResponse>> getRoom() {
-//        ApiResponse<List<TenantResponse>> apiResponse = new ApiResponse<>();
-//        List<TenantResponse> rooms = searchService.getRooms();
-//        apiResponse.setCode(HttpStatus.OK.value());
-//        apiResponse.setMessage("Tìm kiếm thành công");
-//        apiResponse.setResult(rooms);
-//        return apiResponse;
-//    }
 
     @Operation(summary = "Search room by name")
     @GetMapping("/addressBullet")

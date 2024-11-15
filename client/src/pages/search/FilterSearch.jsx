@@ -8,8 +8,10 @@ import './SearchWHome.css'
 
 import AudioRecorderModal from '../AI/Audio'
 import { searchByName } from '~/apis/searchAPI'
+import { useTranslation } from 'react-i18next'
 
 function FilterSearch({ setSearchData }) {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [openAudio, setOpenAudio] = useState(false)
   const handleOpen = () => setOpen(true)
@@ -169,7 +171,7 @@ function FilterSearch({ setSearchData }) {
                         className="css-i6dzq1">
                         <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
                       </svg>
-                      <span style={{ fontSize: '13px' }}>Bộ lọc</span>
+                      <span style={{ fontSize: '13px' }}>{t('bo-loc')}</span>
                     </div>
                   </li>
                 </ul>
@@ -200,7 +202,7 @@ function FilterSearch({ setSearchData }) {
                       <div>
                         <b className="province-location-show">Hồ Chí Minh</b>
                         <br />
-                        <span className="district-location-show">Quận 1</span>
+                        <span className="district-location-show">{t('quan-1')}</span>
                       </div>
                     </div>
                     <div
@@ -231,7 +233,7 @@ function FilterSearch({ setSearchData }) {
                     <input
                       type="text"
                       className="form-control w-100"
-                      placeholder="Nhập nơi học tập & làm việc..."
+                      placeholder={t('noi-hoc-tap')}
                       autoComplete="off"
                       value={keyword} // Hiển thị dữ liệu ghi âm
                       onChange={(e) => setKeyword(e.target.value)}
@@ -279,7 +281,7 @@ function FilterSearch({ setSearchData }) {
                       onChange={handleAreaChange}
                       displayEmpty>
                       <Typography gutterBottom sx={{ mt: 2, mx: 1.5 }}>
-                        Khoảng diện tích (Diện tích)
+                        {t('khoang-dien-tich')} ({t('dien-tich')})
                       </Typography>
                       <Box sx={{ mx: 1.5, my: 2 }}>
                         <Slider
@@ -294,10 +296,10 @@ function FilterSearch({ setSearchData }) {
                       <MenuItem value="">
                         <em>None</em>
                       </MenuItem>
-                      <MenuItem value="1-5">Từ 1 - 5 m2</MenuItem>
-                      <MenuItem value="5-10">Từ 5 - 10 m2</MenuItem>
-                      <MenuItem value="10-15">Từ 10 - 15 m2</MenuItem>
-                      <MenuItem value="0-50">Dưới 50 m2</MenuItem>
+                      <MenuItem value="1-5"> {t('tu')} 1 - 5 m2</MenuItem>
+                      <MenuItem value="5-10"> {t('tu')} 5 - 10 m2</MenuItem>
+                      <MenuItem value="10-15"> {t('tu')} 10 - 15 m2</MenuItem>
+                      <MenuItem value="0-50">{t('duoi')} 50 m2</MenuItem>
                     </Select>
                   </div>
                   <div className="col-md-6 mb-3 mb-md-0 mt-2">
@@ -322,7 +324,7 @@ function FilterSearch({ setSearchData }) {
                       onChange={handleGiaChange}
                       displayEmpty>
                       <Typography gutterBottom sx={{ mt: 2, mx: 1.5 }}>
-                        Khoảng giá (Triệu)
+                        {t('khoang-gia')} ({t('trieu')})
                       </Typography>
                       <Box sx={{ mx: 1.5, my: 2 }}>
                         <Slider
@@ -333,14 +335,24 @@ function FilterSearch({ setSearchData }) {
                           valueLabelDisplay="auto"
                         />
                       </Box>
-                      <Typography sx={{ mx: 1.5 }}>{`Giá từ: ${range[0]} triệu đến ${range[1]} triệu`}</Typography>
+                      <Typography sx={{ mx: 1.5 }}>
+                        {t('gia_tu')} :{` ${range[0]} triệu đến ${range[1]} triệu`}
+                      </Typography>
                       <MenuItem value="">
                         <em>None</em>
                       </MenuItem>
-                      <MenuItem value="1-5">Từ 1 - 5 triệu</MenuItem>
-                      <MenuItem value="5-10">Từ 5 triệu - 10 triệu</MenuItem>
-                      <MenuItem value="10-15">Từ 10 triệu - 15 triệu</MenuItem>
-                      <MenuItem value="0-50">Dưới 50 triệu</MenuItem>
+                      <MenuItem value="1-5">
+                        {t('tu')} 1 - 5 {t('trieu')}
+                      </MenuItem>
+                      <MenuItem value="5-10">
+                        {t('tu')} 5 {t('trieu')} - 10 {t('trieu')}
+                      </MenuItem>
+                      <MenuItem value="10-15">
+                        {t('tu')} 10 {t('trieu')} - 15 {t('trieu')}
+                      </MenuItem>
+                      <MenuItem value="0-50">
+                        {t('duoi')} 50 {t('trieu')}
+                      </MenuItem>
                     </Select>
                   </div>
                 </div>
@@ -352,7 +364,7 @@ function FilterSearch({ setSearchData }) {
                   aria-label="Tìm kiếm"
                   title="Tìm kiếm"
                   onClick={handleSearch}>
-                  Tìm kiếm
+                  {t('tim-kiem')}
                 </button>
               </div>
             </div>

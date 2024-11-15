@@ -36,7 +36,7 @@ public class SecurityConfig {
         "/searchs/**",
         "/search/**",
         "/search/*",
-        "/search",
+        "/search", "/RRMS",
         "/detail/**",
         "/detail/*",
         "/detail",
