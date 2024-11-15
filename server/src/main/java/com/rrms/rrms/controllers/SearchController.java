@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -57,6 +56,7 @@ public class SearchController {
         apiResponse.setResult(rooms);
         return apiResponse;
     }
+
     @Operation(summary = "Get all rooms sorted by created date")
     @GetMapping("/roomNews")
     public ApiResponse<List<BulletinBoardSearchResponse>> getRoomHomeDateNew() {
@@ -78,7 +78,6 @@ public class SearchController {
         apiResponse.setResult(rooms);
         return apiResponse;
     }
-
 
     @Operation(summary = "Search room by name")
     @GetMapping("/addressBullet")
