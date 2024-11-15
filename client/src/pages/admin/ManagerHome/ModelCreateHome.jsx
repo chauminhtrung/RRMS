@@ -148,13 +148,6 @@ const ModelCreateHome = ({ username, MotelId }) => {
     }
   }
 
-  const CloseAllBackUpModal = async () => {
-    const backdropElements = document.querySelectorAll('.modal-backdrop')
-    for (let index = 0; index < backdropElements.length; index++) {
-      backdropElements[index].remove()
-    }
-  }
-
   // Tìm tên của từng phần tử dựa trên `id`
 
   //update address
@@ -319,13 +312,7 @@ const ModelCreateHome = ({ username, MotelId }) => {
   }
 
   return (
-    <div
-      className="modal fade"
-      data-bs-backdrop="static"
-      id="addBlock"
-      tabIndex="-1"
-      style={{ display: 'none' }}
-      aria-hidden="true">
+    <div className="modal fade" id="addBlock" tabIndex="-1" aria-hidden="true">
       <div className="modal-dialog modal-dialog-centered modal-lg">
         <div className="modal-content">
           <div className="modal-header">
@@ -360,12 +347,7 @@ const ModelCreateHome = ({ username, MotelId }) => {
             </div>
 
             <h5 className="modal-title">Thêm nhà trọ</h5>
-            <button
-              type="button"
-              className="btn-close"
-              onClick={CloseAllBackUpModal}
-              data-bs-dismiss="modal"
-              aria-label="Close">
+            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close">
               {' '}
             </button>
           </div>

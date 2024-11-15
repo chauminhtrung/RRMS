@@ -136,7 +136,7 @@ const HomeWData = ({ Motel }) => {
     }
   }
 
-  //tao phong
+  // Tạo phòng
   const handleSubmit = (e) => {
     e.preventDefault()
     const form = document.getElementById('add-room-form')
@@ -146,16 +146,17 @@ const HomeWData = ({ Motel }) => {
     } else {
       createRoom({ ...formData, selectedServices: formData.selectedServices })
         .then((response) => {
-          const roomId = response.roomId // Lấy roomId từ phản hồi
+          const roomId = response.roomId
 
           // Cập nhật lại selectedServices với roomId và lưu từng dịch vụ
           const saveSelectedServices = formData.selectedServices.map((service) =>
             createRoomService({
-              roomId: roomId, // Gán roomId vào từng dịch vụ
+              roomId: roomId,
               serviceId: service.serviceId,
               quantity: service.quantity
             })
           )
+
           // Chờ tất cả các lời gọi `createRoomService` hoàn thành
           Promise.all(saveSelectedServices)
             .then(() => {
@@ -164,15 +165,30 @@ const HomeWData = ({ Motel }) => {
                 title: 'Thông báo',
                 text: 'Room created successfully!'
               })
+
+              // Reset lại formData và trạng thái validation
+              setFormData({
+                name: '',
+                group: '',
+                area: '',
+                price: '',
+                invoiceDate: 1,
+                prioritize: 'Tất cả',
+                selectedServices: []
+              })
+              form.classList.remove('was-validated')
+
+              // Cập nhật danh sách phòng
               fetchRooms()
-              // Sử dụng Bootstrap Modal API để đóng modal
+
+              // Đóng modal bằng Bootstrap Modal API
               const modalElement = document.getElementById('addRoom')
-              const modal = Modal.getInstance(modalElement) // Lấy instance của modal
-              modal.hide() // Đóng modal
-              // Xóa toàn bộ backdrop (nếu có)
+              const modal = Modal.getInstance(modalElement)
+              modal.hide()
+
               // Xóa tất cả các backdrop (nếu có nhiều backdrop)
               const backdropElements = document.querySelectorAll('.modal-backdrop')
-              backdropElements.forEach((backdrop) => backdrop.remove()) // Xóa tất cả các backdrop
+              backdropElements.forEach((backdrop) => backdrop.remove())
             })
             .catch((error) => {
               Swal.fire({
