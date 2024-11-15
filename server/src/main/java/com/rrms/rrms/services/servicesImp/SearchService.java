@@ -134,6 +134,4 @@ public class SearchService implements ISearchService {
                 .map(bulletinBoardMapper::toBulletinBoardSearchResponse)
                 .collect(Collectors.toList());
     }
-
-
 }
