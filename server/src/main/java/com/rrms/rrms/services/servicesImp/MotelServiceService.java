@@ -1,8 +1,5 @@
 package com.rrms.rrms.services.servicesImp;
 
-import com.rrms.rrms.models.Room;
-import com.rrms.rrms.repositories.RoomRepository;
-import com.rrms.rrms.repositories.RoomServiceRepository;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -18,9 +15,11 @@ import com.rrms.rrms.dto.request.MotelServiceUpdateRequest;
 import com.rrms.rrms.dto.response.MotelServiceResponse;
 import com.rrms.rrms.models.Motel;
 import com.rrms.rrms.models.MotelService;
+import com.rrms.rrms.models.Room;
 import com.rrms.rrms.repositories.MotelRepository;
 import com.rrms.rrms.repositories.MotelServiceRepository;
-import com.rrms.rrms.repositories.NameMotelServiceRepository;
+import com.rrms.rrms.repositories.RoomRepository;
+import com.rrms.rrms.repositories.RoomServiceRepository;
 import com.rrms.rrms.services.IMotelServiceService;
 
 @Service
@@ -31,6 +30,7 @@ public class MotelServiceService implements IMotelServiceService {
 
     @Autowired
     private MotelRepository motelRepository;
+
     @Autowired
     private RoomRepository roomRepository;
 
@@ -40,8 +40,8 @@ public class MotelServiceService implements IMotelServiceService {
     @Override
     public MotelServiceResponse createMotelService(MotelServiceRequest request) {
         Motel motel = motelRepository
-            .findById(request.getMotelId())
-            .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
+                .findById(request.getMotelId())
+                .orElseThrow(() -> new IllegalArgumentException("Motel not found"));
 
         MotelService motelService = new MotelService();
         motelService.setMotel(motel);
@@ -53,8 +53,9 @@ public class MotelServiceService implements IMotelServiceService {
         List<UUID> selectedRooms = request.getSelectedRooms();
         if (selectedRooms != null && !selectedRooms.isEmpty()) {
             for (UUID roomId : selectedRooms) {
-                Room room = roomRepository.findById(roomId)
-                    .orElseThrow(() -> new IllegalArgumentException("Room not found with ID: " + roomId));
+                Room room = roomRepository
+                        .findById(roomId)
+                        .orElseThrow(() -> new IllegalArgumentException("Room not found with ID: " + roomId));
 
                 com.rrms.rrms.models.RoomService roomService = new com.rrms.rrms.models.RoomService();
                 roomService.setRoom(room);
@@ -72,8 +73,8 @@ public class MotelServiceService implements IMotelServiceService {
     public MotelServiceResponse updateMotelService(UUID id, MotelServiceUpdateRequest request) {
         // Tìm dịch vụ theo ID
         MotelService motelService = motelServiceRepository
-            .findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("MotelService not found"));
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("MotelService not found"));
 
         // Cập nhật các thuộc tính của dịch vụ
         motelService.setNameService(request.getNameService());
@@ -91,8 +92,8 @@ public class MotelServiceService implements IMotelServiceService {
 
         // Tạo danh sách các phòng ID đã có dịch vụ
         Set<UUID> currentRoomIds = currentRoomServices.stream()
-            .map(roomService -> roomService.getRoom().getRoomId())
-            .collect(Collectors.toSet());
+                .map(roomService -> roomService.getRoom().getRoomId())
+                .collect(Collectors.toSet());
 
         // Lọc ra các phòng mới để thêm và các phòng không còn trong selectedRooms để xóa
         Set<UUID> newRoomIds = new HashSet<>(selectedRooms);
@@ -103,8 +104,9 @@ public class MotelServiceService implements IMotelServiceService {
 
         // Thêm dịch vụ cho các phòng mới
         for (UUID roomId : newRoomIds) {
-            Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new IllegalArgumentException("Room not found with ID: " + roomId));
+            Room room = roomRepository
+                    .findById(roomId)
+                    .orElseThrow(() -> new IllegalArgumentException("Room not found with ID: " + roomId));
 
             com.rrms.rrms.models.RoomService roomService = new com.rrms.rrms.models.RoomService();
             roomService.setRoom(room);
@@ -117,9 +119,9 @@ public class MotelServiceService implements IMotelServiceService {
         // Xóa dịch vụ khỏi các phòng không còn trong danh sách selectedRooms
         for (UUID roomId : removedRoomIds) {
             com.rrms.rrms.models.RoomService roomServiceToDelete = currentRoomServices.stream()
-                .filter(rs -> rs.getRoom().getRoomId().equals(roomId))
-                .findFirst()
-                .orElse(null);
+                    .filter(rs -> rs.getRoom().getRoomId().equals(roomId))
+                    .findFirst()
+                    .orElse(null);
 
             if (roomServiceToDelete != null) {
                 roomServiceRepository.delete(roomServiceToDelete);
@@ -128,7 +130,6 @@ public class MotelServiceService implements IMotelServiceService {
 
         return mapToResponse(updatedMotelService);
     }
-
 
     @Override
     public void deleteMotelService(UUID id) {

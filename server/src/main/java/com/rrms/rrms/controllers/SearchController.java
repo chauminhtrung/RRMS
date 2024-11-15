@@ -1,10 +1,8 @@
 package com.rrms.rrms.controllers;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import com.rrms.rrms.services.ITenantService;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,18 +34,18 @@ public class SearchController {
 
     IRoom roomService;
 
-//    @Operation(summary = "Get all rooms sorted by move-in date")
-//    @GetMapping("/rooms")
-//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
-//    public ApiResponse<List<BulletinBoardSearchResponse>> getRoomHome() {
-//        ApiResponse<List<BulletinBoardSearchResponse>> apiResponse = new ApiResponse<>();
-//        Date moveInDate = new Date();
-//        List<BulletinBoardSearchResponse> rooms = searchService.findByMoveInDateLessThanEqual(moveInDate);
-//        apiResponse.setCode(HttpStatus.OK.value());
-//        apiResponse.setMessage("Tìm kiếm thành công");
-//        apiResponse.setResult(rooms);
-//        return apiResponse;
-//    }
+    //    @Operation(summary = "Get all rooms sorted by move-in date")
+    //    @GetMapping("/rooms")
+    //    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
+    //    public ApiResponse<List<BulletinBoardSearchResponse>> getRoomHome() {
+    //        ApiResponse<List<BulletinBoardSearchResponse>> apiResponse = new ApiResponse<>();
+    //        Date moveInDate = new Date();
+    //        List<BulletinBoardSearchResponse> rooms = searchService.findByMoveInDateLessThanEqual(moveInDate);
+    //        apiResponse.setCode(HttpStatus.OK.value());
+    //        apiResponse.setMessage("Tìm kiếm thành công");
+    //        apiResponse.setResult(rooms);
+    //        return apiResponse;
+    //    }
 
     @Operation(summary = "Get all rooms")
     @GetMapping

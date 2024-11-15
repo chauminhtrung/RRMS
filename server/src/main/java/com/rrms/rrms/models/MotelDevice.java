@@ -28,7 +28,10 @@ public class MotelDevice {
     private String deviceName;
 
     private String icon;
+
+    @Column(name = "`value`")
     private Double value;
+
     private Double valueInput;
     private int totalQuantity;
     private int totalUsing;
@@ -36,5 +39,6 @@ public class MotelDevice {
     private String supplier;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "unit")
     private Unit unit;
 }

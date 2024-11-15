@@ -27,8 +27,6 @@ public interface RoomMapper {
 
     RoomImage toRoomImage(RoomImageRequest roomImageRequest);
 
-
-
     default List<RoomImage> mapRoomImages(List<String> roomImages) {
         return roomImages.stream()
                 .map(imageUrl -> {

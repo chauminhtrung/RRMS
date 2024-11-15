@@ -1,6 +1,8 @@
 package com.rrms.rrms.controllers;
 
-import com.rrms.rrms.dto.response.RoomServiceRespone2;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.rrms.rrms.dto.request.RoomServiceRequest;
 import com.rrms.rrms.dto.response.ApiResponse;
+import com.rrms.rrms.dto.response.RoomServiceRespone2;
 import com.rrms.rrms.dto.response.RoomServiceResponse;
 import com.rrms.rrms.services.IRoomService;
 
@@ -17,9 +20,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
-import java.util.UUID;
 
 @Tag(name = "Room Service Controller")
 @RestController
@@ -55,8 +55,7 @@ public class RoomServiceController {
     // Endpoint để cập nhật RoomService
     @PutMapping("/{roomServiceId}")
     public ResponseEntity<RoomServiceResponse> updateRoomService(
-            @PathVariable UUID roomServiceId,
-            @RequestBody RoomServiceRequest request) {
+            @PathVariable UUID roomServiceId, @RequestBody RoomServiceRequest request) {
         RoomServiceResponse response = roomServiceService.updateRoomService(roomServiceId, request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -88,5 +87,4 @@ public class RoomServiceController {
         List<RoomServiceRespone2> response = roomServiceService.findByRoomId(roomId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
 }

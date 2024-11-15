@@ -1,12 +1,13 @@
 package com.rrms.rrms.dto.response;
 
-import com.rrms.rrms.models.BulletinBoard;
-import com.rrms.rrms.models.BulletinBoardImage;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.io.Serializable;
 import java.util.List;
+
+import com.rrms.rrms.models.BulletinBoard;
+import com.rrms.rrms.models.BulletinBoardImage;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor

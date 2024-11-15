@@ -1,10 +1,11 @@
 package com.rrms.rrms.dto.request;
 
+import java.time.LocalDate;
+
 import com.rrms.rrms.enums.Gender;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
