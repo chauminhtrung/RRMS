@@ -87,7 +87,6 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     }))
   }
 
-
   const fetchRooms = async () => {
     //neu co motelId tren URL
     if (motelId) {
@@ -122,7 +121,6 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
       setMotelServices([])
     }
   }
-
 
   //lay tai san cua motel
   const fetchMotelDevices = async (id) => {

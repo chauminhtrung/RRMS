@@ -348,7 +348,8 @@ const HomeWData = ({ Motel }) => {
   const fetchDevices = async () => {
     try {
       const response = await getAllMotelDevices(motelId)
-      setdevice(response)
+      setdevice(response.result)
+      console.log(device)
     } catch (error) {
       console.error('Error fetching device services:', error)
       setdevice([])
@@ -1904,7 +1905,37 @@ const HomeWData = ({ Motel }) => {
                   {' '}
                 </button>
               </div>
-              <div className="modal-body">{/* lam trong form de hon  */}</div>
+              <div className="modal-body">
+                <div className="row mt-4">
+                  {device.map((item) => (
+                    <div className="col-12 border p-3 d-flex align-items-center mt-1">
+                      <input type="checkbox" className="mx-3" />
+                      <div className="flex-grow-1">
+                        <h6 className="mb-1">{item.deviceName}</h6>
+                        <p className="mb-0">
+                          Giá: <strong>{item.value}</strong> /{' '}
+                          {item.unit == 'CAI'
+                            ? 'Cái'
+                            : item.unit == 'CHIEC'
+                            ? 'Chiếc'
+                            : item.unit == 'BO'
+                            ? 'Bộ'
+                            : 'Cặp'}
+                        </p>
+                      </div>
+                      <div className="d-flex align-items-center">
+                        <input
+                          type="number"
+                          className="form-control text-center"
+                          defaultValue={1}
+                          style={{ width: '100px' }}
+                        />
+                        <span className="mx-2">Số lượng</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
               <div className="modal-footer modal-footer--sticky">
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
                   <svg
