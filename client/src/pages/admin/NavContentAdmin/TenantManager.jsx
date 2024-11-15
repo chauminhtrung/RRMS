@@ -33,6 +33,7 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import TenantMenuUpdate from './TenantMenuUpdate'
+import { env } from '~/configs/environment'
 const TenantManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   const [open, setOpen] = useState(false)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
@@ -91,9 +92,10 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
         return
       }
 
-      const response = await axios.get('http://localhost:8080/tenant', {
+      const response = await axios.get(`${env.API_URL}/tenant`, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'ngrok-skip-browser-warning': '69420'
         }
       })
 
@@ -124,10 +126,11 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
     }
 
     try {
-      const response = await axios.delete(`http://localhost:8080/tenant/${id}`, {
+      const response = await axios.delete(`${env.API_URL}/tenant/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': '69420'
         }
       })
       console.log('Tenant deleted successfully:', response.data)
@@ -545,7 +548,7 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                             </Typography>
                           </TableCell>
 
-                          <TableCell sx={{ borderRight: '1px solid #ddd' }}>{row.tenantId}</TableCell>
+                          <TableCell sx={{ borderRight: '1px solid #ddd' }}>{row.cccd}</TableCell>
                           <TableCell sx={{ borderRight: '1px solid #ddd' }}>{row.licenseDate}</TableCell>
                           <TableCell sx={{ borderRight: '1px solid #ddd' }}>{row.placeOfLicense}</TableCell>
                           <TableCell sx={{ borderRight: '1px solid #ddd', padding: 1 }}>

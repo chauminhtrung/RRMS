@@ -1,5 +1,6 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.request.BulletinBoardReviewsRequest;
 import com.rrms.rrms.dto.response.BulletinBoardReviewsResponse;
+import com.rrms.rrms.dto.response.RatingHistoryResponse;
 import com.rrms.rrms.enums.ErrorCode;
 import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.mapper.BulletinBoardReviewMapper;
@@ -81,5 +83,17 @@ public class BulletinBoardReviewsService implements IBulletinBoardReviews {
                 bulletinBoardReviewsRepository.findByBulletinBoardAndAccount(bulletinBoard, account);
 
         return bulletinBoardReviewMapper.toBulletinBoardReviewsResponse(bulletinBoardReviews);
+    }
+
+    @Override
+    public List<RatingHistoryResponse> getRatingHistoryByBulletinBoardIdAndUsername(String username) {
+        Account account = accountRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+
+        List<BulletinBoardReviews> bulletinBoardReviews = bulletinBoardReviewsRepository.findAllByAccount(account);
+        return bulletinBoardReviews.stream()
+                .map(bulletinBoardReviewMapper::toRatingHistoryResponse)
+                .toList();
     }
 }

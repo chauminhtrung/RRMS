@@ -10,14 +10,16 @@ import axios from 'axios'
 import LoadingPage from '~/components/LoadingPage/LoadingPage'
 import { formatterAmount } from '~/utils/formatterAmount'
 import { Pagination } from '@mui/material'
+import { Link } from 'react-router-dom'
+import { env } from '~/configs/environment'
 const RRMS = ({ setIsAdmin }) => {
   const [searchData, setSearchData] = useState([])
 
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 8 // Số lượng item hiển thị mỗi trang
+  const itemsPerPage = 4 // Số lượng item hiển thị mỗi trang
 
   const [currentPageNew, setCurrentPageNew] = useState(1)
-  const itemsPerPageNew = 4 // Số lượng item hiển thị mỗi trang
+  const itemsPerPageNew = 8 // Số lượng item hiển thị mỗi trang
 
   const indexOfLastItemNew = currentPageNew * itemsPerPageNew
   const indexOfFirstItemNew = indexOfLastItemNew - itemsPerPageNew
@@ -55,43 +57,42 @@ const RRMS = ({ setIsAdmin }) => {
     loadDataDateNew()
   }, [])
 
+  // const loadData = async () => {
+  //   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+
+  //   try {
+  //     const result = await axios.get(`${env.API_URL}/searchs/rooms`, {
+  //       validateStatus: () => true,
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //         'ngrok-skip-browser-warning': '69420'
+  //       }
+  //     })
+
+  //     // Kiểm tra trạng thái phản hồi
+  //     if (result.status === 200) {
+  //       const fetchedData = result.data.result
+
+  //       if (Array.isArray(fetchedData) && fetchedData.length > 0) {
+  //         console.log('Data fetched:', fetchedData)
+  //         setSearchData(fetchedData)
+  //       } else {
+  //         console.log('No results found or data is null')
+  //         setSearchData([])
+  //       }
+  //     } else {
+  //       console.log('Error: Status', result.status)
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error)
+  //   }
+  // }
   const loadData = async () => {
-    const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-
     try {
-      const result = await axios.get(`http://localhost:8080/searchs/rooms`, {
+      const result = await axios.get(`${env.API_URL}/searchs/roomVieux`, {
         validateStatus: () => true,
         headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      // Kiểm tra trạng thái phản hồi
-      if (result.status === 200) {
-        const fetchedData = result.data.result
-
-        if (Array.isArray(fetchedData) && fetchedData.length > 0) {
-          console.log('Data fetched:', fetchedData)
-          setSearchData(fetchedData)
-        } else {
-          console.log('No results found or data is null')
-          setSearchData([])
-        }
-      } else {
-        console.log('Error: Status', result.status)
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error)
-    }
-  }
-
-  const loadDataDateNew = async () => {
-    const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-
-    try {
-      const result = await axios.get(`http://localhost:8080/searchs/roomNews`, {
-        validateStatus: () => true,
-        headers: {
-          Authorization: `Bearer ${token}`
+          'ngrok-skip-browser-warning': '69420'
         }
       })
       // Kiểm tra trạng thái phản hồi
@@ -112,18 +113,46 @@ const RRMS = ({ setIsAdmin }) => {
       console.error('Error fetching data:', error)
     }
   }
+
+  const loadDataDateNew = async () => {
+    try {
+      const result = await axios.get(`${env.API_URL}/searchs/roomNews`, {
+        validateStatus: () => true,
+        headers: {
+          'ngrok-skip-browser-warning': '69420'
+        }
+      })
+      // Kiểm tra trạng thái phản hồi
+      if (result.status === 200) {
+        const fetchedDataDateNew = result.data.result
+
+        if (Array.isArray(fetchedDataDateNew) && fetchedDataDateNew.length > 0) {
+          console.log('Data fetched:', fetchedDataDateNew)
+          setSearchData(fetchedDataDateNew)
+        } else {
+          console.log('No results found or data is null')
+          setSearchData([])
+        }
+      } else {
+        console.log('Error: Status', result.status)
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
+
   const renderList = (card, start, end) => {
     const listItems = []
     for (let i = start; i < end; i++) {
       listItems.push(
         <div className="col-md-3 mb-2">
-          <a
+          <Link
             className="item-district small"
             style={{
               backgroundImage: `url(${card[i].image})`,
               backgroundSize: 'cover'
             }}
-            href="#">
+            to="#">
             <div className="info">
               <span>{card[i].name}</span>
               <span>
@@ -136,7 +165,7 @@ const RRMS = ({ setIsAdmin }) => {
                 {card[i].detail}
               </div>
             </div>
-          </a>
+          </Link>
         </div>
       )
     }
@@ -173,84 +202,84 @@ const RRMS = ({ setIsAdmin }) => {
                 <div className="list-special-home">
                   <ul className="clearfix">
                     <li>
-                      <a
+                      <Link
                         title="phòng trọ gần Trường Cao đẳng Đại Việt Sài Gòn"
-                        href="/thue-phong-tro-gan-truong-cao-dang-dai-viet-sai-gon-id-1569"
+                        to="/thue-phong-tro-gan-truong-cao-dang-dai-viet-sai-gon-id-1569"
                         className="arena">
                         #Trường Cao đẳng Đại Việt Sài Gòn
-                      </a>
+                      </Link>
                     </li>
                     <li>
-                      <a
+                      <Link
                         title="phòng trọ gần Trường Cao đẳng Du lịch Sài Gòn"
-                        href="/thue-phong-tro-gan-truong-cao-dang-du-lich-sai-gon-id-1568"
+                        to="/thue-phong-tro-gan-truong-cao-dang-du-lich-sai-gon-id-1568"
                         className="arena">
                         #Trường Cao đẳng Du lịch Sài Gòn
-                      </a>
+                      </Link>
                     </li>
                     <li>
-                      <a
+                      <Link
                         title="phòng trọ gần Trường Cao đẳng Công thương TP.HCM"
-                        href="/thue-phong-tro-gan-truong-cao-dang-cong-thuong-tphcm-id-1567"
+                        to="/thue-phong-tro-gan-truong-cao-dang-cong-thuong-tphcm-id-1567"
                         className="arena">
                         #Trường Cao đẳng Công thương TP.HCM
-                      </a>
+                      </Link>
                     </li>
                     <li>
-                      <a
+                      <Link
                         title="phòng trọ gần Trường Cao đẳng Công nghệ Sài Gòn"
-                        href="/thue-phong-tro-gan-truong-cao-dang-cong-nghe-sai-gon-id-1546"
+                        to="/thue-phong-tro-gan-truong-cao-dang-cong-nghe-sai-gon-id-1546"
                         className="arena">
                         #Trường Cao đẳng Công nghệ Sài Gòn
-                      </a>
+                      </Link>
                     </li>
                     <li>
-                      <a
+                      <Link
                         title="phòng trọ gần Trường Cao đẳng Bình Minh Sài Gòn"
-                        href="/thue-phong-tro-gan-truong-cao-dang-binh-minh-sai-gon-id-1527"
+                        to="/thue-phong-tro-gan-truong-cao-dang-binh-minh-sai-gon-id-1527"
                         className="arena">
                         #Trường Cao đẳng Bình Minh Sài Gòn
-                      </a>
+                      </Link>
                     </li>
                     <li>
-                      <a
+                      <Link
                         title="phòng trọ gần Trường Cao đẳng Bách khoa Nam Sài Gòn"
-                        href="/thue-phong-tro-gan-truong-cao-dang-bach-khoa-nam-sai-gon-id-1487"
+                        to="/thue-phong-tro-gan-truong-cao-dang-bach-khoa-nam-sai-gon-id-1487"
                         className="arena">
                         #Trường Cao đẳng Bách khoa Nam Sài Gòn
-                      </a>
+                      </Link>
                     </li>
                     <li>
-                      <a
+                      <Link
                         title="phòng trọ gần Trường Cao đẳng bán công Công nghệ và Quản trị doanh nghiệp"
-                        href="/thue-phong-tro-gan-truong-cao-dang-ban-cong-cong-nghe-va-quan-tri-doanh-nghiep-id-1484"
+                        to="/thue-phong-tro-gan-truong-cao-dang-ban-cong-cong-nghe-va-quan-tri-doanh-nghiep-id-1484"
                         className="arena">
                         #Trường Cao đẳng bán công Công nghệ và Quản trị doanh nghiệp
-                      </a>
+                      </Link>
                     </li>
                     <li>
-                      <a
+                      <Link
                         title="phòng trọ gần Trường Đại học Greenwich Việt Nam"
-                        href="/thue-phong-tro-gan-truong-dai-hoc-greenwich-viet-nam-id-1482"
+                        to="/thue-phong-tro-gan-truong-dai-hoc-greenwich-viet-nam-id-1482"
                         className="arena">
                         #Trường Đại học Greenwich Việt Nam
-                      </a>
+                      </Link>
                     </li>
                     <li>
-                      <a
+                      <Link
                         title="phòng trọ gần Trường Kinh doanh Sài Gòn"
-                        href="/thue-phong-tro-gan-truong-kinh-doanh-sai-gon-id-1355"
+                        to="/thue-phong-tro-gan-truong-kinh-doanh-sai-gon-id-1355"
                         className="arena">
                         #Trường Kinh doanh Sài Gòn
-                      </a>
+                      </Link>
                     </li>
                     <li>
-                      <a
+                      <Link
                         title="phòng trọ gần Trường Đại học Hoa Sen (HSU)"
-                        href="/thue-phong-tro-gan-truong-dai-hoc-hoa-sen-hsu-id-1311"
+                        to="/thue-phong-tro-gan-truong-dai-hoc-hoa-sen-hsu-id-1311"
                         className="arena">
                         #Trường Đại học Hoa Sen (HSU)
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </div>
@@ -265,43 +294,43 @@ const RRMS = ({ setIsAdmin }) => {
           <div className="container-menu-home ">
             <div className="row">
               <div className="col">
-                <a href="javascript:;" onClick="getLocation()" className="item">
+                <Link to="javascript:;" onClick="getLocation()" className="item">
                   <picture className="webpimg-container">
                     <img src="./pin2.png" width="85%" alt="Tìm phòng gần tôi" />
                   </picture>
                   <strong>Tìm trọ gần tôi</strong>
                   <div>Tìm gần vị trí hiện tại của bạn</div>
-                </a>
+                </Link>
               </div>
               <div className="col">
-                <a href="/ho-tro-tim-phong.html" className="item">
+                <Link to="/ho-tro-tim-phong.html" className="item">
                   <picture className="webpimg-container">
                     <img src="./hot.png" width="100%" alt="Hỗ trợ tìm kiếm phòng" />
                   </picture>
                   <strong>Hỗ trợ tìm phòng</strong>
                   <div>RRMS hỗ trợ bạn tìm phòng</div>
-                </a>
+                </Link>
               </div>
               <div className="col">
-                <a href="/tra-cuu-hoa-don.html" className="item">
+                <Link to="/tra-cuu-hoa-don.html" className="item">
                   <picture className="webpimg-container">
                     <img src="./bill.png" width="85%" alt="Tra cứu hóa đơn" />
                   </picture>
                   <strong>Tra cứu hóa đơn</strong>
                   <div>Xem hóa đơn nhà đang ở</div>
-                </a>
+                </Link>
               </div>
               <div className="col">
-                <a href="/doi-gas-uu-dai.html" className="item">
+                <Link to="/doi-gas-uu-dai.html" className="item">
                   <picture className="webpimg-container">
                     <img src="./icons8-gas-100.png" width="100%" alt="Đổi gas nhận ưu đãi" />
                   </picture>
                   <strong>Đổi gas ưu đãi</strong>
                   <div>Đổi gas tại RRMS nhận ưu đãi</div>
-                </a>
+                </Link>
               </div>
               <div className="col">
-                <a href="/tro-thanh-moi-gioi-RRMS.html" className="item">
+                <Link to="/tro-thanh-moi-gioi-RRMS.html" className="item">
                   <picture className="webpimg-container ">
                     <img src="./sale-house.png" width="100%" alt="Trở thành môi giới RRMS" />
                     <span
@@ -324,10 +353,13 @@ const RRMS = ({ setIsAdmin }) => {
                   </picture>
                   <strong>Tuyển môi giới</strong>
                   <div>Tuyển, đào tạo môi giới tại RRMS</div>
-                </a>
+                </Link>
               </div>
               <div className="col">
-                <a href="https://quanlytro.me/ung-dung-quan-ly-phong-tro.html" target="_bank" className="item col-sx-3">
+                <Link
+                  to="https://quanlytro.me/ung-dung-quan-ly-phong-tro.html"
+                  target="_bank"
+                  className="item col-sx-3">
                   <picture className="webpimg-container">
                     <img src="./owner.png" width="85%" alt="Chủ nhà cho thuê phòng" />
                     <span
@@ -350,7 +382,7 @@ const RRMS = ({ setIsAdmin }) => {
                   </picture>
                   <strong>Tôi là chủ nhà</strong>
                   <div>Phần mềm quản lý, đăng tin</div>
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -365,44 +397,44 @@ const RRMS = ({ setIsAdmin }) => {
           </div>
           <div className="row">
             <div className="col-md-3">
-              <div className="item-promotion" target="_blank" href="/" rel="noopener" tabIndex="-1">
+              <Link className="item-promotion" target="_blank" to="/" rel="noopener" tabIndex="-1">
                 <img
                   width="100%"
                   src="https://lozido.com/images/promotion/banner-1-desktop.webp"
                   alt="   Hỗ trợ tân sinh viên tìm nhà. Hòa nhập môi trường mới"
                 />
                 <div className="title-promotion cut-text-2">Hỗ trợ tân sinh viên tìm nhà. Hòa nhập môi trường mới</div>
-              </div>
+              </Link>
             </div>
             <div className="col-md-3">
-              <div className="item-promotion" target="_blank" href="/" rel="noopener" tabIndex="-1">
+              <Link className="item-promotion" target="_blank" to="/" rel="noopener" tabIndex="-1">
                 <img
                   width="100%"
                   src="https://lozido.com/images/promotion/banner-1-desktop.webp"
                   alt="   Hỗ trợ tân sinh viên tìm nhà. Hòa nhập môi trường mới"
                 />
                 <div className="title-promotion cut-text-2">Hỗ trợ tân sinh viên tìm nhà. Hòa nhập môi trường mới</div>
-              </div>
+              </Link>
             </div>
             <div className="col-md-3">
-              <div className="item-promotion" target="_blank" href="/" rel="noopener" tabIndex="-1">
+              <Link className="item-promotion" target="_blank" to="/" rel="noopener" tabIndex="-1">
                 <img
                   width="100%"
                   src="https://lozido.com/images/promotion/banner-1-desktop.webp"
                   alt="   Hỗ trợ tân sinh viên tìm nhà. Hòa nhập môi trường mới"
                 />
                 <div className="title-promotion cut-text-2">Hỗ trợ tân sinh viên tìm nhà. Hòa nhập môi trường mới</div>
-              </div>
+              </Link>
             </div>
             <div className="col-md-3">
-              <div className="item-promotion" target="_blank" href="/" rel="noopener" tabIndex="-1">
+              <Link className="item-promotion" target="_blank" to="/" rel="noopener" tabIndex="-1">
                 <img
                   width="100%"
                   src="https://lozido.com/images/promotion/banner-1-desktop.webp"
                   alt="   Hỗ trợ tân sinh viên tìm nhà. Hòa nhập môi trường mới"
                 />
                 <div className="title-promotion cut-text-2">Hỗ trợ tân sinh viên tìm nhà. Hòa nhập môi trường mới</div>
-              </div>
+              </Link>
             </div>
           </div>
         </div>
@@ -416,58 +448,58 @@ const RRMS = ({ setIsAdmin }) => {
           </div>
           <div className="province-link row">
             <div className="col-md-2 mb-2">
-              <a href="#">
+              <Link to="#">
                 <div className="item-province ho-chi-minh" style={{ background: 'url(./tphcm.jpg)' }}>
                   <div className="info">
                     <span style={{ fontSize: '13px' }}>Phòng trọ</span> <strong>Hồ Chí Minh</strong>
                   </div>
                 </div>
-              </a>
+              </Link>
             </div>
             <div className="col-md-2 mb-2">
-              <a href="#">
+              <Link to="#">
                 <div className="item-province ho-chi-minh" style={{ background: 'url(./ha-noi.jpg)' }}>
                   <div className="info">
                     <span style={{ fontSize: '13px' }}>Phòng trọ</span> <strong>Hà Nội</strong>
                   </div>
                 </div>
-              </a>
+              </Link>
             </div>
             <div className="col-md-2 mb-2">
-              <a href="#">
+              <Link to="#">
                 <div className="item-province ho-chi-minh" style={{ background: 'url(./bd.jpg)' }}>
                   <div className="info">
                     <span style={{ fontSize: '13px' }}>Phòng trọ</span> <strong>Bình Dương</strong>
                   </div>
                 </div>
-              </a>
+              </Link>
             </div>
             <div className="col-md-2 mb-2">
-              <a href="#">
+              <Link to="#">
                 <div className="item-province ho-chi-minh" style={{ background: 'url(./caudibo-cantho.jpg)' }}>
                   <div className="info">
                     <span style={{ fontSize: '13px' }}>Phòng trọ</span> <strong>Cần Thơ</strong>
                   </div>
                 </div>
-              </a>
+              </Link>
             </div>
             <div className="col-md-2 mb-2">
-              <a href="#">
+              <Link to="#">
                 <div className="item-province ho-chi-minh" style={{ background: 'url(./da-nang.jpg)' }}>
                   <div className="info">
                     <span style={{ fontSize: '13px' }}>Phòng trọ</span> <strong>Đà Nẵng</strong>
                   </div>
                 </div>
-              </a>
+              </Link>
             </div>
             <div className="col-md-2 mb-2">
-              <a href="#">
+              <Link to="#">
                 <div className="item-province ho-chi-minh" style={{ background: 'url(./dong-nai.jpg)' }}>
                   <div className="info">
                     <span style={{ fontSize: '13px' }}>Phòng trọ</span> <strong>Đồng Nai</strong>
                   </div>
                 </div>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -513,10 +545,10 @@ const RRMS = ({ setIsAdmin }) => {
                 <div className="grid-item" key={i} style={{ maxWidth: '280px' }}>
                   {' '}
                   <article className="i-column" style={{ marginBottom: '14px' }}>
-                    <a
+                    <Link
                       target="_blank"
                       title="Cho thuê phòng trọ full nội thất, giá sinh viên Tam Đảo, Quận 10"
-                      href="#"
+                      tp="#"
                       className="inner-item"
                       style={{ textDecoration: 'none', color: 'black' }}>
                       <div
@@ -530,7 +562,7 @@ const RRMS = ({ setIsAdmin }) => {
                         }}>
                         <img
                           alt="Cho thuê phòng trọ full nội thất, giá sinh viên Tam Đảo, Quận 10"
-                          src={item.roomImages[0].image}
+                          src={item.bulletinBoardImages?.[0]?.imageLink || 'default_image_url.jpg'}
                           style={{
                             width: '100%',
                             height: '100%',
@@ -557,7 +589,7 @@ const RRMS = ({ setIsAdmin }) => {
 
                       <div className="read">
                         <div className="title cut-text-2" style={{ fontSize: '14px', marginTop: 10 }}>
-                          <span className="lable-now">NOW</span> {item.motel.address}
+                          <span className="lable-now">NOW</span> {item?.address}
                         </div>
                         <div className="address cut-text">
                           <span className="icon-user-small">
@@ -575,11 +607,11 @@ const RRMS = ({ setIsAdmin }) => {
                             </svg>
                           </span>
                           <strong style={{ textTransform: 'capitalize', paddingLeft: '5px' }}>
-                            {item.motel.account.username}
+                            {item.account.username}
                           </strong>
                           <span className="zone" style={{ fontSize: '11px' }}>
                             {' '}
-                            {item.nameRoom}
+                            {item?.title}
                           </span>
                         </div>
                       </div>
@@ -591,14 +623,14 @@ const RRMS = ({ setIsAdmin }) => {
                           display: 'flex',
                           padding: '5px'
                         }}>
-                        <b className="text-danger"> {formatterAmount(item.price)} /Tháng</b>
+                        <b className="text-danger"> {formatterAmount(item.rentPrice)} /Tháng</b>
                         <div
                           className="i area"
                           style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
-                          <b> {item.roomArea}</b> m²
+                          <b> {item?.area}</b> m²
                         </div>
                       </div>
-                    </a>
+                    </Link>
                   </article>
                 </div>
               ))
@@ -635,14 +667,14 @@ const RRMS = ({ setIsAdmin }) => {
                         {distric.cards.map((card, f) => (
                           <div key={f}>
                             {f == 0 ? (
-                              <a
+                              <Link
                                 className="item-district large"
                                 style={{
                                   backgroundImage: `url(${card.image})`,
                                   backgroundSize: 'cover'
                                 }}
                                 title="Tìm phòng trọ Quận 1"
-                                href="/thue-phong-tro-quan-1-id-760/ho-chi-minh-id-79">
+                                to="/thue-phong-tro-quan-1-id-760/ho-chi-minh-id-79">
                                 <div className="info">
                                   <span>{card.name}</span>
                                   <span>
@@ -655,7 +687,7 @@ const RRMS = ({ setIsAdmin }) => {
                                     {card.detail}
                                   </div>
                                 </div>
-                              </a>
+                              </Link>
                             ) : (
                               ''
                             )}
@@ -696,9 +728,9 @@ const RRMS = ({ setIsAdmin }) => {
           </div>
           <div className="wards-list">
             {wards_list.map((ward, i) => (
-              <a href="#" key={i} className="wards-item">
+              <Link to="#" key={i} className="wards-item">
                 {ward.name}
-              </a>
+              </Link>
             ))}
           </div>
         </div>
@@ -738,11 +770,11 @@ const RRMS = ({ setIsAdmin }) => {
                 </h2>
               </div>
               <div className="text-right" style={{ flex: '1', textAlign: 'right' }}>
-                <a href="/thue-phong-tro-quan-1-id-760/ho-chi-minh-id-79">
+                <Link to="/thue-phong-tro-quan-1-id-760/ho-chi-minh-id-79">
                   <span>
                     Xem thêm phòng trọ tại <b>Quận 1</b>
                   </span>
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -753,7 +785,7 @@ const RRMS = ({ setIsAdmin }) => {
                   <div className="inner-item flex">
                     <section className="list-img" style={{ width: '36%' }}>
                       <div style={{ position: 'relative', height: '100%' }}>
-                        <a
+                        <Link
                           style={{
                             display: 'block',
                             width: '100%',
@@ -761,12 +793,15 @@ const RRMS = ({ setIsAdmin }) => {
                             overflow: 'hidden',
                             height: '100%'
                           }}
-                          target="_blank"
-                          title={room.name}
-                          href="#"
+                          title={room.title}
+                          to={`/detail/${room.bulletinBoardId}`}
                           className="is-adss">
-                          <img alt={room.name} src={room.roomImages[0].image} className="lazy" />
-                        </a>
+                          <img
+                            alt={room.title}
+                            src={room.bulletinBoardImages?.[0]?.imageLink || 'default_image_url.jpg'}
+                            className="lazy"
+                          />
+                        </Link>
 
                         <div className="images-count">3</div>
                         <div className="bookmark-item bookmark" data-post="290" id="post_290">
@@ -788,14 +823,13 @@ const RRMS = ({ setIsAdmin }) => {
                     <section className="list-info" style={{ width: '64%' }}>
                       <div>
                         <div className="title">
-                          <a
-                            title={room.nameRoom}
-                            target="_blank"
-                            href="#"
+                          <Link
+                            title={room.title}
+                            to={`/detail/${room.bulletinBoardId}`}
                             className="cut-text-2"
                             style={{ textDecoration: 'none', color: 'black' }}>
-                            <span>{room.nameRoom}</span>
-                          </a>
+                            <span>{room.title}</span>
+                          </Link>
                         </div>
                         <div className="adress cut-text">
                           <svg
@@ -811,17 +845,17 @@ const RRMS = ({ setIsAdmin }) => {
                             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                             <circle cx="12" cy="10" r="3"></circle>
                           </svg>
-                          {room.motel.address}
+                          {room.address}
                         </div>
                         <div className="mf">
                           <div className="i price">
-                            <b className="text-danger">{formatterAmount(room.price)}</b>
+                            <b className="text-danger">{formatterAmount(room.rentPrice)}</b>
                           </div>
                           <div className="i are">
                             <i className="fa fa-area-chart hidden" aria-hidden="true">
                               {' '}
                             </i>
-                            <b> {room.roomArea} m²</b>
+                            <b> {room.area} m²</b>
                           </div>
                         </div>
                       </div>
@@ -830,7 +864,7 @@ const RRMS = ({ setIsAdmin }) => {
                           <img width="30px" src="./default-user.webp" alt="icon user" />
                           <div style={{ color: '#666', fontSize: '12px' }}>
                             <strong className="author-name" style={{ textTransform: 'capitalize' }}>
-                              {room.motel.account.username}
+                              {room.account.username}
                             </strong>
                             <div style={{ fontSize: '11px' }} data-time="1 ngày trước">
                               1 ngày trước
@@ -838,14 +872,13 @@ const RRMS = ({ setIsAdmin }) => {
                           </div>
                         </div>
                         <div className="i info-author">
-                          <a
+                          <Link
                             rel="nofollow, noindex"
-                            target="_blank"
-                            href="#"
+                            to={`/detail/${room.bulletinBoardId}`}
                             className="btn-quick-zalo"
                             style={{ textDecoration: 'none' }}>
                             Zalo
-                          </a>
+                          </Link>
                           <span className="btn-quick-call">
                             <svg
                               viewBox="0 0 24 24"
@@ -887,7 +920,7 @@ const RRMS = ({ setIsAdmin }) => {
       <div className="container bot">
         <div className="flex row" style={{ marginBlock: '15px' }}>
           <div className="col-md-6">
-            <a href="#">
+            <Link to="#">
               <img
                 src="./banner1.png"
                 className="w-full lg:rounded-md"
@@ -895,10 +928,10 @@ const RRMS = ({ setIsAdmin }) => {
                 width="100%"
                 style={{ borderRadius: '5px' }}
               />
-            </a>
+            </Link>
           </div>
           <div className="col-md-6">
-            <a href="#">
+            <Link to="#">
               <img
                 src="./banner2.png"
                 className="lg:rounded-md cursor-pointer"
@@ -906,7 +939,7 @@ const RRMS = ({ setIsAdmin }) => {
                 width="100%"
                 style={{ borderRadius: '5px' }}
               />
-            </a>
+            </Link>
           </div>
         </div>
         <h3 className="title-section">Các từ khóa phổ biến trên RRMS</h3>
@@ -930,15 +963,15 @@ const RRMS = ({ setIsAdmin }) => {
             }}>
             {Pkeyw.map((key, i) => (
               <li key={i}>
-                <a
-                  href="#"
+                <Link
+                  to="#"
                   target="_blank"
                   style={{
                     textDecoration: 'none',
                     color: '#3d3d3d'
                   }}>
                   {key.name}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

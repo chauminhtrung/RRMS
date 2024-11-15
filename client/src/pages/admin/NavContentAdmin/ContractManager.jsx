@@ -1,9 +1,11 @@
 import { useEffect } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
+
 import { Box } from '@mui/material'
 import { useParams } from 'react-router-dom'
 import { ReactTabulator } from 'react-tabulator'
 import { useState } from 'react'
+
 import { Modal, Button, Form } from 'react-bootstrap'
 import { getPhuongXa, getQuanHuyen, getTinhThanh } from '~/apis/addressAPI'
 import { getRoomByMotelId } from '~/apis/roomAPI'
@@ -85,6 +87,7 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     }))
   }
 
+
   const fetchRooms = async () => {
     //neu co motelId tren URL
     if (motelId) {
@@ -119,6 +122,7 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
       setMotelServices([])
     }
   }
+
 
   //lay tai san cua motel
   const fetchMotelDevices = async (id) => {

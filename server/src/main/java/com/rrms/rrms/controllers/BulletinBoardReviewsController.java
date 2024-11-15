@@ -1,18 +1,22 @@
 package com.rrms.rrms.controllers;
 
-import com.rrms.rrms.dto.request.BulletinBoardReviewsRequest;
-import com.rrms.rrms.dto.response.ApiResponse;
-import com.rrms.rrms.dto.response.BulletinBoardReviewsResponse;
-import com.rrms.rrms.services.IBulletinBoardReviews;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
+import com.rrms.rrms.dto.request.BulletinBoardReviewsRequest;
+import com.rrms.rrms.dto.response.ApiResponse;
+import com.rrms.rrms.dto.response.BulletinBoardReviewsResponse;
+import com.rrms.rrms.dto.response.RatingHistoryResponse;
+import com.rrms.rrms.services.IBulletinBoardReviews;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -43,6 +47,18 @@ public class BulletinBoardReviewsController {
                         bulletinBoardId, username);
         return ApiResponse.<BulletinBoardReviewsResponse>builder()
                 .message("Get Bulletin Board Reviews successfully")
+                .code(HttpStatus.OK.value())
+                .result(response)
+                .build();
+    }
+
+    @GetMapping("/rating-history")
+    public ApiResponse<List<RatingHistoryResponse>> getRatingHistoryByBulletinBoardIdAndUsername(
+            @RequestParam("username") String username) {
+        List<RatingHistoryResponse> response =
+                bulletinBoardReviewsService.getRatingHistoryByBulletinBoardIdAndUsername(username);
+        return ApiResponse.<List<RatingHistoryResponse>>builder()
+                .message("Get Rating History successfully")
                 .code(HttpStatus.OK.value())
                 .result(response)
                 .build();

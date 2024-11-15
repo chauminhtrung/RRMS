@@ -1,6 +1,8 @@
 import { Box, Typography, Button } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 const Name = () => {
+  const { t } = useTranslation()
   return (
     <Box
       sx={{
@@ -8,25 +10,25 @@ const Name = () => {
         m: 2,
 
         bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542'),
-        color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894'),
+        color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894')
       }}>
       <Box>
         <Typography variant="h6" sx={{ color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894') }}>
-          Phòng trọ, nhà trọ gần khu vực này
+          {t('phong-tro-nha-tro-gan-khu-vuc-nay')}
         </Typography>
       </Box>
 
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
         {[
-          'Trường Cao đẳng Đại Việt Sài Gòn',
-          'Trường Cao đẳng Đại Việt Sài Gòn',
-          'Trường Cao đẳng Đại Việt Sài Gòn',
-          'Trường Cao đẳng Đại Việt Sài Gòn',
-          'Trường Cao đẳng Đại Việt Sài Gòn',
-          'Trường Cao đẳng Đại Việt Sài Gòn',
-          'Trường Cao đẳng Đại Việt Sài Gòn',
-          'Trường Cao đẳng Đại Việt Sài Gòn',
-          'Trường Cao đẳng Đại Việt Sài Gòn',
+          t('truong-cao-dang-viet-sai-gon'),
+          t('truong-cao-dang-viet-sai-gon'),
+          t('truong-cao-dang-viet-sai-gon'),
+          t('truong-cao-dang-viet-sai-gon'),
+          t('truong-cao-dang-viet-sai-gon'),
+          t('truong-cao-dang-viet-sai-gon'),
+          t('truong-cao-dang-viet-sai-gon'),
+          t('truong-cao-dang-viet-sai-gon'),
+          t('truong-cao-dang-viet-sai-gon')
         ].map((school, index) => (
           <Button
             key={index}
@@ -40,8 +42,8 @@ const Name = () => {
               border: '1px solid #3f51b5',
               backgroundColor: '#fff',
               '&:hover': {
-                backgroundColor: '#e3f2fd',
-              },
+                backgroundColor: '#e3f2fd'
+              }
             }}>
             {school}
           </Button>

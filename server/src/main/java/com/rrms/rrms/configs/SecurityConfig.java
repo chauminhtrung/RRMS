@@ -29,7 +29,9 @@ public class SecurityConfig {
     private static final String[] PUBLIC_ENDPOINTS = {
         "/",
         "/oauth2/*",
-        "/oauth2/**", "/authen/login", "/authen/login/error",
+        "/oauth2/**",
+        "/authen/login",
+        "/authen/login/error",
         "/authen/**",
         "/swagger-ui/*",
         "/v3/api-docs/*",
@@ -37,6 +39,7 @@ public class SecurityConfig {
         "/search/**",
         "/search/*",
         "/search",
+        "/RRMS",
         "/detail/**",
         "/detail/*",
         "/detail",
@@ -59,16 +62,13 @@ public class SecurityConfig {
                 .authenticated());
 
         // Cấu hình OAuth2 Login với Google
-        http.oauth2Login(oauth2 -> oauth2
-            .loginPage("/authen/login")
-            .successHandler((request, response, authentication) -> {
-                response.sendRedirect("http://localhost:5173/");
-            })
-            .failureUrl("/authen/login/error")
-            .authorizationEndpoint(config -> config.baseUri("/oauth2/authorization"))
-            .redirectionEndpoint(redirection -> redirection.baseUri("/oauth2/callback/*"))
-        );
-
+        http.oauth2Login(oauth2 -> oauth2.loginPage("/authen/login")
+                .successHandler((request, response, authentication) -> {
+                    response.sendRedirect("http://localhost:5173/");
+                })
+                .failureUrl("/authen/login/error")
+                .authorizationEndpoint(config -> config.baseUri("/oauth2/authorization"))
+                .redirectionEndpoint(redirection -> redirection.baseUri("/oauth2/callback/*")));
 
         http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer ->
                 jwtConfigurer.decoder(jwtDecoder()).jwtAuthenticationConverter(jwtAuthenticationConverter())));

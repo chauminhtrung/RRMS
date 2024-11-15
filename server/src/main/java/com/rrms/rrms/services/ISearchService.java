@@ -21,7 +21,9 @@ public interface ISearchService {
 
     List<RoomSearchResponse> findByAddressFuzzy(String keyword);
 
-    //        List<RoomDetailResponse> findByAuthenIs(Boolean authenis);
+    //    List<BulletinBoardSearchResponse> findByMoveInDateLessThanEqual(Date moveInDate);
 
-    //    List<RoomDetailResponse> findAllByDatenew();
+    List<BulletinBoardSearchResponse> findAllByDatenew();
+
+    List<BulletinBoardSearchResponse> findAllByDateVieux();
 }

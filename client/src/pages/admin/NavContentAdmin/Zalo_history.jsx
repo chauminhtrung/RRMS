@@ -5,7 +5,7 @@ import YearMonthFilter from './YearMonthFilter'
 import DescriptionIcon from '@mui/icons-material/Description'
 // import { ReactTabulator } from 'react-tabulator';
 
-const Zalo_history = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
+const Zalo_history = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
   useEffect(() => {
     setIsAdmin(true)
   }, [setIsAdmin])
@@ -17,7 +17,7 @@ const Zalo_history = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
         motels={motels}
         setIsAdmin={setIsAdmin}
         setIsNavAdmin={setIsNavAdmin}
-        isNavAdmin={true}
+        isNavAdmin={isNavAdmin}
       />
       <div
         style={{

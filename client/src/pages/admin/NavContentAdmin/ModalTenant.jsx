@@ -29,6 +29,7 @@ import { storage } from '~/configs/firebaseConfig'
 import { v4 } from 'uuid'
 import { toast } from 'react-toastify'
 import { getByIdTenant, updateTenant } from '~/apis/tenantAPI'
+import { env } from '~/configs/environment'
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -56,6 +57,8 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
   const [backUrl, setBackUrl] = useState('') // URL mặt sau
   const [frontProgress, setFrontProgress] = useState(0) // Tiến trình ảnh mặt trước
   const [backProgress, setBackProgress] = useState(0) // Tiến trình ảnh mặt sau
+  const [phoneError, setPhoneError] = useState('')
+  const [cccdError, setCccdError] = useState('')
 
   const handleChangeFront = (e) => {
     if (e.target.files[0]) {
@@ -287,10 +290,11 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
     tenant.gender = tenant.gender?.trim() || 'MALE'
 
     try {
-      const response = await axios.post('http://localhost:8080/tenant/insert', tenant, {
+      const response = await axios.post(`${env.API_URL}/tenant/insert`, tenant, {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': '69420'
         }
       })
 
@@ -337,23 +341,28 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
   }, [editId])
 
   const handleUpdateClick = () => {
+    console.log('Tenant data:', tenant) // Kiểm tra dữ liệu trước khi gửi
     if (!tenant || !editId) {
       Swal.fire({
         icon: 'error',
         title: 'Thất bại',
         text: 'Vui lòng cung cấp đầy đủ thông tin khách hàng!'
       })
+
       return
     }
 
     updateTenant(editId, tenant)
       .then((res) => {
-        setTenant(res.result) // Cập nhật lại dữ liệu sau khi lưu thành công
+        setTenant(res.result)
         Swal.fire({ icon: 'success', title: 'Thành công', text: 'Cập nhật khách hàng thành công!' })
+        onClose()
+        reloadData()
       })
       .catch((error) => {
         console.error('Failed to update tenant:', error)
         Swal.fire({ icon: 'error', title: 'Thất bại', text: 'Cập nhật khách hàng thất bại!' })
+        onClose()
       })
   }
 
@@ -494,11 +503,22 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
                   onChange={(e) => {
                     const newPhone = e.target.value
 
+                    // Cập nhật giá trị mới vào tenant
                     setTenant({ ...tenant, phone: newPhone })
+
+                    // Kiểm tra định dạng số điện thoại Việt Nam khi đủ 10 số
+                    const phoneRegex = /^(03|05|07|08|09)\d{8}$/
+                    if (newPhone === '' || (newPhone.length === 10 && phoneRegex.test(newPhone))) {
+                      setPhoneError('') // Không có lỗi
+                    } else if (newPhone.length >= 10) {
+                      setPhoneError('Số điện thoại không hợp lệ') // Hiển thị lỗi khi không hợp lệ
+                    }
                   }}
                   InputProps={{
                     readOnly: !avatar
                   }}
+                  error={!!phoneError} // Hiển thị trạng thái lỗi nếu có
+                  helperText={phoneError} // Hiển thị thông báo lỗi nếu có
                   fullWidth
                 />
               </Grid>
@@ -518,10 +538,25 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
               <TextField
                 label="CMND/CCCD"
                 value={tenant.cccd || ''}
-                onChange={(e) => setTenant({ ...tenant, cccd: e.target.value })}
+                onChange={(e) => {
+                  const newCccd = e.target.value
+                  const numericValue = newCccd.replace(/\D/g, '') // Loại bỏ tất cả ký tự không phải số
+                  // Cập nhật giá trị mới vào tenant chỉ với các ký tự là số
+                  setTenant({ ...tenant, cccd: numericValue })
+                  const cccdRegex = /^(?:\d{9}|\d{12})$/
+                  // Kiểm tra định dạng CMND/CCCD khi đủ 9 hoặc 12 chữ số
+                  if (numericValue === '' || cccdRegex.test(numericValue)) {
+                    setCccdError('') // Không có lỗi nếu hợp lệ
+                  } else {
+                    setCccdError('CMND phải có 9 chữ số hoặc CCCD có 12 chữ số')
+                  }
+                }}
+                error={!!cccdError}
+                helperText={cccdError}
                 fullWidth
               />
             </Grid>
+
             <Grid item xs={12} sx={{ mt: 1 }}>
               <TextField
                 label="Zalo của khách"
@@ -801,11 +836,23 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
                 <Typography variant="body2">Các thông tin về khách thuê và tiền cọc</Typography>
               </Box>
             </Grid>
+            {avatar ? (
+              <></>
+            ) : (
+              <Grid item xs={12} sx={{ mt: 1 }}>
+                <TextField
+                  label="Quan hệ"
+                  value={tenant.relationship || 'Chưa ghi nhận'}
+                  onChange={(e) => setTenant({ ...tenant, relationship: e.target.value })}
+                  fullWidth
+                />
+              </Grid>
+            )}
             <Box>
               <FormControlLabel
                 control={
                   <Switch
-                    checked={checkedStates[0]}
+                    checked={checkedStates[0] && tenant.type_of_tenant === true}
                     onChange={(e) => {
                       const isChecked = event.target.checked
                       handleCheckboxChange(0)(e) // Gọi hàm handleCheckboxChange nếu cần
@@ -814,7 +861,6 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
                         type_of_tenant: isChecked
                       })
                     }}
-                    value={tenant.type_of_tenant}
                     color="primary"
                   />
                 }
@@ -834,7 +880,7 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
               <FormControlLabel
                 control={
                   <Switch
-                    checked={checkedStates[1]}
+                    checked={tenant.temporaryResidence === true}
                     onChange={(e) => {
                       const isChecked = event.target.checked
                       handleCheckboxChange(1)(e) // Gọi hàm handleCheckboxChange nếu cần
@@ -862,7 +908,7 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
               <FormControlLabel
                 control={
                   <Switch
-                    checked={checkedStates[2]}
+                    checked={tenant.informationVerify === true}
                     onChange={(e) => {
                       const isChecked = event.target.checked
                       handleCheckboxChange(2)(e) // Gọi hàm handleCheckboxChange nếu cần

@@ -1,5 +1,6 @@
 package com.rrms.rrms.repositories;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -13,4 +14,6 @@ public interface BulletinBoardReviewsRepository extends JpaRepository<BulletinBo
     BulletinBoardReviews findByBulletinBoardAndAccount(BulletinBoard bulletinBoard, Account account);
 
     Optional<BulletinBoardReviews> findByAccountAndBulletinBoard(Account account, BulletinBoard bulletinBoard);
+
+    List<BulletinBoardReviews> findAllByAccount(Account account);
 }

@@ -1,6 +1,9 @@
 import { Avatar, Box, Button, Rating, TextareaAutosize, Tooltip, Typography } from '@mui/material'
 import { useEffect } from 'react'
-import { getBulletinBoardReviewByBulletinBoardIdAndUsername, postBulletinBoardReview } from '~/apis/bulletinBoardAPI'
+import {
+  getBulletinBoardReviewByBulletinBoardIdAndUsername,
+  postBulletinBoardReview
+} from '~/apis/bulletinBoardReviewsAPI'
 
 const UserRating = ({ roomId, username, setReview, review, refreshBulletinBoards, account }) => {
   useEffect(() => {

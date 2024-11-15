@@ -2,8 +2,9 @@ package com.rrms.rrms.models;
 
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,4 +34,8 @@ public class MotelService {
 
     @Column(columnDefinition = "VARCHAR(255)")
     private String chargetype;
+
+    public UUID getServiceId() {
+        return motelServiceId; // hoặc nếu có một trường ID dịch vụ cụ thể, thì trả về nó
+    }
 }

@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Typography } from '@mui/material'
 import './Contact.css'
+import { Link } from 'react-router-dom'
 const Contact = ({ setIsAdmin }) => {
   useEffect(() => {
     setIsAdmin(false)
@@ -18,7 +19,7 @@ const Contact = ({ setIsAdmin }) => {
           <div className="row">
             <div className="col-sm-12 col-md-3 col-lg-3 mt-2">
               <div className="iContact inner-item text-center">
-                <a rel="nofollow, noindex" href="https://www.facebook.com/profile.php?id=61562538557177">
+                <Link rel="nofollow, noindex" to="https://www.facebook.com/profile.php?id=61562538557177">
                   <div className="iconContact">
                     <img
                       src="https://lozido.com/images/banner/fanpage.webp"
@@ -27,12 +28,12 @@ const Contact = ({ setIsAdmin }) => {
                     />
                     <b style={{ color: 'black' }}>Fanpage phòng trọ</b>
                   </div>
-                </a>
+                </Link>
               </div>
             </div>
             <div className="col-sm-12 col-md-3 col-lg-3 mt-2">
               <div className="iContact inner-item text-center">
-                <a rel="nofollow, noindex" href="https://www.facebook.com/profile.php?id=61562538557177">
+                <Link rel="nofollow, noindex" to="https://www.facebook.com/profile.php?id=61562538557177">
                   <div className="iconContact">
                     <img
                       src="https://lozido.com/images/banner/messager.webp"
@@ -41,30 +42,30 @@ const Contact = ({ setIsAdmin }) => {
                     />
                     <b style={{ color: 'black' }}>Messenger</b>
                   </div>
-                </a>
+                </Link>
               </div>
             </div>
             <div className="col-sm-12 col-md-3 col-lg-3 mt-2">
               <div className="iContact inner-item text-center">
-                <a rel="nofollow, noindex" href="tel:0373395604">
+                <Link rel="nofollow, noindex" to="tel:0373395604">
                   <div className="iconContact">
                     <img src="https://lozido.com/images/banner/phone.webp" style={{ width: '90px' }} alt="icon phone" />
                     <b style={{ color: 'black' }}>0373395604</b>
                   </div>
-                </a>
+                </Link>
               </div>
             </div>
             <div className="col-sm-12 col-md-3 col-lg-3 mt-2">
               <div className="iContact inner-item text-center">
-                <a
+                <Link
                   rel="nofollow, noindex"
-                  href="mailto:nguyentantai0118@gmail.com?Subject=Liên%20hệ%20RRSM.com"
+                  to="mailto:nguyentantai0118@gmail.com?Subject=Liên%20hệ%20RRSM.com"
                   target="_top">
                   <div className="iconContact">
                     <img src="https://lozido.com/images/banner/email.webp" style={{ width: '90px' }} alt="icon email" />
                     <b style={{ color: 'black' }}>lozido.com@gmail.com</b>
                   </div>
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -73,7 +74,7 @@ const Contact = ({ setIsAdmin }) => {
       <div className="container">
         <div className="flex row" style={{ marginBlock: '35px' }}>
           <div className="col-md-6 mt-2">
-            <a href="#">
+            <Link to="#">
               <img
                 src="./banner1.png"
                 className="w-full lg:rounded-md"
@@ -81,10 +82,10 @@ const Contact = ({ setIsAdmin }) => {
                 width="100%"
                 style={{ borderRadius: '5px' }}
               />
-            </a>
+            </Link>
           </div>
           <div className="col-md-6 mt-2">
-            <a href="#">
+            <Link to="#">
               <img
                 src="./banner2.png"
                 className="lg:rounded-md cursor-pointer"
@@ -92,7 +93,7 @@ const Contact = ({ setIsAdmin }) => {
                 width="100%"
                 style={{ borderRadius: '5px' }}
               />
-            </a>
+            </Link>
           </div>
         </div>
 

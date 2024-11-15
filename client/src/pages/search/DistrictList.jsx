@@ -1,4 +1,5 @@
 import { Grid, Link, Box, Typography } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 const districts = [
   'Quận 1',
@@ -22,24 +23,25 @@ const districts = [
   'Quận Bình Tân',
   'Củ Chi',
   'Bình Chánh',
-  'Cần Giờ',
+  'Cần Giờ'
 ]
 
 const DistrictLinks = () => {
+  const { t } = useTranslation()
   return (
     <Box
       sx={{
-        m: 1,
+        m: 1
       }}>
       <Box
         sx={{
           padding: '20px',
           borderRadius: '8px',
           bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542'),
-          color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894'),
+          color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894')
         }}>
         <Typography variant="h6" sx={{ marginBottom: '15px' }}>
-          Khu vực: Hồ Chí Minh
+          {t('khu-vuc')}: Hồ Chí Minh
         </Typography>
         <Grid container spacing={2}>
           {districts.map((district, index) => (
@@ -49,7 +51,7 @@ const DistrictLinks = () => {
                   height: '100%',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
+                  justifyContent: 'center'
                 }}>
                 <Link
                   href={`#${district.replace(/\s/g, '-')}`}
@@ -64,8 +66,8 @@ const DistrictLinks = () => {
                     color: '#3f51b5',
                     borderRadius: '8px',
                     '&:hover': {
-                      backgroundColor: '#e3f2fd',
-                    },
+                      backgroundColor: '#e3f2fd'
+                    }
                   }}>
                   {district}
                 </Link>

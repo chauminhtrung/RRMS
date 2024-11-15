@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "bulletin_boards")
+@Builder
 public class BulletinBoard {
 
     @Id
@@ -57,8 +59,11 @@ public class BulletinBoard {
     @Column(columnDefinition = "VARCHAR(255)")
     private String maxPerson;
 
-    @Column(columnDefinition = "Date")
+    @Column(name = "move_in_date", columnDefinition = "Date")
     private Date moveInDate;
+
+    @Column(columnDefinition = "Date")
+    private Date createdDate = new Date();
 
     @Column(columnDefinition = "VARCHAR(255)")
     private String openingHours;

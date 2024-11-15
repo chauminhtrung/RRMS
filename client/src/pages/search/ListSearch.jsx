@@ -1,19 +1,23 @@
+import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
+
 const ListSearch = () => {
+  const { t } = useTranslation()
   return (
     <div className="container mt-3" style={{ maxWidth: '1180px' }}>
       <ol className="breadcrumb-container breadcrumb">
         <li className="breadcrumb-item">
-          <a href="/">
-            <span>Trang chủ</span>
-          </a>
+          <Link to="/">
+            <span>{t('trang-chu')}</span>
+          </Link>
         </li>
         <li className="breadcrumb-item">
-          <a href="/thue-phong-tro-ho-chi-minh-id-79">
+          <Link to="/thue-phong-tro-ho-chi-minh-id-79">
             <span>Hồ Chí Minh</span>
-          </a>
+          </Link>
         </li>
         <li className="breadcrumb-item breadcrumb-color">
-          <span>Quận 1</span>
+          <span>{t('quan-1')}</span>
         </li>
       </ol>
       <h1
@@ -23,17 +27,18 @@ const ListSearch = () => {
           fontWeight: '500',
           lineHeight: '125%',
           marginBottom: '10px',
-          fontSize: '25px',
+          fontSize: '25px'
         }}>
-        <b>Tìm phòng trọ gần Quận 1</b>
+        <b>{t('duoi-phong-tro')}</b>
       </h1>
       <p>
-        <span className="item-filter">Bán kính tìm kiếm: 3 km</span>
+        <span className="item-filter">{t('ban-kinh-tim-kiem')}: 3 km</span>
       </p>
       <div className="warning">
-        Khi tìm phòng trọ gần <strong>Tìm phòng trọ gần Quận 1</strong> chúng tôi sẽ hiển thị các Phòng trọ, nhà trọ
-        cách địa đó <b>3km</b>, Vì thế có thể phòng trọ không thuộc <b>các quận</b> bạn đang tìm kiếm. Chú ý kết quả để{' '}
-        <b>màu đỏ</b> là không thuộc quận / huyện bạn tìm kiếm.
+        {t('khi-tim-phong-tro-gan')} <strong> {t('tim-phong-tro-quan-1')} </strong> {t('chung-toi-se-hien-thi')}
+        <b> {t('cach-dia-diem')} 3km</b>. {t('vi-the-co-the-phong-tro-khong-thuoc')} <b>{t('cac-quan')}</b>{' '}
+        {t('ban-dang-tim-kiem')}. {t('chu-y-ket-qua')}
+        <b> {t('mau-do')}</b> {t('la-khong-thuoc-quan-huyen-ban-tim-kiem')}
       </div>
     </div>
   )

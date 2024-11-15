@@ -1,6 +1,7 @@
 package com.rrms.rrms.dto.response;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import lombok.*;
@@ -29,4 +30,6 @@ public class RoomResponse2 {
     private Boolean status;
     private String finance;
     private String description;
+    private List<RoomServiceResponse> services;
+
 }
