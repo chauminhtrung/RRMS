@@ -121,16 +121,18 @@ public class SearchService implements ISearchService {
     //                .collect(Collectors.toList());
     //    }
 
+
     @Override
     public List<BulletinBoardSearchResponse> findAllByDatenew() {
-        return searchRepository.findAllByDatenew().stream()
+        List<BulletinBoard> bulletinBoards = searchRepository.findAllByDatenew(true);
+        return bulletinBoards.stream()
                 .map(bulletinBoardMapper::toBulletinBoardSearchResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
-    public List<BulletinBoardSearchResponse> findAllByDateVieux() {
-        return searchRepository.findAllByDateVieux().stream()
+    public List<BulletinBoardSearchResponse> findAllByIsActive() {
+        return searchRepository.findAllByIsActive(true).stream()
                 .map(bulletinBoardMapper::toBulletinBoardSearchResponse)
                 .collect(Collectors.toList());
     }

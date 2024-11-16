@@ -43,9 +43,33 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [editId, setEditId] = useState()
+  const [checkbox, setcheckbox] = useState(0)
 
   const [anchorEl, setAnchorEl] = useState(null)
   const navigate = useNavigate()
+  const fillterData = async (caseee) => {
+    setcheckbox(Number(caseee))
+    switch (caseee) {
+      case 1:
+        await loadData()
+        setRows((prevRows) => prevRows.filter((item) => item.temporaryResidence === true))
+        break
+      case 2:
+        await loadData()
+        setRows((prevRows) => prevRows.filter((item) => item.temporaryResidence === false))
+        break
+      case 3:
+        await loadData()
+        setRows((prevRows) => prevRows.filter((item) => item.informationVerify === true))
+        break
+      case 4:
+        await loadData()
+        setRows((prevRows) => prevRows.filter((item) => item.informationVerify === false))
+        break
+      default:
+        await loadData()
+    }
+  }
 
   const handleOpen = (tenantId) => {
     setOpen(true)
@@ -246,8 +270,42 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
               <Grid container spacing={2} alignItems="center" direction={{ xs: 'column', sm: 'row' }}>
                 <Grid item xs={12} sm={8} display="flex" alignItems="center" gap={2}>
                   {/* Icon Button */}
-                  <IconButton color="primary">
+                  <IconButton
+                    color="primary"
+                    onClick={() => {
+                      fillterData(0)
+                      setcheckbox(!checkbox) // Đảo ngược trạng thái mỗi lần nhấn
+                    }}
+                    sx={{
+                      position: 'relative',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      padding: 1,
+                      border: '1px solid #ddd',
+                      borderRadius: '8px',
+                      minWidth: 100,
+                      '& #filter-count': {
+                        position: 'absolute',
+                        top: '-13px',
+                        right: '-0.5px',
+                        backgroundColor: '#007BFF',
+                        border: '1px solid #0056b3',
+                        borderRadius: '8px',
+                        fontSize: '0.8rem',
+                        padding: '0px 4px',
+                        boxShadow: 3,
+                        color: 'white',
+                        transition: '0.3s',
+                        '&:hover': {
+                          backgroundColor: '#0056b3',
+                          boxShadow: 1,
+                          cursor: 'pointer'
+                        }
+                      }
+                    }}>
                     <FilterAltIcon fontSize="small" />
+                    {!checkbox && <span id="filter-count">{rows.length}</span>}
                   </IconButton>
 
                   {/* First Label - Đã đăng ký tạm trú */}
@@ -274,16 +332,23 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                       padding="0px 2px"
                       transition="0.3s"
                       sx={{
+                        display: checkbox === 1 ? 'block' : 'none', // Ẩn khi không chọn
                         '&:hover': {
                           bgcolor: '#0056b3',
                           boxShadow: 1,
                           cursor: 'pointer'
                         }
                       }}>
-                      0
+                      {rows.length}
                     </Typography>
                     <Box display="flex" alignItems="center" gap={0.2}>
-                      <Checkbox size="small" />
+                      <Checkbox
+                        size="small"
+                        checked={checkbox === 1}
+                        onClick={async () => {
+                          await fillterData(1)
+                        }}
+                      />
                       <Typography variant="caption">Đã đăng ký tạm trú</Typography>
                     </Box>
                   </Box>
@@ -312,16 +377,23 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                       padding="0px 2px"
                       transition="0.3s"
                       sx={{
+                        display: checkbox === 2 ? 'block' : 'none', // Ẩn khi không chọn
                         '&:hover': {
                           bgcolor: '#0056b3',
                           boxShadow: 1,
                           cursor: 'pointer'
                         }
                       }}>
-                      0
+                      {checkbox === 2 ? rows.length : ''}
                     </Typography>
                     <Box display="flex" alignItems="center" gap={0.2}>
-                      <Checkbox size="small" />
+                      <Checkbox
+                        size="small"
+                        checked={checkbox == 2 ? true : false}
+                        onClick={async () => {
+                          await fillterData(2)
+                        }}
+                      />
                       <Typography variant="caption">Chưa đăng ký tạm trú</Typography>
                     </Box>
                   </Box>
@@ -350,16 +422,23 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                       padding="0px 2px"
                       transition="0.3s"
                       sx={{
+                        display: checkbox === 3 ? 'block' : 'none', // Ẩn khi không chọn
                         '&:hover': {
                           bgcolor: '#0056b3',
                           boxShadow: 1,
                           cursor: 'pointer'
                         }
                       }}>
-                      0
+                      {checkbox === 3 ? rows.length : ''}
                     </Typography>
                     <Box display="flex" alignItems="center" gap={0.2}>
-                      <Checkbox size="small" />
+                      <Checkbox
+                        size="small"
+                        checked={checkbox == 3 ? true : false}
+                        onClick={async () => {
+                          fillterData(3)
+                        }}
+                      />
                       <Typography variant="caption">Khách đã nộp giấy tờ</Typography>
                     </Box>
                   </Box>
@@ -388,16 +467,23 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                       padding="0px 2px"
                       transition="0.3s"
                       sx={{
+                        display: checkbox === 4 ? 'block' : 'none', // Ẩn khi không chọn
                         '&:hover': {
                           bgcolor: '#0056b3',
                           boxShadow: 1,
                           cursor: 'pointer'
                         }
                       }}>
-                      0
+                      {checkbox === 4 ? rows.length : ''}
                     </Typography>
                     <Box display="flex" alignItems="center" gap={0.2}>
-                      <Checkbox size="small" />
+                      <Checkbox
+                        size="small"
+                        checked={checkbox == 4 ? true : false}
+                        onClick={() => {
+                          fillterData(4)
+                        }}
+                      />
                       <Typography variant="caption">Khách chưa nộp giấy tờ</Typography>
                     </Box>
                   </Box>
@@ -569,15 +655,15 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                           </TableCell>
                           <TableCell sx={{ borderRight: '1px solid #ddd' }}>
                             <Chip
-                              label={row.temporaryResidence ? 'Đã đầy đủ' : 'Chưa đầy đủ'}
-                              color={row.temporaryResidence ? 'success' : 'warning'}
+                              label={row.informationVerify ? 'Đã đầy đủ' : 'Chưa đầy đủ'}
+                              color={row.informationVerify ? 'success' : 'warning'}
                               size="small"
                             />
                           </TableCell>
                           <TableCell sx={{ borderRight: '1px solid #ddd' }}>
                             <Chip
-                              label={row.informationVerify ? 'Đã có tạm trú' : 'Chưa có tạm trú'}
-                              color={row.informationVerify ? 'success' : 'error'}
+                              label={row.temporaryResidence ? 'Đã có tạm trú' : 'Chưa có tạm trú'}
+                              color={row.temporaryResidence ? 'success' : 'error'}
                               size="small"
                             />
                           </TableCell>

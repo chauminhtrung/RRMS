@@ -25,5 +25,5 @@ public interface ISearchService {
 
     List<BulletinBoardSearchResponse> findAllByDatenew();
 
-    List<BulletinBoardSearchResponse> findAllByDateVieux();
+    List<BulletinBoardSearchResponse> findAllByIsActive();
 }

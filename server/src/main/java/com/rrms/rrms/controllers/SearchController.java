@@ -72,7 +72,7 @@ public class SearchController {
     @GetMapping("/roomVieux")
     public ApiResponse<List<BulletinBoardSearchResponse>> getRoomHomeDateNewVieux() {
         ApiResponse<List<BulletinBoardSearchResponse>> apiResponse = new ApiResponse<>();
-        List<BulletinBoardSearchResponse> rooms = searchService.findAllByDateVieux();
+        List<BulletinBoardSearchResponse> rooms = searchService.findAllByIsActive();
         apiResponse.setCode(HttpStatus.OK.value());
         apiResponse.setMessage("Tìm kiếm thành công");
         apiResponse.setResult(rooms);
