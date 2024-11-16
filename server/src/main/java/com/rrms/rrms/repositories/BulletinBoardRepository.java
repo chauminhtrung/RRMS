@@ -1,13 +1,12 @@
 package com.rrms.rrms.repositories;
 
-import java.util.List;
-import java.util.UUID;
-
+import com.rrms.rrms.models.Account;
+import com.rrms.rrms.models.BulletinBoard;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.rrms.rrms.models.Account;
-import com.rrms.rrms.models.BulletinBoard;
+import java.util.List;
+import java.util.UUID;
 
 public interface BulletinBoardRepository extends JpaRepository<BulletinBoard, UUID> {
     List<BulletinBoard> findByAccount(Account account);
@@ -16,4 +15,6 @@ public interface BulletinBoardRepository extends JpaRepository<BulletinBoard, UU
     List<BulletinBoard> findByAddress(String address);
 
     List<BulletinBoard> findAllByIsActive(Boolean isActive);
+
+    BulletinBoard findByBulletinBoardId(UUID id);
 }

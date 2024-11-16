@@ -1,22 +1,20 @@
 package com.rrms.rrms.database;
 
-import java.time.LocalDate;
-import java.util.*;
-
+import com.rrms.rrms.enums.Gender;
+import com.rrms.rrms.enums.Roles;
+import com.rrms.rrms.models.*;
+import com.rrms.rrms.repositories.*;
+import com.rrms.rrms.services.IBulletinBoard;
+import lombok.extern.slf4j.Slf4j;
+import net.datafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rrms.rrms.enums.Gender;
-import com.rrms.rrms.enums.Roles;
-import com.rrms.rrms.models.*;
-import com.rrms.rrms.repositories.*;
-import com.rrms.rrms.services.ISearchService;
-
-import lombok.extern.slf4j.Slf4j;
-import net.datafaker.Faker;
+import java.time.LocalDate;
+import java.util.*;
 
 @Configuration
 @Slf4j
@@ -40,7 +38,7 @@ public class DB {
             RoomImageRepository roomImageRepository,
             ServiceRepository serviceRepository,
             RoomServiceRepository roomServiceRepository,
-            ISearchService searchService,
+            IBulletinBoard bulletinBoardService,
             RoleRepository roleRepository,
             PermissionRepository permissionRepository,
             NameMotelServiceRepository nameMotelServiceRepository,
@@ -53,7 +51,7 @@ public class DB {
             TenantRepository tenantRepository) {
         return args -> {
             int roomsLength = 5;
-            int bulletinBoardsLength = 10;
+            int bulletinBoardsLength = 1000;
             log.info("Starting to create data... length: {}", roomsLength);
 
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
@@ -148,8 +146,8 @@ public class DB {
             Tenant tenant = generateFakeTenant();
             tenantRepository.save(tenant);
             log.info("All data created");
-            log.info(searchService.syncRoom(roomRepository.findAll()));
         };
+
     }
 
     // Phương thức để tạo dữ liệu mẫu cho roles
@@ -433,7 +431,7 @@ public class DB {
                         // ngày
                         // trước
                         new Date() // Ngày hiện tại
-                        );
+                );
         room.setDeposit(faker.number().randomDouble(2, 500000, 5000000));
         room.setMotel(motel);
         room.setPrice(faker.number().randomDouble(2, 500000, 5000000));
