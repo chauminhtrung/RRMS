@@ -2,16 +2,18 @@ import { Box, Grid, Typography } from '@mui/material'
 import Groups2RoundedIcon from '@mui/icons-material/Groups2Rounded'
 import RecentActorsRoundedIcon from '@mui/icons-material/RecentActorsRounded'
 import MailRoundedIcon from '@mui/icons-material/MailRounded'
+import { useTranslation } from 'react-i18next'
 const ItemSearch = () => {
+  const { t } = useTranslation()
   return (
     <Box
       sx={{
         padding: 1,
         bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542'),
-        color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894'),
+        color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894')
       }}>
       <Typography variant="h6" sx={{ mt: 2 }}>
-        Cho thuê phòng trọ:
+        {t('cho-thue-phong-tro')}
       </Typography>
 
       {/* Danh sách các địa điểm */}
@@ -67,8 +69,8 @@ const ItemSearch = () => {
 
       {/* Các bước đăng tin */}
       <div className="text-center HTPost mt-3">
-        <h3>Các bước đăng tin bài RRMS</h3>
-        <p className="text-center description">Tiếp cận khách thuê dễ dàng với tính năng đăng tin</p>
+        <h3>{t('tiep-can-khach-hang-de-dang-tin')}</h3>
+        <p className="text-center description">{t('tiep-can-khach-hang-de-dang-tin')}</p>
       </div>
       <div className="container mb-4 mt-3">
         <div className="row feature card-benefit">
@@ -78,8 +80,8 @@ const ItemSearch = () => {
                 <span>1</span>
               </div>
               <div className="content-item">
-                <b>Đăng nhập/Đăng ký</b>
-                <div>đăng ký sau đó đăng nhập</div>
+                <b>{t('dang-nhap-dang-ky')}</b>
+                <div>{t('dang-ky-sau-do-dang-nhap')}</div>
               </div>
             </div>
           </div>
@@ -89,8 +91,8 @@ const ItemSearch = () => {
                 <span>2</span>
               </div>
               <div className="content-item">
-                <b>Đăng tin</b>
-                <div>Đăng tin trong tài khoản cá nhân</div>
+                <b>{t('dang-tin')}</b>
+                <div>{t('dang-tin-trong-tai-khoan-ca-nhan')}</div>
               </div>
             </div>
           </div>
@@ -100,8 +102,10 @@ const ItemSearch = () => {
                 <span>3</span>
               </div>
               <div className="content-item">
-                <b>Xét duyệt &amp; tiếp cận khách thuê</b>
-                <div>Chuyên viên sẵn sàng xét duyệt 24/7</div>
+                <b>
+                  {t('xet-duyet')} &amp; {t('tiep-can')}
+                </b>
+                <div>{t('chuyen-vien-san-sang-tu-van')}</div>
               </div>
             </div>
           </div>
@@ -118,13 +122,15 @@ const ItemSearch = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                flexDirection: 'column',
+                flexDirection: 'column'
               }}>
               <Groups2RoundedIcon sx={{ fontSize: 50, color: '#00b894' }} />
               <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
                 4,000+
               </Typography>
-              <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Chủ nhà</Typography>
+              <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {t('chu-nha')}
+              </Typography>
             </Box>
           </Box>
         </Grid>
@@ -136,19 +142,19 @@ const ItemSearch = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                flexDirection: 'column',
+                flexDirection: 'column'
               }}>
               <Groups2RoundedIcon
                 sx={{
                   fontSize: 50,
-                  color: '#00b894',
+                  color: '#00b894'
                 }}
               />
               <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
                 10,000+
               </Typography>
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                Khách thuê
+                {t('khach-thue')}
               </Typography>
             </Box>
           </Box>
@@ -161,13 +167,15 @@ const ItemSearch = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                flexDirection: 'column',
+                flexDirection: 'column'
               }}>
               <RecentActorsRoundedIcon sx={{ fontSize: 50, color: '#00b894' }} />
               <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
                 10+
               </Typography>
-              <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Môi giới</Typography>
+              <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {t('moi-gioi')}
+              </Typography>
             </Box>
           </Box>
         </Grid>
@@ -179,7 +187,7 @@ const ItemSearch = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                flexDirection: 'column',
+                flexDirection: 'column'
               }}>
               <MailRoundedIcon sx={{ fontSize: 50, color: '#00b894' }} />
               <Typography
@@ -188,12 +196,12 @@ const ItemSearch = () => {
                   fontWeight: 'bold',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
+                  justifyContent: 'center'
                 }}>
                 3,000+
               </Typography>
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                Lượt truy cập
+                {t('luot-truy-cap')}
               </Typography>
             </Box>
           </Box>
@@ -201,8 +209,7 @@ const ItemSearch = () => {
       </Grid>
 
       <Typography variant="subtitle2" sx={{ mt: 3, textAlign: 'center' }}>
-        Chúng tôi tự hào là một trong những dịch vụ tìm kiếm phòng trọ đứng đầu Việt Nam, với phương châm tìm là có
-        chúng tôi luôn cập nhật phòng nhanh nhất, chính xác nhất và ưu tiên sự tiện lợi cho người tìm trọ lên hàng đầu.
+        {t('chung-toi-tu-hao')}
       </Typography>
     </Box>
   )

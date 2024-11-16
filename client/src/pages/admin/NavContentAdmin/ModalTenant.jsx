@@ -278,7 +278,6 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
 
     if (!tenant || !tenant.fullname?.trim() || !tenant.phone?.trim() || !tenant.address?.trim()) {
       console.log('dd')
-      toast.error('Please fill in all required fields.')
       Swal.fire({
         icon: 'error',
         title: 'Lỗi',
@@ -301,10 +300,14 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
       console.log('Tenant saved successfully:', response.data)
       Swal.fire({ icon: 'success', title: 'Thành công', text: 'Thêm dịch vụ thành công!' })
       reloadData()
-      onClose()
+      // onClose()
     } catch (error) {
       console.error('Error saving tenant:', error)
-      toast.info('Error saving tenant:')
+      Swal.fire({
+        icon: 'error',
+        title: 'Lỗi',
+        text: 'Please fill in all required fields.'
+      })
     }
   }
 
