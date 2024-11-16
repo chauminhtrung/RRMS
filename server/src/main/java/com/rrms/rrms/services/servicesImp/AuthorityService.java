@@ -1,5 +1,7 @@
 package com.rrms.rrms.services.servicesImp;
 
+import com.rrms.rrms.dto.request.RefreshRequest;
+import com.rrms.rrms.repositories.AccountRepository;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -8,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import lombok.experimental.NonFinal;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,7 +47,10 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthorityService implements IAuthorityService {
 
     @Autowired
-    InvalidatedTokenRepository tokenRepository;
+    InvalidatedTokenRepository invalidatedTokenRepository;
+
+    @Autowired
+    AccountRepository accountRepository;
 
     @Autowired
     AccountService accountService;
@@ -52,8 +58,17 @@ public class AuthorityService implements IAuthorityService {
     @Autowired
     AuthRepository authRepository;
 
+    @NonFinal
     @Value("${jwt.signer-key}")
     private String signerKey;
+
+    @NonFinal
+    @Value("${jwt.valid-duration}")
+    protected long VALID_DURATION;
+
+    @NonFinal
+    @Value("${jwt.refreshable-duration}")
+    protected long REFRESHABLE_DURATION;
 
     public IntrospecTokenResponse introspect(IntrospecTokenRequest request) throws ParseException, JOSEException {
         try {
@@ -69,16 +84,9 @@ public class AuthorityService implements IAuthorityService {
             }
 
             // Gọi hàm verifyToken để xác thực token
-            String verificationResult = verifyToken(token);
-            if (!verificationResult.equals("Token signature is valid")) {
-                return IntrospecTokenResponse.builder()
-                        .valid(false)
-                        .message(verificationResult) // Trả về thông báo lỗi từ verifyToken
-                        .build();
-            }
+            SignedJWT signedJWT = verifyToken(token, false);
 
             // Parse chuỗi JWT thành đối tượng SignedJWT để có thể xử lý
-            SignedJWT signedJWT = SignedJWT.parse(token);
             JWTClaimsSet claimsSet = signedJWT.getJWTClaimsSet();
             List<String> roles = claimsSet.getStringListClaim("roles");
             List<String> permissions = claimsSet.getStringListClaim("permissions");
@@ -162,7 +170,7 @@ public class AuthorityService implements IAuthorityService {
                 .issuer(account.getUsername()) // Người phát hành (issuer)
                 .issueTime(new Date()) // Thời gian phát hành JWT
                 .expirationTime(new Date(
-                        Instant.now().plus(24, ChronoUnit.HOURS).toEpochMilli())) // Thời gian hết hạn của JWT là 1 giờ
+                        Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli())) // Thời gian hết hạn của JWT
                 .claim("roles", roles) // Thêm danh sách roles vào claim
                 .jwtID(UUID.randomUUID().toString())
                 .claim("permissions", permissions) // Thêm danh sách permissions vào claim
@@ -187,34 +195,51 @@ public class AuthorityService implements IAuthorityService {
         }
     }
 
+    public LoginResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
+        var signedJWT = verifyToken(request.getToken(), true);
+        var jit = signedJWT.getJWTClaimsSet().getJWTID();
+        var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+        var username = signedJWT.getJWTClaimsSet().getSubject();
+
+        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                .id(jit)
+                .expiryTime(expiryTime)
+                .build();
+        invalidatedTokenRepository.save(invalidatedToken);
+
+        var user =
+            accountRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+
+        var token = generateToken(user);
+
+        return LoginResponse.builder()
+            .token(token)
+            .authenticated(true)
+            .username(user.getUsername())
+            .fullname(user.getFullname())
+            .phone(user.getPhone())
+            .email(user.getEmail())
+            .avatar(user.getAvatar())
+            .birthday(user.getBirthday())
+            .gender(user.getGender())
+            .cccd(user.getCccd())
+            .build();
+    }
+
+
     public void logout(LogoutRequest request) throws ParseException, JOSEException {
         try {
-            // Lấy token từ request
-            String token = request.getToken();
+            var signToken = verifyToken(request.getToken(), true);
 
-            // Parse token JWT thành SignedJWT
-            SignedJWT signedJWT = SignedJWT.parse(token);
+            String jit = signToken.getJWTClaimsSet().getJWTID();
+            Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
 
-            // Lấy thông tin JWTClaimsSet từ token
-            JWTClaimsSet claimsSet = signedJWT.getJWTClaimsSet();
+            InvalidatedToken invalidatedToken =
+                InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
 
-            // Lấy JWT ID (jit) và thời gian hết hạn của token
-            String jit = claimsSet.getJWTID();
-            Date expirationTime = claimsSet.getExpirationTime();
-
-            // Tạo đối tượng InvalidatedToken với thông tin từ token để lưu vào blacklist
-            InvalidatedToken invalidatedToken = InvalidatedToken.builder()
-                    .id(jit)
-                    .expiryTime(expirationTime)
-                    .build();
-
-            // Lưu token bị vô hiệu hóa vào repository
-            tokenRepository.save(invalidatedToken);
-
-        } catch (ParseException e) {
-            // Log lỗi nếu có lỗi trong quá trình xử lý token
-            log.error("Error during logout", e);
-            throw e;
+            invalidatedTokenRepository.save(invalidatedToken);
+        } catch (AppException exception) {
+            log.info("Token already expired");
         }
     }
 
@@ -223,31 +248,27 @@ public class AuthorityService implements IAuthorityService {
         return authRepository.save(auth);
     }
 
-    private String verifyToken(String token) throws ParseException, JOSEException {
-        try {
-            // Parse chuỗi JWT thành đối tượng SignedJWT để có thể xử lý
-            SignedJWT signedJWT = SignedJWT.parse(token);
+    private SignedJWT verifyToken(String token, boolean isRefresh) throws JOSEException, ParseException {
+        JWSVerifier verifier = new MACVerifier(signerKey.getBytes());
 
-            // Tạo đối tượng verifier với secret key để verify chữ ký của token
-            JWSVerifier verifier = new MACVerifier(signerKey.getBytes());
+        SignedJWT signedJWT = SignedJWT.parse(token);
 
-            // Kiểm tra tính hợp lệ của chữ ký token
-            boolean isSignatureValid = signedJWT.verify(verifier);
+        Date expiryTime = (isRefresh)
+            ? new Date(signedJWT
+            .getJWTClaimsSet()
+            .getIssueTime()
+            .toInstant()
+            .plus(REFRESHABLE_DURATION, ChronoUnit.SECONDS)
+            .toEpochMilli())
+            : signedJWT.getJWTClaimsSet().getExpirationTime();
 
-            // Nếu chữ ký không hợp lệ, trả về chuỗi thông báo lỗi
-            if (!isSignatureValid) {
-                return "Invalid token signature";
-            }
+        var verified = signedJWT.verify(verifier);
 
-            // Nếu chữ ký hợp lệ, trả về chuỗi xác nhận hợp lệ
-            return "Token signature is valid";
+        if (!(verified && expiryTime.after(new Date()))) throw new AppException(ErrorCode.UNAUTHENTICATED);
 
-        } catch (Exception e) {
-            // Log lại lỗi nếu có exception xảy ra trong quá trình xác thực token
-            log.error("Error verifying token", e);
+        if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
 
-            // Trả về chuỗi thông báo lỗi
-            return "Error verifying token: " + e.getMessage();
-        }
+        return signedJWT;
     }
 }

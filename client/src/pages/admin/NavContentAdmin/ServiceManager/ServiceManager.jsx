@@ -76,12 +76,13 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
       });
 
       if (serviceResponse.data?.code === 200 && serviceResponse.data.result.motelServices) {
-        const motelServices = serviceResponse.data.result.motelServices;
-        const rooms = roomResponse.data;
+        const motelServices = serviceResponse.data?.result?.motelServices || [];
+        const rooms = roomResponse.data || [];
 
         const serviceCounts = {};
         rooms.forEach((room) => {
-          room.services.forEach((service) => {
+          const services = room.services || [];
+          services.forEach((service) => {
             serviceCounts[service.serviceId] = (serviceCounts[service.serviceId] || 0) + 1;
           });
         });
@@ -95,11 +96,12 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
 
         // Chuẩn bị dữ liệu phòng cho bảng
         const roomDataFormatted = rooms.map((room) => {
-          const roomServices = room.services.reduce((acc, service) => {
+          const roomServices = (room.services || []).reduce((acc, service) => {
             acc[`usage_${service.serviceId}`] = service.usage;
             acc[`total_${service.serviceId}`] = service.total;
             return acc;
           }, {});
+          
 
           return {
             nameRoom: room.name,

@@ -37,9 +37,9 @@ public class TenantController {
                 .build();
     }
 
-    @Operation(summary = "Get motel by id")
+    @Operation(summary = "Get tenant by id")
     @GetMapping("/tenant-id")
-    public ApiResponse<TenantResponse> getMotelbyid(@RequestParam UUID id) {
+    public ApiResponse<TenantResponse> getTenantbyid(@RequestParam UUID id) {
         TenantResponse tennantResponse = tenantService.findById(id);
         return ApiResponse.<TenantResponse>builder()
                 .code(HttpStatus.OK.value())

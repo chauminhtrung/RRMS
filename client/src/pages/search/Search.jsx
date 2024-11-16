@@ -28,11 +28,6 @@ const Search = ({ setIsAdmin }) => {
   }, [])
 
   useEffect(() => {
-    console.log('Searching for:', searchValue) // Ghi log giá trị tìm kiếm
-    loadData(searchValue)
-  }, [])
-
-  useEffect(() => {
     getTinhThanh()
       .then((response) => {
         if (response.data.error === 0) {
@@ -46,7 +41,7 @@ const Search = ({ setIsAdmin }) => {
 
   // /name?name=${searchValue}
   // Hàm để tải dữ liệu
-  const loadData = async (searchValue) => {
+  const loadDataSearch = async (searchValue, pageNumber = 1, pageSize = 6) => {
     try {
       const response = await axios.get(`${env.API_URL}/searchs`, {
         headers: {
@@ -74,7 +69,10 @@ const Search = ({ setIsAdmin }) => {
       console.error('Error fetching data:', error)
     }
   }
-
+  useEffect(() => {
+    console.log('Searching for:', searchValue) // Ghi log giá trị tìm kiếm
+    loadDataSearch(searchValue, 0, 6)
+  }, [])
   if (!provinces) {
     return <LoadingPage />
   }

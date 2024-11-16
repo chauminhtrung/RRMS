@@ -16,6 +16,11 @@ public interface SearchRepository extends JpaRepository<Search, UUID> {
 
     //    List<BulletinBoard> findByMoveInDateLessThanEqual(Date date);
 
-    @Query("SELECT r FROM BulletinBoard r ORDER BY r.createdDate DESC")
-    List<BulletinBoard> findAllByDatenew();
+    @Query("SELECT r FROM BulletinBoard r WHERE r.isActive = :isActive ORDER BY r.createdDate DESC")
+    List<BulletinBoard> findAllByDatenew(@Param("isActive") Boolean isActive);
+
+
+    @Query("SELECT r FROM BulletinBoard r WHERE r.isActive = :isActive ORDER BY r.createdDate ASC")
+    List<BulletinBoard> findAllByIsActive(@Param("isActive") Boolean isActive);
+
 }

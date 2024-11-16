@@ -1,7 +1,8 @@
 import { Link, useParams, useLocation } from 'react-router-dom'
 import { Tooltip } from 'react-tooltip'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import ModalCreateHome from '~/pages/admin/ManagerHome/ModelCreateHome'
+import { Modal as BootstrapModal } from 'bootstrap'
 import Swal from 'sweetalert2'
 import { deleteMotel, getMotelById } from '~/apis/motelAPI'
 const NavWData = ({ motels }) => {
@@ -10,7 +11,8 @@ const NavWData = ({ motels }) => {
   const location = useLocation() // Nhận thông tin đường dẫn hiện tại
   const [motel, setmotel] = useState(null)
   const [selectedMotelId, setSelectedMotelId] = useState(null)
-
+  const manageBlockModalRef = useRef(null)
+  const addBlockModalRef = useRef(null)
   useEffect(() => {
     // Nếu có danh sách nhà trọ và không có tên cụ thể từ URL
     if (motels && motels.length > 0 && !motelId) {
@@ -36,8 +38,48 @@ const NavWData = ({ motels }) => {
     }
   }, [motels, motelId])
 
+  useEffect(() => {
+    // Khởi tạo modal khi component được mount
+    const manageBlockModalElement = document.getElementById('manageBlock')
+    const manageBlockModal = new BootstrapModal(manageBlockModalElement, {
+      backdrop: 'static'
+    })
+
+    // Lưu vào state hoặc callback để sử dụng lại khi cần
+    window.manageBlockModal = manageBlockModal
+
+    // Khởi tạo modal khi component được mount
+    const addBlockModalElement = document.getElementById('addBlock')
+    const addBlockModal = new BootstrapModal(addBlockModalElement, {
+      backdrop: 'static'
+    })
+
+    // Lưu vào state hoặc callback để sử dụng lại khi cần
+    manageBlockModalRef.current = manageBlockModal
+    addBlockModalRef.current = addBlockModal
+
+    // Dọn dẹp khi component bị unmount
+    return () => {
+      manageBlockModal.dispose()
+      addBlockModal.dispose()
+    }
+  }, [])
+  // Hàm mở modal quản lý block
+  const openModalManagerBlock = () => {
+    if (manageBlockModalRef.current) {
+      manageBlockModalRef.current.show() // Mở modal quản lý block
+    }
+  }
+
+  // Hàm mở modal thêm block
+  const openModalAddBlock = () => {
+    if (addBlockModalRef.current) {
+      addBlockModalRef.current.show() // Mở modal thêm block
+    }
+  }
+
   //nhan vao nut edit
-  //ham xoa template Contract
+  //ham xoa
   const handleDelete = async (motelId) => {
     const result = await Swal.fire({
       title: 'Bạn có chắc muốn xóa không?',
@@ -75,8 +117,7 @@ const NavWData = ({ motels }) => {
             <div
               className="current-block d-flex align-items-center"
               style={{ position: 'relative' }}
-              data-bs-toggle="modal"
-              data-bs-target="#manageBlock">
+              onClick={openModalManagerBlock}>
               <div className="d-flex align-items-center" style={{ flexDirection: 'row', flex: '1' }}>
                 <div className="icon-blocks">
                   <span className="count-block">{motels.length}</span>
@@ -113,55 +154,52 @@ const NavWData = ({ motels }) => {
                   </h4>
                 </div>
               </div>
-
-              <button
-                className="shadow"
-                id="add-block"
-                data-bs-toggle="modal"
-                data-bs-target="#addBlock"
-                data-mode="add"
-                onClick={() => setSelectedMotelId('Create')}
-                style={{
-                  position: 'absolute',
-                  right: '-10px',
-                  top: '34px',
-                  borderRadius: '100%',
-                  height: '35px',
-                  width: '35px',
-                  textAlign: 'center',
-                  padding: '0px',
-                  backgroundColor: '#20a9e7',
-                  color: '#fff',
-                  border: '1px solid #20a9e7',
-                  zIndex: '10'
-                }}
-                data-tooltip-id="my-tooltip"
-                data-tooltip-content="Thêm mới nhà cho thuê"
-                data-tooltip-place="top">
-                <Tooltip id="my-tooltip" />
-
-                <span
-                  data-bs-toggle="tooltip"
-                  data-bs-placement="top"
-                  title=""
-                  data-bs-original-title="Thêm mới nhà cho thuê">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="feather feather-plus">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                  </svg>
-                </span>
-              </button>
             </div>
+            <button
+              className="shadow"
+              id="add-block"
+              onClick={() => {
+                setSelectedMotelId('Create')
+                openModalAddBlock()
+              }}
+              style={{
+                marginLeft: '-20px',
+                borderRadius: '100%',
+                height: '40px',
+                width: '47px',
+                textAlign: 'center',
+                padding: '0px',
+                backgroundColor: '#20a9e7',
+                color: '#fff',
+                border: '1px solid #20a9e7',
+                zIndex: '10'
+              }}
+              data-tooltip-id="my-tooltip"
+              data-tooltip-content="Thêm mới nhà cho thuê"
+              data-tooltip-place="top">
+              <Tooltip id="my-tooltip" />
+
+              <span
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                title=""
+                data-bs-original-title="Thêm mới nhà cho thuê">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="feather feather-plus">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </span>
+            </button>
           </div>
           <div
             className="col-md-10"
@@ -378,13 +416,7 @@ const NavWData = ({ motels }) => {
         </div>
       </div>
       {/* Modal manage block  */}
-      <div
-        className="modal fade"
-        id="manageBlock"
-        tabIndex="-1"
-        aria-labelledby="manageBlockLabel"
-        aria-hidden="true"
-        style={{ display: 'none' }}>
+      <div className="modal fade" id="manageBlock" tabIndex="-1" aria-hidden="true" ref={manageBlockModalRef}>
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header modal-header--sticky">
@@ -524,12 +556,12 @@ const NavWData = ({ motels }) => {
                       </div>
                     </div>
                     {/* nut chuyen toi tro  */}
-                    <Link
+                    <a
                       className="btn-round btn-go-to"
                       data-bs-toggle="tooltip"
                       data-bs-placement="top"
                       title=""
-                      to={`/quanlytro/${motelinMap.motelId}`}
+                      href={`/quanlytro/${motelinMap.motelId}`}
                       data-bs-original-title="Tới quản lý Nhà trọ"
                       data-tooltip-id="my-tooltipManagerMotel"
                       data-tooltip-content="Tới quản lý Nhà trọ"
@@ -549,7 +581,7 @@ const NavWData = ({ motels }) => {
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                         <polyline points="12 5 19 12 12 19"></polyline>
                       </svg>
-                    </Link>
+                    </a>
                   </div>
                 ))
               ) : (
@@ -560,7 +592,7 @@ const NavWData = ({ motels }) => {
         </div>
       </div>
       {/* Modal add  */}
-      <ModalCreateHome username={username} MotelId={selectedMotelId} />
+      <ModalCreateHome username={username} MotelId={selectedMotelId} ref={addBlockModalRef} />
     </div>
   )
 }

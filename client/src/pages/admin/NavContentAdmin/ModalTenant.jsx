@@ -268,6 +268,7 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
 
     const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
     if (!token) {
+      onClose()
       Swal.fire({
         icon: 'error',
         title: 'Lỗi',
@@ -278,7 +279,7 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
 
     if (!tenant || !tenant.fullname?.trim() || !tenant.phone?.trim() || !tenant.address?.trim()) {
       console.log('dd')
-      toast.error('Please fill in all required fields.')
+      onClose()
       Swal.fire({
         icon: 'error',
         title: 'Lỗi',
@@ -304,7 +305,13 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
       onClose()
     } catch (error) {
       console.error('Error saving tenant:', error)
-      toast.info('Error saving tenant:')
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Lỗi',
+        text: 'Please fill in all required fields.'
+      })
+      onClose()
     }
   }
 
@@ -348,6 +355,7 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
         title: 'Thất bại',
         text: 'Vui lòng cung cấp đầy đủ thông tin khách hàng!'
       })
+      onClose()
 
       return
     }

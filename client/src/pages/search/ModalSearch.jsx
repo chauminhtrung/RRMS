@@ -108,7 +108,7 @@ const ModalSearch = ({ open, handleClose }) => {
                 textAlign: 'center',
                 borderRadius: 1
               }}>
-              TIÊU CHÍ TÌM KIẾM
+              {t('tieu-chi-tim-kiem')}
             </Typography>
 
             {/* Chọn Khu vực */}

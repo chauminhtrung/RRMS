@@ -30,7 +30,7 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
 
   // Thêm trạng thái cho trang hiện tại
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 7 // Số lượng item hiển thị mỗi trang
+  const itemsPerPage = 6 // Số lượng item hiển thị mỗi trang
 
   const handleToggle = (id) => {
     setVisiblePhoneNumbers((prev) => ({

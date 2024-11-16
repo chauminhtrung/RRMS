@@ -18,7 +18,7 @@ public class ApiResponse<T> implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    int code;
+    int code = 1000;
     String message;
     T result;
 }
