@@ -1,13 +1,15 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+
 import com.rrms.rrms.repositories.BulletinBoardImageRepository;
 import com.rrms.rrms.services.IBulletinBoardImage;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)

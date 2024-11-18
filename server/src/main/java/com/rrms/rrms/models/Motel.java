@@ -1,11 +1,12 @@
 package com.rrms.rrms.models;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,6 +56,10 @@ public class Motel {
     @ManyToOne
     @JoinColumn(name = "type_room_id", nullable = false)
     private TypeRoom typeRoom;
+
+    //them trường ngày tạo phoing
+    @Column(name = "created_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime createdDate;
 
     // de xoa motell xoa luon dich vu
     @OneToMany(mappedBy = "motel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)

@@ -6,6 +6,7 @@ import java.util.UUID;
 import jakarta.persistence.*;
 
 import com.rrms.rrms.enums.Gender;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -65,12 +66,11 @@ public class Tenant {
     @Column(columnDefinition = "BOOLEAN")
     private Boolean role;
 
-    @Column(name = "relationship",columnDefinition = "VARCHAR(255)")
+    @Column(name = "relationship", columnDefinition = "VARCHAR(255)")
     private String relationship;
 
-    @Column(name = "type_of_tenant",  columnDefinition = "BOOLEAN")
-    private Boolean  type_of_tenant;
-
+    @Column(name = "type_of_tenant", columnDefinition = "BOOLEAN")
+    private Boolean type_of_tenant;
 
     @Column(name = "temporary_residence", columnDefinition = "BOOLEAN")
     private Boolean temporaryResidence;

@@ -1,23 +1,25 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.rrms.rrms.dto.request.TenantRequest;
 import com.rrms.rrms.dto.response.TenantResponse;
 import com.rrms.rrms.mapper.TenantMapper;
 import com.rrms.rrms.models.Tenant;
 import com.rrms.rrms.repositories.TenantRepository;
 import com.rrms.rrms.services.ITenantService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class TenantService implements ITenantService {
     @Autowired
     private TenantRepository tenantRepository;
+
     @Autowired
     private TenantMapper tenantMapper;
 
@@ -37,14 +39,12 @@ public class TenantService implements ITenantService {
                 .orElseThrow(() -> new IllegalArgumentException("Tenant not found"));
     }
 
-
     @Override
     public List<TenantResponse> getAllTenants() {
         return tenantRepository.findAll().stream()
                 .map(tenantMapper::toTenantResponse)
                 .collect(Collectors.toList());
     }
-
 
     @Override
     public TenantResponse update(UUID id, TenantRequest tenantRequest) {
@@ -65,5 +65,4 @@ public class TenantService implements ITenantService {
             tenantRepository.deleteById(id);
         }
     }
-
 }

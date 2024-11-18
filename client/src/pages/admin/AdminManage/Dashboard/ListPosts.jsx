@@ -1,7 +1,9 @@
 import AdminManagerBoard from "../../AdminManageBoard";
 const ListPosts = () => {
   return <>
-    <div>ListPosts</div>
+    <div>
+      <AdminManagerBoard></AdminManagerBoard>
+    </div>
   </>;
 };
 export default ListPosts;  

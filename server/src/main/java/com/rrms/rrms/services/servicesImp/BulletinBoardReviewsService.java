@@ -1,5 +1,11 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+
 import com.rrms.rrms.dto.request.BulletinBoardReviewsRequest;
 import com.rrms.rrms.dto.response.BulletinBoardReviewsResponse;
 import com.rrms.rrms.dto.response.RatingHistoryResponse;
@@ -13,14 +19,10 @@ import com.rrms.rrms.repositories.AccountRepository;
 import com.rrms.rrms.repositories.BulletinBoardRepository;
 import com.rrms.rrms.repositories.BulletinBoardReviewsRepository;
 import com.rrms.rrms.services.IBulletinBoardReviews;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)

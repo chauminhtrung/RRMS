@@ -1,20 +1,21 @@
 package com.rrms.rrms.controllers;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
 import com.rrms.rrms.dto.request.TenantRequest;
 import com.rrms.rrms.dto.response.ApiResponse;
-import com.rrms.rrms.dto.response.MotelResponse;
 import com.rrms.rrms.dto.response.TenantResponse;
 import com.rrms.rrms.services.ITenantService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -61,7 +62,8 @@ public class TenantController {
 
     @Operation(summary = "Update tenant by id")
     @PutMapping("/{id}")
-    public ApiResponse<TenantResponse> updateTenant(@PathVariable("id") UUID id, @RequestBody TenantRequest tenantRequest) {
+    public ApiResponse<TenantResponse> updateTenant(
+            @PathVariable("id") UUID id, @RequestBody TenantRequest tenantRequest) {
         if (!id.equals(null) && !tenantRequest.equals(null)) {
             TenantResponse tenantResponse = tenantService.update(id, tenantRequest);
             log.info("Update motel successfully");
@@ -99,5 +101,4 @@ public class TenantController {
                     .build();
         }
     }
-
 }

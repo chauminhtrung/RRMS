@@ -1,7 +1,15 @@
 package com.rrms.rrms.services;
 
-import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.*;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.elasticsearch.ResourceNotFoundException;
 
 import com.rrms.rrms.dto.request.BulletinBoardRequest;
 import com.rrms.rrms.dto.response.BulletinBoardResponse;
@@ -9,14 +17,6 @@ import com.rrms.rrms.mapper.BulletinBoardMapper;
 import com.rrms.rrms.models.*;
 import com.rrms.rrms.repositories.*;
 import com.rrms.rrms.services.servicesImp.BulletinBoardService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.elasticsearch.ResourceNotFoundException;
-
-import java.util.*;
 
 @SpringBootTest
 public class BulletinBoardServiceTest {
@@ -67,26 +67,28 @@ public class BulletinBoardServiceTest {
                 .thenReturn(new BulletinBoardResponse());
     }
 
-//    @Test
-//    public void testUpdateBulletinBoard_Success() {
-//        // Mock repository để trả về bulletinBoard
-//        when(bulletinBoardRepository.findById(bulletinBoardId)).thenReturn(Optional.of(bulletinBoard));
-//
-//        // Mock các thao tác cập nhật trong repository
-//        when(bulletinBoardRepository.save(any(BulletinBoard.class))).thenReturn(bulletinBoard);
-//        when(bulletinBoardMapper.updateBulletinBoardFromRequest(any(BulletinBoardRequest.class), any(BulletinBoard.class)))
-//                .thenReturn(bulletinBoard);
-//
-//        // Gọi phương thức cần kiểm tra
-//        BulletinBoardResponse response = bulletinBoardService.updateBulletinBoard(bulletinBoardId, bulletinBoardRequest);
-//
-//        // Kiểm tra kết quả
-//        assertNotNull(response);
-//        verify(bulletinBoardRepository).save(any(BulletinBoard.class));
-//        verify(bulletinBoardImageRepository).deleteAllByBulletinBoard(any(BulletinBoard.class));
-//        verify(bulletinBoardRuleRepository).deleteAllByBulletinBoard(any(BulletinBoard.class));
-//        verify(bulletinBoards_RentalAmRepository).deleteAllByBulletinBoard(any(BulletinBoard.class));
-//    }
+    //    @Test
+    //    public void testUpdateBulletinBoard_Success() {
+    //        // Mock repository để trả về bulletinBoard
+    //        when(bulletinBoardRepository.findById(bulletinBoardId)).thenReturn(Optional.of(bulletinBoard));
+    //
+    //        // Mock các thao tác cập nhật trong repository
+    //        when(bulletinBoardRepository.save(any(BulletinBoard.class))).thenReturn(bulletinBoard);
+    //        when(bulletinBoardMapper.updateBulletinBoardFromRequest(any(BulletinBoardRequest.class),
+    // any(BulletinBoard.class)))
+    //                .thenReturn(bulletinBoard);
+    //
+    //        // Gọi phương thức cần kiểm tra
+    //        BulletinBoardResponse response = bulletinBoardService.updateBulletinBoard(bulletinBoardId,
+    // bulletinBoardRequest);
+    //
+    //        // Kiểm tra kết quả
+    //        assertNotNull(response);
+    //        verify(bulletinBoardRepository).save(any(BulletinBoard.class));
+    //        verify(bulletinBoardImageRepository).deleteAllByBulletinBoard(any(BulletinBoard.class));
+    //        verify(bulletinBoardRuleRepository).deleteAllByBulletinBoard(any(BulletinBoard.class));
+    //        verify(bulletinBoards_RentalAmRepository).deleteAllByBulletinBoard(any(BulletinBoard.class));
+    //    }
 
     @Test
     public void testUpdateBulletinBoard_BulletinBoardNotFound() {

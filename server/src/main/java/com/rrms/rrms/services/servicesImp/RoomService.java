@@ -1,5 +1,11 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import com.rrms.rrms.dto.request.RoomRequest;
 import com.rrms.rrms.dto.request.RoomRequest2;
 import com.rrms.rrms.dto.response.PostRoomTableResponse;
@@ -17,15 +23,11 @@ import com.rrms.rrms.repositories.MotelRepository;
 import com.rrms.rrms.repositories.RoomRepository;
 import com.rrms.rrms.repositories.ServiceRepository;
 import com.rrms.rrms.services.IRoom;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)

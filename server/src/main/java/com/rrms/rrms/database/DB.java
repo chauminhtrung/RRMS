@@ -1,20 +1,22 @@
 package com.rrms.rrms.database;
 
-import com.rrms.rrms.enums.Gender;
-import com.rrms.rrms.enums.Roles;
-import com.rrms.rrms.models.*;
-import com.rrms.rrms.repositories.*;
-import com.rrms.rrms.services.ISearchService;
-import lombok.extern.slf4j.Slf4j;
-import net.datafaker.Faker;
+import java.time.LocalDate;
+import java.util.*;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.*;
+import com.rrms.rrms.enums.Gender;
+import com.rrms.rrms.enums.Roles;
+import com.rrms.rrms.models.*;
+import com.rrms.rrms.repositories.*;
+import com.rrms.rrms.services.ISearchService;
+
+import lombok.extern.slf4j.Slf4j;
+import net.datafaker.Faker;
 
 @Configuration
 @Slf4j
@@ -50,7 +52,7 @@ public class DB {
             BulletinBoards_RentalAmRepository bulletinBoards_rentalAmRepository,
             TenantRepository tenantRepository) {
         return args -> {
-            int roomsLength = 5;
+            int roomsLength = 30;
             int bulletinBoardsLength = 10;
             log.info("Starting to create data... length: {}", roomsLength);
 
@@ -91,7 +93,7 @@ public class DB {
                     rooms.add(room);
 
                     // Tạo và lưu dịch vụ Room
-                    //createServicesRoom(faker, roomServices, room, serviceRepository);
+                    // createServicesRoom(faker, roomServices, room, serviceRepository);
 
                     // Tạo hình ảnh cho phòng
                     createRoomImages(faker, roomImages, room);
@@ -431,39 +433,39 @@ public class DB {
                         // ngày
                         // trước
                         new Date() // Ngày hiện tại
-                );
+                        );
         room.setDeposit(faker.number().randomDouble(2, 500000, 5000000));
         room.setMotel(motel);
         room.setPrice(faker.number().randomDouble(2, 500000, 5000000));
         return room;
     }
 
-//    private void createServicesRoom(
-//            Faker faker, List<RoomService> roomServices, Room room, ServiceRepository serviceRepository) {
-//
-//        List<Service> ListService = serviceRepository.findAll();
-//
-//        roomServices.add(RoomService.builder()
-//                .room(room)
-//                .service(ListService.get(0))
-//                .quantity(1)
-//                .build());
-//        roomServices.add(RoomService.builder()
-//                .room(room)
-//                .service(ListService.get(1))
-//                .quantity(1)
-//                .build());
-//        roomServices.add(RoomService.builder()
-//                .room(room)
-//                .service(ListService.get(2))
-//                .quantity(1)
-//                .build());
-//        roomServices.add(RoomService.builder()
-//                .room(room)
-//                .service(ListService.get(3))
-//                .quantity(1)
-//                .build());
-//    }
+    //    private void createServicesRoom(
+    //            Faker faker, List<RoomService> roomServices, Room room, ServiceRepository serviceRepository) {
+    //
+    //        List<Service> ListService = serviceRepository.findAll();
+    //
+    //        roomServices.add(RoomService.builder()
+    //                .room(room)
+    //                .service(ListService.get(0))
+    //                .quantity(1)
+    //                .build());
+    //        roomServices.add(RoomService.builder()
+    //                .room(room)
+    //                .service(ListService.get(1))
+    //                .quantity(1)
+    //                .build());
+    //        roomServices.add(RoomService.builder()
+    //                .room(room)
+    //                .service(ListService.get(2))
+    //                .quantity(1)
+    //                .build());
+    //        roomServices.add(RoomService.builder()
+    //                .room(room)
+    //                .service(ListService.get(3))
+    //                .quantity(1)
+    //                .build());
+    //    }
 
     private void createServices(Faker faker, ServiceRepository serviceRepository) {
         Service service1 = Service.builder()
@@ -500,7 +502,17 @@ public class DB {
             BulletinBoards_RentalAmRepository bulletinBoards_RentalAmRepository) {
 
         for (int i = 0; i < 5; i++) {
-            String name = faker.options().option("Có gác lửng", "Có chỗ giữ xe", "Toilet riêng", "Riêng với chủ", "Có wifi", "Có camera an ninh", "Được nuôi thú cưng", "Có ban công", "Có nơi sinh hoạt");
+            String name = faker.options()
+                    .option(
+                            "Có gác lửng",
+                            "Có chỗ giữ xe",
+                            "Toilet riêng",
+                            "Riêng với chủ",
+                            "Có wifi",
+                            "Có camera an ninh",
+                            "Được nuôi thú cưng",
+                            "Có ban công",
+                            "Có nơi sinh hoạt");
 
             Optional<RentalAmenities> existingRentalAmenities = rentalAmenitiesRepository.findByName(name);
 
@@ -518,15 +530,16 @@ public class DB {
             RuleRepository ruleRepository,
             BulletinBoard bulletinBoard) {
         for (int j = 0; j < 5; j++) {
-            Rule rule = ruleRepository.save(
-                    Rule.builder().ruleName(faker.options()
+            Rule rule = ruleRepository.save(Rule.builder()
+                    .ruleName(faker.options()
                             .option(
                                     "Nhà trọ có giờ giấc không về quá khuya",
                                     "Đóng tiền trọ đúng ngày",
                                     "Không hút thuốc, say xỉn",
                                     "Không chứa chấp tội phạm",
                                     "Không hát karaoke, nhậu nhặt ảnh hưởng tới phòng kế bên",
-                                    "Cư xử văn hóa")).build());
+                                    "Cư xử văn hóa"))
+                    .build());
             bulletinBoardRuleList = new ArrayList<>();
             bulletinBoardRuleList.add(bulletinBoardRuleRepository.save(BulletinBoardRule.builder()
                     .rule(rule)
@@ -620,11 +633,19 @@ public class DB {
 
         String CCCD = faker.idNumber().valid();
         String email = faker.internet().emailAddress();
-        LocalDate birthday = faker.date().birthday().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+        LocalDate birthday = faker.date()
+                .birthday()
+                .toInstant()
+                .atZone(java.time.ZoneId.systemDefault())
+                .toLocalDate();
         Gender gender = faker.bool().bool() ? Gender.MALE : Gender.FEMALE;
         String address = faker.address().fullAddress();
         String job = faker.job().title();
-        LocalDate licenseDate = faker.date().birthday().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+        LocalDate licenseDate = faker.date()
+                .birthday()
+                .toInstant()
+                .atZone(java.time.ZoneId.systemDefault())
+                .toLocalDate();
         String placeOfLicense = faker.address().city();
         String frontPhoto = "front_" + faker.internet().uuid() + ".jpg";
         String backPhoto = "back_" + faker.internet().uuid() + ".jpg";
@@ -638,7 +659,7 @@ public class DB {
         Tenant tenant = Tenant.builder()
                 .tenantId(UUID.randomUUID())
                 .fullname(fullname)
-                .phone(phone)  // Đảm bảo phone không vượt quá 12 ký tự
+                .phone(phone) // Đảm bảo phone không vượt quá 12 ký tự
                 .cccd(CCCD)
                 .email(email)
                 .birthday(birthday)
@@ -658,6 +679,4 @@ public class DB {
 
         return tenant;
     }
-
-
 }
