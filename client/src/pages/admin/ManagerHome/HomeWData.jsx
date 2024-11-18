@@ -215,44 +215,44 @@ const HomeWData = ({ Motel }) => {
 
   //sua dich vu phong handleSubmitServiceRoom
   // Hàm để xử lý khi người dùng nhấn nút "Áp dụng dịch vụ"
-  const handleApplyServices = async () => {
-    // Lọc các dịch vụ không được chọn
-    const servicesToDelete = roomSerivces.filter((service) => !service.isSelected)
-    const servicesToUpdate = roomSerivces.filter((service) => service.isSelected)
+  // const handleApplyServices = async () => {
+  //   // Lọc các dịch vụ không được chọn
+  //   const servicesToDelete = roomSerivces.filter((service) => !service.isSelected)
+  //   const servicesToUpdate = roomSerivces.filter((service) => service.isSelected)
 
-    // Gọi API để xóa các dịch vụ không được chọn
-    for (const service of servicesToDelete) {
-      console.log(service)
-      DeleteRoomServiceByid(service.roomServiceId)
-    }
+  //   // Gọi API để xóa các dịch vụ không được chọn
+  //   for (const service of servicesToDelete) {
+  //     console.log(service)
+  //     DeleteRoomServiceByid(service.roomServiceId)
+  //   }
 
-    for (const service of servicesToUpdate) {
-      let SerivceUpdate = {
-        roomServiceId: service.roomServiceId,
-        roomId: service.room.roomId,
-        serviceId: service.service.motelServiceId,
-        quantity: service.quantity
-      }
-      console.log(SerivceUpdate)
+  //   for (const service of servicesToUpdate) {
+  //     let SerivceUpdate = {
+  //       roomServiceId: service.roomServiceId,
+  //       roomId: service.room.roomId,
+  //       serviceId: service.service.motelServiceId,
+  //       quantity: service.quantity
+  //     }
+  //     console.log(SerivceUpdate)
 
-      updateSerivceRoom(service.roomServiceId, SerivceUpdate)
-      console.log('Service can update', service)
-    }
+  //     updateSerivceRoom(service.roomServiceId, SerivceUpdate)
+  //     console.log('Service can update', service)
+  //   }
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Thông báo',
-      text: 'All Serivce Room updated successfully!'
-    })
-    const modalElement = document.getElementById('priceItemSelect')
-    const modal = Modal.getInstance(modalElement) // Lấy instance của modal
-    modal.hide() // Đóng modal
-    // Xóa toàn bộ backdrop (nếu có)
-    // Xóa tất cả các backdrop (nếu có nhiều backdrop)
-    const backdropElements = document.querySelectorAll('.modal-backdrop')
-    backdropElements.forEach((backdrop) => backdrop.remove()) // Xóa tất cả các backdrop
-    fetchDataServiceRooms(room.roomId)
-  }
+  //   Swal.fire({
+  //     icon: 'success',
+  //     title: 'Thông báo',
+  //     text: 'All Serivce Room updated successfully!'
+  //   })
+  //   const modalElement = document.getElementById('priceItemSelect')
+  //   const modal = Modal.getInstance(modalElement) // Lấy instance của modal
+  //   modal.hide() // Đóng modal
+  //   // Xóa toàn bộ backdrop (nếu có)
+  //   // Xóa tất cả các backdrop (nếu có nhiều backdrop)
+  //   const backdropElements = document.querySelectorAll('.modal-backdrop')
+  //   backdropElements.forEach((backdrop) => backdrop.remove()) // Xóa tất cả các backdrop
+  //   fetchDataServiceRooms(room.roomId)
+  // }
 
   // Hàm xử lý khi textarea thay đổi, cập nhật trực tiếp description của room
   const handleNoteChange = (event) => {
@@ -1829,7 +1829,7 @@ const HomeWData = ({ Motel }) => {
                   </svg>
                   Đóng
                 </button>
-                <button type="button" id="submit-room" className="btn btn-primary" onClick={handleApplyServices}>
+                {/* <button type="button" id="submit-room" className="btn btn-primary" onClick={handleApplyServices}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -1845,7 +1845,7 @@ const HomeWData = ({ Motel }) => {
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                   </svg>
                   Áp dụng dịch vụ
-                </button>
+                </button> */}
               </div>
             </div>
           </div>
@@ -1906,35 +1906,41 @@ const HomeWData = ({ Motel }) => {
                 </button>
               </div>
               <div className="modal-body">
-                <div className="row mt-4">
-                  {device.map((item) => (
-                    <div className="col-12 border p-3 d-flex align-items-center mt-1">
-                      <input type="checkbox" className="mx-3" />
-                      <div className="flex-grow-1">
-                        <h6 className="mb-1">{item.deviceName}</h6>
-                        <p className="mb-0">
-                          Giá: <strong>{item.value}</strong> /{' '}
-                          {item.unit == 'CAI'
-                            ? 'Cái'
-                            : item.unit == 'CHIEC'
-                            ? 'Chiếc'
-                            : item.unit == 'BO'
-                            ? 'Bộ'
-                            : 'Cặp'}
-                        </p>
+                {device.length > 0 ? (
+                  <div className="row mt-4">
+                    {device.map((item) => (
+                      <div className="col-12 border p-3 d-flex align-items-center mt-1">
+                        <input type="checkbox" className="mx-3" />
+                        <div className="flex-grow-1">
+                          <h6 className="mb-1">{item.deviceName}</h6>
+                          <p className="mb-0">
+                            Giá: <strong>{item.value}</strong> /{' '}
+                            {item.unit == 'CAI'
+                              ? 'Cái'
+                              : item.unit == 'CHIEC'
+                              ? 'Chiếc'
+                              : item.unit == 'BO'
+                              ? 'Bộ'
+                              : 'Cặp'}
+                          </p>
+                        </div>
+                        <div className="d-flex align-items-center">
+                          <input
+                            type="number"
+                            className="form-control text-center"
+                            defaultValue={1}
+                            style={{ width: '100px' }}
+                          />
+                          <span className="mx-2">Số lượng</span>
+                        </div>
                       </div>
-                      <div className="d-flex align-items-center">
-                        <input
-                          type="number"
-                          className="form-control text-center"
-                          defaultValue={1}
-                          style={{ width: '100px' }}
-                        />
-                        <span className="mx-2">Số lượng</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-danger mt-2">Căn trọ chưa thiết lập tài sản nào, cần thêm tài sản !</p>
+                  </div>
+                )}
               </div>
               <div className="modal-footer modal-footer--sticky">
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
@@ -1955,7 +1961,7 @@ const HomeWData = ({ Motel }) => {
                   Đóng
                 </button>
                 {/* su kien onclick khi submit form cua thuan (nho thay doi)  */}
-                <button type="button" id="submit-room" className="btn btn-primary" onClick={handleApplyServices}>
+                {/* <button type="button" id="submit-room" className="btn btn-primary" onClick={handleApplyServices}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -1971,7 +1977,7 @@ const HomeWData = ({ Motel }) => {
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                   </svg>
                   Áp dụng tài sản
-                </button>
+                </button> */}
               </div>
             </div>
           </div>
