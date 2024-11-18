@@ -530,7 +530,7 @@ const HomeWData = ({ Motel }) => {
     }
   }
   const handleDetailClick = (e, rowId) => {
-    window.open(`/quanlytro/${motelId}/Chi-tiet-phong/${rowId}`, '_blank')
+    window.open(`/quanlytro/${motelId ? motelId : Motel[0].motelId}/Chi-tiet-phong/${rowId}`, '_blank')
   }
 
   // Hàm xử lý khi người dùng chọn một mục trong menu

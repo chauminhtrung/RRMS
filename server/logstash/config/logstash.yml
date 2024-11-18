@@ -1,5 +1,8 @@
 http.host: 0.0.0.0
 path.config: /usr/share/logstash/pipeline
+pipeline.batch.delay: 50
+pipeline.batch.size: 200
+pipeline.workers: 4
 xpack.monitoring.elasticsearch.hosts:
 - http://elasticsearch:9200
 xpack.monitoring.enabled: false

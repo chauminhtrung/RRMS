@@ -8,11 +8,13 @@ import { useState } from 'react'
 
 import { Modal, Button, Form } from 'react-bootstrap'
 import { getPhuongXa, getQuanHuyen, getTinhThanh } from '~/apis/addressAPI'
-import { getRoomByMotelId } from '~/apis/roomAPI'
+import { getRoomByMotelId, getRoomById } from '~/apis/roomAPI'
 import { getMotelById } from '~/apis/motelAPI'
 import { getAllMotelDevices } from '~/apis/deviceAPT'
+import { getContractTemplatesByMotelId, createTenant, createContract } from '~/apis/contractTemplateAPI'
 import Swal from 'sweetalert2'
 const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
+  const username = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).username : null
   const { motelId } = useParams()
   const [show, setShow] = useState(false)
   const [provinces, setProvinces] = useState([])
@@ -21,60 +23,61 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
   const [selectedProvince, setSelectedProvince] = useState('')
   const [selectedDistrict, setSelectedDistrict] = useState('')
   const [selectedWard, setSelectedWard] = useState('')
-  const [errors, setErrors] = useState({})
   const [rooms, setRooms] = useState([])
+  const [room, setRoom] = useState(null)
   const [tenant, setTenant] = useState({
     fullname: '',
     phone: '',
     CCCD: '',
     email: '',
     birthday: null,
-    gender: '', // 'MALE', 'FEMALE', hoặc 'OTHER'
+    gender: 'OTHER', // 'MALE', 'FEMALE', hoặc 'OTHER'
     address: '',
     job: '',
-    License_date: null,
-    Place_of_license: '',
-    front_photo: '',
-    back_photo: '',
-    role: false,
-    temporary_residence: false,
-    information_verify: false
+    licenseDate: null,
+    placeOfLicense: '',
+    frontPhoto: '',
+    backPhoto: '',
+    role: true,
+    temporaryResidence: false,
+    informationVerify: false
   })
 
   const [contract, setContract] = useState({
-    contractId: null,
-    room: null,
-    tenant: null,
-    landlord: null,
-    contract_template: null,
-    broker: null,
+    roomId: null,
+    tenantId: null,
+    username: username,
+    contracttemplateId: null,
+    brokerId: null,
     moveinDate: new Date().toISOString().slice(0, 10),
     leaseTerm: '',
     closeContract: '',
     description: '',
     debt: 0.0,
     price: 0.0,
+    deposit: 0.0,
     collection_cycle: '',
-    createdate: '',
-    Sign_contract: '',
+    createdate: new Date().toISOString().slice(0, 10),
+    Sign_contract: 'Khách chưa ký',
     language: 'Tiếng Việt',
-    countTenant: 1,
-    status: '' // Giá trị có thể là 'ACTIVE', 'ENDED', hoặc 'IATExpire'
+    countTenant: 0,
+    status: 'ACTIVE' // Giá trị có thể là 'ACTIVE', 'ENDED', hoặc 'IATExpire'
   })
   const [motelServices, setMotelServices] = useState([])
   const [motelDevices, setMotelSDevices] = useState([])
   const [motel, setMotel] = useState({})
   const [selectedRoomId, setSelectedRoomId] = useState(null)
+  const [contractTemplates, setcontractTemplates] = useState([])
   const handleClose = () => setShow(false)
   const handleShow = () => {
     setShow(true)
     if (motelId) {
       fetchMotelServices(motelId)
       fetchMotelDevices(motelId)
+      fetchMotelContractTemplate(motelId)
       setIsAdmin(true)
       fetchCity()
       fetchRooms()
-      console.log(motelDevices)
     }
   }
 
@@ -85,6 +88,35 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
       ...prevTenant,
       [name]: value
     }))
+  }
+
+
+  const InsertTenant = async (tenant) => {
+    try {
+      const response = await createTenant(tenant)
+      setTenant(response.result) // Lưu tenant vào state nếu cần
+
+      // Cập nhật tenantUsername trong contract
+      setContract((prevContract) => ({
+        ...prevContract,
+        tenantId: response.result.tenantId // Gán giá trị tenantUsername từ kết quả trả về
+      }))
+
+      return response.result // Trả về thông tin tenant
+    } catch (error) {
+      console.error('Error saving tenant:', error)
+      throw error // Ném lỗi ra ngoài để có thể xử lý ở nơi gọi
+    }
+  }
+
+  const InsertContract = async (contract) => {
+    try {
+      const response = await createContract(contract)
+      return response // Trả về kết quả từ tạo hợp đồng
+    } catch (error) {
+      console.error('Error saving contract:', error)
+      throw error // Ném lỗi ra ngoài để có thể xử lý ở nơi gọi
+    }
   }
 
   const fetchRooms = async () => {
@@ -98,7 +130,7 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
       }
     } else {
       try {
-        const dataRoom = await getRoomByMotelId(Motel[0].motelId)
+        const dataRoom = await getRoomByMotelId(motel[0].motelId)
         setRooms(dataRoom)
       } catch (error) {
         console.log(error)
@@ -126,7 +158,6 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
   const fetchMotelDevices = async (id) => {
     try {
       const response = await getAllMotelDevices(id)
-      console.log(response)
       if (response.code === 200) {
         setMotelSDevices(response.result)
       } else {
@@ -138,30 +169,82 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     }
   }
 
+  //lay tempalte contract cua motel
+  const fetchMotelContractTemplate = async (id) => {
+    try {
+      const response = await getContractTemplatesByMotelId(id)
+      if (response) {
+        setcontractTemplates(response)
+      } else {
+        setcontractTemplates([])
+      }
+    } catch (error) {
+      console.error('Error fetching motel services:', error)
+      setMotelServices([])
+    }
+  }
+
   // Hàm onChange để cập nhật các trường trong contract
   const handleContractChange = (e) => {
     const { name, value } = e.target
-    setContract((prev) => {
-      const newContract = { ...prev, [name]: value }
 
-      // Nếu name là leaseTerm, tính toán ngày kết thúc
-      if (name === 'leaseTerm' && prev.moveinDate) {
+    setContract((prev) => {
+      const newContract = { ...prev }
+
+      if (name === 'price') {
+        // Loại bỏ các ký tự không phải số và cập nhật giá trị thô
+        const numericValue = value.replace(/[^0-9]/g, '') // Chỉ giữ lại số
+        newContract.price = numericValue // Lưu giá trị thô vào state
+      } else if (name === 'deposit') {
+        // Loại bỏ các ký tự không phải số và cập nhật giá trị thô
+        const numericValue = value.replace(/[^0-9]/g, '') // Chỉ giữ lại số
+        newContract.deposit = numericValue // Lưu giá trị thô vào state
+      } else if (name === 'leaseTerm' && prev.moveinDate) {
+        // Nếu thay đổi leaseTerm, tính toán closeContract
         const monthsToAdd = parseInt(value, 10)
         if (!isNaN(monthsToAdd)) {
           const moveinDate = new Date(prev.moveinDate)
           moveinDate.setMonth(moveinDate.getMonth() + monthsToAdd)
           newContract.closeContract = moveinDate.toISOString().slice(0, 10)
         }
+        newContract.leaseTerm = value // Cập nhật giá trị leaseTerm
+      } else {
+        newContract[name] = value // Cập nhật các trường khác
       }
 
       return newContract
     })
   }
 
-  const handleRoomClick = (roomId) => {
+  const handleRoomClick = async (roomId) => {
     setSelectedRoomId(roomId === selectedRoomId ? null : roomId) // Nếu phòng đã chọn thì bỏ chọn, nếu không thì chọn phòng mới
-    // Hiển thị ID của phòng khi chọn
-    alert(`ID phòng: ${roomId}`)
+    if (roomId === selectedRoomId) {
+      setRoom(null)
+      return
+    }
+    if (roomId) {
+      try {
+        const dataRoom = await getRoomById(roomId)
+        console.log(dataRoom)
+
+        setRoom(dataRoom)
+        setContract((prevContract) => ({
+          ...prevContract,
+          roomId: dataRoom.roomId, // Cập nhật dữ liệu phòng vào contract,
+          price: dataRoom.price,
+          deposit: dataRoom.price
+        }))
+      } catch (error) {
+        console.log(error)
+      }
+    } else {
+      // Nếu không chọn phòng nào, xóa thông tin phòng trong contract
+      setRoom(null)
+      setContract((prevContract) => ({
+        ...prevContract,
+        room: null
+      }))
+    }
   }
 
   //lay tinh thanh
@@ -223,25 +306,65 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
   }
 
   // Hàm xử lý submit
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const form = document.getElementById('add-contract-form')
 
     if (!form.checkValidity()) {
       form.classList.add('was-validated')
     } else {
-      if (!selectedRoomId) {
+      if (!room) {
         Swal.fire({
           icon: 'error',
           title: 'Thông báo',
-          text: 'chưa chọn phòng nào!'
+          text: 'Chưa chọn phòng nào!'
         })
       } else {
-        Swal.fire({
-          icon: 'success',
-          title: 'Thông báo',
-          text: 'Tạo hợp đồng thành công!'
-        })
-        console.log(contract)
+        try {
+          // Hiển thị thông báo tạo hợp đồng
+          Swal.fire({
+            icon: 'info',
+            title: 'Thông báo',
+            text: 'Đang xử lý...',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            didOpen: () => {
+              Swal.showLoading()
+            }
+          })
+
+          // Thêm tenant và cập nhật tenantUsername vào contract
+          const tenantResponse = await InsertTenant(tenant)
+          console.log(tenantResponse)
+
+          // Cập nhật tenantUsername v  ào contract
+          setContract((prev) => ({
+            ...prev,
+            tenantId: tenantResponse.tenantId // Giả sử API trả về `username`
+          }))
+
+          // Tạo hợp đồng sau khi tenant được thêm thành công
+
+          //const contractResponse = await InsertContract(contract)
+          console.log(contract)
+
+          // Thông báo thành công
+          Swal.fire({
+            icon: 'success',
+            title: 'Thông báo',
+            text: 'Tạo hợp đồng thành công!'
+          })
+
+          // Đóng modal
+          handleClose()
+        } catch (error) {
+          // Thông báo lỗi
+          Swal.fire({
+            icon: 'error',
+            title: 'Thông báo',
+            text: 'Có lỗi xảy ra trong quá trình xử lý!'
+          })
+          console.error(error)
+        }
       }
     }
   }
@@ -407,91 +530,95 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
                     </div>
                     <div style={{ position: 'sticky', top: '20px' }}>
                       <div className="room-list row g-2">
-                        {rooms.map((room) => (
-                          <div
-                            key={room.roomId}
-                            className={`col-6 room-item ${selectedRoomId === room.roomId ? 'active' : ''}`}
-                            onClick={() => handleRoomClick(room.roomId)} // Chọn phòng khi click
-                          >
-                            <div className="d-flex room-item-inner align-items-center">
-                              <div className="flex-grow-0 icon-room">
-                                {selectedRoomId === room.roomId ? (
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="feather feather-check">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                  </svg>
-                                ) : (
-                                  <img
-                                    width="20px"
-                                    src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Froom.png?alt=media&token=9f1a69c1-ce2e-4586-ba90-94db53443d49"
-                                    alt=""
-                                  />
-                                )}
-                              </div>
-                              <div className="flex-grow-1">
-                                <div>
-                                  <b>{room.name}</b>
-                                  <span
-                                    style={{
-                                      backgroundColor: '#ED6004',
-                                      display: 'table',
-                                      fontSize: '12px',
-                                      borderRadius: '5px',
-                                      padding: '0 7px',
-                                      color: '#fff'
-                                    }}>
-                                    Đang trống
-                                  </span>
+                        {rooms ? (
+                          rooms.map((room) => (
+                            <div
+                              key={room.roomId}
+                              className={`col-6 room-item ${selectedRoomId === room.roomId ? 'active' : ''}`}
+                              onClick={() => handleRoomClick(room.roomId)} // Chọn phòng khi click
+                            >
+                              <div className="d-flex room-item-inner align-items-center">
+                                <div className="flex-grow-0 icon-room">
+                                  {selectedRoomId === room.roomId ? (
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="24"
+                                      height="24"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      className="feather feather-check">
+                                      <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                  ) : (
+                                    <img
+                                      width="20px"
+                                      src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Froom.png?alt=media&token=9f1a69c1-ce2e-4586-ba90-94db53443d49"
+                                      alt=""
+                                    />
+                                  )}
                                 </div>
-                                <div className="d-flex justify-content-between align-items-center mt-1">
+                                <div className="flex-grow-1">
                                   <div>
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="18"
-                                      height="18"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      className="feather feather-dollar-sign">
-                                      <line x1="12" y1="1" x2="12" y2="23"></line>
-                                      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                    </svg>{' '}
-                                    {room.price.toLocaleString()}₫
+                                    <b>{room.name}</b>
+                                    <span
+                                      style={{
+                                        backgroundColor: '#ED6004',
+                                        display: 'table',
+                                        fontSize: '12px',
+                                        borderRadius: '5px',
+                                        padding: '0 7px',
+                                        color: '#fff'
+                                      }}>
+                                      Đang trống
+                                    </span>
                                   </div>
-                                  <div>
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="18"
-                                      height="18"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      className="feather feather-user">
-                                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                      <circle cx="12" cy="7" r="4"></circle>
-                                    </svg>{' '}
-                                    0/1 người
+                                  <div className="d-flex justify-content-between align-items-center mt-1">
+                                    <div>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="18"
+                                        height="18"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        className="feather feather-dollar-sign">
+                                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                      </svg>{' '}
+                                      {room.price.toLocaleString()}₫
+                                    </div>
+                                    <div>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="18"
+                                        height="18"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        className="feather feather-user">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                      </svg>{' '}
+                                      0/1 người
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
+                          ))
+                        ) : (
+                          <>Loading........</>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -528,7 +655,6 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
                           </option>
                         ))}
                       </Form.Select>
-                      {errors.leaseTerm && <div className="text-danger">{errors.leaseTerm}</div>}
                       <div className="row">
                         <div className="col-6 mt-3">
                           <Form.Label>Ngày vào ở</Form.Label>
@@ -562,16 +688,33 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
                         <div className="col-12">
                           <Form.Control
                             type="number"
-                            name="soluongthanhvien"
+                            name="countTenant"
+                            min={0}
                             placeholder="Số lượng thành viên"
+                            value={contract.countTenant}
+                            onChange={handleContractChange}
                             required
                           />
                         </div>
                         <div className="col-6 mt-3">
-                          <Form.Control type="text" name="tennguoio" placeholder="Tên người ở" required />
+                          <Form.Control
+                            type="text"
+                            name="fullname"
+                            value={tenant.fullname}
+                            onChange={handleTenantChange}
+                            placeholder="Tên người ở"
+                            required
+                          />
                         </div>
                         <div className="col-6 mt-3">
-                          <Form.Control type="text" name="sodienthoai" placeholder="Số điện thoại" required />
+                          <Form.Control
+                            type="text"
+                            name="phone"
+                            value={tenant.phone}
+                            onChange={handleTenantChange}
+                            placeholder="Số điện thoại"
+                            required
+                          />
                         </div>
                         <div className="col-12 mt-3">
                           <Form.Control type="text" name="cccd" placeholder="CMND/CCCD" />
@@ -718,20 +861,20 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
                       <div className="row">
                         <div className="col-6">
                           <Form.Control
-                            type="number"
+                            type="text"
                             name="price"
                             placeholder="Giá thuê"
-                            value={contract.price}
+                            value={contract.price ? Number(contract.price).toLocaleString('vi-VN') : ''}
                             onChange={handleContractChange}
                             required
                           />
                         </div>
                         <div className="col-6">
                           <Form.Control
-                            type="number"
-                            name="debt"
+                            type="text"
+                            name="deposit"
                             placeholder="Tiền cọc"
-                            value={contract.debt}
+                            value={contract.deposit ? Number(contract.deposit).toLocaleString('vi-VN') : ''}
                             onChange={handleContractChange}
                             required
                           />
@@ -776,10 +919,28 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
                         <b>Chọn mẫu văn bản hợp đồng</b>
                         <i className="des">Mẫu văn bản hợp đồng dùng khi in</i>
                       </div>
-                      <Form.Select name="mauhopdong" required>
+                      <Form.Select
+                        name="mauhopdong"
+                        required
+                        onChange={(e) => {
+                          const selectedTemplateId = e.target.value
+                          console.log(selectedTemplateId)
+
+                          setContract((prevContract) => ({
+                            ...prevContract,
+                            contracttemplateId: selectedTemplateId || null // Cập nhật giá trị hoặc để null nếu không chọn
+                          }))
+                        }}>
                         <option value="">--Mẫu văn bản hợp đồng--</option>
-                        <option value="0">Hợp đồng điện tử</option>
-                        <option value="1">Hợp đồng giấy</option>
+                        {contractTemplates ? (
+                          contractTemplates.map((contractTemplate, index) => (
+                            <option key={index} value={contractTemplate.contractTemplateId}>
+                              {contractTemplate.templatename}
+                            </option>
+                          ))
+                        ) : (
+                          <></>
+                        )}
                       </Form.Select>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="description">
