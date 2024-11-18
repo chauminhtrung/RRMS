@@ -12,8 +12,9 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
   const [IsTaikhoan, setIsTaikhoan] = useState(false)
   const [IsThongbao, setIsThongbao] = useState(false)
   const [IsMobileTaikhoan, setIsMobileTaikhoan] = useState(false)
-
+  const [searchKeyWord, setSearchKeyWord] = useState()
   const navigate = useNavigate()
+
   const handleMenuItemClick = () => {
     setIsTaikhoan(false) // Đóng menu khi click vào bất kỳ mục nào
   }
@@ -71,6 +72,10 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
         text: 'Đã xảy ra lỗi khi thực hiện đăng xuất.'
       })
     }
+  }
+
+  const handleSearch = () => {
+    navigate('/search', { state: { searchKeyWord } })
   }
   const tokenExists = sessionStorage.getItem('user') !== null
 
@@ -287,7 +292,10 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                             '--ah4jb82-2': 'undefined',
                             '--ah4jb82-6': '35px'
                           }}>
-                          <button aria-label="Search Button Desktop" className="aw__p1vnrcrb aw__cm4yjvg">
+                          <button
+                            onClick={handleSearch}
+                            aria-label="Search Button Desktop"
+                            className="aw__p1vnrcrb aw__cm4yjvg">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               data-type="monochrome"
@@ -303,6 +311,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                           </button>
                         </div>
                         <input
+                          onChange={(e) => setSearchKeyWord(e.target.value)}
                           autoComplete="off"
                           placeholder="Nhập thông tin tìm kiếm"
                           id="__inputItemProps"

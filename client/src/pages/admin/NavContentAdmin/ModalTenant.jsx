@@ -67,7 +67,7 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
 
       // Tiến hành upload ảnh mặt trước và lấy URL
       const imageName = v4() // Tạo tên ngẫu nhiên cho ảnh
-      const storageRef = ref(storage, `images/${imageName}`)
+      const storageRef = ref(storage, `images/tenant/${imageName}`)
       const uploadTask = uploadBytesResumable(storageRef, image)
 
       uploadTask.on(
@@ -101,7 +101,7 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
 
       // Tiến hành upload ảnh mặt sau và lấy URL
       const imageName = v4() // Tạo tên ngẫu nhiên cho ảnh
-      const storageRef = ref(storage, `images/${imageName}`)
+      const storageRef = ref(storage, `images/tenant/${imageName}`)
       const uploadTask = uploadBytesResumable(storageRef, image)
 
       uploadTask.on(

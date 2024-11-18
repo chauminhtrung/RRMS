@@ -1,5 +1,4 @@
 import { Box, useMediaQuery } from '@mui/material'
-import { bannerHorizontal } from '~/apis/mock/mock-data-banner-horizontal'
 
 const BannerHorizontal = () => {
   const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'))
@@ -14,7 +13,7 @@ const BannerHorizontal = () => {
       }}>
       <Box
         component="img"
-        src={bannerHorizontal[0].image}
+        src={'https://lozido.com/images/promotion/banner-1-desktop.webp'}
         alt=""
         width="50%"
         height="auto"
@@ -22,7 +21,7 @@ const BannerHorizontal = () => {
       />
       <Box
         component="img"
-        src={bannerHorizontal[1].image}
+        src={'https://lozido.com/images/promotion/banner-2-desktop.webp'}
         alt=""
         width="50%"
         height="auto"

@@ -15,6 +15,8 @@ import axios from 'axios'
 import ChatAI from '../AI/ChatAI'
 import { getTinhThanh } from '~/apis/addressAPI'
 import { env } from '~/configs/environment'
+import { useLocation } from 'react-router-dom'
+import { searchBulletinBoardByAddress } from '~/apis/bulletinBoardAPI'
 
 const Search = ({ setIsAdmin }) => {
   const [provinces, setProvinces] = useState([])
@@ -22,6 +24,9 @@ const Search = ({ setIsAdmin }) => {
   const [totalRooms, setTotalRooms] = useState(0)
   const [searchValue, setSearchValue] = useState('')
   const [recordedText, setRecordedText] = useState('')
+  const [keyword, setKeyword] = useState('')
+  const location = useLocation()
+  const { searchKeyWord } = location.state || {}
 
   useEffect(() => {
     setIsAdmin(false)
@@ -42,6 +47,20 @@ const Search = ({ setIsAdmin }) => {
   // /name?name=${searchValue}
   // Hàm để tải dữ liệu
   const loadDataSearch = async (searchValue, pageNumber = 1, pageSize = 6) => {
+    console.log(searchKeyWord)
+
+    if (searchKeyWord) {
+      setKeyword(searchKeyWord)
+
+      searchBulletinBoardByAddress(searchKeyWord).then((res) => {
+        console.log(res)
+        setSearchData(res.result)
+        setTotalRooms(res.result.length)
+        console.log(searchData)
+      })
+      return
+    }
+
     try {
       const response = await axios.get(`${env.API_URL}/searchs`, {
         headers: {
@@ -84,7 +103,14 @@ const Search = ({ setIsAdmin }) => {
           mt: 5,
           borderRadius: '6px'
         }}>
-        <FilterSearch setSearchData={setSearchData} recordedText={recordedText} />
+        <FilterSearch
+          setTotalRooms={setTotalRooms}
+          searchKeyWord={searchKeyWord}
+          setSearchData={setSearchData}
+          recordedText={recordedText}
+          keyword={keyword}
+          setKeyword={setKeyword}
+        />
       </Container>
       <ListSearch />
       <Container>
