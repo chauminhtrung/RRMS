@@ -1,23 +1,18 @@
-package com.rrms.rrms.dto.response;
+package com.rrms.rrms.dto.request;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.annotation.Id;
-
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SearchResponse {
-    @Id
-    UUID roomId;
-
-    String nameRoom;
-    MotelResponse motel;
-    String chargetype;
+public class RefreshRequest {
+    private String token;
 }
+

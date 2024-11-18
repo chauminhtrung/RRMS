@@ -90,6 +90,7 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     }))
   }
 
+
   const InsertTenant = async (tenant) => {
     try {
       const response = await createTenant(tenant)

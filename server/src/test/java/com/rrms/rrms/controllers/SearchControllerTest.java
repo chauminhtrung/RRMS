@@ -106,7 +106,7 @@ public class SearchControllerTest {
                 .address("456 Old St")
                 .createdDate(new Date())
                 .build();
-        when(searchService.findAllByDateVieux()).thenReturn(List.of(room));
+        when(searchService.findAllByIsActive()).thenReturn(List.of(room));
 
         // Act & Assert: Perform the GET request and verify the response
         mockMvc.perform(MockMvcRequestBuilders.get("/searchs/roomVieux").contentType(MediaType.APPLICATION_JSON))
@@ -119,7 +119,7 @@ public class SearchControllerTest {
     @Test
     void getRoomHomeDateNewVieux_whenNoRooms_returnsEmptyList() throws Exception {
         // Arrange: Mock service to return an empty list
-        when(searchService.findAllByDateVieux()).thenReturn(List.of());
+        when(searchService.findAllByIsActive()).thenReturn(List.of());
 
         // Act & Assert: Perform the GET request and verify the response
         mockMvc.perform(MockMvcRequestBuilders.get("/searchs/roomVieux").contentType(MediaType.APPLICATION_JSON))

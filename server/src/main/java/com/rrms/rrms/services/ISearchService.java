@@ -1,10 +1,9 @@
 package com.rrms.rrms.services;
 
-import java.util.List;
-
 import com.rrms.rrms.dto.response.BulletinBoardSearchResponse;
 import com.rrms.rrms.dto.response.RoomSearchResponse;
-import com.rrms.rrms.models.Room;
+
+import java.util.List;
 
 public interface ISearchService {
 
@@ -12,8 +11,6 @@ public interface ISearchService {
     //        List<RoomDetailResponse> listRoomPrice(Double startPrice, Double endPrice);
 
     List<BulletinBoardSearchResponse> getRooms();
-
-    String syncRoom(List<Room> rooms);
 
     List<RoomSearchResponse> findByAddressNoElastic(String keyword);
 
@@ -25,5 +22,5 @@ public interface ISearchService {
 
     List<BulletinBoardSearchResponse> findAllByDatenew();
 
-    List<BulletinBoardSearchResponse> findAllByDateVieux();
+    List<BulletinBoardSearchResponse> findAllByIsActive();
 }

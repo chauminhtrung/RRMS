@@ -15,11 +15,12 @@ import { env } from '~/configs/environment'
 const RRMS = ({ setIsAdmin }) => {
   const [searchData, setSearchData] = useState([])
 
+  const [dataNew, setDataNew] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 4 // Số lượng item hiển thị mỗi trang
+  const itemsPerPage = 8 // Số lượng item hiển thị mỗi trang
 
   const [currentPageNew, setCurrentPageNew] = useState(1)
-  const itemsPerPageNew = 8 // Số lượng item hiển thị mỗi trang
+  const itemsPerPageNew = 4 // Số lượng item hiển thị mỗi trang
 
   const indexOfLastItemNew = currentPageNew * itemsPerPageNew
   const indexOfFirstItemNew = indexOfLastItemNew - itemsPerPageNew
@@ -37,8 +38,8 @@ const RRMS = ({ setIsAdmin }) => {
   const indexOfLastItem = currentPage * itemsPerPage // Vị trí item cuối trên trang hiện tại
   const indexOfFirstItem = indexOfLastItem - itemsPerPage // Vị trí item đầu trên trang hiện tại
   let currentItems = []
-  if (Array.isArray(searchData)) {
-    currentItems = searchData.slice(indexOfFirstItem, indexOfLastItem)
+  if (Array.isArray(dataNew)) {
+    currentItems = dataNew.slice(indexOfFirstItem, indexOfLastItem)
     console.log(currentItems) // Hiển thị các phần tử hiện tại
   } else {
     currentItems = []
@@ -53,55 +54,24 @@ const RRMS = ({ setIsAdmin }) => {
   }, [])
 
   useEffect(() => {
+    loadDataNew()
     loadData()
-    loadDataDateNew()
   }, [])
 
-  // const loadData = async () => {
-  //   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-
-  //   try {
-  //     const result = await axios.get(`${env.API_URL}/searchs/rooms`, {
-  //       validateStatus: () => true,
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //         'ngrok-skip-browser-warning': '69420'
-  //       }
-  //     })
-
-  //     // Kiểm tra trạng thái phản hồi
-  //     if (result.status === 200) {
-  //       const fetchedData = result.data.result
-
-  //       if (Array.isArray(fetchedData) && fetchedData.length > 0) {
-  //         console.log('Data fetched:', fetchedData)
-  //         setSearchData(fetchedData)
-  //       } else {
-  //         console.log('No results found or data is null')
-  //         setSearchData([])
-  //       }
-  //     } else {
-  //       console.log('Error: Status', result.status)
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching data:', error)
-  //   }
-  // }
-  const loadData = async () => {
+  // Phần lấy dữ liệu cho currentItems
+  const loadDataNew = async () => {
     try {
-      const result = await axios.get(`${env.API_URL}/searchs/roomVieux`, {
-        validateStatus: () => true,
+      const result = await axios.get(`${env.API_URL}/searchs/roomNews`, {
         headers: {
           'ngrok-skip-browser-warning': '69420'
         }
       })
-      // Kiểm tra trạng thái phản hồi
-      if (result.status === 200) {
-        const fetchedDataDateNew = result.data.result
 
-        if (Array.isArray(fetchedDataDateNew) && fetchedDataDateNew.length > 0) {
-          console.log('Data fetched:', fetchedDataDateNew)
-          setSearchData(fetchedDataDateNew)
+      if (result.status === 200) {
+        const fetchedData = result.data.result
+        if (Array.isArray(fetchedData) && fetchedData.length > 0) {
+          console.log('Data fetched:', fetchedData)
+          setSearchData(fetchedData) // set dữ liệu cho currentItems
         } else {
           console.log('No results found or data is null')
           setSearchData([])
@@ -114,24 +84,23 @@ const RRMS = ({ setIsAdmin }) => {
     }
   }
 
-  const loadDataDateNew = async () => {
+  // Phần lấy dữ liệu cho currentItemsNew
+  const loadData = async () => {
     try {
-      const result = await axios.get(`${env.API_URL}/searchs/roomNews`, {
-        validateStatus: () => true,
+      const result = await axios.get(`${env.API_URL}/searchs/roomVieux`, {
         headers: {
           'ngrok-skip-browser-warning': '69420'
         }
       })
-      // Kiểm tra trạng thái phản hồi
-      if (result.status === 200) {
-        const fetchedDataDateNew = result.data.result
 
-        if (Array.isArray(fetchedDataDateNew) && fetchedDataDateNew.length > 0) {
-          console.log('Data fetched:', fetchedDataDateNew)
-          setSearchData(fetchedDataDateNew)
+      if (result.status === 200) {
+        const fetchedData = result.data.result
+        if (Array.isArray(fetchedData) && fetchedData.length > 0) {
+          console.log('Data fetched:', fetchedData)
+          setDataNew(fetchedData) // set dữ liệu cho currentItemsNew
         } else {
           console.log('No results found or data is null')
-          setSearchData([])
+          setDataNew([])
         }
       } else {
         console.log('Error: Status', result.status)
@@ -540,8 +509,8 @@ const RRMS = ({ setIsAdmin }) => {
             </div>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', marginTop: 26 }}>
-            {currentItems.length > 0 ? (
-              currentItems.map((item, i) => (
+            {currentItemsNew.length > 0 ? (
+              currentItemsNew.map((item, i) => (
                 <div className="grid-item" key={i} style={{ maxWidth: '280px' }}>
                   {' '}
                   <article className="i-column" style={{ marginBottom: '14px' }}>
@@ -640,9 +609,9 @@ const RRMS = ({ setIsAdmin }) => {
           </div>
         </div>
         <Pagination
-          count={Math.ceil(searchData.length / itemsPerPage)} // Tổng số trang
-          page={currentPage} // Trang hiện tại
-          onChange={handlePageChangeNumber} // Hàm xử lý khi thay đổi trang
+          count={Math.ceil(dataNew.length / itemsPerPageNew)} // Tổng số trang
+          page={currentPageNew} // Trang hiện tại
+          onChange={handlePageChangeNumberNew} // Hàm xử lý khi thay đổi trang
           variant="outlined"
           color="primary"
           sx={{ mt: 4, display: 'flex', justifyContent: 'center' }} // Đặt margin-top và căn giữa
@@ -779,8 +748,8 @@ const RRMS = ({ setIsAdmin }) => {
             </div>
           </div>
           <div className="list-6 row">
-            {currentItemsNew.length > 0 ? (
-              currentItemsNew.map((room, i) => (
+            {currentItems.length > 0 ? (
+              currentItems.map((room, i) => (
                 <article className="item col-xs-12 col-md-12 col-lg-6 " key={i}>
                   <div className="inner-item flex">
                     <section className="list-img" style={{ width: '36%' }}>
@@ -910,8 +879,8 @@ const RRMS = ({ setIsAdmin }) => {
         </div>
         <Pagination
           count={Math.ceil(searchData.length / itemsPerPage)} // Tổng số trang
-          page={currentPageNew} // Trang hiện tại
-          onChange={handlePageChangeNumberNew} // Hàm xử lý khi thay đổi trang
+          page={currentItems} // Trang hiện tại
+          onChange={handlePageChangeNumber} // Hàm xử lý khi thay đổi trang
           variant="outlined"
           color="primary"
           sx={{ mt: 4, display: 'flex', justifyContent: 'center' }} // Đặt margin-top và căn giữa
