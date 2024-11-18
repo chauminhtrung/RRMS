@@ -1,6 +1,7 @@
 package com.rrms.rrms.repositories;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,12 +13,15 @@ import com.rrms.rrms.models.Contract;
 
 public interface ContractRepository extends JpaRepository<Contract, UUID> {
 
+
+    List<Contract> findByRoom_Motel_MotelId(UUID MotelId);
+
     // tinh tong contract da dc active
-    @Query("SELECT COUNT(c) FROM Contract c WHERE c.landlord = :usernameLandlord AND c.status = 'ACTIVE'")
+    @Query("SELECT COUNT(c) FROM Contract c WHERE c.account = :usernameLandlord AND c.status = 'ACTIVE'")
     Integer countActiveContractsByLandlord(@Param("usernameLandlord") Account usernameLandlord);
 
     // tinh tong tien contact da dc active
-    @Query("SELECT SUM(c.deposit) FROM Contract c WHERE c.landlord = :usernameLandlord AND c.status = 'ACTIVE'")
+    @Query("SELECT SUM(c.deposit) FROM Contract c WHERE c.account = :usernameLandlord AND c.status = 'ACTIVE'")
     BigDecimal sumActiveContractDepositsByLandlord(@Param("usernameLandlord") Account usernameLandlord);
 
     // tinh tổng hợp đồng đã hết hạn

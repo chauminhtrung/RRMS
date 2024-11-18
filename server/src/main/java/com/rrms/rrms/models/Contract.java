@@ -3,8 +3,10 @@ package com.rrms.rrms.models;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import com.rrms.rrms.enums.ContractStatus;
@@ -26,18 +28,19 @@ public class Contract {
 
     @ManyToOne
     @JoinColumn(name = "room_id")
+    @JsonBackReference(value = "Room-Contract") // Đặt tên cho tham chiếu ngược
     private Room room;
 
     @ManyToOne
-    @JoinColumn(name = "username_tenant")
+    @JoinColumn(name = "tenant_id")
     private Tenant tenant;
 
     @ManyToOne
-    @JoinColumn(name = "username_landlord")
-    private Account landlord;
+    @JoinColumn(name = "username")
+    private Account account;
 
     @ManyToOne
-    @JoinColumn(name = "contract_template")
+    @JoinColumn(name = "contracttemplate_id")
     private ContractTemplate contract_template;
 
     @ManyToOne
@@ -86,7 +89,7 @@ public class Contract {
 
     //ngon ngu
     @Column(columnDefinition = "TEXT")
-    private LocalDate language;
+    private String language;
 
     //so luong nguoi thue
     @Column(name = "count_tenant", columnDefinition = "TEXT")
@@ -96,4 +99,8 @@ public class Contract {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "ENUM('ACTIVE', 'ENDED','IATExpire')")
     private ContractStatus status;
+
+
+
+
 }
