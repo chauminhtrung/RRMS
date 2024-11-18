@@ -1,6 +1,5 @@
 package com.rrms.rrms.services.servicesImp;
 
-
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import com.rrms.rrms.dto.request.BulletinBoardRequest;
 import com.rrms.rrms.dto.response.BulletinBoardResponse;
@@ -12,6 +11,7 @@ import com.rrms.rrms.mapper.BulletinBoardMapper;
 import com.rrms.rrms.models.*;
 import com.rrms.rrms.repositories.*;
 import com.rrms.rrms.services.IBulletinBoard;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -214,7 +214,6 @@ public class BulletinBoardService implements IBulletinBoard {
     public List<BulletinBoardSearchResponse> searchBulletinBoards(String address) {
         return bulletinBoardElasticsearchRepository.findByAddress(address);
     }
-
 
     public BulletinBoard approveBulletinBoard(UUID id) {
         BulletinBoard bulletinBoard = bulletinBoardRepository

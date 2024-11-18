@@ -14,7 +14,7 @@ const AdminManagerBoard = ({ setIsAdmin }) => {
   const [bulletinBoards, setBulletinBoards] = useState([]);
   const userData = JSON.parse(sessionStorage.getItem('user')); // Lấy dữ liệu người dùng từ session storage
   const token = userData?.token; // Lấy token
-  const [ setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [setError] = useState(null);
 
   const fetchBulletinBoards = async () => {

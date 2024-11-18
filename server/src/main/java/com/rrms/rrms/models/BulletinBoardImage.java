@@ -1,13 +1,15 @@
 package com.rrms.rrms.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.UUID;
+
 import jakarta.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.UUID;
 
 @Entity
 @Data

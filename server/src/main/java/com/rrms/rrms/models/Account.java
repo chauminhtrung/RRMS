@@ -1,6 +1,7 @@
 package com.rrms.rrms.models;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,7 +53,7 @@ public class Account {
     private String cccd;
 
     @Column(columnDefinition = "INT")
-    private int commissionRate;
+    private Integer commissionRate;
 
     @OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
     @JsonManagedReference(value = "Auth-Acc") // Đặt tên cho tham chiếu quản lý
@@ -61,6 +62,10 @@ public class Account {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "heart_id")
     private Heart heart;
+
+    // Thêm trường ngày tạo
+    @Column(name = "created_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime createdDate;
 
     public List<String> getRoles() {
         return authorities.stream()

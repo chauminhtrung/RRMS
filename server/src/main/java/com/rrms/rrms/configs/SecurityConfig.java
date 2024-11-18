@@ -29,26 +29,26 @@ import lombok.extern.slf4j.Slf4j;
 public class SecurityConfig {
 
     private static final String[] PUBLIC_ENDPOINTS = {
-        "/oauth2/callback/google/*",
-        "/favicon.ico",
-        "/",
-        "/oauth2/*",
-        "/oauth2/**",
-        "/authen/*",
-        "/authen/**",
-        "/swagger-ui/*",
-        "/v3/api-docs/*",
-        "/searchs/**",
-        "/search/**",
-        "/search/*",
-        "/search",
-        "/RRMS",
-        "/detail/**",
-        "/detail/*",
-        "/detail",
-        "/bulletin-board/*",
-        "/api-accounts/**",
-        "/motels/get-motel-id",
+            "/oauth2/callback/google/*",
+            "/favicon.ico",
+            "/",
+            "/oauth2/*",
+            "/oauth2/**",
+            "/authen/*",
+            "/authen/**",
+            "/swagger-ui/*",
+            "/v3/api-docs/*",
+            "/searchs/**",
+            "/search/**",
+            "/search/*",
+            "/search",
+            "/RRMS",
+            "/detail/**",
+            "/detail/*",
+            "/detail",
+            "/bulletin-board/*",
+            "/api-accounts/**",
+            "/motels/get-motel-id",
     };
 
     @Value("${jwt.signer-key}")
@@ -66,18 +66,16 @@ public class SecurityConfig {
 
         // Cấu hình OAuth2 Login
         http.oauth2Login(oauth2 -> oauth2
-            .loginPage("/authen/login")
-            .successHandler((request, response, authentication) -> {
-                response.sendRedirect("/authen/success");
-            })
-            .failureHandler((request, response, exception) -> {
-                response.sendRedirect("/authen/error");
-            })
-        );
+                .loginPage("/authen/login")
+                .successHandler((request, response, authentication) -> {
+                    response.sendRedirect("/authen/success");
+                })
+                .failureHandler((request, response, exception) -> {
+                    response.sendRedirect("/authen/error");
+                }));
 
-
-        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer ->
-                jwtConfigurer.decoder(jwtDecoder()).jwtAuthenticationConverter(jwtAuthenticationConverter())));
+        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())
+                .jwtAuthenticationConverter(jwtAuthenticationConverter())));
 
         http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
 

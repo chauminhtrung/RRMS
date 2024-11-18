@@ -24,4 +24,6 @@ public interface IAuthorityService {
     Auth save(Auth auth);
 
     String generateToken(Account account) throws ParseException;
+
+
 }
