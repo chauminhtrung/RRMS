@@ -17,7 +17,7 @@ public class RoomServiceResponse implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private UUID roomServiceId;
-    private UUID roomId; // Thay vì đối tượng Room, chỉ trả về ID
-    private UUID serviceId; // Thay vì đối tượng Service, chỉ trả về ID
+    private UUID roomId;
+    private UUID serviceId;
     private Integer quantity;
 }
