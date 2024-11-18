@@ -45,21 +45,21 @@ const DashboardHome = () => {
 
   const options = { 
     height:'350px',
-    rowHeight: 30, // Thay đổi chiều cao hàng 
-    movableColumns: true, // Cho phép di chuyển cột
-    resizableRows: true, // Cho phép thay đổi kích thước hàng
+    rowHeight: 30, 
+    movableColumns: true, 
+    resizableRows: true, 
     movableRows: true,
-    resizableColumns: true, // Cho phép thay đổi kích thước cột
+    resizableColumns: true,
     resizableColumnFit: true,
     layout: 'fitColumns',
     responsiveLayout: 'collapse',
   }
 
   const cardData = [  
-    { title: 'Total Page Views', value: '4,42,236', percent: '59.3%', extra: '35,000' },  
-    { title: 'Total Users', value: '12,345', percent: '25.5%', extra: '2,500' },  
-    { title: 'New Subscriptions', value: '3,210', percent: '40.2%', extra: '1,500' },  
-    { title: 'Revenue', value: '$15,240', percent: '15.7%', extra: '$2,000' },  
+    { title: 'Tổng số lượt xem trang', value: '100', extra: '35,000' },  
+    { title: 'Tổng số người dùng', value: '10', extra: '2,500' },  
+    { title: 'Người dùng mới đã đăng ký', value: '5', extra: '1,500' },  
+    { title: 'Doanh thu', value: '15.000.000 VNĐ', extra: '$2,000' },  
   ];  
 
   const data = {  
@@ -107,9 +107,6 @@ const DashboardHome = () => {
                       <div>
                         <h4>{card.value}</h4>
                       </div> 
-                      <div className='pt-2 pe-1 ps-4 rounded' style={{backgroundColor:'rgb(230, 244, 255)', color:'rgb(22, 119, 255)'}}>
-                        <h4>{card.percent}</h4>
-                      </div>
                     </Grid>  
                     <Typography variant="caption">  
                       You made an extra <Typography component="span" variant="caption" color="text.primary">{card.extra}</Typography> this year  
