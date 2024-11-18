@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react'
-import { Typography, Button, Box, Grid, Container, Paper, Tab, Tabs, CardContent, Card } from '@mui/material'
+import { Typography, Button, Box, Grid, Container, Paper, Tab, Tabs, CardContent, Card, useTheme } from '@mui/material'
 import './Home.css'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 // Define the tab components with unique content
 const Tab1 = () => {
@@ -202,7 +203,9 @@ const Tab3 = () => {
   )
 }
 export default function HomePage({ setIsAdmin }) {
+  const { t } = useTranslation()
   const [value, setValue] = React.useState(0)
+  const theme = useTheme()
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
@@ -214,26 +217,27 @@ export default function HomePage({ setIsAdmin }) {
 
   return (
     <div>
-      <section className="banner">
+      <section
+        className="banner"
+        style={{
+          background: theme.palette.mode === 'light' ? '#eef8ff' : '#1f1f1f'
+        }}>
         <Container>
           <div className="inner-banner mt-5">
             <Grid container spacing={2}>
               <Grid item xl={7} md={12} className="d-flex align-content-center text-center">
                 <div className="inner-slider align-self-center align-baseline">
                   <Typography variant="h3" className="title" fontWeight="bold">
-                    Phần mềm quản lý nhà cho thuê
+                    {t('phan-mem-quan-ly-nha-cho-thue')}
                   </Typography>
                   <Typography variant="h3" className="title" fontWeight="bold">
-                    <span className="text-gradient">Điện thoại - iPad - Máy tính</span> 🎉
+                    <span className="text-gradient">{t('dt-mt')}</span> 🎉
                   </Typography>
                   <article>
                     <Typography variant="h4" className="title-descrip">
-                      <span className="wrap">Quản lý nhẹ nhàng như chiếc smartphone trong tay của bạn!</span>
+                      <span className="wrap">{t('quan-ly-nhe-nhang')}</span>
                     </Typography>
-                    <Typography>
-                      Sử dụng đơn giản, chi phí tối ưu, hỗ trợ sâu sát & phù hợp với tất cả <br /> loại hình tòa nhà cho
-                      thuê như văn phòng, nhà trọ – căn hộ, coworking space,…
-                    </Typography>
+                    <Typography>{t('su-dung-don-gian')}</Typography>
                   </article>
                   <div className="d-flex justify-content-center mt-3 button1">
                     <div className=" mt-2">
@@ -242,7 +246,7 @@ export default function HomePage({ setIsAdmin }) {
                         className="btn-media shadow"
                         data-toggle="modal"
                         data-target="#modalVideoIntroduce">
-                        Dùng thử miễn phí
+                        {t('dung-thu')}
                       </Button>
                     </div>
                     <div className="text-start mt-2 ms-5">
@@ -258,7 +262,7 @@ export default function HomePage({ setIsAdmin }) {
                             alt="play video"
                           />
                         </span>
-                        Tư vấn về dịch vụ
+                        {t('tu-van')}
                       </Button>
                     </div>
                   </div>
@@ -279,7 +283,9 @@ export default function HomePage({ setIsAdmin }) {
       </section>
 
       {/* Highlights */}
-      <section className="feature-home">
+      <section
+        className="feature-home"
+        style={{ backgroundColor: theme.palette.mode === 'light' ? '#ffffff' : '#1f1f1f' }}>
         <div className="container1">
           <div className="text-center">
             <Typography className="header-title" sx={{ fontSize: '40px', fontWeight: 'bold' }}>
@@ -655,10 +661,10 @@ const features1 = [
 
 const testimonials = [
   {
-    name: 'Bà Lê Thanh Nhàn',
-    rooms: '40 phòng',
-    role: 'Chủ nhà',
-    feedback: 'Ứng dụng dễ dàng sử dụng và miễn phí, đầy đủ chức năng giúp tôi có thể quản lý cùng lúc nhiều nhà trọ.',
+    name: 'Dương Trí Dũng',
+    rooms: '69 phòng',
+    role: 'Hacker Lỏd',
+    feedback: 'Sau khi đọc xong 300 bài code thiếu nhi tôi đã code.',
     image: 'https://quanlytro.me/images/owner_avatars/chu-tro-01-80x80.webp?version=29842'
   },
   {
