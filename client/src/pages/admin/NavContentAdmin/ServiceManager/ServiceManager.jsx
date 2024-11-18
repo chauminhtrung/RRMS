@@ -28,13 +28,13 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
     const dynamicColumns = motelServices.map(service => ({
       title: service.nameService, // Tiêu đề là tên dịch vụ
       columns: [
-        { title: 'Sử dụng', field: `usage_${service.motelServiceId}`, hozAlign: 'right', sorter: 'number', width: 65 },
+        { title: 'Sử dụng', field: `usage_${service.motelServiceId}`, hozAlign: 'right', sorter: 'number', width: 75 },
         { title: 'Thành tiền', field: `total_${service.motelServiceId}`, hozAlign: 'center', width: 135 }
       ]
     }));
     
     return [
-      { title: 'Tên phòng', field: 'nameRoom', hozAlign: 'center', width: 150 },
+      { title: 'Tên phòng', field: 'nameRoom', hozAlign: 'center', width: 100 },
       ...dynamicColumns
     ];
   };
@@ -61,7 +61,7 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
     columnHeaderVertAlign: 'bottom'
   }
   useEffect(() => {
-    const totalColumnWidth = columns.reduce((acc, column) => acc + (column.width || 200), 10); // Giả sử mỗi cột có width 150 nếu không có width nào khác được định nghĩa
+    const totalColumnWidth = columns.reduce((acc, column) => acc + (column.width || 206), 10); // Giả sử mỗi cột có width 150 nếu không có width nào khác được định nghĩa
     setTableWidth(totalColumnWidth);
   }, [columns]);
 
