@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react'
 import { Box, Typography, Select, MenuItem, Slider } from '@mui/material'
 import { useDebounce } from '@uidotdev/usehooks'
@@ -10,7 +11,7 @@ import AudioRecorderModal from '../AI/Audio'
 import { searchByName } from '~/apis/searchAPI'
 import { useTranslation } from 'react-i18next'
 
-function FilterSearch({ setSearchData }) {
+function FilterSearch({ setSearchData, searchKeyWord, setKeyword, keyword, setTotalRooms }) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [openAudio, setOpenAudio] = useState(false)
@@ -21,7 +22,7 @@ function FilterSearch({ setSearchData }) {
   const [range, setRange] = useState([0, 50])
   const [selectedValue, setSelectedValue] = useState('Dưới 50 triệu')
   const [area, setArea] = useState([0, 50])
-  const [keyword, setKeyword] = useState('')
+
   const [isRecording, setIsRecording] = useState(false)
 
   const [selectedValueArea, setSelectedValueArea] = useState('Dưới 50 m2')
@@ -32,20 +33,24 @@ function FilterSearch({ setSearchData }) {
   // }
 
   useEffect(() => {
-    if (debouncedKeyword) {
-      searchByName(debouncedKeyword)
-        .then((searchResult) => {
+    if (!searchKeyWord) {
+      if (debouncedKeyword) {
+        searchByName(debouncedKeyword)
+          .then((searchResult) => {
+            setSearchData(searchResult.data.result)
+            setTotalRooms(searchResult.data.result.length)
+          })
+          .catch(() => {
+            setSearchData([])
+            setTotalRooms(0)
+          })
+      } else {
+        searchByName(debouncedKeyword).then((searchResult) => {
           setSearchData(searchResult.data.result)
         })
-        .catch((error) => {
-          console.error('Error fetching search results:', error)
-        })
-    } else {
-      searchByName(debouncedKeyword).then((searchResult) => {
-        setSearchData(searchResult.data.result)
-      })
+      }
     }
-  }, [debouncedKeyword, setSearchData])
+  }, [debouncedKeyword, setSearchData, searchKeyWord])
 
   const handleSearch = (e) => {
     setKeyword(e.target.value)

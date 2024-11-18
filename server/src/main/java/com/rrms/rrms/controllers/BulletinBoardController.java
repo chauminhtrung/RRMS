@@ -112,7 +112,7 @@ public class BulletinBoardController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<BulletinBoardSearchResponse>> searchBulletinBoards(
+    public ApiResponse<List<BulletinBoardSearchResponse>> searchBulletinBoards(
             @RequestParam("address") String address) {
         // Gọi service để thực hiện tìm kiếm
         List<BulletinBoardSearchResponse> resultElastic = bulletinBoardService.searchBulletinBoards(address);
@@ -121,6 +121,10 @@ public class BulletinBoardController {
             result.add(bulletinBoardService.findByBulletinBoardId(bulletinBoardSearchResponse.getBulletinBoardId()));
         });
         log.info("Search bulletin board successfully");
-        return ResponseEntity.ok(result);
+        return ApiResponse.<List<BulletinBoardSearchResponse>>builder()
+                .message("Search bulletin board successfully")
+                .code(HttpStatus.OK.value())
+                .result(result)
+                .build();
     }
 }

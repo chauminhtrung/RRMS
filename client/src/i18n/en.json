@@ -33,7 +33,7 @@
   "den": "To",
   "duoi": "Under",
   "trieu": "Million",
-  "gia_tu":"Price from",
+  "gia_tu": "Price from",
   "khoang-dien-tich": "Area range",
   "tieu-chi-tim-kiem": "SEARCH CRITERIA",
   "khu-vuc-tim-kiem": "Which district/area do you want to search in?",
@@ -56,7 +56,7 @@
   "nganh-nghe-khac": "Other professions",
   "quay-ve": "Go back",
   "404-xin-loi-khong-ton-tai": "Sorry, the page you are looking for does not exist. Please go back to the homepage to continue.",
-   "duoi-phong-tro": "Below are rental rooms near District 1",
+  "duoi-phong-tro": "Below are rental rooms near District 1",
   "ban-kinh-tim-kiem": "Search radius",
   "khi-tim-phong-tro-gan": "When looking for a nearby rental room",
   "tim-phong-tro-quan-1": "Find rental rooms near District 1",
@@ -72,8 +72,8 @@
   "phong-tro-nha-tro": "Rental room, boarding house",
   "tu-thap-den-cao": "From low to high",
   "tu-cao-den-thap": "From high to low",
-   "muc-gia": "Price range",
-    "nho-den-lon": "Small to large",
+  "muc-gia": "Price range",
+  "nho-den-lon": "Small to large",
   "lon-den-nho": "Large to small",
   "phong-tro-nha-tro-gan-khu-vuc-nay": "Rental rooms, boarding houses near this area",
   "truong-cao-dang-viet-sai-gon": "Viet Saigon College",
@@ -105,5 +105,6 @@
   "khach-thue": "Tenant",
   "moi-gioi": "Agent",
   "luot-truy-cap": "Views",
-  "chung-toi-tu-hao": "We are proud to be one of the leading room search services in Vietnam, with the motto 'If you search, we have it.' We always update the latest, most accurate rooms and prioritize convenience for room seekers."
+  "chung-toi-tu-hao": "We are proud to be one of the leading room search services in Vietnam, with the motto 'If you search, we have it.' We always update the latest, most accurate rooms and prioritize convenience for room seekers.",
+  "tai": "at"
 }

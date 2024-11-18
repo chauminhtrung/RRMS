@@ -54,3 +54,12 @@ export const deleteBulletinBoard = async (id) => {
   })
   return response.data
 }
+
+export const searchBulletinBoardByAddress = async (address) => {
+  const response = await axios.get(`${env.API_URL}/bulletin-board/search?address=${address}`, {
+    headers: {
+      'ngrok-skip-browser-warning': '69420'
+    }
+  })
+  return response.data
+}

@@ -1,5 +1,5 @@
 import { Box, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 const SearchList = ({ totalRooms }) => {
@@ -9,6 +9,10 @@ const SearchList = ({ totalRooms }) => {
   const handlePriceChange = (event) => {
     setSortByPrice(event.target.value)
   }
+
+  useEffect(() => {
+    console.log(totalRooms)
+  }, [totalRooms])
 
   const handleAreaChange = (event) => {
     setSortByArea(event.target.value)

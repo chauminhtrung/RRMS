@@ -5,6 +5,7 @@ import com.rrms.rrms.models.BulletinBoard;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,7 +19,7 @@ public interface BulletinBoardRepository extends JpaRepository<BulletinBoard, UU
 //    List<BulletinBoard> findAllByIsActive(Boolean isActive);
 
     BulletinBoard findByBulletinBoardId(UUID id);
-    
+
     @Query("SELECT r FROM BulletinBoard r WHERE r.isActive = :isActive")
     List<BulletinBoard> findAllByIsActive(@Param("isActive") Boolean isActive);
 }
