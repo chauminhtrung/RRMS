@@ -25,24 +25,25 @@ const ModelUpdateService = ({ serviceData, refreshServices }) => {
     const fetchRooms = async () => {
       try {
         const response = await axios.get(`${env.API_URL}/room/motel/${serviceData.motelId}`, {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         });
         const roomsData = response.data;
-  
-        // Xác định phòng nào đã có `serviceId` khớp với `serviceData.motelServiceId`
+    
         const selectedRooms = {};
         roomsData.forEach(room => {
-          room.services.forEach(service => {
-            if (service.serviceId === serviceData.motelServiceId) {
-              selectedRooms[room.roomId] = true;
-            }
-          });
+          if (room.services && Array.isArray(room.services)) {
+            room.services.forEach(service => {
+              if (service.serviceId === serviceData.motelServiceId) {
+                selectedRooms[room.roomId] = true;
+              }
+            });
+          }
         });
-  
+    
         setFormData((prevState) => ({
           ...prevState,
           rooms: roomsData,
-          selectedRooms: selectedRooms
+          selectedRooms: selectedRooms,
         }));
       } catch (error) {
         console.error('Error fetching rooms:', error);
@@ -53,6 +54,7 @@ const ModelUpdateService = ({ serviceData, refreshServices }) => {
         });
       }
     };
+    
   
     if (serviceData) {
       const modalElement = document.getElementById("updateModelService");
@@ -66,7 +68,7 @@ const ModelUpdateService = ({ serviceData, refreshServices }) => {
         chargetype: serviceData.chargetype || '',
         price: serviceData.price || '',
         subtraction: serviceData.subtraction || false,
-        selectedRooms: {},  // Thiết lập lại phòng được chọn khi mở lại modal
+        selectedRooms: {}, 
       }));
   
       return () => {
