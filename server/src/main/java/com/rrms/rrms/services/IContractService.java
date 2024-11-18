@@ -1,6 +1,7 @@
 package com.rrms.rrms.services;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 import com.rrms.rrms.dto.request.ContractRequest;
@@ -22,4 +23,7 @@ public interface IContractService {
     ContractResponse updateContract(UUID contractId, ContractRequest request);
 
     void deleteContract(UUID contractId);
+
+    List<ContractResponse> getAllContractsByMotelId(UUID motelId);
+
 }

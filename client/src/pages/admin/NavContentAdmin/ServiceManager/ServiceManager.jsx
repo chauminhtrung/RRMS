@@ -18,28 +18,25 @@ import 'react-tabulator/lib/css/tabulator.min.css'
 
 const ServiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-  const { motelId } = useParams() 
+  const { motelId } = useParams()
   const [motelServices, setMotelServices] = useState([])
   const [selectedService, setSelectedService] = useState(null)
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
-  const [roomData, setRoomData] = useState([]);
-  const [tableWidth, setTableWidth] = useState(0);
+  const [roomData, setRoomData] = useState([])
+  const [tableWidth, setTableWidth] = useState(0)
   const generateColumns = () => {
-    const dynamicColumns = motelServices.map(service => ({
+    const dynamicColumns = motelServices.map((service) => ({
       title: service.nameService, // Tiêu đề là tên dịch vụ
       columns: [
         { title: 'Sử dụng', field: `usage_${service.motelServiceId}`, hozAlign: 'right', sorter: 'number', width: 65 },
         { title: 'Thành tiền', field: `total_${service.motelServiceId}`, hozAlign: 'center', width: 135 }
       ]
-    }));
-    
-    return [
-      { title: 'Tên phòng', field: 'nameRoom', hozAlign: 'center', width: 150 },
-      ...dynamicColumns
-    ];
-  };
+    }))
 
-  const columns = generateColumns();
+    return [{ title: 'Tên phòng', field: 'nameRoom', hozAlign: 'center', width: 150 }, ...dynamicColumns]
+  }
+
+  const columns = generateColumns()
 
   const options = {
     height: '400px', // Chiều cao của bảng
@@ -61,65 +58,67 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
     columnHeaderVertAlign: 'bottom'
   }
   useEffect(() => {
-    const totalColumnWidth = columns.reduce((acc, column) => acc + (column.width || 200), 10); // Giả sử mỗi cột có width 150 nếu không có width nào khác được định nghĩa
-    setTableWidth(totalColumnWidth);
-  }, [columns]);
-
+    const totalColumnWidth = columns.reduce((acc, column) => acc + (column.width || 200), 10) // Giả sử mỗi cột có width 150 nếu không có width nào khác được định nghĩa
+    setTableWidth(totalColumnWidth)
+  }, [columns])
 
   const fetchMotelServicesWithCount = async (id) => {
     try {
       const serviceResponse = await axios.get(`${env.API_URL}/motels/get-motel-id?id=${id}`, {
         headers: { Authorization: `Bearer ${token}` }
-      });
+      })
       const roomResponse = await axios.get(`${env.API_URL}/room/motel/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
-      });
+      })
 
       if (serviceResponse.data?.code === 200 && serviceResponse.data.result.motelServices) {
-        const motelServices = serviceResponse.data.result.motelServices;
-        const rooms = roomResponse.data;
+        const motelServices = serviceResponse.data.result.motelServices
+        const rooms = roomResponse.data
+        console.log(rooms)
 
-        const serviceCounts = {};
-        rooms.forEach((room) => {
-          room.services.forEach((service) => {
-            serviceCounts[service.serviceId] = (serviceCounts[service.serviceId] || 0) + 1;
-          });
-        });
+        const serviceCounts = {}
+        if (rooms) {
+          rooms.forEach((room) => {
+            room.services.forEach((service) => {
+              serviceCounts[service.serviceId] = (serviceCounts[service.serviceId] || 0) + 1
+            })
+          })
+        }
+
+        console.log(serviceCounts)
 
         const servicesWithCount = motelServices.map((service) => ({
           ...service,
-          count: serviceCounts[service.motelServiceId] || 0,
-        }));
+          count: serviceCounts[service.motelServiceId] || 0
+        }))
 
-        setMotelServices(servicesWithCount);
+        setMotelServices(servicesWithCount)
 
         // Chuẩn bị dữ liệu phòng cho bảng
         const roomDataFormatted = rooms.map((room) => {
           const roomServices = room.services.reduce((acc, service) => {
-            acc[`usage_${service.serviceId}`] = service.usage;
-            acc[`total_${service.serviceId}`] = service.total;
-            return acc;
-          }, {});
+            acc[`usage_${service.serviceId}`] = service.usage
+            acc[`total_${service.serviceId}`] = service.total
+            return acc
+          }, {})
 
           return {
             nameRoom: room.name,
             ...roomServices
-          };
-        });
+          }
+        })
 
-        setRoomData(roomDataFormatted);
+        setRoomData(roomDataFormatted)
       } else {
-        setMotelServices([]);
-        setRoomData([]);
+        setMotelServices([])
+        setRoomData([])
       }
     } catch (error) {
-      console.error('Lỗi khi gọi API:', error);
-      setMotelServices([]);
-      setRoomData([]);
+      console.error('Lỗi khi gọi API:', error)
+      setMotelServices([])
+      setRoomData([])
     }
-  };
-  
-  
+  }
 
   const deleteMotelService = async (serviceId) => {
     // Kiểm tra xem serviceId có tồn tại không
@@ -188,11 +187,11 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
     if (motelId) {
       fetchMotelServicesWithCount(motelId)
     }
-  }, [motelId]) 
+  }, [motelId])
 
   const openEditModal = (service) => {
     setSelectedService(service)
-    setIsUpdateModalOpen(true) 
+    setIsUpdateModalOpen(true)
   }
 
   const closeUpdateModal = () => {
@@ -248,7 +247,7 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                           </span>
                           {service.count > 0 ? (
                             <span className="price-item-status" style={{ color: '#28a745' }}>
-                              Đang áp dụng cho {service.count} phòng 
+                              Đang áp dụng cho {service.count} phòng
                             </span>
                           ) : (
                             <i className="price-item-status">
@@ -256,7 +255,7 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                             </i>
                           )}
                         </div>
-                        
+
                         <button
                           className="btn-round btn-edit"
                           style={{ border: 'none' }}
@@ -327,7 +326,7 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
               </div>
 
               <div style={{ overflowX: 'auto' }}>
-                <div style={{ height: '100%', width: `${tableWidth}px` }}> 
+                <div style={{ height: '100%', width: `${tableWidth}px` }}>
                   <ReactTabulator
                     className="my-custom-table"
                     columns={columns}
@@ -346,7 +345,6 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                   />
                 </div>
               </div>
-
             </div>
           </div>
         </div>

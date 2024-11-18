@@ -49,7 +49,7 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
         Swal.fire('Thêm thành công', 'Đã thêm thành công!', 'success')
         getAllMotelDevice()
       } catch (error) {
-        Swal.fire('Thêm thất bại', 'Thử lại sau!', 'error')
+        Swal.fire('Thêm thất bại', 'Thử lại sau!', error)
       }
       handleClose()
     } else {
@@ -87,18 +87,44 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
     return true
   }
 
+  // Định dạng tiền tệ Việt Nam (VND)
+  const currencyFormatter = (cell) => {
+    const value = cell.getValue()
+    if (value !== null && value !== undefined) {
+      return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+      }).format(value)
+    }
+    if (value === null || value === undefined) {
+      return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+      }).format(0)
+    }
+    return value
+  }
+
   const columns = [
     {
       title: '',
       field: 'icon',
       hozAlign: 'center',
-      width: 40,
+      width: 60,
       formatter: (cell) => {
         const icon = cell.getRow().getData().icon
         const element = document.createElement('div')
         element.classList.add('icon-device')
         element.innerHTML = `
-          <div style="width: 20px; height: 20px;">
+          <div style=" background-color: #eaeaea;
+          border-radius: 100%;
+          padding: 3px;
+          text-align: center;
+          cursor: pointer;
+          width: 39px;
+          height: 39px;
+          color: #fff;
+          margin: auto;">
             <img src="\\icon-${icon}.png" style="width: 30px; height: 30px;" />
           </div>
         `
@@ -111,10 +137,27 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
       field: 'deviceName',
       hozAlign: 'center',
       minWidth: 40,
-      editor: 'input'
+      editor: 'input',
+      cssClass: 'bold-text'
     },
-    { title: 'Giá Trị Tài Sản', field: 'value', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Giá Trị Nhập Vào', field: 'valueInput', hozAlign: 'center', minWidth: 40, editor: 'input' },
+    {
+      title: 'Giá Trị Tài Sản',
+      field: 'value',
+      hozAlign: 'center',
+      minWidth: 40,
+      editor: 'input',
+      cssClass: 'bold-text',
+      formatter: currencyFormatter
+    },
+    {
+      title: 'Giá Trị Nhập Vào',
+      field: 'valueInput',
+      hozAlign: 'center',
+      minWidth: 40,
+      editor: 'input',
+      cssClass: 'bold-text',
+      formatter: currencyFormatter
+    },
     { title: 'Tổng Số Lượng', field: 'totalQuantity', hozAlign: 'center', minWidth: 40, editor: 'input' },
     { title: 'Đơn Vị', field: 'unitDescription', hozAlign: 'center', minWidth: 40, editor: 'input' },
     { title: 'Đơn Vị Cung Cấp', field: 'supplier', hozAlign: 'center', minWidth: 40, editor: 'input' },

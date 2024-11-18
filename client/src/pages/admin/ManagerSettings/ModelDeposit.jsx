@@ -263,7 +263,7 @@ const ModelDeposit = ({ motel, username, templatecontractRouteId, fetchDataTemla
                   id="content-contract"
                   aria-hidden="true"></textarea>
                 <Editor
-                  apiKey="bj3v769fvuxhilkoz8g48ituulf3bl6d7bi27ji6fb1k7f2w"
+                  apiKey="fuzhg6solj5mz1szgk10647zoab79x74x4aj5xxze88wgzwf"
                   onEditorChange={(evt, editor) => {
                     editorRef.current = editor
                   }}
