@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.rrms.rrms.dto.request.BulletinBoardRequest;
 import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.dto.response.BulletinBoardResponse;
+import com.rrms.rrms.dto.response.BulletinBoardSearchResponse;
 import com.rrms.rrms.dto.response.BulletinBoardTableResponse;
 import com.rrms.rrms.models.BulletinBoard;
 import com.rrms.rrms.services.IBulletinBoard;
@@ -19,6 +20,13 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -70,8 +78,8 @@ public class BulletinBoardController {
     public ApiResponse<BulletinBoardResponse> updateBulletinBoard(
             @RequestBody BulletinBoardRequest bulletinBoardRequest, @PathVariable("id") UUID id) {
         log.info("Update bulletin board with id: {}", id);
-        BulletinBoardResponse bulletinBoardResponse =
-                bulletinBoardService.updateBulletinBoard(id, bulletinBoardRequest);
+        BulletinBoardResponse bulletinBoardResponse = bulletinBoardService.updateBulletinBoard(id,
+                bulletinBoardRequest);
         log.info("Update bulletin board successfully");
         return ApiResponse.<BulletinBoardResponse>builder()
                 .message("Update bulletin board successfully")
@@ -109,5 +117,22 @@ public class BulletinBoardController {
         bulletinBoardService.deleteBulletinBoard(id);
         log.info("Delete bulletin board with id: " + id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public ApiResponse<List<BulletinBoardSearchResponse>> searchBulletinBoards(
+            @RequestParam("address") String address) {
+        // Gọi service để thực hiện tìm kiếm
+        List<BulletinBoardSearchResponse> resultElastic = bulletinBoardService.searchBulletinBoards(address);
+        List<BulletinBoardSearchResponse> result = new ArrayList<>();
+        resultElastic.forEach(bulletinBoardSearchResponse -> {
+            result.add(bulletinBoardService.findByBulletinBoardId(bulletinBoardSearchResponse.getBulletinBoardId()));
+        });
+        log.info("Search bulletin board successfully");
+        return ApiResponse.<List<BulletinBoardSearchResponse>>builder()
+                .message("Search bulletin board successfully")
+                .code(HttpStatus.OK.value())
+                .result(result)
+                .build();
     }
 }

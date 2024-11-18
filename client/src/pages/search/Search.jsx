@@ -14,6 +14,9 @@ import FilterSearch from './FilterSearch'
 import axios from 'axios'
 import ChatAI from '../AI/ChatAI'
 import { getTinhThanh } from '~/apis/addressAPI'
+import { env } from '~/configs/environment'
+import { useLocation } from 'react-router-dom'
+import { searchBulletinBoardByAddress } from '~/apis/bulletinBoardAPI'
 
 const Search = ({ setIsAdmin }) => {
   const [provinces, setProvinces] = useState([])
@@ -21,14 +24,12 @@ const Search = ({ setIsAdmin }) => {
   const [totalRooms, setTotalRooms] = useState(0)
   const [searchValue, setSearchValue] = useState('')
   const [recordedText, setRecordedText] = useState('')
+  const [keyword, setKeyword] = useState('')
+  const location = useLocation()
+  const { searchKeyWord } = location.state || {}
 
   useEffect(() => {
     setIsAdmin(false)
-  }, [])
-
-  useEffect(() => {
-    console.log('Searching for:', searchValue) // Ghi log giá trị tìm kiếm
-    loadData(searchValue)
   }, [])
 
   useEffect(() => {
@@ -45,9 +46,27 @@ const Search = ({ setIsAdmin }) => {
 
   // /name?name=${searchValue}
   // Hàm để tải dữ liệu
-  const loadData = async (searchValue) => {
+  const loadDataSearch = async (searchValue, pageNumber = 1, pageSize = 6) => {
+    console.log(searchKeyWord)
+
+    if (searchKeyWord) {
+      setKeyword(searchKeyWord)
+
+      searchBulletinBoardByAddress(searchKeyWord).then((res) => {
+        console.log(res)
+        setSearchData(res.result)
+        setTotalRooms(res.result.length)
+        console.log(searchData)
+      })
+      return
+    }
+
     try {
-      const response = await axios.get(`http://localhost:8080/searchs`)
+      const response = await axios.get(`${env.API_URL}/searchs`, {
+        headers: {
+          'ngrok-skip-browser-warning': '69420'
+        }
+      })
 
       // Kiểm tra trạng thái phản hồi
       if (response.status === 200) {
@@ -69,7 +88,10 @@ const Search = ({ setIsAdmin }) => {
       console.error('Error fetching data:', error)
     }
   }
-
+  useEffect(() => {
+    console.log('Searching for:', searchValue) // Ghi log giá trị tìm kiếm
+    loadDataSearch(searchValue, 0, 6)
+  }, [])
   if (!provinces) {
     return <LoadingPage />
   }
@@ -81,7 +103,14 @@ const Search = ({ setIsAdmin }) => {
           mt: 5,
           borderRadius: '6px'
         }}>
-        <FilterSearch setSearchData={setSearchData} recordedText={recordedText} />
+        <FilterSearch
+          setTotalRooms={setTotalRooms}
+          searchKeyWord={searchKeyWord}
+          setSearchData={setSearchData}
+          recordedText={recordedText}
+          keyword={keyword}
+          setKeyword={setKeyword}
+        />
       </Container>
       <ListSearch />
       <Container>

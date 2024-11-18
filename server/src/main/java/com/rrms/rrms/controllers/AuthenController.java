@@ -45,57 +45,56 @@ public class AuthenController {
     @Autowired
     private IAuthorityService authorityService;
 
+    @Autowired
     private IMailService mailService;
 
-    @GetMapping("/login/error")
+    @GetMapping("/error")
     public ResponseEntity<String> loginFailure() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Đăng nhập thất bại!");
     }
 
-    @GetMapping("/login/success")
-    public void loginSuccess(
-            HttpServletRequest request, HttpServletResponse response, @AuthenticationPrincipal OAuth2User oauthUser)
+    @GetMapping("/success")
+    public void loginSuccess(HttpServletRequest request, HttpServletResponse response,
+            @AuthenticationPrincipal OAuth2User oauthUser)
             throws IOException, ParseException {
+
+        if (oauthUser == null) {
+            log.error("OAuth2 User is null");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Không xác thực được tài khoản Google");
+            return;
+        }
+
+        log.info("OAuth2 User Info: {}", oauthUser.getAttributes());
+
         String email = oauthUser.getAttribute("email");
         String name = oauthUser.getAttribute("name");
 
-        log.info("Google login success: email={}, name={}", email, name);
+        if (email == null || name == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Không lấy được thông tin email hoặc tên");
+            return;
+        }
 
-        // Kiểm tra nếu tài khoản đã tồn tại trong cơ sở dữ liệu, nếu không thì tạo tài khoản mới.
-        Optional<Account> accountOptional = accountService.findByEmail(email);
-        Account account;
-        if (accountOptional.isPresent()) {
-            account = accountOptional.get();
-        } else {
+        Account account = accountService.findByEmail(email).orElseGet(() -> {
             RegisterRequest registerRequest = RegisterRequest.builder()
                     .username(name)
-                    .phone("")
                     .email(email)
                     .password(UUID.randomUUID().toString())
                     .userType("CUSTOMER")
                     .build();
-            account = accountService.register(registerRequest);
-            log.info("New account created: {}", account);
-        }
+            return accountService.registergg(registerRequest);
+        });
 
-        // Tạo JWT token
         String token = authorityService.generateToken(account);
-        log.info("Generated JWT token: {}", token);
+        log.info("Generated JWT Token: {}", token);
 
-        // Chuyển hướng người dùng đến frontend với token trong URL
-        String redirectUrl = "http://localhost:5173/oauth2/redirect?token=" + token;
-        response.sendRedirect(redirectUrl);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"token\":\"" + token + "\"}");
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         Map<String, Object> response = new HashMap<>();
         try {
-            var authen = SecurityContextHolder.getContext().getAuthentication();
-
-            log.info("Get all account {}", authen.getName());
-            authen.getAuthorities()
-                    .forEach(grantedAuthority -> log.info("GrantedAuthority: {}", grantedAuthority.getAuthority()));
             Optional<Account> accountOptional = accountService.findByPhone(loginRequest.getPhone());
             if (accountOptional.isEmpty()) {
                 response.put("status", false);
@@ -141,14 +140,7 @@ public class AuthenController {
     public ResponseEntity<?> logout(@RequestBody LogoutRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
-            // Log token để kiểm tra xem token có được gửi đúng không
-            log.info("Token nhận được để logout: " + request.getToken());
-
-            // Gọi hàm logout của authorityService, nơi bạn xử lý việc đưa token vào
-            // blacklist
             authorityService.logout(request);
-
-            // Trả về thông báo đăng xuất thành công
             response.put("status", true);
             response.put("message", "Đăng xuất thành công.");
             return ResponseEntity.ok(response);
@@ -196,6 +188,38 @@ public class AuthenController {
             response.setStatus(false);
             response.setMessage("Đã xảy ra lỗi trong quá trình đăng ký.");
 
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PostMapping("/refreshToken")
+    public ResponseEntity<?> refresh(@RequestBody RefreshRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            LoginResponse loginResponse = authorityService.refreshToken(request);
+            response.put("status", true);
+            response.put("message", "Làm mới token thành công.");
+            response.put("data", loginResponse);
+            return ResponseEntity.ok(response);
+        } catch (AppException ex) {
+            response.put("status", false);
+            response.put("message", ex.getMessage());
+            response.put("data", null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        } catch (ParseException ex) {
+            response.put("status", false);
+            response.put("message", "Token không hợp lệ.");
+            response.put("data", null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (JOSEException ex) {
+            response.put("status", false);
+            response.put("message", "Đã xảy ra lỗi khi làm mới token.");
+            response.put("data", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        } catch (Exception ex) {
+            response.put("status", false);
+            response.put("message", "Đã xảy ra lỗi không xác định.");
+            response.put("data", null);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Dropdown, DropdownButton, DropdownItem } from 'react-bootstrap'
-import { FaEye, FaShare, FaUserPlus, FaTrashAlt, FaPrint, FaTimes } from 'react-icons/fa'
+import { FaEye, FaShare, FaUserPlus, FaTrashAlt, FaTimes } from 'react-icons/fa'
+import Swal from 'sweetalert2'
 
 const TenantMenuUpdate = ({
   handleClickDoc,
@@ -12,9 +13,54 @@ const TenantMenuUpdate = ({
   deleteTenant
 }) => {
   const [showMenu, setShowMenu] = useState(false)
+  const linkToCopy = 'http://localhost:5173/residenceForm'
 
+  const linkDienThoai = 'http://localhost:5173/AppPromo'
   // Mở hoặc đóng menu
   const handleMenuToggle = () => setShowMenu(!showMenu)
+  const handleCopyLink = () => {
+    navigator.clipboard
+      .writeText(linkToCopy)
+      .then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Thành công',
+          text: `Đã sao chép liên kết văn bản tạm trú! Bạn có thể chia sẻ cho bên thứ ba. ${linkToCopy}`,
+          showCancelButton: true,
+          confirmButtonText: 'Đi đến đường dẫn',
+          cancelButtonText: 'Đóng'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            handleClickDoc(tenantId)
+          }
+        })
+      })
+      .catch(() => {
+        Swal.fire({ icon: 'error', title: 'Thất bại', text: 'Lỗi khi sao chép link!' })
+      })
+  }
+  const handleCopyLinkTuNhap = () => {
+    navigator.clipboard
+      .writeText(linkToCopy)
+      .then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Thành công',
+          text: `Đã sao chép liên kết văn bản tạm trú! Bạn có thể chia sẻ cho bên thứ ba. ${linkToCopy}`,
+          showCancelButton: true,
+          confirmButtonText: 'Đi đến đường dẫn',
+          cancelButtonText: 'Đóng'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Chuyển hướng đến đường dẫn
+            window.location.href = linkDienThoai
+          }
+        })
+      })
+      .catch(() => {
+        Swal.fire({ icon: 'error', title: 'Thất bại', text: 'Lỗi khi sao chép link!' })
+      })
+  }
 
   return (
     <div>
@@ -33,18 +79,13 @@ const TenantMenuUpdate = ({
             <FaEye /> Xem mẫu văn bản tạm trú
           </DropdownItem>
 
-          {/* Mục in tenantId */}
-          <DropdownItem onClick={handleClose}>
-            <FaPrint /> {tenantId}
-          </DropdownItem>
-
           {/* Mục chia sẻ mẫu văn bản */}
-          <DropdownItem onClick={handleClose}>
+          <DropdownItem onClick={handleCopyLink}>
             <FaShare /> Chia sẻ mẫu văn bản tạm trú
           </DropdownItem>
 
           {/* Mục khách thuê tự nhập */}
-          <DropdownItem onClick={handleClose}>
+          <DropdownItem onClick={handleCopyLinkTuNhap}>
             <FaUserPlus /> Khách thuê tự nhập
           </DropdownItem>
 
@@ -56,7 +97,7 @@ const TenantMenuUpdate = ({
               setAvatar(false) // Đặt avatar nếu cần
               console.log('setEditId called with tenantId:', tenantId) // Kiểm tra console
             }}>
-            <FaUserPlus /> Chỉnh sửa
+            <FaUserPlus /> Chỉnh sửa thông tin khách hàng
           </DropdownItem>
 
           {/* Mục xóa */}

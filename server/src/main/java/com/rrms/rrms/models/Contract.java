@@ -2,8 +2,11 @@ package com.rrms.rrms.models;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import com.rrms.rrms.enums.ContractStatus;
@@ -25,45 +28,79 @@ public class Contract {
 
     @ManyToOne
     @JoinColumn(name = "room_id")
+    @JsonBackReference(value = "Room-Contract") // Đặt tên cho tham chiếu ngược
     private Room room;
 
     @ManyToOne
-    @JoinColumn(name = "username_tenant")
+    @JoinColumn(name = "tenant_id")
     private Tenant tenant;
 
     @ManyToOne
-    @JoinColumn(name = "username_landlord")
-    private Account landlord;
+    @JoinColumn(name = "username")
+    private Account account;
 
     @ManyToOne
-    @JoinColumn(name = "contract_template")
+    @JoinColumn(name = "contracttemplate_id")
     private ContractTemplate contract_template;
 
+    @ManyToOne
+    @JoinColumn(name = "broker_id")
+    private Broker broker;
+
+    //Ngay vao o
     @Column(columnDefinition = "DATE")
-    private LocalDate firstTime;
+    private Date moveinDate;
 
-    @Column(columnDefinition = "INT")
-    private Integer leaseTerm;
+    //thoi han hop dong
+    @Column(columnDefinition = "TEXT")
+    private String leaseTerm;
 
+    //Ngay ket thuc hop dong
+    @Column(columnDefinition = "DATE")
+    private Date closeContract;
+
+    //mo ta
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    //tien no
     @Column(columnDefinition = "DECIMAL(10, 2)")
-    private BigDecimal deposit;
+    private Double debt;
 
+    //gia tien
+    @Column(columnDefinition = "DECIMAL(10, 2)")
+    private Double price;
+
+    //tien coc
+    @Column(columnDefinition = "DECIMAL(10, 2)")
+    private Double deposit;
+
+    //chu ky thu
     @Column(columnDefinition = "TEXT")
     private String collection_cycle;
 
+    //ngay lap hop dong
     @Column(columnDefinition = "DATE")
     private LocalDate createdate;
 
+    //chu ky khach hang
     @Column(columnDefinition = "TEXT")
-    private LocalDate Sign_contract;
+    private String Sign_contract;
 
+    //ngon ngu
     @Column(columnDefinition = "TEXT")
-    private LocalDate language;
+    private String language;
 
+    //so luong nguoi thue
+    @Column(name = "count_tenant", columnDefinition = "TEXT")
+    private Integer countTenant;
+
+    //trang thai hop dong
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "ENUM('ACTIVE', 'ENDED')")
+    @Column(columnDefinition = "ENUM('ACTIVE', 'ENDED','IATExpire')")
     private ContractStatus status;
+
+
+
+
 }

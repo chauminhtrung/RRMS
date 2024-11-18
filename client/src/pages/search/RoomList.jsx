@@ -30,7 +30,7 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
 
   // Thêm trạng thái cho trang hiện tại
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 7 // Số lượng item hiển thị mỗi trang
+  const itemsPerPage = 6 // Số lượng item hiển thị mỗi trang
 
   const handleToggle = (id) => {
     setVisiblePhoneNumbers((prev) => ({
@@ -95,7 +95,7 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
   let currentItems = []
   if (Array.isArray(searchData)) {
     currentItems = searchData.slice(indexOfFirstItem, indexOfLastItem)
-    console.log(currentItems) // Hiển thị các phần tử hiện tại
+    // console.log(currentItems) // Hiển thị các phần tử hiện tại
   } else {
     currentItems = []
   }
@@ -107,8 +107,8 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
       <Box sx={{ width: '100%', overflow: 'hidden', mt: 2 }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            {currentItems.length > 0 ? (
-              currentItems.map((item1, i) => (
+            {currentItems?.length > 0 ? (
+              currentItems?.map((item1, i) => (
                 <Card
                   key={i}
                   sx={{
@@ -127,9 +127,9 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
                   }}>
                   <CardMedia
                     component="img"
-                    image={item1.bulletinBoardImages?.[0]?.imageLink || 'default_image_url.jpg'}
+                    image={item1?.bulletinBoardImages?.[0]?.imageLink || 'default_image_url.jpg'}
                     alt="Chung cư"
-                    onClick={() => handlePageChange(item1.bulletinBoardId)}
+                    onClick={() => handlePageChange(item1?.bulletinBoardId)}
                     sx={{
                       width: { xs: '100%', sm: 200 },
                       height: { xs: 200, sm: 150 },
@@ -164,7 +164,7 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
                           color: 'primary.main'
                         }
                       }}>
-                      {item1.title}
+                      {item1?.title}
                     </Typography>
 
                     <Typography
@@ -180,7 +180,7 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
                           fontWeight: 500
                         }
                       }}>
-                      {item1.address}
+                      {item1?.address}
                     </Typography>
 
                     <Typography
@@ -194,27 +194,27 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
                           transform: 'scale(1.05)'
                         }
                       }}>
-                      {formatterAmount(item1.rentPrice)} /Tháng
+                      {formatterAmount(item1?.rentPrice)} /Tháng
                     </Typography>
 
                     <Typography
                       variant="body2"
                       sx={{ mt: 1, display: 'flex', alignItems: 'center', flexWrap: 'nowrap' }}>
                       <Box component="span" sx={{ mr: 2 }}>
-                        {item1.area} m²
+                        {item1?.area} m²
                       </Box>
                       <Box sx={{ display: 'flex', flexWrap: 'nowrap', alignItems: 'center' }}>
                         {/* Hiển thị giá Nước nếu có */}
-                        {item1.waterPrice && (
+                        {item1?.waterPrice && (
                           <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-                            <Box component="span">{formatterAmount(item1.waterPrice)}/khối</Box>
+                            <Box component="span">{formatterAmount(item1?.waterPrice)}/khối</Box>
                           </Box>
                         )}
 
                         {/* Hiển thị giá Điện nếu có */}
-                        {item1.electricityPrice && (
+                        {item1?.electricityPrice && (
                           <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-                            <Box component="span">{formatterAmount(item1.electricityPrice)}/Kw</Box>
+                            <Box component="span">{formatterAmount(item1?.electricityPrice)}/Kw</Box>
                           </Box>
                         )}
                       </Box>
@@ -222,11 +222,11 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
 
                     <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
                       <Avatar
-                        src={item1.account?.avatar || '/path/to/default-avatar.png'} // Dùng ảnh mặc định nếu avatar không có
+                        src={item1?.account?.avatar || '/path/to/default-avatar.png'} // Dùng ảnh mặc định nếu avatar không có
                         sx={{ mr: 1 }}
                       />
                       <Typography variant="caption" color="textSecondary" noWrap>
-                        {item1.account?.username || 'Người dùng không có sẵn'}, 2 ngày trước
+                        {item1?.account?.username || 'Người dùng không có sẵn'}, 2 ngày trước
                       </Typography>
                       <IconButton
                         onClick={() => handleHeartClick(item1?.bulletinBoardRules[0].bulletinBoardRuleId)} // Here we access the bulletinBoardRuleId of the first rule (adjust as necessary)
@@ -277,7 +277,7 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
                       variant="outlined"
                       color="primary"
                       fullWidth
-                      onClick={() => handleToggle(item1.roomId)}
+                      onClick={() => handleToggle(item1?.roomId)}
                       sx={{
                         textTransform: 'none',
                         ml: { xs: 2, sm: 0 },
@@ -287,7 +287,7 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
                           color: '#fff'
                         }
                       }}>
-                      {visiblePhoneNumbers[item1.roomId] ? item1.motel.account.phone : 'Xem SĐT'}
+                      {visiblePhoneNumbers[item1?.roomId] ? item1?.motel.account.phone : 'Xem SĐT'}
                     </Button>
                   </Box>
                 </Card>
@@ -301,7 +301,7 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
 
       {/* Component Pagination */}
       <Pagination
-        count={Math.ceil(searchData.length / itemsPerPage)} // Tổng số trang
+        count={Math.ceil(searchData?.length / itemsPerPage)} // Tổng số trang
         page={currentPage} // Trang hiện tại
         onChange={handlePageChangeNumber} // Hàm xử lý khi thay đổi trang
         variant="outlined"

@@ -1,5 +1,8 @@
 package com.rrms.rrms.dto.request;
 
+import java.util.List;
+import java.util.UUID;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,4 +17,5 @@ public class MotelServiceUpdateRequest {
     String nameService;
     Long price;
     String chargetype;
+    List<UUID> selectedRooms;
 }

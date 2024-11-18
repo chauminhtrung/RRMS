@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -27,24 +29,26 @@ import lombok.extern.slf4j.Slf4j;
 public class SecurityConfig {
 
     private static final String[] PUBLIC_ENDPOINTS = {
-        "/",
-        "/oauth2/*",
-        "/oauth2/**",
-        "/authen/login",
-        "/authen/login/error",
-        "/authen/**",
-        "/swagger-ui/*",
-        "/v3/api-docs/*",
-        "/searchs/**",
-        "/search/**",
-        "/search/*",
-        "/search",
-        "/detail/**",
-        "/detail/*",
-        "/detail",
-        "/bulletin-board/*",
-        "/api-accounts/**",
-        "/motels/get-motel-id",
+            "/oauth2/callback/google/*",
+            "/favicon.ico",
+            "/",
+            "/oauth2/*",
+            "/oauth2/**",
+            "/authen/*",
+            "/authen/**",
+            "/swagger-ui/*",
+            "/v3/api-docs/*",
+            "/searchs/**",
+            "/search/**",
+            "/search/*",
+            "/search",
+            "/RRMS",
+            "/detail/**",
+            "/detail/*",
+            "/detail",
+            "/bulletin-board/*",
+            "/api-accounts/**",
+            "/motels/get-motel-id",
     };
 
     @Value("${jwt.signer-key}")
@@ -60,17 +64,18 @@ public class SecurityConfig {
                 .anyRequest()
                 .authenticated());
 
-        // Cấu hình OAuth2 Login với Google
-        http.oauth2Login(oauth2 -> oauth2.loginPage("/authen/login")
+        // Cấu hình OAuth2 Login
+        http.oauth2Login(oauth2 -> oauth2
+                .loginPage("/authen/login")
                 .successHandler((request, response, authentication) -> {
-                    response.sendRedirect("http://localhost:5173/");
+                    response.sendRedirect("/authen/success");
                 })
-                .failureUrl("/authen/login/error")
-                .authorizationEndpoint(config -> config.baseUri("/oauth2/authorization"))
-                .redirectionEndpoint(redirection -> redirection.baseUri("/oauth2/callback/*")));
+                .failureHandler((request, response, exception) -> {
+                    response.sendRedirect("/authen/error");
+                }));
 
-        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer ->
-                jwtConfigurer.decoder(jwtDecoder()).jwtAuthenticationConverter(jwtAuthenticationConverter())));
+        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())
+                .jwtAuthenticationConverter(jwtAuthenticationConverter())));
 
         http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
 
@@ -101,5 +106,10 @@ public class SecurityConfig {
         return NimbusJwtDecoder.withSecretKey(secretKeySpec)
                 .macAlgorithm(MacAlgorithm.HS512)
                 .build();
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(10);
     }
 }

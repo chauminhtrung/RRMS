@@ -99,11 +99,18 @@ const DashboardHome = () => {
         setMonthlyDataThisYear(monthlyAccountsThisYearResponse.data);
         setMonthlyDataLastYear(monthlyAccountsLastYearResponse.data);
 
+        setCardData([
+          { title: 'Tổng Số Người Dùng', value: totalAccountsResponse.data + totalTenantsResponse.data, percent: '59.3%', extra: '35,000' },
+          { title: 'Tổng Số Chủ Trọ', value: totalHostAccountsResponse.data, percent: '25.5%', extra: '2,500' },
+          { title: 'Tổng Số Nhà Trọ', value: totalMotelsResponse.data, percent: '40.2%', extra: '1,500' },
+          { title: 'Tổng Số Người Thuê', value: totalTenantsResponse.data, percent: '15.7%', extra: '$2,000' },
+        ]);
 
       } catch (error) {
         console.error('Error fetching card data:', error);
       }
     };
+
     fetchCardData();
   }, []);
 
@@ -129,24 +136,30 @@ const DashboardHome = () => {
 
   const options = {
     height: '350px',
-    rowHeight: 30, // Thay đổi chiều cao hàng 
-    movableColumns: true, // Cho phép di chuyển cột
-    resizableRows: true, // Cho phép thay đổi kích thước hàng
+    rowHeight: 30,
+    movableColumns: true,
+    resizableRows: true,
     movableRows: true,
-    resizableColumns: true, // Cho phép thay đổi kích thước cột
+    resizableColumns: true,
     resizableColumnFit: true,
     layout: 'fitColumns',
     responsiveLayout: 'collapse',
   }
-  // Lấy các nhãn từ các thuộc tính của đối tượng
-  // const chartLabels = Object.keys(weeklyData.length > 0 ? weeklyData[0] : {});
+
+  // const cardData = [
+  //   { title: 'Tổng số lượt xem trang', value: '100', extra: '35,000' },
+  //   { title: 'Tổng số người dùng', value: '10', extra: '2,500' },
+  //   { title: 'Người dùng mới đã đăng ký', value: '5', extra: '1,500' },
+  //   { title: 'Doanh thu', value: '15.000.000 VNĐ', extra: '$2,000' },
+  // ];
+
   const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const data = {
     labels: labels,
     datasets: [
       {
-        label: 'Biểu đồ năm nay',
-        data: labels.map((_, index) => monthlyDataThisYear[index] || 0),
+        label: 'Tài Khoản Năm Này',
+        data: labels.map((_, index) => monthlyDataThisYear[index] || 0), // Sử dụng dữ liệu cho năm nay
         fill: true,
         backgroundColor: 'rgba(75,192,192,0.2)',
         borderColor: 'rgba(75,192,192,1)',
@@ -154,8 +167,8 @@ const DashboardHome = () => {
         tension: 0.4,
       },
       {
-        label: 'Biểu đồ năm trước',
-        data: labels.map((_, index) => monthlyDataLastYear[index] || 0),
+        label: 'Tài Khoản Năm Trước',
+        data: labels.map((_, index) => monthlyDataLastYear[index] || 0), // Sử dụng dữ liệu cho năm trước
         fill: true,
         backgroundColor: 'rgba(255,99,132,0.2)',
         borderColor: 'rgba(255,99,132,1)',
@@ -185,9 +198,6 @@ const DashboardHome = () => {
                     <Grid container alignItems="center" justifyContent="space-between">
                       <div>
                         <h4>{card.value}</h4>
-                      </div>
-                      <div className='pt-2 pe-1 ps-4 rounded' style={{ backgroundColor: 'rgb(230, 244, 255)', color: 'rgb(22, 119, 255)' }}>
-                        <h4>{card.percent}</h4>
                       </div>
                     </Grid>
                     <Typography variant="caption">

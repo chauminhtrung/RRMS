@@ -34,7 +34,6 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api-accounts")
 public class AccountController {
-    // test
     IAccountService accountService;
 
     @Operation(summary = "Get all account")

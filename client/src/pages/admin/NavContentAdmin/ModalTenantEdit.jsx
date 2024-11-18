@@ -28,6 +28,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { storage } from '~/configs/firebaseConfig'
 import { v4 } from 'uuid'
 import { toast } from 'react-toastify'
+import { env } from '~/configs/environment'
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -63,7 +64,7 @@ const EditTenantModal = ({ open, onClose, reloadData }) => {
 
       // Tiến hành upload ảnh mặt trước và lấy URL
       const imageName = v4() // Tạo tên ngẫu nhiên cho ảnh
-      const storageRef = ref(storage, `images/${imageName}`)
+      const storageRef = ref(storage, `images/tenant/${imageName}`)
       const uploadTask = uploadBytesResumable(storageRef, image)
 
       uploadTask.on(
@@ -97,7 +98,7 @@ const EditTenantModal = ({ open, onClose, reloadData }) => {
 
       // Tiến hành upload ảnh mặt sau và lấy URL
       const imageName = v4() // Tạo tên ngẫu nhiên cho ảnh
-      const storageRef = ref(storage, `images/${imageName}`)
+      const storageRef = ref(storage, `images/tenant/${imageName}`)
       const uploadTask = uploadBytesResumable(storageRef, image)
 
       uploadTask.on(
@@ -280,10 +281,11 @@ const EditTenantModal = ({ open, onClose, reloadData }) => {
     tenant.gender = tenant.gender?.trim() || 'MALE'
 
     try {
-      const response = await axios.post('http://localhost:8080/tenant/insert', tenant, {
+      const response = await axios.post(`${env.API_URL}/tenant/insert`, tenant, {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': '69420'
         }
       })
 

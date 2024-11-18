@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { env } from '~/configs/environment';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -8,44 +8,104 @@ import 'react-tabulator/lib/styles.css'
 import 'react-tabulator/lib/css/tabulator.min.css' 
 
 const ModelCreateService = ({motelId, refreshServices  }) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;  
   const [formData, setFormData] = useState({  
     nameService: 'Dịch vụ 1',  
     chargetype: 'kwh',  
     price: '10000',  
     subtraction: false,  
+    selectedRooms: {}, 
+    rooms: []  
   });  
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: type === 'checkbox' ? checked : value,
-    }))
-  }
+  useEffect(() => {  
+    const fetchRooms = async () => {  
+      try {  
+        const response = await axios.get(`${env.API_URL}/room/motel/${motelId}`, {  
+          headers: { Authorization: `Bearer ${token}` }  
+        });  
+        setFormData((prevState) => ({  
+          ...prevState,  
+          rooms: response.data   
+        }));  
+      } catch (error) {  
+        console.error('Error fetching rooms:', error);  
+        Swal.fire({  
+          icon: 'error',  
+          title: 'Lỗi',  
+          text: 'Không thể tải danh sách phòng!',  
+        });  
+      }  
+    };  
+  
+    if (motelId) fetchRooms();  
+  }, [motelId, token]);  
+
+  const handleChange = (e) => {  
+    const { name, value, type, checked } = e.target;  
+    setFormData((prevState) => ({  
+      ...prevState,  
+      [name]: type === 'checkbox' ? checked : value,  
+    }));  
+  };  
+
+  const handleRoomSelect = (roomId, checked) => {
+    setFormData((prevState) => {
+      const updatedSelectedRooms = {
+        ...prevState.selectedRooms,
+        [roomId]: checked,
+      };
+  
+      const allSelected = Object.values(updatedSelectedRooms).length === prevState.rooms.length &&
+                          Object.values(updatedSelectedRooms).every(Boolean);
+  
+      return {
+        ...prevState,
+        selectedRooms: updatedSelectedRooms,
+        allRoomsSelected: allSelected, 
+      };
+    });
+  };
+  
+  const handleSelectAllRooms = () => {
+    setFormData((prevState) => {
+      const allSelected = !Object.values(prevState.selectedRooms).every(Boolean); 
+      const updatedSelectedRooms = prevState.rooms.reduce((acc, room) => {
+        acc[room.roomId] = allSelected;
+        return acc;
+      }, {});
+  
+      return {
+        ...prevState,
+        selectedRooms: updatedSelectedRooms,
+        allRoomsSelected: allSelected,
+      };
+    });
+  };
 
   const handleSubmit = async (e) => {  
     e.preventDefault();  
-    const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;  
-    if (!motelId) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Lỗi',
-        text: 'ID nhà trọ không hợp lệ!',
-      });
-      return;
+    if (!motelId) {  
+      Swal.fire({  
+        icon: 'error',  
+        title: 'Lỗi',  
+        text: 'ID nhà trọ không hợp lệ!',  
+      });  
+      return;  
     }  
 
     try {  
+      const selectedRoomIds = Object.keys(formData.selectedRooms).filter(roomId => formData.selectedRooms[roomId]);  
+
       const response = await axios.post(`${env.API_URL}/motel-services/create`, {  
-        motelId: motelId, // sử dụng motelId từ props  
+        motelId: motelId,  
         nameService: formData.nameService,  
         price: Number(formData.price),  
-        chargetype: formData.chargetype, 
-      },
-      {  
+        chargetype: formData.chargetype,  
+        selectedRooms: selectedRoomIds 
+      }, {  
         headers: { Authorization: `Bearer ${token}` },  
-      }  
-      );   
+      });   
 
       if (response.status === 200) {  
         Swal.fire({  
@@ -54,24 +114,23 @@ const ModelCreateService = ({motelId, refreshServices  }) => {
           text: 'Thêm dịch vụ thành công!',  
         });  
         refreshServices();  
-        // Reset form sau khi thêm thành công  
         setFormData({  
           nameService: '',  
-          chargetype: '',  
-          price: '',  
+          chargetype: 'kwh',  
+          price: '10000',  
           subtraction: false,  
+          selectedRooms: {}, // Reset selection  
+          rooms: [] // Reset room list  
         });  
       }  
-    } catch (error) {
-      console.error('Error creating service:', error);
-      
-      Swal.fire({
-          icon: 'error',
-          title: 'Lỗi',
-          text: 'Có lỗi xảy ra, vui lòng thử lại!',
-      });
-  }
-  
+    } catch (error) {  
+      console.error('Error creating service:', error);  
+      Swal.fire({  
+        icon: 'error',  
+        title: 'Lỗi',  
+        text: 'Có lỗi xảy ra, vui lòng thử lại!',  
+      });  
+    }  
   };  
 
   return (
@@ -212,20 +271,39 @@ const ModelCreateService = ({motelId, refreshServices  }) => {
                     </div>
                   </div>
 
-                  <div className="col-4 mt-4" style={{ textAlign: 'center' }}>
+                  <div className="col-4 mt-4" style={{ textAlign: 'center' }}>  
                     <input
-                      style={{ float: 'right' }}
                       className="form-check-input"
                       id="room_check_all"
                       type="checkbox"
                       name="room_check_all"
-                      checked={formData.roomCheckAll}
-                      onChange={handleChange}
+                      checked={formData.allRoomsSelected}
+                      onChange={handleSelectAllRooms}
                     />
-                    <label htmlFor="room_check_all">
-                      <b>Chọn tất cả</b>
-                    </label>
+                    <label htmlFor="room_check_all"><b>Chọn tất cả</b></label>
                   </div>
+
+                  <div className='row mt-2' style={{marginLeft:'1px'}}>  
+                    {formData.rooms.map(room => (  
+                      <div key={room.roomId} className="col-6 mb-2">  
+                        <div className="border pt-2 rounded d-flex align-items-center justify-content-between" style={{paddingLeft:'10px',paddingBottom:'7px'}}>  
+                          <div className="form-check" style={{width:'100%'}}>  
+                            <input  
+                              className="form-check-input"  
+                              type="checkbox"  
+                              id={`room_${room.roomId}`}  
+                              checked={formData.selectedRooms[room.roomId] || false}  
+                              onChange={(e) => handleRoomSelect(room.roomId, e.target.checked)}  
+                            />  
+                            <label className="form-check-label" htmlFor={`room_${room.roomId}`}>  
+                              {room.name} 
+                            </label>  
+                          </div>  
+                        </div>  
+                      </div>  
+                    ))}  
+                  </div>
+
                 </div>
               </form>
             </div>
@@ -233,7 +311,7 @@ const ModelCreateService = ({motelId, refreshServices  }) => {
               className="modal-footer modal-footer--sticky"
               style={{ justifyContent: 'space-between', alignItems: 'center' }}>
               <div className="row g-0" style={{ width: '100%' }}>
-                <div className="col-6">{/* Có thể thêm nội dung vào đây nếu cần */}</div>
+                <div className="col-6"></div>
                 <div className="col-6 text-end">
                   <button type="button" className="btn btn-secondary m-1" data-bs-dismiss="modal">
                     Đóng

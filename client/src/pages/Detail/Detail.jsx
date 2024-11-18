@@ -28,7 +28,6 @@ import GroupIcon from '@mui/icons-material/Group'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined'
 import LanguageIcon from '@mui/icons-material/Language'
-import { roomOrder } from '~/apis/mock/mock-data-room-order'
 import RoomOther from './RoomOther'
 import RaitingAvg from './RaitingAvg'
 import Comment from './Comment'
@@ -43,6 +42,8 @@ import UserRaiting from './UserRaiting'
 import { useTranslation } from 'react-i18next'
 import { getBulletinBoard } from '~/apis/bulletinBoardAPI'
 import { getAccountByUsername, introspect } from '~/apis/accountAPI'
+import { findProvinceRegex } from '~/utils/findProvince'
+import { searchByName } from '~/apis/searchAPI'
 
 const Detail = ({ setIsAdmin }) => {
   const { t } = useTranslation()
@@ -59,6 +60,7 @@ const Detail = ({ setIsAdmin }) => {
     rating: 1,
     content: ''
   })
+  const [roomOrder, setRoomOrder] = useState([])
 
   useEffect(() => {
     setIsAdmin(false)
@@ -79,10 +81,23 @@ const Detail = ({ setIsAdmin }) => {
   }
 
   const refreshBulletinBoards = () => {
-    Promise.all([getBulletinBoard(bulletinBoardId), introspect().then((res) => getAccountByUsername(res.data.issuer))])
+    Promise.all([
+      getBulletinBoard(bulletinBoardId),
+      introspect().then((res) => {
+        if (res.valid === false) {
+          return getAccountByUsername(res.data.issuer)
+        }
+        return null
+      })
+    ])
       .then(([bulletinRes, accountRes]) => {
         setDetail(bulletinRes.result)
-        setAccount(accountRes.data)
+        searchByName(findProvinceRegex(bulletinRes.result.address)).then((res) => {
+          setRoomOrder(res.data.result)
+        })
+        if (accountRes) {
+          setAccount(accountRes.data)
+        }
       })
       .catch((error) => {
         console.error('Lỗi khi lấy dữ liệu:', error)
@@ -90,10 +105,23 @@ const Detail = ({ setIsAdmin }) => {
   }
 
   useEffect(() => {
-    Promise.all([getBulletinBoard(bulletinBoardId), introspect().then((res) => getAccountByUsername(res.data.issuer))])
+    Promise.all([
+      getBulletinBoard(bulletinBoardId),
+      introspect().then((res) => {
+        if (res.valid === false) {
+          return getAccountByUsername(res.data.issuer)
+        }
+        return null
+      })
+    ])
       .then(([bulletinRes, accountRes]) => {
         setDetail(bulletinRes.result)
-        setAccount(accountRes.data)
+        searchByName(findProvinceRegex(bulletinRes.result.address)).then((res) => {
+          setRoomOrder(res.data.result)
+        })
+        if (accountRes) {
+          setAccount(accountRes.data)
+        }
       })
       .catch((error) => {
         console.error('Lỗi khi lấy dữ liệu:', error)
@@ -161,12 +189,12 @@ const Detail = ({ setIsAdmin }) => {
           {t('trang-chu')}
         </Link>
         <Link color="inherit" to="/">
-          {detail.title}
+          {findProvinceRegex(detail.address)}
         </Link>
         <Link color="inherit" to="/">
           {detail.rentalCategory}
         </Link>
-        <Typography sx={{ color: 'text.primary' }}>{detail.nameRoom}</Typography>
+        <Typography sx={{ color: 'text.primary' }}>{detail.title}</Typography>
       </Breadcrumbs>
       <Grid container spacing={2}>
         <Grid
@@ -235,7 +263,9 @@ const Detail = ({ setIsAdmin }) => {
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <LanguageIcon sx={{ mr: 0.5 }} />
                 <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>{t('tinh-trang')}: </Typography>
-                {detail.status ? 'Đang cho thuê' : 'Đã có người thuê'}
+                <Typography sx={{ color: detail.isActive ? 'lime' : 'red' }}>
+                  {detail.status ? 'Đang cho thuê' : 'Đã có người thuê'}
+                </Typography>
               </Typography>
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <CalendarMonthIcon sx={{ mr: 0.5 }} />
@@ -255,12 +285,13 @@ const Detail = ({ setIsAdmin }) => {
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'flex-start',
-                  color: detail.censor ? 'lime' : 'red'
+                  justifyContent: 'flex-start'
                 }}>
                 <ShieldOutlinedIcon sx={{ mr: 0.5, color: '#6B6B6B' }} />
                 <Typography sx={{ display: isMobile ? 'none' : 'block', mx: 0.5 }}>{t('kiem-duyet')}: </Typography>
-                {detail.isActive ? 'Đã kiểm duyệt' : 'Chưa kiểm duyệt'}
+                <Typography sx={{ color: detail.isActive ? 'lime' : 'red' }}>
+                  {detail.isActive ? 'Đã kiểm duyệt' : 'Chưa kiểm duyệt'}
+                </Typography>
               </Typography>
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                 <GroupIcon sx={{ mr: 0.5 }} />
@@ -423,10 +454,17 @@ const Detail = ({ setIsAdmin }) => {
                   justifyContent: 'space-between',
                   flexWrap: 'wrap'
                 }}>
-                <Typography variant="h5">{t('phong-tro-cung-dia-chi')}</Typography>
-                <Typography variant="subtitle1">
-                  {t('xem-them')} {detail.rentalCategory} {detail.title}
-                </Typography>
+                <Typography variant="h6">{t('phong-tro-cung-dia-chi')}</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  <Typography variant="subtitle1">{t('xem-them')}</Typography>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                    {detail.rentalCategory}
+                  </Typography>
+                  <Typography variant="subtitle1">{t('tai')}</Typography>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                    {findProvinceRegex(detail.address)}
+                  </Typography>
+                </Box>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Box

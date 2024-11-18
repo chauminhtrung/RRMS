@@ -13,8 +13,7 @@ import com.rrms.rrms.enums.Gender;
 import com.rrms.rrms.enums.Roles;
 import com.rrms.rrms.models.*;
 import com.rrms.rrms.repositories.*;
-import com.rrms.rrms.services.ISearchService;
-
+import com.rrms.rrms.services.IBulletinBoard;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
 
@@ -40,7 +39,7 @@ public class DB {
             RoomImageRepository roomImageRepository,
             ServiceRepository serviceRepository,
             RoomServiceRepository roomServiceRepository,
-            ISearchService searchService,
+            IBulletinBoard bulletinBoardService,
             RoleRepository roleRepository,
             PermissionRepository permissionRepository,
             NameMotelServiceRepository nameMotelServiceRepository,
@@ -52,7 +51,7 @@ public class DB {
             BulletinBoards_RentalAmRepository bulletinBoards_rentalAmRepository,
             TenantRepository tenantRepository) {
         return args -> {
-            int roomsLength = 30;
+            int roomsLength = 5;
             int bulletinBoardsLength = 10;
             log.info("Starting to create data... length: {}", roomsLength);
 
@@ -148,8 +147,8 @@ public class DB {
             Tenant tenant = generateFakeTenant();
             tenantRepository.save(tenant);
             log.info("All data created");
-            log.info(searchService.syncRoom(roomRepository.findAll()));
         };
+
     }
 
     // Phương thức để tạo dữ liệu mẫu cho roles

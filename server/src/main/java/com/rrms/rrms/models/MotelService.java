@@ -34,4 +34,8 @@ public class MotelService {
 
     @Column(columnDefinition = "VARCHAR(255)")
     private String chargetype;
+
+    public UUID getServiceId() {
+        return motelServiceId; // hoặc nếu có một trường ID dịch vụ cụ thể, thì trả về nó
+    }
 }

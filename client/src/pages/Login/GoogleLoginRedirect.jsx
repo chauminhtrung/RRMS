@@ -11,13 +11,14 @@ const OAuth2RedirectHandler = () => {
     console.log("Token received:", token); // Kiểm tra token
   
     if (token) {
-      sessionStorage.setItem('userToken', token); 
+      sessionStorage.setItem('userToken', token);
       Swal.fire('Đăng nhập thành công!', 'Chào mừng bạn quay trở lại!', 'success');
-      navigate('/'); 
+      navigate('/'); // Điều hướng về trang chính
     } else {
       Swal.fire('Đăng nhập thất bại', 'Có lỗi xảy ra, vui lòng thử lại.', 'error');
-      navigate('/login');
+      navigate('/login'); // Điều hướng về trang login
     }
+    
   }, [navigate]);
   
   

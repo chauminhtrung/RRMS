@@ -33,35 +33,46 @@ public class SearchController {
 
     IRoom roomService;
 
-    //        @Operation(summary = "Get all rooms authen")
-    //        @GetMapping("/roomNews")
-    //        @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')") // su dung phân quền phù hop theo role
-    //        public ApiResponse<List<RoomDetailResponse>> getRoomHomeDateNew() {
-    //            ApiResponse<List<RoomDetailResponse>> apiResponse = new ApiResponse<>();
-    //            List<RoomDetailResponse> rooms = searchService.findAllByDatenew();
-    //            apiResponse.setCode(HttpStatus.OK.value());
-    //            apiResponse.setMessage("Tìm kiếm thành công");
-    //            apiResponse.setResult(rooms);
-    //            return apiResponse;
-    //        }
-
-    //        @Operation(summary = "Get all rooms authen")
-    //        @GetMapping("/rooms")
-    //        @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')") // su dung phân quền phù hop theo role
-    //        public ApiResponse<List<RoomDetailResponse>> getRoomHome() {
-    //            ApiResponse<List<RoomDetailResponse>> apiResponse = new ApiResponse<>();
-    //            List<RoomDetailResponse> rooms = searchService.findByAuthenIs(true);
-    //            apiResponse.setCode(HttpStatus.OK.value());
-    //            apiResponse.setMessage("Tìm kiếm thành công");
-    //            apiResponse.setResult(rooms);
-    //            return apiResponse;
-    //        }
+    //    @Operation(summary = "Get all rooms sorted by move-in date")
+    //    @GetMapping("/rooms")
+    //    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
+    //    public ApiResponse<List<BulletinBoardSearchResponse>> getRoomHome() {
+    //        ApiResponse<List<BulletinBoardSearchResponse>> apiResponse = new ApiResponse<>();
+    //        Date moveInDate = new Date();
+    //        List<BulletinBoardSearchResponse> rooms = searchService.findByMoveInDateLessThanEqual(moveInDate);
+    //        apiResponse.setCode(HttpStatus.OK.value());
+    //        apiResponse.setMessage("Tìm kiếm thành công");
+    //        apiResponse.setResult(rooms);
+    //        return apiResponse;
+    //    }
 
     @Operation(summary = "Get all rooms")
     @GetMapping
     public ApiResponse<List<BulletinBoardSearchResponse>> getRoom() {
         ApiResponse<List<BulletinBoardSearchResponse>> apiResponse = new ApiResponse<>();
         List<BulletinBoardSearchResponse> rooms = searchService.getRooms();
+        apiResponse.setCode(HttpStatus.OK.value());
+        apiResponse.setMessage("Tìm kiếm thành công");
+        apiResponse.setResult(rooms);
+        return apiResponse;
+    }
+
+    @Operation(summary = "Get all rooms sorted by created date")
+    @GetMapping("/roomNews")
+    public ApiResponse<List<BulletinBoardSearchResponse>> getRoomHomeDateNew() {
+        ApiResponse<List<BulletinBoardSearchResponse>> apiResponse = new ApiResponse<>();
+        List<BulletinBoardSearchResponse> rooms = searchService.findAllByDatenew();
+        apiResponse.setCode(HttpStatus.OK.value());
+        apiResponse.setMessage("Tìm kiếm thành công");
+        apiResponse.setResult(rooms);
+        return apiResponse;
+    }
+
+    @Operation(summary = "Get all rooms sorted by created date")
+    @GetMapping("/roomVieux")
+    public ApiResponse<List<BulletinBoardSearchResponse>> getRoomHomeDateNewVieux() {
+        ApiResponse<List<BulletinBoardSearchResponse>> apiResponse = new ApiResponse<>();
+        List<BulletinBoardSearchResponse> rooms = searchService.findAllByIsActive();
         apiResponse.setCode(HttpStatus.OK.value());
         apiResponse.setMessage("Tìm kiếm thành công");
         apiResponse.setResult(rooms);

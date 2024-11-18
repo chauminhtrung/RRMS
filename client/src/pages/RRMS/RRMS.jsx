@@ -11,9 +11,11 @@ import LoadingPage from '~/components/LoadingPage/LoadingPage'
 import { formatterAmount } from '~/utils/formatterAmount'
 import { Pagination } from '@mui/material'
 import { Link } from 'react-router-dom'
+import { env } from '~/configs/environment'
 const RRMS = ({ setIsAdmin }) => {
   const [searchData, setSearchData] = useState([])
 
+  const [dataNew, setDataNew] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 8 // Số lượng item hiển thị mỗi trang
 
@@ -36,8 +38,8 @@ const RRMS = ({ setIsAdmin }) => {
   const indexOfLastItem = currentPage * itemsPerPage // Vị trí item cuối trên trang hiện tại
   const indexOfFirstItem = indexOfLastItem - itemsPerPage // Vị trí item đầu trên trang hiện tại
   let currentItems = []
-  if (Array.isArray(searchData)) {
-    currentItems = searchData.slice(indexOfFirstItem, indexOfLastItem)
+  if (Array.isArray(dataNew)) {
+    currentItems = dataNew.slice(indexOfFirstItem, indexOfLastItem)
     console.log(currentItems) // Hiển thị các phần tử hiện tại
   } else {
     currentItems = []
@@ -52,27 +54,24 @@ const RRMS = ({ setIsAdmin }) => {
   }, [])
 
   useEffect(() => {
+    loadDataNew()
     loadData()
-    loadDataDateNew()
   }, [])
 
-  const loadData = async () => {
-    const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-
+  // Phần lấy dữ liệu cho currentItems
+  const loadDataNew = async () => {
     try {
-      const result = await axios.get(`http://localhost:8080/searchs/rooms`, {
-        validateStatus: () => true,
+      const result = await axios.get(`${env.API_URL}/searchs/roomNews`, {
         headers: {
-          Authorization: `Bearer ${token}`
+          'ngrok-skip-browser-warning': '69420'
         }
       })
-      // Kiểm tra trạng thái phản hồi
+
       if (result.status === 200) {
         const fetchedData = result.data.result
-
         if (Array.isArray(fetchedData) && fetchedData.length > 0) {
           console.log('Data fetched:', fetchedData)
-          setSearchData(fetchedData)
+          setSearchData(fetchedData) // set dữ liệu cho currentItems
         } else {
           console.log('No results found or data is null')
           setSearchData([])
@@ -85,26 +84,23 @@ const RRMS = ({ setIsAdmin }) => {
     }
   }
 
-  const loadDataDateNew = async () => {
-    const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-
+  // Phần lấy dữ liệu cho currentItemsNew
+  const loadData = async () => {
     try {
-      const result = await axios.get(`http://localhost:8080/searchs/roomNews`, {
-        validateStatus: () => true,
+      const result = await axios.get(`${env.API_URL}/searchs/roomVieux`, {
         headers: {
-          Authorization: `Bearer ${token}`
+          'ngrok-skip-browser-warning': '69420'
         }
       })
-      // Kiểm tra trạng thái phản hồi
-      if (result.status === 200) {
-        const fetchedDataDateNew = result.data.result
 
-        if (Array.isArray(fetchedDataDateNew) && fetchedDataDateNew.length > 0) {
-          console.log('Data fetched:', fetchedDataDateNew)
-          setSearchData(fetchedDataDateNew)
+      if (result.status === 200) {
+        const fetchedData = result.data.result
+        if (Array.isArray(fetchedData) && fetchedData.length > 0) {
+          console.log('Data fetched:', fetchedData)
+          setDataNew(fetchedData) // set dữ liệu cho currentItemsNew
         } else {
           console.log('No results found or data is null')
-          setSearchData([])
+          setDataNew([])
         }
       } else {
         console.log('Error: Status', result.status)
@@ -113,6 +109,7 @@ const RRMS = ({ setIsAdmin }) => {
       console.error('Error fetching data:', error)
     }
   }
+
   const renderList = (card, start, end) => {
     const listItems = []
     for (let i = start; i < end; i++) {
@@ -512,8 +509,8 @@ const RRMS = ({ setIsAdmin }) => {
             </div>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', marginTop: 26 }}>
-            {currentItems.length > 0 ? (
-              currentItems.map((item, i) => (
+            {currentItemsNew.length > 0 ? (
+              currentItemsNew.map((item, i) => (
                 <div className="grid-item" key={i} style={{ maxWidth: '280px' }}>
                   {' '}
                   <article className="i-column" style={{ marginBottom: '14px' }}>
@@ -534,7 +531,7 @@ const RRMS = ({ setIsAdmin }) => {
                         }}>
                         <img
                           alt="Cho thuê phòng trọ full nội thất, giá sinh viên Tam Đảo, Quận 10"
-                          src={item.roomImages[0].image}
+                          src={item.bulletinBoardImages?.[0]?.imageLink || 'default_image_url.jpg'}
                           style={{
                             width: '100%',
                             height: '100%',
@@ -561,7 +558,7 @@ const RRMS = ({ setIsAdmin }) => {
 
                       <div className="read">
                         <div className="title cut-text-2" style={{ fontSize: '14px', marginTop: 10 }}>
-                          <span className="lable-now">NOW</span> {item.motel.address}
+                          <span className="lable-now">NOW</span> {item?.address}
                         </div>
                         <div className="address cut-text">
                           <span className="icon-user-small">
@@ -579,11 +576,11 @@ const RRMS = ({ setIsAdmin }) => {
                             </svg>
                           </span>
                           <strong style={{ textTransform: 'capitalize', paddingLeft: '5px' }}>
-                            {item.motel.account.username}
+                            {item.account.username}
                           </strong>
                           <span className="zone" style={{ fontSize: '11px' }}>
                             {' '}
-                            {item.nameRoom}
+                            {item?.title}
                           </span>
                         </div>
                       </div>
@@ -595,11 +592,11 @@ const RRMS = ({ setIsAdmin }) => {
                           display: 'flex',
                           padding: '5px'
                         }}>
-                        <b className="text-danger"> {formatterAmount(item.price)} /Tháng</b>
+                        <b className="text-danger"> {formatterAmount(item.rentPrice)} /Tháng</b>
                         <div
                           className="i area"
                           style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
-                          <b> {item.roomArea}</b> m²
+                          <b> {item?.area}</b> m²
                         </div>
                       </div>
                     </Link>
@@ -612,9 +609,9 @@ const RRMS = ({ setIsAdmin }) => {
           </div>
         </div>
         <Pagination
-          count={Math.ceil(searchData.length / itemsPerPage)} // Tổng số trang
-          page={currentPage} // Trang hiện tại
-          onChange={handlePageChangeNumber} // Hàm xử lý khi thay đổi trang
+          count={Math.ceil(dataNew.length / itemsPerPageNew)} // Tổng số trang
+          page={currentPageNew} // Trang hiện tại
+          onChange={handlePageChangeNumberNew} // Hàm xử lý khi thay đổi trang
           variant="outlined"
           color="primary"
           sx={{ mt: 4, display: 'flex', justifyContent: 'center' }} // Đặt margin-top và căn giữa
@@ -751,8 +748,8 @@ const RRMS = ({ setIsAdmin }) => {
             </div>
           </div>
           <div className="list-6 row">
-            {currentItemsNew.length > 0 ? (
-              currentItemsNew.map((room, i) => (
+            {currentItems.length > 0 ? (
+              currentItems.map((room, i) => (
                 <article className="item col-xs-12 col-md-12 col-lg-6 " key={i}>
                   <div className="inner-item flex">
                     <section className="list-img" style={{ width: '36%' }}>
@@ -765,11 +762,14 @@ const RRMS = ({ setIsAdmin }) => {
                             overflow: 'hidden',
                             height: '100%'
                           }}
-                          target="_blank"
-                          title={room.name}
-                          to="#"
+                          title={room.title}
+                          to={`/detail/${room.bulletinBoardId}`}
                           className="is-adss">
-                          <img alt={room.name} src={room.roomImages[0].image} className="lazy" />
+                          <img
+                            alt={room.title}
+                            src={room.bulletinBoardImages?.[0]?.imageLink || 'default_image_url.jpg'}
+                            className="lazy"
+                          />
                         </Link>
 
                         <div className="images-count">3</div>
@@ -793,12 +793,11 @@ const RRMS = ({ setIsAdmin }) => {
                       <div>
                         <div className="title">
                           <Link
-                            title={room.nameRoom}
-                            target="_blank"
-                            to="#"
+                            title={room.title}
+                            to={`/detail/${room.bulletinBoardId}`}
                             className="cut-text-2"
                             style={{ textDecoration: 'none', color: 'black' }}>
-                            <span>{room.nameRoom}</span>
+                            <span>{room.title}</span>
                           </Link>
                         </div>
                         <div className="adress cut-text">
@@ -815,17 +814,17 @@ const RRMS = ({ setIsAdmin }) => {
                             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                             <circle cx="12" cy="10" r="3"></circle>
                           </svg>
-                          {room.motel.address}
+                          {room.address}
                         </div>
                         <div className="mf">
                           <div className="i price">
-                            <b className="text-danger">{formatterAmount(room.price)}</b>
+                            <b className="text-danger">{formatterAmount(room.rentPrice)}</b>
                           </div>
                           <div className="i are">
                             <i className="fa fa-area-chart hidden" aria-hidden="true">
                               {' '}
                             </i>
-                            <b> {room.roomArea} m²</b>
+                            <b> {room.area} m²</b>
                           </div>
                         </div>
                       </div>
@@ -834,7 +833,7 @@ const RRMS = ({ setIsAdmin }) => {
                           <img width="30px" src="./default-user.webp" alt="icon user" />
                           <div style={{ color: '#666', fontSize: '12px' }}>
                             <strong className="author-name" style={{ textTransform: 'capitalize' }}>
-                              {room.motel.account.username}
+                              {room.account.username}
                             </strong>
                             <div style={{ fontSize: '11px' }} data-time="1 ngày trước">
                               1 ngày trước
@@ -844,8 +843,7 @@ const RRMS = ({ setIsAdmin }) => {
                         <div className="i info-author">
                           <Link
                             rel="nofollow, noindex"
-                            target="_blank"
-                            to="#"
+                            to={`/detail/${room.bulletinBoardId}`}
                             className="btn-quick-zalo"
                             style={{ textDecoration: 'none' }}>
                             Zalo
@@ -881,8 +879,8 @@ const RRMS = ({ setIsAdmin }) => {
         </div>
         <Pagination
           count={Math.ceil(searchData.length / itemsPerPage)} // Tổng số trang
-          page={currentPageNew} // Trang hiện tại
-          onChange={handlePageChangeNumberNew} // Hàm xử lý khi thay đổi trang
+          page={currentItems} // Trang hiện tại
+          onChange={handlePageChangeNumber} // Hàm xử lý khi thay đổi trang
           variant="outlined"
           color="primary"
           sx={{ mt: 4, display: 'flex', justifyContent: 'center' }} // Đặt margin-top và căn giữa

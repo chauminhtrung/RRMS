@@ -9,82 +9,153 @@ import 'react-tabulator/lib/styles.css'
 import 'react-tabulator/lib/css/tabulator.min.css' 
 
 const ModelUpdateService = ({ serviceData, refreshServices }) => {  
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;  
   const [formData, setFormData] = useState({  
       nameService: '',  
       chargetype: '',  
       price: '',  
       subtraction: false,  
-      roomCheckAll: false,  
+      selectedRooms: {},  
+      rooms: [],  
+      allRoomsSelected: false, 
   });  
 
-  useEffect(() => {  
-    const modalElement = document.getElementById("updateModelService");  
-    if (modalElement) {  
-        const modal = new Modal(modalElement, { backdrop: true });  
-        if (serviceData) {  
-            modal.show();  
-            setFormData({  
-                nameService: serviceData.nameService || '',  
-                chargetype: serviceData.chargetype || '',  
-                price: serviceData.price || '',  
-                subtraction: serviceData.subtraction || false,  
-                roomCheckAll: serviceData.roomCheckAll || false,  
-            });  
-        }  
 
-        return () => {  
-            modal.hide();  
-        };  
-    }  
-}, [serviceData]); 
-
-  const handleChange = (e) => {
-      const { name, value, type, checked } = e.target;
-      setFormData((prevState) => ({
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const response = await axios.get(`${env.API_URL}/room/motel/${serviceData.motelId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const roomsData = response.data;
+    
+        const selectedRooms = {};
+        roomsData.forEach(room => {
+          if (room.services && Array.isArray(room.services)) {
+            room.services.forEach(service => {
+              if (service.serviceId === serviceData.motelServiceId) {
+                selectedRooms[room.roomId] = true;
+              }
+            });
+          }
+        });
+    
+        setFormData((prevState) => ({
           ...prevState,
-          [name]: type === 'checkbox' ? checked : value,
+          rooms: roomsData,
+          selectedRooms: selectedRooms,
+        }));
+      } catch (error) {
+        console.error('Error fetching rooms:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Lỗi',
+          text: 'Không thể tải danh sách phòng!',
+        });
+      }
+    };
+    
+  
+    if (serviceData) {
+      const modalElement = document.getElementById("updateModelService");
+      const modal = new Modal(modalElement, { backdrop: true });
+      modal.show();
+      fetchRooms();
+  
+      setFormData((prevState) => ({
+        ...prevState,
+        nameService: serviceData.nameService || '',
+        chargetype: serviceData.chargetype || '',
+        price: serviceData.price || '',
+        subtraction: serviceData.subtraction || false,
+        selectedRooms: {}, 
       }));
-  };
+  
+      return () => {
+        modal.hide();
+      };
+    }
+  }, [serviceData, token]);
+  
 
-  const handleSubmit = async (e) => {  
-    e.preventDefault();  
-    const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;  
 
-    try {  
-        const response = await axios.put(  
-            `${env.API_URL}/motel-services/update/${serviceData.motelServiceId}`,  
-            {  
-                nameService: formData.nameService,  
-                price: formData.price,  
-                chargetype: formData.chargetype,  
-            },  
-            {  
-                headers: { Authorization: `Bearer ${token}` },  
-            }  
-        );  
+  const handleChange = (e) => {  
+    const { name, value, type, checked } = e.target;  
+    setFormData((prevState) => ({  
+      ...prevState,  
+      [name]: type === 'checkbox' ? checked : value,  
+    }));  
+  };  
 
-        if (response.status === 200) {  
-            await Swal.fire({  
-                icon: 'success',  
-                title: 'Success!',  
-                text: 'Service updated successfully',  
-            });  
-            refreshServices();  
-        } else {  
-            await Swal.fire({  
-                icon: 'error',  
-                title: 'Error',  
-                text: 'Failed to update service',  
-            });  
-        }  
-    } catch (error) {  
-        console.error('Error updating service:', error);  
-        await Swal.fire({  
-            icon: 'error',  
-            title: 'Error',  
-            text: 'An error occurred. Please try again.',  
-        });  
-    }  
+  const handleRoomSelect = (roomId, checked) => {  
+    setFormData((prevState) => {  
+      const updatedSelectedRooms = {  
+        ...prevState.selectedRooms,  
+        [roomId]: checked,  
+      };  
+      const allRoomsAreSelected = Object.keys(updatedSelectedRooms).every(id => updatedSelectedRooms[id]);  
+      return {  
+        ...prevState,  
+        selectedRooms: updatedSelectedRooms,  
+        allRoomsSelected: allRoomsAreSelected,
+      };  
+    });  
+  }; 
+
+  const handleSelectAllRooms = () => {  
+    const allSelected = !formData.allRoomsSelected; 
+    setFormData((prevState) => {  
+      const updatedSelectedRooms = prevState.rooms.reduce((acc, room) => {  
+        acc[room.roomId] = allSelected; 
+        return acc;  
+      }, {});  
+      return {  
+        ...prevState,  
+        selectedRooms: updatedSelectedRooms,  
+        allRoomsSelected: allSelected, 
+      };  
+    });  
+  };  
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const selectedRoomIds = Object.keys(formData.selectedRooms).filter(roomId => formData.selectedRooms[roomId]);
+      const response = await axios.put(
+        `${env.API_URL}/motel-services/update/${serviceData.motelServiceId}`,
+        {
+          nameService: formData.nameService,
+          price: formData.price,
+          chargetype: formData.chargetype,
+          selectedRooms: selectedRoomIds
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.status === 200) {
+        await Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Service updated successfully',
+        });
+        refreshServices();
+      } else {
+        await Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to update service',
+        });
+      }
+    } catch (error) {
+      console.error('Error updating service:', error);
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred. Please try again.',
+      });
+    }
   };
 
     return (
@@ -211,17 +282,40 @@ const ModelUpdateService = ({ serviceData, refreshServices }) => {
                   </div>
 
                   <div className="col-4 mt-4" style={{ textAlign: 'center' }}>
-                    <input  
-                      className="form-check-input"  
-                      id="room_check_all"  
-                      type="checkbox"  
-                      name="room_check_all"  
-                      checked={formData.roomCheckAll}  
-                      onChange={handleChange}  
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      checked={formData.allRoomsSelected}
+                      onChange={handleSelectAllRooms}
                     /> 
                     <label htmlFor="room_check_all">
                       <b>Chọn tất cả</b>
                     </label>
+                  </div>
+
+                  <div className='row mt-2' style={{ marginLeft: '1px' }}>
+                    {Array.isArray(formData.rooms) && formData.rooms.length > 0 ? (
+                      formData.rooms.map(room => (
+                        <div key={room.roomId} className="col-6 mb-2">
+                          <div className="border pt-2 rounded d-flex align-items-center justify-content-between" style={{ paddingLeft: '10px', paddingBottom: '7px' }}>
+                            <div className="form-check" style={{ width: '100%' }}>
+                              <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id={`room_${room.roomId}`}
+                                checked={formData.selectedRooms[room.roomId] || false}
+                                onChange={(e) => handleRoomSelect(room.roomId, e.target.checked)}
+                              />
+                              <label className="form-check-label" htmlFor={`room_${room.roomId}`}>
+                                {room.name}
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="col-12">Không có phòng nào để hiển thị.</div>
+                    )}
                   </div>
                 </div>
               </form>
@@ -230,7 +324,7 @@ const ModelUpdateService = ({ serviceData, refreshServices }) => {
               className="modal-footer modal-footer--sticky"
               style={{ justifyContent: 'space-between', alignItems: 'center' }}>
               <div className="row g-0" style={{ width: '100%' }}>
-                <div className="col-6">{/* Có thể thêm nội dung vào đây nếu cần */}</div>
+                <div className="col-6"></div>
                 <div className="modal-footer">  
                   <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">  
                     Đóng  

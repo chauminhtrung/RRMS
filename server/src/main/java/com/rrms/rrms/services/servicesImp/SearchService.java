@@ -1,10 +1,5 @@
 package com.rrms.rrms.services.servicesImp;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-
 import com.rrms.rrms.dto.response.BulletinBoardSearchResponse;
 import com.rrms.rrms.dto.response.RoomSearchResponse;
 import com.rrms.rrms.enums.ErrorCode;
@@ -16,12 +11,16 @@ import com.rrms.rrms.models.Room;
 import com.rrms.rrms.repositories.BulletinBoardRepository;
 import com.rrms.rrms.repositories.RoomRepository;
 import com.rrms.rrms.repositories.RoomRepositoryElasticsearch;
+import com.rrms.rrms.repositories.SearchRepository;
 import com.rrms.rrms.services.ISearchService;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -33,6 +32,8 @@ public class SearchService implements ISearchService {
     BulletinBoardMapper bulletinBoardMapper;
     RoomMapper roomMapper;
     private final BulletinBoardRepository bulletinBoardRepository;
+
+    SearchRepository searchRepository;
 
     @Override
     public List<BulletinBoardSearchResponse> listRoomByAddress(String address) {
@@ -79,20 +80,6 @@ public class SearchService implements ISearchService {
     //            return response;
     //        }
 
-    @Override
-    public String syncRoom(List<Room> rooms) {
-        String message = "Error synchronize data";
-        List<RoomSearchResponse> roomSearchResponsesList =
-                rooms.stream().map(roomMapper::toRoomSearchResponse).collect(Collectors.toList());
-        try {
-            roomRepositoryElasticsearch.saveAll(roomSearchResponsesList);
-            message = "Synchronized data Mysql and Elasticsearch";
-            log.info(message);
-        } catch (Exception e) {
-            log.error(message);
-        }
-        return message;
-    }
 
     @Override
     public List<RoomSearchResponse> findByAddressNoElastic(String keyword) {
@@ -113,17 +100,27 @@ public class SearchService implements ISearchService {
         return roomRepositoryElasticsearch.findByAddressFuzzy(keyword);
     }
 
-    //        @Override
-    //        public List<RoomDetailResponse> findByAuthenIs(Boolean authenis) {
-    //            return roomRepository.findAllByAuthenIs(authenis).stream()
-    //                    .map(roomMapper::toRoomDetailResponse)
-    //                    .collect(Collectors.toList());
-    //        }
-
     //    @Override
-    //    public List<RoomDetailResponse> findAllByDatenew() {
-    //        return roomRepository.findAllByDatenew().stream()
-    //                .map(roomMapper::toRoomDetailResponse)
+    //    public List<BulletinBoardSearchResponse> findByMoveInDateLessThanEqual(Date moveInDate) {
+    //        // Ensure the repository method accepts a Date parameter
+    //        return searchRepository.findByMoveInDateLessThanEqual(moveInDate).stream()
+    //                .map(bulletinBoardMapper::toBulletinBoardSearchResponse)
     //                .collect(Collectors.toList());
     //    }
+
+
+    @Override
+    public List<BulletinBoardSearchResponse> findAllByDatenew() {
+        List<BulletinBoard> bulletinBoards = searchRepository.findAllByDatenew(true);
+        return bulletinBoards.stream()
+                .map(bulletinBoardMapper::toBulletinBoardSearchResponse)
+                .toList();
+    }
+
+    @Override
+    public List<BulletinBoardSearchResponse> findAllByIsActive() {
+        return searchRepository.findAllByIsActive(true).stream()
+                .map(bulletinBoardMapper::toBulletinBoardSearchResponse)
+                .collect(Collectors.toList());
+    }
 }

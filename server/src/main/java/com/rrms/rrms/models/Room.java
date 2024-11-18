@@ -1,8 +1,11 @@
 package com.rrms.rrms.models;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -24,6 +27,7 @@ public class Room {
 
     @ManyToOne
     @JoinColumn(name = "motel_id", nullable = false)
+    @JsonBackReference(value = "motel-Room") // Đặt tên cho tham chiếu ngược
     private Motel motel;
 
     @Column(name = "room_group", columnDefinition = "NVARCHAR(255)")
@@ -55,9 +59,9 @@ public class Room {
     @Column(name = "invoice_date", columnDefinition = "TEXT")
     private Integer invoiceDate;
 
-    // cai nay thuong nam o hop dong
-    @Column(name = "payment_circle", columnDefinition = "INT")
-    private Integer paymentCircle;
+    //chu ky thu
+    @Column(columnDefinition = "TEXT")
+    private String collection_cycle;
 
     @Column(name = "move_in_date", columnDefinition = "DATE")
     private Date moveInDate;
@@ -70,4 +74,11 @@ public class Room {
 
     @Column(name = "finance", columnDefinition = "TEXT")
     private String finance;
+
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference(value = "Room-Contract") // Đặt tên cho tham chiếu quản lý
+    private List<Contract> contracts;
 }

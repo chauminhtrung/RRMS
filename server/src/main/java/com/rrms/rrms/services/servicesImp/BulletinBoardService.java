@@ -1,15 +1,9 @@
 package com.rrms.rrms.services.servicesImp;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.springframework.data.elasticsearch.ResourceNotFoundException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import com.rrms.rrms.dto.request.BulletinBoardRequest;
 import com.rrms.rrms.dto.response.BulletinBoardResponse;
+import com.rrms.rrms.dto.response.BulletinBoardSearchResponse;
 import com.rrms.rrms.dto.response.BulletinBoardTableResponse;
 import com.rrms.rrms.enums.ErrorCode;
 import com.rrms.rrms.exceptions.AppException;
@@ -22,11 +16,20 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.elasticsearch.ResourceNotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(propagation = Propagation.REQUIRED)
 public class BulletinBoardService implements IBulletinBoard {
 
     BulletinBoardRepository bulletinBoardRepository;
@@ -36,7 +39,11 @@ public class BulletinBoardService implements IBulletinBoard {
     RentalAmenitiesRepository rentalAmenitiesRepository;
     RuleRepository ruleRepository;
     AccountRepository accountRepository;
+    BulletinBoardElasticsearchRepository bulletinBoardElasticsearchRepository;
+
     BulletinBoardMapper bulletinBoardMapper;
+
+    ElasticsearchClient elasticsearchClient;
 
     @Override
     public List<BulletinBoardResponse> getAllBulletinBoards() {
@@ -203,6 +210,11 @@ public class BulletinBoardService implements IBulletinBoard {
                 .toList();
     }
 
+    @Override
+    public List<BulletinBoardSearchResponse> searchBulletinBoards(String address) {
+        return bulletinBoardElasticsearchRepository.findByAddress(address);
+    }
+
     public BulletinBoard approveBulletinBoard(UUID id) {
         BulletinBoard bulletinBoard = bulletinBoardRepository
                 .findById(id)
@@ -213,5 +225,10 @@ public class BulletinBoardService implements IBulletinBoard {
 
     public void deleteBulletinBoard(UUID id) {
         bulletinBoardRepository.deleteById(id);
+    }
+
+    @Override
+    public BulletinBoardSearchResponse findByBulletinBoardId(UUID id) {
+        return bulletinBoardMapper.toBulletinBoardSearchResponse(bulletinBoardRepository.findByBulletinBoardId(id));
     }
 }
