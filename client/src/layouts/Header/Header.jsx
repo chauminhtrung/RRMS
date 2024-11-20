@@ -1565,7 +1565,10 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
             <Link to="#" className="menuItem active">
               <span className="aw__ngv58n8">
                 <span className="aw__lza0u1">
-                  <img src="./PTY_lv1_cat_muban.png" alt="" />
+                  <img
+                    src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2FPTY_lv1_cat_muban.png?alt=media&token=0a78f985-f7dc-4211-b14c-cc64c9892136"
+                    alt=""
+                  />
                 </span>
                 <span>Muốn thuê</span>
               </span>
@@ -1578,7 +1581,10 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
             <Link to="#" className="menuItem">
               <span className="aw__ngv58n8">
                 <span className="aw__lza0u1">
-                  <img src="./PTY_lv1_cat_chothue.png" alt="" />
+                  <img
+                    src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2FPTY_lv1_cat_chothue.png?alt=media&token=6ebeeb22-5d71-45e9-b02c-3c03499ce555"
+                    alt=""
+                  />
                 </span>
                 <span>Cho thuê</span>
               </span>
@@ -1591,7 +1597,10 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
             <Link to="#" className="menuItem">
               <span className="aw__ngv58n8">
                 <span className="aw__lza0u1">
-                  <img src="./PTY_lv1_cat_duan.png" alt="" />
+                  <img
+                    src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2FPTY_lv1_cat_duan.png?alt=media&token=88b33caf-3f11-4025-a18c-653c0a6056c4"
+                    alt=""
+                  />
                 </span>
                 <span>Dự án</span>
               </span>
@@ -1604,7 +1613,10 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
             <Link to="#" className="menuItem">
               <span className="aw__ngv58n8">
                 <span className="aw__lza0u1">
-                  <img src="./PTY_lv1_cat_timmoigioi.png" alt="" />
+                  <img
+                    src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2FPTY_lv1_cat_timmoigioi.png?alt=media&token=a08d9169-cf8a-4fdd-aa1c-200a888b0abd"
+                    alt=""
+                  />
                 </span>
                 <span>Tìm môi giới</span>
               </span>
@@ -1612,7 +1624,10 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
             <Link to="/chart" className="menuItem">
               <span className="aw__ngv58n8">
                 <span className="aw__lza0u1">
-                  <img src="./PTY_lv1_cat_bieudogia.png" alt="" />
+                  <img
+                    src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2FPTY_lv1_cat_bieudogia.png?alt=media&token=e62c4212-ee82-4985-b2a5-02e225c1e4d1"
+                    alt=""
+                  />
                 </span>
                 <span>Biểu đồ biến động giá</span>
               </span>
@@ -1620,7 +1635,10 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
             <Link to="#" className="menuItem">
               <span className="aw__ngv58n8">
                 <span className="aw__lza0u1">
-                  <img src="./PTY_lv1_cat_vaymuanha.png" alt="" />
+                  <img
+                    src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2FPTY_lv1_cat_vaymuanha.png?alt=media&token=ec55ddd5-2e94-408d-b167-d8f02582ac73"
+                    alt=""
+                  />
                 </span>
                 <span>Vay mua nhà</span>
               </span>

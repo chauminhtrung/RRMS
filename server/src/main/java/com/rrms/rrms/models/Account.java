@@ -67,4 +67,12 @@ public class Account {
                 .map(auth -> auth.getRole().getRoleName().name())
                 .collect(Collectors.toList());
     }
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference(value = "Account-Contract") // Đặt tên cho tham chiếu quản lý
+    private List<Contract> contracts;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference(value = "account-motel") // Đặt tên cho tham chiếu quản lý
+    private List<Motel> motels;
 }

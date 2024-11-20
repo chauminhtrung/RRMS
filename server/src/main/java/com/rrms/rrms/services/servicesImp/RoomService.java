@@ -1,9 +1,12 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.rrms.rrms.dto.response.ContractResponse;
 import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.request.RoomRequest;
@@ -221,7 +224,21 @@ public class RoomService implements IRoom {
         return rooms.stream().map(this::convertToResponse).collect(Collectors.toList());
     }
 
+    @Override
+    public List<RoomResponse2> getRoomsByMotelIdNullContract(UUID motelId) {
+        // Kiểm tra xem Motel có tồn tại không
+        Motel motel =
+                motelRepository.findById(motelId).orElseThrow(() -> new IllegalArgumentException("Motel not found"));
+
+        // Lấy danh sách phòng theo motelId
+        List<Room> rooms = roomRepository.findRoomsWithoutContractsByMotel(motel);
+
+        // Chuyển đổi danh sách Room sang RoomResponse
+        return rooms.stream().map(this::convertToResponse).collect(Collectors.toList());
+    }
+
     // Chuyển đổi từ Room sang RoomResponse
+
     private RoomResponse2 convertToResponse(Room room) {
         RoomResponse2 response = new RoomResponse2();
         response.setRoomId(room.getRoomId());
@@ -240,6 +257,32 @@ public class RoomService implements IRoom {
         response.setStatus(room.getStatus());
         response.setFinance(room.getFinance());
         response.setDescription(room.getDescription());
+
+        // Lấy hợp đồng mới nhất từ danh sách `room.getContracts()`
+        ContractResponse latestContract = Optional.ofNullable(room.getContracts())
+                .orElse(List.of()) // Trả về danh sách rỗng nếu room.getContracts() là null
+                .stream()
+                .map(contract -> ContractResponse.builder()
+                        .contractId(contract.getContractId())
+                        .moveinDate(contract.getMoveinDate())
+                        .leaseTerm(contract.getLeaseTerm())
+                        .closeContract(contract.getCloseContract())
+                        .description(contract.getDescription())
+                        .debt(contract.getDebt())
+                        .price(contract.getPrice())
+                        .deposit(contract.getDeposit())
+                        .collectioncycle(contract.getCollectioncycle())
+                        .createdate(contract.getCreatedate())
+                        .signcontract(contract.getSigncontract())
+                        .language(contract.getLanguage())
+                        .countTenant(contract.getCountTenant())
+                        .status(contract.getStatus())
+                        .build()
+                )
+                .max(Comparator.comparing(ContractResponse::getCreatedate)) // Lấy hợp đồng có ngày tạo lớn nhất
+                .orElse(null); // Trả về null nếu không có hợp đồng nào
+
+        response.setLatestContract(latestContract); // Gắn hợp đồng mới nhất vào response
         return response;
     }
 

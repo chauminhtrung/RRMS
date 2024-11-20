@@ -31,5 +31,5 @@ public class RoomResponse2 {
     private String finance;
     private String description;
     private List<RoomServiceResponse> services;
-
+    private ContractResponse latestContract; // Hợp đồng mới nhất
 }

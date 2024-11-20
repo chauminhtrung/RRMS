@@ -69,4 +69,9 @@ public class RoomController {
         List<RoomResponse2> rooms = roomService.getRoomsByMotelId(motelId);
         return ResponseEntity.ok(rooms);
     }
+    @GetMapping("/motel/W-Contract/{motelId}")
+    public ResponseEntity<List<RoomResponse2>> getRoomsByMotelIdWContract(@PathVariable UUID motelId) {
+        List<RoomResponse2> rooms = roomService.getRoomsByMotelIdNullContract(motelId);
+        return ResponseEntity.ok(rooms);
+    }
 }

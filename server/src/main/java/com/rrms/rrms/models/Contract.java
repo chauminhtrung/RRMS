@@ -37,10 +37,12 @@ public class Contract {
 
     @ManyToOne
     @JoinColumn(name = "username")
+    @JsonBackReference(value = "Account-Contract") // Đặt tên cho tham chiếu ngược
     private Account account;
 
     @ManyToOne
     @JoinColumn(name = "contracttemplate_id")
+    @JsonBackReference(value = "ContractTemplate-Contract") // Đặt tên cho tham chiếu ngược
     private ContractTemplate contract_template;
 
     @ManyToOne
@@ -77,7 +79,7 @@ public class Contract {
 
     //chu ky thu
     @Column(columnDefinition = "TEXT")
-    private String collection_cycle;
+    private String collectioncycle;
 
     //ngay lap hop dong
     @Column(columnDefinition = "DATE")
@@ -85,7 +87,7 @@ public class Contract {
 
     //chu ky khach hang
     @Column(columnDefinition = "TEXT")
-    private String Sign_contract;
+    private String signcontract;
 
     //ngon ngu
     @Column(columnDefinition = "TEXT")

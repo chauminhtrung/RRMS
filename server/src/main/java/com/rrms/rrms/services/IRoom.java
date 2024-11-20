@@ -33,4 +33,6 @@ public interface IRoom {
     void deleteRoom2(UUID roomId);
 
     List<RoomResponse2> getRoomsByMotelId(UUID motelId); // Thêm phương thức mới
+
+    List<RoomResponse2> getRoomsByMotelIdNullContract(UUID motelId); // Thêm phương thức mới
 }

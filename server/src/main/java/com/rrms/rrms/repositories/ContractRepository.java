@@ -16,6 +16,8 @@ public interface ContractRepository extends JpaRepository<Contract, UUID> {
 
     List<Contract> findByRoom_Motel_MotelId(UUID MotelId);
 
+    Contract findByRoom_RoomId(UUID MotelId);
+
     // tinh tong contract da dc active
     @Query("SELECT COUNT(c) FROM Contract c WHERE c.account = :usernameLandlord AND c.status = 'ACTIVE'")
     Integer countActiveContractsByLandlord(@Param("usernameLandlord") Account usernameLandlord);

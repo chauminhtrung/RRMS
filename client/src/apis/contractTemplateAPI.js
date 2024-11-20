@@ -26,6 +26,8 @@ export const getContractTemplateById = async (id) => {
   return response.data
 }
 
+
+
 // Lấy danh sách tất cả Contract Templates
 export const getAllContractTemplates = async () => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
@@ -106,6 +108,34 @@ export const getContractById = async (id) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;
 
   const response = await axios.get(`${env.API_URL}/contracts/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'ngrok-skip-browser-warning': '69420',
+    },
+  });
+
+  return response.data;
+};
+
+// Lấy hợp đồng theo ID Room
+export const getContractByIdRoom = async (roomId) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;
+
+  const response = await axios.get(`${env.API_URL}/contracts/room/${roomId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'ngrok-skip-browser-warning': '69420',
+    },
+  });
+
+  return response.data;
+};
+
+// Lấy hợp đồng theo ID motel
+export const getContractByIdMotel = async (motelId) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;
+
+  const response = await axios.get(`${env.API_URL}/contracts/motel/${motelId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
       'ngrok-skip-browser-warning': '69420',

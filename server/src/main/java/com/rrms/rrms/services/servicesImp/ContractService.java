@@ -8,9 +8,7 @@
     import com.rrms.rrms.dto.response.ContractResponse;
     import com.rrms.rrms.mapper.ContractMapper;
     import com.rrms.rrms.models.*;
-    import com.rrms.rrms.repositories.ContractTemplateRepository;
-    import com.rrms.rrms.repositories.RoomRepository;
-    import com.rrms.rrms.repositories.TenantRepository;
+    import com.rrms.rrms.repositories.*;
     import jakarta.persistence.EntityManager;
     import jakarta.persistence.EntityNotFoundException;
     import jakarta.persistence.ParameterMode;
@@ -20,7 +18,6 @@
     import org.springframework.data.elasticsearch.ResourceNotFoundException;
     import org.springframework.stereotype.Service;
 
-    import com.rrms.rrms.repositories.ContractRepository;
     import com.rrms.rrms.services.IContractService;
 
     @Service
@@ -37,6 +34,9 @@
 
         @Autowired
         private TenantRepository tenantRepository;
+
+        @Autowired
+        private AccountRepository accountRepository;
 
         @Autowired
         private ContractTemplateRepository contractTemplateRepository;
@@ -70,7 +70,14 @@
 
         @Override
         public ContractResponse createContract(ContractRequest request) {
+            System.out.println("username o day: " +request.getUsername());
+            System.out.println("room o day: " +request.getRoomId());
+            System.out.println("tenant o day: " +request.getTenantId());
+            System.out.println("contractempalte o day: " +request.getContracttemplateId());
             // Fetch related entities from the database using UUIDs
+            Account username = accountRepository.findByUsername(request.getUsername())
+                    .orElseThrow(() -> new EntityNotFoundException("Room not found"));
+
             Room room = roomRepository.findById(request.getRoomId())
                     .orElseThrow(() -> new EntityNotFoundException("Room not found"));
 
@@ -80,16 +87,14 @@
             ContractTemplate contractTemplate = contractTemplateRepository.findById(request.getContracttemplateId())
                     .orElseThrow(() -> new EntityNotFoundException("ContractTemplate not found"));
 
-            System.out.println(room.getRoomId());
-            System.out.println(tenant.getTenantId());
-            System.out.println(contractTemplate.getContracttemplateId());
+
 
             // Create Contract entity from the request and set related entities
             Contract contract = ContractMapper.INSTANCE.toEntity(request);
+            contract.setAccount(username);  // Set the fetched account entity
             contract.setRoom(room);  // Set the fetched Room entity
             contract.setTenant(tenant);  // Set the fetched Tenant entity
             contract.setContract_template(contractTemplate);  // Set the fetched ContractTemplate entity
-
 
 
             // Save the contract
@@ -129,14 +134,29 @@
 
         @Override
         public List<ContractResponse> getAllContractsByMotelId(UUID motelId) {
-            // Lấy danh sách hợp đồng từ Repository
             List<Contract> contracts = contractRepository.findByRoom_Motel_MotelId(motelId);
 
-            // Chuyển đổi danh sách Contract thành ContractResponse
+            if (contracts.isEmpty()) {
+                throw new EntityNotFoundException("No contracts found for motelId: " + motelId);
+            }
+
             return contracts.stream()
-                    .map(ContractMapper.INSTANCE::toResponse)
+                    .map(contract -> {
+                        return ContractMapper.INSTANCE.toResponse(contract);
+                    })
                     .toList();
         }
+
+        @Override
+        public ContractResponse getAllContractsByRoomId(UUID roomId) {
+            Contract contract = contractRepository.findByRoom_RoomId(roomId);
+            if (contract == null) {
+                throw new ResourceNotFoundException("Contract not found for room with id " + roomId);
+            }
+            return ContractMapper.INSTANCE.toResponse(contract);
+        }
+
+
 
 
     }

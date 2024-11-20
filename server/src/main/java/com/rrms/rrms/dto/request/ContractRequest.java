@@ -23,9 +23,9 @@ public class ContractRequest {
     private Double debt;                // Debt amount
     private Double price;               // Price of the contract
     private Double deposit;             // Deposit amount
-    private String collectionCycle;     // Collection cycle (e.g., monthly, quarterly)
+    private String collectioncycle;     // Collection cycle (e.g., monthly, quarterly)
     private LocalDate createdate;       // Contract creation date
-    private String signContract;        // Sign contract status
+    private String signcontract;        // Sign contract status
     private String language;            // Language of the contract
     private Integer countTenant;        // Number of tenants
     private ContractStatus status;      // Status of the contract (ACTIVE, ENDED, etc.)

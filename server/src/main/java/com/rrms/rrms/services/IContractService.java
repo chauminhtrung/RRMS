@@ -25,5 +25,5 @@ public interface IContractService {
     void deleteContract(UUID contractId);
 
     List<ContractResponse> getAllContractsByMotelId(UUID motelId);
-
+    ContractResponse getAllContractsByRoomId(UUID motelId);
 }
