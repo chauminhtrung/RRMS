@@ -6,15 +6,14 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.rrms.rrms.dto.response.ContractResponse;
 import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.request.RoomRequest;
 import com.rrms.rrms.dto.request.RoomRequest2;
+import com.rrms.rrms.dto.response.ContractResponse;
 import com.rrms.rrms.dto.response.PostRoomTableResponse;
 import com.rrms.rrms.dto.response.RoomDetailResponse;
 import com.rrms.rrms.dto.response.RoomResponse2;
-import com.rrms.rrms.dto.response.RoomServiceResponse;
 import com.rrms.rrms.enums.ErrorCode;
 import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.mapper.BulletinBoardMapper;
@@ -279,8 +278,7 @@ public class RoomService implements IRoom {
                         .language(contract.getLanguage())
                         .countTenant(contract.getCountTenant())
                         .status(contract.getStatus())
-                        .build()
-                )
+                        .build())
                 .max(Comparator.comparing(ContractResponse::getCreatedate)) // Lấy hợp đồng có ngày tạo lớn nhất
                 .orElse(null); // Trả về null nếu không có hợp đồng nào
 

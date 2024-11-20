@@ -1,5 +1,14 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.rrms.rrms.dto.request.RoleRequest;
 import com.rrms.rrms.dto.response.RoleResponse;
 import com.rrms.rrms.enums.Roles;
@@ -9,17 +18,10 @@ import com.rrms.rrms.models.Role;
 import com.rrms.rrms.repositories.PermissionRepository;
 import com.rrms.rrms.repositories.RoleRepository;
 import com.rrms.rrms.services.IRoleService;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -90,6 +92,7 @@ public class RoleServiceImp implements IRoleService {
 
     @Override
     public RoleResponse findById(UUID id) {
-        return roleMapper.toRoleResponse(roleRepository.findById(id).orElseThrow(() -> new RuntimeException("Role not found")));
+        return roleMapper.toRoleResponse(
+                roleRepository.findById(id).orElseThrow(() -> new RuntimeException("Role not found")));
     }
 }

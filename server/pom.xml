@@ -274,7 +274,6 @@
                     <excludes>
                         <exclude>com/rrms/rrms</exclude>
                         <exclude>com/rrms/rrms/mapper/**</exclude>
-                        <exclude>com/rrms/rrms/configs/**</exclude>
                         <exclude>com/rrms/rrms/dto/**</exclude>
                         <exclude>com/rrms/rrms/runner/**</exclude>
                         <exclude>com/rrms/rrms/database/**</exclude>
