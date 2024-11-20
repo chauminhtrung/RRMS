@@ -3,7 +3,6 @@ package com.rrms.rrms.services;
 import java.util.List;
 
 import com.rrms.rrms.dto.response.BulletinBoardSearchResponse;
-import com.rrms.rrms.dto.response.RoomSearchResponse;
 
 public interface ISearchService {
 
@@ -12,11 +11,11 @@ public interface ISearchService {
 
     List<BulletinBoardSearchResponse> getRooms();
 
-    List<RoomSearchResponse> findByAddressNoElastic(String keyword);
-
-    List<RoomSearchResponse> findByAddress(String keyword);
-
-    List<RoomSearchResponse> findByAddressFuzzy(String keyword);
+    //    List<RoomSearchResponse> findByAddressNoElastic(String keyword);
+    //
+    //    List<RoomSearchResponse> findByAddress(String keyword);
+    //
+    //    List<RoomSearchResponse> findByAddressFuzzy(String keyword);
 
     //    List<BulletinBoardSearchResponse> findByMoveInDateLessThanEqual(Date moveInDate);
 

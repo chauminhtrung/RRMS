@@ -3,14 +3,14 @@ package com.rrms.rrms.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rrms.rrms.dto.response.*;
+import com.rrms.rrms.dto.response.ApiResponse;
+import com.rrms.rrms.dto.response.BulletinBoardSearchResponse;
 import com.rrms.rrms.services.IRoom;
 import com.rrms.rrms.services.ISearchService;
 
@@ -109,48 +109,48 @@ public class SearchController {
     //        return apiResponse;
     //    }
 
-    @Operation(summary = "Search room by address")
-    @GetMapping("/addressNoElastic")
-    public ApiResponse<List<RoomSearchResponse>> findByAddressNoElastic(@RequestParam("address") String address) {
-        List<RoomSearchResponse> roomSearchResponseList = searchService.findByAddressNoElastic(address);
-        return ApiResponse.<List<RoomSearchResponse>>builder()
-                .code(HttpStatus.OK.value())
-                .message("success " + roomSearchResponseList.size())
-                .result(roomSearchResponseList)
-                .build();
-    }
+    //    @Operation(summary = "Search room by address")
+    //    @GetMapping("/addressNoElastic")
+    //    public ApiResponse<List<RoomSearchResponse>> findByAddressNoElastic(@RequestParam("address") String address) {
+    //        List<RoomSearchResponse> roomSearchResponseList = searchService.findByAddressNoElastic(address);
+    //        return ApiResponse.<List<RoomSearchResponse>>builder()
+    //                .code(HttpStatus.OK.value())
+    //                .message("success " + roomSearchResponseList.size())
+    //                .result(roomSearchResponseList)
+    //                .build();
+    //    }
 
-    @Operation(summary = "Search room by address use elastic search without cache")
-    @GetMapping("/nocache/address")
-    public ApiResponse<List<RoomSearchResponse>> findByAddressNoCache(@RequestParam("address") String address) {
-        List<RoomSearchResponse> roomSearchResponseList = searchService.findByAddress(address);
-        return ApiResponse.<List<RoomSearchResponse>>builder()
-                .code(HttpStatus.OK.value())
-                .message("success " + roomSearchResponseList.size())
-                .result(roomSearchResponseList)
-                .build();
-    }
-
-    @Operation(summary = "Search room by address use elastic search")
-    @Cacheable(value = "room", key = "#address")
-    @GetMapping("/address")
-    public ApiResponse<List<RoomSearchResponse>> findByAddress(@RequestParam("address") String address) {
-        List<RoomSearchResponse> roomSearchResponseList = searchService.findByAddress(address);
-        return ApiResponse.<List<RoomSearchResponse>>builder()
-                .code(HttpStatus.OK.value())
-                .message("success " + roomSearchResponseList.size())
-                .result(roomSearchResponseList)
-                .build();
-    }
-
-    @Operation(summary = "Search room by address fuzzy use elastic search")
-    @GetMapping("/addressFuzzy")
-    public ApiResponse<List<RoomSearchResponse>> findByAddressFuzzy(@RequestParam("address") String address) {
-        List<RoomSearchResponse> roomSearchResponseList = searchService.findByAddressFuzzy(address);
-        return ApiResponse.<List<RoomSearchResponse>>builder()
-                .code(HttpStatus.OK.value())
-                .message("success " + roomSearchResponseList.size())
-                .result(roomSearchResponseList)
-                .build();
-    }
+    //    @Operation(summary = "Search room by address use elastic search without cache")
+    //    @GetMapping("/nocache/address")
+    //    public ApiResponse<List<RoomSearchResponse>> findByAddressNoCache(@RequestParam("address") String address) {
+    //        List<RoomSearchResponse> roomSearchResponseList = searchService.findByAddress(address);
+    //        return ApiResponse.<List<RoomSearchResponse>>builder()
+    //                .code(HttpStatus.OK.value())
+    //                .message("success " + roomSearchResponseList.size())
+    //                .result(roomSearchResponseList)
+    //                .build();
+    //    }
+    //
+    //    @Operation(summary = "Search room by address use elastic search")
+    //    @Cacheable(value = "room", key = "#address")
+    //    @GetMapping("/address")
+    //    public ApiResponse<List<RoomSearchResponse>> findByAddress(@RequestParam("address") String address) {
+    //        List<RoomSearchResponse> roomSearchResponseList = searchService.findByAddress(address);
+    //        return ApiResponse.<List<RoomSearchResponse>>builder()
+    //                .code(HttpStatus.OK.value())
+    //                .message("success " + roomSearchResponseList.size())
+    //                .result(roomSearchResponseList)
+    //                .build();
+    //    }
+    //
+    //    @Operation(summary = "Search room by address fuzzy use elastic search")
+    //    @GetMapping("/addressFuzzy")
+    //    public ApiResponse<List<RoomSearchResponse>> findByAddressFuzzy(@RequestParam("address") String address) {
+    //        List<RoomSearchResponse> roomSearchResponseList = searchService.findByAddressFuzzy(address);
+    //        return ApiResponse.<List<RoomSearchResponse>>builder()
+    //                .code(HttpStatus.OK.value())
+    //                .message("success " + roomSearchResponseList.size())
+    //                .result(roomSearchResponseList)
+    //                .build();
+    //    }
 }
