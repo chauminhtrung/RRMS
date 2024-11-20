@@ -29,7 +29,7 @@ const Support = ({ setIsAdmin }) => {
           <div className="inner-container">
             <div className="d-flex" style={{ alignItems: 'center', width: '100%' }}>
               <div className="icon-left">
-                <img src="./ideal-request-post.svg" style={{ width: '30px' }} />
+                <img src="/ideal-request-post.svg" style={{ width: '30px' }} />
               </div>
               <div className="content">
                 <strong>BẠN CHƯA TÌM ĐƯỢC PHÒNG?</strong>
