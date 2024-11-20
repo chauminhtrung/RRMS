@@ -6,13 +6,11 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.response.BulletinBoardSearchResponse;
-import com.rrms.rrms.dto.response.RoomSearchResponse;
 import com.rrms.rrms.enums.ErrorCode;
 import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.mapper.BulletinBoardMapper;
 import com.rrms.rrms.mapper.RoomMapper;
 import com.rrms.rrms.models.BulletinBoard;
-import com.rrms.rrms.models.Room;
 import com.rrms.rrms.repositories.BulletinBoardRepository;
 import com.rrms.rrms.repositories.RoomRepository;
 import com.rrms.rrms.repositories.RoomRepositoryElasticsearch;
@@ -82,24 +80,24 @@ public class SearchService implements ISearchService {
     //            return response;
     //        }
 
-    @Override
-    public List<RoomSearchResponse> findByAddressNoElastic(String keyword) {
-        log.info("Normal search no elasticsearch room by address: {}", keyword);
-        List<Room> rooms = roomRepository.findByAddress(keyword);
-        return rooms.stream().map(roomMapper::toRoomSearchResponse).collect(Collectors.toList());
-    }
+    //    @Override
+    //    public List<RoomSearchResponse> findByAddressNoElastic(String keyword) {
+    //        log.info("Normal search no elasticsearch room by address: {}", keyword);
+    //        List<Room> rooms = roomRepository.findByAddress(keyword);
+    //        return rooms.stream().map(roomMapper::toRoomSearchResponse).collect(Collectors.toList());
+    //    }
 
-    @Override
-    public List<RoomSearchResponse> findByAddress(String keyword) {
-        log.info("Normal search room by address: {}", keyword);
-        return roomRepositoryElasticsearch.findByAddress(keyword);
-    }
+    //    @Override
+    //    public List<RoomSearchResponse> findByAddress(String keyword) {
+    //        log.info("Normal search room by address: {}", keyword);
+    //        return roomRepositoryElasticsearch.findByAddress(keyword);
+    //    }
 
-    @Override
-    public List<RoomSearchResponse> findByAddressFuzzy(String keyword) {
-        log.info("Fuzzy search address: {}", keyword);
-        return roomRepositoryElasticsearch.findByAddressFuzzy(keyword);
-    }
+    //    @Override
+    //    public List<RoomSearchResponse> findByAddressFuzzy(String keyword) {
+    //        log.info("Fuzzy search address: {}", keyword);
+    //        return roomRepositoryElasticsearch.findByAddressFuzzy(keyword);
+    //    }
 
     //    @Override
     //    public List<BulletinBoardSearchResponse> findByMoveInDateLessThanEqual(Date moveInDate) {

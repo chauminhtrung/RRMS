@@ -1,15 +1,8 @@
 package com.rrms.rrms.controllers;
 
-import com.rrms.rrms.configs.RedisRateLimiter;
-import com.rrms.rrms.dto.request.RoleRequest;
-import com.rrms.rrms.dto.response.ApiResponse;
-import com.rrms.rrms.dto.response.RoleResponse;
-import com.rrms.rrms.services.IRoleService;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -17,8 +10,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.UUID;
+import com.rrms.rrms.configs.RedisRateLimiter;
+import com.rrms.rrms.dto.request.RoleRequest;
+import com.rrms.rrms.dto.response.ApiResponse;
+import com.rrms.rrms.dto.response.RoleResponse;
+import com.rrms.rrms.services.IRoleService;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
 @Tag(name = "Role Controller", description = "Controller for Role")
 @Slf4j
@@ -115,7 +117,6 @@ public class RolesController {
         }
     }
 
-
     @CacheEvict(value = "role", key = "#id")
     @DeleteMapping("/deleteRole/{id}")
     public ApiResponse<Void> deleteRole(@PathVariable UUID id) {
@@ -136,5 +137,4 @@ public class RolesController {
                     .build();
         }
     }
-
 }
