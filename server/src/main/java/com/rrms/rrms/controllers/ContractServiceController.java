@@ -1,23 +1,23 @@
 package com.rrms.rrms.controllers;
 
-import com.rrms.rrms.dto.request.ContractServiceRequest;
-import com.rrms.rrms.dto.response.ContractServiceResponse;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.UUID;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.rrms.rrms.dto.request.ContractServiceRequest;
+import com.rrms.rrms.dto.response.ContractServiceResponse;
 import com.rrms.rrms.services.IContractServiceService;
+
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "contract-service Controller", description = "Controller for contract-service")
 @RestController
@@ -37,8 +37,7 @@ public class ContractServiceController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ContractServiceResponse> updateContractService(
-            @PathVariable("id") UUID contractServiceId,
-            @RequestBody ContractServiceRequest request) {
+            @PathVariable("id") UUID contractServiceId, @RequestBody ContractServiceRequest request) {
         ContractServiceResponse response = contractServiceService.updateContractService(contractServiceId, request);
         return ResponseEntity.ok(response);
     }

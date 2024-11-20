@@ -1,19 +1,21 @@
 package com.rrms.rrms.dto.response;
 
-import com.rrms.rrms.models.BulletinBoard;
-import com.rrms.rrms.models.BulletinBoardImage;
-import com.rrms.rrms.models.BulletinBoardRule;
-import com.rrms.rrms.models.BulletinBoards_RentalAm;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Document;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+
+import com.rrms.rrms.models.BulletinBoard;
+import com.rrms.rrms.models.BulletinBoardImage;
+import com.rrms.rrms.models.BulletinBoardRule;
+import com.rrms.rrms.models.BulletinBoards_RentalAm;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
@@ -24,8 +26,10 @@ import java.util.UUID;
 public class BulletinBoardSearchResponse implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
+
     @Id
     UUID bulletinBoardId;
+
     AccountResponse account;
     String title;
     String description;

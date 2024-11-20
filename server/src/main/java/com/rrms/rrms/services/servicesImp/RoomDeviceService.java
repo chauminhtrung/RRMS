@@ -1,20 +1,22 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.rrms.rrms.dto.request.RoomDeviceRequest;
 import com.rrms.rrms.dto.response.RoomDeviceResponse;
 import com.rrms.rrms.mapper.RoomDeviceMapper;
 import com.rrms.rrms.models.RoomDevice;
 import com.rrms.rrms.repositories.RoomDeviceRepository;
 import com.rrms.rrms.services.IRoomDeviceService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 public class RoomDeviceService implements IRoomDeviceService {
     @Autowired
     private RoomDeviceRepository roomDeviceRepository;
+
     @Autowired
     private RoomDeviceMapper mapper;
 
@@ -33,6 +35,5 @@ public class RoomDeviceService implements IRoomDeviceService {
         } else {
             return false;
         }
-
     }
 }

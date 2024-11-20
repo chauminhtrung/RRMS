@@ -1,5 +1,10 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import com.rrms.rrms.dto.response.BulletinBoardSearchResponse;
 import com.rrms.rrms.dto.response.RoomSearchResponse;
 import com.rrms.rrms.enums.ErrorCode;
@@ -13,14 +18,11 @@ import com.rrms.rrms.repositories.RoomRepository;
 import com.rrms.rrms.repositories.RoomRepositoryElasticsearch;
 import com.rrms.rrms.repositories.SearchRepository;
 import com.rrms.rrms.services.ISearchService;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -80,7 +82,6 @@ public class SearchService implements ISearchService {
     //            return response;
     //        }
 
-
     @Override
     public List<RoomSearchResponse> findByAddressNoElastic(String keyword) {
         log.info("Normal search no elasticsearch room by address: {}", keyword);
@@ -107,7 +108,6 @@ public class SearchService implements ISearchService {
     //                .map(bulletinBoardMapper::toBulletinBoardSearchResponse)
     //                .collect(Collectors.toList());
     //    }
-
 
     @Override
     public List<BulletinBoardSearchResponse> findAllByDatenew() {

@@ -14,9 +14,7 @@ import {
   createRoomService,
   getServiceRoombyRoomId,
   getRoomById,
-  DeleteRoomServiceByid,
   DeleteRoomByid,
-  updateSerivceRoom,
   updateRoom
 } from '~/apis/roomAPI'
 import { Modal } from 'bootstrap' // Import Bootstrap Modal API
@@ -555,7 +553,14 @@ const HomeWData = ({ Motel }) => {
       setShowMenu(null) // Đóng menu
       //ham o duoi dung de xac dinh dang nhan vao phong nao
       fetchDataRooms(showMenu)
-    } else {
+    } 
+    else if (label === 'Lập hóa đơn') {
+      setShowMenu(null) // Đóng menu
+
+    } 
+    
+    
+    else {
       alert(`Action: ${label} on room ${showMenu}`)
     }
   }
@@ -1331,7 +1336,12 @@ const HomeWData = ({ Motel }) => {
                       {...(item.label === 'Ghi chú' && {
                         'data-bs-toggle': 'modal',
                         'data-bs-target': '#noteModal'
-                      })}>
+                      })}
+                      {...(item.label === 'Lập hóa đơn' && {
+                        'data-bs-toggle': 'modal',
+                        'data-bs-target': '#invoiceModal'
+                      })}
+                      >
                       {item.icon && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -2094,6 +2104,107 @@ const HomeWData = ({ Motel }) => {
       ) : (
         <> </>
       )}
+
+      {/* Modal hiển thị hoa don*/}
+      {/* them 1 dieu kien nhu da co tai san r moi duoc mo*/}
+      {room ? (
+        <div
+          className="modal fade"
+          data-bs-backdrop="static"
+          id="invoiceModal"
+          tabIndex={-1}
+          aria-labelledby="invoiceModal"
+          aria-modal="true"
+          role="dialog"
+          style={{ display: 'none', paddingLeft: '0px' }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <div
+                  style={{
+                    marginRight: '15px',
+                    outline: '0',
+                    boxShadow: '0 0 0 .25rem rgb(112 175 237 / 16%)',
+                    opacity: '1',
+                    borderRadius: '100%',
+                    width: '36px',
+                    height: '36px',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    display: 'flex',
+                    backgroundColor: 'rgb(111 171 232)'
+                  }}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-inbox">
+                    <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
+                    <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+                  </svg>
+                </div>
+                <h5 className="modal-title" id="addRoomLabel">
+                  Lập hóa đơn
+                  <span className="room-name"> &quot;{room.name}&quot;</span>
+                </h5>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                  {' '}
+                </button>
+
+              </div>
+              <div className="modal-body">
+
+              </div>
+              <div className="modal-footer modal-footer--sticky">
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-x">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                  Đóng
+                </button>
+                <button type="button" id="submit-room" className="btn btn-primary" onClick={handleAppNote}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-plus">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  Lưu
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <> </>
+      )}
+
+
     </div>
   )
 }

@@ -1,6 +1,14 @@
 package com.rrms.rrms.services.servicesImp;
 
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.data.elasticsearch.ResourceNotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.rrms.rrms.dto.request.BulletinBoardRequest;
 import com.rrms.rrms.dto.response.BulletinBoardResponse;
 import com.rrms.rrms.dto.response.BulletinBoardSearchResponse;
@@ -12,18 +20,11 @@ import com.rrms.rrms.models.*;
 import com.rrms.rrms.repositories.*;
 import com.rrms.rrms.services.IBulletinBoard;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.elasticsearch.ResourceNotFoundException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
