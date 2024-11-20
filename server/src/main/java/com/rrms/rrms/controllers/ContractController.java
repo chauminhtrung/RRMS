@@ -8,15 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.rrms.rrms.dto.request.ContractRequest;
-import com.rrms.rrms.dto.response.ContractResponse;
-import com.rrms.rrms.services.IContractService;
-
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "Contract Controller", description = "Controller for Contract")
 @RestController
@@ -58,4 +51,19 @@ public class ContractController {
         contractService.deleteContract(contractId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/motel/{motelId}")
+    public ResponseEntity<List<ContractResponse>> getAllContractsByMotelId(@PathVariable UUID motelId) {
+        List<ContractResponse> responses = contractService.getAllContractsByMotelId(motelId);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
+
+    // Lấy hợp đồng theo ID
+    @GetMapping("room/{roomId}")
+    public ResponseEntity<ContractResponse> getContractByRoomId(@PathVariable UUID roomId) {
+        ContractResponse response = contractService.getAllContractsByRoomId(roomId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
 }

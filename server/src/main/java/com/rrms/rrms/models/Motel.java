@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -51,6 +52,7 @@ public class Motel {
 
     @ManyToOne
     @JoinColumn(name = "username")
+    @JsonBackReference(value = "account-motel") // Đặt tên cho tham chiếu ngược
     private Account account;
 
     @ManyToOne
@@ -69,4 +71,9 @@ public class Motel {
     @OneToMany(mappedBy = "motel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference(value = "motel-Room") // Đặt tên cho tham chiếu quản lý
     private List<Room> rooms;
+
+    @OneToMany(mappedBy = "motel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference(value = "motel-ContractTemplate") // Đặt tên cho tham chiếu quản lý
+    private List<ContractTemplate> contractTemplates;
+
 }

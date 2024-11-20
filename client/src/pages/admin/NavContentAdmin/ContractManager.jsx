@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
 
 import { Box } from '@mui/material'
@@ -8,18 +8,34 @@ import { useState } from 'react'
 
 import { Modal, Button, Form } from 'react-bootstrap'
 import { getPhuongXa, getQuanHuyen, getTinhThanh } from '~/apis/addressAPI'
-import { getRoomByMotelId, getRoomById } from '~/apis/roomAPI'
+import {
+  getRoomByMotelIdWContract,
+  getRoomById,
+  getServiceRoombyRoomId,
+  updateSerivceRoom,
+  DeleteRoomServiceByid,
+  createRoomService
+} from '~/apis/roomAPI'
 import { getMotelById } from '~/apis/motelAPI'
 import { getAllMotelDevices } from '~/apis/deviceAPT'
-import { getContractTemplatesByMotelId, createTenant, createContract } from '~/apis/contractTemplateAPI'
+import {
+  getContractTemplatesByMotelId,
+  createTenant,
+  createContract,
+  getContractByIdMotel
+} from '~/apis/contractTemplateAPI'
 import Swal from 'sweetalert2'
 const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
   const username = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).username : null
   const { motelId } = useParams()
   const [show, setShow] = useState(false)
+  const menuRef = useRef(null) // Tham chiếu đến menu
   const [provinces, setProvinces] = useState([])
   const [districts, setDistricts] = useState([])
   const [wards, setWards] = useState([])
+
+  const [showMenu, setShowMenu] = useState(null) // Trạng thái của menu hiện tại
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 })
   const [selectedProvince, setSelectedProvince] = useState('')
   const [selectedDistrict, setSelectedDistrict] = useState('')
   const [selectedWard, setSelectedWard] = useState('')
@@ -56,16 +72,18 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     debt: 0.0,
     price: 0.0,
     deposit: 0.0,
-    collection_cycle: '',
+    collectioncycle: '1',
     createdate: new Date().toISOString().slice(0, 10),
-    Sign_contract: 'Khách chưa ký',
+    signcontract: 'Khách chưa ký',
     language: 'Tiếng Việt',
-    countTenant: 0,
+    countTenant: 1,
     status: 'ACTIVE' // Giá trị có thể là 'ACTIVE', 'ENDED', hoặc 'IATExpire'
   })
+  const [contracts, setContracts] = useState([])
   const [motelServices, setMotelServices] = useState([])
   const [motelDevices, setMotelSDevices] = useState([])
   const [motel, setMotel] = useState({})
+  const [roomServices, setRoomServices] = useState([])
   const [selectedRoomId, setSelectedRoomId] = useState(null)
   const [contractTemplates, setcontractTemplates] = useState([])
   const handleClose = () => setShow(false)
@@ -81,6 +99,21 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     }
   }
 
+  // Hàm xử lý nhấn ngoài menu
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      // Kiểm tra xem nhấn ngoài menu hay không
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setShowMenu(null)
+      }
+    }
+
+    document.addEventListener('click', handleClickOutside)
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [])
+
   // Hàm onChange để cập nhật các trường trong tenant
   const handleTenantChange = (event) => {
     const { name, value } = event.target
@@ -90,18 +123,10 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     }))
   }
 
-
   const InsertTenant = async (tenant) => {
     try {
       const response = await createTenant(tenant)
       setTenant(response.result) // Lưu tenant vào state nếu cần
-
-      // Cập nhật tenantUsername trong contract
-      setContract((prevContract) => ({
-        ...prevContract,
-        tenantId: response.result.tenantId // Gán giá trị tenantUsername từ kết quả trả về
-      }))
-
       return response.result // Trả về thông tin tenant
     } catch (error) {
       console.error('Error saving tenant:', error)
@@ -123,18 +148,35 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     //neu co motelId tren URL
     if (motelId) {
       try {
-        const dataRoom = await getRoomByMotelId(motelId)
+        const dataRoom = await getRoomByMotelIdWContract(motelId)
         setRooms(dataRoom)
       } catch (error) {
         console.log(error)
       }
     } else {
       try {
-        const dataRoom = await getRoomByMotelId(motel[0].motelId)
+        const dataRoom = await getRoomByMotelIdWContract(motel[0].motelId)
         setRooms(dataRoom)
       } catch (error) {
         console.log(error)
       }
+    }
+  }
+
+  //lay hop dong cua motel do
+  const fetchMotelContract = async (id) => {
+    try {
+      const response = await getContractByIdMotel(id)
+      console.log(response)
+
+      if (response) {
+        setContracts(response)
+      } else {
+        setContracts([])
+      }
+    } catch (error) {
+      console.error('Error fetching motel services:', error)
+      setContracts([])
     }
   }
 
@@ -216,6 +258,32 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     })
   }
 
+  //ham lay dich vu phong
+  const fetchDataServiceRooms = async (roomId) => {
+    try {
+      const roomServicesResponse = await getServiceRoombyRoomId(roomId) // Lấy danh sách dịch vụ mà phòng đang sử dụng
+
+      const updatedServices = motelServices.map((service) => {
+        // Tìm dịch vụ tương ứng trong roomServicesResponse
+        const roomService = roomServicesResponse.find(
+          (roomService) => roomService.service.motelServiceId === service.motelServiceId
+        )
+        return {
+          ...service,
+          isSelected: !!roomService, // Đánh dấu checked nếu dịch vụ có trong roomServicesResponse
+          quantity: roomService ? roomService.quantity : 0,
+          roomId: roomId,
+          roomServiceId: roomService ? roomService.roomServiceId : null
+          // Gắn quantity nếu tồn tại, nếu không thì mặc định là 0
+        }
+      })
+
+      setRoomServices(updatedServices) // Cập nhật danh sách dịch vụ
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const handleRoomClick = async (roomId) => {
     setSelectedRoomId(roomId === selectedRoomId ? null : roomId) // Nếu phòng đã chọn thì bỏ chọn, nếu không thì chọn phòng mới
     if (roomId === selectedRoomId) {
@@ -225,9 +293,8 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     if (roomId) {
       try {
         const dataRoom = await getRoomById(roomId)
-        console.log(dataRoom)
-
         setRoom(dataRoom)
+        fetchDataServiceRooms(roomId)
         setContract((prevContract) => ({
           ...prevContract,
           roomId: dataRoom.roomId, // Cập nhật dữ liệu phòng vào contract,
@@ -305,6 +372,67 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     setSelectedWard(Number(event.target.value))
   }
 
+  // Hàm để xử lý khi người dùng nhấn nút "Áp dụng dịch vụ"
+  // Hàm để xử lý khi người dùng nhấn nút "Áp dụng dịch vụ"
+  const handleApplyServices = async () => {
+    try {
+      // Lọc các dịch vụ không được chọn (để xóa) và các dịch vụ được chọn (để thêm/cập nhật)
+      const servicesToDelete = roomServices.filter((service) => !service.isSelected && service.roomServiceId)
+      const servicesToUpdateOrAdd = roomServices.filter((service) => service.isSelected)
+      console.log(servicesToDelete)
+
+      // Xử lý xóa các dịch vụ không được chọn
+      const deletePromises = servicesToDelete.map((service) => DeleteRoomServiceByid(service.roomServiceId))
+
+      // Xử lý thêm hoặc cập nhật các dịch vụ được chọn
+      const updateOrAddPromises = servicesToUpdateOrAdd.map((service) => {
+        const serviceUpdateData = {
+          roomServiceId: service.roomServiceId || null,
+          roomId: room.roomId, // ID của phòng hiện tại
+          serviceId: service.motelServiceId, // ID của dịch vụ
+          quantity: service.quantity || 1 // Giá trị mặc định là 1 nếu quantity chưa có
+        }
+
+        return service.roomServiceId
+          ? updateSerivceRoom(service.roomServiceId, serviceUpdateData) // Cập nhật nếu đã tồn tại
+          : createRoomService(serviceUpdateData) // Thêm mới nếu chưa tồn tại
+      })
+
+      // Chờ tất cả các yêu cầu API hoàn tất
+      await Promise.all([...deletePromises, ...updateOrAddPromises])
+
+      // Hiển thị thông báo thành công
+      Swal.fire({
+        icon: 'success',
+        title: 'Thông báo',
+        text: 'Tất cả dịch vụ phòng đã được cập nhật thành công!'
+      })
+
+      // Đóng modal
+      const modalElement = document.getElementById('priceItemSelect')
+      const modal = Modal.getInstance(modalElement)
+      if (modal) modal.hide()
+
+      // Xóa backdrop dư thừa
+      removeExtraModalBackdrops()
+
+      // Cập nhật danh sách dịch vụ trong phòng
+      fetchDataServiceRooms(room.roomId)
+    } catch (error) {
+      console.error('Lỗi khi cập nhật dịch vụ phòng:', error)
+      Swal.fire({
+        icon: 'error',
+        title: 'Lỗi',
+        text: 'Đã xảy ra lỗi khi cập nhật dịch vụ phòng. Vui lòng thử lại!'
+      })
+    }
+  }
+
+  // Hàm xóa backdrop dư thừa
+  const removeExtraModalBackdrops = () => {
+    document.querySelectorAll('.modal-backdrop').forEach((backdrop) => backdrop.remove())
+  }
+
   // Hàm xử lý submit
   const handleSubmit = async () => {
     const form = document.getElementById('add-contract-form')
@@ -332,20 +460,22 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
             }
           })
 
-          // Thêm tenant và cập nhật tenantUsername vào contract
+          handleApplyServices()
+
+          //Thêm tenant và lấy tenantResponse
           const tenantResponse = await InsertTenant(tenant)
-          console.log(tenantResponse)
+          console.log('Tenant response:', tenantResponse)
 
-          // Cập nhật tenantUsername v  ào contract
-          setContract((prev) => ({
-            ...prev,
-            tenantId: tenantResponse.tenantId // Giả sử API trả về `username`
-          }))
+          //Cập nhật contract với tenantId
+          const updatedContract = {
+            ...contract,
+            tenantId: tenantResponse.tenantId
+          }
 
-          // Tạo hợp đồng sau khi tenant được thêm thành công
+          console.log('Updated contract:', updatedContract)
 
-          //const contractResponse = await InsertContract(contract)
-          console.log(contract)
+          // Gửi yêu cầu tạo hợp đồng với dữ liệu đã cập nhật
+          const contractResponse = await InsertContract(updatedContract)
 
           // Thông báo thành công
           Swal.fire({
@@ -354,6 +484,9 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
             text: 'Tạo hợp đồng thành công!'
           })
 
+          if (motelId) {
+            fetchMotelContract(motelId)
+          }
           // Đóng modal
           handleClose()
         } catch (error) {
@@ -369,35 +502,294 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     }
   }
 
-  const columns = [
-    { title: 'STT', field: 'STT', hozAlign: 'center', minWidth: 40, editor: 'input' }, // Đặt minWidth để tránh cột bị quá nhỏ
-    { title: 'Tên Phòng', field: 'name', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Giá Thuê', field: 'giathue', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Mức Giá Tiền Cọc', field: 'mucgiathue', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Chu Kỳ Thu', field: 'chukythu', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Mẫu Hợp Đồng', field: 'mauhopdong', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Ngày Lập', field: 'ngaylap', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Ngày Vào Ở', field: 'ngayvaoo', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Thời Hạn Hợp Đồng', field: 'thoihanhopdong', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Ký Hợp Đồng', field: 'kyhopdong', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Ngôn Ngữ', field: 'ngonngu', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Tình Trạng', field: 'tinhtrang', hozAlign: 'center', minWidth: 40, editor: 'input' }
+  useEffect(() => {
+    setContract((prev) => ({
+      ...prev,
+      username: username
+    }))
+  }, [username]) // Chỉ chạy khi username thay đổi
+
+  // Định dạng tiền tệ Việt Nam (VND)
+  const currencyFormatter = (cell) => {
+    const value = cell.getValue()
+    if (value !== null && value !== undefined) {
+      return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+      }).format(value)
+    }
+    if (value === null || value === undefined) {
+      return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+      }).format(0)
+    }
+    return value
+  }
+  // Định dạng tiền tệ Việt Nam (VND) va khac chua dua tien coc
+  const currencyDepositFormatter = (cell) => {
+    const value = cell.getValue()
+    let displayValue = ''
+
+    // Nếu giá trị tiền cọc hợp lệ
+    if (value !== null && value !== undefined && value !== 0) {
+      displayValue =
+        new Intl.NumberFormat('vi-VN', {
+          style: 'currency',
+          currency: 'VND'
+        }).format(value) +
+        '<br/> <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><i style="font-size: 11px;color:#ff0000;">(Chưa thu tiền cọc)</i></div>'
+    } else {
+      // Nếu giá trị là 0 hoặc null/undefined, hiển thị "Chưa thu tiền cọc"
+      displayValue = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+      }).format(0)
+    }
+
+    return displayValue
+  }
+
+  // Định dạng thêm "/1 người" vào cột countTenant
+  const tenantFormatter = (cell) => {
+    const countTenant = cell.getValue()
+    const svgiconuser = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" strokeLinecap="round" strokeLinejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`
+    if (countTenant !== null && countTenant !== undefined) {
+      return `${svgiconuser} ${countTenant} người`
+    }
+    if (countTenant === null && countTenant === 0) {
+      return `Không xác định`
+    }
+
+    return countTenant
+  }
+
+  // Hàm định dạng ngày
+  const formatDate = (dateString) => {
+    const date = new Date(dateString) // Chuyển đổi chuỗi thành đối tượng Date
+    const day = String(date.getDate()).padStart(2, '0') // Lấy ngày
+    const month = String(date.getMonth() + 1).padStart(2, '0') // Lấy tháng (lưu ý là tháng trong JavaScript bắt đầu từ 0)
+    const year = date.getFullYear() // Lấy năm
+
+    // Trả về ngày theo định dạng dd/mm/yyyy
+    return `${day}/${month}/${year}`
+  }
+
+  //ham dinh dang chu ky cua khac hang
+  const sighTenantFormatter = (cell) => {
+    const countTenant = cell.getValue()
+    if (countTenant !== null && countTenant !== undefined) {
+      return `${countTenant}`
+    }
+    return countTenant
+  }
+
+  // Formatter cho cột "Status"
+  const StatusFormatter = (cell) => {
+    const financeValue = cell.getValue()
+    // Nếu giá trị tài chính là "Đang trống", hiển thị badge với màu cam
+    if (financeValue === 'ACTIVE') {
+      return `<span class="badge mt-2 " style="background-color: #7dc242; white-space: break-spaces;">Trong thời hạn hợp đồng</span>`
+    }
+    if (financeValue === 'IATExpire') {
+      return `<span class="badge mt-2 " style="background-color: #ED6004; white-space: break-spaces;">Đang trống</span>`
+    }
+    if (financeValue === 'ENDED') {
+      return `<span class="badge mt-2 " style="background-color: #ED6004; white-space: break-spaces;">Đang trống</span>`
+    }
+
+    // Nếu không phải "Đang trống", hiển thị giá trị tài chính
+    return financeValue
+  }
+
+  const collectionCycleOptions = [
+    { value: '0', label: 'Tùy chỉnh' },
+    { value: '1', label: '1 tháng' },
+    { value: '2', label: '2 tháng' },
+    { value: '3', label: '3 tháng' },
+    { value: '4', label: '4 tháng' },
+    { value: '5', label: '5 tháng' },
+    { value: '6', label: '6 tháng' },
+    { value: '7', label: '7 tháng' },
+    { value: '8', label: '8 tháng' },
+    { value: '9', label: '9 tháng' },
+    { value: '10', label: '10 tháng' },
+    { value: '11', label: '11 tháng' },
+    { value: '12', label: '1 năm' },
+    { value: '18', label: '1 năm, 6 tháng' },
+    { value: '24', label: '2 năm' },
+    { value: '32', label: '3 năm' },
+    { value: '48', label: '4 năm' },
+    { value: '60', label: '5 năm' }
   ]
 
-  const data = [
+  const getCollectionCycleLabel = (value) => {
+    const option = collectionCycleOptions.find((opt) => opt.value === value)
+    return option ? option.label : 'Không xác định'
+  }
+
+  const menuItems = [
+    { id: 1, label: 'Xem văn bản hợp đồng', icon: 'arrow-right-circle' },
+    { id: 2, label: 'Thiết lập tài sản', icon: 'trello' },
+    { id: 3, label: 'In văn bản hợp đồng', icon: 'printer' },
+    { id: 4, label: 'Chia sẻ văn bản hợp đồng', icon: 'share' },
+    { id: 5, label: 'Chia sẻ mã kết nối', icon: 'share-2' }
+  ]
+
+  const handleActionClick = (e, roomId) => {
+    e.stopPropagation() // Ngừng sự kiện click để không bị bắt bởi sự kiện ngoài
+    // In ra tọa độ
+    // Sử dụng getBoundingClientRect để lấy vị trí chính xác của phần tử được nhấn
+    const targetElement = e.currentTarget
+    const rect = targetElement.getBoundingClientRect()
+
+    // Cập nhật vị trí của menu sao cho hiển thị gần biểu tượng Action
+    setMenuPosition({
+      x: rect.left + window.scrollX + rect.width / 2, // Centered horizontally
+      y: rect.top + window.scrollY + rect.height // Below the icon
+    })
+    setShowMenu(roomId) // Hiển thị menu cho hàng với roomId tương ứng
+  }
+
+  // Hàm xử lý khi người dùng chọn một mục trong menu
+  const handleItemClick = (label) => {
+    if (label === 'Đóng menu') {
+      setShowMenu(null) // Đóng menu
+    } else {
+      alert(`Action: ${label} on room ${showMenu}`)
+    }
+  }
+
+  const columns = [
+    { title: 'id', field: 'contractId', hozAlign: 'center', minWidth: 40, visible: false },
     {
-      STT: '1',
-      name: 'Phòng A202',
-      giathue: '5,000,000 VND',
-      mucgiathue: '4,000,000 VND',
-      chukythu: '1 Tháng',
-      mauhopdong: 'Hợp Đồng Điện Tử',
-      ngaylap: '18-01-2024',
-      ngayvaoo: '01-02-2024',
-      thoihanhopdong: '12 tháng',
-      kyhopdong: 'Nguyễn Tấn Tài',
-      ngonngu: 'Việt Nam',
-      tinhtrang: 'Đã Hoàn Thành'
+      title: '',
+      field: 'detail',
+      hozAlign: 'center',
+      minWidth: 20,
+      formatter: () => {
+        const element = document.createElement('div')
+        element.innerHTML = `
+          <div class="icon-first" style="background-color: #ED6004;">
+            <img width="30px" src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Froom.png?alt=media&token=9f1a69c1-ce2e-4586-ba90-94db53443d49">
+          </div>
+        `
+        // element.addEventListener('click', (e) => handleDetailClick(e, rowId))
+        return element
+      }
+    },
+    {
+      title: 'Tên Phòng',
+      field: 'room.name',
+      hozAlign: 'center',
+      minWidth: 150,
+      editor: 'input',
+      cssClass: 'bold-text'
+    },
+    {
+      title: 'Tổng thành viên',
+      field: 'countTenant',
+      hozAlign: 'center',
+      minWidth: 100,
+      editor: 'input',
+      formatter: tenantFormatter
+    },
+    {
+      title: 'Giá Thuê',
+      field: 'price',
+      hozAlign: 'center',
+      minWidth: 100,
+      editor: 'input',
+      cssClass: 'bold-text',
+      formatter: currencyFormatter
+    },
+    {
+      title: 'Mức Giá Tiền Cọc',
+      field: 'deposit',
+      hozAlign: 'center',
+      minWidth: 150,
+      editor: 'input',
+      cssClass: 'bold-text',
+      formatter: currencyDepositFormatter
+    },
+    {
+      title: 'Chu Kỳ Thu',
+      field: 'collectioncycle',
+      hozAlign: 'center',
+      minWidth: 100,
+      editor: 'input',
+      formatter: (cell) => {
+        const value = cell.getValue() // Lấy giá trị của collectioncycle
+        return getCollectionCycleLabel(value) // Hiển thị label tương ứng
+      }
+    },
+    {
+      title: 'Mẫu Hợp Đồng',
+      field: 'contracttemplate.templatename',
+      hozAlign: 'center',
+      minWidth: 40,
+      editor: 'input'
+    },
+    {
+      title: 'Ngày Lập',
+      field: 'createdate',
+      hozAlign: 'center',
+      minWidth: 150,
+      editor: 'input',
+      formatter: (cell) => formatDate(cell.getValue())
+    },
+    {
+      title: 'Ngày Vào Ở',
+      field: 'moveinDate',
+      hozAlign: 'center',
+      minWidth: 150,
+      editor: 'input',
+      formatter: (cell) => formatDate(cell.getValue())
+    },
+    {
+      title: 'Thời Hạn Hợp Đồng',
+      field: 'closeContract',
+      hozAlign: 'center',
+      minWidth: 150,
+      editor: 'input',
+      formatter: (cell) => formatDate(cell.getValue())
+    },
+    {
+      title: 'Ký Hợp Đồng',
+      field: 'signcontract',
+      hozAlign: 'center',
+      minWidth: 150,
+      editor: 'input',
+      formatter: sighTenantFormatter
+    },
+    { title: 'Ngôn Ngữ', field: 'language', hozAlign: 'center', minWidth: 100, editor: 'input' },
+    {
+      title: 'Tình Trạng',
+      field: 'status',
+      hozAlign: 'center',
+      minWidth: 100,
+      editor: 'input',
+      formatter: StatusFormatter
+    },
+    {
+      title: 'Action',
+      field: 'Action',
+      hozAlign: 'center',
+      formatter: (cell) => {
+        const rowId = cell.getRow().getData().contractId
+        const element = document.createElement('div')
+        element.classList.add('icon-menu-action')
+        element.innerHTML = `
+          <svg    xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" class="feather feather-more-vertical">
+            <circle cx="12" cy="12" r="1"></circle>
+            <circle cx="12" cy="5" r="1"></circle>
+            <circle cx="12" cy="19" r="1"></circle>
+          </svg>
+        `
+
+        element.addEventListener('click', (e) => handleActionClick(e, rowId))
+        return element
+      }
     }
   ]
 
@@ -422,6 +814,9 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
 
   useEffect(() => {
     setIsAdmin(true)
+    if (motelId) {
+      fetchMotelContract(motelId)
+    }
     console.log(isNavAdmin)
   }, [])
   return (
@@ -689,7 +1084,7 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
                           <Form.Control
                             type="number"
                             name="countTenant"
-                            min={0}
+                            min={1}
                             placeholder="Số lượng thành viên"
                             value={contract.countTenant}
                             onChange={handleContractChange}
@@ -807,42 +1202,93 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
                       </div>
                       <div className="price-items-checkout-layout">
                         {motelServices ? (
-                          motelServices.map((motelService, index) => (
+                          motelServices.map((service, index) => (
                             <div className="item" key={index}>
+                              {/* Checkbox để chọn dịch vụ */}
                               <div className="item-check-name">
                                 <input
                                   className="form-check-input"
-                                  id="room_check_price_item_23660"
                                   type="checkbox"
-                                  value="1"
-                                  name="price_items[23660][is_selected]"
-                                />
+                                  checked={roomServices.some(
+                                    (s) => s.motelServiceId === service.motelServiceId && s.isSelected
+                                  )} // Kiểm tra nếu dịch vụ đã tồn tại và isSelected = true
+                                  onChange={(e) => {
+                                    const isChecked = e.target.checked
+                                    setRoomServices((prevServices) => {
+                                      const existingService = prevServices.find(
+                                        (s) => s.motelServiceId === service.motelServiceId
+                                      )
 
-                                <label htmlFor="room_check_price_item_23660">
-                                  <b>{motelService.nameService}</b>
+                                      if (isChecked) {
+                                        // Nếu checked, thêm/cập nhật dịch vụ với `isSelected = true`
+                                        if (existingService) {
+                                          // Dịch vụ đã tồn tại => cập nhật `isSelected = true`
+                                          return prevServices.map((s) =>
+                                            s.motelServiceId === service.motelServiceId
+                                              ? { ...s, isSelected: true, quantity: s.quantity || 1 }
+                                              : s
+                                          )
+                                        } else {
+                                          // Thêm dịch vụ mới
+                                          return [
+                                            ...prevServices,
+                                            { ...service, isSelected: true, quantity: 1 } // Mặc định quantity = 1
+                                          ]
+                                        }
+                                      } else {
+                                        // Nếu unchecked, chỉ cập nhật `isSelected = false` (không loại bỏ dịch vụ)
+                                        if (existingService) {
+                                          return prevServices.map((s) =>
+                                            s.motelServiceId === service.motelServiceId
+                                              ? { ...s, isSelected: false }
+                                              : s
+                                          )
+                                        }
+                                        return prevServices // Không làm gì nếu dịch vụ chưa tồn tại
+                                      }
+                                    })
+                                  }}
+                                />
+                                <label>
+                                  <b>{service.nameService}</b>
                                   <p>
-                                    Giá: <b>{motelService.price.toLocaleString('vi-VN')}đ</b> /{' '}
-                                    {motelService.chargetype === 'Theo người' ? 'người' : motelService.chargetype}
+                                    Giá: <b>{service.price.toLocaleString('vi-VN')}đ</b> /{' '}
+                                    {service.chargetype === 'Theo người' ? 'người' : service.chargetype}
                                   </p>
                                 </label>
                               </div>
 
+                              {/* Nhập số lượng dịch vụ */}
                               <div className="item-value">
                                 <div className="input-group">
                                   <input
                                     className="form-control"
-                                    id="new_contract_room_price_item_23660"
+                                    readOnly
                                     min="0"
                                     type="number"
                                     placeholder="Nhập giá trị"
-                                    value="0"
-                                    name="price_items[23660][value][]"
+                                    value={
+                                      roomServices.find((s) => s.motelServiceId === service.motelServiceId)?.quantity ||
+                                      0
+                                    } // Lấy quantity từ roomServices nếu dịch vụ tồn tại
+                                    disabled={
+                                      !roomServices.some(
+                                        (s) => s.motelServiceId === service.motelServiceId && s.isSelected
+                                      )
+                                    } // Vô hiệu hóa nếu dịch vụ chưa được chọn
+                                    onChange={(e) => {
+                                      const newQuantity = parseInt(e.target.value, 10) || 0
+                                      setRoomServices((prevServices) =>
+                                        prevServices.map((s) =>
+                                          s.motelServiceId === service.motelServiceId
+                                            ? { ...s, quantity: newQuantity }
+                                            : s
+                                        )
+                                      )
+                                    }}
                                   />
-                                  <label
-                                    style={{ fontSize: '12px' }}
-                                    className="input-group-text"
-                                    htmlFor="new_contract_room_price_item_23660">
-                                    {motelService.chargetype === 'Theo người' ? 'người' : motelService.chargetype}
+                                  <label style={{ fontSize: '12px' }} className="input-group-text">
+                                    {service.chargetype === 'Theo người' ? 'người' : service.chargetype}
                                   </label>
                                 </div>
                               </div>
@@ -853,6 +1299,7 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
                         )}
                       </div>
                     </Form.Group>
+
                     <Form.Group className="mb-3" controlId="giatrihopdong">
                       <div className="title-item-small mb-2">
                         <b>Thông tin giá trị hợp đồng:</b>
@@ -881,8 +1328,8 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
                         </div>
                         <div className="col-12 mt-3">
                           <Form.Select
-                            name="collection_cycle"
-                            value={contract.collection_cycle}
+                            name="collectioncycle"
+                            value={contract.collectioncycle}
                             onChange={handleContractChange}
                             required>
                             <option value="">--Chu kỳ thu tiền--</option>
@@ -1050,14 +1497,166 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
           </Modal>
         </Box>
       </div>
-      <div className="mt-3" style={{ marginLeft: '15px', marginRight: '10px' }}>
+      <div className="mt-3" style={{ marginLeft: '15px', marginRight: '10px', position: 'relative' }}>
         <ReactTabulator
           className="my-custom-table rounded" // Thêm lớp tùy chỉnh nếu cần
           columns={columns}
-          data={data}
           options={options}
+          data={contracts}
           placeholder={<h1></h1>} // Sử dụng placeholder tùy chỉnh
         />
+        {showMenu && (
+          <div
+            className="tabulator-menu tabulator-popup-container "
+            ref={menuRef} // Gán ref đúng cách cho menu
+            style={{
+              position: 'absolute',
+              top: menuPosition.y - 610,
+              left: menuPosition.x - 350,
+              transform: 'translateX(-50%)'
+            }}>
+            {menuItems.map((item) => (
+              <div
+                key={item.id}
+                // Gắn ref vào tag này
+                className={`tabulator-menu-item ${item.textClass || ''}`}
+                onClick={() => handleItemClick(item.label)} // Đóng menu khi chọn item
+                {...(item.label === 'Cài đặt dịch vụ' && {
+                  'data-bs-toggle': 'modal',
+                  'data-bs-target': '#priceItemSelect'
+                })}
+                {...(item.label === 'Thiết lập tài sản' && {
+                  'data-bs-toggle': 'modal',
+                  'data-bs-target': '#assetSelect'
+                })}
+                {...(item.label === 'Ghi chú' && {
+                  'data-bs-toggle': 'modal',
+                  'data-bs-target': '#noteModal'
+                })}>
+                {item.icon && (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className={`feather feather-${item.icon}`}>
+                    {item.icon === 'dollar-sign' && (
+                      <>
+                        <line x1="12" y1="1" x2="12" y2="23" />
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                      </>
+                    )}
+                    {item.icon === 'arrow-right-circle' && (
+                      <>
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 16 16 12 12 8" />
+                        <line x1="8" y1="12" x2="16" y2="12" />
+                      </>
+                    )}
+                    {item.icon === 'user' && (
+                      <>
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                      </>
+                    )}
+                    {item.icon === 'refresh-ccw' && (
+                      <>
+                        <polyline points="1 4 1 10 7 10" />
+                        <polyline points="23 20 23 14 17 14" />
+                        <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" />
+                      </>
+                    )}
+                    {item.icon === 'bell' && (
+                      <>
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                      </>
+                    )}
+                    {item.icon === 'settings' && (
+                      <>
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                      </>
+                    )}
+                    {item.icon === 'log-out' && (
+                      <>
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                      </>
+                    )}
+                    {item.icon === 'trello' && (
+                      <>
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <rect x="7" y="7" width="3" height="9"></rect>
+                        <rect x="14" y="7" width="3" height="5"></rect>
+                      </>
+                    )}
+                    {item.icon === 'printer' && (
+                      <>
+                        <polyline points="6 9 6 2 18 2 18 9" />
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                        <rect x="6" y="14" width="12" height="8" />
+                      </>
+                    )}
+                    {item.icon === 'edit-3' && (
+                      <>
+                        <path d="M12 20h9" />
+                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                      </>
+                    )}
+                    {item.icon === 'share' && (
+                      <>
+                        <path d="M4 12v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4" />
+                        <polyline points="16 6 12 2 8 6" />
+                        <line x1="12" y1="2" x2="12" y2="15" />
+                      </>
+                    )}
+                    {item.icon === 'trash-2' && (
+                      <>
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m5 0V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" />
+                        <line x1="10" y1="11" x2="10" y2="17" />
+                        <line x1="14" y1="11" x2="14" y2="17" />
+                      </>
+                    )}
+                    {item.icon === 'share-2' && (
+                      <>
+                        <circle cx="18" cy="5" r="3" />
+                        <circle cx="6" cy="12" r="3" />
+                        <circle cx="18" cy="19" r="3" />
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                      </>
+                    )}
+                    {item.icon === 'x-circle' && (
+                      <>
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="15" y1="9" x2="9" y2="15" />
+                        <line x1="9" y1="9" x2="15" y2="15" />
+                      </>
+                    )}
+                    {item.icon === 'truck' && (
+                      <>
+                        <rect x="1" y="3" width="15" height="13" />
+                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                        <circle cx="5.5" cy="18.5" r="2.5" />
+                        <circle cx="18.5" cy="18.5" r="2.5" />
+                      </>
+                    )}
+                    {/* Thêm các biểu tượng khác nếu cần */}
+                  </svg>
+                )}
+                {item.label}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )
