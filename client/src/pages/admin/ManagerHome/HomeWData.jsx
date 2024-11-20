@@ -20,7 +20,7 @@ import {
   updateRoom
 } from '~/apis/roomAPI'
 import { Modal } from 'bootstrap' // Import Bootstrap Modal API
-import { getAllMotelDevices } from '~/apis/deviceAPT'
+import { getAllMotelDevices, insertRoomDevice } from '~/apis/deviceAPT'
 const HomeWData = ({ Motel }) => {
   const { motelId } = useParams()
   const [rooms, setRooms] = useState([])
@@ -137,6 +137,33 @@ const HomeWData = ({ Motel }) => {
             : value // các trường còn lại là chuỗi
       })
     }
+  }
+  const applyRoomDevice = async (roomParam, motel_device_idParam) => {
+    const data = {
+      room: roomParam,
+      motelDevice: {
+        motel_device_id: motel_device_idParam
+      },
+      quantity: 5
+    }
+    const response = await insertRoomDevice(data)
+    if ((response.code = 200)) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Thành công',
+        text: 'RoomDevice apply successfully!'
+      })
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Thất bại',
+        text: 'RoomDevice apply failed!'
+      })
+    }
+  }
+  const cancelRoomDevice = async (room, motel_device_id) => {
+    console.log(motel_device_id)
+    console.log(roomId)
   }
 
   // Tạo phòng
@@ -1909,8 +1936,18 @@ const HomeWData = ({ Motel }) => {
                 {device.length > 0 ? (
                   <div className="row mt-4">
                     {device.map((item) => (
-                      <div className="col-12 border p-3 d-flex align-items-center mt-1">
-                        <input type="checkbox" className="mx-3" />
+                      <div key={item.motel_device_id} className="col-12 border p-3 d-flex align-items-center mt-1">
+                        <input
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              applyRoomDevice(room, item.motel_device_id)
+                            } else {
+                              cancelRoomDevice(room, item.motel_device_id)
+                            }
+                          }}
+                          type="checkbox"
+                          className="mx-3"
+                        />
                         <div className="flex-grow-1">
                           <h6 className="mb-1">{item.deviceName}</h6>
                           <p className="mb-0">
