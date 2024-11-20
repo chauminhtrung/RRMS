@@ -84,10 +84,9 @@ const Detail = ({ setIsAdmin }) => {
     Promise.all([
       getBulletinBoard(bulletinBoardId),
       introspect().then((res) => {
-        if (res.valid === false) {
-          return getAccountByUsername(res.data.issuer)
-        }
-        return null
+        getAccountByUsername(res.data.issuer).then((res) => {
+          setAccount(res.data)
+        })
       })
     ])
       .then(([bulletinRes, accountRes]) => {
@@ -95,9 +94,7 @@ const Detail = ({ setIsAdmin }) => {
         searchByName(findProvinceRegex(bulletinRes.result.address)).then((res) => {
           setRoomOrder(res.data.result)
         })
-        if (accountRes) {
-          setAccount(accountRes.data)
-        }
+        console.log(accountRes)
       })
       .catch((error) => {
         console.error('Lỗi khi lấy dữ liệu:', error)
@@ -108,10 +105,9 @@ const Detail = ({ setIsAdmin }) => {
     Promise.all([
       getBulletinBoard(bulletinBoardId),
       introspect().then((res) => {
-        if (res.valid === false) {
-          return getAccountByUsername(res.data.issuer)
-        }
-        return null
+        getAccountByUsername(res.data.issuer).then((res) => {
+          setAccount(res.data)
+        })
       })
     ])
       .then(([bulletinRes, accountRes]) => {
@@ -119,9 +115,7 @@ const Detail = ({ setIsAdmin }) => {
         searchByName(findProvinceRegex(bulletinRes.result.address)).then((res) => {
           setRoomOrder(res.data.result)
         })
-        if (accountRes) {
-          setAccount(accountRes.data)
-        }
+        console.log(accountRes)
       })
       .catch((error) => {
         console.error('Lỗi khi lấy dữ liệu:', error)
@@ -428,7 +422,7 @@ const Detail = ({ setIsAdmin }) => {
             <UserRaiting
               roomId={bulletinBoardId}
               refreshBulletinBoards={refreshBulletinBoards}
-              username={account.username}
+              username={account?.username}
               review={review}
               setReview={setReview}
               account={account}
