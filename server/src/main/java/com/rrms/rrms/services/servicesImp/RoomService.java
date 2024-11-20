@@ -243,8 +243,9 @@ public class RoomService implements IRoom {
         response.setFinance(room.getFinance());
         response.setDescription(room.getDescription());
         // Lấy danh sách dịch vụ cho phòng
-        List<com.rrms.rrms.models.RoomService> roomServices =
-                roomServiceRepository.findByRoom(room); // Thay đổi phương thức cho phù hợp
+        List<com.rrms.rrms.models.RoomService> roomServices = roomServiceRepository.findByRoom(room); // Thay đổi phương
+        // thức cho phù
+        // hợp
 
         // Chuyển đổi danh sách dịch vụ sang RoomServiceResponse
         List<RoomServiceResponse> serviceResponses = roomServices.stream()
