@@ -1,23 +1,24 @@
 package com.rrms.rrms.controllers;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
+import com.rrms.rrms.configs.RedisRateLimiter;
 import com.rrms.rrms.dto.request.RoleRequest;
+import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.dto.response.RoleResponse;
 import com.rrms.rrms.services.IRoleService;
-
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "Role Controller", description = "Controller for Role")
 @Slf4j
@@ -25,79 +26,115 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/roles")
+@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 public class RolesController {
 
-    @Autowired
     IRoleService roleService;
+    RedisRateLimiter redisRateLimiter;
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @Cacheable(value = "role")
     @GetMapping("/getAllRole")
-    public ResponseEntity<?> getAllRole() {
-        Map<String, Object> rs = new HashMap<>();
+    public ApiResponse<List<RoleResponse>> getAllRole() {
+        List<RoleResponse> roleResponse = roleService.GetAllRoles();
         try {
-            rs.put("status", true);
-            rs.put("message", "Call api success");
-            rs.put("data", roleService.GetAllRoles());
             log.info("Get all role successfully");
+            return ApiResponse.<List<RoleResponse>>builder()
+                    .message("Get all role successfully")
+                    .code(HttpStatus.OK.value())
+                    .result(roleResponse)
+                    .build();
         } catch (Exception ex) {
-            rs.put("status", false);
-            rs.put("message", "Call api failed");
-            rs.put("data", null);
-            log.error("Get all role failed", ex);
+            return ApiResponse.<List<RoleResponse>>builder()
+                    .message("Get all role failed")
+                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                    .result(null)
+                    .build();
         }
-        return ResponseEntity.ok(rs);
     }
 
+    @GetMapping("/getRole/{id}")
+    @Cacheable(value = "role", key = "#id")
+    public ApiResponse<RoleResponse> getRoleById(@PathVariable("id") UUID id) {
+        try {
+            RoleResponse roleResponse = roleService.findById(id);
+            log.info("Get Role by id successfully");
+            return ApiResponse.<RoleResponse>builder()
+                    .message("Call api success")
+                    .code(HttpStatus.OK.value())
+                    .result(roleResponse)
+                    .build();
+        } catch (Exception ex) {
+            log.error("Get role failed", ex);
+            return ApiResponse.<RoleResponse>builder()
+                    .message("Call api failed")
+                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                    .result(null)
+                    .build();
+        }
+    }
+
+    @CacheEvict(value = "role", allEntries = true)
     @PostMapping("/createRole")
-    public ResponseEntity<?> addRole(@RequestBody RoleRequest request) {
-        Map<String, Object> rs = new HashMap<>();
+    public ApiResponse<RoleResponse> addRole(@RequestBody RoleRequest request) {
         try {
             RoleResponse roleResponse = roleService.createRole(request);
-            rs.put("status", true);
-            rs.put("message", "Role added successfully");
-            rs.put("data", roleResponse);
             log.info("Add role successfully: {}", roleResponse);
+            return ApiResponse.<RoleResponse>builder()
+                    .message("Role added successfully")
+                    .code(HttpStatus.CREATED.value())
+                    .result(roleResponse)
+                    .build();
         } catch (Exception ex) {
-            rs.put("status", false);
-            rs.put("message", "Failed to add role");
-            rs.put("data", null);
             log.error("Add role failed", ex);
+            return ApiResponse.<RoleResponse>builder()
+                    .message("Failed to add role")
+                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                    .result(null)
+                    .build();
         }
-        return ResponseEntity.ok(rs);
     }
 
+    @CachePut(value = "role", key = "#roleRequest.roleId")
     @PutMapping("/updateRole")
-    public ResponseEntity<?> updateRole(@RequestBody RoleRequest roleRequest) {
-        Map<String, Object> rs = new HashMap<>();
+    public ApiResponse<RoleResponse> updateRole(@RequestBody RoleRequest roleRequest) {
         try {
             RoleResponse roleResponse = roleService.updateRole(roleRequest);
-
-            rs.put("status", true);
-            rs.put("message", "Role updated successfully");
-            rs.put("data", roleResponse);
             log.info("Update role successfully: {}", roleResponse);
+            return ApiResponse.<RoleResponse>builder()
+                    .message("Role updated successfully")
+                    .code(HttpStatus.OK.value())
+                    .result(roleResponse)
+                    .build();
         } catch (Exception ex) {
-            rs.put("status", false);
-            rs.put("message", "Failed to update role");
-            rs.put("data", null);
             log.error("Update role failed", ex);
+            return ApiResponse.<RoleResponse>builder()
+                    .message("Failed to update role")
+                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                    .result(null)
+                    .build();
         }
-        return ResponseEntity.ok(rs);
     }
 
+
+    @CacheEvict(value = "role", key = "#id")
     @DeleteMapping("/deleteRole/{id}")
-    public ResponseEntity<?> deleteRole(@PathVariable UUID id) {
-        Map<String, Object> rs = new HashMap<>();
+    public ApiResponse<Void> deleteRole(@PathVariable UUID id) {
         try {
             roleService.deleteRole(id);
-            rs.put("status", true);
-            rs.put("message", "Role deleted successfully");
             log.info("Delete role successfully for id: {}", id);
+            return ApiResponse.<Void>builder()
+                    .message("Role deleted successfully")
+                    .code(HttpStatus.NO_CONTENT.value())
+                    .result(null)
+                    .build();
         } catch (Exception ex) {
-            rs.put("status", false);
-            rs.put("message", "Failed to delete role");
             log.error("Delete role failed for id: {}", id, ex);
+            return ApiResponse.<Void>builder()
+                    .message("Failed to delete role")
+                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                    .result(null)
+                    .build();
         }
-        return ResponseEntity.ok(rs);
     }
+
 }

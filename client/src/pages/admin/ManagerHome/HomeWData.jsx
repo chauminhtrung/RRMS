@@ -14,9 +14,7 @@ import {
   createRoomService,
   getServiceRoombyRoomId,
   getRoomById,
-  DeleteRoomServiceByid,
   DeleteRoomByid,
-  updateSerivceRoom,
   updateRoom
 } from '~/apis/roomAPI'
 import { Modal } from 'bootstrap' // Import Bootstrap Modal API
@@ -92,6 +90,7 @@ const HomeWData = ({ Motel }) => {
         ...service,
         isSelected: true // Mặc định là chọn (checked)
       }))
+      console.log(updatedServices)
 
       // Cập nhật lại trạng thái với danh sách dịch vụ đã có trường `isSelected`
       setRoomSerivces(updatedServices)
@@ -207,6 +206,10 @@ const HomeWData = ({ Motel }) => {
                 selectedServices: []
               })
               form.classList.remove('was-validated')
+
+              setTimeout(() => {
+                window.location.reload()
+              }, 1000)
 
               // Cập nhật danh sách phòng
               fetchRooms()
@@ -341,6 +344,8 @@ const HomeWData = ({ Motel }) => {
     if (motelId) {
       try {
         const dataRoom = await getRoomByMotelId(motelId)
+        console.log(dataRoom)
+
         setRooms(dataRoom)
       } catch (error) {
         console.log(error)
@@ -376,7 +381,6 @@ const HomeWData = ({ Motel }) => {
     try {
       const response = await getAllMotelDevices(motelId)
       setdevice(response.result)
-      console.log(device)
     } catch (error) {
       console.error('Error fetching device services:', error)
       setdevice([])
@@ -444,9 +448,9 @@ const HomeWData = ({ Motel }) => {
     const countTenant = cell.getValue()
     const svgiconuser = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" strokeLinecap="round" strokeLinejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`
     if (countTenant !== null && countTenant !== undefined) {
-      return `${svgiconuser} ${countTenant} / 1 người`
+      return `${svgiconuser} 0 / ${countTenant} người`
     }
-    if (countTenant === null && countTenant === 0) {
+    if (countTenant === null || countTenant === undefined) {
       return `Không xác định`
     }
 
@@ -455,7 +459,7 @@ const HomeWData = ({ Motel }) => {
 
   // Hàm định dạng ngày
   const formatDate = (dateString) => {
-    if (dateString === null) {
+    if (dateString === null || dateString === undefined) {
       return `Không xác định`
     }
     const date = new Date(dateString)
@@ -475,15 +479,30 @@ const HomeWData = ({ Motel }) => {
   }
 
   //ham dinh dang chu ky thu tien
-  const paymentCircleFormatter = (cell) => {
-    const countTenant = cell.getValue()
-    if (countTenant !== null && countTenant !== undefined) {
-      return `${countTenant} tháng`
-    }
-    if (countTenant === null || countTenant === undefined) {
-      return `Không xác định`
-    }
-    return countTenant
+  const collectionCycleOptions = [
+    { value: '0', label: 'Tùy chỉnh' },
+    { value: '1', label: '1 tháng' },
+    { value: '2', label: '2 tháng' },
+    { value: '3', label: '3 tháng' },
+    { value: '4', label: '4 tháng' },
+    { value: '5', label: '5 tháng' },
+    { value: '6', label: '6 tháng' },
+    { value: '7', label: '7 tháng' },
+    { value: '8', label: '8 tháng' },
+    { value: '9', label: '9 tháng' },
+    { value: '10', label: '10 tháng' },
+    { value: '11', label: '11 tháng' },
+    { value: '12', label: '1 năm' },
+    { value: '18', label: '1 năm, 6 tháng' },
+    { value: '24', label: '2 năm' },
+    { value: '32', label: '3 năm' },
+    { value: '48', label: '4 năm' },
+    { value: '60', label: '5 năm' }
+  ]
+
+  const getCollectionCycleLabel = (value) => {
+    const option = collectionCycleOptions.find((opt) => opt.value === value)
+    return option ? option.label : 'Không xác định'
   }
 
   // Formatter cho cột "finance"
@@ -503,15 +522,39 @@ const HomeWData = ({ Motel }) => {
   const StatusFormatter = (cell) => {
     const financeValue = cell.getValue()
     // Nếu giá trị tài chính là "Đang trống", hiển thị badge với màu cam
-    if (financeValue === true) {
+    if (financeValue === 'ACTIVE') {
       return `<span class="badge mt-2 " style="background-color: #7dc242; white-space: break-spaces;">Đang ở</span>`
     }
-    if (financeValue === false) {
+    if (financeValue === 'ENDED' || financeValue === undefined) {
       return `<span class="badge mt-2 " style="background-color: #ED6004; white-space: break-spaces;">Đang trống</span>`
     }
 
     // Nếu không phải "Đang trống", hiển thị giá trị tài chính
     return financeValue
+  }
+
+  // Định dạng tiền tệ Việt Nam (VND) va khac chua dua tien coc
+  const currencyDepositFormatter = (cell) => {
+    const value = cell.getValue()
+    let displayValue = ''
+
+    // Nếu giá trị tiền cọc hợp lệ
+    if (value !== null && value !== undefined && value !== 0) {
+      displayValue =
+        new Intl.NumberFormat('vi-VN', {
+          style: 'currency',
+          currency: 'VND'
+        }).format(value) +
+        '<br/> <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><i style="font-size: 11px;color:#ff0000;">(Chưa thu tiền cọc)</i></div>'
+    } else {
+      // Nếu giá trị là 0 hoặc null/undefined, hiển thị "Chưa thu tiền cọc"
+      displayValue = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+      }).format(0)
+    }
+
+    return displayValue
   }
 
   const handleActionClick = (e, roomId) => {
@@ -582,7 +625,14 @@ const HomeWData = ({ Motel }) => {
       setShowMenu(null) // Đóng menu
       //ham o duoi dung de xac dinh dang nhan vao phong nao
       fetchDataRooms(showMenu)
-    } else {
+    } 
+    else if (label === 'Lập hóa đơn') {
+      setShowMenu(null) // Đóng menu
+
+    } 
+    
+    
+    else {
       alert(`Action: ${label} on room ${showMenu}`)
     }
   }
@@ -605,6 +655,7 @@ const HomeWData = ({ Motel }) => {
     { id: 15, label: 'Chia sẻ mã kết nối', icon: 'share-2' },
     { id: 16, label: 'Đóng menu', icon: 'x-circle', textClass: 'close-menu-action' }
   ]
+
   const columns = [
     {
       title: '',
@@ -654,11 +705,11 @@ const HomeWData = ({ Motel }) => {
     },
     {
       title: 'Mức giá tiền cọc',
-      field: 'deposit',
+      field: 'latestContract.deposit',
       hozAlign: 'center',
       minWidth: 150,
       editor: 'input',
-      formatter: currencyFormatter,
+      formatter: currencyDepositFormatter,
       cssClass: 'bold-text'
     },
     {
@@ -672,7 +723,7 @@ const HomeWData = ({ Motel }) => {
     },
     {
       title: 'Khách thuê',
-      field: 'countTenant',
+      field: 'latestContract.countTenant',
       hozAlign: 'center',
       minWidth: 100,
       editor: 'input',
@@ -688,15 +739,18 @@ const HomeWData = ({ Motel }) => {
     },
     {
       title: 'Chu kỳ thu tiền',
-      field: 'paymentCircle',
+      field: 'latestContract.collectioncycle',
       hozAlign: 'center',
       minWidth: 150,
       editor: 'input',
-      formatter: paymentCircleFormatter
+      formatter: (cell) => {
+        const value = cell.getValue() // Lấy giá trị của collectioncycle
+        return getCollectionCycleLabel(value) // Hiển thị label tương ứng
+      }
     },
     {
       title: 'Ngày vào ở',
-      field: 'moveInDate',
+      field: 'latestContract.moveinDate',
       hozAlign: 'center',
       minWidth: 150,
       editor: 'input',
@@ -704,7 +758,7 @@ const HomeWData = ({ Motel }) => {
     },
     {
       title: 'Thời hạn hợp đồng',
-      field: 'contractDuration',
+      field: 'latestContract.closeContract',
       hozAlign: 'center',
       minWidth: 150,
       editor: 'input',
@@ -712,7 +766,7 @@ const HomeWData = ({ Motel }) => {
     },
     {
       title: 'Tình trạng',
-      field: 'status',
+      field: 'latestContract.status',
       hozAlign: 'center',
       minWidth: 40,
       editor: 'input',
@@ -1358,7 +1412,12 @@ const HomeWData = ({ Motel }) => {
                       {...(item.label === 'Ghi chú' && {
                         'data-bs-toggle': 'modal',
                         'data-bs-target': '#noteModal'
-                      })}>
+                      })}
+                      {...(item.label === 'Lập hóa đơn' && {
+                        'data-bs-toggle': 'modal',
+                        'data-bs-target': '#invoiceModal'
+                      })}
+                      >
                       {item.icon && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -2131,6 +2190,107 @@ const HomeWData = ({ Motel }) => {
       ) : (
         <> </>
       )}
+
+      {/* Modal hiển thị hoa don*/}
+      {/* them 1 dieu kien nhu da co tai san r moi duoc mo*/}
+      {room ? (
+        <div
+          className="modal fade"
+          data-bs-backdrop="static"
+          id="invoiceModal"
+          tabIndex={-1}
+          aria-labelledby="invoiceModal"
+          aria-modal="true"
+          role="dialog"
+          style={{ display: 'none', paddingLeft: '0px' }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <div
+                  style={{
+                    marginRight: '15px',
+                    outline: '0',
+                    boxShadow: '0 0 0 .25rem rgb(112 175 237 / 16%)',
+                    opacity: '1',
+                    borderRadius: '100%',
+                    width: '36px',
+                    height: '36px',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    display: 'flex',
+                    backgroundColor: 'rgb(111 171 232)'
+                  }}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-inbox">
+                    <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
+                    <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+                  </svg>
+                </div>
+                <h5 className="modal-title" id="addRoomLabel">
+                  Lập hóa đơn
+                  <span className="room-name"> &quot;{room.name}&quot;</span>
+                </h5>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                  {' '}
+                </button>
+
+              </div>
+              <div className="modal-body">
+
+              </div>
+              <div className="modal-footer modal-footer--sticky">
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-x">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                  Đóng
+                </button>
+                <button type="button" id="submit-room" className="btn btn-primary" onClick={handleAppNote}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-plus">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  Lưu
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <> </>
+      )}
+
+
     </div>
   )
 }

@@ -265,7 +265,7 @@ const RRMS = ({ setIsAdmin }) => {
               <div className="col">
                 <Link to="javascript:;" onClick="getLocation()" className="item">
                   <picture className="webpimg-container">
-                    <img src="./pin2.png" width="85%" alt="Tìm phòng gần tôi" />
+                    <img src="/pin2.png" width="85%" alt="Tìm phòng gần tôi" />
                   </picture>
                   <strong>Tìm trọ gần tôi</strong>
                   <div>Tìm gần vị trí hiện tại của bạn</div>
@@ -274,7 +274,7 @@ const RRMS = ({ setIsAdmin }) => {
               <div className="col">
                 <Link to="/ho-tro-tim-phong.html" className="item">
                   <picture className="webpimg-container">
-                    <img src="./hot.png" width="100%" alt="Hỗ trợ tìm kiếm phòng" />
+                    <img src="/hot.png" width="100%" alt="Hỗ trợ tìm kiếm phòng" />
                   </picture>
                   <strong>Hỗ trợ tìm phòng</strong>
                   <div>RRMS hỗ trợ bạn tìm phòng</div>
@@ -283,7 +283,7 @@ const RRMS = ({ setIsAdmin }) => {
               <div className="col">
                 <Link to="/tra-cuu-hoa-don.html" className="item">
                   <picture className="webpimg-container">
-                    <img src="./bill.png" width="85%" alt="Tra cứu hóa đơn" />
+                    <img src="/bill.png" width="85%" alt="Tra cứu hóa đơn" />
                   </picture>
                   <strong>Tra cứu hóa đơn</strong>
                   <div>Xem hóa đơn nhà đang ở</div>
@@ -292,7 +292,7 @@ const RRMS = ({ setIsAdmin }) => {
               <div className="col">
                 <Link to="/doi-gas-uu-dai.html" className="item">
                   <picture className="webpimg-container">
-                    <img src="./icons8-gas-100.png" width="100%" alt="Đổi gas nhận ưu đãi" />
+                    <img src="/icons8-gas-100.png" width="100%" alt="Đổi gas nhận ưu đãi" />
                   </picture>
                   <strong>Đổi gas ưu đãi</strong>
                   <div>Đổi gas tại RRMS nhận ưu đãi</div>
@@ -301,7 +301,7 @@ const RRMS = ({ setIsAdmin }) => {
               <div className="col">
                 <Link to="/tro-thanh-moi-gioi-RRMS.html" className="item">
                   <picture className="webpimg-container ">
-                    <img src="./sale-house.png" width="100%" alt="Trở thành môi giới RRMS" />
+                    <img src="/sale-house.png" width="100%" alt="Trở thành môi giới RRMS" />
                     <span
                       style={{
                         animationName: 'pulse_zalo',
@@ -330,7 +330,7 @@ const RRMS = ({ setIsAdmin }) => {
                   target="_bank"
                   className="item col-sx-3">
                   <picture className="webpimg-container">
-                    <img src="./owner.png" width="85%" alt="Chủ nhà cho thuê phòng" />
+                    <img src="/owner.png" width="85%" alt="Chủ nhà cho thuê phòng" />
                     <span
                       style={{
                         animationName: 'pulse_zalo',
@@ -499,7 +499,7 @@ const RRMS = ({ setIsAdmin }) => {
                     borderRadius: '100%',
                     marginRight: '10px'
                   }}>
-                  <img src="./feature_icon.webp" alt="icon lịch" style={{ width: '30px', height: '30px' }} />
+                  <img src="/feature_icon.webp" alt="icon lịch" style={{ width: '30px', height: '30px' }} />
                 </div>
                 <h2 className="title-section">
                   🏡🏡🏡 Phòng dọn vào ở ngay - <strong style={{ color: 'rgb(75, 207, 250)' }}>NOW ️️️️</strong>
@@ -731,7 +731,7 @@ const RRMS = ({ setIsAdmin }) => {
                     borderRadius: '100%',
                     marginRight: '10px'
                   }}>
-                  <img src="./feature_icon.webp" alt="icon lịch" style={{ width: '30px', height: '30px' }} />
+                  <img src="/feature_icon.webp" alt="icon lịch" style={{ width: '30px', height: '30px' }} />
                 </div>
                 <h2 className="title-section">
                   Phòng trọ - <strong style={{ color: 'rgb(75, 207, 250)' }}>mới nhất</strong>
@@ -830,7 +830,7 @@ const RRMS = ({ setIsAdmin }) => {
                       </div>
                       <div className="author">
                         <div className="i info-author">
-                          <img width="30px" src="./default-user.webp" alt="icon user" />
+                          <img width="30px" src="/default-user.webp" alt="icon user" />
                           <div style={{ color: '#666', fontSize: '12px' }}>
                             <strong className="author-name" style={{ textTransform: 'capitalize' }}>
                               {room.account.username}
@@ -891,7 +891,7 @@ const RRMS = ({ setIsAdmin }) => {
           <div className="col-md-6">
             <Link to="#">
               <img
-                src="./banner1.png"
+                src="/banner1.png"
                 className="w-full lg:rounded-md"
                 alt="banner moi gioi lozido"
                 width="100%"
@@ -902,7 +902,7 @@ const RRMS = ({ setIsAdmin }) => {
           <div className="col-md-6">
             <Link to="#">
               <img
-                src="./banner2.png"
+                src="/banner2.png"
                 className="lg:rounded-md cursor-pointer"
                 alt="banner-pc"
                 width="100%"

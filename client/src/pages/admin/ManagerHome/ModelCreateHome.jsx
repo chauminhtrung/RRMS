@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react'
 import { getPhuongXa, getQuanHuyen, getTinhThanh } from '~/apis/addressAPI'
@@ -5,7 +6,7 @@ import { getAllTypeRoom } from '~/apis/typeRoomAPI'
 import { createMotel, getMotelById, updateMotel } from '~/apis/motelAPI'
 import { createSerivceMotel } from '~/apis/motelServiceAPI'
 import Swal from 'sweetalert2'
-import { Link } from 'react-router-dom'
+import * as XLSX from 'xlsx'
 
 const ModelCreateHome = ({ username, MotelId }) => {
   const [selectedOption, setSelectedOption] = useState('')
@@ -17,6 +18,7 @@ const ModelCreateHome = ({ username, MotelId }) => {
   const [selectedDistrict, setSelectedDistrict] = useState('')
   const [selectedWard, setSelectedWard] = useState('')
   const [Typerooms, setTyperooms] = useState([])
+  const [jsonData, setJsonData] = useState([])
 
   const [priceItemEle, setPriceItemEle] = useState('3')
   const [priceItemWater, setPriceItemWater] = useState('3')
@@ -101,18 +103,13 @@ const ModelCreateHome = ({ username, MotelId }) => {
         price: parseFloat(50000),
         chargetype: priceItemWifi === '1' ? 'Theo người' : 'Theo tháng'
       }
-    ].filter(Boolean) // Lọc bỏ các dịch vụ không sử dụng (giá trị "0")
+    ].filter(Boolean) // Lọc bỏ các dịch vụ không sử dụng (giá trị "0") hoặc không có giá trị
 
     try {
-      // Gửi từng dịch vụ đến API
-      for (const service of services) {
-        await createSerivceMotel(service)
-      }
-      console.log('All services created successfully.')
-      // Xử lý phản hồi từ API (như thông báo thành công)
+      const responses = await Promise.all(services.map((service) => createSerivceMotel(service)))
+      console.log('All services created successfully:', responses)
     } catch (error) {
       console.error('Error creating services:', error)
-      // Xử lý lỗi (như thông báo lỗi)
     }
   }
 
@@ -183,6 +180,8 @@ const ModelCreateHome = ({ username, MotelId }) => {
 
   function handleChangeFileName(event) {
     setFileName(event.target.files[0].name)
+    handleFileExcelUpload(event.target.files[0])
+    console.log('ss')
   }
 
   // Hàm xử lý khi chọn tỉnh/thành
@@ -306,6 +305,80 @@ const ModelCreateHome = ({ username, MotelId }) => {
               console.error('Error updating template:', error)
             })
         }
+      }
+    }
+  }
+
+  // cột tạo nhà trọ excel
+  const rows = [
+    {
+      'Tên nhà trọ': '',
+      'Diện tích': '',
+      'Giá trung bình': '',
+      'Địa chỉ': '',
+      'Tối đa người ở': '',
+      'Ngày lập hóa đơn': '',
+      'Ngày lập hợp đồng': ''
+    }
+  ]
+
+  const downloadExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(rows)
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'NhaTro')
+    XLSX.writeFile(workbook, 'DanhSachNhaTro.xlsx')
+  }
+
+  const handleFileExcelUpload = (file) => {
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const binaryStr = e.target.result
+        const wb = XLSX.read(binaryStr, { type: 'binary' })
+
+        const ws = wb.Sheets[wb.SheetNames[0]]
+
+        const data = XLSX.utils.sheet_to_json(ws, { header: 1 })
+
+        const formattedData = data.slice(1).map((row) => {
+          return {
+            account: { username: username },
+            methodofcreation: 'Excel',
+            typeRoom: { typeRoomId: document.getElementById('category').value },
+            motelName: row[0] || '',
+            area: row[1] || '',
+            averagePrice: row[2] || '',
+            address: row[3] || '',
+            maxperson: row[4] || '',
+            invoicedate: row[5] || '',
+            paymentdeadline: row[6] || ''
+          }
+        })
+        setJsonData(formattedData)
+      }
+
+      reader.readAsBinaryString(file)
+    }
+  }
+
+  const handleFileImport = async (event) => {
+    for (const [index, item] of jsonData.entries()) {
+      try {
+        // Đợi kết quả trả về từ createMotel
+        const res = await createMotel(item)
+        await handleCreateServices(res.data.result.motelId) // Đảm bảo xử lý hoàn thành
+        setJsonData([])
+        Swal.fire({
+          icon: 'success',
+          title: 'Thông báo',
+          text: 'Motel created successfully!'
+        })
+        setTimeout(() => {
+          window.location.reload()
+        }, 1400)
+        event.target.value = null
+      } catch (error) {
+        console.error('Lỗi tại dòng', index + 2, error.message || error)
       }
     }
   }
@@ -622,8 +695,8 @@ const ModelCreateHome = ({ username, MotelId }) => {
                           <div className="invalid-feedback"> Vui lòng chọn file Excel</div>
                         </div>
                       </div>
-                      <div className="col-6 mt-2 download-template-excel">
-                        <Link to="./template/template_excel.xlsx" style={{ color: 'inherit' }}>
+                      <div className="col-6 mt-2 download-template-excel" onClick={downloadExcel}>
+                        <div style={{ color: 'inherit' }}>
                           <div className="image-upload-simple" style={{ height: '100px' }}>
                             <div
                               className="container-upload "
@@ -663,7 +736,7 @@ const ModelCreateHome = ({ username, MotelId }) => {
                               </div>
                             </div>
                           </div>
-                        </Link>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1208,9 +1281,15 @@ const ModelCreateHome = ({ username, MotelId }) => {
             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
               Đóng
             </button>
-            <button type="button" id="submit-block" className="btn btn-primary" onClick={onSaveMotel}>
-              {MotelId === 'Create' ? <>Thêm nhà trọ</> : <>Chỉnh sửa Nhà trọ</>}
-            </button>
+            {selectedOption === 'excel' ? (
+              <button type="button" id="submit-block" className="btn btn-primary" onClick={handleFileImport}>
+                Thêm nhà trọ bằng file
+              </button>
+            ) : (
+              <button type="button" id="submit-block" className="btn btn-primary" onClick={onSaveMotel}>
+                {MotelId === 'Create' ? <>Thêm nhà trọ</> : <>Chỉnh sửa Nhà trọ</>}
+              </button>
+            )}
           </div>
         </div>
       </div>

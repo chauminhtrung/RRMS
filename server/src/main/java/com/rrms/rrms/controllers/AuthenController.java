@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,8 +53,8 @@ public class AuthenController {
     }
 
     @GetMapping("/success")
-    public void loginSuccess(HttpServletRequest request, HttpServletResponse response,
-            @AuthenticationPrincipal OAuth2User oauthUser)
+    public void loginSuccess(
+            HttpServletRequest request, HttpServletResponse response, @AuthenticationPrincipal OAuth2User oauthUser)
             throws IOException, ParseException {
 
         if (oauthUser == null) {

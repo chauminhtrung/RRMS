@@ -1,22 +1,20 @@
 package com.rrms.rrms.services.servicesImp;
 
-import com.rrms.rrms.repositories.ContractServiceRepository;
-import com.rrms.rrms.services.IContractServiceService;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.request.ContractServiceRequest;
 import com.rrms.rrms.dto.response.ContractServiceResponse;
 import com.rrms.rrms.models.ContractService;
 import com.rrms.rrms.repositories.ContractRepository;
-
+import com.rrms.rrms.repositories.ContractServiceRepository;
 import com.rrms.rrms.repositories.MotelServiceRepository;
+import com.rrms.rrms.services.IContractServiceService;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,16 +25,16 @@ public class ContractServiceService implements IContractServiceService {
 
     @Override
     public ContractServiceResponse createContractService(ContractServiceRequest request) {
-        var contract = contractRepository.findById(request.getContractId())
+        var contract = contractRepository
+                .findById(request.getContractId())
                 .orElseThrow(() -> new IllegalArgumentException("Contract not found"));
 
-        var service = motelServiceRepository.findById(request.getServiceId())
+        var service = motelServiceRepository
+                .findById(request.getServiceId())
                 .orElseThrow(() -> new IllegalArgumentException("Service not found"));
 
-        ContractService contractService = ContractService.builder()
-                .contract(contract)
-                .service(service)
-                .build();
+        ContractService contractService =
+                ContractService.builder().contract(contract).service(service).build();
 
         ContractService savedService = contractServiceRepository.save(contractService);
         return mapToResponse(savedService);
@@ -44,13 +42,16 @@ public class ContractServiceService implements IContractServiceService {
 
     @Override
     public ContractServiceResponse updateContractService(UUID contractServiceId, ContractServiceRequest request) {
-        ContractService contractService = contractServiceRepository.findById(contractServiceId)
+        ContractService contractService = contractServiceRepository
+                .findById(contractServiceId)
                 .orElseThrow(() -> new IllegalArgumentException("ContractService not found"));
 
-        var contract = contractRepository.findById(request.getContractId())
+        var contract = contractRepository
+                .findById(request.getContractId())
                 .orElseThrow(() -> new IllegalArgumentException("Contract not found"));
 
-        var service = motelServiceRepository.findById(request.getServiceId())
+        var service = motelServiceRepository
+                .findById(request.getServiceId())
                 .orElseThrow(() -> new IllegalArgumentException("Service not found"));
 
         contractService.setContract(contract);
@@ -70,15 +71,15 @@ public class ContractServiceService implements IContractServiceService {
 
     @Override
     public ContractServiceResponse getContractServiceById(UUID contractServiceId) {
-        ContractService contractService = contractServiceRepository.findById(contractServiceId)
+        ContractService contractService = contractServiceRepository
+                .findById(contractServiceId)
                 .orElseThrow(() -> new IllegalArgumentException("ContractService not found"));
         return mapToResponse(contractService);
     }
 
     @Override
     public List<ContractServiceResponse> getAllContractServices() {
-        return contractServiceRepository.findAll()
-                .stream()
+        return contractServiceRepository.findAll().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
