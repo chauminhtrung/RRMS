@@ -1,8 +1,7 @@
 package com.rrms.rrms.services.servicesImp;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,6 +121,35 @@ public class AccountService implements IAccountService {
         authRepository.save(auth);
 
         return savedAccount;
+    }
+
+    @Override
+    public Account registergg(RegisterRequest request) {
+        if (accountRepository.existsByUsername(request.getUsername())) {
+            throw new AppException(ErrorCode.ACCOUNT_ALREADY_EXISTS);
+        }
+
+        // Mã hóa mật khẩu
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+
+        // Tạo tài khoản
+        Account account = new Account();
+        account.setUsername(request.getUsername());
+        account.setEmail(request.getEmail());
+        account.setPassword(encodedPassword);
+        account.setPhone(request.getPhone());
+        accountRepository.save(account);
+
+        // Gán role
+        Role role = roleRepository
+                .findByRoleName(request.getUserType().equals("CUSTOMER") ? Roles.CUSTOMER : Roles.HOST)
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+        Auth auth = new Auth();
+        auth.setAccount(account);
+        auth.setRole(role);
+        authRepository.save(auth);
+
+        return account;
     }
 
     @Override

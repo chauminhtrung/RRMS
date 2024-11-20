@@ -4,9 +4,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import jakarta.persistence.*;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -59,7 +60,7 @@ public class Room {
     @Column(name = "invoice_date", columnDefinition = "TEXT")
     private Integer invoiceDate;
 
-    //chu ky thu
+    // chu ky thu
     @Column(columnDefinition = "TEXT")
     private String collection_cycle;
 

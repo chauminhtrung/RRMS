@@ -1,13 +1,13 @@
 package com.rrms.rrms.services;
 
+import java.util.List;
+import java.util.UUID;
+
 import com.rrms.rrms.dto.request.BulletinBoardRequest;
 import com.rrms.rrms.dto.response.BulletinBoardResponse;
 import com.rrms.rrms.dto.response.BulletinBoardSearchResponse;
 import com.rrms.rrms.dto.response.BulletinBoardTableResponse;
 import com.rrms.rrms.models.BulletinBoard;
-
-import java.util.List;
-import java.util.UUID;
 
 public interface IBulletinBoard {
     List<BulletinBoardResponse> getAllBulletinBoards();
@@ -29,5 +29,4 @@ public interface IBulletinBoard {
     void deleteBulletinBoard(UUID id);
 
     BulletinBoardSearchResponse findByBulletinBoardId(UUID id);
-
 }

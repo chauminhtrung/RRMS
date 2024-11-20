@@ -28,14 +28,15 @@ const ModelUpdateService = ({ serviceData, refreshServices }) => {
         })
         const roomsData = response.data
 
-        // Xác định phòng nào đã có `serviceId` khớp với `serviceData.motelServiceId`
         const selectedRooms = {}
         roomsData.forEach((room) => {
-          room.services.forEach((service) => {
-            if (service.serviceId === serviceData.motelServiceId) {
-              selectedRooms[room.roomId] = true
-            }
-          })
+          if (room.services && Array.isArray(room.services)) {
+            room.services.forEach((service) => {
+              if (service.serviceId === serviceData.motelServiceId) {
+                selectedRooms[room.roomId] = true
+              }
+            })
+          }
         })
 
         setFormData((prevState) => ({
@@ -65,7 +66,7 @@ const ModelUpdateService = ({ serviceData, refreshServices }) => {
         chargetype: serviceData.chargetype || '',
         price: serviceData.price || '',
         subtraction: serviceData.subtraction || false,
-        selectedRooms: {} // Thiết lập lại phòng được chọn khi mở lại modal
+        selectedRooms: {}
       }))
 
       return () => {

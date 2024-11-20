@@ -98,6 +98,7 @@ const HouseRentalTable = ({ username }) => {
       }
 
       try {
+        console.log(userData);
 
         const totalrooms = await axios.get(`${env.API_URL}/report/total-rooms/${username}`, {
           headers: {

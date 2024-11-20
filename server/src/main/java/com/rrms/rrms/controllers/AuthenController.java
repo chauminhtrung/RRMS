@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,44 +47,47 @@ public class AuthenController {
     @Autowired
     private IMailService mailService;
 
-    @GetMapping("/login/error")
+    @GetMapping("/error")
     public ResponseEntity<String> loginFailure() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Đăng nhập thất bại!");
     }
 
-    @GetMapping("/login/success")
+    @GetMapping("/success")
     public void loginSuccess(
             HttpServletRequest request, HttpServletResponse response, @AuthenticationPrincipal OAuth2User oauthUser)
             throws IOException, ParseException {
+
+        if (oauthUser == null) {
+            log.error("OAuth2 User is null");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Không xác thực được tài khoản Google");
+            return;
+        }
+
+        log.info("OAuth2 User Info: {}", oauthUser.getAttributes());
+
         String email = oauthUser.getAttribute("email");
         String name = oauthUser.getAttribute("name");
 
-        log.info("Google login success: email={}, name={}", email, name);
+        if (email == null || name == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Không lấy được thông tin email hoặc tên");
+            return;
+        }
 
-        // Kiểm tra nếu tài khoản đã tồn tại trong cơ sở dữ liệu, nếu không thì tạo tài khoản mới.
-        Optional<Account> accountOptional = accountService.findByEmail(email);
-        Account account;
-        if (accountOptional.isPresent()) {
-            account = accountOptional.get();
-        } else {
+        Account account = accountService.findByEmail(email).orElseGet(() -> {
             RegisterRequest registerRequest = RegisterRequest.builder()
                     .username(name)
-                    .phone("")
                     .email(email)
                     .password(UUID.randomUUID().toString())
                     .userType("CUSTOMER")
                     .build();
-            account = accountService.register(registerRequest);
-            log.info("New account created: {}", account);
-        }
+            return accountService.registergg(registerRequest);
+        });
 
-        // Tạo JWT token
         String token = authorityService.generateToken(account);
-        log.info("Generated JWT token: {}", token);
+        log.info("Generated JWT Token: {}", token);
 
-        // Chuyển hướng người dùng đến frontend với token trong URL
-        String redirectUrl = "http://localhost:5173/oauth2/redirect?token=" + token;
-        response.sendRedirect(redirectUrl);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"token\":\"" + token + "\"}");
     }
 
     @PostMapping("/login")
@@ -188,6 +190,7 @@ public class AuthenController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
     @PostMapping("/refreshToken")
     public ResponseEntity<?> refresh(@RequestBody RefreshRequest request) {
         Map<String, Object> response = new HashMap<>();

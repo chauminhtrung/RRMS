@@ -5,6 +5,8 @@ import { env } from '~/configs/environment'
 import Swal from 'sweetalert2'
 import LanguageSelect from './Options/LanguageSelect'
 import ModeSelect from './Options/ModeSelect'
+import { useTheme } from '@emotion/react'
+import { useTranslation } from 'react-i18next'
 
 const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLanguage, currentLanguage, motelId }) => {
   const [IsDanhmuc, setIsDanhmuc] = useState(false)
@@ -12,8 +14,11 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
   const [IsTaikhoan, setIsTaikhoan] = useState(false)
   const [IsThongbao, setIsThongbao] = useState(false)
   const [IsMobileTaikhoan, setIsMobileTaikhoan] = useState(false)
-
+  const [searchKeyWord, setSearchKeyWord] = useState()
   const navigate = useNavigate()
+  const theme = useTheme()
+  const { t } = useTranslation()
+
   const handleMenuItemClick = () => {
     setIsTaikhoan(false) // Đóng menu khi click vào bất kỳ mục nào
   }
@@ -72,34 +77,40 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
       })
     }
   }
+
+  const handleSearch = () => {
+    navigate('/search', { state: { searchKeyWord } })
+  }
   const tokenExists = sessionStorage.getItem('user') !== null
 
   return (
     <header>
-      <div className="ct-appwrapper aw__sa4yob3" style={{ '--sa4yob3-0': '#fff', '--sa4yob3-1': 'inherit' }}>
+      <div
+        className="ct-appwrapper aw__sa4yob3"
+        style={{ '--sa4yob3-0': theme.palette.mode === 'light' ? '#fff' : '#1f1f1f', '--sa4yob3-1': 'inherit' }}>
         <div className="aw__s10g0md5" style={{ '--s10g0md5-0': '#22222' }}>
           <span className="aw__l3mdvjv">
             <span>
               <Link to="/" className="aw__i9tio1c">
-                Trang chủ
+                {t('trang-chu')}
               </Link>
               <span className="aw__v1t61y1y"></span>
             </span>
             <span>
               <Link to="/search" className="aw__i9tio1c">
-                Tìm kiếm
+                {t('tim-kiem')}
               </Link>
               <span className="aw__v1t61y1y"></span>
             </span>
             <span>
               <Link to="/contact" className="aw__i9tio1c">
-                Liên hệ
+                {t('lien-he')}
               </Link>
               <span className="aw__v1t61y1y"></span>
             </span>
             <span>
               <Link to="/support" className="aw__i9tio1c">
-                Trợ giúp
+                {t('tro-giup')}
               </Link>
             </span>
           </span>
@@ -111,17 +122,17 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
               profile="[object Object]"
               target="_blank">
               <span className="aw__nx3kzrx show-desktop aw__szp9uz0" color="#8C8C8C">
-                Đóng góp ý kiến
+                {t('dong-gop')}
               </span>
             </Link>
-            <Link className="aw__naoniqq" to="/" rel="nofollow">
-              <span className="aw__nez25v5 show-desktop aw__szp9uz0" color="#8C8C8C">
-                Tải ứng dụng
+            <Link className="aw__i9tio1c" to="/">
+              <span className="aw__n1rd4x1j show-desktop aw__szp9uz0" color="#8C8C8C">
+                {t('tai-ung-dung')}
               </span>
             </Link>
             <Link to="/introduce" className="aw__i9tio1c">
               <span className="aw__n1rd4x1j show-desktop aw__szp9uz0" color="#8C8C8C">
-                Về chúng tôi
+                {t('ve-chung-toi')}
               </span>
             </Link>
           </span>
@@ -130,11 +141,11 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
         <Link
           className="aw__fe17nfm"
           to="https://www.nhatot.com/kenh-moi-gioi"
-          color="#222222"
+          color={theme.palette.mode === 'light' ? '#222222' : '#E8E8E8'}
           style={{
             '--fe17nfm-1': '190px',
-            '--fe17nfm-3': '#E8E8E8',
-            '--fe17nfm-4': '#222222'
+            '--fe17nfm-3': theme.palette.mode === 'light' ? '#E8E8E8' : '#000000',
+            '--fe17nfm-4': theme.palette.mode === 'light' ? '#1f1f1f' : '#E8E8E8'
           }}>
           <span className="aw__muulhme">
             <img
@@ -142,7 +153,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
               alt=""
             />
           </span>
-          <span>Dành cho môi giới</span>
+          <span>{t('danh-cho-moi-gioi')}</span>
         </Link>
       </div>
 
@@ -183,6 +194,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
               {/* danh muc nam trong day */}
               <div className="aw__i8z877t" style={{ '--i8z877t-0': '#8C8C8C', '--i8z877t-6': '#222222' }}>
                 <svg
+                  style={{ color: theme.palette.mode === 'light' ? '#212121' : '#E8E8E8' }}
                   width="24"
                   height="25"
                   viewBox="0 0 24 25"
@@ -201,18 +213,20 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                     </clipPath>
                   </defs>
                 </svg>
-                <span className="aw__i1utyhlb">
+                <span
+                  className="aw__i1utyhlb"
+                  style={{ color: theme.palette.mode === 'light' ? '#212121' : '#E8E8E8' }}>
                   <span
                     className="aw__c19wws31 show-desktop aw__szp9uz0"
-                    color="#8C8C8C"
+                    color={theme.palette.mode === 'light' ? '#8C8C8C' : '#E8E8E8'}
                     style={{
                       '--szp9uz0-1': 'inherit',
-                      '--szp9uz0-9': '#8C8C8C'
+                      '--szp9uz0-9': theme.palette.mode === 'light' ? '#8C8C8C' : '#e8e8e8'
                     }}>
-                    Danh mục
+                    {t('danh-muc')}
                   </span>
-
                   <svg
+                    style={{ color: theme.palette.mode === 'light' ? '#212121' : '#E8E8E8' }}
                     width="1rem"
                     height="1rem"
                     viewBox="0 0 16 16"
@@ -230,14 +244,20 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
           <div className="aw__c1fkdta0">
             <div className="aw__s1wdsl35">
               <div>
-                <div className="aw__slq94yq" style={{ '--slq94yq-4': '#f4f4f4' }}>
+                <div
+                  className="aw__slq94yq"
+                  style={{ '--slq94yq-4': theme.palette.mode === 'light' ? '#f4f4f4' : '#1f1f1f' }}>
                   <div
                     className="drop-down aw__d1x4wh9a"
                     style={{ '--d1x4wh9a-0': '#f4f4f4' }}
                     onClick={() => {
                       !IsMuaban ? setIsMuaban(true) : setIsMuaban(false)
                     }}>
-                    <div className="drop-down--text">Muốn thuê</div>
+                    <div
+                      className="drop-down--text"
+                      style={{ color: theme.palette.mode === 'light' ? '#212121' : '#E8E8E8' }}>
+                      {t('muon-thue')}
+                    </div>
                     <span className="drop-down--icon">
                       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" viewBox="0 0 12 16">
                         <g fill="none" fillRule="evenodd">
@@ -287,7 +307,10 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                             '--ah4jb82-2': 'undefined',
                             '--ah4jb82-6': '35px'
                           }}>
-                          <button aria-label="Search Button Desktop" className="aw__p1vnrcrb aw__cm4yjvg">
+                          <button
+                            onClick={handleSearch}
+                            aria-label="Search Button Desktop"
+                            className="aw__p1vnrcrb aw__cm4yjvg">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               data-type="monochrome"
@@ -303,14 +326,15 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                           </button>
                         </div>
                         <input
+                          onChange={(e) => setSearchKeyWord(e.target.value)}
                           autoComplete="off"
-                          placeholder="Nhập thông tin tìm kiếm"
+                          placeholder={t('nhap-thong-tin')}
                           id="__inputItemProps"
                           type="text"
                           className="aw__t16o28i7"
                           style={{
                             '--t16o28i7-3': '36px',
-                            '--t16o28i7-5': '#f4f4f4',
+                            '--t16o28i7-5': theme.palette.mode === 'light' ? '#f4f4f4' : '#1f1f1f',
                             '--t16o28i7-6': '35px',
                             '--t16o28i7-8': '35px'
                           }}
@@ -478,7 +502,11 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                             d="M12.0001 16.2008C10.8829 16.2008 9.78747 16.5102 8.83528 17.0946C7.88309 17.6791 7.11134 18.5158 6.60557 19.512C6.43056 19.8567 6.00923 19.9943 5.66452 19.8193C5.3198 19.6443 5.18222 19.2229 5.35723 18.8782C5.98004 17.6515 6.93038 16.6211 8.10291 15.9014C9.27544 15.1817 10.6244 14.8008 12.0001 14.8008C13.3759 14.8008 14.7249 15.1817 15.8974 15.9014C17.0699 16.6211 18.0203 17.6515 18.6431 18.8782C18.8181 19.2229 18.6805 19.6443 18.3358 19.8193C17.9911 19.9943 17.5697 19.8567 17.3947 19.512C16.889 18.5158 16.1172 17.6791 15.165 17.0946C14.2128 16.5102 13.1174 16.2008 12.0001 16.2008Z"
                             fill="curentColor"></path>
                         </svg>
-                        <span className="show-desktop aw__szp9uz0">{username || 'Tài khoản'}</span>
+                        <span
+                          style={{ color: theme.palette.mode === 'light' ? '#1f1f1f' : '#E8E8E8' }}
+                          className="show-desktop aw__szp9uz0">
+                          {username || t('tai-khoan')}
+                        </span>
                         <svg
                           width="1rem"
                           height="1rem"
@@ -880,7 +908,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                         '--szp9uz0-1': 'inherit',
                         '--szp9uz0-9': '#4bcffa'
                       }}>
-                      Trang chủ
+                      {t('trang-chu')}
                     </span>
                   </Link>
                 </span>

@@ -85,7 +85,7 @@ const AdminManage = ({ setIsAdmin }) => {
       <aside id="sidebar" className={isCollapsed ? 'collapsed' : ''}>
         <Box sx={{ padding: 2 }}>
           <Box display="flex" justifyContent="center" marginBottom={2}>
-            <img src="./logo.png" alt="Logo" className="imglogo" style={{ width: '80%' }} />
+            <img src="../logo.png" alt="Logo" className="imglogo" style={{ width: '80%' }} />
           </Box>
 
           <Typography variant="subtitle2" color="textSecondary" sx={{ marginBottom: 1 }}>

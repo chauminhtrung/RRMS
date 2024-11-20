@@ -1,9 +1,6 @@
 package com.rrms.rrms.dto.response;
 
-import java.io.Serializable;
 import java.util.UUID;
-
-import org.springframework.data.annotation.Id;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -15,11 +12,12 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RoomSearchResponse implements Serializable {
-    @Id
-    UUID roomId;
+public class RoomDeviceResponse {
+    UUID roomDeviceId;
 
-    String nameRoom;
-    MotelResponse motel;
-    String chargetype;
+    RoomResponse2 room;
+
+    MotelDeviceResponse motelDevice;
+
+    int quantity;
 }

@@ -26,6 +26,8 @@ public interface IAccountService {
 
     Account register(RegisterRequest request);
 
+    Account registergg(RegisterRequest request);
+
     Optional<Account> login(String phone, String password);
 
     AccountResponse createAccount(AccountRequest accountRequest);

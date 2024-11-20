@@ -1,12 +1,12 @@
 package com.rrms.rrms.dto.request;
 
-
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
-import lombok.Data;
 import com.rrms.rrms.enums.ContractStatus;
+
+import lombok.Data;
 
 @Data
 public class ContractRequest {

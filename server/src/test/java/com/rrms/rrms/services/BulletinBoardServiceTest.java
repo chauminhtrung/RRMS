@@ -102,7 +102,10 @@ public class BulletinBoardServiceTest {
                 .isActive(true)
                 .bulletinBoardImages(Collections.singletonList(new BulletinBoardImage()))
                 .bulletinBoardRules(Collections.singletonList(new BulletinBoardRule()))
-                .bulletinBoards_RentalAm(Collections.singletonList(bulletinBoards_RentalAm)) // Gán vào danh sách hợp lệ
+                .bulletinBoards_RentalAm(Collections.singletonList(bulletinBoards_RentalAm)) // Gán vào
+                // danh
+                // sách hợp
+                // lệ
                 .build();
 
         // Tạo BulletinBoardResponse tương ứng
@@ -130,7 +133,10 @@ public class BulletinBoardServiceTest {
                 .bulletinBoardImages(Collections.singletonList(new BulletinBoardImage()))
                 .bulletinBoardReviews(Collections.singletonList(new BulletinBoardReviewsResponse()))
                 .bulletinBoardRules(Collections.singletonList(new BulletinBoardRule()))
-                .bulletinBoards_RentalAm(Collections.singletonList(bulletinBoards_RentalAm)) // Gán vào danh sách hợp lệ
+                .bulletinBoards_RentalAm(Collections.singletonList(bulletinBoards_RentalAm)) // Gán vào
+                // danh
+                // sách hợp
+                // lệ
                 .build();
     }
 
@@ -277,7 +283,8 @@ public class BulletinBoardServiceTest {
         assertEquals(bulletinBoardResponse.getBulletinBoardId(), result.getBulletinBoardId());
         assertEquals(bulletinBoardResponse.getTitle(), result.getTitle());
 
-        // Kiểm tra rằng phương thức `findById()` và `toBulletinBoardResponse()` được gọi
+        // Kiểm tra rằng phương thức `findById()` và `toBulletinBoardResponse()` được
+        // gọi
         verify(bulletinBoardRepository).findById(bulletinBoardId);
         verify(bulletinBoardMapper).toBulletinBoardResponse(any(BulletinBoard.class));
     }
@@ -286,7 +293,8 @@ public class BulletinBoardServiceTest {
     void testGetBulletinBoardById_NotFound() {
         UUID bulletinBoardId = UUID.randomUUID();
 
-        // Mock hành vi của repository trả về Optional.empty() khi không tìm thấy BulletinBoard
+        // Mock hành vi của repository trả về Optional.empty() khi không tìm thấy
+        // BulletinBoard
         when(bulletinBoardRepository.findById(bulletinBoardId)).thenReturn(Optional.empty());
 
         // Kiểm tra khi không tìm thấy BulletinBoard sẽ ném ngoại lệ
@@ -314,7 +322,8 @@ public class BulletinBoardServiceTest {
 
         // Tạo BulletinBoards_RentalAm với RentalAmenities đã khởi tạo
         BulletinBoards_RentalAm bulletinBoards_RentalAm = new BulletinBoards_RentalAm();
-        bulletinBoards_RentalAm.setRentalAmenities(rentalAmenities); // Set RentalAmenities cho BulletinBoards_RentalAm
+        bulletinBoards_RentalAm.setRentalAmenities(rentalAmenities); // Set RentalAmenities cho
+        // BulletinBoards_RentalAm
         bulletinBoards_RentalAm.setBulletinBoard(bulletinBoard);
 
         // Tạo BulletinBoardRequest với các dữ liệu cần thiết
@@ -322,8 +331,9 @@ public class BulletinBoardServiceTest {
                 .title("Updated Title")
                 .bulletinBoardImages(Collections.singletonList(new BulletinBoardImage()))
                 .bulletinBoardRules(Collections.singletonList(new BulletinBoardRule()))
-                .bulletinBoards_RentalAm(
-                        Collections.singletonList(bulletinBoards_RentalAm)) // Set bulletinBoards_RentalAm đã khởi tạo
+                .bulletinBoards_RentalAm(Collections.singletonList(bulletinBoards_RentalAm)) // Set
+                // bulletinBoards_RentalAm
+                // đã khởi tạo
                 .build();
 
         BulletinBoardResponse bulletinBoardResponse = BulletinBoardResponse.builder()

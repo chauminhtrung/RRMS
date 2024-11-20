@@ -14,9 +14,7 @@ import {
   createRoomService,
   getServiceRoombyRoomId,
   getRoomById,
-  DeleteRoomServiceByid,
   DeleteRoomByid,
-  updateSerivceRoom,
   updateRoom
 } from '~/apis/roomAPI'
 import { Modal } from 'bootstrap' // Import Bootstrap Modal API
@@ -220,44 +218,44 @@ const HomeWData = ({ Motel }) => {
 
   //sua dich vu phong handleSubmitServiceRoom
   // Hàm để xử lý khi người dùng nhấn nút "Áp dụng dịch vụ"
-  const handleApplyServices = async () => {
-    // Lọc các dịch vụ không được chọn
-    const servicesToDelete = roomSerivces.filter((service) => !service.isSelected)
-    const servicesToUpdate = roomSerivces.filter((service) => service.isSelected)
+  // const handleApplyServices = async () => {
+  //   // Lọc các dịch vụ không được chọn
+  //   const servicesToDelete = roomSerivces.filter((service) => !service.isSelected)
+  //   const servicesToUpdate = roomSerivces.filter((service) => service.isSelected)
 
-    // Gọi API để xóa các dịch vụ không được chọn
-    for (const service of servicesToDelete) {
-      console.log(service)
-      DeleteRoomServiceByid(service.roomServiceId)
-    }
+  //   // Gọi API để xóa các dịch vụ không được chọn
+  //   for (const service of servicesToDelete) {
+  //     console.log(service)
+  //     DeleteRoomServiceByid(service.roomServiceId)
+  //   }
 
-    for (const service of servicesToUpdate) {
-      let SerivceUpdate = {
-        roomServiceId: service.roomServiceId,
-        roomId: service.room.roomId,
-        serviceId: service.service.motelServiceId,
-        quantity: service.quantity
-      }
-      console.log(SerivceUpdate)
+  //   for (const service of servicesToUpdate) {
+  //     let SerivceUpdate = {
+  //       roomServiceId: service.roomServiceId,
+  //       roomId: service.room.roomId,
+  //       serviceId: service.service.motelServiceId,
+  //       quantity: service.quantity
+  //     }
+  //     console.log(SerivceUpdate)
 
-      updateSerivceRoom(service.roomServiceId, SerivceUpdate)
-      console.log('Service can update', service)
-    }
+  //     updateSerivceRoom(service.roomServiceId, SerivceUpdate)
+  //     console.log('Service can update', service)
+  //   }
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Thông báo',
-      text: 'All Serivce Room updated successfully!'
-    })
-    const modalElement = document.getElementById('priceItemSelect')
-    const modal = Modal.getInstance(modalElement) // Lấy instance của modal
-    modal.hide() // Đóng modal
-    // Xóa toàn bộ backdrop (nếu có)
-    // Xóa tất cả các backdrop (nếu có nhiều backdrop)
-    const backdropElements = document.querySelectorAll('.modal-backdrop')
-    backdropElements.forEach((backdrop) => backdrop.remove()) // Xóa tất cả các backdrop
-    fetchDataServiceRooms(room.roomId)
-  }
+  //   Swal.fire({
+  //     icon: 'success',
+  //     title: 'Thông báo',
+  //     text: 'All Serivce Room updated successfully!'
+  //   })
+  //   const modalElement = document.getElementById('priceItemSelect')
+  //   const modal = Modal.getInstance(modalElement) // Lấy instance của modal
+  //   modal.hide() // Đóng modal
+  //   // Xóa toàn bộ backdrop (nếu có)
+  //   // Xóa tất cả các backdrop (nếu có nhiều backdrop)
+  //   const backdropElements = document.querySelectorAll('.modal-backdrop')
+  //   backdropElements.forEach((backdrop) => backdrop.remove()) // Xóa tất cả các backdrop
+  //   fetchDataServiceRooms(room.roomId)
+  // }
 
   // Hàm xử lý khi textarea thay đổi, cập nhật trực tiếp description của room
   const handleNoteChange = (event) => {
@@ -600,7 +598,14 @@ const HomeWData = ({ Motel }) => {
       setShowMenu(null) // Đóng menu
       //ham o duoi dung de xac dinh dang nhan vao phong nao
       fetchDataRooms(showMenu)
-    } else {
+    } 
+    else if (label === 'Lập hóa đơn') {
+      setShowMenu(null) // Đóng menu
+
+    } 
+    
+    
+    else {
       alert(`Action: ${label} on room ${showMenu}`)
     }
   }
@@ -1380,7 +1385,12 @@ const HomeWData = ({ Motel }) => {
                       {...(item.label === 'Ghi chú' && {
                         'data-bs-toggle': 'modal',
                         'data-bs-target': '#noteModal'
-                      })}>
+                      })}
+                      {...(item.label === 'Lập hóa đơn' && {
+                        'data-bs-toggle': 'modal',
+                        'data-bs-target': '#invoiceModal'
+                      })}
+                      >
                       {item.icon && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -1878,7 +1888,7 @@ const HomeWData = ({ Motel }) => {
                   </svg>
                   Đóng
                 </button>
-                <button type="button" id="submit-room" className="btn btn-primary" onClick={handleApplyServices}>
+                {/* <button type="button" id="submit-room" className="btn btn-primary" onClick={handleApplyServices}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -1894,7 +1904,7 @@ const HomeWData = ({ Motel }) => {
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                   </svg>
                   Áp dụng dịch vụ
-                </button>
+                </button> */}
               </div>
             </div>
           </div>
@@ -1955,35 +1965,41 @@ const HomeWData = ({ Motel }) => {
                 </button>
               </div>
               <div className="modal-body">
-                <div className="row mt-4">
-                  {device.map((item) => (
-                    <div className="col-12 border p-3 d-flex align-items-center mt-1">
-                      <input type="checkbox" className="mx-3" />
-                      <div className="flex-grow-1">
-                        <h6 className="mb-1">{item.deviceName}</h6>
-                        <p className="mb-0">
-                          Giá: <strong>{item.value}</strong> /{' '}
-                          {item.unit == 'CAI'
-                            ? 'Cái'
-                            : item.unit == 'CHIEC'
-                            ? 'Chiếc'
-                            : item.unit == 'BO'
-                            ? 'Bộ'
-                            : 'Cặp'}
-                        </p>
+                {device.length > 0 ? (
+                  <div className="row mt-4">
+                    {device.map((item) => (
+                      <div className="col-12 border p-3 d-flex align-items-center mt-1">
+                        <input type="checkbox" className="mx-3" />
+                        <div className="flex-grow-1">
+                          <h6 className="mb-1">{item.deviceName}</h6>
+                          <p className="mb-0">
+                            Giá: <strong>{item.value}</strong> /{' '}
+                            {item.unit == 'CAI'
+                              ? 'Cái'
+                              : item.unit == 'CHIEC'
+                              ? 'Chiếc'
+                              : item.unit == 'BO'
+                              ? 'Bộ'
+                              : 'Cặp'}
+                          </p>
+                        </div>
+                        <div className="d-flex align-items-center">
+                          <input
+                            type="number"
+                            className="form-control text-center"
+                            defaultValue={1}
+                            style={{ width: '100px' }}
+                          />
+                          <span className="mx-2">Số lượng</span>
+                        </div>
                       </div>
-                      <div className="d-flex align-items-center">
-                        <input
-                          type="number"
-                          className="form-control text-center"
-                          defaultValue={1}
-                          style={{ width: '100px' }}
-                        />
-                        <span className="mx-2">Số lượng</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-danger mt-2">Căn trọ chưa thiết lập tài sản nào, cần thêm tài sản !</p>
+                  </div>
+                )}
               </div>
               <div className="modal-footer modal-footer--sticky">
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
@@ -2004,7 +2020,7 @@ const HomeWData = ({ Motel }) => {
                   Đóng
                 </button>
                 {/* su kien onclick khi submit form cua thuan (nho thay doi)  */}
-                <button type="button" id="submit-room" className="btn btn-primary" onClick={handleApplyServices}>
+                {/* <button type="button" id="submit-room" className="btn btn-primary" onClick={handleApplyServices}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -2020,7 +2036,7 @@ const HomeWData = ({ Motel }) => {
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                   </svg>
                   Áp dụng tài sản
-                </button>
+                </button> */}
               </div>
             </div>
           </div>
@@ -2137,6 +2153,107 @@ const HomeWData = ({ Motel }) => {
       ) : (
         <> </>
       )}
+
+      {/* Modal hiển thị hoa don*/}
+      {/* them 1 dieu kien nhu da co tai san r moi duoc mo*/}
+      {room ? (
+        <div
+          className="modal fade"
+          data-bs-backdrop="static"
+          id="invoiceModal"
+          tabIndex={-1}
+          aria-labelledby="invoiceModal"
+          aria-modal="true"
+          role="dialog"
+          style={{ display: 'none', paddingLeft: '0px' }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <div
+                  style={{
+                    marginRight: '15px',
+                    outline: '0',
+                    boxShadow: '0 0 0 .25rem rgb(112 175 237 / 16%)',
+                    opacity: '1',
+                    borderRadius: '100%',
+                    width: '36px',
+                    height: '36px',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    display: 'flex',
+                    backgroundColor: 'rgb(111 171 232)'
+                  }}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-inbox">
+                    <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
+                    <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+                  </svg>
+                </div>
+                <h5 className="modal-title" id="addRoomLabel">
+                  Lập hóa đơn
+                  <span className="room-name"> &quot;{room.name}&quot;</span>
+                </h5>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                  {' '}
+                </button>
+
+              </div>
+              <div className="modal-body">
+
+              </div>
+              <div className="modal-footer modal-footer--sticky">
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-x">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                  Đóng
+                </button>
+                <button type="button" id="submit-room" className="btn btn-primary" onClick={handleAppNote}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-plus">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  Lưu
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <> </>
+      )}
+
+
     </div>
   )
 }

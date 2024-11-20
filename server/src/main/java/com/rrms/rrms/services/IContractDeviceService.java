@@ -1,10 +1,10 @@
 package com.rrms.rrms.services;
 
-import com.rrms.rrms.dto.request.ContractDeviceRequest;
-import com.rrms.rrms.dto.response.ContractDeviceResponse;
-
 import java.util.List;
 import java.util.UUID;
+
+import com.rrms.rrms.dto.request.ContractDeviceRequest;
+import com.rrms.rrms.dto.response.ContractDeviceResponse;
 
 public interface IContractDeviceService {
     ContractDeviceResponse createContractDevice(ContractDeviceRequest request);
