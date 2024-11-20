@@ -18,7 +18,7 @@ import com.rrms.rrms.services.servicesImp.InvoiceService;
 
 @RestController
 @RequestMapping("/report")
-public class ReportAPI {
+public class ReportController {
     @Autowired
     private IMotelService motelService;
 
