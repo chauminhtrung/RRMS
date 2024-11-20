@@ -67,12 +67,13 @@ public class ContractService implements IContractService {
     }
 
 
+
     @Override
     public ContractResponse createContract(ContractRequest request) {
-        System.out.println("username o day: " + request.getUsername());
-        System.out.println("room o day: " + request.getRoomId());
-        System.out.println("tenant o day: " + request.getTenantId());
-        System.out.println("contractempalte o day: " + request.getContracttemplateId());
+        System.out.println("username o day: " +request.getUsername());
+        System.out.println("room o day: " +request.getRoomId());
+        System.out.println("tenant o day: " +request.getTenantId());
+        System.out.println("contractempalte o day: " +request.getContracttemplateId());
         // Fetch related entities from the database using UUIDs
         Account username = accountRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new EntityNotFoundException("Room not found"));
@@ -85,6 +86,7 @@ public class ContractService implements IContractService {
 
         ContractTemplate contractTemplate = contractTemplateRepository.findById(request.getContracttemplateId())
                 .orElseThrow(() -> new EntityNotFoundException("ContractTemplate not found"));
+
 
 
         // Create Contract entity from the request and set related entities
@@ -133,7 +135,6 @@ public class ContractService implements IContractService {
     @Override
     public List<ContractResponse> getAllContractsByMotelId(UUID motelId) {
         List<Contract> contracts = contractRepository.findByRoom_Motel_MotelId(motelId);
-
         if (contracts.isEmpty()) {
             throw new EntityNotFoundException("No contracts found for motelId: " + motelId);
         }
@@ -153,6 +154,8 @@ public class ContractService implements IContractService {
         }
         return ContractMapper.INSTANCE.toResponse(contract);
     }
+
+
 
 
 }
