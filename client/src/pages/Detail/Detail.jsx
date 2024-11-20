@@ -82,44 +82,35 @@ const Detail = ({ setIsAdmin }) => {
 
   const refreshBulletinBoards = () => {
     Promise.all([
-      getBulletinBoard(bulletinBoardId),
+      getBulletinBoard(bulletinBoardId).then((res) => {
+        setDetail(res.result)
+        searchByName(findProvinceRegex(res.result.address)).then((res) => {
+          setRoomOrder(res.data.result)
+        })
+      }),
       introspect().then((res) => {
         getAccountByUsername(res.data.issuer).then((res) => {
           setAccount(res.data)
         })
       })
     ])
-      .then(([bulletinRes, accountRes]) => {
-        setDetail(bulletinRes.result)
-        searchByName(findProvinceRegex(bulletinRes.result.address)).then((res) => {
-          setRoomOrder(res.data.result)
-        })
-        console.log(accountRes)
-      })
-      .catch((error) => {
-        console.error('Lỗi khi lấy dữ liệu:', error)
-      })
   }
 
   useEffect(() => {
     Promise.all([
-      getBulletinBoard(bulletinBoardId),
+      getBulletinBoard(bulletinBoardId).then((res) => {
+        setDetail(res.result)
+        searchByName(findProvinceRegex(res.result.address)).then((res) => {
+          setRoomOrder(res.data.result)
+          console.log(roomOrder)
+        })
+      }),
       introspect().then((res) => {
         getAccountByUsername(res.data.issuer).then((res) => {
           setAccount(res.data)
         })
       })
     ])
-      .then(([bulletinRes, accountRes]) => {
-        setDetail(bulletinRes.result)
-        searchByName(findProvinceRegex(bulletinRes.result.address)).then((res) => {
-          setRoomOrder(res.data.result)
-        })
-        console.log(accountRes)
-      })
-      .catch((error) => {
-        console.error('Lỗi khi lấy dữ liệu:', error)
-      })
   }, [bulletinBoardId])
 
   const indexOfLastComment = currentPage * commentsPerPage
@@ -416,7 +407,7 @@ const Detail = ({ setIsAdmin }) => {
             />
           </Box>
           {currentComments.map((item, i) => (
-            <Comment key={i} item={item} roomId={bulletinBoardId} />
+            <Comment username={account?.username} key={i} item={item} roomId={bulletinBoardId} />
           ))}
           {account && (
             <UserRaiting
@@ -460,7 +451,7 @@ const Detail = ({ setIsAdmin }) => {
                   </Typography>
                 </Box>
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box>
                 <Box
                   sx={{
                     width: isMobile ? '325px' : '756px',
