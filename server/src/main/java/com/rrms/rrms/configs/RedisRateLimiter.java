@@ -1,12 +1,11 @@
 package com.rrms.rrms.configs;
 
-import java.time.Duration;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
-import lombok.extern.slf4j.Slf4j;
+import java.time.Duration;
 
 @Slf4j
 @Component
@@ -15,7 +14,7 @@ public class RedisRateLimiter {
     private StringRedisTemplate redisTemplate;
     //  ten request only one second
     private static final int LIMIT = 10;
-    private static final int TIME_WINDOW = 1;
+    private static final int TIME_WINDOW = 10;
 
     public boolean isAllowed(String username) {
         String key = "rate:limit:" + username;
