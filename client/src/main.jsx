@@ -14,9 +14,8 @@ import { BrowserRouter } from 'react-router-dom'
 createRoot(document.getElementById('root')).render(
   <>
     <ThemeProvider theme={theme}>
-      <ChatAI />
       <CssBaseline />
-
+      <ChatAI />
       <BrowserRouter>
         <App />
       </BrowserRouter>

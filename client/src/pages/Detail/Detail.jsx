@@ -44,6 +44,7 @@ import { getBulletinBoard } from '~/apis/bulletinBoardAPI'
 import { getAccountByUsername, introspect } from '~/apis/accountAPI'
 import { findProvinceRegex } from '~/utils/findProvince'
 import { searchByName } from '~/apis/searchAPI'
+import { toast } from 'react-toastify'
 
 const Detail = ({ setIsAdmin }) => {
   const { t } = useTranslation()
@@ -102,7 +103,6 @@ const Detail = ({ setIsAdmin }) => {
         setDetail(res.result)
         searchByName(findProvinceRegex(res.result.address)).then((res) => {
           setRoomOrder(res.data.result)
-          console.log(roomOrder)
         })
       }),
       introspect().then((res) => {
@@ -139,7 +139,7 @@ const Detail = ({ setIsAdmin }) => {
 
   const getDescription = (description) => {
     navigator.clipboard.writeText(description)
-    alert('Đã sao chép mô tả')
+    toast.success('Đã sao chép mô tả')
   }
 
   const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'))
@@ -407,7 +407,14 @@ const Detail = ({ setIsAdmin }) => {
             />
           </Box>
           {currentComments.map((item, i) => (
-            <Comment username={account?.username} key={i} item={item} roomId={bulletinBoardId} />
+            <Comment
+              refreshBulletinBoards={refreshBulletinBoards}
+              username={account?.username}
+              key={i}
+              item={item}
+              roomId={bulletinBoardId}
+              setReview={setReview}
+            />
           ))}
           {account && (
             <UserRaiting
@@ -451,7 +458,7 @@ const Detail = ({ setIsAdmin }) => {
                   </Typography>
                 </Box>
               </Box>
-              <Box>
+              <Box sx={{ '& .slick-track': { display: 'flex', justifyContent: 'center' } }}>
                 <Box
                   sx={{
                     width: isMobile ? '325px' : '756px',
