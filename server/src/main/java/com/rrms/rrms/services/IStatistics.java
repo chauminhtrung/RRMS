@@ -1,10 +1,10 @@
 package com.rrms.rrms.services;
 
-import com.rrms.rrms.models.Account;
-
 import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Map;
+
+import com.rrms.rrms.models.Account;
 
 public interface IStatistics {
     Long getTotalAccounts();

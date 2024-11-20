@@ -1,5 +1,6 @@
 package com.rrms.rrms.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,13 +21,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -78,8 +72,8 @@ public class BulletinBoardController {
     public ApiResponse<BulletinBoardResponse> updateBulletinBoard(
             @RequestBody BulletinBoardRequest bulletinBoardRequest, @PathVariable("id") UUID id) {
         log.info("Update bulletin board with id: {}", id);
-        BulletinBoardResponse bulletinBoardResponse = bulletinBoardService.updateBulletinBoard(id,
-                bulletinBoardRequest);
+        BulletinBoardResponse bulletinBoardResponse =
+                bulletinBoardService.updateBulletinBoard(id, bulletinBoardRequest);
         log.info("Update bulletin board successfully");
         return ApiResponse.<BulletinBoardResponse>builder()
                 .message("Update bulletin board successfully")

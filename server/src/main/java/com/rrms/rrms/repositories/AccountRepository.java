@@ -1,6 +1,5 @@
 package com.rrms.rrms.repositories;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -42,12 +41,12 @@ public interface AccountRepository extends JpaRepository<Account, String> {
     Long countNonAdminAccounts();
 
     @Query("SELECT a FROM Account a WHERE a.createdDate >= :startDate AND a.createdDate < :endDate")
-    List<Account> findAccountsCreatedBetween(LocalDateTime startDate, LocalDateTime  endDate);
+    List<Account> findAccountsCreatedBetween(LocalDateTime startDate, LocalDateTime endDate);
 
     @Query("SELECT COUNT(a) FROM Account a WHERE YEAR(a.createdDate) = ?1 AND MONTH(a.createdDate) = ?2")
-
     long countAccountsCreatedByMonth(int year, int month);
 
-    @Query("SELECT a FROM Account a JOIN a.authorities auth WHERE auth.role.roleName = 'HOST' AND a.createdDate >= :startDate")
+    @Query(
+            "SELECT a FROM Account a JOIN a.authorities auth WHERE auth.role.roleName = 'HOST' AND a.createdDate >= :startDate")
     List<Account> findRecentHosts(@Param("startDate") LocalDateTime startDate);
 }

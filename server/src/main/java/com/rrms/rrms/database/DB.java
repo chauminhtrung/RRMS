@@ -14,6 +14,7 @@ import com.rrms.rrms.enums.Roles;
 import com.rrms.rrms.models.*;
 import com.rrms.rrms.repositories.*;
 import com.rrms.rrms.services.IBulletinBoard;
+
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
 
@@ -148,7 +149,6 @@ public class DB {
             tenantRepository.save(tenant);
             log.info("All data created");
         };
-
     }
 
     // Phương thức để tạo dữ liệu mẫu cho roles

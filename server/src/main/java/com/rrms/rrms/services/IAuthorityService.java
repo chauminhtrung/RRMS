@@ -1,12 +1,12 @@
 package com.rrms.rrms.services;
 
-import com.rrms.rrms.dto.request.RefreshRequest;
 import java.text.ParseException;
 
 import com.nimbusds.jose.JOSEException;
 import com.rrms.rrms.dto.request.IntrospecTokenRequest;
 import com.rrms.rrms.dto.request.LoginRequest;
 import com.rrms.rrms.dto.request.LogoutRequest;
+import com.rrms.rrms.dto.request.RefreshRequest;
 import com.rrms.rrms.dto.response.IntrospecTokenResponse;
 import com.rrms.rrms.dto.response.LoginResponse;
 import com.rrms.rrms.models.Account;
@@ -24,6 +24,4 @@ public interface IAuthorityService {
     Auth save(Auth auth);
 
     String generateToken(Account account) throws ParseException;
-
-
 }

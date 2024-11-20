@@ -141,8 +141,9 @@ public class AccountService implements IAccountService {
         accountRepository.save(account);
 
         // Gán role
-        Role role = roleRepository.findByRoleName(request.getUserType().equals("CUSTOMER") ? Roles.CUSTOMER : Roles.HOST)
-            .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+        Role role = roleRepository
+                .findByRoleName(request.getUserType().equals("CUSTOMER") ? Roles.CUSTOMER : Roles.HOST)
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
         Auth auth = new Auth();
         auth.setAccount(account);
         auth.setRole(role);
@@ -386,6 +387,4 @@ public class AccountService implements IAccountService {
     public boolean existsByEmail(String email) {
         return accountRepository.existsAccountByEmail(email);
     }
-
-
 }
