@@ -3,7 +3,6 @@ package com.rrms.rrms.controllers;
 
 import com.rrms.rrms.dto.request.ContractRequest;
 import com.rrms.rrms.dto.response.ContractResponse;
-import com.rrms.rrms.models.ContractService;
 import com.rrms.rrms.services.IContractService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
@@ -25,7 +24,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
-public class ContractAPI {
+public class ContractController {
 
     @Autowired
     private IContractService contractService;

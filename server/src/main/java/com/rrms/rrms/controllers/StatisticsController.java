@@ -45,6 +45,7 @@ public class StatisticsController {
         Long total = statisticsService.getTotalMotels();
         return ResponseEntity.ok(total);
     }
+
     @GetMapping("/total-account-last-week")
     public ResponseEntity<Map<DayOfWeek, Long>> getAccountsCreatedLastWeek() {
         Map<DayOfWeek, Long> counts = statisticsService.getAccountsCreatedLastWeek();
