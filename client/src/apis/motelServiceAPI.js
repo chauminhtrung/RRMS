@@ -7,7 +7,8 @@ export const createSerivceMotel = async (data) => {
   const response = await axios.post(`${env.API_URL}/motel-services/create`, data, {
     headers: {
       Authorization: `Bearer ${token}`,
-      'ngrok-skip-browser-warning': '69420'
+      'ngrok-skip-browser-warning': '69420',
+      'Content-Type': 'application/json'
     }
   })
   return response.data

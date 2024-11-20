@@ -21,7 +21,7 @@ import {
   updateRoom
 } from '~/apis/roomAPI'
 import { Modal } from 'bootstrap' // Import Bootstrap Modal API
-import { getAllMotelDevices } from '~/apis/deviceAPT'
+import { getAllMotelDevices, insertRoomDevice } from '~/apis/deviceAPT'
 const HomeWData = ({ Motel }) => {
   const { motelId } = useParams()
   const [rooms, setRooms] = useState([])
@@ -116,6 +116,7 @@ const HomeWData = ({ Motel }) => {
         ...service,
         isSelected: true // Mặc định là chọn (checked)
       }))
+      console.log(updatedServices)
 
       // Cập nhật lại trạng thái với danh sách dịch vụ đã có trường `isSelected`
       setRoomSerivces(updatedServices)
@@ -162,6 +163,33 @@ const HomeWData = ({ Motel }) => {
       })
     }
   }
+  const applyRoomDevice = async (roomParam, motel_device_idParam) => {
+    const data = {
+      room: roomParam,
+      motelDevice: {
+        motel_device_id: motel_device_idParam
+      },
+      quantity: 5
+    }
+    const response = await insertRoomDevice(data)
+    if ((response.code = 200)) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Thành công',
+        text: 'RoomDevice apply successfully!'
+      })
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Thất bại',
+        text: 'RoomDevice apply failed!'
+      })
+    }
+  }
+  const cancelRoomDevice = async (room, motel_device_id) => {
+    console.log(motel_device_id)
+    console.log(roomId)
+  }
 
   // Tạo phòng
   const handleSubmit = (e) => {
@@ -204,6 +232,10 @@ const HomeWData = ({ Motel }) => {
                 selectedServices: []
               })
               form.classList.remove('was-validated')
+
+              setTimeout(() => {
+                window.location.reload()
+              }, 1000)
 
               // Cập nhật danh sách phòng
               fetchRooms()
@@ -338,6 +370,8 @@ const HomeWData = ({ Motel }) => {
     if (motelId) {
       try {
         const dataRoom = await getRoomByMotelId(motelId)
+        console.log(dataRoom)
+
         setRooms(dataRoom)
       } catch (error) {
         console.log(error)
@@ -373,7 +407,6 @@ const HomeWData = ({ Motel }) => {
     try {
       const response = await getAllMotelDevices(motelId)
       setdevice(response.result)
-      console.log(device)
     } catch (error) {
       console.error('Error fetching device services:', error)
       setdevice([])
@@ -441,9 +474,9 @@ const HomeWData = ({ Motel }) => {
     const countTenant = cell.getValue()
     const svgiconuser = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" strokeLinecap="round" strokeLinejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`
     if (countTenant !== null && countTenant !== undefined) {
-      return `${svgiconuser} ${countTenant} / 1 người`
+      return `${svgiconuser} 0 / ${countTenant} người`
     }
-    if (countTenant === null && countTenant === 0) {
+    if (countTenant === null || countTenant === undefined) {
       return `Không xác định`
     }
 
@@ -452,7 +485,7 @@ const HomeWData = ({ Motel }) => {
 
   // Hàm định dạng ngày
   const formatDate = (dateString) => {
-    if (dateString === null) {
+    if (dateString === null || dateString === undefined) {
       return `Không xác định`
     }
     const date = new Date(dateString)
@@ -472,15 +505,30 @@ const HomeWData = ({ Motel }) => {
   }
 
   //ham dinh dang chu ky thu tien
-  const paymentCircleFormatter = (cell) => {
-    const countTenant = cell.getValue()
-    if (countTenant !== null && countTenant !== undefined) {
-      return `${countTenant} tháng`
-    }
-    if (countTenant === null || countTenant === undefined) {
-      return `Không xác định`
-    }
-    return countTenant
+  const collectionCycleOptions = [
+    { value: '0', label: 'Tùy chỉnh' },
+    { value: '1', label: '1 tháng' },
+    { value: '2', label: '2 tháng' },
+    { value: '3', label: '3 tháng' },
+    { value: '4', label: '4 tháng' },
+    { value: '5', label: '5 tháng' },
+    { value: '6', label: '6 tháng' },
+    { value: '7', label: '7 tháng' },
+    { value: '8', label: '8 tháng' },
+    { value: '9', label: '9 tháng' },
+    { value: '10', label: '10 tháng' },
+    { value: '11', label: '11 tháng' },
+    { value: '12', label: '1 năm' },
+    { value: '18', label: '1 năm, 6 tháng' },
+    { value: '24', label: '2 năm' },
+    { value: '32', label: '3 năm' },
+    { value: '48', label: '4 năm' },
+    { value: '60', label: '5 năm' }
+  ]
+
+  const getCollectionCycleLabel = (value) => {
+    const option = collectionCycleOptions.find((opt) => opt.value === value)
+    return option ? option.label : 'Không xác định'
   }
 
   // Formatter cho cột "finance"
@@ -500,15 +548,39 @@ const HomeWData = ({ Motel }) => {
   const StatusFormatter = (cell) => {
     const financeValue = cell.getValue()
     // Nếu giá trị tài chính là "Đang trống", hiển thị badge với màu cam
-    if (financeValue === true) {
+    if (financeValue === 'ACTIVE') {
       return `<span class="badge mt-2 " style="background-color: #7dc242; white-space: break-spaces;">Đang ở</span>`
     }
-    if (financeValue === false) {
+    if (financeValue === 'ENDED' || financeValue === undefined) {
       return `<span class="badge mt-2 " style="background-color: #ED6004; white-space: break-spaces;">Đang trống</span>`
     }
 
     // Nếu không phải "Đang trống", hiển thị giá trị tài chính
     return financeValue
+  }
+
+  // Định dạng tiền tệ Việt Nam (VND) va khac chua dua tien coc
+  const currencyDepositFormatter = (cell) => {
+    const value = cell.getValue()
+    let displayValue = ''
+
+    // Nếu giá trị tiền cọc hợp lệ
+    if (value !== null && value !== undefined && value !== 0) {
+      displayValue =
+        new Intl.NumberFormat('vi-VN', {
+          style: 'currency',
+          currency: 'VND'
+        }).format(value) +
+        '<br/> <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><i style="font-size: 11px;color:#ff0000;">(Chưa thu tiền cọc)</i></div>'
+    } else {
+      // Nếu giá trị là 0 hoặc null/undefined, hiển thị "Chưa thu tiền cọc"
+      displayValue = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+      }).format(0)
+    }
+
+    return displayValue
   }
 
   const handleActionClick = (e, roomId) => {
@@ -609,6 +681,7 @@ const HomeWData = ({ Motel }) => {
     { id: 15, label: 'Chia sẻ mã kết nối', icon: 'share-2' },
     { id: 16, label: 'Đóng menu', icon: 'x-circle', textClass: 'close-menu-action' }
   ]
+
   const columns = [
     {
       title: '',
@@ -658,11 +731,11 @@ const HomeWData = ({ Motel }) => {
     },
     {
       title: 'Mức giá tiền cọc',
-      field: 'deposit',
+      field: 'latestContract.deposit',
       hozAlign: 'center',
       minWidth: 150,
       editor: 'input',
-      formatter: currencyFormatter,
+      formatter: currencyDepositFormatter,
       cssClass: 'bold-text'
     },
     {
@@ -676,7 +749,7 @@ const HomeWData = ({ Motel }) => {
     },
     {
       title: 'Khách thuê',
-      field: 'countTenant',
+      field: 'latestContract.countTenant',
       hozAlign: 'center',
       minWidth: 100,
       editor: 'input',
@@ -692,15 +765,18 @@ const HomeWData = ({ Motel }) => {
     },
     {
       title: 'Chu kỳ thu tiền',
-      field: 'paymentCircle',
+      field: 'latestContract.collectioncycle',
       hozAlign: 'center',
       minWidth: 150,
       editor: 'input',
-      formatter: paymentCircleFormatter
+      formatter: (cell) => {
+        const value = cell.getValue() // Lấy giá trị của collectioncycle
+        return getCollectionCycleLabel(value) // Hiển thị label tương ứng
+      }
     },
     {
       title: 'Ngày vào ở',
-      field: 'moveInDate',
+      field: 'latestContract.moveinDate',
       hozAlign: 'center',
       minWidth: 150,
       editor: 'input',
@@ -708,7 +784,7 @@ const HomeWData = ({ Motel }) => {
     },
     {
       title: 'Thời hạn hợp đồng',
-      field: 'contractDuration',
+      field: 'latestContract.closeContract',
       hozAlign: 'center',
       minWidth: 150,
       editor: 'input',
@@ -716,7 +792,7 @@ const HomeWData = ({ Motel }) => {
     },
     {
       title: 'Tình trạng',
-      field: 'status',
+      field: 'latestContract.status',
       hozAlign: 'center',
       minWidth: 40,
       editor: 'input',
@@ -1945,8 +2021,18 @@ const HomeWData = ({ Motel }) => {
                 {device.length > 0 ? (
                   <div className="row mt-4">
                     {device.map((item) => (
-                      <div className="col-12 border p-3 d-flex align-items-center mt-1">
-                        <input type="checkbox" className="mx-3" />
+                      <div key={item.motel_device_id} className="col-12 border p-3 d-flex align-items-center mt-1">
+                        <input
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              applyRoomDevice(room, item.motel_device_id)
+                            } else {
+                              cancelRoomDevice(room, item.motel_device_id)
+                            }
+                          }}
+                          type="checkbox"
+                          className="mx-3"
+                        />
                         <div className="flex-grow-1">
                           <h6 className="mb-1">{item.deviceName}</h6>
                           <p className="mb-0">

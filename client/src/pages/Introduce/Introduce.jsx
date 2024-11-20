@@ -232,7 +232,7 @@ const Introduce = ({ setIsAdmin }) => {
           <div className="col-md-6 mt-2">
             <Link to="#">
               <img
-                src="./banner1.png"
+                src="/banner1.png"
                 className="w-full lg:rounded-md"
                 alt="banner moi gioi lozido"
                 width="100%"
@@ -243,7 +243,7 @@ const Introduce = ({ setIsAdmin }) => {
           <div className="col-md-6 mt-2">
             <Link to="#">
               <img
-                src="./banner2.png"
+                src="/banner2.png"
                 className="lg:rounded-md cursor-pointer"
                 alt="banner-pc"
                 width="100%"

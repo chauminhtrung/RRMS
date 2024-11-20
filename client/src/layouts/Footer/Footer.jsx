@@ -23,7 +23,7 @@ export default function Footer() {
                 <div className="ft-about">
                   <div className="logo">
                     <Link to="#">
-                      <img src="./logo.png" alt="" />
+                      <img src="/logo.png" alt="" />
                     </Link>
                   </div>
                   <Typography>

@@ -147,7 +147,7 @@ const Forgot_Password = ({ setIsAdmin }) => {
                       }}
                       width="80px"
                       className="custom-logo img-responsive"
-                      src="./LOGO-NHATRO.png"
+                      src="/LOGO-NHATRO.png"
                       alt="Logo LOZIDO - Quản lý nhà cho thuê"
                       title="LOZIDO - Quản lý nhà cho thuê"
                     />

@@ -130,7 +130,7 @@ const Login = ({ setUsername, setAvatar }) => {
                     boxShadow: '0 1rem 2rem 0 rgb(0 0 0 / 3%), 0 0.5rem 1rem 0 rgb(0 0 0 / 5%)'
                   }}
                   width="80px"
-                  src="./LOGO-NHATRO.png"
+                  src="/LOGO-NHATRO.png"
                   alt="Logo LOZIDO - Quản lý nhà cho thuê"
                 />
               </Link>
@@ -212,7 +212,7 @@ const Login = ({ setUsername, setAvatar }) => {
                       borderRadius: '10px',
                       border: '2px solid #1d6b1b'
                     }}
-                    src="./qr-code.png"
+                    src="/qr-code.png"
                     data-src="/images/qr-code.png"
                     className="lazy img-responsive"
                     alt="tải ứng dùng tìm phòng qua mã qr"

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Box, Card, CardContent, CardMedia, Chip, Rating, Typography } from '@mui/material'
 import Slider from 'react-slick'
 
@@ -19,6 +19,8 @@ const RoomOther = ({ items }) => {
     }
     return 0
   }
+
+  useEffect(() => {}, [items])
 
   const settings = {
     infinite: true,

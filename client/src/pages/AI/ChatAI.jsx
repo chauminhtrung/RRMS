@@ -39,6 +39,21 @@ function ChatAI() {
     const initializeChat = () => {
       window.fpt_ai_render_chatbox(FptLiveChatConfigs, liveChatBaseUrl, LiveChatSocketUrl)
       window.fpt_ai_chatbox_rendered = true
+      adjustLiveChatButtonMargin()
+    }
+
+    const adjustLiveChatButtonMargin = () => {
+      const button = document.getElementById('fpt_ai_livechat_button')
+      const div = document.getElementById('fpt_ai_livechat_button_tooltip')
+
+      if (button) {
+        if (window.innerWidth <= 800) {
+          div.style.setProperty('bottom', '80px', 'important')
+          button.style.setProperty('bottom', '80px', 'important')
+
+          console.log('Lề đã được điều chỉnh cho màn hình nhỏ.')
+        }
+      }
     }
 
     // Kiểm tra nếu script đã tồn tại và chỉ thêm nếu cần thiết
@@ -59,7 +74,14 @@ function ChatAI() {
       link.href = `${liveChatBaseUrl}/static/fptai-livechat.css`
       document.body.appendChild(link)
 
+      // Initial adjustment
+      adjustLiveChatButtonMargin()
+
+      // Adjust on window resize
+      window.addEventListener('resize', adjustLiveChatButtonMargin)
+
       return () => {
+        window.removeEventListener('resize', adjustLiveChatButtonMargin)
         if (window.fpt_ai_chatbox_rendered) {
           const chatContainer = document.getElementById('fpt-chat-container')
           if (chatContainer) chatContainer.innerHTML = '' // Dọn dẹp nội dung chat

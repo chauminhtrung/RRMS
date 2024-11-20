@@ -112,7 +112,7 @@ li.nav-item.menu-item.author-menu-item {
 }
 
 .header-home {
-  background: url('./backgroud_plaform.jpeg');
+  background: url('https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Fbackround-flatform.jpg?alt=media&token=6d97130e-e173-4642-81e1-7dccec6ee891');
   background-size: cover;
   box-shadow: 1px 1px 15px -15px #000;
   position: relative;

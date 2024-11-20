@@ -2,14 +2,16 @@ import { useEffect, useState } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
 import { getRoomById, getServiceRoombyRoomId } from '~/apis/roomAPI'
 import { useParams } from 'react-router-dom'
-
+import { getContractByIdRoom } from '~/apis/contractTemplateAPI'
 const DetailRoom = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
   const { roomId } = useParams()
   const [room, setRoom] = useState({})
+  const [contract, setContract] = useState({})
   const [roomSerivces, setRoomSerivces] = useState([])
   useEffect(() => {
     fetchDataRoom(roomId)
     fetchDataRoomServices(roomId)
+    fetchContractRoom(roomId)
     setIsAdmin(true)
   }, [])
 
@@ -19,6 +21,19 @@ const DetailRoom = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }
       try {
         const response = await getRoomById(Id)
         setRoom(response)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
+  const fetchContractRoom = async (Id) => {
+    if (Id) {
+      try {
+        const response = await getContractByIdRoom(Id)
+        console.log('contract ben detail ', response)
+
+        setContract(response)
       } catch (error) {
         console.log(error)
       }
@@ -54,7 +69,7 @@ const DetailRoom = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }
         isNavAdmin={isNavAdmin}
       />
 
-      {room ? (
+      {room && contract ? (
         <div className="page-room">
           <div className="row">
             <div className="col-md-4">
@@ -103,19 +118,47 @@ const DetailRoom = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }
                   </div>
                   <div className="item d-flex justify-content-between">
                     <span>Ngày vào ở</span>
-                    <span>{room.moveInDate ? <b> {room.moveInDate}</b> : <>Không xác định</>}</span>
+                    <span>
+                      {contract.moveinDate ? (
+                        <b>
+                          {new Intl.DateTimeFormat('vi-VN', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                          }).format(new Date(contract.moveinDate))}
+                        </b>
+                      ) : (
+                        <>Không xác định</>
+                      )}
+                    </span>
                   </div>
                   <div className="item d-flex justify-content-between">
                     <span>Thời hạn hợp đồng</span>
                     <span>
-                      <span>{room.contractDuration ? <b> {room.contractDuration}</b> : <>Không xác định</>}</span>
+                      <span>
+                        {contract.closeContract ? (
+                          <b>
+                            {new Intl.DateTimeFormat('vi-VN', {
+                              day: '2-digit',
+                              month: '2-digit',
+                              year: 'numeric'
+                            }).format(new Date(contract.closeContract))}
+                          </b>
+                        ) : (
+                          <>Không xác định</>
+                        )}
+                      </span>
                     </span>
                   </div>
                   <div className="item d-flex justify-content-between">
                     <span>Trạng thái</span>
-                    {room.status === true ? (
+                    {contract.status === 'ACTIVE' ? (
                       <span className="badge mt-2 " style={{ backgroundColor: '#7dc242', whiteSpace: 'break-spaces' }}>
                         Đang ở
+                      </span>
+                    ) : contract.status === 'IATExpire' ? (
+                      <span className="badge mt-2 " style={{ backgroundColor: '#FFC107', whiteSpace: 'break-spaces' }}>
+                        Sắp hết hạn
                       </span>
                     ) : (
                       <span className="badge mt-2 " style={{ backgroundColor: '#ED6004', whiteSpace: 'break-spaces' }}>
@@ -297,6 +340,51 @@ const DetailRoom = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }
                           <b>Hành động</b>
                         </td>
                       </tr>
+                      {contract.tenant ? (
+                        <tr style={{ cursor: 'pointer' }} className="row-history">
+                          <td>
+                            <b>{contract.tenant.fullname}</b>
+                          </td>
+                          <td>{contract.tenant.phone}</td>
+                          <td>
+                            <strong>{contract.price}đ</strong>
+                            <div>{contract.deposit}đ</div>
+                          </td>
+                          <td>{contract.createdate}</td>
+                          <td>
+                            {' '}
+                            {new Intl.DateTimeFormat('vi-VN', {
+                              day: '2-digit',
+                              month: '2-digit',
+                              year: 'numeric'
+                            }).format(new Date(contract.closeContract))}
+                          </td>
+                          <td>
+                            {contract.status === 'ACTIVE' ? (
+                              <span style={{ color: 'rgb(32, 169, 231)' }}>Trong thời hạn hợp đồng</span>
+                            ) : contract.status === 'IATExpire' ? (
+                              <span
+                                className="badge mt-2 "
+                                style={{ backgroundColor: '#FFC107', whiteSpace: 'break-spaces' }}>
+                                Sắp hết hạn
+                              </span>
+                            ) : (
+                              <span
+                                className="badge mt-2 "
+                                style={{ backgroundColor: '#ED6004', whiteSpace: 'break-spaces' }}>
+                                Đang trống
+                              </span>
+                            )}
+                          </td>
+                          <td>
+                            <span style={{ color: 'rgb(32, 169, 231)', textDecoration: 'underline' }}>
+                              Xem chi tiết
+                            </span>
+                          </td>
+                        </tr>
+                      ) : (
+                        <></>
+                      )}
                     </tbody>
                   </table>
                 </div>
