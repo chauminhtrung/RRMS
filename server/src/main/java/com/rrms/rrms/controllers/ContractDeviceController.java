@@ -1,6 +1,16 @@
 package com.rrms.rrms.controllers;
 
+import java.util.List;
+import java.util.UUID;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.rrms.rrms.dto.request.ContractDeviceRequest;
+import com.rrms.rrms.dto.response.ContractDeviceResponse;
 import com.rrms.rrms.services.IContractDeviceService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -8,17 +18,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.rrms.rrms.dto.request.ContractDeviceRequest;
-import com.rrms.rrms.dto.response.ContractDeviceResponse;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 @Tag(name = "contract-device Controller", description = "Controller for contract-device")
 @RestController
@@ -38,8 +37,7 @@ public class ContractDeviceController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ContractDeviceResponse> updateContractDevice(
-            @PathVariable("id") UUID contractDeviceId,
-            @RequestBody ContractDeviceRequest request) {
+            @PathVariable("id") UUID contractDeviceId, @RequestBody ContractDeviceRequest request) {
         ContractDeviceResponse response = contractDeviceService.updateContractDevice(contractDeviceId, request);
         return ResponseEntity.ok(response);
     }

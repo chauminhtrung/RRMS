@@ -13,7 +13,6 @@ import com.rrms.rrms.models.Contract;
 
 public interface ContractRepository extends JpaRepository<Contract, UUID> {
 
-
     List<Contract> findByRoom_Motel_MotelId(UUID MotelId);
 
     // tinh tong contract da dc active

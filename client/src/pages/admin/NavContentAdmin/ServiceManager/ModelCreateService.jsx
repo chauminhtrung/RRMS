@@ -24,9 +24,10 @@ const ModelCreateService = ({motelId, refreshServices  }) => {
         const response = await axios.get(`${env.API_URL}/room/motel/${motelId}`, {  
           headers: { Authorization: `Bearer ${token}` }  
         });  
+        console.log("API response data:", response.data);
         setFormData((prevState) => ({  
           ...prevState,  
-          rooms: response.data   
+          rooms: Array.isArray(response.data) ? response.data : [],  
         }));  
       } catch (error) {  
         console.error('Error fetching rooms:', error);  
@@ -36,7 +37,7 @@ const ModelCreateService = ({motelId, refreshServices  }) => {
           text: 'Không thể tải danh sách phòng!',  
         });  
       }  
-    };  
+    };    
   
     if (motelId) fetchRooms();  
   }, [motelId, token]);  

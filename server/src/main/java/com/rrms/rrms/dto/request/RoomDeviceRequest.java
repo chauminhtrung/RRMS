@@ -2,6 +2,7 @@ package com.rrms.rrms.dto.request;
 
 import com.rrms.rrms.dto.response.MotelDeviceResponse;
 import com.rrms.rrms.dto.response.RoomResponse2;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

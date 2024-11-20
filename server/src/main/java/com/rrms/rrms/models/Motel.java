@@ -57,7 +57,7 @@ public class Motel {
     @JoinColumn(name = "type_room_id", nullable = false)
     private TypeRoom typeRoom;
 
-    //them trường ngày tạo phoing
+    // them trường ngày tạo phoing
     @Column(name = "created_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdDate;
 
@@ -69,5 +69,4 @@ public class Motel {
     @OneToMany(mappedBy = "motel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference(value = "motel-Room") // Đặt tên cho tham chiếu quản lý
     private List<Room> rooms;
-
 }

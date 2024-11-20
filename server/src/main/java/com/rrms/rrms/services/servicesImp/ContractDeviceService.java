@@ -1,32 +1,36 @@
 package com.rrms.rrms.services.servicesImp;
 
-import com.rrms.rrms.services.IContractDeviceService;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import com.rrms.rrms.dto.request.ContractDeviceRequest;
 import com.rrms.rrms.dto.response.ContractDeviceResponse;
 import com.rrms.rrms.models.ContractDevice;
 import com.rrms.rrms.repositories.ContractDeviceRepository;
 import com.rrms.rrms.repositories.ContractRepository;
 import com.rrms.rrms.repositories.MotelDeviceRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.rrms.rrms.services.IContractDeviceService;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ContractDeviceService  implements IContractDeviceService {
+public class ContractDeviceService implements IContractDeviceService {
     private final ContractDeviceRepository contractDeviceRepository;
     private final ContractRepository contractRepository;
     private final MotelDeviceRepository motelDeviceRepository;
 
     @Override
     public ContractDeviceResponse createContractDevice(ContractDeviceRequest request) {
-        var contract = contractRepository.findById(request.getContractId())
+        var contract = contractRepository
+                .findById(request.getContractId())
                 .orElseThrow(() -> new IllegalArgumentException("Contract not found"));
 
-        var motelDevice = motelDeviceRepository.findById(request.getMotelDeviceId())
+        var motelDevice = motelDeviceRepository
+                .findById(request.getMotelDeviceId())
                 .orElseThrow(() -> new IllegalArgumentException("MotelDevice not found"));
 
         ContractDevice contractDevice = ContractDevice.builder()
@@ -41,13 +45,16 @@ public class ContractDeviceService  implements IContractDeviceService {
 
     @Override
     public ContractDeviceResponse updateContractDevice(UUID contractDeviceId, ContractDeviceRequest request) {
-        ContractDevice contractDevice = contractDeviceRepository.findById(contractDeviceId)
+        ContractDevice contractDevice = contractDeviceRepository
+                .findById(contractDeviceId)
                 .orElseThrow(() -> new IllegalArgumentException("ContractDevice not found"));
 
-        var contract = contractRepository.findById(request.getContractId())
+        var contract = contractRepository
+                .findById(request.getContractId())
                 .orElseThrow(() -> new IllegalArgumentException("Contract not found"));
 
-        var motelDevice = motelDeviceRepository.findById(request.getMotelDeviceId())
+        var motelDevice = motelDeviceRepository
+                .findById(request.getMotelDeviceId())
                 .orElseThrow(() -> new IllegalArgumentException("MotelDevice not found"));
 
         contractDevice.setContract(contract);
@@ -68,15 +75,15 @@ public class ContractDeviceService  implements IContractDeviceService {
 
     @Override
     public ContractDeviceResponse getContractDeviceById(UUID contractDeviceId) {
-        ContractDevice contractDevice = contractDeviceRepository.findById(contractDeviceId)
+        ContractDevice contractDevice = contractDeviceRepository
+                .findById(contractDeviceId)
                 .orElseThrow(() -> new IllegalArgumentException("ContractDevice not found"));
         return mapToResponse(contractDevice);
     }
 
     @Override
     public List<ContractDeviceResponse> getAllContractDevices() {
-        return contractDeviceRepository.findAll()
-                .stream()
+        return contractDeviceRepository.findAll().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }

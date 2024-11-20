@@ -1,19 +1,17 @@
 package com.rrms.rrms.controllers;
 
-import com.rrms.rrms.models.Account;
-import com.rrms.rrms.services.IAccountService;
+import java.time.DayOfWeek;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rrms.rrms.models.Account;
 import com.rrms.rrms.services.IStatistics;
-
-import java.time.DayOfWeek;
-import java.time.Year;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/statistics")
@@ -45,6 +43,7 @@ public class StatisticsController {
         Long total = statisticsService.getTotalMotels();
         return ResponseEntity.ok(total);
     }
+
     @GetMapping("/total-account-last-week")
     public ResponseEntity<Map<DayOfWeek, Long>> getAccountsCreatedLastWeek() {
         Map<DayOfWeek, Long> counts = statisticsService.getAccountsCreatedLastWeek();

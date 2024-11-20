@@ -1,7 +1,5 @@
 package com.rrms.rrms.services.servicesImp;
 
-import com.rrms.rrms.dto.request.RefreshRequest;
-import com.rrms.rrms.repositories.AccountRepository;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -10,7 +8,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import lombok.experimental.NonFinal;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +21,7 @@ import com.nimbusds.jwt.SignedJWT;
 import com.rrms.rrms.dto.request.IntrospecTokenRequest;
 import com.rrms.rrms.dto.request.LoginRequest;
 import com.rrms.rrms.dto.request.LogoutRequest;
+import com.rrms.rrms.dto.request.RefreshRequest;
 import com.rrms.rrms.dto.response.IntrospecTokenResponse;
 import com.rrms.rrms.dto.response.LoginResponse;
 import com.rrms.rrms.enums.ErrorCode;
@@ -31,6 +29,7 @@ import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Auth;
 import com.rrms.rrms.models.InvalidatedToken;
+import com.rrms.rrms.repositories.AccountRepository;
 import com.rrms.rrms.repositories.AuthRepository;
 import com.rrms.rrms.repositories.InvalidatedTokenRepository;
 import com.rrms.rrms.services.IAuthorityService;
@@ -38,6 +37,7 @@ import com.rrms.rrms.services.IAuthorityService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -169,8 +169,9 @@ public class AuthorityService implements IAuthorityService {
                 .subject(account.getPhone()) // Subject của JWT là số điện thoại người dùng
                 .issuer(account.getUsername()) // Người phát hành (issuer)
                 .issueTime(new Date()) // Thời gian phát hành JWT
-                .expirationTime(new Date(
-                        Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli())) // Thời gian hết hạn của JWT
+                .expirationTime(new Date(Instant.now()
+                        .plus(VALID_DURATION, ChronoUnit.SECONDS)
+                        .toEpochMilli())) // Thời gian hết hạn của JWT
                 .claim("roles", roles) // Thêm danh sách roles vào claim
                 .jwtID(UUID.randomUUID().toString())
                 .claim("permissions", permissions) // Thêm danh sách permissions vào claim
@@ -201,31 +202,29 @@ public class AuthorityService implements IAuthorityService {
         var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
         var username = signedJWT.getJWTClaimsSet().getSubject();
 
-        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
-                .id(jit)
-                .expiryTime(expiryTime)
-                .build();
+        InvalidatedToken invalidatedToken =
+                InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
         invalidatedTokenRepository.save(invalidatedToken);
 
-        var user =
-            accountRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+        var user = accountRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
         var token = generateToken(user);
 
         return LoginResponse.builder()
-            .token(token)
-            .authenticated(true)
-            .username(user.getUsername())
-            .fullname(user.getFullname())
-            .phone(user.getPhone())
-            .email(user.getEmail())
-            .avatar(user.getAvatar())
-            .birthday(user.getBirthday())
-            .gender(user.getGender())
-            .cccd(user.getCccd())
-            .build();
+                .token(token)
+                .authenticated(true)
+                .username(user.getUsername())
+                .fullname(user.getFullname())
+                .phone(user.getPhone())
+                .email(user.getEmail())
+                .avatar(user.getAvatar())
+                .birthday(user.getBirthday())
+                .gender(user.getGender())
+                .cccd(user.getCccd())
+                .build();
     }
-
 
     public void logout(LogoutRequest request) throws ParseException, JOSEException {
         try {
@@ -235,7 +234,7 @@ public class AuthorityService implements IAuthorityService {
             Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
 
             InvalidatedToken invalidatedToken =
-                InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
+                    InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
 
             invalidatedTokenRepository.save(invalidatedToken);
         } catch (AppException exception) {
@@ -254,13 +253,13 @@ public class AuthorityService implements IAuthorityService {
         SignedJWT signedJWT = SignedJWT.parse(token);
 
         Date expiryTime = (isRefresh)
-            ? new Date(signedJWT
-            .getJWTClaimsSet()
-            .getIssueTime()
-            .toInstant()
-            .plus(REFRESHABLE_DURATION, ChronoUnit.SECONDS)
-            .toEpochMilli())
-            : signedJWT.getJWTClaimsSet().getExpirationTime();
+                ? new Date(signedJWT
+                        .getJWTClaimsSet()
+                        .getIssueTime()
+                        .toInstant()
+                        .plus(REFRESHABLE_DURATION, ChronoUnit.SECONDS)
+                        .toEpochMilli())
+                : signedJWT.getJWTClaimsSet().getExpirationTime();
 
         var verified = signedJWT.verify(verifier);
 

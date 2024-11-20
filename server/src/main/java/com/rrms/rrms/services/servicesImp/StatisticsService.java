@@ -1,18 +1,17 @@
 package com.rrms.rrms.services.servicesImp;
 
-import com.rrms.rrms.models.Account;
-import com.rrms.rrms.models.Motel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.rrms.rrms.repositories.*;
-import com.rrms.rrms.services.IStatistics;
-
 import java.time.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.rrms.rrms.models.Account;
+import com.rrms.rrms.models.Motel;
+import com.rrms.rrms.repositories.*;
+import com.rrms.rrms.services.IStatistics;
 
 @Service
 public class StatisticsService implements IStatistics {
@@ -95,7 +94,11 @@ public class StatisticsService implements IStatistics {
     @Override
     public Map<Integer, Long> getTotalMotelsByMonth() {
         List<Motel> motels = motelRepository.findAll();
-        ZonedDateTime currentYear = ZonedDateTime.now(ZoneId.systemDefault()).withDayOfYear(1).withHour(0).withMinute(0).withSecond(0);
+        ZonedDateTime currentYear = ZonedDateTime.now(ZoneId.systemDefault())
+                .withDayOfYear(1)
+                .withHour(0)
+                .withMinute(0)
+                .withSecond(0);
 
         // Khởi tạo Map để chứa tổng số nhà trọ cho từng tháng
         Map<Integer, Long> totalsByMonth = new HashMap<>();

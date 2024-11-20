@@ -23,7 +23,7 @@ public class TemporaryR_contract {
     @JoinColumn(name = "motel_id")
     private Motel motel;
 
-    //chu nha
+    // chu nha
     @ManyToOne
     @JoinColumn(name = "username_tenant")
     private Account tenant;

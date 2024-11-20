@@ -15,4 +15,3 @@ import lombok.experimental.FieldDefaults;
 public class RefreshRequest {
     private String token;
 }
-
