@@ -64,5 +64,4 @@ public class Motel {
     @OneToMany(mappedBy = "motel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference(value = "motel-Room") // Đặt tên cho tham chiếu quản lý
     private List<Room> rooms;
-
 }

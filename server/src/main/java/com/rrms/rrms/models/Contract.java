@@ -1,14 +1,12 @@
 package com.rrms.rrms.models;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.rrms.rrms.enums.ContractStatus;
 
 import lombok.AllArgsConstructor;
@@ -47,60 +45,56 @@ public class Contract {
     @JoinColumn(name = "broker_id")
     private Broker broker;
 
-    //Ngay vao o
+    // Ngay vao o
     @Column(columnDefinition = "DATE")
     private Date moveinDate;
 
-    //thoi han hop dong
+    // thoi han hop dong
     @Column(columnDefinition = "TEXT")
     private String leaseTerm;
 
-    //Ngay ket thuc hop dong
+    // Ngay ket thuc hop dong
     @Column(columnDefinition = "DATE")
     private Date closeContract;
 
-    //mo ta
+    // mo ta
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    //tien no
+    // tien no
     @Column(columnDefinition = "DECIMAL(10, 2)")
     private Double debt;
 
-    //gia tien
+    // gia tien
     @Column(columnDefinition = "DECIMAL(10, 2)")
     private Double price;
 
-    //tien coc
+    // tien coc
     @Column(columnDefinition = "DECIMAL(10, 2)")
     private Double deposit;
 
-    //chu ky thu
+    // chu ky thu
     @Column(columnDefinition = "TEXT")
     private String collection_cycle;
 
-    //ngay lap hop dong
+    // ngay lap hop dong
     @Column(columnDefinition = "DATE")
     private LocalDate createdate;
 
-    //chu ky khach hang
+    // chu ky khach hang
     @Column(columnDefinition = "TEXT")
     private String Sign_contract;
 
-    //ngon ngu
+    // ngon ngu
     @Column(columnDefinition = "TEXT")
     private String language;
 
-    //so luong nguoi thue
+    // so luong nguoi thue
     @Column(name = "count_tenant", columnDefinition = "TEXT")
     private Integer countTenant;
 
-    //trang thai hop dong
+    // trang thai hop dong
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "ENUM('ACTIVE', 'ENDED','IATExpire')")
     private ContractStatus status;
-
-
-
-
 }

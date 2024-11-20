@@ -65,16 +65,13 @@ public class SecurityConfig {
                 .authenticated());
 
         // Cấu hình OAuth2 Login
-        http.oauth2Login(oauth2 -> oauth2
-            .loginPage("/authen/login")
-            .successHandler((request, response, authentication) -> {
-                response.sendRedirect("/authen/success");
-            })
-            .failureHandler((request, response, exception) -> {
-                response.sendRedirect("/authen/error");
-            })
-        );
-
+        http.oauth2Login(oauth2 -> oauth2.loginPage("/authen/login")
+                .successHandler((request, response, authentication) -> {
+                    response.sendRedirect("/authen/success");
+                })
+                .failureHandler((request, response, exception) -> {
+                    response.sendRedirect("/authen/error");
+                }));
 
         http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer ->
                 jwtConfigurer.decoder(jwtDecoder()).jwtAuthenticationConverter(jwtAuthenticationConverter())));

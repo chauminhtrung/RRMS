@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,8 +53,9 @@ public class AuthenController {
     }
 
     @GetMapping("/success")
-    public void loginSuccess(HttpServletRequest request, HttpServletResponse response, @AuthenticationPrincipal OAuth2User oauthUser)
-        throws IOException, ParseException {
+    public void loginSuccess(
+            HttpServletRequest request, HttpServletResponse response, @AuthenticationPrincipal OAuth2User oauthUser)
+            throws IOException, ParseException {
 
         if (oauthUser == null) {
             log.error("OAuth2 User is null");
@@ -75,11 +75,11 @@ public class AuthenController {
 
         Account account = accountService.findByEmail(email).orElseGet(() -> {
             RegisterRequest registerRequest = RegisterRequest.builder()
-                .username(name)
-                .email(email)
-                .password(UUID.randomUUID().toString())
-                .userType("CUSTOMER")
-                .build();
+                    .username(name)
+                    .email(email)
+                    .password(UUID.randomUUID().toString())
+                    .userType("CUSTOMER")
+                    .build();
             return accountService.registergg(registerRequest);
         });
 
@@ -190,6 +190,7 @@ public class AuthenController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
     @PostMapping("/refreshToken")
     public ResponseEntity<?> refresh(@RequestBody RefreshRequest request) {
         Map<String, Object> response = new HashMap<>();

@@ -185,7 +185,7 @@ const ProfileTab = ({ profile, setProfile, selectedImage }) => {
         </Grid>
       </Grid>
       <Button
-        sx={{ width: '9%', bottom: 5, position: 'absolute' }}
+        sx={{ width: '9%', bottom: 60, position: 'absolute' }}
         variant="contained"
         color="primary"
         fullWidth
