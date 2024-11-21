@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Tooltip } from 'react-tooltip'
 import { useEffect, useState, useRef } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import 'react-tabulator/lib/styles.css' // required styles
 import 'react-tabulator/lib/css/tabulator.min.css' // theme
 import { ReactTabulator } from 'react-tabulator'
@@ -19,6 +19,7 @@ import {
 } from '~/apis/roomAPI'
 import { Modal } from 'bootstrap' // Import Bootstrap Modal API
 import { getAllMotelDevices } from '~/apis/deviceAPT'
+import { getMotelById } from '~/apis/motelAPI'
 const HomeWData = ({ Motel }) => {
   const { motelId } = useParams()
   const [rooms, setRooms] = useState([])
@@ -27,6 +28,8 @@ const HomeWData = ({ Motel }) => {
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 })
   const menuRef = useRef(null) // Tham chiếu đến menu
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  const [motelName, setMotelName] = useState()
+  const location = useLocation()
   const [formData, setFormData] = useState({
     motelId: motelId ? motelId : Motel[0].motelId,
     deposit: null,
@@ -58,16 +61,22 @@ const HomeWData = ({ Motel }) => {
       }
     }
 
+    if (motelId) {
+      getMotelById(motelId).then((res) => {
+        setMotelName(res.data.result.motelName)
+      })
+    }
+
     document.addEventListener('click', handleClickOutside)
     return () => {
       document.removeEventListener('click', handleClickOutside)
     }
-  }, [])
+  }, [location])
 
   useEffect(() => {
     fetchRooms()
     fetchDevices()
-  }, [])
+  }, [location])
 
   // Hàm xử lý thay đổi trạng thái checkbox
   const handleCheckboxChange = (serviceId) => {
@@ -598,14 +607,9 @@ const HomeWData = ({ Motel }) => {
       setShowMenu(null) // Đóng menu
       //ham o duoi dung de xac dinh dang nhan vao phong nao
       fetchDataRooms(showMenu)
-    } 
-    else if (label === 'Lập hóa đơn') {
+    } else if (label === 'Lập hóa đơn') {
       setShowMenu(null) // Đóng menu
-
-    } 
-    
-    
-    else {
+    } else {
       alert(`Action: ${label} on room ${showMenu}`)
     }
   }
@@ -963,7 +967,7 @@ const HomeWData = ({ Motel }) => {
             <div className="header-item">
               <h4 className="title-item">
                 Quản lý danh sách phòng
-                <i className="des">Tất cả danh sách phòng trong Nhà trọ Trung</i>
+                <i className="des">Tất cả danh sách phòng trong Nhà trọ {motelName ? motelName : ''}</i>
               </h4>
               <div className="d-flex">
                 <Link
@@ -1389,8 +1393,7 @@ const HomeWData = ({ Motel }) => {
                       {...(item.label === 'Lập hóa đơn' && {
                         'data-bs-toggle': 'modal',
                         'data-bs-target': '#invoiceModal'
-                      })}
-                      >
+                      })}>
                       {item.icon && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -1967,8 +1970,8 @@ const HomeWData = ({ Motel }) => {
               <div className="modal-body">
                 {device.length > 0 ? (
                   <div className="row mt-4">
-                    {device.map((item) => (
-                      <div className="col-12 border p-3 d-flex align-items-center mt-1">
+                    {device.map((item, i) => (
+                      <div key={i} className="col-12 border p-3 d-flex align-items-center mt-1">
                         <input type="checkbox" className="mx-3" />
                         <div className="flex-grow-1">
                           <h6 className="mb-1">{item.deviceName}</h6>
@@ -2205,11 +2208,8 @@ const HomeWData = ({ Motel }) => {
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close">
                   {' '}
                 </button>
-
               </div>
-              <div className="modal-body">
-
-              </div>
+              <div className="modal-body"></div>
               <div className="modal-footer modal-footer--sticky">
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
                   <svg
@@ -2252,8 +2252,6 @@ const HomeWData = ({ Motel }) => {
       ) : (
         <> </>
       )}
-
-
     </div>
   )
 }
