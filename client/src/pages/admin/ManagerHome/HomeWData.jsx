@@ -1,3 +1,6 @@
+/* eslint-disable no-constant-condition */
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Tooltip } from 'react-tooltip'
 import { useEffect, useState, useRef } from 'react'
@@ -2062,8 +2065,8 @@ const HomeWData = ({ Motel }) => {
               <div className="modal-body">
                 {device.length > 0 ? (
                   <div className="row mt-4">
-                    {device.map((item) => (
-                      <div className="col-12 border p-3 d-flex align-items-center mt-1">
+                    {device.map((item, i) => (
+                      <div key={i} className="col-12 border p-3 d-flex align-items-center mt-1">
                         <input type="checkbox" className="mx-3" />
                         <div className="flex-grow-1">
                           <h6 className="mb-1">{item.deviceName}</h6>
