@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Tooltip } from 'react-tooltip'
 import { useEffect, useState, useRef } from 'react'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import 'react-tabulator/lib/styles.css' // required styles
 import 'react-tabulator/lib/css/tabulator.min.css' // theme
 import { ReactTabulator } from 'react-tabulator'
@@ -19,7 +19,6 @@ import {
 } from '~/apis/roomAPI'
 import { Modal } from 'bootstrap' // Import Bootstrap Modal API
 import { getAllMotelDevices } from '~/apis/deviceAPT'
-import { getMotelById } from '~/apis/motelAPI'
 const HomeWData = ({ Motel }) => {
   const { motelId } = useParams()
   const [rooms, setRooms] = useState([])
@@ -28,8 +27,6 @@ const HomeWData = ({ Motel }) => {
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 })
   const menuRef = useRef(null) // Tham chiếu đến menu
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-  const [motelName, setMotelName] = useState()
-  const location = useLocation()
   const [formData, setFormData] = useState({
     motelId: motelId ? motelId : Motel[0].motelId,
     deposit: null,
@@ -48,6 +45,24 @@ const HomeWData = ({ Motel }) => {
     prioritize: 'Tất cả',
     selectedServices: [] // Thêm trường này để lưu các dịch vụ đã chọn
   })
+  const addNewItem = () => {
+    const newItem = {
+      id: Date.now(), // Unique ID
+      addition: 1, // Default value for "Cộng [+]"
+      additionValue: '',
+      additionReason: ''
+    }
+    setAdditionItems([...additionItems, newItem])
+  }
+
+  const removeItem = (id) => {
+    setAdditionItems(additionItems.filter((item) => item.id !== id))
+  }
+
+  const handleChange = (id, field, value) => {
+    setAdditionItems(additionItems.map((item) => (item.id === id ? { ...item, [field]: value } : item)))
+  }
+
   const [roomSerivces, setRoomSerivces] = useState([])
   const [room, setRoom] = useState()
   const [note, setNote] = useState('') // Tạo state để lưu ghi chú
@@ -107,6 +122,27 @@ const HomeWData = ({ Motel }) => {
       console.log(error)
     }
   }
+  const handleChangeQuantityRoomDevice = async (roomId, motel_device_id, quantity) => {
+    const data = {
+      roomId: roomId,
+      motel_device_id: motel_device_id,
+      quantity: quantity
+    }
+    const response = await changeQuantityRoomDevice(data)
+    if (response.result == true) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Thành công',
+        text: 'change quantity successfully!'
+      })
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Thành công',
+        text: 'change quantity failed!'
+      })
+    }
+  }
 
   // Hàm lấy dữ liệu phòng từ server
   const fetchDataRooms = async (id) => {
@@ -143,6 +179,45 @@ const HomeWData = ({ Motel }) => {
             : ['area', 'invoiceDate'].includes(name)
             ? parseInt(value, 10) // chuyển đổi 'area' và 'invoiceDate' thành integer
             : value // các trường còn lại là chuỗi
+      })
+    }
+  }
+  const applyRoomDevice = async (roomParam, motel_device_idParam) => {
+    const data = {
+      room: roomParam,
+      motelDevice: {
+        motel_device_id: motel_device_idParam
+      },
+      quantity: 1
+    }
+    const response = await insertRoomDevice(data)
+    if ((response.code = 200)) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Thành công',
+        text: 'RoomDevice apply successfully!'
+      })
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Thất bại',
+        text: 'RoomDevice apply failed!'
+      })
+    }
+  }
+  const cancelRoomDevice = async (roomId, motel_device_id) => {
+    const response = await deleteRoomDevice(roomId, motel_device_id)
+    if (response.result == true) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Thành công',
+        text: 'RoomDevice cancel successfully!'
+      })
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Thất bại',
+        text: 'RoomDevice cancel failed!'
       })
     }
   }
@@ -584,6 +659,22 @@ const HomeWData = ({ Motel }) => {
   const handleDetailClick = (e, rowId) => {
     window.open(`/quanlytro/${motelId ? motelId : Motel[0].motelId}/Chi-tiet-phong/${rowId}`, '_blank')
   }
+  const [deviceByRoom, setdeviceByRoom] = useState([])
+  const fetchDeviceByRoom = async (roomId) => {
+    if (!roomId) {
+      console.warn('Room ID is invalid')
+      setdeviceByRoom([])
+      return
+    }
+    const response = await getAllDeviceByRomId(roomId)
+    console.log(response.result)
+
+    if (response.result.length > 0) {
+      setdeviceByRoom(response.result)
+    } else {
+      setdeviceByRoom([])
+    }
+  }
 
   // Hàm xử lý khi người dùng chọn một mục trong menu
   const handleItemClick = (label) => {
@@ -603,6 +694,7 @@ const HomeWData = ({ Motel }) => {
       //ham o duoi dung de xac dinh dang nhan vao phong nao
       fetchDataRooms(showMenu)
       //ham thuan fetch tai san cua phong o duoi (giong trung o cai dat dich vu)
+      fetchDeviceByRoom(showMenu)
     } else if (label === 'Ghi chú') {
       setShowMenu(null) // Đóng menu
       //ham o duoi dung de xac dinh dang nhan vao phong nao
@@ -1970,8 +2062,8 @@ const HomeWData = ({ Motel }) => {
               <div className="modal-body">
                 {device.length > 0 ? (
                   <div className="row mt-4">
-                    {device.map((item, i) => (
-                      <div key={i} className="col-12 border p-3 d-flex align-items-center mt-1">
+                    {device.map((item) => (
+                      <div className="col-12 border p-3 d-flex align-items-center mt-1">
                         <input type="checkbox" className="mx-3" />
                         <div className="flex-grow-1">
                           <h6 className="mb-1">{item.deviceName}</h6>
@@ -1989,8 +2081,16 @@ const HomeWData = ({ Motel }) => {
                         <div className="d-flex align-items-center">
                           <input
                             type="number"
+                            onChange={(e) => {
+                              handleChangeQuantityRoomDevice(room.roomId, item.motel_device_id, 200)
+                            }}
                             className="form-control text-center"
-                            defaultValue={1}
+                            value={
+                              deviceByRoom.some((it) => it.motelDevice.motel_device_id === item.motel_device_id)
+                                ? deviceByRoom.find((it) => it.motelDevice.motel_device_id === item.motel_device_id)
+                                    .quantity
+                                : 1
+                            }
                             style={{ width: '100px' }}
                           />
                           <span className="mx-2">Số lượng</span>

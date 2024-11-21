@@ -1,5 +1,6 @@
 package com.rrms.rrms.controllers;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -51,9 +52,9 @@ public class RoomDeviceController {
     }
 
     @Operation(summary = "delete roomDevice")
-    @DeleteMapping("/{roomDeviceId}")
-    public ApiResponse<Boolean> deleteRoomDevice(@PathVariable("roomDeviceId") UUID roomDeviceId) {
-        Boolean result = roomDeviceService.deleteRoomDevice(roomDeviceId);
+    @DeleteMapping("/{roomId}/{motel_device_id}")
+    public ApiResponse<Boolean> deleteRoomDevice(@PathVariable("roomId") UUID roomId, @PathVariable("motel_device_id") UUID motel_device_id) {
+        Boolean result = roomDeviceService.deleteByRoomAndAndMotelDevice(roomId, motel_device_id);
         if (result) {
             log.info("delete roomDevice successfully");
             return ApiResponse.<Boolean>builder()
@@ -63,6 +64,38 @@ public class RoomDeviceController {
                     .build();
         } else {
             log.info("delete roomDevice failed");
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.NOT_FOUND.value())
+                    .message("error")
+                    .result(false)
+                    .build();
+        }
+    }
+
+    @Operation(summary = "getDeviceByRomId")
+    @GetMapping("/{roomId}")
+    public ApiResponse<List<RoomDeviceResponse>> getDeviceByRomId(@PathVariable("roomId") UUID roomId) {
+        List<RoomDeviceResponse> getDeviceByRomId = roomDeviceService.getAllDeviceByRoomId(roomId);
+        return ApiResponse.<List<RoomDeviceResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .message("success")
+                .result(getDeviceByRomId)
+                .build();
+    }
+
+    @Operation(summary = "update quantity roomDevice")
+    @PostMapping("/{roomId}/{motel_device_id}/{quantity}")
+    public ApiResponse<Boolean> updateQuantityRoomDevice(@PathVariable("roomId") UUID roomId, @PathVariable("motel_device_id") UUID motel_device_id, @PathVariable("quantity") Integer quantity) {
+        Boolean result = roomDeviceService.updateQuantity(roomId, motel_device_id, quantity);
+        if (result) {
+            log.info("update quantity roomDevice successfully");
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("success")
+                    .result(true)
+                    .build();
+        } else {
+            log.info("update quantity roomDevice failed");
             return ApiResponse.<Boolean>builder()
                     .code(HttpStatus.NOT_FOUND.value())
                     .message("error")
