@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useRef, useState } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
 import { ReactTabulator } from 'react-tabulator'
