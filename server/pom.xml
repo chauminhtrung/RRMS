@@ -273,6 +273,7 @@
                 <configuration>
                     <excludes>
                         <exclude>com/rrms/rrms</exclude>
+                        <exclude>com/rrms/rrms/models/**</exclude>
                         <exclude>com/rrms/rrms/mapper/**</exclude>
                         <exclude>com/rrms/rrms/dto/**</exclude>
                         <exclude>com/rrms/rrms/runner/**</exclude>

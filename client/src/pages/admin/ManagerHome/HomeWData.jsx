@@ -30,6 +30,7 @@ import {
   getAllMotelDevices,
   insertRoomDevice
 } from '~/apis/deviceAPT'
+import RentRoomModal from '../NavContentAdmin/RentRoomModal'
 const HomeWData = ({ Motel }) => {
   const { motelId } = useParams()
   const [rooms, setRooms] = useState([])
@@ -79,6 +80,11 @@ const HomeWData = ({ Motel }) => {
   const [room, setRoom] = useState()
   const [note, setNote] = useState('') // Tạo state để lưu ghi chú
   const [device, setdevice] = useState([])
+  const [modalOpen, setModalOpen] = useState(false)
+
+  const toggleModal = () => {
+    setModalOpen(!modalOpen)
+  }
   // Hàm xử lý nhấn ngoài menu
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -706,6 +712,9 @@ const HomeWData = ({ Motel }) => {
       //ham o duoi dung de xac dinh dang nhan vao phong nao
       fetchDataRooms(showMenu)
     } else if (label === 'Lập hóa đơn') {
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'Danh sách khách thuê') {
+      toggleModal(!modalOpen)
       setShowMenu(null) // Đóng menu
     } else {
       alert(`Action: ${label} on room ${showMenu}`)
@@ -1475,7 +1484,12 @@ const HomeWData = ({ Motel }) => {
                       key={item.id}
                       // Gắn ref vào tag này
                       className={`tabulator-menu-item ${item.textClass || ''}`}
-                      onClick={() => handleItemClick(item.label)} // Đóng menu khi chọn item
+                      onClick={() => {
+                        if (item.icon === 'user') {
+                          toggleModal()
+                          setShowMenu(null)
+                        }
+                      }}
                       {...(item.label === 'Cài đặt dịch vụ' && {
                         'data-bs-toggle': 'modal',
                         'data-bs-target': '#priceItemSelect'
@@ -2903,6 +2917,7 @@ const HomeWData = ({ Motel }) => {
       ) : (
         <> </>
       )}
+      <RentRoomModal modalOpen={modalOpen} toggleModal={toggleModal} />
     </div>
   )
 }
