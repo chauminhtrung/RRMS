@@ -35,8 +35,4 @@ public interface RoomRepository extends JpaRepository<Room, UUID> {
 
     @Query("SELECT r FROM Room r LEFT JOIN r.contracts c WHERE c IS NULL AND r.motel = :motel")
     List<Room> findRoomsWithoutContractsByMotel(Motel motel);
-
-
-
-
 }
