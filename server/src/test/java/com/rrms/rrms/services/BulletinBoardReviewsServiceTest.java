@@ -1,5 +1,20 @@
 package com.rrms.rrms.services;
 
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import com.rrms.rrms.dto.request.BulletinBoardReviewsRequest;
 import com.rrms.rrms.dto.response.BulletinBoardReviewsResponse;
 import com.rrms.rrms.dto.response.RatingHistoryResponse;
@@ -11,20 +26,6 @@ import com.rrms.rrms.repositories.AccountRepository;
 import com.rrms.rrms.repositories.BulletinBoardRepository;
 import com.rrms.rrms.repositories.BulletinBoardReviewsRepository;
 import com.rrms.rrms.services.servicesImp.BulletinBoardReviewsService;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class BulletinBoardReviewsServiceTest {
@@ -54,9 +55,11 @@ public class BulletinBoardReviewsServiceTest {
 
         when(accountRepository.findByUsername(request.getUsername())).thenReturn(Optional.of(account));
         when(bulletinBoardRepository.findById(request.getBulletinBoardId())).thenReturn(Optional.of(bulletinBoard));
-        when(bulletinBoardReviewsRepository.findByAccountAndBulletinBoard(account, bulletinBoard)).thenReturn(Optional.empty());
+        when(bulletinBoardReviewsRepository.findByAccountAndBulletinBoard(account, bulletinBoard))
+                .thenReturn(Optional.empty());
         when(bulletinBoardReviewMapper.toBulletinBoardReviews(request)).thenReturn(bulletinBoardReviews);
-        when(bulletinBoardReviewMapper.toBulletinBoardReviewsResponse(bulletinBoardReviews)).thenReturn(bulletinBoardReviewsResponse);
+        when(bulletinBoardReviewMapper.toBulletinBoardReviewsResponse(bulletinBoardReviews))
+                .thenReturn(bulletinBoardReviewsResponse);
         when(bulletinBoardReviewsRepository.save(bulletinBoardReviews)).thenReturn(bulletinBoardReviews);
 
         BulletinBoardReviewsResponse result = bulletinBoardReviewsService.createOrUpdateBulletinBoardReviews(request);
@@ -64,7 +67,7 @@ public class BulletinBoardReviewsServiceTest {
         assertNotNull(result);
         verify(bulletinBoardReviewsRepository, times(1)).save(bulletinBoardReviews);
     }
-    
+
     @Test
     void testGetBulletinBoardReviewsByBulletinBoardIdAndUsername() {
         UUID bulletinBoardId = UUID.randomUUID();
@@ -76,10 +79,14 @@ public class BulletinBoardReviewsServiceTest {
 
         when(accountRepository.findByUsername(username)).thenReturn(Optional.of(account));
         when(bulletinBoardRepository.findById(bulletinBoardId)).thenReturn(Optional.of(bulletinBoard));
-        when(bulletinBoardReviewsRepository.findByBulletinBoardAndAccount(bulletinBoard, account)).thenReturn(bulletinBoardReviews);
-        when(bulletinBoardReviewMapper.toBulletinBoardReviewsResponse(bulletinBoardReviews)).thenReturn(bulletinBoardReviewsResponse);
+        when(bulletinBoardReviewsRepository.findByBulletinBoardAndAccount(bulletinBoard, account))
+                .thenReturn(bulletinBoardReviews);
+        when(bulletinBoardReviewMapper.toBulletinBoardReviewsResponse(bulletinBoardReviews))
+                .thenReturn(bulletinBoardReviewsResponse);
 
-        BulletinBoardReviewsResponse result = bulletinBoardReviewsService.getBulletinBoardReviewsByBulletinBoardIdAndUsername(bulletinBoardId, username);
+        BulletinBoardReviewsResponse result =
+                bulletinBoardReviewsService.getBulletinBoardReviewsByBulletinBoardIdAndUsername(
+                        bulletinBoardId, username);
 
         assertNotNull(result);
         verify(bulletinBoardReviewsRepository, times(1)).findByBulletinBoardAndAccount(bulletinBoard, account);
@@ -100,7 +107,8 @@ public class BulletinBoardReviewsServiceTest {
         when(bulletinBoardReviewMapper.toRatingHistoryResponse(review1)).thenReturn(ratingHistoryResponse1);
         when(bulletinBoardReviewMapper.toRatingHistoryResponse(review2)).thenReturn(ratingHistoryResponse2);
 
-        List<RatingHistoryResponse> result = bulletinBoardReviewsService.getRatingHistoryByBulletinBoardIdAndUsername(username);
+        List<RatingHistoryResponse> result =
+                bulletinBoardReviewsService.getRatingHistoryByBulletinBoardIdAndUsername(username);
 
         assertNotNull(result);
         assertEquals(2, result.size());
@@ -111,13 +119,14 @@ public class BulletinBoardReviewsServiceTest {
     void testDeleteBulletinBoardReviewsByBulletinBoardReviewsId() {
         UUID bulletinBoardReviewsId = UUID.randomUUID();
 
-        when(bulletinBoardReviewsRepository.deleteBulletinBoardReviewsByBulletinBoardReviewsId(bulletinBoardReviewsId)).thenReturn(1);
+        when(bulletinBoardReviewsRepository.deleteBulletinBoardReviewsByBulletinBoardReviewsId(bulletinBoardReviewsId))
+                .thenReturn(1);
 
-        Integer result = bulletinBoardReviewsService.deleteBulletinBoardReviewsByBulletinBoardReviewsId(bulletinBoardReviewsId);
+        Integer result =
+                bulletinBoardReviewsService.deleteBulletinBoardReviewsByBulletinBoardReviewsId(bulletinBoardReviewsId);
 
         assertEquals(1, result);
-        verify(bulletinBoardReviewsRepository, times(1)).deleteBulletinBoardReviewsByBulletinBoardReviewsId(bulletinBoardReviewsId);
+        verify(bulletinBoardReviewsRepository, times(1))
+                .deleteBulletinBoardReviewsByBulletinBoardReviewsId(bulletinBoardReviewsId);
     }
-
-
 }

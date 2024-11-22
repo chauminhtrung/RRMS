@@ -1,17 +1,18 @@
 package com.rrms.rrms.services;
 
-import com.rrms.rrms.repositories.BulletinBoardImageRepository;
-import com.rrms.rrms.services.servicesImp.BulletinBoardImageService;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import com.rrms.rrms.repositories.BulletinBoardImageRepository;
+import com.rrms.rrms.services.servicesImp.BulletinBoardImageService;
 
 @ExtendWith(MockitoExtension.class)
 public class BulletinBoardImageServiceTest {
@@ -48,10 +49,11 @@ public class BulletinBoardImageServiceTest {
     void testDeleteBulletinBoardImageThrowsException() {
         UUID bulletinBoardImageId = UUID.randomUUID();
 
-        doThrow(new RuntimeException("Database Error")).when(bulletinBoardImageRepository).deleteById(bulletinBoardImageId);
+        doThrow(new RuntimeException("Database Error"))
+                .when(bulletinBoardImageRepository)
+                .deleteById(bulletinBoardImageId);
 
-        assertThrows(RuntimeException.class, () -> bulletinBoardImageService.deleteBulletinBoardImage(bulletinBoardImageId));
+        assertThrows(
+                RuntimeException.class, () -> bulletinBoardImageService.deleteBulletinBoardImage(bulletinBoardImageId));
     }
-
-
 }

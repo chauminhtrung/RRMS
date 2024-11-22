@@ -1,24 +1,25 @@
 package com.rrms.rrms.services;
 
-import com.rrms.rrms.dto.request.BrokerCreateRequest;
-import com.rrms.rrms.dto.response.BrokerResponse;
-import com.rrms.rrms.mapper.BrokerMapper;
-import com.rrms.rrms.models.Broker;
-import com.rrms.rrms.repositories.BrokerRepository;
-import com.rrms.rrms.services.servicesImp.BrokerService;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.rrms.rrms.dto.request.BrokerCreateRequest;
+import com.rrms.rrms.dto.response.BrokerResponse;
+import com.rrms.rrms.mapper.BrokerMapper;
+import com.rrms.rrms.models.Broker;
+import com.rrms.rrms.repositories.BrokerRepository;
+import com.rrms.rrms.services.servicesImp.BrokerService;
 
 @ExtendWith(MockitoExtension.class)
 public class BrokerServiceTest {
@@ -92,6 +93,4 @@ public class BrokerServiceTest {
 
         assertThrows(RuntimeException.class, () -> brokerService.createBroker(brokerRequest));
     }
-
-
 }

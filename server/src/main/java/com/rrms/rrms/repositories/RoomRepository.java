@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Motel;
@@ -35,4 +36,7 @@ public interface RoomRepository extends JpaRepository<Room, UUID> {
 
     @Query("SELECT r FROM Room r LEFT JOIN r.contracts c WHERE c IS NULL AND r.motel = :motel")
     List<Room> findRoomsWithoutContractsByMotel(Motel motel);
+
+    @Query("SELECT r FROM Room r JOIN r.contracts c WHERE r.motel.motelId = :motelId AND c IS NOT NULL")
+    List<Room> findRoomsWithContractsByMotelId(@Param("motelId") UUID motelId);
 }
