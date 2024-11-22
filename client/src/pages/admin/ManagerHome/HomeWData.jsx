@@ -18,6 +18,8 @@ import {
   getServiceRoombyRoomId,
   getRoomById,
   DeleteRoomByid,
+  updateSerivceRoom,
+  DeleteRoomServiceByid,
   updateRoom
 } from '~/apis/roomAPI'
 import { Modal } from 'bootstrap' // Import Bootstrap Modal API
@@ -305,45 +307,45 @@ const HomeWData = ({ Motel }) => {
   }
 
   //sua dich vu phong handleSubmitServiceRoom
-  // Hàm để xử lý khi người dùng nhấn nút "Áp dụng dịch vụ"
-  // const handleApplyServices = async () => {
-  //   // Lọc các dịch vụ không được chọn
-  //   const servicesToDelete = roomSerivces.filter((service) => !service.isSelected)
-  //   const servicesToUpdate = roomSerivces.filter((service) => service.isSelected)
+  //Hàm để xử lý khi người dùng nhấn nút "Áp dụng dịch vụ"
+  const handleApplyServices = async () => {
+    // Lọc các dịch vụ không được chọn
+    const servicesToDelete = roomSerivces.filter((service) => !service.isSelected)
+    const servicesToUpdate = roomSerivces.filter((service) => service.isSelected)
 
-  //   // Gọi API để xóa các dịch vụ không được chọn
-  //   for (const service of servicesToDelete) {
-  //     console.log(service)
-  //     DeleteRoomServiceByid(service.roomServiceId)
-  //   }
+    // Gọi API để xóa các dịch vụ không được chọn
+    for (const service of servicesToDelete) {
+      console.log(service)
+      DeleteRoomServiceByid(service.roomServiceId)
+    }
 
-  //   for (const service of servicesToUpdate) {
-  //     let SerivceUpdate = {
-  //       roomServiceId: service.roomServiceId,
-  //       roomId: service.room.roomId,
-  //       serviceId: service.service.motelServiceId,
-  //       quantity: service.quantity
-  //     }
-  //     console.log(SerivceUpdate)
+    for (const service of servicesToUpdate) {
+      let SerivceUpdate = {
+        roomServiceId: service.roomServiceId,
+        roomId: service.room.roomId,
+        serviceId: service.service.motelServiceId,
+        quantity: service.quantity
+      }
+      console.log(SerivceUpdate)
 
-  //     updateSerivceRoom(service.roomServiceId, SerivceUpdate)
-  //     console.log('Service can update', service)
-  //   }
+      updateSerivceRoom(service.roomServiceId, SerivceUpdate)
+      console.log('Service can update', service)
+    }
 
-  //   Swal.fire({
-  //     icon: 'success',
-  //     title: 'Thông báo',
-  //     text: 'All Serivce Room updated successfully!'
-  //   })
-  //   const modalElement = document.getElementById('priceItemSelect')
-  //   const modal = Modal.getInstance(modalElement) // Lấy instance của modal
-  //   modal.hide() // Đóng modal
-  //   // Xóa toàn bộ backdrop (nếu có)
-  //   // Xóa tất cả các backdrop (nếu có nhiều backdrop)
-  //   const backdropElements = document.querySelectorAll('.modal-backdrop')
-  //   backdropElements.forEach((backdrop) => backdrop.remove()) // Xóa tất cả các backdrop
-  //   fetchDataServiceRooms(room.roomId)
-  // }
+    Swal.fire({
+      icon: 'success',
+      title: 'Thông báo',
+      text: 'All Serivce Room updated successfully!'
+    })
+    const modalElement = document.getElementById('priceItemSelect')
+    const modal = Modal.getInstance(modalElement) // Lấy instance của modal
+    modal.hide() // Đóng modal
+    // Xóa toàn bộ backdrop (nếu có)
+    // Xóa tất cả các backdrop (nếu có nhiều backdrop)
+    const backdropElements = document.querySelectorAll('.modal-backdrop')
+    backdropElements.forEach((backdrop) => backdrop.remove()) // Xóa tất cả các backdrop
+    fetchDataServiceRooms(room.roomId)
+  }
 
   // Hàm xử lý khi textarea thay đổi, cập nhật trực tiếp description của room
   const handleNoteChange = (event) => {
@@ -1987,7 +1989,7 @@ const HomeWData = ({ Motel }) => {
                   </svg>
                   Đóng
                 </button>
-                {/* <button type="button" id="submit-room" className="btn btn-primary" onClick={handleApplyServices}>
+                <button type="button" id="submit-room" className="btn btn-primary" onClick={handleApplyServices}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -2003,7 +2005,7 @@ const HomeWData = ({ Motel }) => {
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                   </svg>
                   Áp dụng dịch vụ
-                </button> */}
+                </button>
               </div>
             </div>
           </div>
@@ -2098,7 +2100,7 @@ const HomeWData = ({ Motel }) => {
                         <div className="d-flex align-items-center">
                           <input
                             type="number"
-                            onChange={(e) => {
+                            onChange={() => {
                               handleChangeQuantityRoomDevice(room.roomId, item.motel_device_id, 200)
                             }}
                             className="form-control text-center"
