@@ -1,9 +1,9 @@
+/* eslint-disable no-constant-condition */
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Tooltip } from 'react-tooltip'
 import { useEffect, useState, useRef } from 'react'
-import Flatpickr from 'react-flatpickr'
-import { Vietnamese } from 'flatpickr/dist/l10n/vn'
-import monthSelectPlugin from 'flatpickr/dist/plugins/monthSelect'
 import { Link, useParams } from 'react-router-dom'
 import 'react-tabulator/lib/styles.css' // required styles
 import 'react-tabulator/lib/css/tabulator.min.css' // theme
@@ -37,7 +37,6 @@ const HomeWData = ({ Motel }) => {
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 })
   const menuRef = useRef(null) // Tham chiếu đến menu
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-  const [additionItems, setAdditionItems] = useState([])
   const [formData, setFormData] = useState({
     motelId: motelId ? motelId : Motel[0].motelId,
     deposit: null,
@@ -92,16 +91,22 @@ const HomeWData = ({ Motel }) => {
       }
     }
 
+    if (motelId) {
+      getMotelById(motelId).then((res) => {
+        setMotelName(res.data.result.motelName)
+      })
+    }
+
     document.addEventListener('click', handleClickOutside)
     return () => {
       document.removeEventListener('click', handleClickOutside)
     }
-  }, [])
+  }, [location])
 
   useEffect(() => {
     fetchRooms()
     fetchDevices()
-  }, [])
+  }, [location])
 
   // Hàm xử lý thay đổi trạng thái checkbox
   const handleCheckboxChange = (serviceId) => {
@@ -1072,7 +1077,7 @@ const HomeWData = ({ Motel }) => {
             <div className="header-item">
               <h4 className="title-item">
                 Quản lý danh sách phòng
-                <i className="des">Tất cả danh sách phòng trong Nhà trọ Trung</i>
+                <i className="des">Tất cả danh sách phòng trong Nhà trọ {motelName ? motelName : ''}</i>
               </h4>
               <div className="d-flex">
                 <Link
@@ -2080,22 +2085,9 @@ const HomeWData = ({ Motel }) => {
               <div className="modal-body">
                 {device.length > 0 ? (
                   <div className="row mt-4">
-                    {device.map((item) => (
-                      <div key={item.motel_device_id} className="col-12 border p-3 d-flex align-items-center mt-1">
-                        <input
-                          onChange={async (e) => {
-                            if (e.target.checked) {
-                              await applyRoomDevice(room, item.motel_device_id)
-                            } else {
-                              await cancelRoomDevice(room.roomId, item.motel_device_id)
-                            }
-                            const updatedDevices = await fetchDeviceByRoom(room.roomId)
-                            setdeviceByRoom(updatedDevices.result)
-                          }}
-                          type="checkbox"
-                          className="mx-3"
-                          checked={deviceByRoom.some((it) => it.motelDevice.motel_device_id === item.motel_device_id)}
-                        />
+                    {device.map((item, i) => (
+                      <div key={i} className="col-12 border p-3 d-flex align-items-center mt-1">
+                        <input type="checkbox" className="mx-3" />
                         <div className="flex-grow-1">
                           <h6 className="mb-1">{item.deviceName}</h6>
                           <p className="mb-0">
@@ -2340,540 +2332,8 @@ const HomeWData = ({ Motel }) => {
                   {' '}
                 </button>
               </div>
-              <div className="modal-body">
-                <div className="row g-2">
-                  <div className="col-12">
-                    <div className="form-floating">
-                      <select name="chargetype" className="form-select" value={formData.chargetype}>
-                        <option value="kwh">Thu tiền hàng tháng</option>
-                        <option value="khoi">Thu tiền tháng đầu tiên</option>
-                        <option value="thang">Thu tiền khi kết thúc hợp đồng</option>
-                        <option value="nguoi">Thu tiền phòng chu kỳ</option>
-                        <option value="chiec">Thu tiền dịch vụ</option>
-                        <option value="lan">Thu tiền cọc</option>
-                        <option value="cai">Hoàn tiền cọc</option>
-                      </select>
-                      <label htmlFor="chargetype">
-                        Đơn vị <label style={{ color: 'red' }}>*</label>
-                      </label>
-                    </div>
-                  </div>
-                  <div className="col-12">
-                    <div className="header-item">
-                      <div className="input-group" style={{ marginTop: '20px' }}>
-                        <div className="form-floating">
-                          <Flatpickr
-                            className="form-control month-flat-picker flatpickr-input"
-                            name="month"
-                            id="month"
-                            placeholder="Nhập tháng"
-                            options={{
-                              locale: Vietnamese,
-                              plugins: [
-                                new monthSelectPlugin({
-                                  shorthand: true,
-                                  dateFormat: 'm/y'
-                                })
-                              ]
-                            }}
-                          />
-
-                          <label htmlFor="month">
-                            Tháng lập phiếu <label style={{ color: 'red' }}>*</label>
-                          </label>
-                        </div>
-                        <label className="input-group-text" htmlFor="month">
-                          <i className="bi bi-calendar" style={{ fontSize: '25px' }}></i>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-6">
-                    <div className="header-item">
-                      <div className="input-group" style={{ marginTop: '20px' }}>
-                        <div className="form-floating">
-                          <Flatpickr
-                            className="form-control month-flat-picker flatpickr-input"
-                            name="month"
-                            id="month"
-                            placeholder="Nhập tháng"
-                            options={{
-                              locale: Vietnamese,
-                              plugins: [
-                                new monthSelectPlugin({
-                                  shorthand: true,
-                                  dateFormat: 'm/y'
-                                })
-                              ]
-                            }}
-                          />
-
-                          <label htmlFor="month">
-                            Ngày lập phiếu <label style={{ color: 'red' }}>*</label>
-                          </label>
-                        </div>
-                        <label className="input-group-text" htmlFor="month">
-                          <i className="bi bi-calendar" style={{ fontSize: '25px' }}></i>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-6">
-                    <div className="header-item">
-                      <div className="input-group" style={{ marginTop: '20px' }}>
-                        <div className="form-floating">
-                          <Flatpickr
-                            className="form-control month-flat-picker flatpickr-input"
-                            name="month"
-                            id="month"
-                            placeholder="Nhập tháng"
-                            options={{
-                              locale: Vietnamese,
-                              plugins: [
-                                new monthSelectPlugin({
-                                  shorthand: true,
-                                  dateFormat: 'm/y'
-                                })
-                              ]
-                            }}
-                          />
-
-                          <label htmlFor="month">
-                            Hạn đóng tiền <label style={{ color: 'red' }}>*</label>
-                          </label>
-                        </div>
-                        <label className="input-group-text" htmlFor="month">
-                          <i className="bi bi-calendar" style={{ fontSize: '25px' }}></i>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-12">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="feather feather-home me-2"
-                      style={{ marginTop: '15px' }}>
-                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"></path>
-                      <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                    </svg>
-                    <div className="title-item-small">
-                      <b>Thu tiền hàng tháng</b>
-                      <i className="des">
-                        Ngày vào: <label style={{ color: 'rgb(255, 87, 34)' }}>16/11/2024</label>. Chu kỳ thu:
-                        <label style={{ color: 'rgb(255, 87, 34)' }}>1 tháng, thu cuối tháng</label>
-                      </i>
-                    </div>
-                  </div>
-                  <div className="col-6">
-                    <div className="header-item">
-                      <div className="input-group" style={{ marginTop: '20px' }}>
-                        <div className="form-floating">
-                          <Flatpickr
-                            className="form-control month-flat-picker flatpickr-input"
-                            name="birth"
-                            id="birth"
-                            placeholder="Nhập ngày/tháng/năm sinh"
-                            required
-                            options={{
-                              allowInput: true,
-                              dateFormat: 'd/m/Y'
-                            }}
-                          />
-                          <label htmlFor="birth">
-                            Từ ngày <label style={{ color: 'red' }}>*</label>
-                          </label>
-                        </div>
-                        <label className="input-group-text" htmlFor="birth">
-                          <i className="bi bi-calendar" style={{ fontSize: '25px' }}></i>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-6">
-                    <div className="header-item">
-                      <div className="input-group" style={{ marginTop: '20px' }}>
-                        <div className="form-floating">
-                          <Flatpickr
-                            className="form-control month-flat-picker flatpickr-input"
-                            name="birth"
-                            id="birth"
-                            placeholder="Nhập ngày/tháng/năm sinh"
-                            required
-                            options={{
-                              allowInput: true,
-                              dateFormat: 'd/m/Y'
-                            }}
-                          />
-                          <label htmlFor="birth">
-                            Đến ngày <label style={{ color: 'red' }}>*</label>
-                          </label>
-                        </div>
-                        <label className="input-group-text" htmlFor="birth">
-                          <i className="bi bi-calendar" style={{ fontSize: '25px' }}></i>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className="col-12"
-                    style={{
-                      border: '1px solid rgb(32, 169, 231)',
-                      borderRadius: '10px',
-                      backgroundColor: 'rgb(32, 169, 231)',
-                      padding: '10px 15px',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center'
-                    }}>
-                    <div>
-                      <label className="form-check-label" htmlFor="subtraction">
-                        <b>Thu tiền hàng tháng</b>
-                        <p style={{ margin: '0', color: 'orange' }}>
-                          1 tháng, 0 ngày <span style={{ color: 'black' }}>x 2.000.000 ₫</span>
-                        </p>
-                      </label>
-                    </div>
-                    <div>
-                      <label className="form-check-label" htmlFor="subtraction">
-                        <b>Thành tiền</b>
-                        <p style={{ margin: '0' }}>2.000.000 ₫</p>
-                      </label>
-                    </div>
-                  </div>
-                  <div className="col-12">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="css-i6dzq1 me-2"
-                      style={{ marginTop: '15px' }}>
-                      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                      <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                      <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                    </svg>
-                    <div className="title-item-small">
-                      <b>Tiền dịch vụ</b>
-                      <i className="des">Tính tiền dịch vụ khách xài </i>
-                    </div>
-                  </div>
-                  <div className="col-12">
-                    <div className="price-items-checkout-layout">
-                      {motelServices.length > 0 ? (
-                        motelServices.map((service) => (
-                          <div key={service.motelServiceId} className="item mt-2">
-                            <div className="item-check-name">
-                              <input
-                                type="checkbox"
-                                className="form-check-input"
-                                checked={formData.selectedServices.some(
-                                  (item) => item.serviceId === service.motelServiceId
-                                )}
-                                onChange={(e) => handleServiceSelection(service.motelServiceId, e.target.checked)}
-                              />
-                              <label htmlFor={`service_${service.motelServiceId}`}>
-                                <b>{service.nameService}</b>
-                                <p>
-                                  Giá: <b>{service.price.toLocaleString('vi-VN')}đ</b> / {service.chargetype}
-                                </p>
-                              </label>
-                            </div>
-
-                            <div className="item-value">
-                              <div className="input-group">
-                                <input
-                                  className="form-control"
-                                  min="0"
-                                  type="number"
-                                  name="quantity"
-                                  value={
-                                    formData.selectedServices.find((item) => item.serviceId === service.motelServiceId)
-                                      ?.quantity || 0
-                                  }
-                                  onChange={(e) =>
-                                    handleQuantityChange(service.motelServiceId, parseInt(e.target.value))
-                                  }
-                                />
-                                <label style={{ fontSize: '12px' }} className="input-group-text">
-                                  {service.chargetype}
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        ))
-                      ) : (
-                        <p>Chưa có dịch vụ nào.</p>
-                      )}
-                    </div>
-                  </div>
-                  <div
-                    className="col-12"
-                    style={{
-                      border: '1px solid rgb(32, 169, 231)',
-                      borderRadius: '10px',
-                      backgroundColor: 'rgb(32, 169, 231)',
-                      padding: '10px 15px',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center'
-                    }}>
-                    <div>
-                      <label className="form-check-label" htmlFor="subtraction">
-                        <b>Tính tiền dịch vụ</b>
-                        <p style={{ margin: '0' }}>1 dịch vụ </p>
-                        <p style={{ margin: '0', color: 'orange' }}>1 tháng, 0 ngày</p>
-                      </label>
-                    </div>
-                    <div>
-                      <label className="form-check-label" htmlFor="subtraction">
-                        <b>Thành tiền</b>
-                        <p style={{ margin: '0' }}>0 ₫</p>
-                      </label>
-                    </div>
-                  </div>
-                  <div className="col-12">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="css-i6dzq1 me-2"
-                      style={{ marginTop: '15px' }}>
-                      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                      <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                      <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                    </svg>
-                    <div className="title-item-small">
-                      <b>Cộng thêm / Giảm trừ:</b>
-                      <i className="des">Ví dụ giảm ngày tết, giảm trừ covid, thêm tiền phạt... </i>
-                    </div>
-                  </div>
-                  <div
-                    className="col-12"
-                    style={{
-                      border: '1px solid #ed6003',
-                      borderRadius: '10px',
-                      backgroundColor: '#e4eef5',
-                      padding: '10px 15px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      marginBottom: '10px',
-                      marginTop: '10px'
-                    }}>
-                    <div className="icon flex-0" style={{ marginRight: '10px' }}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="feather feather-info">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="16" x2="12" y2="12"></line>
-                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                      </svg>
-                    </div>
-                    <div className="des flex-1">
-                      <label className="form-check-label" htmlFor="subtraction">
-                        <b>Chú ý: Cộng thêm / giảm trừ không nên là tiền cọc. Hãy chọn lý do có tiền cọc để nếu cần</b>
-                      </label>
-                    </div>
-                  </div>
-                  <div className="col-12">
-                    {additionItems.map((item, index) => (
-                      <div key={item.id} className="row g-0 item mt-1 mb-1 border rounded">
-                        <div className="col-3">
-                          <div className="">
-                            <div className="border-bottom p-2 pb-3 pt-3">
-                              <div className="form-check">
-                                <input
-                                  className="form-check-input"
-                                  type="radio"
-                                  name={`addition_items[${index}]['addition']`}
-                                  id={`addition_a_bill_${item.id}`}
-                                  value="1"
-                                  checked={item.addition === 1}
-                                  onChange={() => handleChange(item.id, 'addition', 1)}
-                                />
-                                <label className="form-check-label" htmlFor={`addition_a_bill_${item.id}`}>
-                                  Cộng [+]
-                                </label>
-                              </div>
-                            </div>
-                            <div className="p-2 pt-3 pb-3">
-                              <div className="form-check">
-                                <input
-                                  className="form-check-input"
-                                  type="radio"
-                                  name={`addition_items[${index}]['addition']`}
-                                  id={`addition_b_bill_${item.id}`}
-                                  value="-1"
-                                  checked={item.addition === -1}
-                                  onChange={() => handleChange(item.id, 'addition', -1)}
-                                />
-                                <label className="form-check-label" htmlFor={`addition_b_bill_${item.id}`}>
-                                  Giảm [-]
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="col-8">
-                          <div className="row">
-                            <div className="col-12">
-                              <div className="form-floating">
-                                <input
-                                  type="text"
-                                  className="border-bottom form-control"
-                                  name={`addition_items[${index}]['addition_value']`}
-                                  placeholder="Số tiền cộng thêm hoặc giảm trừ"
-                                  value={item.additionValue}
-                                  onChange={(e) => handleChange(item.id, 'additionValue', e.target.value)}
-                                  required
-                                />
-                                <label>Số tiền (đ)</label>
-                              </div>
-                            </div>
-                            <div className="col-12">
-                              <div className="form-floating">
-                                <textarea
-                                  rows="10"
-                                  style={{ minHeight: '60px' }}
-                                  className="form-control"
-                                  name={`addition_items[${index}]['addition_reason']`}
-                                  placeholder="Nhập lý do"
-                                  value={item.additionReason}
-                                  onChange={(e) => handleChange(item.id, 'additionReason', e.target.value)}
-                                  required></textarea>
-                                <label>Lý do</label>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          className="col-1"
-                          style={{
-                            borderRadius: '0 5px 5px 0',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor: '#ffeee9'
-                          }}>
-                          <button
-                            className="btn delete"
-                            type="button"
-                            style={{ color: 'red', height: '100%' }}
-                            onClick={() => removeItem(item.id)}>
-                            Xóa
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                    <button
-                      type="button"
-                      className="btn btn-secondary mt-2"
-                      style={{ width: '100%' }}
-                      onClick={addNewItem}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="feather feather-plus">
-                        <line x1="12" y1="5" x2="12" y2="19" />
-                        <line x1="5" y1="12" x2="19" y2="12" />
-                      </svg>
-                      Thêm mục cộng thêm / giảm trừ
-                    </button>
-                  </div>
-                  <div
-                    className="col-12"
-                    style={{
-                      border: '1px solid rgb(32, 169, 231)',
-                      borderRadius: '10px',
-                      backgroundColor: 'rgb(32, 169, 231)',
-                      padding: '10px 15px',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center'
-                    }}>
-                    <div>
-                      <label className="form-check-label" htmlFor="subtraction">
-                        <p style={{ margin: '0' }}>Cộng thêm</p>
-                        <p style={{ margin: '0' }}>Lý do: Chưa có lý do</p>
-                      </label>
-                    </div>
-                    <div>
-                      <label className="form-check-label" htmlFor="subtraction">
-                        <p style={{ margin: '0' }}>Thành tiền</p>
-                        <p style={{ margin: '0' }}>0 ₫</p>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="modal-footer modal-footer--sticky" style={{ backgroundColor: 'white' }}>
-                <div className="row">
-                  <div className="col-8">
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        name="send_to_zalo"
-                        id="send_to_zalo"
-                        value="1"
-                        defaultChecked
-                      />
-                      <label className="form-check-label" htmlFor="send_to_zalo">
-                        <b style={{ color: '#2196F3' }}>Gửi ZALO & APP khách thuê</b>
-                        <div>Hệ thống sẽ tự động gửi hóa đơn tới ZALO và APP khách</div>
-                        <div>
-                          <strong style={{ color: 'orangered' }}>
-                            *Lưu ý: Chỉ có thể gửi zalo cho khách thuê từ 6.00 đến 22.00 giờ
-                          </strong>
-                        </div>
-                      </label>
-                    </div>
-                  </div>
-                  <div className="col-4 text-end">
-                    <div>
-                      <span>Tổng cộng hóa đơn</span>
-                    </div>
-                    <b className="show-total total-price bill-total" style={{ color: '#3c9e47' }}>
-                      2.000.000&nbsp;₫
-                    </b>
-                  </div>
-                </div>
-
+              <div className="modal-body"></div>
+              <div className="modal-footer modal-footer--sticky">
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

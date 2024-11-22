@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react'
 import { getPhuongXa, getQuanHuyen, getTinhThanh } from '~/apis/addressAPI'
@@ -7,6 +6,9 @@ import { createMotel, getMotelById, updateMotel } from '~/apis/motelAPI'
 import { createSerivceMotel } from '~/apis/motelServiceAPI'
 import Swal from 'sweetalert2'
 import * as XLSX from 'xlsx'
+import { createRoom } from '~/apis/roomAPI'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const ModelCreateHome = ({ username, MotelId }) => {
   const [selectedOption, setSelectedOption] = useState('')
@@ -19,6 +21,11 @@ const ModelCreateHome = ({ username, MotelId }) => {
   const [selectedWard, setSelectedWard] = useState('')
   const [Typerooms, setTyperooms] = useState([])
   const [jsonData, setJsonData] = useState([])
+  const navigate = useNavigate()
+  const [dataCreateAuto, setDataCreateAuto] = useState({
+    typeMotelCreate: '',
+    totalRoomCreate: ''
+  })
 
   const [priceItemEle, setPriceItemEle] = useState('3')
   const [priceItemWater, setPriceItemWater] = useState('3')
@@ -181,7 +188,6 @@ const ModelCreateHome = ({ username, MotelId }) => {
   function handleChangeFileName(event) {
     setFileName(event.target.files[0].name)
     handleFileExcelUpload(event.target.files[0])
-    console.log('ss')
   }
 
   // Hàm xử lý khi chọn tỉnh/thành
@@ -309,24 +315,47 @@ const ModelCreateHome = ({ username, MotelId }) => {
     }
   }
 
-  // cột tạo nhà trọ excel
   const rows = [
     {
-      'Tên nhà trọ': '',
+      Nhóm: '',
+      Tên: '',
+      'Giá thuê': '',
+      'Ưu tiên': '',
       'Diện tích': '',
-      'Giá trung bình': '',
-      'Địa chỉ': '',
-      'Tối đa người ở': '',
-      'Ngày lập hóa đơn': '',
-      'Ngày lập hợp đồng': ''
+      'Mức giá tiền cọc': '',
+      'Số tiền cọc đã thu': '',
+      'Số lượng thành viên': '',
+      'Chu kỳ đóng tiền': '',
+      'Ngày vào ở': '',
+      'Ngày hợp đồng': '',
+      'Ngày kết thúc hợp đồng': '',
+      'Trạng thái': '',
+      'Tài chính': ''
     }
   ]
 
   const downloadExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(rows)
+    worksheet['!cols'] = [
+      { wch: 10 },
+      { wch: 20 },
+      { wch: 15 },
+      { wch: 10 },
+      { wch: 12 },
+      { wch: 18 },
+      { wch: 18 },
+      { wch: 20 },
+      { wch: 15 },
+      { wch: 12 },
+      { wch: 15 },
+      { wch: 20 },
+      { wch: 12 },
+      { wch: 12 }
+    ]
+
     const workbook = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'NhaTro')
-    XLSX.writeFile(workbook, 'DanhSachNhaTro.xlsx')
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'KhachThue')
+    XLSX.writeFile(workbook, 'DanhSachPhong.xlsx')
   }
 
   const handleFileExcelUpload = (file) => {
@@ -342,18 +371,23 @@ const ModelCreateHome = ({ username, MotelId }) => {
 
         const formattedData = data.slice(1).map((row) => {
           return {
-            account: { username: username },
-            methodofcreation: 'Excel',
-            typeRoom: { typeRoomId: document.getElementById('category').value },
-            motelName: row[0] || '',
-            area: row[1] || '',
-            averagePrice: row[2] || '',
-            address: row[3] || '',
-            maxperson: row[4] || '',
-            invoicedate: row[5] || '',
-            paymentdeadline: row[6] || ''
+            group: row[0] || '',
+            name: row[1] || '',
+            price: row[2] || '',
+            prioritize: row[3] || '',
+            area: row[4] || '',
+            deposit: row[5] || '',
+            debt: row[6] || '',
+            countTenant: row[7] || '',
+            invoiceDate: row[8] || '',
+            paymentCircle: row[9] || '',
+            moveInDate: row[10] || '',
+            contractDuration: row[11] || '',
+            status: row[12] || '',
+            finance: row[13] || ''
           }
         })
+
         setJsonData(formattedData)
       }
 
@@ -361,26 +395,154 @@ const ModelCreateHome = ({ username, MotelId }) => {
     }
   }
 
+  useEffect(() => {
+    console.log('Dữ liệu JSON đã được cập nhật:', jsonData)
+  }, [jsonData])
+
   const handleFileImport = async (event) => {
-    for (const [index, item] of jsonData.entries()) {
-      try {
-        // Đợi kết quả trả về từ createMotel
-        const res = await createMotel(item)
-        await handleCreateServices(res.data.result.motelId) // Đảm bảo xử lý hoàn thành
-        setJsonData([])
+    const fullAddress = `${addressDetail}, ${selectedWard}, ${selectedDistrict}, ${selectedProvince}`
+
+    const motelData = {
+      typeRoom: { typeRoomId: document.getElementById('category').value },
+      account: { username: username },
+      motelName: document.getElementById('motelName').value,
+      methodofcreation: selectedOption,
+      address: fullAddress || null,
+      area: Number(document.getElementById('area').value),
+      averagePrice: parseFloat(document.getElementById('averagePrice').value),
+      maxperson: Number(document.getElementById('maxperson').value),
+      invoicedate: Number(document.getElementById('invoicedate').value),
+      paymentdeadline: Number(document.getElementById('paymentdeadline').value)
+    }
+
+    try {
+      const response = await createMotel(motelData) // Gọi API tạo motel
+      setMotel(response)
+      await handleCreateServices(response.data.result.motelId) // Gọi thêm dịch vụ nếu cần
+
+      let success = true
+      console.log('Dữ liệu JSON đã được cập nhật:', jsonData)
+
+      for (const [index, item] of jsonData.entries()) {
+        try {
+          await createRoom({ ...item, motelId: response.data.result.motelId }) // Gọi API tạo room
+        } catch (error) {
+          success = false
+          console.error('Lỗi tại dòng', index + 2, error.message || error)
+        }
+      }
+
+      if (success) {
         Swal.fire({
           icon: 'success',
           title: 'Thông báo',
-          text: 'Motel created successfully!'
+          text: 'Rooms created successfully!'
         })
-        setTimeout(() => {
-          window.location.reload()
-        }, 1400)
-        event.target.value = null
-      } catch (error) {
-        console.error('Lỗi tại dòng', index + 2, error.message || error)
+      } else {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Thông báo',
+          text: 'Một số phòng không được tạo thành công.'
+        })
       }
+      navigate('/quanlytro/' + response.data.result.motelId)
+      setJsonData([]) // Xóa dữ liệu sau khi hoàn tất
+      event.target.value = null // Reset file input
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Thông báo',
+        text: 'Error creating motel or rooms.'
+      })
+      console.error(error)
     }
+  }
+
+  const handleCreateRoomAuto = async () => {
+    const { typeMotelCreate, totalRoomCreate } = dataCreateAuto
+    const totalRooms = parseInt(totalRoomCreate, 10)
+    const totalFloors = parseInt(typeMotelCreate, 10)
+    const fullAddress = `${addressDetail}, ${selectedWard}, ${selectedDistrict}, ${selectedProvince}`
+
+    if (!typeMotelCreate || !totalRoomCreate || isNaN(totalRooms) || isNaN(totalFloors)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Lỗi',
+        text: 'Vui lòng nhập đúng số lượng phòng và chọn loại nhà.'
+      })
+      return
+    }
+
+    const motelData = {
+      typeRoom: { typeRoomId: document.getElementById('category').value },
+      account: { username: username },
+      motelName: document.getElementById('motelName').value,
+      methodofcreation: selectedOption,
+      address: fullAddress || null,
+      area: Number(document.getElementById('area').value),
+      averagePrice: parseFloat(document.getElementById('averagePrice').value),
+      maxperson: Number(document.getElementById('maxperson').value),
+      invoicedate: Number(document.getElementById('invoicedate').value),
+      paymentdeadline: Number(document.getElementById('paymentdeadline').value)
+    }
+
+    try {
+      // Gọi API tạo motel
+      const response = await createMotel(motelData)
+      const motelId = response.data.result.motelId
+
+      // Gọi thêm dịch vụ nếu cần
+      await handleCreateServices(motelId)
+
+      // Tạo danh sách phòng
+      const rooms = Array.from({ length: totalRooms }, (_, index) => ({
+        motelId,
+        group: 'Tầng ' + ((index % totalFloors) + 1),
+        name: 'Phòng ' + (index + 1),
+        price: '',
+        prioritize: '',
+        area: '',
+        deposit: '',
+        debt: '',
+        countTenant: '',
+        invoiceDate: '',
+        paymentCircle: '',
+        moveInDate: '',
+        contractDuration: '',
+        status: '',
+        finance: ''
+      }))
+
+      // Gửi đồng thời các yêu cầu tạo phòng
+      toast.info('Đang tạo phòng trọ...')
+      await Promise.all(rooms.map((room) => createRoom(room)))
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Thông báo',
+        text: 'Tạo phòng thành công'
+      })
+      navigate('/quanlytro/' + response.data.result.motelId)
+    } catch (error) {
+      console.error(error)
+      Swal.fire({
+        icon: 'error',
+        title: 'Lỗi',
+        text: 'Có lỗi xảy ra trong quá trình tạo phòng. Vui lòng thử lại.'
+      })
+    }
+  }
+
+  const renderButtonText = (action) => {
+    if (action === 'excel') return 'Tạo phòng trọ từ file'
+    if (action === 'enable') return 'Tạo phòng trọ tự động'
+    return MotelId === 'Create' ? 'Thêm nhà trọ' : 'Chỉnh sửa Nhà trọ'
+  }
+
+  const renderOnClickHandler = (action) => {
+    if (action === 'excel') return handleFileImport
+    if (action === 'enable') return handleCreateRoomAuto
+    return onSaveMotel
   }
 
   return (
@@ -753,6 +915,8 @@ const ModelCreateHome = ({ username, MotelId }) => {
                         id="count_floor"
                         name="count_floor"
                         className="form-select form-control"
+                        value={dataCreateAuto.typeMotelCreate}
+                        onChange={(e) => setDataCreateAuto({ ...dataCreateAuto, typeMotelCreate: e.target.value })}
                         required>
                         <option value="1">Tầng trệt (không có tầng)</option>
                         <option value="2">2 tầng (Gồm 1 trệt + 1 tầng)</option>
@@ -782,6 +946,8 @@ const ModelCreateHome = ({ username, MotelId }) => {
                         id="room_total"
                         placeholder="Nhập số phòng"
                         required
+                        value={dataCreateAuto.totalRoomCreate}
+                        onChange={(e) => setDataCreateAuto({ ...dataCreateAuto, totalRoomCreate: e.target.value })}
                       />
                       <label htmlFor="room_total">
                         Số{' '}
@@ -1281,15 +1447,13 @@ const ModelCreateHome = ({ username, MotelId }) => {
             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
               Đóng
             </button>
-            {selectedOption === 'excel' ? (
-              <button type="button" id="submit-block" className="btn btn-primary" onClick={handleFileImport}>
-                Thêm nhà trọ bằng file
-              </button>
-            ) : (
-              <button type="button" id="submit-block" className="btn btn-primary" onClick={onSaveMotel}>
-                {MotelId === 'Create' ? <>Thêm nhà trọ</> : <>Chỉnh sửa Nhà trọ</>}
-              </button>
-            )}
+            <button
+              type="button"
+              id="submit-block"
+              className="btn btn-primary"
+              onClick={renderOnClickHandler(selectedOption)}>
+              {renderButtonText(selectedOption)}
+            </button>
           </div>
         </div>
       </div>

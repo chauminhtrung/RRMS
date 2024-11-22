@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useRef, useState } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
 import { ReactTabulator } from 'react-tabulator'
@@ -9,6 +7,7 @@ import { useEffect } from 'react'
 import { createRoom, getRoomByMotelId } from '~/apis/roomAPI'
 import { useParams } from 'react-router-dom'
 import * as Papa from 'papaparse'
+import { toast } from 'react-toastify'
 
 const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   const fileInputRef = useRef(null) // Tạo reference cho input file
@@ -24,11 +23,32 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
     fileInputRef.current.click()
   }
 
+  const StatusFormatter = (cell) => {
+    const financeValue = cell.getValue()
+    // Nếu giá trị tài chính là "Đang trống", hiển thị badge với màu cam
+    if (financeValue) {
+      return `<span class="badge mt-2 " style="background-color: #7dc242; white-space: break-spaces;">Đang ở</span>`
+    }
+    if (!financeValue) {
+      return `<span class="badge mt-2 " style="background-color: #ED6004; white-space: break-spaces;">Đang trống</span>`
+    }
+
+    // Nếu không phải "Đang trống", hiển thị giá trị tài chính
+    return financeValue
+  }
+
   const columns = [
     { title: 'STT', field: 'STT', hozAlign: 'center', minWidth: 40, editor: 'input' },
     { title: 'Tên phòng', field: 'name', hozAlign: 'center', minWidth: 40, editor: 'input' },
     { title: 'Ưu tiên', field: 'prioritize', hozAlign: 'center', minWidth: 40, editor: 'input' },
-    { title: 'Trạng thái', field: 'status', hozAlign: 'center', minWidth: 40, editor: 'input' }
+    {
+      title: 'Trạng thái',
+      field: 'status',
+      hozAlign: 'center',
+      minWidth: 40,
+      editor: 'input',
+      formatter: StatusFormatter
+    }
   ]
 
   const columns1 = [
@@ -97,24 +117,42 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
 
   const rows = [
     {
-      group: 'Nhóm',
-      name: 'Tên',
-      price: 0,
-      prioritize: 'Ưu tiên',
-      area: 0,
-      deposit: 0,
-      debt: 0,
-      countTenant: 0,
-      invoiceDate: 0,
-      paymentCircle: 0,
-      moveInDate: '1970-01-01',
-      contractDuration: '1970-01-01',
-      status: false,
-      finance: 'Thanh toán'
+      Nhóm: '',
+      Tên: '',
+      'Giá thuê': '',
+      'Ưu tiên': '',
+      'Diện tích': '',
+      'Mức giá tiền cọc': '',
+      'Số tiền cọc đã thu': '',
+      'Số lượng thành viên': '',
+      'Chu kỳ đóng tiền': '',
+      'Ngày vào ở': '',
+      'Ngày hợp đồng': '',
+      'Ngày kết thúc hợp đồng': '',
+      'Trạng thái': '',
+      'Tài chính': ''
     }
   ]
+
   const downloadExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(rows)
+    worksheet['!cols'] = [
+      { wch: 10 },
+      { wch: 20 },
+      { wch: 15 },
+      { wch: 10 },
+      { wch: 12 },
+      { wch: 18 },
+      { wch: 18 },
+      { wch: 20 },
+      { wch: 15 },
+      { wch: 12 },
+      { wch: 15 },
+      { wch: 20 },
+      { wch: 12 },
+      { wch: 12 }
+    ]
+
     const workbook = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(workbook, worksheet, 'KhachThue')
     XLSX.writeFile(workbook, 'DanhSachPhong.xlsx')
@@ -238,19 +276,30 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
       } else if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls')) {
         handleFileExcelUpload(file)
       }
+      toast.success('Đã upload thành công!')
       event.target.value = null
     }
   }
 
-  const handleFileImport = () => {
-    jsonData.map((item, index) => {
-      try {
-        createRoom(item).then((res) => {})
-      } catch (error) {
-        console.log('Lỗi tại dòng', index + 2)
-      }
+  const handleFileImport = async () => {
+    try {
+      const promises = jsonData.map((item) => createRoom(item))
+      await Promise.all(promises)
+      toast.success('Đã nhập thành công!')
+      refrestRooms()
+    } catch (error) {
+      console.log('Có lỗi xảy ra:', error)
+    }
+  }
+
+  const refrestRooms = () => {
+    getRoomByMotelId(motelId).then((res) => {
+      const dataWithSTT = res.map((room, index) => ({
+        STT: index + 1,
+        ...room
+      }))
+      setRooms(dataWithSTT)
     })
-    refrestRooms()
   }
 
   useEffect(() => {
@@ -268,16 +317,6 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
       setRooms(dataWithSTT)
     })
   }, [motelId])
-
-  const refrestRooms = () => {
-    getRoomByMotelId(motelId).then((res) => {
-      const dataWithSTT = res.map((room, index) => ({
-        STT: index + 1,
-        ...room
-      }))
-      setRooms(dataWithSTT)
-    })
-  }
 
   const options = {
     height: '500px',
@@ -297,9 +336,6 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
       headerSort: false
     }
   }
-  useEffect(() => {
-    setIsAdmin(true)
-  }, [])
 
   return (
     <div style={{ backgroundColor: 'rgb(228, 238, 245)' }}>
@@ -427,7 +463,7 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                 placeholder={<h1></h1>} // Sử dụng placeholder tùy chỉnh
               />
               {/* Thêm div cho hình ảnh và chữ nếu không có dữ liệu */}
-              {rooms.length === 0 && (
+              {rooms?.length === 0 && (
                 <div className="custom-placeholder">
                   <img
                     src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Fempty-box-4085812-3385481.webp?alt=media&token=eaf37b59-00e3-4d16-8463-5441f54fb60e"
@@ -449,7 +485,7 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                 placeholder={<h1></h1>} // Sử dụng placeholder tùy chỉnh
               />
               {/* Thêm div cho hình ảnh và chữ nếu không có dữ liệu */}
-              {rooms.length === 0 && (
+              {rooms?.length === 0 && (
                 <div className="custom-placeholder">
                   <img
                     src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Fempty-box-4085812-3385481.webp?alt=media&token=eaf37b59-00e3-4d16-8463-5441f54fb60e"
