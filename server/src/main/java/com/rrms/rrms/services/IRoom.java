@@ -35,4 +35,6 @@ public interface IRoom {
     List<RoomResponse2> getRoomsByMotelId(UUID motelId); // Thêm phương thức mới
 
     List<RoomResponse2> getRoomsByMotelIdNullContract(UUID motelId); // Thêm phương thức mới
+
+    List<RoomResponse2> getRoomsByMotelIdContract(UUID motelId);
 }

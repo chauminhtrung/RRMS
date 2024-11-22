@@ -17,7 +17,9 @@ import {
   Switch,
   Divider,
   styled,
-  IconButton
+  IconButton,
+  CardContent,
+  CircularProgress
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
@@ -30,6 +32,9 @@ import { v4 } from 'uuid'
 import { toast } from 'react-toastify'
 import { getByIdTenant, updateTenant } from '~/apis/tenantAPI'
 import { env } from '~/configs/environment'
+import { getRoomById } from '~/apis/apiClient'
+import { getRoomByMotelIdWContract, getRoomByMotelIdYContract } from '~/apis/roomAPI'
+import { useParams } from 'react-router-dom'
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -59,6 +64,51 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
   const [backProgress, setBackProgress] = useState(0) // Tiến trình ảnh mặt sau
   const [phoneError, setPhoneError] = useState('')
   const [cccdError, setCccdError] = useState('')
+
+  const [rooms, setRooms] = useState(null)
+  const [selectedRoom, setSelectedRoom] = useState(null)
+  const [loading, setLoading] = useState(false)
+
+  const { motelId } = useParams()
+
+  useEffect(() => {
+    const fetchRooms = async () => {
+      if (!motelId) return // Đảm bảo có motelId trước khi thực hiện gọi API
+      setLoading(true)
+      console.log('aa')
+
+      try {
+        const dataRoom = await getRoomByMotelIdYContract(motelId)
+        setRooms(dataRoom || [])
+        console.log(dataRoom)
+      } catch (error) {
+        console.error('Error fetching rooms:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchRooms()
+  }, [motelId, getRoomByMotelIdYContract])
+
+  const handleRoomClick = async (roomId) => {
+    if (!roomId) {
+      setSelectedRoom(null) // Không có ID phòng thì bỏ chọn
+      return
+    }
+
+    setLoading(true)
+    try {
+      const dataRoom = await getRoomById(roomId)
+
+      setSelectedRoom(dataRoom || null) // Lưu trữ thông tin phòng đã chọn
+      console.log('Room selected:', roomId) // Hiển thị ID của phòng đã chọn
+    } catch (error) {
+      console.error('Error fetching room details:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleChangeFront = (e) => {
     if (e.target.files[0]) {
@@ -382,7 +432,7 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          width: 1000,
+          width: 1220,
           bgcolor: 'background.paper',
           boxShadow: 24,
           p: 4,
@@ -403,26 +453,254 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
           Thêm thông tin khách thuê cho phòng
         </Typography>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={6} sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-            <Box sx={{ display: 'flex' }}>
-              <Box
-                sx={{
-                  width: '5px',
-                  height: '40px',
-                  bgcolor: 'primary.main',
-                  border: '1px solid #0056b3',
-                  marginRight: 1,
-                  mt: 0.5
-                }}
-              />
-              <Box>
-                <Typography variant="h6">Danh sách phòng</Typography>
-                <Typography variant="body2">Danh sách phòng để thêm khách thuê</Typography>
-              </Box>
-            </Box>
-            <Typography variant="body2" sx={{ mt: 2 }}>
-              Không có phòng nào để thêm khách thuê
-            </Typography>
+          <Grid item xs={12} sm={6} style={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+            <form className="needs-validation" noValidate id="add-contract-form">
+              <div className="row">
+                <div>
+                  <div>
+                    <div className="title-item-small">
+                      <b>Danh sách phòng</b>
+                      <i className="des">Danh sách phòng để thêm khách thuê</i>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="room-list mt-3">
+                      {rooms ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                          {/* Lặp qua các phòng và nhóm chúng thành từng cặp */}
+                          {rooms.map((room, index) => {
+                            // Mỗi nhóm sẽ có 2 phòng, chúng ta chia danh sách phòng thành các cặp
+                            if (index % 2 === 0) {
+                              return (
+                                <Grid container spacing={2} key={index}>
+                                  <Grid item xs={12} sm={6}>
+                                    <div
+                                      style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        border: '1px solid #ddd',
+                                        borderRadius: '8px',
+                                        width: '280px',
+                                        height: '130px',
+                                        padding: '10px',
+                                        cursor: 'pointer'
+                                      }}
+                                      onClick={() => handleRoomClick(room.roomId)} // Click vào phòng
+                                    >
+                                      <div
+                                        className="d-flex room-item-inner align-items-center"
+                                        style={{ display: 'flex', alignItems: 'center' }}>
+                                        <div className="flex-grow-0 icon-room" style={{ paddingRight: '10px' }}>
+                                          {selectedRoom && selectedRoom.roomId === room.roomId ? (
+                                            <svg
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              width="24"
+                                              height="24"
+                                              viewBox="0 0 24 24"
+                                              stroke="#00BFFF"
+                                              fill="none"
+                                              strokeWidth="2"
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              className="feather feather-check">
+                                              <polyline points="20 6 9 17 4 12"></polyline>
+                                            </svg>
+                                          ) : (
+                                            <img
+                                              width="30px"
+                                              src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Froom.png?alt=media&token=9f1a69c1-ce2e-4586-ba90-94db53443d49"
+                                              alt=""
+                                            />
+                                          )}
+                                        </div>
+                                        <div
+                                          className="flex-grow-1 room-item-details"
+                                          style={{ display: 'flex', flexDirection: 'column' }}>
+                                          <div className="room-name" style={{ marginBottom: '8px' }}>
+                                            <b>{room.name || 'Không có'}</b>
+                                            <br />
+                                            <span
+                                              style={{
+                                                backgroundColor: '#ED6004',
+                                                display: 'inline-block',
+                                                fontSize: '12px',
+                                                borderRadius: '5px',
+                                                padding: '0 7px',
+                                                color: '#fff',
+                                                marginLeft: '8px'
+                                              }}>
+                                              Đang trống
+                                            </span>
+                                          </div>
+                                          <div
+                                            className="d-flex justify-content-between align-items-center mt-1"
+                                            style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <div
+                                              className="d-flex align-items-center"
+                                              style={{ display: 'flex', alignItems: 'center' }}>
+                                              <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="18"
+                                                height="18"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                className="feather feather-dollar-sign">
+                                                <line x1="12" y1="1" x2="12" y2="23"></line>
+                                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                              </svg>{' '}
+                                              {room.price.toLocaleString()}₫
+                                            </div>
+                                            <div
+                                              className="d-flex align-items-center"
+                                              style={{ display: 'flex', alignItems: 'center' }}>
+                                              <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="18"
+                                                height="18"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                className="feather feather-user">
+                                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="12" cy="7" r="4"></circle>
+                                              </svg>{' '}
+                                              0/1 người
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </Grid>
+                                  {/* Kiểm tra phòng tiếp theo nếu có */}
+                                  {rooms[index + 1] && (
+                                    <Grid item xs={12} sm={6}>
+                                      <div
+                                        style={{
+                                          display: 'flex',
+                                          flexDirection: 'column',
+                                          border: '1px solid #ddd',
+                                          borderRadius: '8px',
+                                          width: '280px',
+                                          height: '130px',
+                                          padding: '10px',
+                                          cursor: 'pointer'
+                                        }}
+                                        onClick={() => handleRoomClick(rooms[index + 1].roomId)} // Click vào phòng
+                                      >
+                                        {/* Tương tự như phòng trước */}
+                                        <div
+                                          className="d-flex room-item-inner align-items-center"
+                                          style={{ display: 'flex', alignItems: 'center' }}>
+                                          <div className="flex-grow-0 icon-room" style={{ paddingRight: '10px' }}>
+                                            {selectedRoom && selectedRoom.roomId === rooms[index + 1].roomId ? (
+                                              <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="34"
+                                                height="34"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="#00BFFF"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                className="feather feather-check">
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                              </svg>
+                                            ) : (
+                                              <img
+                                                width="30px"
+                                                src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Froom.png?alt=media&token=9f1a69c1-ce2e-4586-ba90-94db53443d49"
+                                                alt=""
+                                              />
+                                            )}
+                                          </div>
+                                          <div
+                                            className="flex-grow-1 room-item-details"
+                                            style={{ display: 'flex', flexDirection: 'column' }}>
+                                            <div className="room-name" style={{ marginBottom: '8px' }}>
+                                              <b>{rooms[index + 1].name || 'Không có'}</b>
+                                              <br />
+                                              <span
+                                                style={{
+                                                  backgroundColor: '#ED6004',
+                                                  display: 'inline-block',
+                                                  fontSize: '12px',
+                                                  borderRadius: '5px',
+                                                  padding: '0 7px',
+                                                  color: '#fff',
+                                                  marginLeft: '8px'
+                                                }}>
+                                                Đang trống
+                                              </span>
+                                            </div>
+                                            <div
+                                              className="d-flex justify-content-between align-items-center mt-1"
+                                              style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                              <div
+                                                className="d-flex align-items-center"
+                                                style={{ display: 'flex', alignItems: 'center' }}>
+                                                <svg
+                                                  xmlns="http://www.w3.org/2000/svg"
+                                                  width="18"
+                                                  height="18"
+                                                  viewBox="0 0 24 24"
+                                                  fill="none"
+                                                  stroke="currentColor"
+                                                  strokeWidth="2"
+                                                  strokeLinecap="round"
+                                                  strokeLinejoin="round"
+                                                  className="feather feather-dollar-sign">
+                                                  <line x1="12" y1="1" x2="12" y2="23"></line>
+                                                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                                </svg>{' '}
+                                                {rooms[index + 1].price.toLocaleString()}₫
+                                              </div>
+                                              <div
+                                                className="d-flex align-items-center"
+                                                style={{ display: 'flex', alignItems: 'center' }}>
+                                                <svg
+                                                  xmlns="http://www.w3.org/2000/svg"
+                                                  width="18"
+                                                  height="18"
+                                                  viewBox="0 0 24 24"
+                                                  fill="none"
+                                                  stroke="currentColor"
+                                                  strokeWidth="2"
+                                                  strokeLinecap="round"
+                                                  strokeLinejoin="round"
+                                                  className="feather feather-user">
+                                                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                                  <circle cx="12" cy="7" r="4"></circle>
+                                                </svg>{' '}
+                                                0/1 người
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </Grid>
+                                  )}
+                                </Grid>
+                              )
+                            }
+                            return null
+                          })}
+                        </div>
+                      ) : (
+                        <div>Không có phòng nào</div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
           </Grid>
 
           <Grid item xs={12} sm={6}>

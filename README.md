@@ -60,8 +60,8 @@ Hệ thống được xây dựng dựa trên các công nghệ hiện đại v�
   <a href="https://vercel.com/" target="_blank" rel="noreferrer">
     <img src="https://assets.vercel.com/image/upload/front/favicon/vercel/180x180.png" alt="Vercel" width="40" height="40"/>
   </a>
-  <a href="https://render.com/" target="_blank" rel="noreferrer">
-    <img src="https://global.discourse-cdn.com/business6/uploads/render/original/2X/1/11352202c8503f736bea5efb59684f678d7c860c.svg" alt="Render" width="40" height="40"/>
+  <a href="https://ngrok.com/" target="_blank" rel="noreferrer">
+    <img src="https://logos.prod-v1.vertice.one/94adae15-b8bb-50cf-92e8-2307ac1b267f.svg" alt="Render" width="40" height="40"/>
   </a>
   <a href="https://code.visualstudio.com/" target="_blank" rel="noreferrer">
     <img src="https://www.vectorlogo.zone/logos/visualstudio_code/visualstudio_code-icon.svg" alt="VS Code" width="40" height="40"/>
@@ -69,7 +69,7 @@ Hệ thống được xây dựng dựa trên các công nghệ hiện đại v�
   <a href="https://www.jetbrains.com/idea/" target="_blank" rel="noreferrer">
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/IntelliJ_IDEA_Icon.svg/768px-IntelliJ_IDEA_Icon.svg.png" alt="IntelliJ IDEA" width="40" height="40"/>
   </a>
-    <a href="https://www.jetbrains.com/idea/" target="_blank" rel="noreferrer">
+    <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSocket" target="_blank" rel="noreferrer">
     <img src="https://cdn.worldvectorlogo.com/logos/websocket.svg" alt="IntelliJ IDEA" width="40" height="40"/>
   </a>
     <a href="https://www.elastic.co/" target="_blank" rel="noreferrer">
@@ -89,12 +89,12 @@ Hệ thống được xây dựng dựa trên các công nghệ hiện đại v�
 
 Chúng tôi xin gửi lời cảm ơn đến những cá nhân đã tham gia phát triển hệ thống:
 
-- [Trí Dũng](https://github.com/tridung778) -
-- [Cao Trí](https://github.com/trivu2004) -
-- [Minh Trung](https://github.com/chauminhtrung) -
-- [Kiến Quốc](https://github.com/KienQuocVn) -
-- [Quốc Thuận](https://github.com/thuanquoctr) -
-- [Tấn Tài](https://github.com/taitan0118) -
+- [Trí Dũng](https://github.com/tridung778)
+- [Cao Trí](https://github.com/trivu2004)
+- [Minh Trung](https://github.com/chauminhtrung)
+- [Kiến Quốc](https://github.com/KienQuocVn)
+- [Quốc Thuận](https://github.com/thuanquoctr)
+- [Tấn Tài](https://github.com/taitan0118)
 
 ---
 

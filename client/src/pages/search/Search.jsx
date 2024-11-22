@@ -30,6 +30,7 @@ const Search = ({ setIsAdmin }) => {
 
   useEffect(() => {
     setIsAdmin(false)
+    loadDataSearch()
   }, [])
 
   useEffect(() => {
@@ -46,7 +47,7 @@ const Search = ({ setIsAdmin }) => {
 
   // /name?name=${searchValue}
   // Hàm để tải dữ liệu
-  const loadDataSearch = async (searchValue, pageNumber = 1, pageSize = 6) => {
+  const loadDataSearch = async (searchValue) => {
     console.log(searchKeyWord)
 
     if (searchKeyWord) {
@@ -90,7 +91,7 @@ const Search = ({ setIsAdmin }) => {
   }
   useEffect(() => {
     console.log('Searching for:', searchValue) // Ghi log giá trị tìm kiếm
-    loadDataSearch(searchValue, 0, 6)
+    loadDataSearch(searchValue)
   }, [])
   if (!provinces) {
     return <LoadingPage />
