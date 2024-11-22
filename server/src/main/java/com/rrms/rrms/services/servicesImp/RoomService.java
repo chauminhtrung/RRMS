@@ -238,6 +238,18 @@ public class RoomService implements IRoom {
         return rooms.stream().map(this::convertToResponse).collect(Collectors.toList());
     }
 
+    @Override
+    public List<RoomResponse2> getRoomsByMotelIdContract(UUID motelId) {
+        Motel motel =
+                motelRepository.findById(motelId).orElseThrow(() -> new IllegalArgumentException("Motel not found"));
+
+        // Lấy danh sách phòng có hợp đồng
+        List<Room> rooms = roomRepository.findRoomsWithContractsByMotelId(motelId);
+
+        // Chuyển đổi danh sách Room sang RoomResponse2
+        return rooms.stream().map(this::convertToResponse).collect(Collectors.toList());
+    }
+
     // Chuyển đổi từ Room sang RoomResponse
 
     private RoomResponse2 convertToResponse(Room room) {

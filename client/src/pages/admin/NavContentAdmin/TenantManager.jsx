@@ -47,6 +47,7 @@ const TenantManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
 
   const [anchorEl, setAnchorEl] = useState(null)
   const navigate = useNavigate()
+
   const fillterData = async (caseee) => {
     setcheckbox(Number(caseee))
     switch (caseee) {
