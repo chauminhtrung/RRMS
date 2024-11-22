@@ -8,6 +8,5 @@ import org.springframework.test.context.TestPropertySource;
 @SpringBootTest
 class RrmsApplicationTests {
     @Test
-    void contextLoads() {
-    }
+    void contextLoads() {}
 }
