@@ -35,7 +35,8 @@ import FaceMatch from './pages/AI/FaceMatch'
 import InvoiceManager from './pages/admin/NavContentAdmin/InvoiceManager/InvoiceManager'
 import ServiceManager from './pages/admin/NavContentAdmin/ServiceManager/ServiceManager'
 import AssetManager from './pages/admin/NavContentAdmin/AssetManager'
-import ContractManager from './pages/admin/NavContentAdmin/ContractManager'
+import ContractManager from './pages/admin/NavContentAdmin/ContractManage/ContractManager'
+import ContractPreview from './pages/admin/NavContentAdmin/ContractManage/ContractPreview'
 import TenantManager from './pages/admin/NavContentAdmin/TenantManager'
 import IncomeSummary from './pages/admin/NavContentAdmin/IncomeSummary/IncomeSummary'
 import Zalo_history from './pages/admin/NavContentAdmin/Zalo_history'
@@ -173,7 +174,6 @@ function App() {
             element={<AdminManageBoker setIsAdmin={setIsAdmin} motels={motels} setmotels={setmotels} />}
           />
           <Route path="/adminManage" element={<AdminManage setIsAdmin={setIsAdmin} />} />
-
           <Route
             path="/bao-cao"
             element={
@@ -211,20 +211,16 @@ function App() {
               />
             }
           />
-
           <Route path="/AppPromo" element={<AppPromo />} setIsAdmin={setIsAdmin} />
           <Route
             path="/residenceForm/:tenantId"
             element={<ResidenceForm setIsAdmin={setIsAdmin} isNavAdmin={isNavAdmin} />}
           />
-
           <Route path="/adminManage/*" element={<AdminManage setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminStatis" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
           <Route path="/bao-cao" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
-
           <Route path="/roomManagement" element={<RoomManagement setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminStatis" element={<AdminStatis setIsAdmin={setIsAdmin} />} />
-
           <Route path="/AdminManagerBoard" element={<AdminManagerBoard setIsAdmin={setIsAdmin} />} />
           <Route path="/AdminManagerGroup" element={<AdminManagerGroup setIsAdmin={setIsAdmin} />} />
           <Route path="/dang-tin" element={<PostRooms setIsAdmin={setIsAdmin} />} />
@@ -241,9 +237,7 @@ function App() {
             path="/cai-dat/:motelId"
             element={<ManagerSettings setIsAdmin={setIsAdmin} motels={motels} setmotels={setmotels} />}
           />
-
           {/* nav 2 cac tab o ben admin */}
-
           <Route
             path="/quanlytro/:motelId/quan-ly-hoa-don"
             element={
@@ -352,9 +346,7 @@ function App() {
               />
             }
           />
-
           {/* detaiROoom */}
-
           <Route
             path="/quanlytro/:motelId/Chi-tiet-phong/:roomId"
             element={
@@ -366,6 +358,11 @@ function App() {
                 setIsNavAdmin={setIsNavAdmin}
               />
             }
+          />
+          {/* preview contract  */}
+          <Route
+            path="/quanlytro/:motelId/Contract-Preview/:contractId"
+            element={<ContractPreview setIsAdmin={setIsAdmin} />}
           />
         </Routes>
         {!isAdmin ? <Footer /> : <></>}
