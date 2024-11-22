@@ -203,7 +203,7 @@ const HomeWData = ({ Motel }) => {
       quantity: 1
     }
     const response = await insertRoomDevice(data)
-    if ((response.code = 200)) {
+    if (response.code == 200) {
       Swal.fire({
         icon: 'success',
         title: 'Thành công',
@@ -1485,6 +1485,7 @@ const HomeWData = ({ Motel }) => {
                       // Gắn ref vào tag này
                       className={`tabulator-menu-item ${item.textClass || ''}`}
                       onClick={() => {
+                        handleItemClick(item.label)
                         if (item.icon === 'user') {
                           toggleModal()
                           setShowMenu(null)
