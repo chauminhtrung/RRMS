@@ -6,11 +6,11 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Motel;
 import com.rrms.rrms.models.Room;
-import org.springframework.data.repository.query.Param;
 
 public interface RoomRepository extends JpaRepository<Room, UUID> {
 
@@ -39,7 +39,4 @@ public interface RoomRepository extends JpaRepository<Room, UUID> {
 
     @Query("SELECT r FROM Room r JOIN r.contracts c WHERE r.motel.motelId = :motelId AND c IS NOT NULL")
     List<Room> findRoomsWithContractsByMotelId(@Param("motelId") UUID motelId);
-
-
-
 }

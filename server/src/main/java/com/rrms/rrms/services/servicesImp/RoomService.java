@@ -298,7 +298,6 @@ public class RoomService implements IRoom {
         return response;
     }
 
-
     // Chuyển đổi từ RoomRequest sang Room
     private Room convertToEntity(RoomRequest2 roomRequest) {
         Room room = new Room();
@@ -336,6 +335,4 @@ public class RoomService implements IRoom {
         if (roomRequest.getFinance() != null) room.setFinance(roomRequest.getFinance());
         if (roomRequest.getDescription() != null) room.setDescription(roomRequest.getDescription());
     }
-
-
 }
