@@ -188,7 +188,6 @@ const HomeWData = ({ Motel }) => {
   }
   const cancelRoomDevice = async (room, motel_device_id) => {
     console.log(motel_device_id)
-    console.log(roomId)
   }
 
   // Tạo phòng
