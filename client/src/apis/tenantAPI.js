@@ -18,20 +18,17 @@ export const updateTenant = async (id, tenant) => {
     console.error('No token found, unable to authenticate')
     throw new Error('Unauthorized')
   }
-
-  console.log('Updating tenant with data:', tenant) // Kiểm tra dữ liệu tenant trước khi gửi
-
   try {
-    const response = await axios.put(`${env.API_URL}/tenant/${id}`, {
+    const response = await axios.put(`${env.API_URL}/tenant/${id}`, tenant, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
-        'ngrok-skip-browser-warning': '69420'
+        'ngrok-skip-browser-warning': '69420' // Chỉ cần nếu dùng ngrok
       }
     })
     return response.data
   } catch (error) {
-    console.error('Error updating tenant:', error)
+    console.error('Error updating tenant:', error.response?.data || error.message)
     throw error
   }
 }

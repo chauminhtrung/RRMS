@@ -35,8 +35,7 @@ export const getRoomById = async (id) => {
   return response.data
 }
 
-
-export const updateRoom= async (id, data) => {
+export const updateRoom = async (id, data) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   const response = await axios.put(`${env.API_URL}/room/${id}`, data, {
     headers: {
@@ -118,11 +117,20 @@ export const DeleteRoomByid = async (id) => {
   return response.data
 }
 
-
-
 export const getRoomByMotelIdWContract = async (id) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   const response = await axios.get(`${env.API_URL}/room/motel/W-Contract/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'ngrok-skip-browser-warning': '69420'
+    }
+  })
+  return response.data
+}
+
+export const getRoomByMotelIdYContract = async (id) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  const response = await axios.get(`${env.API_URL}/room/motel/Y-Contract/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
       'ngrok-skip-browser-warning': '69420'
