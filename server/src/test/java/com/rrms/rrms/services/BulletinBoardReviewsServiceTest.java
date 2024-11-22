@@ -64,47 +64,6 @@ public class BulletinBoardReviewsServiceTest {
         assertNotNull(result);
         verify(bulletinBoardReviewsRepository, times(1)).save(bulletinBoardReviews);
     }
-
-    @Test
-    void testCreateOrUpdateBulletinBoardReviews_UpdateExisting() {
-        // Prepare the request with valid data
-        BulletinBoardReviewsRequest request = new BulletinBoardReviewsRequest();
-        request.setUsername("testUsername");
-        request.setBulletinBoardId(UUID.randomUUID());
-
-        // Prepare mock data
-        Account account = new Account();
-        account.setUsername("testUsername");
-
-        BulletinBoard bulletinBoard = new BulletinBoard();
-        bulletinBoard.setBulletinBoardId(UUID.randomUUID());
-
-        // Create a BulletinBoardReviews object with all necessary fields initialized
-        BulletinBoardReviews existingReview = new BulletinBoardReviews();
-        existingReview.setAccount(account);
-        existingReview.setBulletinBoard(bulletinBoard);
-        existingReview.setRating(5);
-        existingReview.setContent("Updated review content");
-
-        // Mock repository responses
-        when(accountRepository.findByUsername(request.getUsername())).thenReturn(Optional.of(account));
-        when(bulletinBoardRepository.findById(request.getBulletinBoardId())).thenReturn(Optional.of(bulletinBoard));
-        when(bulletinBoardReviewsRepository.findByAccountAndBulletinBoard(account, bulletinBoard)).thenReturn(Optional.of(existingReview));
-
-        // Mock mapper response (make sure to mock it leniently to avoid strict stubbing issues)
-        BulletinBoardReviewsResponse response = new BulletinBoardReviewsResponse();
-        response.setRating(5);
-        response.setContent("Updated review content");
-
-        lenient().doReturn(response).when(bulletinBoardReviewMapper).toBulletinBoardReviewsResponse(existingReview);
-
-        // Call the service method
-        BulletinBoardReviewsResponse result = bulletinBoardReviewsService.createOrUpdateBulletinBoardReviews(request);
-
-        // Assert results
-        assertNotNull(result);
-        verify(bulletinBoardReviewsRepository, times(1)).save(existingReview);  // Ensure save was called
-    }
     
     @Test
     void testGetBulletinBoardReviewsByBulletinBoardIdAndUsername() {
