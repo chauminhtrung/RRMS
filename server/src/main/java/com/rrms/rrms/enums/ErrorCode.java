@@ -31,6 +31,7 @@ public enum ErrorCode {
     ACCOUNT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST.value(), "Account elready exists", HttpStatus.BAD_REQUEST),
     ROLE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Role not found", HttpStatus.NOT_FOUND),
     ROLE_NOT_PROVIDED(HttpStatus.NOT_FOUND.value(), "ROLE NOT PROVIDED", HttpStatus.NOT_FOUND),
+    INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST.value(), "Invalid refresh token", HttpStatus.BAD_REQUEST),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
