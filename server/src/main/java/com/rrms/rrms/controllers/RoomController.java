@@ -81,5 +81,4 @@ public class RoomController {
         List<RoomResponse2> rooms = roomService.getRoomsByMotelIdContract(motelId);
         return ResponseEntity.ok(rooms);
     }
-
 }

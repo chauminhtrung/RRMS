@@ -45,7 +45,7 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
     if (username) {
       try {
         const response = await getTRCByusername(username)
-        console.log(response.data.result.length)
+        console.log(response)
 
         if (response && response.data.result.length > 0) {
           // Cập nhật formData với dữ liệu từ API
@@ -374,8 +374,12 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
                                       allowInput: true,
                                       dateFormat: 'd/m/Y'
                                     }}
-                                    value={formData.birth}
-                                    onChange={(date) => handleDateChange('birth', date)}
+                                    value={new Date(formData.birth)}
+                                    onChange={(date) => {
+                                      if (date && date.length > 0) {
+                                        handleDateChange('birth', date) // Cập nhật dữ liệu
+                                      }
+                                    }}
                                   />
                                   <label htmlFor="setting_info_birthday">Nhập ngày/tháng/năm sinh</label>
                                 </div>
@@ -492,7 +496,7 @@ const ManagerSettings = ({ setIsAdmin, motels, setmotels }) => {
                                       allowInput: true,
                                       dateFormat: 'd/m/Y'
                                     }}
-                                    value={formData.dateofissue}
+                                    value={new Date(formData.dateofissue)}
                                     onChange={(date) => handleDateChange('dateofissue', date)}
                                   />
                                   <label htmlFor="setting_info_identity_date">Nhập ngày cấp</label>

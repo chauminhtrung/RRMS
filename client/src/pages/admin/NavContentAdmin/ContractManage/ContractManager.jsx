@@ -17,7 +17,7 @@ import {
   createRoomService
 } from '~/apis/roomAPI'
 import { getMotelById } from '~/apis/motelAPI'
-import { getAllMotelDevices } from '~/apis/deviceAPT'
+import { getAllMotelDevices, getAllDeviceByRomId, deleteRoomDevice, insertRoomDevice } from '~/apis/deviceAPT'
 import {
   getContractTemplatesByMotelId,
   createTenant,
@@ -84,6 +84,7 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
   const [motelDevices, setMotelSDevices] = useState([])
   const [motel, setMotel] = useState({})
   const [roomServices, setRoomServices] = useState([])
+  const [roomDevices, setRoomDevices] = useState([])
   const [selectedRoomId, setSelectedRoomId] = useState(null)
   const [contractTemplates, setcontractTemplates] = useState([])
   const handleClose = () => setShow(false)
@@ -284,6 +285,29 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     }
   }
 
+  //ham lay tai san phong
+  const fetchDataDeviceRooms = async (roomId) => {
+    try {
+      const roomDevicesResponse = await getAllDeviceByRomId(roomId) // Lấy danh sách dịch vụ mà phòng đang sử dụng
+      const updatedDevices = motelDevices.map((device) => {
+        // Tìm dịch vụ tương ứng trong roomServicesResponse
+        const roomDevice = roomDevicesResponse.result.find(
+          (roomDevice) => roomDevice.motelDevice.motel_device_id === device.motel_device_id
+        )
+        return {
+          ...device,
+          isSelected: !!roomDevice, // Đánh dấu checked nếu dịch vụ có trong roomServicesResponse
+          quantity: roomDevice ? roomDevice.quantity : 0,
+          roomId: roomId,
+          roomDeviceId: roomDevice ? roomDevice.roomDeviceId : null
+        }
+      })
+      setRoomDevices(updatedDevices)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const handleRoomClick = async (roomId) => {
     setSelectedRoomId(roomId === selectedRoomId ? null : roomId) // Nếu phòng đã chọn thì bỏ chọn, nếu không thì chọn phòng mới
     if (roomId === selectedRoomId) {
@@ -295,6 +319,7 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
         const dataRoom = await getRoomById(roomId)
         setRoom(dataRoom)
         fetchDataServiceRooms(roomId)
+        fetchDataDeviceRooms(roomId)
         setContract((prevContract) => ({
           ...prevContract,
           roomId: dataRoom.roomId, // Cập nhật dữ liệu phòng vào contract,
@@ -373,7 +398,6 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
   }
 
   // Hàm để xử lý khi người dùng nhấn nút "Áp dụng dịch vụ"
-  // Hàm để xử lý khi người dùng nhấn nút "Áp dụng dịch vụ"
   const handleApplyServices = async () => {
     try {
       // Lọc các dịch vụ không được chọn (để xóa) và các dịch vụ được chọn (để thêm/cập nhật)
@@ -428,6 +452,62 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     }
   }
 
+  // Hàm để xử lý khi người dùng nhấn nút "Áp dụng device"
+  const handleApplyDevice = async () => {
+    try {
+      const DevicesToDelete = roomDevices.filter((device) => !device.isSelected && device.roomDeviceId)
+      const DevicesToUpdateOrAdd = roomDevices.filter((device) => device.isSelected)
+      // Xử lý xóa các dịch vụ không được chọn
+      const deletePromises = DevicesToDelete.map((device) => deleteRoomDevice(device.roomId, device.motel_device_id))
+      console.log(DevicesToDelete)
+      console.log(DevicesToUpdateOrAdd)
+      // Xử lý thêm hoặc cập nhật các dịch vụ được chọn
+      const updateOrAddPromises = DevicesToUpdateOrAdd.map((device) => {
+        const DeviceUpdateData = {
+          roomDeviceId: device.roomDeviceId || null,
+          room: {
+            roomId: device.roomId
+          }, // phòng hiện tại
+          motelDevice: {
+            motel_device_id: device.motel_device_id
+          },
+          quantity: device.quantity || 1 // Giá trị mặc định là 1 nếu quantity chưa có
+        }
+        console.log(DeviceUpdateData)
+
+        return device.roomDeviceId ? console.log() : insertRoomDevice(DeviceUpdateData) // Thêm mới nếu chưa tồn tại
+      })
+
+      // Chờ tất cả các yêu cầu API hoàn tất
+      await Promise.all([...deletePromises, ...updateOrAddPromises])
+
+      // Hiển thị thông báo thành công
+      Swal.fire({
+        icon: 'success',
+        title: 'Thông báo',
+        text: 'Tất cả Device phòng đã được cập nhật thành công!'
+      })
+
+      // Đóng modal
+      const modalElement = document.getElementById('priceItemSelect')
+      const modal = Modal.getInstance(modalElement)
+      if (modal) modal.hide()
+
+      // Xóa backdrop dư thừa
+      removeExtraModalBackdrops()
+
+      // Cập nhật danh sách Device trong phòng
+      fetchDataServiceRooms(room.roomId)
+    } catch (error) {
+      console.error('Lỗi khi cập nhật Device phòng:', error)
+      Swal.fire({
+        icon: 'error',
+        title: 'Lỗi',
+        text: 'Đã xảy ra lỗi khi cập nhật Device phòng. Vui lòng thử lại!'
+      })
+    }
+  }
+
   // Hàm xóa backdrop dư thừa
   const removeExtraModalBackdrops = () => {
     document.querySelectorAll('.modal-backdrop').forEach((backdrop) => backdrop.remove())
@@ -461,10 +541,9 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
           })
 
           handleApplyServices()
-
+          handleApplyDevice()
           //Thêm tenant và lấy tenantResponse
           const tenantResponse = await InsertTenant(tenant)
-          console.log('Tenant response:', tenantResponse)
 
           //Cập nhật contract với tenantId
           const updatedContract = {
@@ -472,11 +551,9 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
             tenantId: tenantResponse.tenantId
           }
 
-          console.log('Updated contract:', updatedContract)
-
           // Gửi yêu cầu tạo hợp đồng với dữ liệu đã cập nhật
           const contractResponse = await InsertContract(updatedContract)
-
+          console.log(contractResponse)
           // Thông báo thành công
           Swal.fire({
             icon: 'success',
@@ -653,9 +730,11 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
 
   // Hàm xử lý khi người dùng chọn một mục trong menu
   const handleItemClick = (label) => {
-    if (label === 'Đóng menu') {
+    if (label === 'Xem văn bản hợp đồng') {
+      window.open(`/quanlytro/${motelId}/Contract-Preview/${showMenu}`, '_blank')
       setShowMenu(null) // Đóng menu
     } else {
+      setShowMenu(null) // Đóng menu
       alert(`Action: ${label} on room ${showMenu}`)
     }
   }
@@ -1427,10 +1506,46 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
                               <div className="item-check-name">
                                 <input
                                   className="form-check-input"
-                                  id="room_check_asset_344"
                                   type="checkbox"
-                                  value="1"
-                                  name="assets[344][is_selected]"
+                                  checked={roomDevices.some(
+                                    (d) => d.motel_device_id === motelDevice.motel_device_id && d.isSelected
+                                  )} // Kiểm tra nếu dịch vụ đã tồn tại và isSelected = true
+                                  onChange={(e) => {
+                                    const isChecked = e.target.checked
+                                    setRoomDevices((prevDevices) => {
+                                      const existingService = prevDevices.find(
+                                        (d) => d.motel_device_id === motelDevice.motel_device_id
+                                      )
+
+                                      if (isChecked) {
+                                        // Nếu checked, thêm/cập nhật dịch vụ với `isSelected = true`
+                                        if (existingService) {
+                                          // Dịch vụ đã tồn tại => cập nhật `isSelected = true`
+                                          return prevDevices.map((d) =>
+                                            d.motel_device_id === motelDevice.motel_device_id
+                                              ? { ...d, isSelected: true, quantity: d.quantity || 1 }
+                                              : d
+                                          )
+                                        } else {
+                                          // Thêm dịch vụ mới
+                                          return [
+                                            ...prevDevices,
+                                            { ...motelDevice, isSelected: true, quantity: 1 } // Mặc định quantity = 1
+                                          ]
+                                        }
+                                      } else {
+                                        // Nếu unchecked, chỉ cập nhật `isSelected = false` (không loại bỏ dịch vụ)
+                                        if (existingService) {
+                                          return prevDevices.map((d) =>
+                                            d.motel_device_id === motelDevice.motel_device_id
+                                              ? { ...d, isSelected: false }
+                                              : d
+                                          )
+                                        }
+                                        return prevDevices // Không làm gì nếu dịch vụ chưa tồn tại
+                                      }
+                                    })
+                                  }}
                                 />
                                 <label htmlFor="room_check_asset_344">
                                   <b>{motelDevice.deviceName}</b>
@@ -1443,12 +1558,28 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
                                 <div className="input-group">
                                   <input
                                     className="form-control"
-                                    id="room_asset_344"
                                     min="0"
                                     type="number"
-                                    placeholder="Nhập số lương"
-                                    value="1"
-                                    name="assets[344][quantity]"
+                                    readOnly
+                                    value={
+                                      roomDevices.find((s) => s.motel_device_id === motelDevice.motel_device_id)
+                                        ?.quantity || 0
+                                    } // Lấy quantity từ roomDevices nếu dịch vụ tồn tại
+                                    disabled={
+                                      !roomDevices.some(
+                                        (d) => d.motel_device_id === motelDevice.motel_device_id && d.isSelected
+                                      )
+                                    } // Vô hiệu hóa nếu dịch vụ chưa được chọn
+                                    onChange={(e) => {
+                                      const newQuantity = parseInt(e.target.value, 10) || 0
+                                      setRoomDevices((prevServices) =>
+                                        prevServices.map((d) =>
+                                          d.motel_device_id === motelDevice.motel_device_id
+                                            ? { ...d, quantity: newQuantity }
+                                            : d
+                                        )
+                                      )
+                                    }}
                                   />
                                 </div>
                               </div>

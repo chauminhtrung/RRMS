@@ -53,7 +53,8 @@ public class RoomDeviceController {
 
     @Operation(summary = "delete roomDevice")
     @DeleteMapping("/{roomId}/{motel_device_id}")
-    public ApiResponse<Boolean> deleteRoomDevice(@PathVariable("roomId") UUID roomId, @PathVariable("motel_device_id") UUID motel_device_id) {
+    public ApiResponse<Boolean> deleteRoomDevice(
+            @PathVariable("roomId") UUID roomId, @PathVariable("motel_device_id") UUID motel_device_id) {
         Boolean result = roomDeviceService.deleteByRoomAndAndMotelDevice(roomId, motel_device_id);
         if (result) {
             log.info("delete roomDevice successfully");
@@ -85,7 +86,10 @@ public class RoomDeviceController {
 
     @Operation(summary = "update quantity roomDevice")
     @PostMapping("/{roomId}/{motel_device_id}/{quantity}")
-    public ApiResponse<Boolean> updateQuantityRoomDevice(@PathVariable("roomId") UUID roomId, @PathVariable("motel_device_id") UUID motel_device_id, @PathVariable("quantity") Integer quantity) {
+    public ApiResponse<Boolean> updateQuantityRoomDevice(
+            @PathVariable("roomId") UUID roomId,
+            @PathVariable("motel_device_id") UUID motel_device_id,
+            @PathVariable("quantity") Integer quantity) {
         Boolean result = roomDeviceService.updateQuantity(roomId, motel_device_id, quantity);
         if (result) {
             log.info("update quantity roomDevice successfully");
