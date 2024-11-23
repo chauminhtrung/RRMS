@@ -1,8 +1,10 @@
 package com.rrms.rrms.dto.request;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.rrms.rrms.dto.response.MotelServiceResponse;
+import com.rrms.rrms.models.Motel;
 import com.rrms.rrms.models.TypeRoom;
 
 import lombok.*;
@@ -12,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 public class MotelRequest {
     String motelName;
     Double area;
@@ -24,4 +27,11 @@ public class MotelRequest {
     TypeRoom typeRoom;
     AccountRequest account;
     List<MotelServiceResponse> motelServices;
+
+    public MotelRequest(Motel motel) {
+        this.motelName = motel.getMotelName();
+        this.address = motel.getAddress();
+        // Ánh xạ các thuộc tính khác của Motel nếu cần
+    }
+
 }
