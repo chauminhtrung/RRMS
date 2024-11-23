@@ -46,7 +46,7 @@ const VisuallyHiddenInput = styled('input')({
   whiteSpace: 'nowrap',
   width: 1
 })
-const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
+const AddTenantModal = ({ open, onClose, reloadData, avatar, editId, toggleTenant, tenantOpen }) => {
   const [provinces, setProvinces] = useState([])
   const [selectedProvince, setSelectedProvince] = useState('')
   const [districts, setDistricts] = useState([])
@@ -425,7 +425,7 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
   }
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={open} onClose={onClose} openAddTenantModal={toggleTenant} tenantOpen={tenantOpen}>
       <Box
         sx={{
           position: 'absolute',

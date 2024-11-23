@@ -95,7 +95,7 @@ const DetailRoom = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }
                   <div className="item d-flex justify-content-between">
                     <span>Giá thuê</span>
                     <span>
-                      <b>{room.price}</b>
+                      <b>{room.price ? room.price.toLocaleString('vi-VN') : <></>}đ</b>
                     </span>
                   </div>
                   <div className="item d-flex justify-content-between">
@@ -347,8 +347,8 @@ const DetailRoom = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }
                           </td>
                           <td>{contract.tenant.phone}</td>
                           <td>
-                            <strong>{contract.price}đ</strong>
-                            <div>{contract.deposit}đ</div>
+                            <strong>{contract.price.toLocaleString('vi-VN')}đ</strong>
+                            <div>{contract.deposit.toLocaleString('vi-VN')}đ</div>
                           </td>
                           <td>{contract.createdate}</td>
                           <td>

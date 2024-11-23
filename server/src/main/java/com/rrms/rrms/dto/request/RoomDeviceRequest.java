@@ -16,8 +16,6 @@ import lombok.experimental.FieldDefaults;
 public class RoomDeviceRequest {
 
     RoomResponse2 room;
-
     MotelDeviceResponse motelDevice;
-
     int quantity;
 }
