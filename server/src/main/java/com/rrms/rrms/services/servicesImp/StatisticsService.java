@@ -22,9 +22,6 @@ public class StatisticsService implements IStatistics {
     private AuthRepository authRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
     private TenantRepository tenantRepository;
 
     @Autowired
