@@ -1,12 +1,16 @@
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import AddIcon from '@mui/icons-material/Add'
+import AddTenantModal from './ModalTenant'
+import { useState } from 'react'
 function RentRoomModal({ toggleModal, modalOpen }) {
+  const [tenantOpen, setTenantOpen] = useState(false)
+
+  const toggleTenant = () => {
+    setTenantOpen(!tenantOpen)
+  }
+
   return (
     <div>
-      <Button color="primary" onClick={toggleModal}>
-        Danh sách khách thuê - Phòng 2
-      </Button>
-
       <Modal isOpen={modalOpen} toggle={toggleModal}>
         <ModalHeader toggle={toggleModal}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -55,6 +59,7 @@ function RentRoomModal({ toggleModal, modalOpen }) {
                   borderRadius: '5px',
                   padding: '5px'
                 }}
+                onClick={toggleTenant}
                 className="btn btn-outline-primary">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -125,11 +130,12 @@ function RentRoomModal({ toggleModal, modalOpen }) {
           <Button color="secondary" onClick={toggleModal}>
             Đóng
           </Button>
-          <Button color="primary">
+          <Button color="primary" onClick={toggleTenant}>
             <AddIcon /> Thêm thông tin khách thuê
           </Button>
         </ModalFooter>
       </Modal>
+      <AddTenantModal tenantOpen={tenantOpen} toggleTenant={toggleTenant} />
     </div>
   )
 }

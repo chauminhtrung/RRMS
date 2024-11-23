@@ -82,4 +82,6 @@ public class MotelDeviceController {
                     .build();
         }
     }
+
+
 }
