@@ -77,4 +77,8 @@ public class Tenant {
 
     @Column(name = "information_verify", columnDefinition = "BOOLEAN")
     private Boolean informationVerify;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "roomId")
+    private Room room;
 }
