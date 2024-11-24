@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.rrms.rrms.models.Room;
+import com.rrms.rrms.repositories.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +24,19 @@ public class TenantService implements ITenantService {
 
     @Autowired
     private TenantMapper tenantMapper;
+    @Autowired
+    RoomRepository roomRepository;
 
     @Override
-    public TenantResponse insert(TenantRequest tenant) {
-        return tenantMapper.toTenantResponse(tenantRepository.save(tenantMapper.tenantRequestToTenant(tenant)));
+    public TenantResponse insert(UUID roomId, TenantRequest tenant) {
+        Room find = roomRepository.findById(roomId).orElse(null);
+        if (find != null) {
+            Tenant newt = tenantMapper.tenantRequestToTenant(tenant);
+            newt.setRoom(find);
+            return tenantMapper.toTenantResponse(tenantRepository.save(newt));
+        } else {
+            return null;
+        }
     }
 
     @Override

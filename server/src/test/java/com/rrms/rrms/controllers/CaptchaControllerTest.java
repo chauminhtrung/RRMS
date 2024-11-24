@@ -43,6 +43,7 @@ public class CaptchaControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(captchaController).build();
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testVerifyCaptcha_Success() throws Exception {
         // Mock the response from RestTemplate
@@ -66,6 +67,7 @@ public class CaptchaControllerTest {
         System.out.println("Response: " + content);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testVerifyCaptcha_Failure() throws Exception {
         // Mock the response from RestTemplate for failure case
@@ -89,9 +91,11 @@ public class CaptchaControllerTest {
         System.out.println("Response: " + content);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testVerifyCaptcha_InternalServerError() throws Exception {
-        // Mock the RestTemplate to throw an exception (simulating an internal server error)
+        // Mock the RestTemplate to throw an exception (simulating an internal server
+        // error)
         when(restTemplate.postForEntity(any(String.class), any(), any(Class.class)))
                 .thenThrow(new RuntimeException("Internal Server Error"));
 

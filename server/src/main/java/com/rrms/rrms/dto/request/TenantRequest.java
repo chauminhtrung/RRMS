@@ -1,7 +1,9 @@
 package com.rrms.rrms.dto.request;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
+import com.rrms.rrms.dto.response.RoomResponse2;
 import com.rrms.rrms.enums.Gender;
 
 import lombok.*;
@@ -31,4 +33,5 @@ public class TenantRequest {
     Boolean type_of_tenant;
     Boolean temporaryResidence;
     Boolean informationVerify;
+
 }

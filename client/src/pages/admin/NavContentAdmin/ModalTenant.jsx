@@ -90,7 +90,7 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId, toggleTenan
 
     fetchRooms()
   }, [motelId, getRoomByMotelIdYContract])
-
+  const [rom, setrom] = useState(null)
   const handleRoomClick = async (roomId) => {
     if (!roomId) {
       setSelectedRoom(null) // Không có ID phòng thì bỏ chọn
@@ -101,7 +101,8 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId, toggleTenan
     try {
       const dataRoom = await getRoomById(roomId)
 
-      setSelectedRoom(dataRoom || null) // Lưu trữ thông tin phòng đã chọn
+      setSelectedRoom(dataRoom || null)
+      setrom(roomId) // Lưu trữ thông tin phòng đã chọn
       console.log('Room selected:', roomId) // Hiển thị ID của phòng đã chọn
     } catch (error) {
       console.error('Error fetching room details:', error)
@@ -276,7 +277,8 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId, toggleTenan
     address: '',
     type_of_tenant: false,
     temporaryResidence: false,
-    informationVerify: false
+    informationVerify: false,
+    roomId: rom !== null ? rom : ''
   })
   const handleChange = (e) => {
     setTenant({
@@ -315,6 +317,14 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId, toggleTenan
 
   const saveTenant = async (e) => {
     e.preventDefault()
+    if (selectedRoom == null) {
+      Swal.fire({
+        icon: 'error',
+        title: 'v ui log ',
+        text: 'Token is missing, please login again.'
+      })
+      return
+    }
 
     const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
     if (!token) {
@@ -339,9 +349,10 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId, toggleTenan
     }
 
     tenant.gender = tenant.gender?.trim() || 'MALE'
-
     try {
-      const response = await axios.post(`${env.API_URL}/tenant/insert`, tenant, {
+      console.log(selectedRoom.roomId)
+
+      const response = await axios.post(`${env.API_URL}/tenant/insert/${rom}`, tenant, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -352,10 +363,9 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId, toggleTenan
       console.log('Tenant saved successfully:', response.data)
       Swal.fire({ icon: 'success', title: 'Thành công', text: 'Thêm dịch vụ thành công!' })
       reloadData()
+      setrom(null)
       onClose()
     } catch (error) {
-      console.error('Error saving tenant:', error)
-
       Swal.fire({
         icon: 'error',
         title: 'Lỗi',

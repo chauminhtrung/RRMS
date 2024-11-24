@@ -435,7 +435,8 @@ public class AccountControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(true))
                 .andExpect(jsonPath("$.message").value("Update product successful"))
-                .andExpect(jsonPath("$.data.fullname").value("Updated Name")); // Sửa lại jsonPath cho fullname
+                .andExpect(jsonPath("$.data.fullname").value("Updated Name")); // Sửa lại jsonPath cho
+        // fullname
 
         // Kiểm tra phương thức service được gọi
         verify(accountService, times(1)).updateAcc(eq(username), any(Account.class));
@@ -459,8 +460,11 @@ public class AccountControllerTest {
                         .content(new ObjectMapper().writeValueAsString(inputAccount))) // Serialize JSON
                 .andExpect(status().isNotFound()) // Kiểm tra mã lỗi 404
                 .andExpect(jsonPath("$.status").value(false)) // Kiểm tra status là false
-                .andExpect(
-                        jsonPath("$.message").value("Account not found: Account not found")) // Kiểm tra thông điệp lỗi
+                .andExpect(jsonPath("$.message").value("Account not found: Account not found")) // Kiểm
+                // tra
+                // thông
+                // điệp
+                // lỗi
                 .andExpect(jsonPath("$.data").isEmpty()); // Kiểm tra dữ liệu trả về rỗng
 
         // Kiểm tra phương thức service được gọi
@@ -583,10 +587,12 @@ public class AccountControllerTest {
 
     @Test
     public void testSearchAccounts_withNoSearchTerm() throws Exception {
+        new AccountResponse();
+        new AccountResponse();
         // Mô phỏng accountService.findAll()
         List<AccountResponse> mockAccounts = Arrays.asList(
-                new AccountResponse().builder().username("user1").build(),
-                new AccountResponse().builder().username("user2").build());
+                AccountResponse.builder().username("user1").build(),
+                AccountResponse.builder().username("user2").build());
         ;
         Mockito.when(accountService.findAll()).thenReturn(mockAccounts);
 
@@ -605,9 +611,10 @@ public class AccountControllerTest {
 
     @Test
     public void testSearchAccounts_withSearchTermResults() throws Exception {
+        new AccountResponse();
         // Mô phỏng accountService.searchAccounts() trả về danh sách tài khoản tìm được
         List<AccountResponse> mockAccounts =
-                Arrays.asList(new AccountResponse().builder().username("user1").build());
+                Arrays.asList(AccountResponse.builder().username("user1").build());
         Mockito.when(accountService.searchAccounts("user1")).thenReturn(mockAccounts);
 
         // Gửi yêu cầu với tham số tìm kiếm có kết quả

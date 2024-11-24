@@ -7,6 +7,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @TestConfiguration
 public class SecurityConfigTest {
+    @SuppressWarnings({"removal", "deprecation"})
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf()
