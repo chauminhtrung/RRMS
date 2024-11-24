@@ -302,10 +302,10 @@ export const getAllContractDevices = async () => {
 
 //-------------------------insert tenant
 
-export const createTenant = async (data) => {
+export const createTenant = async (roomId,data) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;
 
-  const response = await axios.post(`${env.API_URL}/tenant/insert`, data, {
+  const response = await axios.post(`${env.API_URL}/tenant/insert/${roomId}`, data, {
     headers: {
       Authorization: `Bearer ${token}`,
       'ngrok-skip-browser-warning': '69420',

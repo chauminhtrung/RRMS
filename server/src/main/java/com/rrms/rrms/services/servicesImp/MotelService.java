@@ -5,6 +5,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.rrms.rrms.dto.request.ContractTemplateRequest;
+import com.rrms.rrms.models.ContractTemplate;
+import com.rrms.rrms.repositories.ContractTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,9 +32,27 @@ public class MotelService implements IMotelService {
     @Autowired
     private AccountMapper accountMapper;
 
+    @Autowired
+    private ContractTemplateRepository contractTemplateRepository;
+
     @Override
     public MotelResponse insert(MotelRequest motel) {
-        return motelMapper.motelToMotelResponse(motelRepository.save(motelMapper.motelRequestToMotel(motel)));
+        // Lưu motel và lấy entity đã lưu cùng với ID được tạo
+        Motel savedMotel = motelRepository.save(motelMapper.motelRequestToMotel(motel));
+
+        // Tạo ContractTemplateRequest với ID của Motel vừa lưu
+        ContractTemplate contractTemplate = new ContractTemplate();
+        contractTemplate.setMotel(savedMotel); // Sử dụng ID từ entity đã lưu
+        contractTemplate.setTemplatename("Mẫu mặc định");
+        contractTemplate.setNamecontract("Mẫu mặc định");
+        contractTemplate.setSortorder(1);
+        contractTemplate.setContent("Mẫu mặc định");
+
+        // Lưu contract template
+        contractTemplateRepository.save(contractTemplate);
+
+        // Trả về response
+        return motelMapper.motelToMotelResponse(savedMotel);
     }
 
     @Transactional
