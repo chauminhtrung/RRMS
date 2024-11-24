@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import jakarta.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.rrms.rrms.enums.Gender;
 
 import lombok.AllArgsConstructor;
@@ -78,6 +79,11 @@ public class Tenant {
 
     @Column(name = "information_verify", columnDefinition = "BOOLEAN")
     private Boolean informationVerify;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "roomId")
+    @JsonBackReference(value = "Room-Tenant") // Đặt tên cho tham chiếu ngược
+    private Room room;
 
     @OneToMany(mappedBy = "tenant")
     private List<Contract> contracts; // Một người thuê có nhiều hợp đồng
