@@ -11,7 +11,7 @@ public interface ITenantService {
 
     List<TenantResponse> getAllTenants();
 
-    TenantResponse insert(UUID roomId,TenantRequest tenantRequest);
+    TenantResponse insert(UUID roomId, TenantRequest tenantRequest);
 
     TenantResponse update(UUID id, TenantRequest tenantRequest);
 

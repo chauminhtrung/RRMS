@@ -102,7 +102,7 @@ public class DB {
 
                 // Lưu tất cả motels, rooms, roomServices và roomImages trong một lần
                 List<Motel> savedMotels = motelRepository.saveAll(motels);
-                createTemplateContract(contractTemplateRepository,savedMotels);
+                createTemplateContract(contractTemplateRepository, savedMotels);
                 roomRepository.saveAll(rooms);
                 roomServiceRepository.saveAll(roomServices);
                 roomImageRepository.saveAll(roomImages);
@@ -420,7 +420,6 @@ public class DB {
 
         // Lưu tất cả các ContractTemplate
         contractTemplateRepository.saveAll(contractTemplates);
-
     }
 
     private void createNameMotelService(NameMotelServiceRepository nameMotelServiceRepository) {

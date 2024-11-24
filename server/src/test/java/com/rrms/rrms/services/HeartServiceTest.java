@@ -1,5 +1,19 @@
 package com.rrms.rrms.services;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+
+import java.util.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.response.AccountResponse;
 import com.rrms.rrms.dto.response.HeartResponse;
@@ -10,23 +24,8 @@ import com.rrms.rrms.models.Room;
 import com.rrms.rrms.repositories.HeartRepository;
 import com.rrms.rrms.repositories.RoomRepository;
 import com.rrms.rrms.services.servicesImp.HeartService;
-import jakarta.persistence.EntityNotFoundException;
+
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import static org.mockito.Mockito.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoSettings;
-
-import java.util.*;
-
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 @Slf4j
@@ -43,8 +42,10 @@ public class HeartServiceTest {
 
     @Mock
     private RoomRepository roomRepository;
+
     @Mock
     private Heart heart;
+
     private Room room;
     private AccountResponse accountResponse;
     private RoomDetailResponse roomDetailResponse;
@@ -52,8 +53,6 @@ public class HeartServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-
-
     }
 
     @Test
@@ -107,11 +106,11 @@ public class HeartServiceTest {
     void removeHeart_whenHeartAndRoomExist_shouldRemoveRoom() {
         // Khởi tạo đối tượng AccountResponse với username
         accountResponse = new AccountResponse();
-        accountResponse.setUsername("testUser");  // Set username cho accountResponse
+        accountResponse.setUsername("testUser"); // Set username cho accountResponse
 
         // Khởi tạo RoomDetailResponse với roomId
         roomDetailResponse = new RoomDetailResponse();
-        roomDetailResponse.setRoomId(UUID.randomUUID());  // Set roomId cho roomDetailResponse
+        roomDetailResponse.setRoomId(UUID.randomUUID()); // Set roomId cho roomDetailResponse
 
         // Khởi tạo Room
         room = new Room();
@@ -119,19 +118,19 @@ public class HeartServiceTest {
 
         // Khởi tạo Heart với các Room liên quan
         heart = new Heart();
-        heart.setRooms(new ArrayList<>());  // Dùng ArrayList hoặc Set<Room> tùy vào khai báo của Heart
-        heart.getRooms().add(room);  // Thêm phòng vào Heart
+        heart.setRooms(new ArrayList<>()); // Dùng ArrayList hoặc Set<Room> tùy vào khai báo của Heart
+        heart.getRooms().add(room); // Thêm phòng vào Heart
 
         // Cấu hình khi tìm Heart theo account (ví dụ: accountId hoặc một thuộc tính khác)
         when(heartRepository.findHeartByAccount_Username(anyString())).thenReturn(heart);
-        when(roomRepository.getOne(any(UUID.class))).thenReturn(room);  // Mock phòng trả về khi gọi getOne
+        when(roomRepository.getOne(any(UUID.class))).thenReturn(room); // Mock phòng trả về khi gọi getOne
         // Case: Heart và Room đều tồn tại
 
         // Khi gọi phương thức removeHeart
         HeartResponse response = heartService.removeHeart(accountResponse, roomDetailResponse);
 
         // Kiểm tra rằng room đã được xóa khỏi Heart
-        assertNull(response);  // Nếu phương thức trả về null khi không thành công
+        assertNull(response); // Nếu phương thức trả về null khi không thành công
 
         // Xác nhận rằng chúng ta đã gọi phương thức findHeartByAccount_Username và roomRepository.getOne
         verify(heartRepository).findHeartByAccount_Username(anyString());
@@ -162,8 +161,6 @@ public class HeartServiceTest {
         // Xác nhận rằng chúng ta đã gọi phương thức findHeartByAccount_Username
         verify(heartRepository).findHeartByAccount_Username(anyString());
     }
-
-
 
     @Test
     void addHeart_whenHeartAndRoomExistAndRoomNotInHeart_shouldAddRoomAndReturnHeartResponse() {
@@ -206,7 +203,6 @@ public class HeartServiceTest {
         verify(heartMapper).heartToHeartResponse(mockHeart);
     }
 
-
     @Test
     void addHeart_whenHeartAndRoomExistButRoomAlreadyInHeart_shouldReturnNull() {
         // Mock data
@@ -240,7 +236,4 @@ public class HeartServiceTest {
         verifyNoInteractions(heartMapper); // Mapper không được gọi
         verify(heartRepository, never()).save(any());
     }
-
-
-
 }
