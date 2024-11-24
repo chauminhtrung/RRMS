@@ -1,9 +1,9 @@
 package com.rrms.rrms.models;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import com.rrms.rrms.enums.Gender;
@@ -79,8 +79,6 @@ public class Tenant {
     @Column(name = "information_verify", columnDefinition = "BOOLEAN")
     private Boolean informationVerify;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "roomId")
-    @JsonBackReference(value = "Room-Tenant") // Đặt tên cho tham chiếu ngược
-    private Room room;
+    @OneToMany(mappedBy = "tenant")
+    private List<Contract> contracts; // Một người thuê có nhiều hợp đồng
 }
