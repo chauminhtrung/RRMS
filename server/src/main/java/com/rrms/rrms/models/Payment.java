@@ -1,5 +1,6 @@
 package com.rrms.rrms.models;
 
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.*;
@@ -24,4 +25,7 @@ public class Payment {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @OneToMany(mappedBy = "payment")
+    private List<Invoice> invoices;
 }

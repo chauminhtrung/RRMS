@@ -1,6 +1,7 @@
 package com.rrms.rrms.models;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.*;
@@ -77,4 +78,7 @@ public class Tenant {
 
     @Column(name = "information_verify", columnDefinition = "BOOLEAN")
     private Boolean informationVerify;
+
+    @OneToMany(mappedBy = "tenant")
+    private List<Contract> contracts; // Một người thuê có nhiều hợp đồng
 }

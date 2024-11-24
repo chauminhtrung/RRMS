@@ -3,6 +3,7 @@ package com.rrms.rrms.dto.response;
 import java.util.UUID;
 
 import com.rrms.rrms.models.Motel;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,6 +27,16 @@ public class MotelDeviceResponse {
     String supplier;
     String unit;
 
-    public MotelDeviceResponse(UUID motelDeviceId, Motel motel, String deviceName, String icon, Double value, Double valueInput, int totalQuantity, int totalUsing, int totalNull, String supplier, String name) {
-    }
+    public MotelDeviceResponse(
+            UUID motelDeviceId,
+            Motel motel,
+            String deviceName,
+            String icon,
+            Double value,
+            Double valueInput,
+            int totalQuantity,
+            int totalUsing,
+            int totalNull,
+            String supplier,
+            String name) {}
 }
