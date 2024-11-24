@@ -3,6 +3,7 @@ package com.rrms.rrms.models;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import com.rrms.rrms.enums.Gender;
@@ -80,5 +81,6 @@ public class Tenant {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roomId")
+    @JsonBackReference(value = "Room-Tenant") // Đặt tên cho tham chiếu ngược
     private Room room;
 }

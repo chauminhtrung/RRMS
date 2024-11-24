@@ -50,6 +50,7 @@ public class DB {
             BulletinBoardReviewsRepository bulletinBoardReviewsRepository,
             BulletinBoardImageRepository bulletinBoardImageRepository,
             BulletinBoards_RentalAmRepository bulletinBoards_rentalAmRepository,
+            ContractTemplateRepository contractTemplateRepository,
             TenantRepository tenantRepository) {
         return args -> {
             int roomsLength = 5;
@@ -100,7 +101,8 @@ public class DB {
                 }
 
                 // Lưu tất cả motels, rooms, roomServices và roomImages trong một lần
-                motelRepository.saveAll(motels);
+                List<Motel> savedMotels = motelRepository.saveAll(motels);
+                createTemplateContract(contractTemplateRepository,savedMotels);
                 roomRepository.saveAll(rooms);
                 roomServiceRepository.saveAll(roomServices);
                 roomImageRepository.saveAll(roomImages);
@@ -401,6 +403,24 @@ public class DB {
         motel.setPaymentdeadline((int) faker.number().numberBetween(1, 20));
         motel.setTypeRoom(typeRoom);
         return motel;
+    }
+
+    private void createTemplateContract(ContractTemplateRepository contractTemplateRepository, List<Motel> motels) {
+        List<ContractTemplate> contractTemplates = new ArrayList<>();
+
+        for (Motel motel : motels) {
+            ContractTemplate contractTemplate = new ContractTemplate();
+            contractTemplate.setMotel(motel); // Tham chiếu đến Motel đã lưu
+            contractTemplate.setTemplatename("Mẫu mặc định");
+            contractTemplate.setNamecontract("Mẫu mặc định");
+            contractTemplate.setSortorder(1);
+            contractTemplate.setContent("Mẫu mặc định");
+            contractTemplates.add(contractTemplate);
+        }
+
+        // Lưu tất cả các ContractTemplate
+        contractTemplateRepository.saveAll(contractTemplates);
+
     }
 
     private void createNameMotelService(NameMotelServiceRepository nameMotelServiceRepository) {

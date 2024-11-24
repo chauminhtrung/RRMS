@@ -121,6 +121,8 @@ const HomeWData = ({ Motel }) => {
   const fetchDataServiceRooms = async (id) => {
     try {
       const response = await getServiceRoombyRoomId(id)
+      console.log(response)
+
       // Thêm trường `isSelected` vào từng dịch vụ
       const updatedServices = response.map((service) => ({
         ...service,
@@ -217,6 +219,7 @@ const HomeWData = ({ Motel }) => {
       })
     }
   }
+
   const cancelRoomDevice = async (roomId, motel_device_id) => {
     const response = await deleteRoomDevice(roomId, motel_device_id)
     if (response.result == true) {
