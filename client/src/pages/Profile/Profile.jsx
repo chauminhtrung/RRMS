@@ -104,7 +104,7 @@ const Profile = ({ setIsAdmin, username }) => {
                 </IconButton>
               </Box>
               <Typography variant="h6" sx={{ marginTop: '10px' }}>
-                {profile.fullname ? profile.fullname : 'Trí Dũng'}
+                {profile.fullname ? profile.fullname : 'Người dùng ẩn danh'}
               </Typography>
               <Typography variant="subtitle1" color="textSecondary">
                 {profile.username ? profile.username : 'tridung778'}

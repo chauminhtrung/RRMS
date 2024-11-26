@@ -52,10 +52,12 @@ import ResidenceForm from './pages/admin/NavContentAdmin/ResidenceForm'
 import { Box } from '@mui/material'
 import AppPromo from './pages/admin/NavContentAdmin/AppPromo'
 import RatingHistory from './pages/RatingHistory/RatingHistory'
+import { getAccountByUsername } from './apis/accountAPI'
 
 function App() {
   const [username, setUsername] = useState('')
   const [avatar, setAvatar] = useState('')
+  const [account, setAccount] = useState()
   const [token, setToken] = useState(null)
   //lay thong tin tro cua tk account truyen xuong cho trang chu tro
   const [isAdmin, setIsAdmin] = useState(false)
@@ -86,10 +88,14 @@ function App() {
     //   setIsAdmin(true)
     const user = JSON.parse(sessionStorage.getItem('user'))
     if (user) {
+      getAccountByUsername(user.username).then((res) => {
+        setAccount(res.data)
+      })
       setUsername(user.username)
       setAvatar(user.avatar)
       setToken(user.token)
       fetchMotelsByUsername(user.username)
+
       console.log(motels.length)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -101,6 +107,7 @@ function App() {
         {/* <ValidCaptcha /> */}
         {!isAdmin ? (
           <Header
+            account={account}
             username={username}
             avatar={avatar}
             token={token}
