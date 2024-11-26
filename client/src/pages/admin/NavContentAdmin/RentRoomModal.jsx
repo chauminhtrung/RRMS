@@ -16,7 +16,7 @@ function RentRoomModal({ toggleModal, modalOpen, motelId }) {
   const [roomId, setRoomId] = useState()
   const openTenant = () => {
     setTenantOpen(!tenantOpen)
-    setAvatar(avatar)
+    setAvatar(true)
   }
   const toggleTenant = (tenantId) => {
     setTenantOpen(!tenantOpen)
@@ -50,13 +50,16 @@ function RentRoomModal({ toggleModal, modalOpen, motelId }) {
   }
 
   const fetchMotelContract = async (id) => {
+    console.log(id)
+
     try {
       const response = await getContractByIdMotel(id)
 
       if (response) {
         setContracts(response)
-        setRoomId(response[0].room.roomId)
         loadDataTenantRoomId(response[0].room.roomId)
+        setRoomId(response[0].room.roomId)
+        console.log(roomId)
       } else {
         setContracts([])
       }
@@ -103,7 +106,6 @@ function RentRoomModal({ toggleModal, modalOpen, motelId }) {
     if (motelId) {
       fetchMotelContract(motelId)
     }
-    openTenant()
   }, [roomId])
 
   return (
