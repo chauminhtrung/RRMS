@@ -46,7 +46,7 @@ const VisuallyHiddenInput = styled('input')({
   whiteSpace: 'nowrap',
   width: 1
 })
-const AddTenantModal = ({ open, onClose, reloadData, avatar, editId, toggleTenant, tenantOpen }) => {
+const AddTenantModal = ({ open, onClose, reloadData, avatar, editId, tenantOpen }) => {
   const [provinces, setProvinces] = useState([])
   const [selectedProvince, setSelectedProvince] = useState('')
   const [districts, setDistricts] = useState([])
@@ -75,12 +75,10 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId, toggleTenan
     const fetchRooms = async () => {
       if (!motelId) return // Đảm bảo có motelId trước khi thực hiện gọi API
       setLoading(true)
-      console.log('aa')
 
       try {
         const dataRoom = await getRoomByMotelIdYContract(motelId)
         setRooms(dataRoom || [])
-        console.log(dataRoom)
       } catch (error) {
         console.error('Error fetching rooms:', error)
       } finally {
@@ -103,7 +101,6 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId, toggleTenan
 
       setSelectedRoom(dataRoom || null)
       setrom(roomId) // Lưu trữ thông tin phòng đã chọn
-      console.log('Room selected:', roomId) // Hiển thị ID của phòng đã chọn
     } catch (error) {
       console.error('Error fetching room details:', error)
     } finally {
@@ -168,8 +165,6 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId, toggleTenan
           // Lấy URL của ảnh mặt sau sau khi tải lên thành công
           getDownloadURL(uploadTask.snapshot.ref).then((url) => {
             setBackUrl(url) // Cập nhật URL ảnh mặt sau vào state
-            console.log(url)
-            // Cập nhật tenant với URL ảnh mặt sau
             setTenant((prevTenant) => ({
               ...prevTenant,
               backPhoto: url // Cập nhật ảnh mặt sau vào tenant
@@ -320,7 +315,7 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId, toggleTenan
     if (selectedRoom == null) {
       Swal.fire({
         icon: 'error',
-        title: 'v ui log ',
+        title: 'Token đã hết hạn',
         text: 'Token is missing, please login again.'
       })
       return
@@ -338,7 +333,6 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId, toggleTenan
     }
 
     if (!tenant || !tenant.fullname?.trim() || !tenant.phone?.trim() || !tenant.address?.trim()) {
-      console.log('dd')
       onClose()
       Swal.fire({
         icon: 'error',
@@ -376,7 +370,6 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId, toggleTenan
   }
 
   useEffect(() => {
-    console.log(editId)
     setTenant({
       fullname: '',
       phone: '',
@@ -401,7 +394,6 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId, toggleTenan
     })
     if (editId) {
       getByIdTenant(editId).then((res) => {
-        console.log(res.result)
         setTenant(res.result)
       })
     }
@@ -435,7 +427,7 @@ const AddTenantModal = ({ open, onClose, reloadData, avatar, editId, toggleTenan
   }
 
   return (
-    <Modal open={open} onClose={onClose} openAddTenantModal={toggleTenant} tenantOpen={tenantOpen}>
+    <Modal open={open} onClose={onClose}>
       <Box
         sx={{
           position: 'absolute',

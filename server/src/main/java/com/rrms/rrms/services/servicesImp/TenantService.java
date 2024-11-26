@@ -84,7 +84,7 @@ public class TenantService implements ITenantService {
 
     @Override
     public List<TenantResponse> getAllTenantsRoomId(UUID roomId) {
-        return tenantRepository.findByRoomId(roomId).stream()
+        return tenantRepository.findByRoomRoomId(roomId).stream()
                 .map(tenantMapper::toTenantResponse)
                 .collect(Collectors.toList());
     }

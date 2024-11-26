@@ -103,12 +103,13 @@ public class TenantController {
         }
     }
 
-    @RequestMapping("")
-    public ApiResponse<List<TenantResponse>> getAllTenantsRoomId(UUID roomId) {
+    @RequestMapping("/roomId/{roomId}")
+    public ApiResponse<List<TenantResponse>> getAllTenantsRoomId(@PathVariable("roomId")  UUID roomId) {
+        System.out.println(roomId);
         List<TenantResponse> tenantResponses = tenantService.getAllTenantsRoomId(roomId);
-        log.info("Get all tenants successfully");
+        log.info("Get all tenants by room id successfully");
         return ApiResponse.<List<TenantResponse>>builder()
-                .message("Get all tenants successfully")
+                .message("Get all tenants by room id successfully")
                 .code(HttpStatus.OK.value())
                 .result(tenantResponses)
                 .build();
