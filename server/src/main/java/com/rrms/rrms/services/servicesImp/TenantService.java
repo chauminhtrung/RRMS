@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import com.rrms.rrms.dto.request.TenantRequest;
 import com.rrms.rrms.dto.response.TenantResponse;
 import com.rrms.rrms.mapper.TenantMapper;
+import com.rrms.rrms.models.Room;
 import com.rrms.rrms.models.Tenant;
+import com.rrms.rrms.repositories.RoomRepository;
 import com.rrms.rrms.repositories.TenantRepository;
 import com.rrms.rrms.services.ITenantService;
 
@@ -23,9 +25,19 @@ public class TenantService implements ITenantService {
     @Autowired
     private TenantMapper tenantMapper;
 
+    @Autowired
+    RoomRepository roomRepository;
+
     @Override
-    public TenantResponse insert(TenantRequest tenant) {
-        return tenantMapper.toTenantResponse(tenantRepository.save(tenantMapper.tenantRequestToTenant(tenant)));
+    public TenantResponse insert(UUID roomId, TenantRequest tenant) {
+        Room find = roomRepository.findById(roomId).orElse(null);
+        if (find != null) {
+            Tenant newt = tenantMapper.tenantRequestToTenant(tenant);
+            newt.setRoom(find);
+            return tenantMapper.toTenantResponse(tenantRepository.save(newt));
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -69,4 +81,14 @@ public class TenantService implements ITenantService {
             tenantRepository.deleteById(id);
         }
     }
+
+    @Override
+    public List<TenantResponse> getAllTenantsRoomId(UUID roomId) {
+        return tenantRepository.findByRoomRoomId(roomId).stream()
+                .map(tenantMapper::toTenantResponse)
+                .collect(Collectors.toList());
+    }
+
+
+
 }

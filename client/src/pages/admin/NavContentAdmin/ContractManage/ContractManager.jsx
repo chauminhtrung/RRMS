@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
-
 import { Box } from '@mui/material'
 import { useParams } from 'react-router-dom'
 import { ReactTabulator } from 'react-tabulator'
@@ -17,12 +16,19 @@ import {
   createRoomService
 } from '~/apis/roomAPI'
 import { getMotelById } from '~/apis/motelAPI'
-import { getAllMotelDevices, getAllDeviceByRomId, deleteRoomDevice, insertRoomDevice } from '~/apis/deviceAPT'
+import {
+  getAllMotelDevices,
+  getAllDeviceByRomId,
+  deleteRoomDevice,
+  insertRoomDevice,
+  changeQuantityRoomDevice
+} from '~/apis/deviceAPT'
 import {
   getContractTemplatesByMotelId,
   createTenant,
   createContract,
-  getContractByIdMotel
+  getContractByIdMotel,
+  getContractById
 } from '~/apis/contractTemplateAPI'
 import Swal from 'sweetalert2'
 const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }) => {
@@ -79,12 +85,14 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     countTenant: 1,
     status: 'ACTIVE' // Giá trị có thể là 'ACTIVE', 'ENDED', hoặc 'IATExpire'
   })
+
   const [contracts, setContracts] = useState([])
   const [motelServices, setMotelServices] = useState([])
   const [motelDevices, setMotelSDevices] = useState([])
   const [motel, setMotel] = useState({})
   const [roomServices, setRoomServices] = useState([])
   const [roomDevices, setRoomDevices] = useState([])
+  const [device, setdevice] = useState([])
   const [selectedRoomId, setSelectedRoomId] = useState(null)
   const [contractTemplates, setcontractTemplates] = useState([])
   const handleClose = () => setShow(false)
@@ -124,14 +132,104 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     }))
   }
 
-  const InsertTenant = async (tenant) => {
+  const InsertTenant = async (roomId, tenant) => {
     try {
-      const response = await createTenant(tenant)
+      const response = await createTenant(roomId, tenant)
       setTenant(response.result) // Lưu tenant vào state nếu cần
       return response.result // Trả về thông tin tenant
     } catch (error) {
       console.error('Error saving tenant:', error)
       throw error // Ném lỗi ra ngoài để có thể xử lý ở nơi gọi
+    }
+  }
+
+  const fetchDevices = async () => {
+    try {
+      const response = await getAllMotelDevices(motelId)
+      setdevice(response.result)
+    } catch (error) {
+      console.error('Error fetching device services:', error)
+      setdevice([])
+    }
+  }
+
+  const applyRoomDevice = async (roomParam, motel_device_idParam) => {
+    const data = {
+      room: roomParam,
+      motelDevice: {
+        motel_device_id: motel_device_idParam
+      },
+      quantity: 1
+    }
+    const response = await insertRoomDevice(data)
+    if (response.code == 200) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Thành công',
+        text: 'RoomDevice apply successfully!'
+      })
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Thất bại',
+        text: 'RoomDevice apply failed!'
+      })
+    }
+  }
+
+  const cancelRoomDevice = async (roomId, motel_device_id) => {
+    const response = await deleteRoomDevice(roomId, motel_device_id)
+    if (response.result == true) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Thành công',
+        text: 'RoomDevice cancel successfully!'
+      })
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Thất bại',
+        text: 'RoomDevice cancel failed!'
+      })
+    }
+  }
+
+  const [deviceByRoom, setdeviceByRoom] = useState([])
+  const fetchDeviceByRoom = async (roomId) => {
+    if (!roomId) {
+      console.warn('Room ID is invalid')
+      setdeviceByRoom([])
+      return
+    }
+    const response = await getAllDeviceByRomId(roomId)
+    console.log(response.result)
+
+    if (response.result.length > 0) {
+      setdeviceByRoom(response.result)
+    } else {
+      setdeviceByRoom([])
+    }
+  }
+
+  const handleChangeQuantityRoomDevice = async (roomId, motel_device_id, quantity) => {
+    const data = {
+      roomId: roomId,
+      motel_device_id: motel_device_id,
+      quantity: quantity
+    }
+    const response = await changeQuantityRoomDevice(data)
+    if (response.result == true) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Thành công',
+        text: 'change quantity successfully!'
+      })
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Thành công',
+        text: 'change quantity failed!'
+      })
     }
   }
 
@@ -508,6 +606,28 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     }
   }
 
+  const fetchDataRoomByContract = async (id) => {
+    try {
+      const response = await getContractById(id) // Lấy dữ liệu phòng từ API
+      setRoom(response.room)
+      fetchDeviceByRoom(response.room.roomId)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handlePrintContract = () => {
+    const contractUrl = `/quanlytro/${motelId}/Contract-Preview/${showMenu}`
+
+    // Mở cửa sổ mới để in nội dung hợp đồng
+    const printWindow = window.open(contractUrl, '_blank')
+
+    // Đợi nội dung tải xong, sau đó gọi window.print
+    printWindow.onload = () => {
+      printWindow.print()
+    }
+  }
+
   // Hàm xóa backdrop dư thừa
   const removeExtraModalBackdrops = () => {
     document.querySelectorAll('.modal-backdrop').forEach((backdrop) => backdrop.remove())
@@ -543,7 +663,7 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
           handleApplyServices()
           handleApplyDevice()
           //Thêm tenant và lấy tenantResponse
-          const tenantResponse = await InsertTenant(tenant)
+          const tenantResponse = await InsertTenant(room.roomId ? room.roomId : '', tenant)
 
           //Cập nhật contract với tenantId
           const updatedContract = {
@@ -733,6 +853,52 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     if (label === 'Xem văn bản hợp đồng') {
       window.open(`/quanlytro/${motelId}/Contract-Preview/${showMenu}`, '_blank')
       setShowMenu(null) // Đóng menu
+    } else if (label === 'Thiết lập tài sản') {
+      setShowMenu(null) // Đóng menu
+      fetchDataRoomByContract(showMenu)
+    } else if (label === 'Chia sẻ văn bản hợp đồng') {
+      const baseUrl = 'http://localhost:5173'
+      const shareLink = `${baseUrl}/quanlytro/${motelId}/Contract-Preview/${showMenu}`
+
+      // Sao chép liên kết vào clipboard
+      navigator.clipboard
+        .writeText(shareLink)
+        .then(() => {
+          Swal.fire({
+            title: '<strong><u>Thông báo!</u></strong>',
+            icon: 'info',
+            html: `
+            Đã sao chép liên kết hợp đồng! Bạn có thể chia sẻ cho bên thứ ba.<br>
+            <a href="${shareLink}" target="_blank">${shareLink}</a>
+          `,
+            showCloseButton: true,
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: `Đi đến đường dẫn`,
+            confirmButtonAriaLabel: 'Thumbs up, great!',
+            cancelButtonText: `Đóng`,
+            cancelButtonAriaLabel: 'Thumbs down'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Người dùng chọn "Đi đến đường dẫn"
+              window.open(shareLink, '_blank')
+            }
+          })
+        })
+        .catch((err) => {
+          console.error('Không thể sao chép liên kết:', err)
+          Swal.fire({
+            title: 'Lỗi',
+            text: 'Không thể sao chép liên kết. Vui lòng thử lại.',
+            icon: 'error'
+          })
+        })
+
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'In văn bản hợp đồng') {
+      setShowMenu(null) // Đóng menu
+      // Thực hiện chức năng in hợp đồng
+      handlePrintContract()
     } else {
       setShowMenu(null) // Đóng menu
       alert(`Action: ${label} on room ${showMenu}`)
@@ -893,6 +1059,8 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
 
   useEffect(() => {
     setIsAdmin(true)
+    fetchDevices()
+    fetchMotelDevices(motelId)
     if (motelId) {
       fetchMotelContract(motelId)
     }
@@ -1652,17 +1820,9 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
                 // Gắn ref vào tag này
                 className={`tabulator-menu-item ${item.textClass || ''}`}
                 onClick={() => handleItemClick(item.label)} // Đóng menu khi chọn item
-                {...(item.label === 'Cài đặt dịch vụ' && {
-                  'data-bs-toggle': 'modal',
-                  'data-bs-target': '#priceItemSelect'
-                })}
                 {...(item.label === 'Thiết lập tài sản' && {
                   'data-bs-toggle': 'modal',
                   'data-bs-target': '#assetSelect'
-                })}
-                {...(item.label === 'Ghi chú' && {
-                  'data-bs-toggle': 'modal',
-                  'data-bs-target': '#noteModal'
                 })}>
                 {item.icon && (
                   <svg
@@ -1789,6 +1949,159 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
           </div>
         )}
       </div>
+
+      {/* Modal hiển thị tai san */}
+      {room ? (
+        <div
+          className="modal fade"
+          data-bs-backdrop="static"
+          id="assetSelect"
+          tabIndex={-1}
+          aria-labelledby="assetSelect"
+          aria-modal="true"
+          role="dialog"
+          style={{ display: 'none', paddingLeft: '0px' }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <div
+                  style={{
+                    marginRight: '15px',
+                    outline: '0',
+                    boxShadow: '0 0 0 .25rem rgb(112 175 237 / 16%)',
+                    opacity: '1',
+                    borderRadius: '100%',
+                    width: '36px',
+                    height: '36px',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    display: 'flex',
+                    backgroundColor: 'rgb(111 171 232)'
+                  }}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-inbox">
+                    <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
+                    <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+                  </svg>
+                </div>
+                <h5 className="modal-title" id="addRoomLabel">
+                  Thông tin tài sản
+                  <span className="room-name"> &quot;{room.name}&quot;</span>
+                </h5>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                  {' '}
+                </button>
+              </div>
+              <div className="modal-body">
+                {device.length > 0 ? (
+                  <div className="row mt-4">
+                    {device.map((item) => (
+                      <div key={item.motel_device_id} className="col-12 border p-3 d-flex align-items-center mt-1">
+                        <input
+                          onChange={async (e) => {
+                            if (e.target.checked) {
+                              await applyRoomDevice(room, item.motel_device_id)
+                            } else {
+                              await cancelRoomDevice(room.roomId, item.motel_device_id)
+                            }
+                            const updatedDevices = await fetchDeviceByRoom(room.roomId)
+                            setdeviceByRoom(updatedDevices.result)
+                          }}
+                          type="checkbox"
+                          className="mx-3"
+                          checked={deviceByRoom.some((it) => it.motelDevice.motel_device_id === item.motel_device_id)}
+                        />
+                        <div className="flex-grow-1">
+                          <h6 className="mb-1">{item.deviceName}</h6>
+                          <p className="mb-0">
+                            Giá: <strong>{item.value}</strong> /{' '}
+                            {item.unit == 'CAI'
+                              ? 'Cái'
+                              : item.unit == 'CHIEC'
+                              ? 'Chiếc'
+                              : item.unit == 'BO'
+                              ? 'Bộ'
+                              : 'Cặp'}
+                          </p>
+                        </div>
+                        <div className="d-flex align-items-center">
+                          <input
+                            type="number"
+                            onChange={() => {
+                              handleChangeQuantityRoomDevice(room.roomId, item.motel_device_id, 200)
+                            }}
+                            className="form-control text-center"
+                            value={
+                              deviceByRoom.some((it) => it.motelDevice.motel_device_id === item.motel_device_id)
+                                ? deviceByRoom.find((it) => it.motelDevice.motel_device_id === item.motel_device_id)
+                                    .quantity
+                                : 1
+                            }
+                            style={{ width: '100px' }}
+                          />
+                          <span className="mx-2">Số lượng</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-danger mt-2">Căn trọ chưa thiết lập tài sản nào, cần thêm tài sản !</p>
+                  </div>
+                )}
+              </div>
+              <div className="modal-footer modal-footer--sticky">
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-x">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                  Đóng
+                </button>
+                {/* su kien onclick khi submit form cua thuan (nho thay doi)  */}
+                {/* <button type="button" id="submit-room" className="btn btn-primary" onClick={handleApplyServices}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-plus">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  Áp dụng tài sản
+                </button> */}
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   )
 }

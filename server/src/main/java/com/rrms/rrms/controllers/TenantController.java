@@ -49,9 +49,10 @@ public class TenantController {
     }
 
     @Operation(summary = "Add tenant by id")
-    @PostMapping("/insert")
-    public ApiResponse<TenantResponse> insertTenant(@RequestBody TenantRequest tenantRequest) {
-        TenantResponse tenantResponse = tenantService.insert(tenantRequest);
+    @PostMapping("/insert/{roomId}")
+    public ApiResponse<TenantResponse> insertTenant(
+            @RequestBody TenantRequest tenantRequest, @PathVariable UUID roomId) {
+        TenantResponse tenantResponse = tenantService.insert(roomId, tenantRequest);
         log.info("Insert tenant successfully");
         return ApiResponse.<TenantResponse>builder()
                 .code(HttpStatus.CREATED.value())
@@ -100,5 +101,17 @@ public class TenantController {
                     .result(false)
                     .build();
         }
+    }
+
+    @RequestMapping("/roomId/{roomId}")
+    public ApiResponse<List<TenantResponse>> getAllTenantsRoomId(@PathVariable("roomId")  UUID roomId) {
+        System.out.println(roomId);
+        List<TenantResponse> tenantResponses = tenantService.getAllTenantsRoomId(roomId);
+        log.info("Get all tenants by room id successfully");
+        return ApiResponse.<List<TenantResponse>>builder()
+                .message("Get all tenants by room id successfully")
+                .code(HttpStatus.OK.value())
+                .result(tenantResponses)
+                .build();
     }
 }

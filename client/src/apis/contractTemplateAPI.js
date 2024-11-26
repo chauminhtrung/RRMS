@@ -131,6 +131,20 @@ export const getContractByIdRoom = async (roomId) => {
   return response.data;
 };
 
+// Lấy hợp đồng theo ID Room
+export const getContractByIdRoom2= async (roomId) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;
+
+  const response = await axios.get(`${env.API_URL}/contracts/room/${roomId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'ngrok-skip-browser-warning': '69420',
+    },
+  });
+
+  return response.data;
+};
+
 // Lấy hợp đồng theo ID motel
 export const getContractByIdMotel = async (motelId) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;
@@ -302,10 +316,10 @@ export const getAllContractDevices = async () => {
 
 //-------------------------insert tenant
 
-export const createTenant = async (data) => {
+export const createTenant = async (roomId,data) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;
 
-  const response = await axios.post(`${env.API_URL}/tenant/insert`, data, {
+  const response = await axios.post(`${env.API_URL}/tenant/insert/${roomId}`, data, {
     headers: {
       Authorization: `Bearer ${token}`,
       'ngrok-skip-browser-warning': '69420',

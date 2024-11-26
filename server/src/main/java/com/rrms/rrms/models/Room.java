@@ -82,4 +82,8 @@ public class Room {
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference(value = "Room-Contract") // Đặt tên cho tham chiếu quản lý
     private List<Contract> contracts;
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference(value = "Room-Tenant") // Đặt tên cho tham chiếu quản lý
+    private List<Tenant> tenants;
 }
