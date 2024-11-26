@@ -101,4 +101,15 @@ public class TenantController {
                     .build();
         }
     }
+
+    @RequestMapping("")
+    public ApiResponse<List<TenantResponse>> getAllTenantsRoomId(UUID roomId) {
+        List<TenantResponse> tenantResponses = tenantService.getAllTenantsRoomId(roomId);
+        log.info("Get all tenants successfully");
+        return ApiResponse.<List<TenantResponse>>builder()
+                .message("Get all tenants successfully")
+                .code(HttpStatus.OK.value())
+                .result(tenantResponses)
+                .build();
+    }
 }

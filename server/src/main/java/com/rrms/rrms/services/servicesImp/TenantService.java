@@ -80,4 +80,14 @@ public class TenantService implements ITenantService {
             tenantRepository.deleteById(id);
         }
     }
+
+    @Override
+    public List<TenantResponse> getAllTenantsRoomId(UUID roomId) {
+        return tenantRepository.findByRoomId(roomId).stream()
+                .map(tenantMapper::toTenantResponse)
+                .collect(Collectors.toList());
+    }
+
+
+
 }
