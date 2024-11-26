@@ -1,7 +1,7 @@
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import AddIcon from '@mui/icons-material/Add'
 import AddTenantModal from './ModalTenant'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 function RentRoomModal({ toggleModal, modalOpen }) {
   const [tenantOpen, setTenantOpen] = useState(false)
 
