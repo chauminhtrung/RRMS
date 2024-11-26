@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.rrms.rrms.dto.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.request.MotelDeviceRequest;
@@ -94,7 +92,6 @@ public class MotelDeviceService implements IMotelDeviceService {
         return null;
     }
 
-
     @Override
     public void deleteMotelDevice(UUID motelDeviceId) {
         Optional<MotelDevice> motelDevice = motelDeviceRepository.findById(motelDeviceId);
@@ -102,7 +99,4 @@ public class MotelDeviceService implements IMotelDeviceService {
             motelDeviceRepository.delete(motelDevice.get());
         }
     }
-
-
-
 }

@@ -50,8 +50,9 @@ public class TenantController {
 
     @Operation(summary = "Add tenant by id")
     @PostMapping("/insert/{roomId}")
-    public ApiResponse<TenantResponse> insertTenant(@RequestBody TenantRequest tenantRequest,@PathVariable UUID roomId) {
-        TenantResponse tenantResponse = tenantService.insert(roomId,tenantRequest);
+    public ApiResponse<TenantResponse> insertTenant(
+            @RequestBody TenantRequest tenantRequest, @PathVariable UUID roomId) {
+        TenantResponse tenantResponse = tenantService.insert(roomId, tenantRequest);
         log.info("Insert tenant successfully");
         return ApiResponse.<TenantResponse>builder()
                 .code(HttpStatus.CREATED.value())

@@ -20,6 +20,18 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID invoiceId;
 
+    @Column(columnDefinition = "DATE")
+    private LocalDate invoice_createMonth;
+
+    @Column(columnDefinition = "DATE")
+    private LocalDate invoice_createDate;
+
+    @Column(columnDefinition = "DATE")
+    private LocalDate invoice_dueDate;
+
+    @Column(columnDefinition = "VARCHAR(50)")
+    private String status;
+
     @ManyToOne
     @JoinColumn(name = "tenant_id")
     private Tenant tenant;
@@ -28,9 +40,7 @@ public class Invoice {
     @JoinColumn(name = "payment_id")
     private Payment payment;
 
-    @Column(columnDefinition = "VARCHAR(50)")
-    private String status;
-
-    @Column(columnDefinition = "DATE")
-    private LocalDate createDate;
+    @ManyToOne
+    @JoinColumn(name = "contract_id")
+    private Contract contract;
 }

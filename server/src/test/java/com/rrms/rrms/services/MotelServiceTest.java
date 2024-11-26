@@ -1,13 +1,12 @@
 package com.rrms.rrms.services;
 
-import com.rrms.rrms.dto.request.MotelRequest;
-import com.rrms.rrms.dto.response.MotelResponse;
-import com.rrms.rrms.mapper.AccountMapper;
-import com.rrms.rrms.mapper.MotelMapper;
-import com.rrms.rrms.models.Motel;
-import com.rrms.rrms.repositories.MotelRepository;
-import com.rrms.rrms.services.servicesImp.MotelService;
-import lombok.extern.slf4j.Slf4j;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,12 +14,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import com.rrms.rrms.dto.request.MotelRequest;
+import com.rrms.rrms.dto.response.MotelResponse;
+import com.rrms.rrms.mapper.AccountMapper;
+import com.rrms.rrms.mapper.MotelMapper;
+import com.rrms.rrms.models.Motel;
+import com.rrms.rrms.repositories.MotelRepository;
+import com.rrms.rrms.services.servicesImp.MotelService;
 
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+import lombok.extern.slf4j.Slf4j;
 
 @ExtendWith(MockitoExtension.class)
 @Slf4j
@@ -38,18 +40,14 @@ public class MotelServiceTest {
     @Mock
     AccountMapper accountMapper;
 
-
-
     Motel motel;
     MotelRequest motelRequest;
     MotelResponse motelResponse;
     UUID motelId;
+
     @BeforeEach
     void init() {
-        motel = Motel.builder()
-                .motelName("Motel 1")
-                .address("456 Main St")
-                .build();
+        motel = Motel.builder().motelName("Motel 1").address("456 Main St").build();
         motelResponse = MotelResponse.builder()
                 .motelName("Motel 1")
                 .address("456 Main St")
@@ -81,7 +79,7 @@ public class MotelServiceTest {
 
         // Cập nhật đúng giá trị cho motelResponse để khớp với dữ liệu thực tế
         MotelResponse motelResponse = MotelResponse.builder()
-                .motelName("Motel 1")  // Sửa thành "Motel 1" để khớp với giá trị mong đợi
+                .motelName("Motel 1") // Sửa thành "Motel 1" để khớp với giá trị mong đợi
                 .address("456 Main St") // Đảm bảo địa chỉ đúng
                 .build();
 
@@ -93,12 +91,11 @@ public class MotelServiceTest {
         // Then
         log.info(response.toString());
         assertEquals(1, response.size());
-        assertEquals("Motel 1", response.get(0).getMotelName());  // Sửa thành "Motel 1" thay vì "Updated Motel 1"
+        assertEquals("Motel 1", response.get(0).getMotelName()); // Sửa thành "Motel 1" thay vì "Updated Motel 1"
 
         verify(motelRepository).findAll();
         verify(motelMapper).motelToMotelResponse(motel);
     }
-
 
     @Test
     void findAll_whenNoMotels_returnsEmptyList() {
@@ -114,13 +111,14 @@ public class MotelServiceTest {
         verify(motelRepository).findAll();
         verifyNoInteractions(motelMapper);
     }
+
     @Test
     void update_whenMotelExists_returnsUpdatedMotelResponse() {
         // Given
         when(motelRepository.findById(motelId)).thenReturn(Optional.of(motel));
         when(motelRepository.save(motel)).thenReturn(motel);
         when(motelMapper.motelToMotelResponse(motel)).thenReturn(motelResponse);
-        when(accountMapper.toAccount(any())).thenReturn(null);  // Mock accountMapper method
+        when(accountMapper.toAccount(any())).thenReturn(null); // Mock accountMapper method
 
         // When
         MotelResponse response = motelService.update(motelId, motelRequest);
@@ -133,7 +131,7 @@ public class MotelServiceTest {
         verify(motelRepository).findById(motelId);
         verify(motelRepository).save(motel);
         verify(motelMapper).motelToMotelResponse(motel);
-        verify(accountMapper).toAccount(any());  // Verify accountMapper method
+        verify(accountMapper).toAccount(any()); // Verify accountMapper method
     }
 
     @Test
@@ -142,46 +140,47 @@ public class MotelServiceTest {
         when(motelRepository.findById(motelId)).thenReturn(Optional.empty()); // Khi không tìm thấy Motel
 
         // When
-        MotelResponse response = motelService.update(motelId, motelRequest);  // Gọi phương thức update
+        MotelResponse response = motelService.update(motelId, motelRequest); // Gọi phương thức update
 
         // Then
-        assertNull(response);  // Đảm bảo trả về null khi không tìm thấy Motel
+        assertNull(response); // Đảm bảo trả về null khi không tìm thấy Motel
 
-        verify(motelRepository).findById(motelId);  // Kiểm tra rằng findById đã được gọi
-        verifyNoMoreInteractions(motelRepository);  // Kiểm tra không có bất kỳ tương tác nào khác
-        verifyNoInteractions(motelMapper);  // Kiểm tra không có bất kỳ tương tác nào với motelMapper
+        verify(motelRepository).findById(motelId); // Kiểm tra rằng findById đã được gọi
+        verifyNoMoreInteractions(motelRepository); // Kiểm tra không có bất kỳ tương tác nào khác
+        verifyNoInteractions(motelMapper); // Kiểm tra không có bất kỳ tương tác nào với motelMapper
     }
+
     @Test
     void delete_whenMotelExists_callsDeleteById() {
         // Given
-        UUID motelId = UUID.randomUUID();  // Tạo một ID ngẫu nhiên cho motel
-        Motel motel = Motel.builder()  // Tạo một đối tượng motel mẫu
+        UUID motelId = UUID.randomUUID(); // Tạo một ID ngẫu nhiên cho motel
+        Motel motel = Motel.builder() // Tạo một đối tượng motel mẫu
                 .motelId(motelId)
                 .motelName("Motel 1")
                 .address("456 Main St")
                 .build();
 
-        when(motelRepository.findById(motelId)).thenReturn(Optional.of(motel));  // Khi motel tồn tại
+        when(motelRepository.findById(motelId)).thenReturn(Optional.of(motel)); // Khi motel tồn tại
 
         // When
-        motelService.delete(motelId);  // Gọi phương thức delete
+        motelService.delete(motelId); // Gọi phương thức delete
 
         // Then
-        verify(motelRepository).findById(motelId);  // Kiểm tra phương thức findById đã được gọi
-        verify(motelRepository).deleteById(motelId);  // Kiểm tra phương thức deleteById đã được gọi
+        verify(motelRepository).findById(motelId); // Kiểm tra phương thức findById đã được gọi
+        verify(motelRepository).deleteById(motelId); // Kiểm tra phương thức deleteById đã được gọi
     }
+
     @Test
     void delete_whenMotelDoesNotExist_doesNotCallDeleteById() {
         // Given
-        UUID motelId = UUID.randomUUID();  // Tạo một ID ngẫu nhiên cho motel
-        when(motelRepository.findById(motelId)).thenReturn(Optional.empty());  // Khi motel không tồn tại
+        UUID motelId = UUID.randomUUID(); // Tạo một ID ngẫu nhiên cho motel
+        when(motelRepository.findById(motelId)).thenReturn(Optional.empty()); // Khi motel không tồn tại
 
         // When
-        motelService.delete(motelId);  // Gọi phương thức delete
+        motelService.delete(motelId); // Gọi phương thức delete
 
         // Then
-        verify(motelRepository).findById(motelId);  // Kiểm tra phương thức findById đã được gọi
-        verify(motelRepository, never()).deleteById(motelId);  // Kiểm tra phương thức deleteById không được gọi
+        verify(motelRepository).findById(motelId); // Kiểm tra phương thức findById đã được gọi
+        verify(motelRepository, never()).deleteById(motelId); // Kiểm tra phương thức deleteById không được gọi
     }
-
 }
