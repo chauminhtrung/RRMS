@@ -46,7 +46,7 @@ const VisuallyHiddenInput = styled('input')({
   whiteSpace: 'nowrap',
   width: 1
 })
-const AddTenantModal = ({ open, onClose, reloadData, avatar, editId, tenantOpen }) => {
+const AddTenantModal = ({ open, onClose, reloadData, avatar, editId }) => {
   const [provinces, setProvinces] = useState([])
   const [selectedProvince, setSelectedProvince] = useState('')
   const [districts, setDistricts] = useState([])
