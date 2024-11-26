@@ -5,9 +5,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.rrms.rrms.dto.request.ContractTemplateRequest;
-import com.rrms.rrms.models.ContractTemplate;
-import com.rrms.rrms.repositories.ContractTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +14,9 @@ import com.rrms.rrms.dto.response.MotelResponse;
 import com.rrms.rrms.mapper.AccountMapper;
 import com.rrms.rrms.mapper.MotelMapper;
 import com.rrms.rrms.models.Account;
+import com.rrms.rrms.models.ContractTemplate;
 import com.rrms.rrms.models.Motel;
+import com.rrms.rrms.repositories.ContractTemplateRepository;
 import com.rrms.rrms.repositories.MotelRepository;
 import com.rrms.rrms.services.IMotelService;
 

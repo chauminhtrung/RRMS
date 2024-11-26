@@ -38,6 +38,5 @@ public class MotelResponse implements Serializable {
         this.motelName = motelName;
     }
 
-    public MotelResponse(Motel motel) {
-    }
+    public MotelResponse(Motel motel) {}
 }

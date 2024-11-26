@@ -76,6 +76,5 @@ public class Motel {
     @JsonManagedReference(value = "motel-ContractTemplate") // Đặt tên cho tham chiếu quản lý
     private List<ContractTemplate> contractTemplates;
 
-    public Motel(UUID motelId, String motelName, String motelAddress) {
-    }
+    public Motel(UUID motelId, String motelName, String motelAddress) {}
 }

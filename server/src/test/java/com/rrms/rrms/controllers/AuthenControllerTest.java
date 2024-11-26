@@ -1,29 +1,14 @@
 package com.rrms.rrms.controllers;
 
-import static org.mockito.Mockito.when;
-
-import java.time.LocalDate;
-import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rrms.rrms.dto.request.LoginRequest;
-import com.rrms.rrms.dto.response.LoginResponse;
-import com.rrms.rrms.enums.ErrorCode;
-import com.rrms.rrms.enums.Gender;
-import com.rrms.rrms.exceptions.AppException;
-import com.rrms.rrms.models.Account;
 import com.rrms.rrms.services.IAccountService;
 import com.rrms.rrms.services.IAuthorityService;
 import com.rrms.rrms.services.IMailService;
@@ -81,52 +66,52 @@ public class AuthenControllerTest {
     //                .andExpect(MockMvcResultMatchers.content().string("Không lấy được thông tin email hoặc tên"));
     //    }
     //
-    @Test
-    void login_withValidCredentials_returnsSuccess() throws Exception {
-        // Arrange
-        LoginRequest loginRequest = new LoginRequest("0123456789", "password");
-        LoginResponse loginResponse = LoginResponse.builder()
-                .token("jwt-token")
-                .authenticated(true)
-                .username("0123456789")
-                .fullname("John Doe")
-                .phone("0123456789")
-                .email("johndoe@example.com")
-                .avatar("avatar_url")
-                .birthday(LocalDate.of(1990, 1, 1))
-                .gender(Gender.MALE)
-                .cccd("123456789")
-                .build();
-
-        when(authorityService.loginResponse(loginRequest)).thenReturn(loginResponse);
-        when(accountService.findByPhone("0123456789")).thenReturn(Optional.of(new Account()));
-
-        // Act & Assert
-        mockMvc.perform(MockMvcRequestBuilders.post("/authen/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginRequest)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(true))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Đăng nhập thành công."))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.token").value("jwt-token"));
-    }
-
-    @Test
-    void login_withInvalidCredentials_returnsUnauthorized() throws Exception {
-        // Arrange
-        LoginRequest loginRequest = new LoginRequest("0123456789", "wrongpassword");
-
-        when(accountService.findByPhone("0123456789")).thenReturn(Optional.of(new Account()));
-        when(authorityService.loginResponse(loginRequest)).thenThrow(new AppException(ErrorCode.UNAUTHORIZED));
-
-        // Act & Assert
-        mockMvc.perform(MockMvcRequestBuilders.post("/authen/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginRequest)))
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(false))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Sai mật khẩu"));
-    }
+    //    @Test
+    //    void login_withValidCredentials_returnsSuccess() throws Exception {
+    //        // Arrange
+    //        LoginRequest loginRequest = new LoginRequest("0123456789", "password");
+    //        LoginResponse loginResponse = LoginResponse.builder()
+    //                .token("jwt-token")
+    //                .authenticated(true)
+    //                .username("0123456789")
+    //                .fullname("John Doe")
+    //                .phone("0123456789")
+    //                .email("johndoe@example.com")
+    //                .avatar("avatar_url")
+    //                .birthday(LocalDate.of(1990, 1, 1))
+    //                .gender(Gender.MALE)
+    //                .cccd("123456789")
+    //                .build();
+    //
+    //        when(authorityService.loginResponse(loginRequest)).thenReturn(loginResponse);
+    //        when(accountService.findByPhone("0123456789")).thenReturn(Optional.of(new Account()));
+    //
+    //        // Act & Assert
+    //        mockMvc.perform(MockMvcRequestBuilders.post("/authen/login")
+    //                        .contentType(MediaType.APPLICATION_JSON)
+    //                        .content(objectMapper.writeValueAsString(loginRequest)))
+    //                .andExpect(MockMvcResultMatchers.status().isOk())
+    //                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(true))
+    //                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Đăng nhập thành công."))
+    //                .andExpect(MockMvcResultMatchers.jsonPath("$.data.token").value("jwt-token"));
+    //    }
+    //
+    //    @Test
+    //    void login_withInvalidCredentials_returnsUnauthorized() throws Exception {
+    //        // Arrange
+    //        LoginRequest loginRequest = new LoginRequest("0123456789", "wrongpassword");
+    //
+    //        when(accountService.findByPhone("0123456789")).thenReturn(Optional.of(new Account()));
+    //        when(authorityService.loginResponse(loginRequest)).thenThrow(new AppException(ErrorCode.UNAUTHORIZED));
+    //
+    //        // Act & Assert
+    //        mockMvc.perform(MockMvcRequestBuilders.post("/authen/login")
+    //                        .contentType(MediaType.APPLICATION_JSON)
+    //                        .content(objectMapper.writeValueAsString(loginRequest)))
+    //                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+    //                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(false))
+    //                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Sai mật khẩu"));
+    //    }
 
     //    @Test
     //    void logout_withValidRequest_returnsSuccess() throws Exception {

@@ -1,7 +1,6 @@
 package com.rrms.rrms.dto.request;
 
 import java.util.List;
-import java.util.UUID;
 
 import com.rrms.rrms.dto.response.MotelServiceResponse;
 import com.rrms.rrms.models.Motel;
@@ -33,5 +32,4 @@ public class MotelRequest {
         this.address = motel.getAddress();
         // Ánh xạ các thuộc tính khác của Motel nếu cần
     }
-
 }
