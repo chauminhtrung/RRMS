@@ -872,9 +872,8 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
             <TextField
               onChange={(event) => {
                 handleDetailAddressChange(event)
-                formik.handleChange
               }}
-              value={formik.values.address}
+              value={bulletinBoard.address}
               InputLabelProps={{
                 shrink: !!bulletinBoard.address
               }}
@@ -884,8 +883,6 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
               label="Địa chỉ chi tiết"
               variant="filled"
               sx={{ width: '100%', mt: -2 }}
-              error={Boolean(formik.errors.address)}
-              helperText={formik.errors.address}
             />
           </Box>
           <TitleAttribute title="Tọa độ" description="Chọn vị trí trên bản đồ để lấy tọa độ của bạn" />
