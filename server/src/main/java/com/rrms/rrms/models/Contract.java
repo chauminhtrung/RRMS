@@ -31,6 +31,7 @@ public class Contract {
 
     @ManyToOne
     @JoinColumn(name = "tenant_id")
+    @JsonBackReference(value = "Tenant-Contract") // Đặt tên cho tham chiếu ngược
     private Tenant tenant;
 
     @ManyToOne
