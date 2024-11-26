@@ -91,7 +91,8 @@ class MotelDeviceServiceTest {
         // Assertions
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertEquals("Device1", result.get(0).getDeviceName());
+
+    assertEquals("Device1", result.get(0).getDeviceName());
         assertEquals("Device2", result.get(1).getDeviceName());
 
         // Verify interactions
