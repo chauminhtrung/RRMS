@@ -22,7 +22,9 @@ import * as Yup from 'yup'
 import { updateProfile } from '~/apis/profileAPI'
 
 const validationSchema = Yup.object({
-  email: Yup.string().email('Email không hợp lệ').required('Bắt buộc nhập email')
+  email: Yup.string()
+    .matches(/^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/, 'Email không hợp lệ')
+    .required('Bắt buộc nhập email')
 })
 
 const ProfileTab = ({ profile, setProfile, selectedImage }) => {
@@ -148,11 +150,13 @@ const ProfileTab = ({ profile, setProfile, selectedImage }) => {
             <TextField
               label="Số điện thoại"
               fullWidth
+              read
               value={profile.phone}
               onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
               InputLabelProps={{
                 shrink: !!profile.phone
               }}
+              disabled
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -163,7 +167,7 @@ const ProfileTab = ({ profile, setProfile, selectedImage }) => {
               InputLabelProps={{
                 shrink: true
               }}
-              value={profile.birthday}
+              value={profile.birthday ? profile.birthday.split('T')[0] : ''}
               onChange={(e) => setProfile({ ...profile, birthday: e.target.value })}
             />
           </Grid>
@@ -189,7 +193,8 @@ const ProfileTab = ({ profile, setProfile, selectedImage }) => {
         variant="contained"
         color="primary"
         fullWidth
-        onClick={handleUpload}>
+        onClick={handleUpload}
+        disabled={!formik.isValid || !formik.dirty}>
         Lưu thay đổi
       </Button>
     </Box>

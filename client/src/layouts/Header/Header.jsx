@@ -7,8 +7,20 @@ import LanguageSelect from './Options/LanguageSelect'
 import ModeSelect from './Options/ModeSelect'
 import { useTheme } from '@emotion/react'
 import { useTranslation } from 'react-i18next'
+import { Avatar } from '@mui/material'
+import WarningEmailNotExits from './WarningEmailNotExits'
 
-const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLanguage, currentLanguage, motelId }) => {
+const Header = ({
+  username,
+  avatar,
+  setUsername,
+  setAvatar,
+  setToken,
+  toggleLanguage,
+  currentLanguage,
+  motelId,
+  account
+}) => {
   const [IsDanhmuc, setIsDanhmuc] = useState(false)
   const [IsMuaban, setIsMuaban] = useState(false)
   const [IsTaikhoan, setIsTaikhoan] = useState(false)
@@ -526,13 +538,12 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
                       <div className="aw__m1n72bce">
                         <div className="aw__ntc1674" style={{ '--ntc1674-2': '124px' }}>
                           {username ? (
-                            <Link to="/profile" rel="nofollow" onClick={handleMenuItemClick}>
-                              <span
-                                className="aw__nrouw61"
-                                style={{
-                                  '--nrouw61-3': '48px',
-                                  backgroundImage: `url(${avatar || '/default_user.png'})` // Sử dụng avatar hoặc ảnh mặc định
-                                }}></span>
+                            <Link
+                              to="/profile"
+                              rel="nofollow"
+                              onClick={handleMenuItemClick}
+                              style={{ display: 'flex' }}>
+                              <Avatar>{username[0]}</Avatar>
                               <span className="aw__n171wcvy" style={{ '--n171wcvy-0': '8px', '--n171wcvy-1': '14px' }}>
                                 {username || 'Đăng nhập / Đăng ký'}
                               </span>
@@ -875,6 +886,7 @@ const Header = ({ username, avatar, setUsername, setAvatar, setToken, toggleLang
             )}
           </div>
         </div>
+        {account?.email && account ? <></> : <WarningEmailNotExits />}
         <div className="init aw__s1bb4p92">
           <ul className="aw__m3xdfsg">
             <li id="btn-home-app-wrapper" className="aw__m15ofxwr">
