@@ -69,38 +69,28 @@ const VisuallyHiddenInput = styled('input')({
 })
 
 const validationSchema = Yup.object({
-  nameRoom: Yup.string()
-    .required('Tiêu đề là bắt buộc.')
-    .min(2, 'Tiêu đề phải có ít nhất 2 ký tự.')
-    .max(50, 'Tiêu đề không được quá 50 ký tự.'),
-  typeRoomName: Yup.string().required('Loại phòng là bắt buộc.'),
-  // owner: Yup.string().required('Tên chủ phòng là bắt buộc.'),
-  // phone: Yup.string()
-  //   .required('Số điện thoại là bắt buộc.')
-  //   .matches(/^[0-9]+$/, 'Số điện thoại chỉ chứa số.')
-  //   .min(10, 'Số điện thoại phải có ít nhất 10 ký tự.')
-  //   .max(15, 'Số điện thoại không được quá 15 ký tự.'),
-  description: Yup.string().required('Mô tả là bắt buộc.').max(500, 'Mô tả không được quá 500 ký tự.'),
-  price: Yup.number().required('Giá phòng là bắt buộc.').min(0, 'Giá phòng phải lớn hơn hoặc bằng 0.'),
-  deposit: Yup.number().required('Tiền đặt cọc là bắt buộc.').min(0, 'Tiền đặt cọc phải lớn hơn hoặc bằng 0.'),
-  roomArea: Yup.number()
-    .required('Diện tích phòng là bắt buộc.')
-    .min(0, 'Diện tích phòng phải lớn hơn hoặc bằng 0.')
-    .max(100, 'Diện tích phần phải lớn hơn hoặc bằng 100.'),
-  maxPerson: Yup.number().required('Số người tối đa là bắt buộc.').min(1, 'Số người tối đa phải lớn hơn hoặc bằng 1.'),
-  rentalStartTime: Yup.date()
-    .required('Thời gian bắt đầu cho thuê là bắt buộc.')
-    .min(new Date(), 'Thời gian bắt đầu không được là trong quá khứ.'),
-  roomServices: Yup.array()
-    .of(Yup.string())
-    .min(1, 'Ít nhất một dịch vụ phải được chọn.')
-    .required('Dịch vụ là bắt buộc.'),
-  roomImages: Yup.array().of(Yup.string().url('Hình ảnh phải là một URL hợp lệ.')).min(1, 'Cần ít nhất một hình ảnh.'),
-  rules: Yup.array()
-    .of(Yup.string().required('Quy định là bắt buộc.'))
-    .required('Ít nhất một quy định phải được cung cấp.'),
-  address: Yup.string().required('Địa chỉ là bắt buộc.')
+  title: Yup.string().required('Tiêu đề là bắt buộc.').max(100, 'Tiêu đề không được vượt quá 100 ký tự.'),
+  rentalCategory: Yup.string().required('Danh mục cho thuê là bắt buộc.'),
+  description: Yup.string().max(500, 'Mô tả không được vượt quá 500 ký tự.'),
+  rentPrice: Yup.number().required('Giá thuê là bắt buộc.').min(0, 'Giá thuê phải lớn hơn hoặc bằng 0.'),
+  promotionalRentalPrice: Yup.number()
+    .nullable()
+    .min(0, 'Giá khuyến mãi phải lớn hơn hoặc bằng 0.')
+    .max(Yup.ref('rentPrice'), 'Giá khuyến mãi phải nhỏ hơn hoặc bằng giá thuê.'),
+  deposit: Yup.number().required('Tiền cọc là bắt buộc.').min(0, 'Tiền cọc phải lớn hơn hoặc bằng 0.'),
+  area: Yup.number().required('Diện tích là bắt buộc.').min(0, 'Diện tích phải lớn hơn hoặc bằng 0.'),
+  electricityPrice: Yup.number().required('Giá điện là bắt buộc.').min(0, 'Giá điện phải lớn hơn hoặc bằng 0.'),
+  waterPrice: Yup.number().required('Giá nước là bắt buộc.').min(0, 'Giá nước phải lớn hơn hoặc bằng 0.'),
+  maxPerson: Yup.string().required('Số người ở là bắt buộc.'),
+  moveInDate: Yup.date()
+    .nullable()
+    .required('Ngày chuyển vào là bắt buộc.')
+    .min(new Date(), 'Ngày chuyển vào không được ở quá khứ.'),
+  openingHours: Yup.string().required('Giờ mở cửa là bắt buộc.'),
+  closeHours: Yup.string().required('Giờ đóng cửa là bắt buộc.'),
+  address: Yup.string().required('Địa chỉ là bắt buộc.').max(200, 'Địa chỉ không được vượt quá 200 ký tự.')
 })
+
 const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }) => {
   const label = { inputProps: { 'aria-label': 'Switch demo' } }
   const [selectedImages, setSelectedImages] = useState([])
@@ -171,63 +161,49 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
     }
   }, [bulletinBoardId]) // Hook chỉ chạy khi bulletinBoardId thay đổi
 
-  // const formik = useFormik({
-  //   initialValues: {
-  //     username: bulletinBoard.username,
-  //     title: bulletinBoard.title,
-  //     rentalCategory: bulletinBoard.rentalCategory,
-  //     rentPrice: bulletinBoard.rentPrice,
-  //     promotionalRentalPrice: bulletinBoard.promotionalRentalPrice,
-  //     deposit: bulletinBoard.deposit,
-  //     area: bulletinBoard.area,
-  //     electricityPrice: bulletinBoard.electricityPrice,
-  //     waterPrice: bulletinBoard.waterPrice,
-  //     priceWater: bulletinBoard.priceWater,
-  //     maxPerson: bulletinBoard.maxPerson,
-  //     moveInDate: bulletinBoard.moveInDate,
-  //     openingHours: bulletinBoard.openingHours,
-  //     closeHours: bulletinBoard.closeHours,
-  //     address: bulletinBoard.address,
-  //     longitude: bulletinBoard.longitude,
-  //     latitude: bulletinBoard.latitude,
-  //     status: bulletinBoard.status,
-  //     isActive: bulletinBoard.isActive,
-  //     bulletinBoardImages: bulletinBoard.bulletinBoardImages,
-  //     bulletinBoardRules: bulletinBoard.bulletinBoardRules,
-  //     bulletinBoards_RentalAm: bulletinBoard.bulletinBoards_RentalAm
-  //   },
-  //   validationSchema: validationSchema,
-  //   onSubmit: (values) => {
-  //     console.log(values)
-  //   }
-  // })
+  const formik = useFormik({
+    initialValues: {
+      title: '',
+      rentalCategory: '',
+      description: '',
+      rentPrice: '',
+      promotionalRentalPrice: '',
+      deposit: '',
+      area: '',
+      electricityPrice: '',
+      waterPrice: '',
+      maxPerson: '',
+      moveInDate: null,
+      openingHours: '',
+      closeHours: '',
+      address: ''
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      console.log(values)
+    }
+  })
 
-  // useEffect(() => {
-  //   formik.setValues({
-  //     username: bulletinBoard.username,
-  //     title: bulletinBoard.title,
-  //     rentalCategory: bulletinBoard.rentalCategory,
-  //     rentPrice: bulletinBoard.rentPrice,
-  //     promotionalRentalPrice: bulletinBoard.promotionalRentalPrice,
-  //     deposit: bulletinBoard.deposit,
-  //     area: bulletinBoard.area,
-  //     electricityPrice: bulletinBoard.electricityPrice,
-  //     waterPrice: bulletinBoard.waterPrice,
-  //     priceWater: bulletinBoard.priceWater,
-  //     maxPerson: bulletinBoard.maxPerson,
-  //     moveInDate: bulletinBoard.moveInDate,
-  //     openingHours: bulletinBoard.openingHours,
-  //     closeHours: bulletinBoard.closeHours,
-  //     address: bulletinBoard.address,
-  //     longitude: bulletinBoard.longitude,
-  //     latitude: bulletinBoard.latitude,
-  //     status: bulletinBoard.status,
-  //     isActive: bulletinBoard.isActive,
-  //     bulletinBoardImages: bulletinBoard.bulletinBoardImages,
-  //     bulletinBoardRules: bulletinBoard.bulletinBoardRules,
-  //     bulletinBoards_RentalAm: bulletinBoard.bulletinBoards_RentalAm
-  //   })
-  // }, [bulletinBoard])
+  useEffect(() => {
+    if (bulletinBoard) {
+      formik.setValues({
+        title: bulletinBoard.title || '',
+        rentalCategory: bulletinBoard.rentalCategory || '',
+        description: bulletinBoard.description || '',
+        rentPrice: bulletinBoard.rentPrice || '',
+        promotionalRentalPrice: bulletinBoard.promotionalRentalPrice || '',
+        deposit: bulletinBoard.deposit || '',
+        area: bulletinBoard.area || '',
+        electricityPrice: bulletinBoard.electricityPrice || '',
+        waterPrice: bulletinBoard.waterPrice || '',
+        maxPerson: bulletinBoard.maxPerson || '',
+        moveInDate: bulletinBoard.moveInDate || null,
+        openingHours: bulletinBoard.openingHours || '',
+        closeHours: bulletinBoard.closeHours || '',
+        address: bulletinBoard.address || ''
+      })
+    }
+  }, [bulletinBoard])
 
   const handleLocationChange = (province, district, ward) => {
     const newAddress = [ward, district, province].filter(Boolean).join(', ')
@@ -273,8 +249,8 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
     const images = Array.from(event.target.files)
     console.log('Selected files:', images)
 
-    if (selectedImages.length + images.length > 5) {
-      toast.info('Chỉ được chọn tối đa 5 ảnh')
+    if (selectedImages.length + images.length < 2 || selectedImages.length + images.length > 5) {
+      toast.info('Chỉ được chọn từ 2 đến 5 ảnh')
       return
     }
 
@@ -458,11 +434,10 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
             <Grid item xs={12} sx={{ my: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <TextField
                 onChange={(event) => {
+                  formik.handleChange(event)
                   setBulletinBoard({ ...bulletinBoard, title: event.target.value })
-                  //  formik.handleChange
                 }}
-                value={bulletinBoard.title}
-                // onBlur={formik.handleBlur}
+                value={formik.values.title}
                 name="nameRoom"
                 required
                 variant="filled"
@@ -471,28 +446,25 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
                 InputLabelProps={{
                   shrink: !!bulletinBoard.title
                 }}
-                // error={formik.touched.title && Boolean(formik.errors.title)}
-                // helperText={formik.touched.title && formik.errors.title}
+                error={Boolean(formik.errors.title)}
+                helperText={formik.errors.title}
                 sx={{ minWidth: 350 }}
               />
               <FormControl
                 required
                 variant="filled"
                 sx={{ minWidth: 350 }}
-                //  error={formik.touched.rentalCategory && Boolean(formik.errors.rentalCategory)}
-              >
+                error={Boolean(formik.errors.rentalCategory)}>
                 <InputLabel id="demo-simple-select-filled-label">Danh mục thuê</InputLabel>
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
                   name="rentalCategory"
-                  value={bulletinBoard.rentalCategory}
+                  value={formik.values.rentalCategory}
                   onChange={(event) => {
                     setBulletinBoard({ ...bulletinBoard, rentalCategory: event.target.value })
-                    //    formik.handleChange
-                  }}
-                  //   onBlur={formik.handleBlur}
-                >
+                    formik.handleChange(event)
+                  }}>
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
@@ -507,20 +479,16 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
                   <MenuItem value={'Căn hộ studio'}>Căn hộ studio</MenuItem>
                   <MenuItem value={'Officetel'}>Officetel</MenuItem>
                 </Select>
-                {/* <FormHelperText>{formik.touched.rentalCategory && formik.errors.rentalCategory}</FormHelperText> */}
+                <FormHelperText>{formik.errors.rentalCategory}</FormHelperText>
               </FormControl>
             </Grid>
             <Grid item xs={12} sx={{ mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <TextField
-                // onChange={formik.handleChange}
-                // onBlur={formik.handleBlur}
                 name="owner"
                 id="outlined-basic"
                 label="Tên người liên hệ"
                 variant="filled"
                 value={account?.fullname}
-                // error={formik.touched.owner && Boolean(formik.errors.owner)}
-                // helperText={formik.touched.owner && formik.errors.owner}
                 sx={{ minWidth: 350 }}
                 slotProps={{
                   input: {
@@ -535,14 +503,6 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
                 variant="filled"
                 name="phone"
                 value={account?.phone}
-                // value={formik.values.phone}
-                // onBlur={formik.handleBlur}
-                // onChange={(e) => {
-                //   formik.handleChange(e)
-                //   setRoom({ ...room, phone: e.target.value })
-                // }}
-                // error={formik.touched.phone && Boolean(formik.errors.phone)}
-                // helperText={formik.touched.phone && formik.errors.phone}
                 sx={{ minWidth: 350 }}
                 slotProps={{
                   input: {
@@ -558,10 +518,9 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
             minRows={4}
             onChange={(event) => {
               setBulletinBoard({ ...bulletinBoard, description: event.target.value })
-              // formik.handleChange
+              formik.handleChange(event)
             }}
-            value={bulletinBoard.description}
-            // onBlur={formik.handleBlur}
+            value={formik.values.description}
             name="description"
             style={{
               borderRadius: '10px',
@@ -573,19 +532,18 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
             }}
             placeholder="Nhập mô tả"
           />
-          {/* {formik.touched.description && formik.errors.description && (
-          <div style={{ color: 'red', marginTop: '5px' }}>{formik.errors.description}</div>
-        )} */}
+          {formik.errors.description && (
+            <div style={{ color: 'red', marginTop: '5px' }}>{formik.errors.description}</div>
+          )}
           <TitleAttribute title="Thông tin cơ bản & giá" description="Nhập các thông tin về phòng cho thuê" />
           <Grid container spacing={1} sx={{ my: 1 }}>
             <Grid item xs={4}>
               <TextField
                 onChange={(event) => {
                   setBulletinBoard({ ...bulletinBoard, rentPrice: event.target.value })
-                  // formik.handleChange
+                  formik.handleChange
                 }}
-                // onBlur={formik.handleBlur}
-                value={bulletinBoard.rentPrice}
+                value={formik.values.rentPrice}
                 name="rentPrice"
                 required
                 id="outlined-basic"
@@ -596,8 +554,8 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
                 InputLabelProps={{
                   shrink: !!bulletinBoard.rentPrice
                 }}
-                // error={formik.touched.rentPrice && Boolean(formik.errors.rentPrice)}
-                // helperText={formik.touched.rentPrice && formik.errors.rentPrice}
+                error={Boolean(formik.errors.rentPrice)}
+                helperText={formik.errors.rentPrice}
               />
             </Grid>
             <Grid item xs={4}>
@@ -605,31 +563,28 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
                 required
                 onChange={(event) => {
                   setBulletinBoard({ ...bulletinBoard, promotionalRentalPrice: event.target.value })
-                  // formik.handleChange
+                  formik.handleChange
                 }}
-                // onBlur={formik.handleBlur}
-
                 name="promotionalRentalPrice"
                 id="outlined-basic"
                 label="Giá thuê khuyến mãi"
                 variant="filled"
                 type="number"
                 sx={{ width: '100%' }}
-                value={bulletinBoard.promotionalRentalPrice}
+                value={formik.values.promotionalRentalPrice}
                 InputLabelProps={{
                   shrink: !!bulletinBoard.promotionalRentalPrice
                 }}
-                // error={formik.touched.promotionalRentalPrice && Boolean(formik.errors.promotionalRentalPrice)}
-                // helperText={formik.touched.promotionalRentalPrice && formik.errors.promotionalRentalPrice}
+                error={Boolean(formik.errors.promotionalRentalPrice)}
+                helperText={formik.errors.promotionalRentalPrice}
               />
             </Grid>
             <Grid item xs={4}>
               <TextField
                 onChange={(event) => {
                   setBulletinBoard({ ...bulletinBoard, deposit: event.target.value })
-                  // formik.handleChange
+                  formik.handleChange
                 }}
-                // onBlur={formik.handleBlur}
                 name="deposit"
                 required
                 id="outlined-basic"
@@ -637,21 +592,20 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
                 variant="filled"
                 type="number"
                 sx={{ width: '100%' }}
-                value={bulletinBoard.deposit}
+                value={formik.values.deposit}
                 InputLabelProps={{
                   shrink: !!bulletinBoard.deposit
                 }}
-                // error={formik.touched.deposit && Boolean(formik.errors.deposit)}
-                // helperText={formik.touched.deposit && formik.errors.deposit}
+                error={Boolean(formik.errors.deposit)}
+                helperText={formik.errors.deposit}
               />
             </Grid>
             <Grid item xs={4}>
               <TextField
                 onChange={(event) => {
                   setBulletinBoard({ ...bulletinBoard, area: event.target.value })
-                  // formik.handleChange
+                  formik.handleChange
                 }}
-                // onBlur={formik.handleBlur}
                 name="area"
                 required
                 id="outlined-basic"
@@ -659,21 +613,20 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
                 variant="filled"
                 type="number"
                 sx={{ width: '100%' }}
-                value={bulletinBoard.area}
+                value={formik.values.area}
                 InputLabelProps={{
                   shrink: !!bulletinBoard.area
                 }}
-                // error={formik.touched.area && Boolean(formik.errors.area)}
-                // helperText={formik.touched.area && formik.errors.area}
+                error={Boolean(formik.errors.area)}
+                helperText={formik.errors.area}
               />
             </Grid>
             <Grid item xs={4}>
               <TextField
                 onChange={(event) => {
                   setBulletinBoard({ ...bulletinBoard, electricityPrice: event.target.value })
-                  // formik.handleChange
+                  formik.handleChange
                 }}
-                // onBlur={formik.handleBlur}
                 name="priceElectric"
                 required
                 id="outlined-basic"
@@ -681,21 +634,20 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
                 variant="filled"
                 type="number"
                 sx={{ width: '100%' }}
-                value={bulletinBoard.electricityPrice}
+                value={formik.values.electricityPrice}
                 InputLabelProps={{
                   shrink: !!bulletinBoard.electricityPrice
                 }}
-                // error={formik.touched.electricityPrice && Boolean(formik.errors.electricityPrice)}
-                // helperText={formik.touched.electricityPrice && formik.errors.electricityPrice}
+                error={Boolean(formik.errors.electricityPrice)}
+                helperText={formik.errors.electricityPrice}
               />
             </Grid>
             <Grid item xs={4}>
               <TextField
                 onChange={(event) => {
                   setBulletinBoard({ ...bulletinBoard, waterPrice: event.target.value })
-                  // formik.handleChange
+                  formik.handleChange
                 }}
-                // onBlur={formik.handleBlur}
                 name="priceWater"
                 required
                 id="outlined-basic"
@@ -703,33 +655,26 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
                 variant="filled"
                 type="number"
                 sx={{ width: '100%' }}
-                value={bulletinBoard.waterPrice}
+                value={formik.values.waterPrice}
                 InputLabelProps={{
                   shrink: !!bulletinBoard.waterPrice
                 }}
-                // error={formik.touched.waterPrice && Boolean(formik.errors.waterPrice)}
-                // helperText={formik.touched.waterPrice && formik.errors.waterPrice}
+                error={Boolean(formik.errors.waterPrice)}
+                helperText={formik.errors.waterPrice}
               />
             </Grid>
             <Grid item xs={6}>
-              <FormControl
-                required
-                variant="filled"
-                sx={{ minWidth: 350 }}
-                // error={formik.touched.maxPerson && Boolean(formik.errors.maxPerson)}
-              >
+              <FormControl required variant="filled" sx={{ minWidth: 350 }} error={Boolean(formik.errors.maxPerson)}>
                 <InputLabel id="demo-simple-select-filled-label">Tối đa người ở / phòng</InputLabel>
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
                   name="maxPerson"
-                  value={bulletinBoard.maxPerson}
+                  value={formik.values.maxPerson}
                   onChange={(event) => {
                     setBulletinBoard({ ...bulletinBoard, maxPerson: event.target.value })
-                    // formik.handleChange
-                  }}
-                  // onBlur={formik.handleBlur}
-                >
+                    formik.handleChange
+                  }}>
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
@@ -741,28 +686,27 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
                   <MenuItem value={'7-10 người ở'}>7-10 người ở</MenuItem>
                   <MenuItem value={'Không giới hạn'}>Không giới hạn</MenuItem>
                 </Select>
-                {/* <FormHelperText>{formik.touched.maxPerson && formik.errors.maxPerson}</FormHelperText> */}
+                <FormHelperText>{formik.errors.maxPerson}</FormHelperText>
               </FormControl>
             </Grid>
             <Grid item xs={6}>
               <TextField
                 onChange={(event) => {
                   setBulletinBoard({ ...bulletinBoard, moveInDate: event.target.value })
-                  // formik.handleChange
+                  formik.handleChange
                 }}
-                // onBlur={formik.handleBlur}
                 name="moveInDate"
                 required
                 variant="filled"
                 label="Ngày có thể vào ở"
                 fullWidth
                 type="date"
-                value={bulletinBoard?.moveInDate ? bulletinBoard.moveInDate.split('T')[0] : ''}
+                value={formik.values.moveInDate ? formik.values.moveInDate.split('T')[0] : ''}
                 InputLabelProps={{
                   shrink: true
                 }}
-                // error={formik.touched.moveInDate && Boolean(formik.errors.moveInDate)}
-                // helperText={formik.touched.moveInDate && formik.errors.moveInDate}
+                error={Boolean(formik.errors.moveInDate)}
+                helperText={formik.errors.moveInDate}
               />
             </Grid>
           </Grid>
@@ -793,7 +737,6 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
                       ? bulletinBoard.bulletinBoards_RentalAm.filter((s) => s.rentalAmenities.name !== service)
                       : [...bulletinBoard.bulletinBoards_RentalAm, serviceObject]
                     setBulletinBoard({ ...bulletinBoard, bulletinBoards_RentalAm: newServices })
-                    // formik.setFieldValue('bulletinBoards_RentalAm', newServices)
                   }}
                   control={
                     <Checkbox
@@ -811,17 +754,16 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
               variant="filled"
               name="openingHours"
               sx={{ minWidth: 350 }}
-              // error={formik.touched.openingHours && Boolean(formik.errors.openingHours)}
-            >
+              error={Boolean(formik.errors.openingHours)}>
               <InputLabel id="demo-simple-select-filled-label">Giờ mở cửa</InputLabel>
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
                 name="openingHours"
-                value={bulletinBoard.openingHours}
+                value={formik.values.openingHours}
                 onChange={(event) => {
                   setBulletinBoard({ ...bulletinBoard, openingHours: event.target.value })
-                  // formik.handleChange
+                  formik.handleChange
                 }}>
                 <MenuItem value="">
                   <em>None</em>
@@ -830,13 +772,9 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
                 <MenuItem value={'5 SA'}>5 SA</MenuItem>
                 <MenuItem value={'6 SA'}>6 SA</MenuItem>
               </Select>
-              {/* <FormHelperText>{formik.touched.openingHours && formik.errors.openingHours}</FormHelperText> */}
+              <FormHelperText>{formik.errors.openingHours}</FormHelperText>
             </FormControl>
-            <FormControl
-              variant="filled"
-              sx={{ minWidth: 350 }}
-              // error={formik.touched.closeHours && Boolean(formik.errors.closeHours)}
-            >
+            <FormControl variant="filled" sx={{ minWidth: 350 }} error={Boolean(formik.errors.closeHours)}>
               <InputLabel id="demo-simple-select-filled-label">Giờ đóng cửa</InputLabel>
               <Select
                 labelId="demo-simple-select-filled-label"
@@ -845,7 +783,7 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
                 value={bulletinBoard.closeHours}
                 onChange={(event) => {
                   setBulletinBoard({ ...bulletinBoard, closeHours: event.target.value })
-                  // formik.handleChange
+                  formik.handleChange
                 }}>
                 <MenuItem value="">
                   <em>None</em>
@@ -854,7 +792,7 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
                 <MenuItem value={'23 CH'}>23 CH</MenuItem>
                 <MenuItem value={'00 SA'}>00 SA</MenuItem>
               </Select>
-              {/* <FormHelperText>{formik.touched.closeHours && formik.errors.closeHours}</FormHelperText> */}
+              <FormHelperText>{formik.errors.closeHours}</FormHelperText>
             </FormControl>
           </Box>
           <Box>
@@ -934,21 +872,20 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
             <TextField
               onChange={(event) => {
                 handleDetailAddressChange(event)
-                // formik.handleChange
+                formik.handleChange
               }}
-              value={bulletinBoard.address}
+              value={formik.values.address}
               InputLabelProps={{
                 shrink: !!bulletinBoard.address
               }}
-              // onBlur={formik.handleBlur}
               name="address"
               required
               id="outlined-basic"
               label="Địa chỉ chi tiết"
               variant="filled"
               sx={{ width: '100%', mt: -2 }}
-              // error={formik.touched.address && Boolean(formik.errors.address)}
-              // helperText={formik.touched.address && formik.errors.address}
+              error={Boolean(formik.errors.address)}
+              helperText={formik.errors.address}
             />
           </Box>
           <TitleAttribute title="Tọa độ" description="Chọn vị trí trên bản đồ để lấy tọa độ của bạn" />
@@ -1010,13 +947,12 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
                   multiple
                   onChange={(event) => {
                     handleImageChange(event)
-                    // formik.setFieldValue('roomImages', event.currentTarget.files)
                   }}
                 />
               </IconButton>
               <Box
                 sx={{
-                  display: selectedImages.length > 0 || bulletinBoard.bulletinBoardImages ? 'none' : 'block',
+                  display: selectedImages.length > 0 || bulletinBoard.bulletinBoardImages == [] ? 'none' : 'block',
                   textAlign: 'center'
                 }}>
                 <Typography>Chọn tối đa 5 ảnh</Typography>
@@ -1084,7 +1020,11 @@ const PostModal = ({ open, handleClose, refreshBulletinBoards, bulletinBoardId }
           <Button variant="contained" sx={{ bgcolor: '#2f3542' }} onClick={handleClose}>
             Đóng
           </Button>
-          <Button variant="contained" sx={{ bgcolor: '#2ed573' }} onClick={handlePost}>
+          <Button
+            variant="contained"
+            disabled={!formik.isValid || !formik.dirty}
+            sx={{ bgcolor: '#2ed573' }}
+            onClick={handlePost}>
             Thêm tin đăng
           </Button>
         </Box>

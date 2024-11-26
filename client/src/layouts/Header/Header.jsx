@@ -886,7 +886,7 @@ const Header = ({
             )}
           </div>
         </div>
-        {account?.email && account ? <></> : <WarningEmailNotExits />}
+        {account?.email || !account ? <></> : <WarningEmailNotExits />}
         <div className="init aw__s1bb4p92">
           <ul className="aw__m3xdfsg">
             <li id="btn-home-app-wrapper" className="aw__m15ofxwr">

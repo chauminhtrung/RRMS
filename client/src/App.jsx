@@ -57,7 +57,7 @@ import { getAccountByUsername } from './apis/accountAPI'
 function App() {
   const [username, setUsername] = useState('')
   const [avatar, setAvatar] = useState('')
-  const [account, setAccount] = useState('')
+  const [account, setAccount] = useState()
   const [token, setToken] = useState(null)
   //lay thong tin tro cua tk account truyen xuong cho trang chu tro
   const [isAdmin, setIsAdmin] = useState(false)
