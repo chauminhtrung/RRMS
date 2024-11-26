@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -85,6 +86,7 @@ public class Tenant {
     @JsonBackReference(value = "Room-Tenant") // Đặt tên cho tham chiếu ngược
     private Room room;
 
-    @OneToMany(mappedBy = "tenant")
+    @OneToMany(mappedBy = "tenant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference(value = "Tenant-Contract") // Đặt tên cho tham chiếu quản lý
     private List<Contract> contracts; // Một người thuê có nhiều hợp đồng
 }

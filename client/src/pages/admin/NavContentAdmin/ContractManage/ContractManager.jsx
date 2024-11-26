@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
-
 import { Box } from '@mui/material'
 import { useParams } from 'react-router-dom'
 import { ReactTabulator } from 'react-tabulator'
@@ -86,6 +85,7 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     countTenant: 1,
     status: 'ACTIVE' // Giá trị có thể là 'ACTIVE', 'ENDED', hoặc 'IATExpire'
   })
+
   const [contracts, setContracts] = useState([])
   const [motelServices, setMotelServices] = useState([])
   const [motelDevices, setMotelSDevices] = useState([])
@@ -616,6 +616,18 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
     }
   }
 
+  const handlePrintContract = () => {
+    const contractUrl = `/quanlytro/${motelId}/Contract-Preview/${showMenu}`
+
+    // Mở cửa sổ mới để in nội dung hợp đồng
+    const printWindow = window.open(contractUrl, '_blank')
+
+    // Đợi nội dung tải xong, sau đó gọi window.print
+    printWindow.onload = () => {
+      printWindow.print()
+    }
+  }
+
   // Hàm xóa backdrop dư thừa
   const removeExtraModalBackdrops = () => {
     document.querySelectorAll('.modal-backdrop').forEach((backdrop) => backdrop.remove())
@@ -843,9 +855,50 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
       setShowMenu(null) // Đóng menu
     } else if (label === 'Thiết lập tài sản') {
       setShowMenu(null) // Đóng menu
-      //ham o duoi dung de xac dinh dang nhan vao phong nao
       fetchDataRoomByContract(showMenu)
-      //ham thuan fetch tai san cua phong o duoi (giong trung o cai dat dich vu)
+    } else if (label === 'Chia sẻ văn bản hợp đồng') {
+      const baseUrl = 'http://localhost:5173'
+      const shareLink = `${baseUrl}/quanlytro/${motelId}/Contract-Preview/${showMenu}`
+
+      // Sao chép liên kết vào clipboard
+      navigator.clipboard
+        .writeText(shareLink)
+        .then(() => {
+          Swal.fire({
+            title: '<strong><u>Thông báo!</u></strong>',
+            icon: 'info',
+            html: `
+            Đã sao chép liên kết hợp đồng! Bạn có thể chia sẻ cho bên thứ ba.<br>
+            <a href="${shareLink}" target="_blank">${shareLink}</a>
+          `,
+            showCloseButton: true,
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: `Đi đến đường dẫn`,
+            confirmButtonAriaLabel: 'Thumbs up, great!',
+            cancelButtonText: `Đóng`,
+            cancelButtonAriaLabel: 'Thumbs down'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Người dùng chọn "Đi đến đường dẫn"
+              window.open(shareLink, '_blank')
+            }
+          })
+        })
+        .catch((err) => {
+          console.error('Không thể sao chép liên kết:', err)
+          Swal.fire({
+            title: 'Lỗi',
+            text: 'Không thể sao chép liên kết. Vui lòng thử lại.',
+            icon: 'error'
+          })
+        })
+
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'In văn bản hợp đồng') {
+      setShowMenu(null) // Đóng menu
+      // Thực hiện chức năng in hợp đồng
+      handlePrintContract()
     } else {
       setShowMenu(null) // Đóng menu
       alert(`Action: ${label} on room ${showMenu}`)
