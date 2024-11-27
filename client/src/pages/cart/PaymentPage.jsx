@@ -29,7 +29,7 @@ import InfoIcon from '@mui/icons-material/Info'
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote'
 import DetailsIcon from '@mui/icons-material/Details'
 import { remove as removeDiacritics } from 'diacritics'
-import { paymentPaypal } from '~/apis/paymentAPI'
+import { paymentMoMo, paymentPaypal, paymentVNPay } from '~/apis/paymentAPI'
 import { toast } from 'react-toastify'
 
 const PaymentPage = ({ setIsAdmin }) => {
@@ -58,8 +58,36 @@ const PaymentPage = ({ setIsAdmin }) => {
       paymentPaypal(289).then((res) => {
         if (res.data.redirectUrl) {
           window.location.href = res.data.redirectUrl
+        } else {
+          toast('Có lỗi xảy ra khi tạo thanh toán Paypal.')
         }
       })
+    } else if (paymentMethod === 'vnPay') {
+      paymentVNPay()
+        .then((res) => {
+          if (res.redirectUrl) {
+            window.location.href = res.redirectUrl
+          } else {
+            toast('Có lỗi xảy ra khi tạo thanh toán VNPAY.')
+          }
+        })
+        .catch(() => {
+          toast('Có lỗi xảy ra trong quá trình thanh toán.')
+        })
+    } else if (paymentMethod === 'momo') {
+      paymentMoMo()
+        .then((res) => {
+          if (res && res.payUrl) {
+            window.location.href = res.payUrl
+          } else {
+            toast('Có lỗi xảy ra khi tạo thanh toán MoMo.')
+          }
+        })
+        .catch(() => {
+          toast('Có lỗi xảy ra trong quá trình thanh toán.')
+        })
+    } else {
+      toast('Phương thức thanh toán không hợp lệ.')
     }
   }
 
