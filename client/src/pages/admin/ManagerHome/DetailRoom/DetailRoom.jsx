@@ -243,27 +243,31 @@ const DetailRoom = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels }
               {/* neu co tk nao do thue trong phong do  */}
               <div className="card-feature" style={{ padding: '10px' }} id="list-customers">
                 <div className="row g-2">
-                  <div
-                    style={{ cursor: 'pointer' }}
-                    data-bs-toggle="modal"
-                    data-bs-target="#addCustomer"
-                    data-room-id="103299"
-                    className="col-12 customer">
-                    <div className="col-6 item-feature d-flex align-items-center justify-content-between mb-2">
-                      <div className="info" style={{ flex: 1 }}>
-                        <h6>Qq</h6>
-                        <p>0907274629</p>
-                      </div>
+                  {contract.tenant ? (
+                    <div
+                      style={{ cursor: 'pointer' }}
+                      data-bs-toggle="modal"
+                      data-bs-target="#addCustomer"
+                      data-room-id="103299"
+                      className="col-6 customer">
+                      <div className="col-12 item-feature d-flex align-items-center justify-content-between mb-2">
+                        <div className="info" style={{ flex: 1 }}>
+                          <h6>{contract.tenant.fullname}</h6>
+                          <p>{contract.tenant.phone}</p>
+                        </div>
 
-                      <div className="badge" style={{ backgroundColor: '#15A05C', marginRight: '10px' }}>
-                        Người liên hệ
-                      </div>
+                        <div className="badge" style={{ backgroundColor: '#15A05C', marginRight: '10px' }}>
+                          Người liên hệ
+                        </div>
 
-                      <div className="badge" style={{ backgroundColor: '#7dc242' }}>
-                        Đại diện hợp đồng
+                        <div className="badge" style={{ backgroundColor: '#7dc242' }}>
+                          Đại diện hợp đồng
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </div>
 

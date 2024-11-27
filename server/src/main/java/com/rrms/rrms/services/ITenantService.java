@@ -16,4 +16,6 @@ public interface ITenantService {
     TenantResponse update(UUID id, TenantRequest tenantRequest);
 
     void delete(UUID id);
+
+    List<TenantResponse> getAllTenantsRoomId(UUID roomId);
 }

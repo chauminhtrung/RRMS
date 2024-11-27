@@ -11,6 +11,7 @@ import { ReactTabulator } from 'react-tabulator'
 import axios from 'axios'
 import { env } from '~/configs/environment'
 import Swal from 'sweetalert2'
+import ExportToExcel from './ExportToExcel' // Import component ExportToExcel
 import {
   getRoomByMotelId,
   createRoom,
@@ -22,6 +23,8 @@ import {
   DeleteRoomServiceByid,
   updateRoom
 } from '~/apis/roomAPI'
+import { deleteReserveAPlace } from '~/apis/ReserveAPlaceAPI'
+import { getContractByIdRoom2 } from '~/apis/contractTemplateAPI'
 import { Modal } from 'bootstrap' // Import Bootstrap Modal API
 import {
   changeQuantityRoomDevice,
@@ -31,20 +34,19 @@ import {
   insertRoomDevice
 } from '~/apis/deviceAPT'
 import RentRoomModal from '../NavContentAdmin/RentRoomModal'
+import ModalCreateContract from '../NavContentAdmin/ContractManage/ModalCreateContract'
+import ReserveAPlaceModal from './ReserveAPlace/ReserveAPlaceModal'
+import ReserveAPlaceDetail from './ReserveAPlace/ReserveAPlaceDetail'
 const HomeWData = ({ Motel }) => {
   const { motelId } = useParams()
   const [rooms, setRooms] = useState([])
+  // State quản lý trạng thái của checkbox
   const [motelServices, setMotelServices] = useState([])
   const [showMenu, setShowMenu] = useState(null) // Trạng thái của menu hiện tại
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 })
   const menuRef = useRef(null) // Tham chiếu đến menu
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   const [additionItems, setAdditionItems] = useState([])
-  const [roomSerivces, setRoomSerivces] = useState([])
-  const [room, setRoom] = useState()
-  const [note, setNote] = useState('') // Tạo state để lưu ghi chú
-  const [device, setdevice] = useState([])
-  const [modalOpen, setModalOpen] = useState(false)
   const [formData, setFormData] = useState({
     motelId: motelId ? motelId : Motel[0].motelId,
     deposit: null,
@@ -72,6 +74,7 @@ const HomeWData = ({ Motel }) => {
     }
     setAdditionItems([...additionItems, newItem])
   }
+  const [contract, setContract] = useState({})
 
   const removeItem = (id) => {
     setAdditionItems(additionItems.filter((item) => item.id !== id))
@@ -81,11 +84,29 @@ const HomeWData = ({ Motel }) => {
     setAdditionItems(additionItems.map((item) => (item.id === id ? { ...item, [field]: value } : item)))
   }
 
- 
-
+  const [roomSerivces, setRoomSerivces] = useState([])
+  const [room, setRoom] = useState()
+  const [note, setNote] = useState('') // Tạo state để lưu ghi chú
+  const [device, setdevice] = useState([])
+  const [modalOpen, setModalOpen] = useState(false)
+  const [modalOpenContract, setModalOpenContract] = useState(false)
+  const [modalOpenReAPlace, setModalOpenReAPlace] = useState(false)
+  const [detailOpenReAPlace, setDetailOpenReAPlace] = useState(false)
   const toggleModal = () => {
     setModalOpen(!modalOpen)
   }
+
+  const toggleModalContract = () => {
+    setModalOpenContract(!modalOpenContract)
+  }
+
+  const toggleModalReAPlace = () => {
+    setModalOpenReAPlace(!modalOpenReAPlace)
+  }
+  const toggleDetailReAPlace = () => {
+    setDetailOpenReAPlace(!detailOpenReAPlace)
+  }
+
   // Hàm xử lý nhấn ngoài menu
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -118,6 +139,22 @@ const HomeWData = ({ Motel }) => {
     )
   }
 
+  //lay hop dong cua room do
+  const fetchRoomContract = async (id) => {
+    try {
+      const response = await getContractByIdRoom2(id)
+
+      if (response) {
+        setContract(response)
+      } else {
+        setContract({})
+      }
+    } catch (error) {
+      console.error(error)
+      setContract({})
+    }
+  }
+
   //ham lay dich vu phong
   const fetchDataServiceRooms = async (id) => {
     try {
@@ -137,7 +174,6 @@ const HomeWData = ({ Motel }) => {
       console.log(error)
     }
   }
-
   const handleChangeQuantityRoomDevice = async (roomId, motel_device_id, quantity) => {
     const data = {
       roomId: roomId,
@@ -418,8 +454,6 @@ const HomeWData = ({ Motel }) => {
     if (motelId) {
       try {
         const dataRoom = await getRoomByMotelId(motelId)
-        console.log(dataRoom)
-
         setRooms(dataRoom)
       } catch (error) {
         console.log(error)
@@ -594,17 +628,25 @@ const HomeWData = ({ Motel }) => {
 
   // Formatter cho cột "Status"
   const StatusFormatter = (cell) => {
-    const financeValue = cell.getValue()
+    const data = cell.getRow().getData() // Lấy dữ liệu dòng
     // Nếu giá trị tài chính là "Đang trống", hiển thị badge với màu cam
-    if (financeValue === 'ACTIVE') {
-      return `<span class="badge mt-2 " style="background-color: #7dc242; white-space: break-spaces;">Đang ở</span>`
-    }
-    if (financeValue === 'ENDED' || financeValue === undefined) {
-      return `<span class="badge mt-2 " style="background-color: #ED6004; white-space: break-spaces;">Đang trống</span>`
-    }
+    // if (financeValue === 'ACTIVE') {
+    //   return `<span class="badge mt-2 " style="background-color: #7dc242; white-space: break-spaces;">Đang ở</span>`
+    // }
+    // if (financeValue === 'ENDED' || financeValue === undefined) {
+    //   return `<span class="badge mt-2 " style="background-color: #ED6004; white-space: break-spaces;">Đang trống</span>`
+    // }
 
     // Nếu không phải "Đang trống", hiển thị giá trị tài chính
-    return financeValue
+    const status = data.latestContract?.status // Kiểm tra giá trị status
+    const reserveAPlaceId = data.reserveAPlace?.status // Kiểm tra giá trị reserveAPlaceId
+
+    // Nếu status có giá trị, hiển thị status, nếu không hiển thị reserveAPlaceId
+    return status
+      ? `<span class="badge mt-2 " style="background-color: #7dc242; white-space: break-spaces;">Đang ở</span>`
+      : reserveAPlaceId
+      ? `<span class="badge " style="background-color: #ED6004; white-space: break-spaces;">Đang cọc giữ chỗ</span>`
+      : `<span class="badge mt-2 " style="background-color: #ED6004; white-space: break-spaces;">Đang trống</span>` // Có thể thay 'Chưa xác định' bằng giá trị mặc định khác
   }
 
   // Định dạng tiền tệ Việt Nam (VND) va khac chua dua tien coc
@@ -644,6 +686,8 @@ const HomeWData = ({ Motel }) => {
       y: rect.top + window.scrollY + rect.height // Below the icon
     })
     setShowMenu(roomId) // Hiển thị menu cho hàng với roomId tương ứng
+    fetchRoomContract(roomId)
+    fetchDataRooms(roomId)
   }
 
   //delete Room
@@ -673,6 +717,35 @@ const HomeWData = ({ Motel }) => {
       }
     }
   }
+
+  //huy dat cong
+  const handleDeleteReseAPlace = async (reserveAPlaceId) => {
+    console.log(reserveAPlaceId)
+
+    const result = await Swal.fire({
+      title: 'Bạn có chắc muốn xóa không?',
+      text: 'Bạn sẽ không thể hoàn tác hành động này!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Xóa'
+    })
+
+    if (result.isConfirmed) {
+      try {
+        await deleteReserveAPlace(reserveAPlaceId) // Uncomment when API is implemented
+        Swal.fire('Đã xóa!', 'Đã hủy đặt cọc.', 'success')
+
+        // Sau khi xóa thành công, cập nhật lại danh sách template hoặc làm mới trang
+        fetchRooms()
+      } catch (error) {
+        console.error('Lỗi khi hủy đặt cọc:', error)
+        Swal.fire('Lỗi', 'Không thể hủy đặt cọc.', 'error')
+      }
+    }
+  }
+
   const handleDetailClick = (e, rowId) => {
     window.open(`/quanlytro/${motelId ? motelId : Motel[0].motelId}/Chi-tiet-phong/${rowId}`, '_blank')
   }
@@ -690,6 +763,18 @@ const HomeWData = ({ Motel }) => {
       setdeviceByRoom(response.result)
     } else {
       setdeviceByRoom([])
+    }
+  }
+
+  const handlePrintContract = () => {
+    const contractUrl = `/quanlytro/${motelId}/Contract-Preview/${contract.contractId}`
+
+    // Mở cửa sổ mới để in nội dung hợp đồng
+    const printWindow = window.open(contractUrl, '_blank')
+
+    // Đợi nội dung tải xong, sau đó gọi window.print
+    printWindow.onload = () => {
+      printWindow.print()
     }
   }
 
@@ -721,10 +806,95 @@ const HomeWData = ({ Motel }) => {
     } else if (label === 'Danh sách khách thuê') {
       toggleModal(!modalOpen)
       setShowMenu(null) // Đóng menu
+    } else if (label === 'Hợp đồng mới') {
+      toggleModalContract(!modalOpenContract)
+      fetchDataRooms(showMenu)
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'Xem văn bản hợp đồng') {
+      fetchDataRooms(showMenu)
+      window.open(`/quanlytro/${motelId}/Contract-Preview/${contract.contractId}`, '_blank')
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'Chia sẻ văn bản hợp đồng') {
+      const baseUrl = 'http://localhost:5173'
+      const shareLink = `${baseUrl}/quanlytro/${motelId}/Contract-Preview/${contract.contractId}`
+
+      // Sao chép liên kết vào clipboard
+      navigator.clipboard
+        .writeText(shareLink)
+        .then(() => {
+          Swal.fire({
+            title: '<strong><u>Thông báo!</u></strong>',
+            icon: 'info',
+            html: `
+            Đã sao chép liên kết hợp đồng! Bạn có thể chia sẻ cho bên thứ ba.<br>
+            <a href="${shareLink}" target="_blank">${shareLink}</a>
+          `,
+            showCloseButton: true,
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: `Đi đến đường dẫn`,
+            confirmButtonAriaLabel: 'Thumbs up, great!',
+            cancelButtonText: `Đóng`,
+            cancelButtonAriaLabel: 'Thumbs down'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Người dùng chọn "Đi đến đường dẫn"
+              window.open(shareLink, '_blank')
+            }
+          })
+        })
+        .catch((err) => {
+          console.error('Không thể sao chép liên kết:', err)
+          Swal.fire({
+            title: 'Lỗi',
+            text: 'Không thể sao chép liên kết. Vui lòng thử lại.',
+            icon: 'error'
+          })
+        })
+
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'In văn bản hợp đồng') {
+      setShowMenu(null) // Đóng menu
+      // Thực hiện chức năng in hợp đồng
+      handlePrintContract()
+    } else if (label === 'Cọc giữ chỗ') {
+      toggleModalReAPlace(!modalOpenReAPlace)
+      fetchDataRooms(showMenu)
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'Xem cọc giữ chỗ') {
+      toggleDetailReAPlace(!detailOpenReAPlace)
+      fetchDataRooms(showMenu)
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'Hủy cọc giữ chỗ') {
+      if (room.reserveAPlace.reserveAPlaceId) {
+        handleDeleteReseAPlace(room.reserveAPlace.reserveAPlaceId)
+      }
+
+      setShowMenu(null) // Đóng menu
     } else {
       alert(`Action: ${label} on room ${showMenu}`)
     }
   }
+
+  const IATExpiremenuItems = [
+    { id: 1, label: 'Lập hóa đơn', icon: 'dollar-sign' },
+    { id: 2, label: 'Chi tiết phòng', icon: 'arrow-right-circle' },
+    { id: 3, label: 'Danh sách khách thuê', icon: 'user' },
+    { id: 4, label: 'Chuyển phòng', icon: 'refresh-ccw' },
+    { id: 5, label: 'Báo kết thúc hợp đồng phòng', icon: 'bell' },
+    { id: 6, label: 'Cài đặt dịch vụ', icon: 'settings' },
+    { id: 7, label: 'Kết thúc hợp đồng phòng', icon: 'log-out' },
+    { id: 8, label: 'Gia hạn hợp đồng', icon: 'trello', textClass: 'text-success' },
+    { id: 9, label: 'Thiết lập tài sản', icon: 'trello' },
+    { id: 10, label: 'Xem văn bản hợp đồng', icon: 'arrow-right-circle' },
+    { id: 11, label: 'Quản lý xe', icon: 'truck' },
+    { id: 12, label: 'In văn bản hợp đồng', icon: 'printer' },
+    { id: 13, label: 'Ghi chú', icon: 'edit-3', textClass: 'text-success' },
+    { id: 14, label: 'Chia sẻ văn bản hợp đồng', icon: 'share' },
+    { id: 15, label: 'Xóa phòng', icon: 'trash-2', textClass: 'text-danger' },
+    { id: 16, label: 'Chia sẻ mã kết nối', icon: 'share-2' },
+    { id: 17, label: 'Đóng menu', icon: 'x-circle', textClass: 'close-menu-action' }
+  ]
 
   const menuItems = [
     { id: 1, label: 'Lập hóa đơn', icon: 'dollar-sign' },
@@ -743,6 +913,27 @@ const HomeWData = ({ Motel }) => {
     { id: 14, label: 'Xóa phòng', icon: 'trash-2', textClass: 'text-danger' },
     { id: 15, label: 'Chia sẻ mã kết nối', icon: 'share-2' },
     { id: 16, label: 'Đóng menu', icon: 'x-circle', textClass: 'close-menu-action' }
+  ]
+
+  const EmptyContractmenuItems = [
+    { id: 1, label: 'Hợp đồng mới', icon: 'book', textClass: 'text-success' },
+    { id: 2, label: 'Chi tiết phòng', icon: 'arrow-right-circle' },
+    { id: 3, label: 'Cọc giữ chỗ', icon: 'anchor' },
+    { id: 4, label: 'Xóa phòng', icon: 'trash-2', textClass: 'text-danger' },
+    { id: 5, label: 'Cài đặt dịch vụ', icon: 'settings' },
+    { id: 6, label: 'Thiết lập tài sản', icon: 'trello' },
+    { id: 7, label: 'Đóng menu', icon: 'x-circle', textClass: 'close-menu-action' }
+  ]
+
+  const StakeContractmenuItems = [
+    { id: 1, label: 'Hợp đồng mới', icon: 'book', textClass: 'text-success' },
+    { id: 2, label: 'Chi tiết phòng', icon: 'arrow-right-circle' },
+    { id: 3, label: 'Xem cọc giữ chỗ', icon: 'eye' },
+    { id: 4, label: 'Hủy cọc giữ chỗ', icon: 'x-circle', textClass: 'text-danger' },
+    { id: 5, label: 'Cài đặt dịch vụ', icon: 'settings' },
+    { id: 6, label: 'Xóa phòng', icon: 'trash-2', textClass: 'text-danger' },
+    { id: 7, label: 'Thiết lập tài sản', icon: 'trello' },
+    { id: 8, label: 'Đóng menu', icon: 'x-circle', textClass: 'close-menu-action' }
   ]
 
   const columns = [
@@ -781,7 +972,14 @@ const HomeWData = ({ Motel }) => {
       }
     },
     { title: 'id', field: 'roomId', hozAlign: 'center', minWidth: 40, visible: false },
-    { title: 'Tên phòng', field: 'name', hozAlign: 'center', minWidth: 60, editor: 'input', cssClass: 'bold-text' }, // Đặt minWidth để tránh cột bị quá nhỏ
+    {
+      title: 'Tên phòng',
+      field: 'name',
+      hozAlign: 'center',
+      minWidth: 60,
+      editor: 'input',
+      cssClass: 'bold-text'
+    }, // Đặt minWidth để tránh cột bị quá nhỏ
     { title: 'Nhóm', field: 'group', hozAlign: 'center', minWidth: 40, editor: 'input' },
     {
       title: 'Giá thuê',
@@ -909,9 +1107,71 @@ const HomeWData = ({ Motel }) => {
       headerSort: false
     }
   }
-  //call api invoices
 
+  // Tính tổng số tiền khách nợ
+  const totalDebt = rooms.reduce((sum, room) => {
+    const roomDebt = room.debt || 0 // Giá trị debt của phòng
+    const contractDebt = room.latestContract?.debt || 0 // Giá trị debt từ hợp đồng
+    return sum + roomDebt + contractDebt
+  }, 0)
 
+  // Tính tổng số tiền cọc từ contract
+  const totalContractDeposit = rooms.reduce((sum, room) => {
+    const contractDeposit = room.latestContract?.deposit || 0 // Lấy deposit từ latestContract, mặc định là 0 nếu không có
+    return sum + contractDeposit
+  }, 0)
+
+  // Quản lý trạng thái hiển thị cột
+  const [columnsVisibility, setColumnsVisibility] = useState(
+    columns.reduce((acc, col) => {
+      acc[col.field] = col.visible !== false // Mặc định cột là visible nếu không có thuộc tính 'visible: false'
+      return acc
+    }, {})
+  )
+
+  // Lấy danh sách các cột hiện đang hiển thị
+  const visibleColumns = columns.filter((col) => columnsVisibility[col.field])
+
+  // Xử lý thay đổi khi checkbox được click
+  const handleColumnVisibilityChange = (field) => {
+    setColumnsVisibility((prev) => ({
+      ...prev,
+      [field]: !prev[field] // Đảo ngược trạng thái của cột
+    }))
+  }
+  const [isEmpty, setIsEmpty] = useState(false) // Trạng thái checkbox "Đang trống"
+  // Xử lý thay đổi trạng thái của checkbox "Đang trống"
+  const handleEmptyCheckboxChange = (event) => {
+    setIsEmpty(event.target.checked)
+  }
+  const [isActive, setIsActive] = useState(false) // Trạng thái checkbox "Đang ở"
+  // Xử lý thay đổi trạng thái của checkbox "Đang ở"
+  const handleActiveCheckboxChange = (event) => {
+    setIsActive(event.target.checked)
+  }
+
+  const [isStake, setIsStake] = useState(false) // Trạng thái checkbox "Đang ở"
+  // Xử lý thay đổi trạng thái của checkbox "Đang ở"
+  const handleStakeCheckboxChange = (event) => {
+    setIsStake(event.target.checked)
+  }
+  // Lọc danh sách phòng theo trạng thái
+  const filteredRooms = rooms.filter((room) => {
+    if ((isActive && isEmpty) || (isActive && isStake) || (isEmpty && isStake) || (isActive && isEmpty && isStake)) {
+      // Nếu bất kỳ 2 checkbox hoặc cả 3 checkbox đều được chọn, không hiển thị phòng
+      return false
+    }
+    if (isActive) {
+      return room.latestContract?.status === 'ACTIVE' // Hiển thị các phòng có trạng thái "ACTIVE"
+    }
+    if (isEmpty) {
+      return room.latestContract?.status === undefined && room.reserveAPlace === null // Hiển thị các phòng trống
+    }
+    if (isStake) {
+      return room.latestContract?.status === undefined && room.reserveAPlace?.status === 'Stake' // Hiển thị các phòng trống
+    }
+    return true // Hiển thị tất cả các phòng nếu không có checkbox nào được chọn
+  })
 
   return (
     <div
@@ -956,7 +1216,7 @@ const HomeWData = ({ Motel }) => {
                     </span>
                     <div>
                       <span className="titleadmin">Tổng số tiền khách nợ</span>
-                      <h3 className="text-danger">0đ</h3>
+                      <h3 className="text-danger">{totalDebt.toLocaleString()}đ</h3>
                     </div>
                   </div>
                 </Link>
@@ -994,7 +1254,7 @@ const HomeWData = ({ Motel }) => {
                       <span style={{ color: '#20a9e7' }} className="titleadmin">
                         Tổng số tiền cọc
                       </span>
-                      <h3 style={{ color: '#20a9e7' }}>0đ</h3>
+                      <h3 style={{ color: '#20a9e7' }}>{totalContractDeposit.toLocaleString()}đ</h3>
                     </div>
                   </div>
                 </Link>
@@ -1179,128 +1439,25 @@ const HomeWData = ({ Motel }) => {
                           borderRadius: '5px',
                           color: '#fff'
                         }}>
-                        12
+                        {columns.length - 3}
                       </span>
                     </button>
                     <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton" id="list-show-column">
-                      <li>
-                        <label className="dropdown-item">
-                          <input
-                            type="checkbox"
-                            defaultChecked
-                            className="form-check-input"
-                            name="group_id"
-                            value="group_id"
-                          />{' '}
-                          Nhóm
-                        </label>
-                      </li>
-                      <li>
-                        <label className="dropdown-item">
-                          <input
-                            type="checkbox"
-                            defaultChecked
-                            className="form-check-input"
-                            name="deposit_contract_amount"
-                            value="deposit_contract_amount"
-                          />{' '}
-                          Mức tiền cọc
-                        </label>
-                      </li>
-                      <li>
-                        <label className="dropdown-item">
-                          <input
-                            type="checkbox"
-                            defaultChecked
-                            className="form-check-input"
-                            name="debt_amount"
-                            value="debt_amount"
-                          />{' '}
-                          Tiền nợ
-                        </label>
-                      </li>
-                      <li>
-                        <label className="dropdown-item">
-                          <input
-                            type="checkbox"
-                            defaultChecked
-                            className="form-check-input"
-                            name="customers"
-                            value="customers"
-                          />{' '}
-                          Khách thuê
-                        </label>
-                      </li>
-                      <li>
-                        <label className="dropdown-item">
-                          <input
-                            type="checkbox"
-                            defaultChecked
-                            className="form-check-input"
-                            name="circle_day"
-                            value="circle_day/"
-                          />{' '}
-                          Ngày lập hóa đơn
-                        </label>
-                      </li>
-                      <li>
-                        <label className="dropdown-item">
-                          <input
-                            type="checkbox"
-                            defaultChecked
-                            className="form-check-input"
-                            name="circle_month"
-                            value="circle_month"
-                          />{' '}
-                          Chu kỳ thu tiền
-                        </label>
-                      </li>
-                      <li>
-                        <label className="dropdown-item">
-                          <input
-                            type="checkbox"
-                            defaultChecked
-                            className="form-check-input"
-                            name="date_join"
-                            value="date_join"
-                          />{' '}
-                          Ngày vào ở
-                        </label>
-                      </li>
-                      <li>
-                        <label className="dropdown-item">
-                          <input
-                            type="checkbox"
-                            defaultChecked
-                            className="form-check-input"
-                            name="date_terminate"
-                            value="date_terminate"
-                          />{' '}
-                          Thời hạn hợp đồng
-                        </label>
-                      </li>
+                      {columns.slice(3).map((col) => (
+                        <li key={col.field}>
+                          <label className="dropdown-item">
+                            <input
+                              type="checkbox"
+                              checked={columnsVisibility[col.field]} // Được checked nếu cột đang hiển thị
+                              onChange={() => handleColumnVisibilityChange(col.field)} // Khi nhấn sẽ toggle trạng thái hiển thị
+                            />
+                            {col.title}
+                          </label>
+                        </li>
+                      ))}
                     </ul>
                   </div>
-                  <button id="download-excel" style={{ marginLeft: '10px' }} className="ml-2 btn btn-primary">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="feather feather-file-text">
-                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                      <polyline points="14 2 14 8 20 8"></polyline>
-                      <line x1="16" y1="13" x2="8" y2="13"></line>
-                      <line x1="16" y1="17" x2="8" y2="17"></line>
-                      <polyline points="10 9 9 9 8 9"></polyline>
-                    </svg>
-                    Xuất excel
-                  </button>
+                  <ExportToExcel rooms={filteredRooms} />
                 </div>
               </div>
             </div>
@@ -1320,21 +1477,25 @@ const HomeWData = ({ Motel }) => {
                     className="feather feather-filter">
                     <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
                   </svg>
-                  <span id="filter-count">0</span>
+                  <span id="filter-count">{rooms.length}</span>
                 </div>
                 <div className="d-flex" style={{ flexWrap: 'wrap' }}>
                   <div className="form-check form-check-inline">
                     <input
                       className="form-check-input"
                       type="checkbox"
-                      id="is_active"
+                      id="is_empty"
                       data-value="status"
-                      value="is_active"
+                      value="is_empty"
+                      checked={isActive} // Gán giá trị của checkbox
+                      onChange={handleActiveCheckboxChange} // Gọi hàm xử lý khi checkbox thay đổi
                     />
                     <label className="form-check-label" htmlFor="is_active">
                       Đang ở
                     </label>
-                    <span className="count-filter active success">0</span>
+                    <span className="count-filter active success">
+                      {rooms.filter((room) => room.latestContract?.status === 'ACTIVE').length}
+                    </span>
                   </div>
                   <div className="form-check form-check-inline">
                     <input
@@ -1343,11 +1504,18 @@ const HomeWData = ({ Motel }) => {
                       id="is_empty"
                       data-value="status"
                       value="is_empty"
+                      checked={isEmpty} // Gán giá trị của checkbox
+                      onChange={handleEmptyCheckboxChange} // Gọi hàm xử lý khi checkbox thay đổi
                     />
                     <label className="form-check-label" htmlFor="is_empty">
                       Đang trống
                     </label>
-                    <span className="count-filter empty error">0</span>
+                    <span className="count-filter empty error">
+                      {
+                        rooms.filter((room) => room.latestContract?.status === undefined && room.reserveAPlace === null)
+                          .length
+                      }
+                    </span>
                   </div>
                   <div className="form-check form-check-inline">
                     <input
@@ -1360,7 +1528,10 @@ const HomeWData = ({ Motel }) => {
                     <label className="form-check-label" htmlFor="is_terminate_contract">
                       Đang báo kết thúc{' '}
                     </label>
-                    <span className="count-filter tick-terminate warning">0</span>
+                    <span className="count-filter tick-terminate warning">
+                      {' '}
+                      {rooms.filter((room) => room.latestContract?.status === 'ENDED').length}
+                    </span>
                   </div>
                   <div className="form-check form-check-inline">
                     <input
@@ -1373,20 +1544,10 @@ const HomeWData = ({ Motel }) => {
                     <label className="form-check-label" htmlFor="is_will_terminate_contract">
                       Sắp hết hạn hợp đồng
                     </label>
-                    <span className="count-filter will-terminate warning">0</span>
-                  </div>
-                  <div className="form-check form-check-inline">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      id="is_expire"
-                      data-value="status"
-                      value="is_expire"
-                    />
-                    <label className="form-check-label" htmlFor="is_expire">
-                      Đã quá hạn hợp đồng
-                    </label>
-                    <span className="count-filter expire disable">0</span>
+                    <span className="count-filter will-terminate warning">
+                      {' '}
+                      {rooms.filter((room) => room.latestContract?.status === 'IATExpire').length}
+                    </span>
                   </div>
                   <div className="form-check form-check-inline">
                     <input
@@ -1395,11 +1556,19 @@ const HomeWData = ({ Motel }) => {
                       id="is_deposit_temp"
                       data-value="status"
                       value="is_deposit_temp"
+                      checked={isStake} // Gán giá trị của checkbox
+                      onChange={handleStakeCheckboxChange} // Gọi hàm xử lý khi checkbox thay đổi
                     />
                     <label className="form-check-label" htmlFor="is_deposit_temp">
                       Đang cọc giữ chỗ
                     </label>
-                    <span className="count-filter deposit-temp warning">0</span>
+                    <span className="count-filter deposit-temp warning">
+                      {
+                        rooms.filter(
+                          (room) => room.latestContract?.status === undefined && room.reserveAPlace?.status === 'Stake'
+                        ).length
+                      }
+                    </span>
                   </div>
                   <div className="form-check form-check-inline">
                     <input
@@ -1412,7 +1581,9 @@ const HomeWData = ({ Motel }) => {
                     <label className="form-check-label" htmlFor="active_status">
                       Đang nợ tiền
                     </label>
-                    <span className="count-filter debt error">0</span>
+                    <span className="count-filter debt error">
+                      {rooms.filter((room) => room.latestContract?.debt > 0).length}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1460,8 +1631,8 @@ const HomeWData = ({ Motel }) => {
             <div style={{ position: 'relative', height: '100%' }}>
               <ReactTabulator
                 className="my-custom-table" // Thêm lớp tùy chỉnh nếu cần
-                columns={columns}
-                data={rooms}
+                columns={visibleColumns} // Chỉ truyền các cột được chọn
+                data={filteredRooms}
                 options={options}
                 placeholder={<h1></h1>} // Sử dụng placeholder tùy chỉnh
               />
@@ -1483,11 +1654,33 @@ const HomeWData = ({ Motel }) => {
                   ref={menuRef} // Gán ref đúng cách cho menu
                   style={{
                     position: 'absolute',
-                    top: menuPosition.y - 910,
-                    left: menuPosition.x - 350,
+                    top:
+                      contract.status === 'ACTIVE'
+                        ? menuPosition.y - 890
+                        : contract.status === 'IATExpire'
+                        ? menuPosition.y - 800
+                        : contract.status === 'Stake'
+                        ? menuPosition.y - 720
+                        : menuPosition.y - 720,
+
+                    left:
+                      contract.status === 'ACTIVE'
+                        ? menuPosition.x - 350
+                        : contract.status === 'IATExpire'
+                        ? menuPosition.x - 350
+                        : contract.status === 'Stake'
+                        ? menuPosition.x - 350
+                        : menuPosition.x - 350,
                     transform: 'translateX(-50%)'
                   }}>
-                  {menuItems.map((item) => (
+                  {(room && room.latestContract?.status === 'ACTIVE'
+                    ? menuItems
+                    : room && room.latestContract?.status === 'IATExpire'
+                    ? IATExpiremenuItems
+                    : room && room.latestContract === null && room.reserveAPlace?.status === 'Stake'
+                    ? StakeContractmenuItems
+                    : EmptyContractmenuItems
+                  ).map((item) => (
                     <div
                       key={item.id}
                       // Gắn ref vào tag này
@@ -1496,6 +1689,18 @@ const HomeWData = ({ Motel }) => {
                         handleItemClick(item.label)
                         if (item.icon === 'user') {
                           toggleModal()
+                          setShowMenu(null)
+                        }
+                        if (item.icon === 'book') {
+                          toggleModalContract()
+                          setShowMenu(null)
+                        }
+                        if (item.icon === 'anchor') {
+                          toggleModalReAPlace()
+                          setShowMenu(null)
+                        }
+                        if (item.icon === 'eye') {
+                          toggleDetailReAPlace()
                           setShowMenu(null)
                         }
                       }}
@@ -1629,6 +1834,25 @@ const HomeWData = ({ Motel }) => {
                               <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
                               <circle cx="5.5" cy="18.5" r="2.5" />
                               <circle cx="18.5" cy="18.5" r="2.5" />
+                            </>
+                          )}
+                          {item.icon === 'eye' && (
+                            <>
+                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                              <circle cx="12" cy="12" r="3"></circle>
+                            </>
+                          )}
+                          {item.icon === 'book' && (
+                            <>
+                              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </>
+                          )}
+                          {item.icon === 'anchor' && (
+                            <>
+                              <circle cx="12" cy="5" r="3"></circle>
+                              <line x1="12" y1="22" x2="12" y2="8"></line>
+                              <path d="M5 12H2a10 10 0 0 0 20 0h-3"></path>
                             </>
                           )}
                           {/* Thêm các biểu tượng khác nếu cần */}
@@ -2926,7 +3150,23 @@ const HomeWData = ({ Motel }) => {
       ) : (
         <> </>
       )}
-      <RentRoomModal modalOpen={modalOpen} toggleModal={toggleModal} />
+      <RentRoomModal modalOpen={modalOpen} toggleModal={toggleModal} motelId={motelId} />
+      <ReserveAPlaceModal
+        modalOpen={modalOpenReAPlace}
+        toggleModal={toggleModalReAPlace}
+        roomId={room ? room.roomId : <></>}
+      />
+      <ReserveAPlaceDetail
+        modalOpen={detailOpenReAPlace}
+        toggleModal={toggleDetailReAPlace}
+        roomId={room ? room.roomId : <></>}
+      />
+      <ModalCreateContract
+        modalOpen={modalOpenContract}
+        toggleModal={toggleModalContract}
+        motelId={motelId ? motelId : <></>}
+        roomId={room ? room.roomId : <></>}
+      />
     </div>
   )
 }
