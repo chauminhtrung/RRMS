@@ -74,10 +74,7 @@ const PaymentPage = ({ setIsAdmin }) => {
       handlePaymentVNPay()
     } else if (paymentMethod === 'momo') {
       handlePaymentMomo()
-    } else {
-      toast('Phương thức thanh toán không hợp lệ.')
-    }
-    if (paymentMethod === 'stripe') {
+    } else if (paymentMethod === 'stripe') {
       console.log('handlePaymentStripe')
     } else {
       toast.info('Phương thức thanh toán hiện tại chưa được hỗ trợ')
@@ -287,11 +284,9 @@ const PaymentPage = ({ setIsAdmin }) => {
                       src="https://i0.wp.com/discvietnam.com/wp-content/uploads/2020/07/C%E1%BB%95ng-thanh-to%C3%A1n-VNPAY-Logo-Th%E1%BA%BB-ATM-T%C3%A0i-kho%E1%BA%A3n-ng%C3%A2n-h%C3%A0ng-Online-Banking-M%C3%A3-QR-QR-Pay-Qu%C3%A9t-QR-Transparent.png?fit=360%2C140&ssl=1"
                       alt=""
                     />
-                    Chưa hỗ trợ
                   </MenuItem>
                   <MenuItem value="momo" sx={{ display: 'flex', gap: 2 }}>
                     <img height={35} src="./images/{339F660B-89C6-4C67-9986-2D420FDF3FD8}.png" alt="" />
-                    Chưa hỗ trợ
                   </MenuItem>
                   <MenuItem value="zaloPay" sx={{ display: 'flex', gap: 2 }}>
                     <img
