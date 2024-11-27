@@ -6,15 +6,12 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.rrms.rrms.dto.response.*;
+import com.rrms.rrms.models.Reserve_a_place;
 import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.request.RoomRequest;
 import com.rrms.rrms.dto.request.RoomRequest2;
-import com.rrms.rrms.dto.response.ContractResponse;
-import com.rrms.rrms.dto.response.PostRoomTableResponse;
-import com.rrms.rrms.dto.response.RoomDetailResponse;
-import com.rrms.rrms.dto.response.RoomResponse2;
-import com.rrms.rrms.dto.response.RoomServiceResponse;
 import com.rrms.rrms.enums.ErrorCode;
 import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.mapper.BulletinBoardMapper;
@@ -309,6 +306,12 @@ public class RoomService implements IRoom {
                 .orElse(null); // Trả về null nếu không có hợp đồng nào
 
         response.setLatestContract(latestContract); // Gắn hợp đồng mới nhất vào response
+        // Chuyển đổi ReserveAPlace (nếu có) thành ReserveAPlaceResponse
+        if (room.getReserveAPlaces() != null && !room.getReserveAPlaces().isEmpty()) {
+            ReserveAPlaceResponse reserveAPlaceResponse = convertToReserveAPlaceResponse(room.getReserveAPlaces().get(0));
+            response.setReserveAPlace(reserveAPlaceResponse);
+        }
+
         return response;
     }
 
@@ -348,5 +351,21 @@ public class RoomService implements IRoom {
         if (roomRequest.getStatus() != null) room.setStatus(roomRequest.getStatus());
         if (roomRequest.getFinance() != null) room.setFinance(roomRequest.getFinance());
         if (roomRequest.getDescription() != null) room.setDescription(roomRequest.getDescription());
+    }
+
+    private ReserveAPlaceResponse convertToReserveAPlaceResponse(Reserve_a_place reserveAPlace) {
+        if (reserveAPlace == null) {
+            return null;
+        }
+        return ReserveAPlaceResponse.builder()
+                .reserveAPlaceId(reserveAPlace.getReserveaplaceId())
+                .createDate(reserveAPlace.getCreatedate())
+                .moveInDate(reserveAPlace.getMoveinDate())
+                .nameTenant(reserveAPlace.getNametenant())
+                .phoneTenant(reserveAPlace.getPhonetenant())
+                .deposit(reserveAPlace.getDeposit())
+                .note(reserveAPlace.getNote())
+                .status(reserveAPlace.getStatus())
+                .build();
     }
 }

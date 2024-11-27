@@ -23,6 +23,7 @@ import {
   DeleteRoomServiceByid,
   updateRoom
 } from '~/apis/roomAPI'
+import { deleteReserveAPlace } from '~/apis/ReserveAPlaceAPI'
 import { getContractByIdRoom2 } from '~/apis/contractTemplateAPI'
 import { Modal } from 'bootstrap' // Import Bootstrap Modal API
 import {
@@ -34,6 +35,8 @@ import {
 } from '~/apis/deviceAPT'
 import RentRoomModal from '../NavContentAdmin/RentRoomModal'
 import ModalCreateContract from '../NavContentAdmin/ContractManage/ModalCreateContract'
+import ReserveAPlaceModal from './ReserveAPlace/ReserveAPlaceModal'
+import ReserveAPlaceDetail from './ReserveAPlace/ReserveAPlaceDetail'
 const HomeWData = ({ Motel }) => {
   const { motelId } = useParams()
   const [rooms, setRooms] = useState([])
@@ -87,12 +90,21 @@ const HomeWData = ({ Motel }) => {
   const [device, setdevice] = useState([])
   const [modalOpen, setModalOpen] = useState(false)
   const [modalOpenContract, setModalOpenContract] = useState(false)
+  const [modalOpenReAPlace, setModalOpenReAPlace] = useState(false)
+  const [detailOpenReAPlace, setDetailOpenReAPlace] = useState(false)
   const toggleModal = () => {
     setModalOpen(!modalOpen)
   }
 
   const toggleModalContract = () => {
     setModalOpenContract(!modalOpenContract)
+  }
+
+  const toggleModalReAPlace = () => {
+    setModalOpenReAPlace(!modalOpenReAPlace)
+  }
+  const toggleDetailReAPlace = () => {
+    setDetailOpenReAPlace(!detailOpenReAPlace)
   }
 
   // Hàm xử lý nhấn ngoài menu
@@ -616,17 +628,25 @@ const HomeWData = ({ Motel }) => {
 
   // Formatter cho cột "Status"
   const StatusFormatter = (cell) => {
-    const financeValue = cell.getValue()
+    const data = cell.getRow().getData() // Lấy dữ liệu dòng
     // Nếu giá trị tài chính là "Đang trống", hiển thị badge với màu cam
-    if (financeValue === 'ACTIVE') {
-      return `<span class="badge mt-2 " style="background-color: #7dc242; white-space: break-spaces;">Đang ở</span>`
-    }
-    if (financeValue === 'ENDED' || financeValue === undefined) {
-      return `<span class="badge mt-2 " style="background-color: #ED6004; white-space: break-spaces;">Đang trống</span>`
-    }
+    // if (financeValue === 'ACTIVE') {
+    //   return `<span class="badge mt-2 " style="background-color: #7dc242; white-space: break-spaces;">Đang ở</span>`
+    // }
+    // if (financeValue === 'ENDED' || financeValue === undefined) {
+    //   return `<span class="badge mt-2 " style="background-color: #ED6004; white-space: break-spaces;">Đang trống</span>`
+    // }
 
     // Nếu không phải "Đang trống", hiển thị giá trị tài chính
-    return financeValue
+    const status = data.latestContract?.status // Kiểm tra giá trị status
+    const reserveAPlaceId = data.reserveAPlace?.status // Kiểm tra giá trị reserveAPlaceId
+
+    // Nếu status có giá trị, hiển thị status, nếu không hiển thị reserveAPlaceId
+    return status
+      ? `<span class="badge mt-2 " style="background-color: #7dc242; white-space: break-spaces;">Đang ở</span>`
+      : reserveAPlaceId
+      ? `<span class="badge " style="background-color: #ED6004; white-space: break-spaces;">Đang cọc giữ chỗ</span>`
+      : `<span class="badge mt-2 " style="background-color: #ED6004; white-space: break-spaces;">Đang trống</span>` // Có thể thay 'Chưa xác định' bằng giá trị mặc định khác
   }
 
   // Định dạng tiền tệ Việt Nam (VND) va khac chua dua tien coc
@@ -667,6 +687,7 @@ const HomeWData = ({ Motel }) => {
     })
     setShowMenu(roomId) // Hiển thị menu cho hàng với roomId tương ứng
     fetchRoomContract(roomId)
+    fetchDataRooms(roomId)
   }
 
   //delete Room
@@ -696,6 +717,35 @@ const HomeWData = ({ Motel }) => {
       }
     }
   }
+
+  //huy dat cong
+  const handleDeleteReseAPlace = async (reserveAPlaceId) => {
+    console.log(reserveAPlaceId)
+
+    const result = await Swal.fire({
+      title: 'Bạn có chắc muốn xóa không?',
+      text: 'Bạn sẽ không thể hoàn tác hành động này!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Xóa'
+    })
+
+    if (result.isConfirmed) {
+      try {
+        await deleteReserveAPlace(reserveAPlaceId) // Uncomment when API is implemented
+        Swal.fire('Đã xóa!', 'Đã hủy đặt cọc.', 'success')
+
+        // Sau khi xóa thành công, cập nhật lại danh sách template hoặc làm mới trang
+        fetchRooms()
+      } catch (error) {
+        console.error('Lỗi khi hủy đặt cọc:', error)
+        Swal.fire('Lỗi', 'Không thể hủy đặt cọc.', 'error')
+      }
+    }
+  }
+
   const handleDetailClick = (e, rowId) => {
     window.open(`/quanlytro/${motelId ? motelId : Motel[0].motelId}/Chi-tiet-phong/${rowId}`, '_blank')
   }
@@ -807,6 +857,20 @@ const HomeWData = ({ Motel }) => {
       setShowMenu(null) // Đóng menu
       // Thực hiện chức năng in hợp đồng
       handlePrintContract()
+    } else if (label === 'Cọc giữ chỗ') {
+      toggleModalReAPlace(!modalOpenReAPlace)
+      fetchDataRooms(showMenu)
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'Xem cọc giữ chỗ') {
+      toggleDetailReAPlace(!detailOpenReAPlace)
+      fetchDataRooms(showMenu)
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'Hủy cọc giữ chỗ') {
+      if (room.reserveAPlace.reserveAPlaceId) {
+        handleDeleteReseAPlace(room.reserveAPlace.reserveAPlaceId)
+      }
+
+      setShowMenu(null) // Đóng menu
     } else {
       alert(`Action: ${label} on room ${showMenu}`)
     }
@@ -1085,17 +1149,26 @@ const HomeWData = ({ Motel }) => {
   const handleActiveCheckboxChange = (event) => {
     setIsActive(event.target.checked)
   }
+
+  const [isStake, setIsStake] = useState(false) // Trạng thái checkbox "Đang ở"
+  // Xử lý thay đổi trạng thái của checkbox "Đang ở"
+  const handleStakeCheckboxChange = (event) => {
+    setIsStake(event.target.checked)
+  }
   // Lọc danh sách phòng theo trạng thái
   const filteredRooms = rooms.filter((room) => {
-    if (isActive && isEmpty) {
-      // Nếu cả hai checkbox đều được chọn, không hiển thị phòng
+    if ((isActive && isEmpty) || (isActive && isStake) || (isEmpty && isStake) || (isActive && isEmpty && isStake)) {
+      // Nếu bất kỳ 2 checkbox hoặc cả 3 checkbox đều được chọn, không hiển thị phòng
       return false
     }
     if (isActive) {
       return room.latestContract?.status === 'ACTIVE' // Hiển thị các phòng có trạng thái "ACTIVE"
     }
     if (isEmpty) {
-      return room.latestContract?.status === undefined // Hiển thị các phòng trống
+      return room.latestContract?.status === undefined && room.reserveAPlace === null // Hiển thị các phòng trống
+    }
+    if (isStake) {
+      return room.latestContract?.status === undefined && room.reserveAPlace?.status === 'Stake' // Hiển thị các phòng trống
     }
     return true // Hiển thị tất cả các phòng nếu không có checkbox nào được chọn
   })
@@ -1438,7 +1511,10 @@ const HomeWData = ({ Motel }) => {
                       Đang trống
                     </label>
                     <span className="count-filter empty error">
-                      {rooms.filter((room) => room.latestContract?.status === undefined).length}
+                      {
+                        rooms.filter((room) => room.latestContract?.status === undefined && room.reserveAPlace === null)
+                          .length
+                      }
                     </span>
                   </div>
                   <div className="form-check form-check-inline">
@@ -1480,12 +1556,18 @@ const HomeWData = ({ Motel }) => {
                       id="is_deposit_temp"
                       data-value="status"
                       value="is_deposit_temp"
+                      checked={isStake} // Gán giá trị của checkbox
+                      onChange={handleStakeCheckboxChange} // Gọi hàm xử lý khi checkbox thay đổi
                     />
                     <label className="form-check-label" htmlFor="is_deposit_temp">
                       Đang cọc giữ chỗ
                     </label>
                     <span className="count-filter deposit-temp warning">
-                      {rooms.filter((room) => room.latestContract?.status === 'Stake').length}
+                      {
+                        rooms.filter(
+                          (room) => room.latestContract?.status === undefined && room.reserveAPlace?.status === 'Stake'
+                        ).length
+                      }
                     </span>
                   </div>
                   <div className="form-check form-check-inline">
@@ -1591,11 +1673,11 @@ const HomeWData = ({ Motel }) => {
                         : menuPosition.x - 350,
                     transform: 'translateX(-50%)'
                   }}>
-                  {(contract.status === 'ACTIVE'
+                  {(room && room.latestContract?.status === 'ACTIVE'
                     ? menuItems
-                    : contract.status === 'IATExpire'
+                    : room && room.latestContract?.status === 'IATExpire'
                     ? IATExpiremenuItems
-                    : contract.status === 'Stake'
+                    : room && room.latestContract === null && room.reserveAPlace?.status === 'Stake'
                     ? StakeContractmenuItems
                     : EmptyContractmenuItems
                   ).map((item) => (
@@ -1611,6 +1693,14 @@ const HomeWData = ({ Motel }) => {
                         }
                         if (item.icon === 'book') {
                           toggleModalContract()
+                          setShowMenu(null)
+                        }
+                        if (item.icon === 'anchor') {
+                          toggleModalReAPlace()
+                          setShowMenu(null)
+                        }
+                        if (item.icon === 'eye') {
+                          toggleDetailReAPlace()
                           setShowMenu(null)
                         }
                       }}
@@ -3061,6 +3151,16 @@ const HomeWData = ({ Motel }) => {
         <> </>
       )}
       <RentRoomModal modalOpen={modalOpen} toggleModal={toggleModal} />
+      <ReserveAPlaceModal
+        modalOpen={modalOpenReAPlace}
+        toggleModal={toggleModalReAPlace}
+        roomId={room ? room.roomId : <></>}
+      />
+      <ReserveAPlaceDetail
+        modalOpen={detailOpenReAPlace}
+        toggleModal={toggleDetailReAPlace}
+        roomId={room ? room.roomId : <></>}
+      />
       <ModalCreateContract
         modalOpen={modalOpenContract}
         toggleModal={toggleModalContract}
