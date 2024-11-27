@@ -30,7 +30,7 @@ import InfoIcon from '@mui/icons-material/Info'
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote'
 import DetailsIcon from '@mui/icons-material/Details'
 import { remove as removeDiacritics } from 'diacritics'
-import { paymentPaypal } from '~/apis/paymentAPI'
+import { paymentMoMo, paymentPaypal, paymentVNPay } from '~/apis/paymentAPI'
 import { toast } from 'react-toastify'
 import { loadStripe } from '@stripe/stripe-js'
 import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js'
@@ -69,12 +69,46 @@ const PaymentPage = ({ setIsAdmin }) => {
     })
     toast.info('Đang tiến hành thanh toán, vui lòng chờ trong giây lát...')
     if (paymentMethod === 'paypal') {
-      paymentPaypal(289).then((res) => {
-        if (res.data.redirectUrl) {
-          window.location.href = res.data.redirectUrl
-        }
-      })
+      handlePaymentPaypal()
+    } else if (paymentMethod === 'vnPay') {
+      handlePaymentVNPay()
+    } else if (paymentMethod === 'momo') {
+      handlePaymentMomo()
+    } else {
+      toast('Phương thức thanh toán không hợp lệ.')
     }
+    if (paymentMethod === 'stripe') {
+      console.log('handlePaymentStripe')
+    } else {
+      toast.info('Phương thức thanh toán hiện tại chưa được hỗ trợ')
+    }
+  }
+
+  const handlePaymentPaypal = () => {
+    paymentPaypal(289).then((res) => {
+      if (res.data.redirectUrl) {
+        window.location.href = res.data.redirectUrl
+      }
+    })
+  }
+
+  const handlePaymentVNPay = () => {
+    paymentVNPay().then((res) => {
+      if (res.redirectUrl) {
+        window.location.href = res.redirectUrl
+      } else {
+        toast('Có lỗi xảy ra khi tạo thanh toán VNPAY.')
+      }
+    })
+  }
+  const handlePaymentMomo = () => {
+    paymentMoMo().then((res) => {
+      if (res && res.payUrl) {
+        window.location.href = res.payUrl
+      } else {
+        toast('Có lỗi xảy ra khi tạo thanh toán MoMo.')
+      }
+    })
   }
 
   return (

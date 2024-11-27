@@ -233,4 +233,26 @@ public class PaymentController {
     public String paymentMoMoSuccess() {
         return "paymentMomoSuccess";
     }
+    @PermitAll
+    @PostMapping("/payment-stripe")
+    @ResponseBody
+    public ResponseEntity<StripeResponse> createPaymentIntent(@RequestBody @Valid StripeRequest request) throws StripeException {
+        PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
+                .setAmount(request.getAmount() * 100L) // Chuyển đổi USD sang cent
+                .putMetadata("productName", request.getProductName())
+                .setCurrency("usd")
+                .setAutomaticPaymentMethods(
+                        PaymentIntentCreateParams.AutomaticPaymentMethods.builder()
+                                .setEnabled(true)
+                                .build()
+                )
+                .build();
+
+        PaymentIntent intent = PaymentIntent.create(params);
+
+        // Trả về clientSecret cho frontend
+        StripeResponse responseDto = new StripeResponse(intent.getId(), intent.getClientSecret());
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
 }

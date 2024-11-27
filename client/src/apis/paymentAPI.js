@@ -48,3 +48,6 @@ export const paymentMoMo = async () => {
     toast('Có lỗi xảy ra trong quá trình thanh toán. Vui lòng thử lại.')
   }
 }
+export const paymentStripe = async (stripe) => {
+  return await axios.post(`${env.API_URL}/payment/payment-stripe`, stripe)
+}
