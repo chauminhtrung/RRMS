@@ -46,6 +46,9 @@ public class PaymentController {
     @Value("${stripe.api.publicKey}")
     private String publicKey;
 
+    @Value("${vnpay.api.secretKey}")
+    public String secretKey ;
+
     IPayment paymentService;
 
     @Autowired
@@ -171,7 +174,7 @@ public class PaymentController {
         }
 
         String queryUrl = query.toString();
-        String vnp_SecureHash = Config.hmacSHA512(Config.secretKey, hashData.toString());
+        String vnp_SecureHash = Config.hmacSHA512(secretKey, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
 
         String paymentUrl = Config.vnp_PayUrl + "?" + queryUrl;
