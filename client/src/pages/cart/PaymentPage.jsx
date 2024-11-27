@@ -29,10 +29,13 @@ import InfoIcon from '@mui/icons-material/Info'
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote'
 import DetailsIcon from '@mui/icons-material/Details'
 import { remove as removeDiacritics } from 'diacritics'
+import { paymentPaypal } from '~/apis/paymentAPI'
+import { toast } from 'react-toastify'
 
 const PaymentPage = ({ setIsAdmin }) => {
   const [cardOwner, setCardOwner] = useState('')
   const [cardType, setCardType] = useState('')
+  const [paymentMethod, setPaymentMethod] = useState('')
   const [cardNumber, setCardNumber] = useState('')
   const [expiryDate, setExpiryDate] = useState('')
   const [cvc, setCvc] = useState('')
@@ -50,6 +53,14 @@ const PaymentPage = ({ setIsAdmin }) => {
       expiryDate,
       cvc
     })
+    toast.info('Đang tiến hành thanh toán, vui lòng chờ trong giây lát...')
+    if (paymentMethod === 'paypal') {
+      paymentPaypal(289).then((res) => {
+        if (res.data.redirectUrl) {
+          window.location.href = res.data.redirectUrl
+        }
+      })
+    }
   }
 
   return (
@@ -198,6 +209,93 @@ const PaymentPage = ({ setIsAdmin }) => {
                 Thanh Toán
               </Typography>
 
+              <FormControl
+                fullWidth
+                sx={{ mb: 2, color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894') }}>
+                <InputLabel>Phương thức thanh toán</InputLabel>
+                <Select
+                  value={paymentMethod}
+                  sx={{
+                    bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542')
+                  }}
+                  label="Loại thẻ"
+                  onChange={(e) => setPaymentMethod(e.target.value)}>
+                  <MenuItem value="paypal">
+                    <img
+                      height={35}
+                      src="https://images.ctfassets.net/drk57q8lctrm/21FLkQ2lbOCWynXsDZvXO5/485a163f199ef7749b914e54d4dc3335/paypal-logo.webp"
+                      alt=""
+                    />
+                  </MenuItem>
+                  <MenuItem value="stripe">
+                    <img
+                      height={35}
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Stripe_Logo%2C_revised_2016.svg/2560px-Stripe_Logo%2C_revised_2016.svg.png"
+                      alt=""
+                    />
+                  </MenuItem>
+                  <MenuItem value="vnPay">
+                    <img
+                      height={35}
+                      src="https://i0.wp.com/discvietnam.com/wp-content/uploads/2020/07/C%E1%BB%95ng-thanh-to%C3%A1n-VNPAY-Logo-Th%E1%BA%BB-ATM-T%C3%A0i-kho%E1%BA%A3n-ng%C3%A2n-h%C3%A0ng-Online-Banking-M%C3%A3-QR-QR-Pay-Qu%C3%A9t-QR-Transparent.png?fit=360%2C140&ssl=1"
+                      alt=""
+                    />
+                  </MenuItem>
+                  <MenuItem value="momo">
+                    <img height={35} src="./images/{339F660B-89C6-4C67-9986-2D420FDF3FD8}.png" alt="" />
+                  </MenuItem>
+                  <MenuItem value="zaloPay">
+                    <img
+                      height={35}
+                      src="https://blogchiasekienthuc.com/wp-content/uploads/2019/07/su-dung-dich-vu-zalopay.png"
+                      alt=""
+                    />
+                  </MenuItem>
+                  <MenuItem value="shopeePay">
+                    <img
+                      height={35}
+                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-eXStWVAQ9Qtplrp11xZfmj7DQS4KlRQpFA&s"
+                      alt=""
+                    />
+                  </MenuItem>
+                  <MenuItem value="applePay">
+                    <img
+                      height={35}
+                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWxYUQvdwKXZ9meVu4Jx6fr7nNNo99TLl-bA&s"
+                      alt=""
+                    />
+                  </MenuItem>
+                  <MenuItem value="googlePay">
+                    <img
+                      height={35}
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/2560px-Google_Pay_Logo.svg.png"
+                      alt=""
+                    />
+                  </MenuItem>
+                  <MenuItem value="payoneer">
+                    <img
+                      height={35}
+                      src="https://seeklogo.com/images/P/payoneer-logo-80D77790C2-seeklogo.com.png"
+                      alt=""
+                    />
+                  </MenuItem>
+                  <MenuItem value="2checkout">
+                    <img
+                      height={35}
+                      src="https://logos-download.com/wp-content/uploads/2019/11/2CheckOut_Logo.png"
+                      alt=""
+                    />
+                  </MenuItem>
+                  <MenuItem value="square">
+                    <img
+                      height={35}
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Square%2C_Inc._logo.svg/1024px-Square%2C_Inc._logo.svg.png"
+                      alt=""
+                    />
+                  </MenuItem>
+                </Select>
+              </FormControl>
+
               <Box sx={{ mt: 3 }}>
                 {/* Tên chủ thẻ */}
                 <TextField
@@ -329,7 +427,7 @@ const PaymentPage = ({ setIsAdmin }) => {
                     startIcon={<CreditCardIcon />}
                     disabled={!isChecked} // Disable nếu chưa đồng ý điều khoản
                   >
-                    Hoàn tất đặt chỗ
+                    Hoàn tất đặt chỗ bằng {paymentMethod}
                   </Button>
                 </Box>
               </Box>
