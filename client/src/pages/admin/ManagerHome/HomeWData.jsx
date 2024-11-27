@@ -40,6 +40,11 @@ const HomeWData = ({ Motel }) => {
   const menuRef = useRef(null) // Tham chiếu đến menu
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   const [additionItems, setAdditionItems] = useState([])
+  const [roomSerivces, setRoomSerivces] = useState([])
+  const [room, setRoom] = useState()
+  const [note, setNote] = useState('') // Tạo state để lưu ghi chú
+  const [device, setdevice] = useState([])
+  const [modalOpen, setModalOpen] = useState(false)
   const [formData, setFormData] = useState({
     motelId: motelId ? motelId : Motel[0].motelId,
     deposit: null,
@@ -76,11 +81,7 @@ const HomeWData = ({ Motel }) => {
     setAdditionItems(additionItems.map((item) => (item.id === id ? { ...item, [field]: value } : item)))
   }
 
-  const [roomSerivces, setRoomSerivces] = useState([])
-  const [room, setRoom] = useState()
-  const [note, setNote] = useState('') // Tạo state để lưu ghi chú
-  const [device, setdevice] = useState([])
-  const [modalOpen, setModalOpen] = useState(false)
+ 
 
   const toggleModal = () => {
     setModalOpen(!modalOpen)
@@ -136,6 +137,7 @@ const HomeWData = ({ Motel }) => {
       console.log(error)
     }
   }
+
   const handleChangeQuantityRoomDevice = async (roomId, motel_device_id, quantity) => {
     const data = {
       roomId: roomId,
@@ -907,6 +909,9 @@ const HomeWData = ({ Motel }) => {
       headerSort: false
     }
   }
+  //call api invoices
+
+
 
   return (
     <div

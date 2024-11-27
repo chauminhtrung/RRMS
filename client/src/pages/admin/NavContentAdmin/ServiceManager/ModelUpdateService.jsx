@@ -29,15 +29,15 @@ const ModelUpdateService = ({ serviceData, refreshServices }) => {
         const roomsData = response.data
 
         const selectedRooms = {}
-        roomsData.forEach((room) => {
+        roomsData.forEach(room => {
           if (room.services && Array.isArray(room.services)) {
-            room.services.forEach((service) => {
+            room.services.forEach(service => {
               if (service.serviceId === serviceData.motelServiceId) {
-                selectedRooms[room.roomId] = true
+                selectedRooms[room.roomId] = true;
               }
-            })
+            });
           }
-        })
+        });
 
         setFormData((prevState) => ({
           ...prevState,
