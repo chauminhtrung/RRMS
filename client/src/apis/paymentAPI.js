@@ -5,3 +5,7 @@ export const paymentPaypal = async (totalPrice) => {
   const username = JSON.parse(sessionStorage.getItem('user')).username
   return await axios.post(`${env.API_URL}/payment/payment-paypal?totalPrice=${totalPrice}&userName=${username}`)
 }
+
+export const paymentStripe = async (stripe) => {
+  return await axios.post(`${env.API_URL}/payment/payment-stripe`, stripe)
+}

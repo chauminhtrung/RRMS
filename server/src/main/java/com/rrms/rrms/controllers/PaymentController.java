@@ -4,12 +4,21 @@ package com.rrms.rrms.controllers;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
+import com.rrms.rrms.dto.request.StripeRequest;
+import com.rrms.rrms.dto.response.StripeResponse;
 import com.rrms.rrms.services.IPayment;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
+import com.stripe.param.PaymentIntentCreateParams;
 import jakarta.annotation.security.PermitAll;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -21,6 +30,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/payment")
 public class PaymentController {
+    @Value("${stripe.api.publicKey}")
+    private String publicKey;
+
     IPayment paymentService;
 
     // Paypal payment
@@ -72,6 +84,28 @@ public class PaymentController {
     @PermitAll
     public String success() {
         return "success";
+    }
+
+    @PermitAll
+    @PostMapping("/payment-stripe")
+    @ResponseBody
+    public ResponseEntity<StripeResponse> createPaymentIntent(@RequestBody @Valid StripeRequest request) throws StripeException {
+        PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
+                .setAmount(request.getAmount() * 100L) // Chuyển đổi USD sang cent
+                .putMetadata("productName", request.getProductName())
+                .setCurrency("usd")
+                .setAutomaticPaymentMethods(
+                        PaymentIntentCreateParams.AutomaticPaymentMethods.builder()
+                                .setEnabled(true)
+                                .build()
+                )
+                .build();
+
+        PaymentIntent intent = PaymentIntent.create(params);
+
+        // Trả về clientSecret cho frontend
+        StripeResponse responseDto = new StripeResponse(intent.getId(), intent.getClientSecret());
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
 }
