@@ -3,11 +3,8 @@ package com.rrms.rrms.enums;
 import com.google.gson.annotations.SerializedName;
 
 public enum ConfirmRequestType {
-
-
     @SerializedName("capture")
     CAPTURE("capture"),
-
 
     @SerializedName("cancel")
     CANCEL("cancel");
@@ -31,4 +28,3 @@ public enum ConfirmRequestType {
         return value;
     }
 }
-

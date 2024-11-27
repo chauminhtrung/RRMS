@@ -6,18 +6,18 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.rrms.rrms.dto.response.*;
-import com.rrms.rrms.models.Reserve_a_place;
 import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.request.RoomRequest;
 import com.rrms.rrms.dto.request.RoomRequest2;
+import com.rrms.rrms.dto.response.*;
 import com.rrms.rrms.enums.ErrorCode;
 import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.mapper.BulletinBoardMapper;
 import com.rrms.rrms.mapper.RoomMapper;
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Motel;
+import com.rrms.rrms.models.Reserve_a_place;
 import com.rrms.rrms.models.Room;
 import com.rrms.rrms.repositories.AccountRepository;
 import com.rrms.rrms.repositories.MotelRepository;
@@ -308,7 +308,8 @@ public class RoomService implements IRoom {
         response.setLatestContract(latestContract); // Gắn hợp đồng mới nhất vào response
         // Chuyển đổi ReserveAPlace (nếu có) thành ReserveAPlaceResponse
         if (room.getReserveAPlaces() != null && !room.getReserveAPlaces().isEmpty()) {
-            ReserveAPlaceResponse reserveAPlaceResponse = convertToReserveAPlaceResponse(room.getReserveAPlaces().get(0));
+            ReserveAPlaceResponse reserveAPlaceResponse =
+                    convertToReserveAPlaceResponse(room.getReserveAPlaces().get(0));
             response.setReserveAPlace(reserveAPlaceResponse);
         }
 

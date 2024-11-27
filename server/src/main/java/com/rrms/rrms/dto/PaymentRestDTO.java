@@ -1,9 +1,9 @@
 package com.rrms.rrms.dto;
 
+import java.io.Serializable;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import java.io.Serializable;
 
 @Getter
 @Setter

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.rrms.rrms.models.Account;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +19,7 @@ import com.rrms.rrms.dto.request.MotelRequest;
 import com.rrms.rrms.dto.response.MotelResponse;
 import com.rrms.rrms.mapper.AccountMapper;
 import com.rrms.rrms.mapper.MotelMapper;
+import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Motel;
 import com.rrms.rrms.repositories.MotelRepository;
 import com.rrms.rrms.services.servicesImp.MotelService;
@@ -74,7 +74,6 @@ public class MotelServiceTest {
                 .address("789 New St")
                 .build();
         account = new Account(); // Khởi tạo các thuộc tính nếu cần
-
     }
 
     @Test
@@ -190,7 +189,6 @@ public class MotelServiceTest {
         verify(motelRepository, never()).deleteById(motelId); // Kiểm tra phương thức deleteById không được gọi
     }
 
-
     @Test
     public void testFindMotelByAccount_Username() {
         // Thiết lập danh sách các đối tượng Motel giả lập
@@ -232,5 +230,3 @@ public class MotelServiceTest {
         verify(motelRepository).findTotalAreaByUsername(account);
     }
 }
-
-

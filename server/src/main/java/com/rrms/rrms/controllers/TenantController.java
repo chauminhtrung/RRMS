@@ -104,7 +104,7 @@ public class TenantController {
     }
 
     @RequestMapping("/roomId/{roomId}")
-    public ApiResponse<List<TenantResponse>> getAllTenantsRoomId(@PathVariable("roomId")  UUID roomId) {
+    public ApiResponse<List<TenantResponse>> getAllTenantsRoomId(@PathVariable("roomId") UUID roomId) {
         System.out.println(roomId);
         List<TenantResponse> tenantResponses = tenantService.getAllTenantsRoomId(roomId);
         log.info("Get all tenants by room id successfully");

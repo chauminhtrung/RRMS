@@ -1,5 +1,21 @@
 package com.rrms.rrms.controllers;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import jakarta.annotation.security.PermitAll;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
@@ -17,25 +33,11 @@ import com.rrms.rrms.util.LogUtils;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
-import jakarta.annotation.security.PermitAll;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -47,7 +49,7 @@ public class PaymentController {
     private String publicKey;
 
     @Value("${vnpay.api.secretKey}")
-    public String secretKey ;
+    public String secretKey;
 
     IPayment paymentService;
 
@@ -61,20 +63,14 @@ public class PaymentController {
     // sb-fo7f331992187@personal.example.com
     // r&o}V0Z>
     @PostMapping("/payment-paypal")
-    public Map<String, String> payment(@RequestParam("totalPrice") double totalPrice, @RequestParam("userName") String userName) {
+    public Map<String, String> payment(
+            @RequestParam("totalPrice") double totalPrice, @RequestParam("userName") String userName) {
         Map<String, String> response = new HashMap<>();
         try {
             String cancelUrl = "http://localhost:8080/payment/paypal/cancel";
             String successUrl = "http://localhost:8080/payment/paypal/success";
             Payment payment = paymentService.createPayment(
-                    totalPrice,
-                    "USD",
-                    "PAYPAL",
-                    "sale",
-                    userName + " Thanh toán",
-                    cancelUrl,
-                    successUrl
-            );
+                    totalPrice, "USD", "PAYPAL", "sale", userName + " Thanh toán", cancelUrl, successUrl);
             for (Links links : payment.getLinks()) {
                 if (links.getRel().equals("approval_url")) {
                     response.put("redirectUrl", links.getHref());
@@ -107,7 +103,6 @@ public class PaymentController {
     public String success() {
         return "success";
     }
-
 
     @PostMapping("/create_payment")
     @PermitAll
@@ -163,8 +158,11 @@ public class PaymentController {
             String fieldName = itr.next();
             String fieldValue = vnp_Params.get(fieldName);
             if ((fieldValue != null) && (fieldValue.length() > 0)) {
-                hashData.append(fieldName).append('=').append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
-                query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString())).append('=')
+                hashData.append(fieldName)
+                        .append('=')
+                        .append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
+                query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString()))
+                        .append('=')
                         .append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
                 if (itr.hasNext()) {
                     query.append('&');
@@ -232,8 +230,16 @@ public class PaymentController {
         String returnUrl = "http://localhost:8080/payment/paymentMoMoSuccess";
         String notifyURL = "http://google.com.vn";
         CustomerEnvironment environment = CustomerEnvironment.selectEnv("dev");
-        PaymentResponse captureWalletMoMoResponse = createOrderMoMo.process(environment, orderId, requestId,
-                Long.toString(amount / 100), orderInfo, returnUrl, notifyURL, "", RequestType.PAY_WITH_ATM,
+        PaymentResponse captureWalletMoMoResponse = createOrderMoMo.process(
+                environment,
+                orderId,
+                requestId,
+                Long.toString(amount / 100),
+                orderInfo,
+                returnUrl,
+                notifyURL,
+                "",
+                RequestType.PAY_WITH_ATM,
                 Boolean.TRUE);
         return captureWalletMoMoResponse;
     }
@@ -243,19 +249,19 @@ public class PaymentController {
     public String paymentMoMoSuccess() {
         return "paymentMomoSuccess";
     }
+
     @PermitAll
     @PostMapping("/payment-stripe")
     @ResponseBody
-    public ResponseEntity<StripeResponse> createPaymentIntent(@RequestBody @Valid StripeRequest request) throws StripeException {
+    public ResponseEntity<StripeResponse> createPaymentIntent(@RequestBody @Valid StripeRequest request)
+            throws StripeException {
         PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
                 .setAmount(request.getAmount() * 100L) // Chuyển đổi USD sang cent
                 .putMetadata("productName", request.getProductName())
                 .setCurrency("usd")
-                .setAutomaticPaymentMethods(
-                        PaymentIntentCreateParams.AutomaticPaymentMethods.builder()
-                                .setEnabled(true)
-                                .build()
-                )
+                .setAutomaticPaymentMethods(PaymentIntentCreateParams.AutomaticPaymentMethods.builder()
+                        .setEnabled(true)
+                        .build())
                 .build();
 
         PaymentIntent intent = PaymentIntent.create(params);
@@ -264,5 +270,4 @@ public class PaymentController {
         StripeResponse responseDto = new StripeResponse(intent.getId(), intent.getClientSecret());
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
-
 }

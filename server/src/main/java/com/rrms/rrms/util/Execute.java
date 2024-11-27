@@ -1,14 +1,12 @@
 package com.rrms.rrms.util;
 
+import java.io.IOException;
 
 import com.rrms.rrms.dto.request.HttpRequest;
 import com.rrms.rrms.dto.response.HttpResponse;
+
 import okhttp3.*;
 import okio.Buffer;
-
-import java.io.IOException;
-
-
 
 public class Execute {
 
@@ -26,7 +24,8 @@ public class Execute {
                     + httpRequest.getPayload());
 
             Response result = client.newCall(request).execute();
-            HttpResponse response = new HttpResponse(result.code(), result.body().string(), result.headers());
+            HttpResponse response =
+                    new HttpResponse(result.code(), result.body().string(), result.headers());
 
             LogUtils.info("[HttpResponseFromMoMo] " + response.toString());
 
@@ -40,7 +39,10 @@ public class Execute {
 
     public static Request createRequest(HttpRequest request) {
         RequestBody body = RequestBody.create(MediaType.get(request.getContentType()), request.getPayload());
-        return new Request.Builder().method(request.getMethod(), body).url(request.getEndpoint()).build();
+        return new Request.Builder()
+                .method(request.getMethod(), body)
+                .url(request.getEndpoint())
+                .build();
     }
 
     public String getBodyAsString(Request request) throws IOException {

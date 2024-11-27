@@ -6,5 +6,4 @@ public enum ContractStatus {
     IATExpire,
     Stake,
     ReportEnd
-
 }

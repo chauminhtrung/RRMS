@@ -1,10 +1,12 @@
 package com.rrms.rrms.services;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import com.rrms.rrms.services.servicesImp.InvoiceService;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.StoredProcedureQuery;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.rrms.rrms.services.servicesImp.InvoiceService;
 
 @ExtendWith(MockitoExtension.class)
 public class InvoiceServiceTest {
@@ -37,8 +41,10 @@ public class InvoiceServiceTest {
         Double expectedPrice = 100.0;
 
         // Thiết lập hành vi của entityManager và storedProcedureQuery
-        when(entityManager.createStoredProcedureQuery("GetTotalRoomPriceProcedure")).thenReturn(storedProcedureQuery);
-        when(storedProcedureQuery.registerStoredProcedureParameter(1, String.class, ParameterMode.IN)).thenReturn(storedProcedureQuery);
+        when(entityManager.createStoredProcedureQuery("GetTotalRoomPriceProcedure"))
+                .thenReturn(storedProcedureQuery);
+        when(storedProcedureQuery.registerStoredProcedureParameter(1, String.class, ParameterMode.IN))
+                .thenReturn(storedProcedureQuery);
         when(storedProcedureQuery.setParameter(1, username)).thenReturn(storedProcedureQuery);
         when(storedProcedureQuery.getSingleResult()).thenReturn(expectedPrice);
 
@@ -61,8 +67,10 @@ public class InvoiceServiceTest {
         Double expectedPrice = 50.0;
 
         // Thiết lập hành vi của entityManager và storedProcedureQuery
-        when(entityManager.createStoredProcedureQuery("GetTotalServicePriceProcedure")).thenReturn(storedProcedureQuery);
-        when(storedProcedureQuery.registerStoredProcedureParameter(1, String.class, ParameterMode.IN)).thenReturn(storedProcedureQuery);
+        when(entityManager.createStoredProcedureQuery("GetTotalServicePriceProcedure"))
+                .thenReturn(storedProcedureQuery);
+        when(storedProcedureQuery.registerStoredProcedureParameter(1, String.class, ParameterMode.IN))
+                .thenReturn(storedProcedureQuery);
         when(storedProcedureQuery.setParameter(1, username)).thenReturn(storedProcedureQuery);
         when(storedProcedureQuery.getSingleResult()).thenReturn(expectedPrice);
 
@@ -85,8 +93,10 @@ public class InvoiceServiceTest {
         Double expectedTotal = 150.0;
 
         // Thiết lập hành vi của entityManager và storedProcedureQuery
-        when(entityManager.createStoredProcedureQuery("GetTotalInvoiceProcedure")).thenReturn(storedProcedureQuery);
-        when(storedProcedureQuery.registerStoredProcedureParameter(1, String.class, ParameterMode.IN)).thenReturn(storedProcedureQuery);
+        when(entityManager.createStoredProcedureQuery("GetTotalInvoiceProcedure"))
+                .thenReturn(storedProcedureQuery);
+        when(storedProcedureQuery.registerStoredProcedureParameter(1, String.class, ParameterMode.IN))
+                .thenReturn(storedProcedureQuery);
         when(storedProcedureQuery.setParameter(1, username)).thenReturn(storedProcedureQuery);
         when(storedProcedureQuery.getSingleResult()).thenReturn(expectedTotal);
 

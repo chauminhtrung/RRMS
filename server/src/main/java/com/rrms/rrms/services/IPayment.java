@@ -11,12 +11,8 @@ public interface IPayment {
             String intent,
             String description,
             String cancelUrl,
-            String successUrl
-    ) throws PayPalRESTException;
+            String successUrl)
+            throws PayPalRESTException;
 
-    Payment executePayment(
-            String paymentId,
-            String payerId
-
-    ) throws PayPalRESTException;
+    Payment executePayment(String paymentId, String payerId) throws PayPalRESTException;
 }

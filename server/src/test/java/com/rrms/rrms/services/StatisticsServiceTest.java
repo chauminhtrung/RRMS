@@ -1,11 +1,11 @@
 package com.rrms.rrms.services;
-import com.rrms.rrms.models.Account;
-import com.rrms.rrms.models.Motel;
-import com.rrms.rrms.repositories.AccountRepository;
-import com.rrms.rrms.repositories.AuthRepository;
-import com.rrms.rrms.repositories.MotelRepository;
-import com.rrms.rrms.repositories.TenantRepository;
-import com.rrms.rrms.services.servicesImp.StatisticsService;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.time.*;
+import java.util.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,11 +14,14 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.*;
-import java.util.*;
+import com.rrms.rrms.models.Account;
+import com.rrms.rrms.models.Motel;
+import com.rrms.rrms.repositories.AccountRepository;
+import com.rrms.rrms.repositories.AuthRepository;
+import com.rrms.rrms.repositories.MotelRepository;
+import com.rrms.rrms.repositories.TenantRepository;
+import com.rrms.rrms.services.servicesImp.StatisticsService;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class StatisticsServiceTest {
 
@@ -106,7 +109,8 @@ public class StatisticsServiceTest {
         Map<Integer, Long> expectedCounts = new HashMap<>();
         for (int month = 1; month <= 12; month++) {
             expectedCounts.put(month, 5L); // Giả lập 5 tài khoản cho mỗi tháng
-            when(accountRepository.countAccountsCreatedByMonth(anyInt(), anyInt())).thenReturn(5L);
+            when(accountRepository.countAccountsCreatedByMonth(anyInt(), anyInt()))
+                    .thenReturn(5L);
         }
 
         Map<Integer, Long> actualCounts = statisticsService.getAccountsCreatedThisYear();
@@ -119,7 +123,8 @@ public class StatisticsServiceTest {
         Map<Integer, Long> expectedCounts = new HashMap<>();
         for (int month = 1; month <= 12; month++) {
             expectedCounts.put(month, 3L); // Giả lập 3 tài khoản cho mỗi tháng
-            when(accountRepository.countAccountsCreatedByMonth(anyInt(), anyInt())).thenReturn(3L);
+            when(accountRepository.countAccountsCreatedByMonth(anyInt(), anyInt()))
+                    .thenReturn(3L);
         }
 
         Map<Integer, Long> actualCounts = statisticsService.getAccountsCreatedLastYear();
@@ -144,7 +149,8 @@ public class StatisticsServiceTest {
         Map<Integer, Long> result = statisticsService.getTotalMotelsByMonth();
 
         for (int month = 1; month <= 12; month++) {
-            assertEquals(1L, result.get(month), "Tổng số nhà trọ cho tháng " + month + " không khớp với giá trị mong đợi.");
+            assertEquals(
+                    1L, result.get(month), "Tổng số nhà trọ cho tháng " + month + " không khớp với giá trị mong đợi.");
         }
     }
 

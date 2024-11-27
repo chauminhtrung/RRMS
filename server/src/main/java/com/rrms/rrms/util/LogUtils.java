@@ -1,4 +1,5 @@
 package com.rrms.rrms.util;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -9,7 +10,11 @@ public class LogUtils {
     }
 
     public static void info(String serviceCode, Object object) {
-        log.info(String.valueOf(new StringBuilder().append("[").append(serviceCode).append("]: ").append(object)));
+        log.info(String.valueOf(new StringBuilder()
+                .append("[")
+                .append(serviceCode)
+                .append("]: ")
+                .append(object)));
     }
 
     public static void info(Object object) {
@@ -24,9 +29,9 @@ public class LogUtils {
         log.error((String) object);
     }
 
-//    public static void error(Object object) {
-//        logger.error(object);
-//    }
+    //    public static void error(Object object) {
+    //        logger.error(object);
+    //    }
 
     public static void warn(Object object) {
         log.warn((String) object);

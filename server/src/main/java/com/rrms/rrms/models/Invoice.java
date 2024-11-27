@@ -1,9 +1,13 @@
 package com.rrms.rrms.models;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.*;
+
+import com.rrms.rrms.services.servicesImp.YearMonthAttributeConverter;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,17 +24,28 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID invoiceId;
 
-    @Column(columnDefinition = "DATE")
-    private LocalDate invoice_createMonth;
+    @Column(columnDefinition = "VARCHAR(100)")
+    private String invoiceReason; // Lý do thu tiền
+
+    @Column(columnDefinition = "VARCHAR(7)")
+    @Convert(converter = YearMonthAttributeConverter.class)
+    private YearMonth invoiceCreateMonth;
 
     @Column(columnDefinition = "DATE")
-    private LocalDate invoice_createDate;
+    private LocalDate invoiceCreateDate; // ngay tạo hóa đơn
 
     @Column(columnDefinition = "DATE")
-    private LocalDate invoice_dueDate;
+    private LocalDate dueDate; // //hạn đóng tiền
 
-    @Column(columnDefinition = "VARCHAR(50)")
-    private String status;
+    @ManyToOne
+    @JoinColumn(name = "contract_id")
+    private Contract contract;
+
+    @Column(columnDefinition = "DATE")
+    private LocalDate dueDateofmoveinDate; // //hạn đóng tiền
+
+    @Column(columnDefinition = "DECIMAL(10, 2)")
+    private Double deposit; // Tiền cọc (lấy từ Contract)
 
     @ManyToOne
     @JoinColumn(name = "tenant_id")
@@ -40,7 +55,6 @@ public class Invoice {
     @JoinColumn(name = "payment_id")
     private Payment payment;
 
-    @ManyToOne
-    @JoinColumn(name = "contract_id")
-    private Contract contract;
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DetailInvoice> detailInvoices;
 }

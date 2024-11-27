@@ -1,32 +1,33 @@
 package com.rrms.rrms.services.servicesImp;
 
-import com.rrms.rrms.dto.request.ReserveAPlaceRequest;
-import com.rrms.rrms.dto.response.ReserveAPlaceResponse;
-import com.rrms.rrms.dto.response.RoomResponse2;
-import com.rrms.rrms.services.IReserveAPlaceService;
-
-import com.rrms.rrms.models.Reserve_a_place;
-import com.rrms.rrms.models.Room;
-import com.rrms.rrms.repositories.ReserveAPlaceRepository;
-import com.rrms.rrms.repositories.RoomRepository;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.binary.Hex;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.codec.binary.Hex;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.rrms.rrms.dto.request.ReserveAPlaceRequest;
+import com.rrms.rrms.dto.response.ReserveAPlaceResponse;
+import com.rrms.rrms.dto.response.RoomResponse2;
+import com.rrms.rrms.models.Reserve_a_place;
+import com.rrms.rrms.models.Room;
+import com.rrms.rrms.repositories.ReserveAPlaceRepository;
+import com.rrms.rrms.repositories.RoomRepository;
+import com.rrms.rrms.services.IReserveAPlaceService;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @Slf4j
-public class ReserveAPlaceService  implements IReserveAPlaceService {
+public class ReserveAPlaceService implements IReserveAPlaceService {
 
     @Autowired
     private ReserveAPlaceRepository reserveAPlaceRepository;
@@ -36,8 +37,8 @@ public class ReserveAPlaceService  implements IReserveAPlaceService {
 
     @Override
     public ReserveAPlaceResponse createReserveAPlace(ReserveAPlaceRequest request) {
-        Room room = roomRepository.findById(request.getRoomId())
-                .orElseThrow(() -> new RuntimeException("Room not found"));
+        Room room =
+                roomRepository.findById(request.getRoomId()).orElseThrow(() -> new RuntimeException("Room not found"));
 
         Reserve_a_place reserveAPlace = Reserve_a_place.builder()
                 .createdate(request.getCreateDate())
@@ -56,27 +57,26 @@ public class ReserveAPlaceService  implements IReserveAPlaceService {
 
     @Override
     public ReserveAPlaceResponse getReserveAPlaceById(UUID id) {
-        Reserve_a_place reserveAPlace = reserveAPlaceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("ReserveAPlace not found"));
+        Reserve_a_place reserveAPlace =
+                reserveAPlaceRepository.findById(id).orElseThrow(() -> new RuntimeException("ReserveAPlace not found"));
 
         return mapToResponse(reserveAPlace);
     }
 
     @Override
     public List<ReserveAPlaceResponse> getAllReserveAPlaces() {
-        return reserveAPlaceRepository.findAll()
-                .stream()
+        return reserveAPlaceRepository.findAll().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
     public ReserveAPlaceResponse updateReserveAPlace(UUID id, ReserveAPlaceRequest request) {
-        Reserve_a_place reserveAPlace = reserveAPlaceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("ReserveAPlace not found"));
+        Reserve_a_place reserveAPlace =
+                reserveAPlaceRepository.findById(id).orElseThrow(() -> new RuntimeException("ReserveAPlace not found"));
 
-        Room room = roomRepository.findById(request.getRoomId())
-                .orElseThrow(() -> new RuntimeException("Room not found"));
+        Room room =
+                roomRepository.findById(request.getRoomId()).orElseThrow(() -> new RuntimeException("Room not found"));
 
         reserveAPlace.setCreatedate(request.getCreateDate());
         reserveAPlace.setMoveinDate(request.getMoveInDate());
@@ -111,6 +111,7 @@ public class ReserveAPlaceService  implements IReserveAPlaceService {
         buffer.putLong(uuid.getLeastSignificantBits());
         return buffer.array();
     }
+
     @Override
     public List<ReserveAPlaceResponse> getReserveAPlacesByRoomId(UUID roomId) {
         List<Reserve_a_place> reserveAPlaces = reserveAPlaceRepository.findByRoom_RoomId(roomId);
@@ -126,7 +127,7 @@ public class ReserveAPlaceService  implements IReserveAPlaceService {
                 .name(reserveAPlace.getRoom().getName()) // Ví dụ trường roomName
                 .price(reserveAPlace.getRoom().getPrice()) // Ví dụ trường roomPrice
                 .build();
-        System.out.println("Status po day" + " "+reserveAPlace.getStatus());
+        System.out.println("Status po day" + " " + reserveAPlace.getStatus());
         return ReserveAPlaceResponse.builder()
                 .reserveAPlaceId(reserveAPlace.getReserveaplaceId())
                 .createDate(reserveAPlace.getCreatedate())

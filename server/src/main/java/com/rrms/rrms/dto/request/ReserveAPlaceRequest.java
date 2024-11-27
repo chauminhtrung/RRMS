@@ -1,11 +1,12 @@
 package com.rrms.rrms.dto.request;
 
-import com.rrms.rrms.enums.ContractStatus;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.util.Date;
 import java.util.UUID;
+
+import com.rrms.rrms.enums.ContractStatus;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
