@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react'
 import {
   Box,
@@ -29,8 +30,15 @@ import InfoIcon from '@mui/icons-material/Info'
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote'
 import DetailsIcon from '@mui/icons-material/Details'
 import { remove as removeDiacritics } from 'diacritics'
-import { paymentMoMo, paymentPaypal, paymentVNPay } from '~/apis/paymentAPI'
+import { paymentPaypal } from '~/apis/paymentAPI'
 import { toast } from 'react-toastify'
+import { loadStripe } from '@stripe/stripe-js'
+import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js'
+import StripePayment from './StripePayment'
+
+const stripePromise = loadStripe(
+  'pk_test_51POubLIe2vfQhSWEYarMBn27sc4ydF1n0nhgwSjgy66cojdCizekyBhLqjLpMyvKFmx4FV8BDaoOVCcjaftzhhDu00JImFrcBU'
+)
 
 const PaymentPage = ({ setIsAdmin }) => {
   const [cardOwner, setCardOwner] = useState('')
@@ -40,6 +48,12 @@ const PaymentPage = ({ setIsAdmin }) => {
   const [expiryDate, setExpiryDate] = useState('')
   const [cvc, setCvc] = useState('')
   const [isChecked, setIsChecked] = useState(false)
+  const [stripeDetails, setStripeDetails] = useState({
+    amount: 69,
+    email: 'tringu@gmail.com',
+    productName: 'Sẽ toy'
+  })
+
   useEffect(() => {
     setIsAdmin(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -58,36 +72,8 @@ const PaymentPage = ({ setIsAdmin }) => {
       paymentPaypal(289).then((res) => {
         if (res.data.redirectUrl) {
           window.location.href = res.data.redirectUrl
-        } else {
-          toast('Có lỗi xảy ra khi tạo thanh toán Paypal.')
         }
       })
-    } else if (paymentMethod === 'vnPay') {
-      paymentVNPay()
-        .then((res) => {
-          if (res.redirectUrl) {
-            window.location.href = res.redirectUrl
-          } else {
-            toast('Có lỗi xảy ra khi tạo thanh toán VNPAY.')
-          }
-        })
-        .catch(() => {
-          toast('Có lỗi xảy ra trong quá trình thanh toán.')
-        })
-    } else if (paymentMethod === 'momo') {
-      paymentMoMo()
-        .then((res) => {
-          if (res && res.payUrl) {
-            window.location.href = res.payUrl
-          } else {
-            toast('Có lỗi xảy ra khi tạo thanh toán MoMo.')
-          }
-        })
-        .catch(() => {
-          toast('Có lỗi xảy ra trong quá trình thanh toán.')
-        })
-    } else {
-      toast('Phương thức thanh toán không hợp lệ.')
     }
   }
 
@@ -236,7 +222,6 @@ const PaymentPage = ({ setIsAdmin }) => {
                 <CreditCardIcon sx={{ mr: 1 }} />
                 Thanh Toán
               </Typography>
-
               <FormControl
                 fullWidth
                 sx={{ mb: 2, color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894') }}>
@@ -248,217 +233,231 @@ const PaymentPage = ({ setIsAdmin }) => {
                   }}
                   label="Loại thẻ"
                   onChange={(e) => setPaymentMethod(e.target.value)}>
-                  <MenuItem value="paypal">
+                  <MenuItem value="paypal" sx={{ display: 'flex', gap: 2 }}>
                     <img
                       height={35}
                       src="https://images.ctfassets.net/drk57q8lctrm/21FLkQ2lbOCWynXsDZvXO5/485a163f199ef7749b914e54d4dc3335/paypal-logo.webp"
                       alt=""
                     />
                   </MenuItem>
-                  <MenuItem value="stripe">
+                  <MenuItem value="stripe" sx={{ display: 'flex', gap: 2 }}>
                     <img
                       height={35}
                       src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Stripe_Logo%2C_revised_2016.svg/2560px-Stripe_Logo%2C_revised_2016.svg.png"
                       alt=""
                     />
                   </MenuItem>
-                  <MenuItem value="vnPay">
+                  <MenuItem value="vnPay" sx={{ display: 'flex', gap: 2 }}>
                     <img
                       height={35}
                       src="https://i0.wp.com/discvietnam.com/wp-content/uploads/2020/07/C%E1%BB%95ng-thanh-to%C3%A1n-VNPAY-Logo-Th%E1%BA%BB-ATM-T%C3%A0i-kho%E1%BA%A3n-ng%C3%A2n-h%C3%A0ng-Online-Banking-M%C3%A3-QR-QR-Pay-Qu%C3%A9t-QR-Transparent.png?fit=360%2C140&ssl=1"
                       alt=""
                     />
+                    Chưa hỗ trợ
                   </MenuItem>
-                  <MenuItem value="momo">
+                  <MenuItem value="momo" sx={{ display: 'flex', gap: 2 }}>
                     <img height={35} src="./images/{339F660B-89C6-4C67-9986-2D420FDF3FD8}.png" alt="" />
+                    Chưa hỗ trợ
                   </MenuItem>
-                  <MenuItem value="zaloPay">
+                  <MenuItem value="zaloPay" sx={{ display: 'flex', gap: 2 }}>
                     <img
                       height={35}
                       src="https://blogchiasekienthuc.com/wp-content/uploads/2019/07/su-dung-dich-vu-zalopay.png"
                       alt=""
                     />
+                    Chưa hỗ trợ
                   </MenuItem>
-                  <MenuItem value="shopeePay">
+                  <MenuItem value="shopeePay" sx={{ display: 'flex', gap: 2 }}>
                     <img
                       height={35}
                       src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-eXStWVAQ9Qtplrp11xZfmj7DQS4KlRQpFA&s"
                       alt=""
                     />
+                    Chưa hỗ trợ
                   </MenuItem>
-                  <MenuItem value="applePay">
+                  <MenuItem value="applePay" sx={{ display: 'flex', gap: 2 }}>
                     <img
                       height={35}
                       src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWxYUQvdwKXZ9meVu4Jx6fr7nNNo99TLl-bA&s"
                       alt=""
                     />
+                    Chưa hỗ trợ
                   </MenuItem>
-                  <MenuItem value="googlePay">
+                  <MenuItem value="googlePay" sx={{ display: 'flex', gap: 2 }}>
                     <img
                       height={35}
                       src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/2560px-Google_Pay_Logo.svg.png"
                       alt=""
                     />
+                    Chưa hỗ trợ
                   </MenuItem>
-                  <MenuItem value="payoneer">
+                  <MenuItem value="payoneer" sx={{ display: 'flex', gap: 2 }}>
                     <img
                       height={35}
                       src="https://seeklogo.com/images/P/payoneer-logo-80D77790C2-seeklogo.com.png"
                       alt=""
                     />
+                    Chưa hỗ trợ
                   </MenuItem>
-                  <MenuItem value="2checkout">
+                  <MenuItem value="2checkout" sx={{ display: 'flex', gap: 2 }}>
                     <img
-                      height={35}
+                      height={30}
                       src="https://logos-download.com/wp-content/uploads/2019/11/2CheckOut_Logo.png"
                       alt=""
                     />
+                    Chưa hỗ trợ
                   </MenuItem>
-                  <MenuItem value="square">
+                  <MenuItem value="square" sx={{ display: 'flex', gap: 2 }}>
                     <img
-                      height={35}
+                      height={30}
                       src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Square%2C_Inc._logo.svg/1024px-Square%2C_Inc._logo.svg.png"
                       alt=""
                     />
+                    Chưa hỗ trợ
                   </MenuItem>
                 </Select>
               </FormControl>
+              {paymentMethod === 'stripe' ? (
+                <Elements stripe={stripePromise}>
+                  <StripePayment stripeDetails={stripeDetails} />
+                </Elements>
+              ) : (
+                <Box sx={{ mt: 3 }}>
+                  {/* Tên chủ thẻ */}
+                  <TextField
+                    fullWidth
+                    label="Tên chủ thẻ"
+                    variant="outlined"
+                    value={cardOwner}
+                    onChange={(e) => {
+                      // Lấy giá trị nhập vào
+                      const inputValue = e.target.value
 
-              <Box sx={{ mt: 3 }}>
-                {/* Tên chủ thẻ */}
-                <TextField
-                  fullWidth
-                  label="Tên chủ thẻ"
-                  variant="outlined"
-                  value={cardOwner}
-                  onChange={(e) => {
-                    // Lấy giá trị nhập vào
-                    const inputValue = e.target.value
+                      // Chuyển đổi tất cả các ký tự thành chữ hoa và loại bỏ dấu
+                      const formattedValue = removeDiacritics(inputValue).toUpperCase()
 
-                    // Chuyển đổi tất cả các ký tự thành chữ hoa và loại bỏ dấu
-                    const formattedValue = removeDiacritics(inputValue).toUpperCase()
-
-                    setCardOwner(formattedValue)
-                  }}
-                  sx={{
-                    mb: 2,
-                    bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542'),
-                    color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894')
-                  }}
-                />
-
-                {/* Loại thẻ */}
-                <FormControl
-                  fullWidth
-                  sx={{ mb: 2, color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894') }}>
-                  <InputLabel>Loại thẻ</InputLabel>
-                  <Select
-                    value={cardType}
+                      setCardOwner(formattedValue)
+                    }}
                     sx={{
+                      mb: 2,
+                      bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542'),
+                      color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894')
+                    }}
+                  />
+
+                  {/* Loại thẻ */}
+                  <FormControl
+                    fullWidth
+                    sx={{ mb: 2, color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894') }}>
+                    <InputLabel>Loại thẻ</InputLabel>
+                    <Select
+                      value={cardType}
+                      sx={{
+                        bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542')
+                      }}
+                      label="Loại thẻ"
+                      onChange={(e) => setCardType(e.target.value)}>
+                      <MenuItem value="Visa">Visa</MenuItem>
+                      <MenuItem value="MasterCard">MasterCard</MenuItem>
+                      <MenuItem value="JCB">JCB</MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  {/* Số thẻ */}
+                  <TextField
+                    fullWidth
+                    label="Số thẻ"
+                    variant="outlined"
+                    value={cardNumber}
+                    onChange={(e) => {
+                      // Lấy giá trị nhập vào
+                      const inputValue = e.target.value
+
+                      // Chỉ cho phép nhập số và định dạng thành 4 nhóm 4 số
+                      const formattedValue = inputValue
+                        .replace(/\D/g, '') // Xóa tất cả ký tự không phải số
+                        .replace(/(\d{4})(?=\d)/g, '$1 ') // Thêm khoảng trắng sau mỗi nhóm 4 số
+                        .trim() // Loại bỏ khoảng trắng ở cuối
+
+                      setCardNumber(formattedValue)
+                    }}
+                    inputProps={{
+                      maxLength: 19 // Giới hạn số ký tự tối đa là 19 (16 số + 3 khoảng trắng)
+                    }}
+                    sx={{
+                      mb: 2,
                       bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542')
                     }}
-                    label="Loại thẻ"
-                    onChange={(e) => setCardType(e.target.value)}>
-                    <MenuItem value="Visa">Visa</MenuItem>
-                    <MenuItem value="MasterCard">MasterCard</MenuItem>
-                    <MenuItem value="JCB">JCB</MenuItem>
-                  </Select>
-                </FormControl>
+                  />
 
-                {/* Số thẻ */}
-                <TextField
-                  fullWidth
-                  label="Số thẻ"
-                  variant="outlined"
-                  value={cardNumber}
-                  onChange={(e) => {
-                    // Lấy giá trị nhập vào
-                    const inputValue = e.target.value
-
-                    // Chỉ cho phép nhập số và định dạng thành 4 nhóm 4 số
-                    const formattedValue = inputValue
-                      .replace(/\D/g, '') // Xóa tất cả ký tự không phải số
-                      .replace(/(\d{4})(?=\d)/g, '$1 ') // Thêm khoảng trắng sau mỗi nhóm 4 số
-                      .trim() // Loại bỏ khoảng trắng ở cuối
-
-                    setCardNumber(formattedValue)
-                  }}
-                  inputProps={{
-                    maxLength: 19 // Giới hạn số ký tự tối đa là 19 (16 số + 3 khoảng trắng)
-                  }}
-                  sx={{
-                    mb: 2,
-                    bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542')
-                  }}
-                />
-
-                {/* Ngày hết hạn */}
-                <TextField
-                  fullWidth
-                  label="Ngày hết hạn (MM/YYYY)"
-                  variant="outlined"
-                  value={expiryDate}
-                  onChange={(e) => {
-                    // Lấy giá trị nhập vào
-                    const inputValue = e.target.value
-
-                    // Kiểm tra định dạng và định dạng lại
-                    const formattedValue = inputValue
-                      .replace(/\D/g, '') // Xóa tất cả ký tự không phải số
-                      .replace(/(\d{2})(\d{0,4})/, '$1/$2') // Định dạng thành MM/YYYY
-                      .slice(0, 7) // Giới hạn độ dài tối đa là 7 ký tự (MM/YYYY)
-
-                    setExpiryDate(formattedValue)
-                  }}
-                  inputProps={{
-                    maxLength: 7 // Giới hạn ký tự tối đa là 7 (MM/YYYY)
-                  }}
-                  sx={{
-                    mb: 2,
-                    bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542'),
-                    color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#2f3542')
-                  }}
-                />
-
-                {/* Mã CVC */}
-                <TextField
-                  fullWidth
-                  label="Mã CVC"
-                  variant="outlined"
-                  value={cvc}
-                  onChange={(e) => setCvc(e.target.value)}
-                  sx={{
-                    mb: 2,
-                    bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542')
-                  }}
-                />
-
-                {/* Checkbox lưu thông tin thẻ */}
-                <FormControlLabel
-                  control={<Checkbox checked={isChecked} onChange={(e) => setIsChecked(e.target.checked)} />}
-                  label="Lưu thông tin thẻ cho lần thanh toán sau"
-                  sx={{ mb: 3 }}
-                />
-
-                {/* Nút thanh toán */}
-                <Box display="flex" justifyContent="space-between" sx={{ mt: 3 }}>
-                  <Button
-                    sx={{ color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894') }}
+                  {/* Ngày hết hạn */}
+                  <TextField
+                    fullWidth
+                    label="Ngày hết hạn (MM/YYYY)"
                     variant="outlined"
-                    onClick={() => console.log('Kiểm tra lại đặt phòng')}>
-                    Kiểm tra lại đặt phòng
-                  </Button>
-                  <Button
-                    sx={{ color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894') }}
-                    variant="contained"
-                    onClick={handlePayment}
-                    startIcon={<CreditCardIcon />}
-                    disabled={!isChecked} // Disable nếu chưa đồng ý điều khoản
-                  >
-                    Hoàn tất đặt chỗ bằng {paymentMethod}
-                  </Button>
+                    value={expiryDate}
+                    onChange={(e) => {
+                      // Lấy giá trị nhập vào
+                      const inputValue = e.target.value
+
+                      // Kiểm tra định dạng và định dạng lại
+                      const formattedValue = inputValue
+                        .replace(/\D/g, '') // Xóa tất cả ký tự không phải số
+                        .replace(/(\d{2})(\d{0,4})/, '$1/$2') // Định dạng thành MM/YYYY
+                        .slice(0, 7) // Giới hạn độ dài tối đa là 7 ký tự (MM/YYYY)
+
+                      setExpiryDate(formattedValue)
+                    }}
+                    inputProps={{
+                      maxLength: 7 // Giới hạn ký tự tối đa là 7 (MM/YYYY)
+                    }}
+                    sx={{
+                      mb: 2,
+                      bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542'),
+                      color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#2f3542')
+                    }}
+                  />
+
+                  {/* Mã CVC */}
+                  <TextField
+                    fullWidth
+                    label="Mã CVC"
+                    variant="outlined"
+                    value={cvc}
+                    onChange={(e) => setCvc(e.target.value)}
+                    sx={{
+                      mb: 2,
+                      bgcolor: (theme) => (theme.palette.mode === 'light' ? '#ffffff' : '#2f3542')
+                    }}
+                  />
+
+                  {/* Checkbox lưu thông tin thẻ */}
+                  <FormControlLabel
+                    control={<Checkbox checked={isChecked} onChange={(e) => setIsChecked(e.target.checked)} />}
+                    label="Lưu thông tin thẻ cho lần thanh toán sau"
+                    sx={{ mb: 3 }}
+                  />
+
+                  {/* Nút thanh toán */}
+                  <Box display="flex" justifyContent="space-between" sx={{ mt: 3 }}>
+                    <Button
+                      sx={{ color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894') }}
+                      variant="outlined"
+                      onClick={() => console.log('Kiểm tra lại đặt phòng')}>
+                      Kiểm tra lại đặt phòng
+                    </Button>
+                    <Button
+                      sx={{ color: (theme) => (theme.palette.mode === 'light' ? '#333' : '#00b894') }}
+                      variant="contained"
+                      onClick={handlePayment}
+                      startIcon={<CreditCardIcon />}
+                      disabled={!isChecked} // Disable nếu chưa đồng ý điều khoản
+                    >
+                      Hoàn tất đặt chỗ bằng {paymentMethod}
+                    </Button>
+                  </Box>
                 </Box>
-              </Box>
+              )}
             </Box>
           </Grid>
         </Grid>

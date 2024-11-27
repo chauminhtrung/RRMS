@@ -36,6 +36,9 @@ import java.util.*;
 @RestController
 @RequestMapping("/payment")
 public class PaymentController {
+    @Value("${stripe.api.publicKey}")
+    private String publicKey;
+
     IPayment paymentService;
 
     @Autowired
