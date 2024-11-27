@@ -1,9 +1,6 @@
 package com.rrms.rrms.configs;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
-import javax.crypto.spec.SecretKeySpec;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +17,9 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.crypto.spec.SecretKeySpec;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
@@ -29,26 +28,27 @@ import lombok.extern.slf4j.Slf4j;
 public class SecurityConfig {
 
     private static final String[] PUBLIC_ENDPOINTS = {
-        "/oauth2/callback/google/*",
-        "/favicon.ico",
-        "/",
-        "/oauth2/*",
-        "/oauth2/**",
-        "/authen/*",
-        "/authen/**",
-        "/swagger-ui/*",
-        "/v3/api-docs/*",
-        "/searchs/**",
-        "/search/**",
-        "/search/*",
-        "/search",
-        "/RRMS",
-        "/detail/**",
-        "/detail/*",
-        "/detail",
-        "/bulletin-board/*",
-        "/api-accounts/**",
-        "/motels/get-motel-id",
+            "/oauth2/callback/google/*",
+            "/favicon.ico",
+            "/",
+            "/oauth2/*",
+            "/oauth2/**",
+            "/authen/*",
+            "/authen/**",
+            "/swagger-ui/*",
+            "/v3/api-docs/*",
+            "/searchs/**",
+            "/search/**",
+            "/search/*",
+            "/search",
+            "/RRMS",
+            "/detail/**",
+            "/detail/*",
+            "/detail",
+            "/bulletin-board/*",
+            "/api-accounts/**",
+            "/motels/get-motel-id",
+            "/payment/**",
     };
 
     @Value("${jwt.signer-key}")
