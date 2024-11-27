@@ -3150,7 +3150,7 @@ const HomeWData = ({ Motel }) => {
       ) : (
         <> </>
       )}
-      <RentRoomModal modalOpen={modalOpen} toggleModal={toggleModal} />
+      <RentRoomModal modalOpen={modalOpen} toggleModal={toggleModal} motelId={motelId} />
       <ReserveAPlaceModal
         modalOpen={modalOpenReAPlace}
         toggleModal={toggleModalReAPlace}
