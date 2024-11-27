@@ -1,6 +1,8 @@
 package com.rrms.rrms.configs;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
+
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -16,7 +18,9 @@ public class Config {
     public static String vnp_TmnCode = "XKE8UEHS";
     public static String vnp_Version = "2.1.0";
     public static String vnp_Command = "pay";
-    public static String secretKey = "GVN4SVUT6PITAULH61WSFT1UAW77CZQ1";
+    @Value("${vnpay.api.secretKey}")
+    public String secretKey ;
+
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
 
     public static String md5(String message) {
@@ -56,7 +60,7 @@ public class Config {
     }
 
     //Util for VNPAY
-    public static String hashAllFields(Map fields) {
+    public String hashAllFields(Map fields) {
         List fieldNames = new ArrayList(fields.keySet());
         Collections.sort(fieldNames);
         StringBuilder sb = new StringBuilder();

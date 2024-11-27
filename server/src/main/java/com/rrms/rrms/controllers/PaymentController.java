@@ -7,19 +7,26 @@ import com.paypal.base.rest.PayPalRESTException;
 import com.rrms.rrms.configs.Config;
 import com.rrms.rrms.configs.CustomerEnvironment;
 import com.rrms.rrms.dto.PaymentRestDTO;
+import com.rrms.rrms.dto.request.StripeRequest;
 import com.rrms.rrms.dto.response.PaymentResponse;
+import com.rrms.rrms.dto.response.StripeResponse;
 import com.rrms.rrms.enums.RequestType;
 import com.rrms.rrms.services.IPayment;
 import com.rrms.rrms.services.servicesImp.CreateOrderMoMo;
 import com.rrms.rrms.util.LogUtils;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
+import com.stripe.param.PaymentIntentCreateParams;
 import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +45,9 @@ import java.util.*;
 public class PaymentController {
     @Value("${stripe.api.publicKey}")
     private String publicKey;
+
+    @Value("${vnpay.api.secretKey}")
+    public String secretKey ;
 
     IPayment paymentService;
 
@@ -164,7 +174,7 @@ public class PaymentController {
         }
 
         String queryUrl = query.toString();
-        String vnp_SecureHash = Config.hmacSHA512(Config.secretKey, hashData.toString());
+        String vnp_SecureHash = Config.hmacSHA512(secretKey, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
 
         String paymentUrl = Config.vnp_PayUrl + "?" + queryUrl;
