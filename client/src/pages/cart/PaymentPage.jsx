@@ -55,12 +55,18 @@ const PaymentPage = ({ setIsAdmin }) => {
     })
     toast.info('Đang tiến hành thanh toán, vui lòng chờ trong giây lát...')
     if (paymentMethod === 'paypal') {
-      paymentPaypal(289).then((res) => {
-        if (res.data.redirectUrl) {
-          window.location.href = res.data.redirectUrl
-        }
-      })
+      handlePaymentPaypal()
+    } else {
+      toast.info('Phương thức thanh toán hiện tại chưa được hỗ trợ')
     }
+  }
+
+  const handlePaymentPaypal = () => {
+    paymentPaypal(289).then((res) => {
+      if (res.data.redirectUrl) {
+        window.location.href = res.data.redirectUrl
+      }
+    })
   }
 
   return (
@@ -233,6 +239,7 @@ const PaymentPage = ({ setIsAdmin }) => {
                       src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Stripe_Logo%2C_revised_2016.svg/2560px-Stripe_Logo%2C_revised_2016.svg.png"
                       alt=""
                     />
+                    Chưa hỗ trợ
                   </MenuItem>
                   <MenuItem value="vnPay">
                     <img
@@ -240,6 +247,7 @@ const PaymentPage = ({ setIsAdmin }) => {
                       src="https://i0.wp.com/discvietnam.com/wp-content/uploads/2020/07/C%E1%BB%95ng-thanh-to%C3%A1n-VNPAY-Logo-Th%E1%BA%BB-ATM-T%C3%A0i-kho%E1%BA%A3n-ng%C3%A2n-h%C3%A0ng-Online-Banking-M%C3%A3-QR-QR-Pay-Qu%C3%A9t-QR-Transparent.png?fit=360%2C140&ssl=1"
                       alt=""
                     />
+                    Chưa hỗ trợ
                   </MenuItem>
                   <MenuItem value="momo">
                     <img height={35} src="./images/{339F660B-89C6-4C67-9986-2D420FDF3FD8}.png" alt="" />
@@ -250,6 +258,7 @@ const PaymentPage = ({ setIsAdmin }) => {
                       src="https://blogchiasekienthuc.com/wp-content/uploads/2019/07/su-dung-dich-vu-zalopay.png"
                       alt=""
                     />
+                    Chưa hỗ trợ
                   </MenuItem>
                   <MenuItem value="shopeePay">
                     <img
@@ -257,6 +266,7 @@ const PaymentPage = ({ setIsAdmin }) => {
                       src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-eXStWVAQ9Qtplrp11xZfmj7DQS4KlRQpFA&s"
                       alt=""
                     />
+                    Chưa hỗ trợ
                   </MenuItem>
                   <MenuItem value="applePay">
                     <img
@@ -264,6 +274,7 @@ const PaymentPage = ({ setIsAdmin }) => {
                       src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWxYUQvdwKXZ9meVu4Jx6fr7nNNo99TLl-bA&s"
                       alt=""
                     />
+                    Chưa hỗ trợ
                   </MenuItem>
                   <MenuItem value="googlePay">
                     <img
@@ -271,6 +282,7 @@ const PaymentPage = ({ setIsAdmin }) => {
                       src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/2560px-Google_Pay_Logo.svg.png"
                       alt=""
                     />
+                    Chưa hỗ trợ
                   </MenuItem>
                   <MenuItem value="payoneer">
                     <img
@@ -285,6 +297,7 @@ const PaymentPage = ({ setIsAdmin }) => {
                       src="https://logos-download.com/wp-content/uploads/2019/11/2CheckOut_Logo.png"
                       alt=""
                     />
+                    Chưa hỗ trợ
                   </MenuItem>
                   <MenuItem value="square">
                     <img
@@ -292,6 +305,7 @@ const PaymentPage = ({ setIsAdmin }) => {
                       src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Square%2C_Inc._logo.svg/1024px-Square%2C_Inc._logo.svg.png"
                       alt=""
                     />
+                    Chưa hỗ trợ
                   </MenuItem>
                 </Select>
               </FormControl>
