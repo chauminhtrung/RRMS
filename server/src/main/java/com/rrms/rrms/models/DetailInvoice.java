@@ -30,4 +30,10 @@ public class DetailInvoice {
     @ManyToOne
     @JoinColumn(name = "room_device_id")
     private RoomDevice roomDevice;
+
+    @Column(columnDefinition = "DECIMAL(10, 2)")
+    private Double servicePrice; // Giá dịch vụ
+
+    @Column(columnDefinition = "DECIMAL(10, 2)")
+    private Double quantity; // Số lượng
 }

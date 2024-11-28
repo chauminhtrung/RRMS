@@ -3,6 +3,7 @@ package com.rrms.rrms.services;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,6 +19,7 @@ import com.rrms.rrms.dto.request.MotelRequest;
 import com.rrms.rrms.dto.response.MotelResponse;
 import com.rrms.rrms.mapper.AccountMapper;
 import com.rrms.rrms.mapper.MotelMapper;
+import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Motel;
 import com.rrms.rrms.repositories.MotelRepository;
 import com.rrms.rrms.services.servicesImp.MotelService;
@@ -44,6 +46,8 @@ public class MotelServiceTest {
     MotelRequest motelRequest;
     MotelResponse motelResponse;
     UUID motelId;
+    private String username = "testUser"; // Tên người dùng giả lập
+    private Account account; // Đối tượng Account giả lập
 
     @BeforeEach
     void init() {
@@ -69,6 +73,7 @@ public class MotelServiceTest {
                 .motelName("Updated Motel 1")
                 .address("789 New St")
                 .build();
+        account = new Account(); // Khởi tạo các thuộc tính nếu cần
     }
 
     @Test
@@ -182,5 +187,46 @@ public class MotelServiceTest {
         // Then
         verify(motelRepository).findById(motelId); // Kiểm tra phương thức findById đã được gọi
         verify(motelRepository, never()).deleteById(motelId); // Kiểm tra phương thức deleteById không được gọi
+    }
+
+    @Test
+    public void testFindMotelByAccount_Username() {
+        // Thiết lập danh sách các đối tượng Motel giả lập
+        List<Motel> motels = Arrays.asList(motel);
+
+        // Thiết lập hành vi của motelRepository
+        when(motelRepository.findMotelByAccount_Username(username)).thenReturn(motels);
+
+        // Thiết lập hành vi của motelMapper
+        when(motelMapper.motelToMotelResponse(motel)).thenReturn(motelResponse);
+
+        // Gọi phương thức cần test
+        List<MotelResponse> actualResponses = motelService.findMotelByAccount_Username(username);
+
+        // Kiểm tra kết quả
+        assertEquals(1, actualResponses.size(), "Số lượng MotelResponse không khớp với giá trị mong đợi.");
+        assertEquals(motelResponse, actualResponses.get(0), "MotelResponse không khớp với giá trị mong đợi.");
+
+        // Xác minh rằng các phương thức đã được gọi chính xác
+        verify(motelRepository).findMotelByAccount_Username(username);
+        verify(motelMapper).motelToMotelResponse(motel);
+    }
+
+    @Test
+    public void testGetTotalAreaByUsername() {
+        // Thiết lập giá trị trả về
+        Integer expectedArea = 250;
+
+        // Thiết lập hành vi của motelRepository
+        when(motelRepository.findTotalAreaByUsername(account)).thenReturn(expectedArea);
+
+        // Gọi phương thức cần test
+        Integer actualArea = motelService.getTotalAreaByUsername(account);
+
+        // Kiểm tra kết quả
+        assertEquals(expectedArea, actualArea, "Tổng nhà trọ không khớp với giá trị mong đợi.");
+
+        // Xác minh rằng phương thức đã được gọi chính xác
+        verify(motelRepository).findTotalAreaByUsername(account);
     }
 }

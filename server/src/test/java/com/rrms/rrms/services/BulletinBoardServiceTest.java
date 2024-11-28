@@ -8,6 +8,7 @@ import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -60,6 +61,7 @@ public class BulletinBoardServiceTest {
     BulletinBoard bulletinBoard;
     Account account;
     RentalAmenities rentalAmenities;
+    UUID bulletinBoardId;
 
     @BeforeEach
     void init() {
@@ -137,6 +139,12 @@ public class BulletinBoardServiceTest {
                 // danh
                 // sách hợp
                 // lệ
+                .build();
+
+        bulletinBoardId = UUID.randomUUID();
+        bulletinBoard = BulletinBoard.builder()
+                .bulletinBoardId(bulletinBoardId)
+                .isActive(false) // Trạng thái ban đầu là không hoạt động
                 .build();
     }
 
@@ -482,6 +490,84 @@ public class BulletinBoardServiceTest {
         bulletinBoardService.deleteBulletinBoard(bulletinBoardId);
 
         // Then
+        verify(bulletinBoardRepository).deleteById(bulletinBoardId);
+    }
+
+    @Test
+    public void testGetBulletinBoard() {
+        // Dữ liệu giả lập
+        BulletinBoard bulletinBoard1 = new BulletinBoard();
+        BulletinBoard bulletinBoard2 = new BulletinBoard();
+
+        BulletinBoardResponse response1 = new BulletinBoardResponse();
+        BulletinBoardResponse response2 = new BulletinBoardResponse();
+
+        // Thiết lập hành vi của repository
+        when(bulletinBoardRepository.findAllByIsActive(false))
+                .thenReturn(Arrays.asList(bulletinBoard1, bulletinBoard2));
+
+        // Thiết lập hành vi của mapper cho từng đối tượng
+        when(bulletinBoardMapper.toBulletinBoardResponse(bulletinBoard1)).thenReturn(response1);
+        when(bulletinBoardMapper.toBulletinBoardResponse(bulletinBoard2)).thenReturn(response2);
+
+        // Gọi phương thức cần test
+        List<BulletinBoardResponse> responses = bulletinBoardService.getBulletinBoard();
+
+        // Kiểm tra kết quả
+        assertEquals(2, responses.size());
+        assertEquals(response1, responses.get(0));
+        assertEquals(response2, responses.get(1));
+
+        // Sử dụng ArgumentCaptor để kiểm tra các đối tượng đã được gọi
+        ArgumentCaptor<BulletinBoard> captor = ArgumentCaptor.forClass(BulletinBoard.class);
+
+        verify(bulletinBoardMapper, times(2)).toBulletinBoardResponse(captor.capture());
+        List<BulletinBoard> capturedBulletins = captor.getAllValues();
+
+        assertEquals(2, capturedBulletins.size());
+        assertEquals(bulletinBoard1, capturedBulletins.get(0));
+        assertEquals(bulletinBoard2, capturedBulletins.get(1));
+    }
+
+    @Test
+    public void testApproveBulletinBoardisActive_Success() {
+        // Thiết lập hành vi của repository
+        when(bulletinBoardRepository.findById(bulletinBoardId)).thenReturn(Optional.of(bulletinBoard));
+        when(bulletinBoardRepository.save(bulletinBoard)).thenReturn(bulletinBoard);
+
+        // Gọi phương thức cần test
+        BulletinBoard approvedBulletinBoard = bulletinBoardService.approveBulletinBoard(bulletinBoardId);
+
+        // Kiểm tra trạng thái đã được phê duyệt
+        assertEquals(true, approvedBulletinBoard.getIsActive());
+
+        // Xác minh rằng các phương thức đã được gọi đúng cách
+        verify(bulletinBoardRepository).findById(bulletinBoardId);
+        verify(bulletinBoardRepository).save(bulletinBoard);
+    }
+
+    @Test
+    public void testApproveBulletinBoardisActive_NotFound() {
+        // Thiết lập hành vi của repository để không tìm thấy BulletinBoard
+        when(bulletinBoardRepository.findById(bulletinBoardId)).thenReturn(Optional.empty());
+
+        // Kiểm tra xem ngoại lệ ResourceNotFoundException có được ném ra không
+        assertThrows(ResourceNotFoundException.class, () -> {
+            bulletinBoardService.approveBulletinBoard(bulletinBoardId);
+        });
+
+        // Xác minh rằng phương thức findById đã được gọi
+        verify(bulletinBoardRepository).findById(bulletinBoardId);
+        verify(bulletinBoardRepository, never())
+                .save(any(BulletinBoard.class)); // Không nên gọi save nếu không tìm thấy
+    }
+
+    @Test
+    public void testDeleteBulletinBoard() {
+        // Gọi phương thức cần test
+        bulletinBoardService.deleteBulletinBoard(bulletinBoardId);
+
+        // Xác minh rằng phương thức deleteById đã được gọi với ID chính xác
         verify(bulletinBoardRepository).deleteById(bulletinBoardId);
     }
 }

@@ -98,6 +98,6 @@ public class Contract {
 
     // trang thai hop dong
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "ENUM('ACTIVE', 'ENDED','IATExpire')")
+    @Column(columnDefinition = "ENUM('ACTIVE', 'ENDED','IATExpire','ReportEnd')")
     private ContractStatus status;
 }

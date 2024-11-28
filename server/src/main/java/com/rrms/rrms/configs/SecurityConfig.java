@@ -49,6 +49,10 @@ public class SecurityConfig {
         "/bulletin-board/*",
         "/api-accounts/**",
         "/motels/get-motel-id",
+        "/payment/**",
+        "/payment/paymentSuccess/*",
+        "/payment/paymentFailed/*",
+        "/payment/vnpay-callback/**"
     };
 
     @Value("${jwt.signer-key}")

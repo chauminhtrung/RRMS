@@ -4,6 +4,7 @@ import {
   Button,
   Divider,
   FormControl,
+  FormHelperText,
   Grid,
   InputLabel,
   MenuItem,
@@ -20,9 +21,19 @@ import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { updateProfile } from '~/apis/profileAPI'
+import { subYears } from 'date-fns'
 
 const validationSchema = Yup.object({
-  email: Yup.string().email('Email không hợp lệ').required('Bắt buộc nhập email')
+  email: Yup.string()
+    .matches(/^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/, 'Email không hợp lệ')
+    .required('Bắt buộc nhập email'),
+  gender: Yup.string().required('Bắt buộc nhập giới tính'),
+  birthday: Yup.date()
+    .nullable()
+    .transform((value, originalValue) => (originalValue === '' ? null : value))
+    .required('Ngày sinh là bắt buộc.')
+    .max(subYears(new Date(), 16), 'Bạn phải trên 16 tuổi.'),
+  cccd: Yup.string().matches(/^\d{12}$/, 'CCCD phải bao gồm 12 chữ số.')
 })
 
 const ProfileTab = ({ profile, setProfile, selectedImage }) => {
@@ -68,7 +79,10 @@ const ProfileTab = ({ profile, setProfile, selectedImage }) => {
 
   const formik = useFormik({
     initialValues: {
-      email: profile.email
+      email: profile.email,
+      birthday: profile.birthday ? profile.birthday.split('T')[0] : '',
+      gender: profile.gender,
+      cccd: profile.cccd
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -77,10 +91,22 @@ const ProfileTab = ({ profile, setProfile, selectedImage }) => {
   })
 
   useEffect(() => {
-    formik.setValues({
-      email: profile.email
-    })
-  }, [profile])
+    console.log(formik.errors.cccd)
+
+    if (
+      profile.email !== formik.values.email ||
+      profile.birthday !== formik.values.birthday ||
+      profile.gender !== formik.values.gender ||
+      profile.cccd !== formik.values.cccd
+    ) {
+      formik.setValues({
+        email: profile.email,
+        birthday: profile.birthday ? profile.birthday.split('T')[0] : '',
+        gender: profile.gender,
+        cccd: profile.cccd
+      })
+    }
+  }, [profile]) // Thêm formik.values để tránh cảnh báo phụ thuộc
 
   return (
     <Box>
@@ -112,18 +138,23 @@ const ProfileTab = ({ profile, setProfile, selectedImage }) => {
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+            <FormControl fullWidth error={formik.touched.gender && Boolean(formik.errors.gender)}>
+              <InputLabel id="gender-select-label">Gender</InputLabel>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={profile.gender || ''}
-                label="Gender"
-                onChange={(e) => setProfile({ ...profile, gender: e.target.value })}>
+                labelId="gender-select-label"
+                id="gender-select"
+                value={formik.values.gender}
+                onChange={(e) => {
+                  formik.handleChange(e)
+                  setProfile({ ...profile, gender: e.target.value })
+                }}
+                onBlur={formik.handleBlur}
+                label="Gender">
                 <MenuItem value={'MALE'}>Male</MenuItem>
                 <MenuItem value={'FEMALE'}>Female</MenuItem>
                 <MenuItem value={'OTHER'}>Other</MenuItem>
               </Select>
+              <FormHelperText>{formik.touched.gender && formik.errors.gender}</FormHelperText>
             </FormControl>
           </Grid>
           <Grid item xs={12} md={6}>
@@ -148,11 +179,13 @@ const ProfileTab = ({ profile, setProfile, selectedImage }) => {
             <TextField
               label="Số điện thoại"
               fullWidth
+              read
               value={profile.phone}
               onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
               InputLabelProps={{
                 shrink: !!profile.phone
               }}
+              disabled
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -163,19 +196,29 @@ const ProfileTab = ({ profile, setProfile, selectedImage }) => {
               InputLabelProps={{
                 shrink: true
               }}
-              value={profile.birthday}
-              onChange={(e) => setProfile({ ...profile, birthday: e.target.value })}
+              value={formik.values.birthday || ''}
+              onChange={(e) => {
+                formik.handleChange(e)
+                setProfile({ ...profile, birthday: e.target.value })
+              }}
+              error={Boolean(formik.errors.birthday)}
+              helperText={formik.errors.birthday}
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
               label="CCCD"
               fullWidth
-              value={profile.cccd}
-              onChange={(e) => setProfile({ ...profile, cccd: e.target.value })}
+              value={formik.values.cccd}
+              onChange={(e) => {
+                formik.handleChange(e)
+                setProfile({ ...profile, cccd: e.target.value })
+              }}
               InputLabelProps={{
                 shrink: !!profile.cccd
               }}
+              error={Boolean(formik.errors.cccd)}
+              helperText={formik.errors.cccd}
             />
           </Grid>
 
@@ -189,7 +232,8 @@ const ProfileTab = ({ profile, setProfile, selectedImage }) => {
         variant="contained"
         color="primary"
         fullWidth
-        onClick={handleUpload}>
+        onClick={handleUpload}
+        disabled={!formik.isValid || !formik.dirty}>
         Lưu thay đổi
       </Button>
     </Box>
