@@ -30,6 +30,6 @@ public class Heart {
     @JoinTable(
             name = "heart_room",
             joinColumns = @JoinColumn(name = "heart_id"),
-            inverseJoinColumns = @JoinColumn(name = "room_id"))
-    private List<Room> rooms = new ArrayList<>();
+            inverseJoinColumns = @JoinColumn(name = "bulletinBoard_id"))
+    private List<BulletinBoard> rooms = new ArrayList<>();
 }
