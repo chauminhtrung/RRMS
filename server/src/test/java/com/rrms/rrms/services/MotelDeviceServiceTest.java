@@ -1,5 +1,21 @@
 package com.rrms.rrms.services;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.annotation.Import;
+
 import com.rrms.rrms.configs.SecurityConfigTest;
 import com.rrms.rrms.dto.request.MotelDeviceRequest;
 import com.rrms.rrms.dto.response.MotelDeviceResponse;
@@ -10,21 +26,6 @@ import com.rrms.rrms.models.MotelDevice;
 import com.rrms.rrms.repositories.MotelDeviceRepository;
 import com.rrms.rrms.repositories.MotelRepository;
 import com.rrms.rrms.services.servicesImp.MotelDeviceService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.annotation.Import;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @Import(SecurityConfigTest.class)
@@ -51,7 +52,6 @@ class MotelDeviceServiceTest {
         MockitoAnnotations.openMocks(this); // Mở các mock trước mỗi test
         motelDeviceId = UUID.randomUUID();
     }
-
 
     // @Test
     // public void testGetAllMotelDevicesByMotel_MotelExists() {
@@ -107,7 +107,6 @@ class MotelDeviceServiceTest {
     // .motelDeviceToMotelDeviceResponse(any(MotelDevice.class)); // Verify mapper
     // được gọi đúng
     // }
-
 
     @Test
     public void testGetAllMotelDevicesByMotel_MotelDoesNotExist() {

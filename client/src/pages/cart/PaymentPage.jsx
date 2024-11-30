@@ -30,7 +30,7 @@ import InfoIcon from '@mui/icons-material/Info'
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote'
 import DetailsIcon from '@mui/icons-material/Details'
 import { remove as removeDiacritics } from 'diacritics'
-import { paymentPaypal, paymentStripe } from '~/apis/paymentAPI'
+import { paymentMoMo, paymentPaypal, paymentVNPay } from '~/apis/paymentAPI'
 import { toast } from 'react-toastify'
 import { loadStripe } from '@stripe/stripe-js'
 import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js'
@@ -70,8 +70,11 @@ const PaymentPage = ({ setIsAdmin }) => {
     toast.info('Đang tiến hành thanh toán, vui lòng chờ trong giây lát...')
     if (paymentMethod === 'paypal') {
       handlePaymentPaypal()
-    }
-    if (paymentMethod === 'stripe') {
+    } else if (paymentMethod === 'vnPay') {
+      handlePaymentVNPay()
+    } else if (paymentMethod === 'momo') {
+      handlePaymentMomo()
+    } else if (paymentMethod === 'stripe') {
       console.log('handlePaymentStripe')
     } else {
       toast.info('Phương thức thanh toán hiện tại chưa được hỗ trợ')
@@ -82,6 +85,25 @@ const PaymentPage = ({ setIsAdmin }) => {
     paymentPaypal(289).then((res) => {
       if (res.data.redirectUrl) {
         window.location.href = res.data.redirectUrl
+      }
+    })
+  }
+
+  const handlePaymentVNPay = () => {
+    paymentVNPay().then((res) => {
+      if (res.redirectUrl) {
+        window.location.href = res.redirectUrl
+      } else {
+        toast('Có lỗi xảy ra khi tạo thanh toán VNPAY.')
+      }
+    })
+  }
+  const handlePaymentMomo = () => {
+    paymentMoMo().then((res) => {
+      if (res && res.payUrl) {
+        window.location.href = res.payUrl
+      } else {
+        toast('Có lỗi xảy ra khi tạo thanh toán MoMo.')
       }
     })
   }
@@ -262,11 +284,9 @@ const PaymentPage = ({ setIsAdmin }) => {
                       src="https://i0.wp.com/discvietnam.com/wp-content/uploads/2020/07/C%E1%BB%95ng-thanh-to%C3%A1n-VNPAY-Logo-Th%E1%BA%BB-ATM-T%C3%A0i-kho%E1%BA%A3n-ng%C3%A2n-h%C3%A0ng-Online-Banking-M%C3%A3-QR-QR-Pay-Qu%C3%A9t-QR-Transparent.png?fit=360%2C140&ssl=1"
                       alt=""
                     />
-                    Chưa hỗ trợ
                   </MenuItem>
                   <MenuItem value="momo" sx={{ display: 'flex', gap: 2 }}>
                     <img height={35} src="./images/{339F660B-89C6-4C67-9986-2D420FDF3FD8}.png" alt="" />
-                    Chưa hỗ trợ
                   </MenuItem>
                   <MenuItem value="zaloPay" sx={{ display: 'flex', gap: 2 }}>
                     <img

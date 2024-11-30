@@ -487,7 +487,7 @@ function ModalCreateContract({ toggleModal, modalOpen, roomId, motelId }) {
                   justifyContent: 'center',
                   alignItems: 'center',
                   display: 'flex',
-                  backgroundColor: '#b1e1b8'
+                  backgroundColor: 'rgb(32, 169, 231)'
                 }}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -506,7 +506,7 @@ function ModalCreateContract({ toggleModal, modalOpen, roomId, motelId }) {
                 </svg>
               </div>
               <h5 style={{ marginLeft: '10px', marginTop: '10px' }}>
-                Thêm hợp đồng mới - Phòng `{room ? room.name : <>ko co </>}`
+                Thêm hợp đồng mới - `{room ? room.name : <>ko co </>}`
               </h5>
             </div>
           </ModalHeader>
