@@ -104,6 +104,12 @@ public class PaymentController {
         return "success";
     }
 
+
+    // vnpay
+    //9704198526191432198
+    //NGUYEN VAN A
+    // 07/15
+    //	123456
     @PostMapping("/create_payment")
     @PermitAll
     public ResponseEntity<?> getPay(@RequestBody Map<String, Object> requestData, HttpServletRequest request)

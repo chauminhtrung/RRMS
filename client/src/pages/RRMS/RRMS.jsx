@@ -10,11 +10,11 @@ import axios from 'axios'
 import LoadingPage from '~/components/LoadingPage/LoadingPage'
 import { formatterAmount } from '~/utils/formatterAmount'
 import { Pagination } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { env } from '~/configs/environment'
 const RRMS = ({ setIsAdmin }) => {
   const [searchData, setSearchData] = useState([])
-
+  const navigate = useNavigate()
   const [dataNew, setDataNew] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 8 // Số lượng item hiển thị mỗi trang
@@ -27,7 +27,6 @@ const RRMS = ({ setIsAdmin }) => {
   let currentItemsNew = []
   if (Array.isArray(searchData)) {
     currentItemsNew = searchData.slice(indexOfFirstItemNew, indexOfLastItemNew)
-    console.log(currentItemsNew)
   } else {
     currentItemsNew = []
   }
@@ -40,7 +39,6 @@ const RRMS = ({ setIsAdmin }) => {
   let currentItems = []
   if (Array.isArray(dataNew)) {
     currentItems = dataNew.slice(indexOfFirstItem, indexOfLastItem)
-    console.log(currentItems) // Hiển thị các phần tử hiện tại
   } else {
     currentItems = []
   }
@@ -70,10 +68,8 @@ const RRMS = ({ setIsAdmin }) => {
       if (result.status === 200) {
         const fetchedData = result.data.result
         if (Array.isArray(fetchedData) && fetchedData.length > 0) {
-          console.log('Data fetched:', fetchedData)
           setSearchData(fetchedData) // set dữ liệu cho currentItems
         } else {
-          console.log('No results found or data is null')
           setSearchData([])
         }
       } else {
@@ -96,10 +92,8 @@ const RRMS = ({ setIsAdmin }) => {
       if (result.status === 200) {
         const fetchedData = result.data.result
         if (Array.isArray(fetchedData) && fetchedData.length > 0) {
-          console.log('Data fetched:', fetchedData)
           setDataNew(fetchedData) // set dữ liệu cho currentItemsNew
         } else {
-          console.log('No results found or data is null')
           setDataNew([])
         }
       } else {
@@ -416,16 +410,14 @@ const RRMS = ({ setIsAdmin }) => {
             </h2>
           </div>
           <div className="province-link row">
-            <div className="col-md-2 mb-2">
-              <Link to="#">
-                <div className="item-province ho-chi-minh" style={{ background: 'url(./tphcm.jpg)' }}>
-                  <div className="info">
-                    <span style={{ fontSize: '13px' }}>Phòng trọ</span> <strong>Hồ Chí Minh</strong>
-                  </div>
+            <div className="col-md-2 mb-2" onClick={() => navigate(`/search?query=hcm`)}>
+              <div className="item-province ho-chi-minh" style={{ background: 'url(./tphcm.jpg)' }}>
+                <div className="info">
+                  <span style={{ fontSize: '13px' }}>Phòng trọ</span> <strong>Hồ Chí Minh</strong>
                 </div>
-              </Link>
+              </div>
             </div>
-            <div className="col-md-2 mb-2">
+            <div className="col-md-2 mb-2" onClick={() => navigate(`/search?query=hn`)}>
               <Link to="#">
                 <div className="item-province ho-chi-minh" style={{ background: 'url(./ha-noi.jpg)' }}>
                   <div className="info">
@@ -434,7 +426,7 @@ const RRMS = ({ setIsAdmin }) => {
                 </div>
               </Link>
             </div>
-            <div className="col-md-2 mb-2">
+            <div className="col-md-2 mb-2" onClick={() => navigate(`/search?query=bd`)}>
               <Link to="#">
                 <div className="item-province ho-chi-minh" style={{ background: 'url(./bd.jpg)' }}>
                   <div className="info">
@@ -443,7 +435,7 @@ const RRMS = ({ setIsAdmin }) => {
                 </div>
               </Link>
             </div>
-            <div className="col-md-2 mb-2">
+            <div className="col-md-2 mb-2" onClick={() => navigate(`/search?query=ct`)}>
               <Link to="#">
                 <div className="item-province ho-chi-minh" style={{ background: 'url(./caudibo-cantho.jpg)' }}>
                   <div className="info">
@@ -452,7 +444,7 @@ const RRMS = ({ setIsAdmin }) => {
                 </div>
               </Link>
             </div>
-            <div className="col-md-2 mb-2">
+            <div className="col-md-2 mb-2" onClick={() => navigate(`/search?query=dn`)}>
               <Link to="#">
                 <div className="item-province ho-chi-minh" style={{ background: 'url(./da-nang.jpg)' }}>
                   <div className="info">
@@ -461,7 +453,7 @@ const RRMS = ({ setIsAdmin }) => {
                 </div>
               </Link>
             </div>
-            <div className="col-md-2 mb-2">
+            <div className="col-md-2 mb-2" onClick={() => navigate(`/search?query=đn`)}>
               <Link to="#">
                 <div className="item-province ho-chi-minh" style={{ background: 'url(./dong-nai.jpg)' }}>
                   <div className="info">
@@ -634,20 +626,30 @@ const RRMS = ({ setIsAdmin }) => {
                     <div className="row">
                       <div className="col-md-3 mb-2">
                         {distric.cards.map((card, f) => (
-                          <div key={f}>
+                          <div
+                            key={f}
+                            onClick={() => {
+                              navigate(`/search?query=${card.district}`)
+                            }}>
                             {f == 0 ? (
                               <Link
-                                className="item-district large"
+                                className="item-district large bg-danger"
                                 style={{
                                   backgroundImage: `url(${card.image})`,
                                   backgroundSize: 'cover'
                                 }}
-                                title="Tìm phòng trọ Quận 1"
-                                to="/thue-phong-tro-quan-1-id-760/ho-chi-minh-id-79">
+                                to={`/search?query=${card.district}`}
+                                title="Tìm phòng trọ Quận 1">
                                 <div className="info">
                                   <span>{card.name}</span>
                                   <span>
-                                    <strong style={{ paddingLeft: '7px' }}>{card.district}</strong>
+                                    <strong
+                                      style={{ paddingLeft: '7px' }}
+                                      onClick={() => {
+                                        navigate(`/search?query=${card.district}`)
+                                      }}>
+                                      {card.district}
+                                    </strong>
                                   </span>
                                   <div
                                     style={{
@@ -697,7 +699,11 @@ const RRMS = ({ setIsAdmin }) => {
           </div>
           <div className="wards-list">
             {wards_list.map((ward, i) => (
-              <Link to="#" key={i} className="wards-item">
+              <Link
+                key={i}
+                className="wards-item"
+                to={`/search?query=${ward.name}`} // Điều hướng qua Link
+              >
                 {ward.name}
               </Link>
             ))}

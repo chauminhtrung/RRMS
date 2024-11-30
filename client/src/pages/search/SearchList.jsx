@@ -10,9 +10,7 @@ const SearchList = ({ totalRooms }) => {
     setSortByPrice(event.target.value)
   }
 
-  useEffect(() => {
-    console.log(totalRooms)
-  }, [totalRooms])
+  useEffect(() => {}, [totalRooms])
 
   const handleAreaChange = (event) => {
     setSortByArea(event.target.value)

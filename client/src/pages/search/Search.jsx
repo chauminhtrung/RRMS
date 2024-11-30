@@ -15,7 +15,7 @@ import axios from 'axios'
 import ChatAI from '../AI/ChatAI'
 import { getTinhThanh } from '~/apis/addressAPI'
 import { env } from '~/configs/environment'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useSearchParams } from 'react-router-dom'
 import { searchBulletinBoardByAddress } from '~/apis/bulletinBoardAPI'
 
 const Search = ({ setIsAdmin }) => {
@@ -27,7 +27,77 @@ const Search = ({ setIsAdmin }) => {
   const [keyword, setKeyword] = useState('')
   const location = useLocation()
   const { searchKeyWord } = location.state || {}
+  const [searchParams] = useSearchParams()
 
+  useEffect(() => {
+    switch (searchParams.get('query')) {
+      case 'hcm':
+        setKeyword('Hồ chí minh')
+        break
+      case 'hn':
+        setKeyword('Hà nội')
+        break
+      case 'bd':
+        setKeyword('Bình dương')
+        break
+      case 'ct':
+        setKeyword('Cẩn thơ')
+        break
+      case 'dn':
+        setKeyword('Đà nẵng')
+        break
+      case 'đn':
+        setKeyword('Đồng nai')
+        break
+      case 'Quận 1':
+        setKeyword('Quận 1')
+        break
+      case 'Quận Phú Nhuận':
+        setKeyword('Quận Phú Nhuận')
+        break
+      case 'Tân Định':
+        setKeyword('Tân Định')
+        break
+      case 'Đa Kao':
+        setKeyword('Đa Kao')
+        break
+      case 'Bến Nghé':
+        setKeyword('Bến Nghé')
+        break
+      case 'Bến Thành':
+        setKeyword('Bến Thành')
+        break
+      case 'Nguyễn Thái Bình':
+        setKeyword('Nguyễn Thái Bình')
+        break
+      case 'Phạm Ngũ Lão':
+        setKeyword('Phạm Ngũ Lão')
+        break
+      case 'Cầu Ông Lãnh':
+        setKeyword('Cầu Ông Lãnh')
+        break
+      case 'Cô Giang':
+        setKeyword('Cô Giang')
+        break
+      case 'Nguyễn Cư Trinh':
+        setKeyword('Nguyễn Cư Trinh')
+        break
+      case 'Cầu Kho':
+        setKeyword('Cầu Kho')
+        break
+      case 'Thu Dau 1':
+        setKeyword('Thu Dau 1')
+        break
+      case 'Dong An Ba':
+        setKeyword('Dong An Ba')
+        break
+      case 'Ngoc To':
+        setKeyword('Ngoc To')
+        break
+      default:
+        setKeyword('')
+    }
+  }, [searchParams.get('query')])
   useEffect(() => {
     setIsAdmin(false)
     loadDataSearch()
@@ -48,16 +118,12 @@ const Search = ({ setIsAdmin }) => {
   // /name?name=${searchValue}
   // Hàm để tải dữ liệu
   const loadDataSearch = async (searchValue) => {
-    console.log(searchKeyWord)
-
     if (searchKeyWord) {
       setKeyword(searchKeyWord)
 
       searchBulletinBoardByAddress(searchKeyWord).then((res) => {
-        console.log(res)
         setSearchData(res.result)
         setTotalRooms(res.result.length)
-        console.log(searchData)
       })
       return
     }
@@ -74,11 +140,9 @@ const Search = ({ setIsAdmin }) => {
         const fetchedData = response.data.result
 
         if (Array.isArray(fetchedData) && fetchedData.length > 0) {
-          console.log('Data fetched:', fetchedData)
           setSearchData(fetchedData)
           setTotalRooms(fetchedData.length)
         } else {
-          console.log('No results found or data is null')
           setSearchData([])
           setTotalRooms(0)
         }
@@ -90,7 +154,6 @@ const Search = ({ setIsAdmin }) => {
     }
   }
   useEffect(() => {
-    console.log('Searching for:', searchValue) // Ghi log giá trị tìm kiếm
     loadDataSearch(searchValue)
   }, [])
   if (!provinces) {
