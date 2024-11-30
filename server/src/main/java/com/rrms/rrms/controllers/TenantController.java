@@ -89,7 +89,7 @@ public class TenantController {
             tenantService.delete(id);
             log.info("Delete tenant successfully");
             return ApiResponse.<Boolean>builder()
-                    .code(HttpStatus.BAD_REQUEST.value())
+                    .code(HttpStatus.OK.value())
                     .message("success")
                     .result(true)
                     .build();
