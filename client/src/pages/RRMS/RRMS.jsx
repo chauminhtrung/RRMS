@@ -642,7 +642,7 @@ const RRMS = ({ setIsAdmin }) => {
                                   backgroundImage: `url(${card.image})`,
                                   backgroundSize: 'cover'
                                 }}
-                                to={`/search?query=${card.district}`}
+                                // to={`/search?query=${card.district}`}
                                 title="Tìm phòng trọ Quận 1">
                                 <div className="info">
                                   <span>{card.name}</span>

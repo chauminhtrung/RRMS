@@ -52,6 +52,39 @@ const Search = ({ setIsAdmin }) => {
       case 'Quận 1':
         setKeyword('Quận 1')
         break
+      case 'Quận 12':
+        setKeyword('Quận 12')
+        break
+      case 'Quận Tân Bình':
+        setKeyword('Quận Tân Bình')
+        break
+      case 'Quận Gò Vấp':
+        setKeyword('Quận Gò Vấp')
+        break
+      case 'Quận Tân Phú':
+        setKeyword('Quận Tân Phú')
+        break
+      case 'Quận 3':
+        setKeyword('Quận 3')
+        break
+      case 'Quận 4':
+        setKeyword('Quận 4')
+        break
+      case 'Quận 10':
+        setKeyword('Quận 10')
+        break
+      case 'Quận 5':
+        setKeyword('Quận 5')
+        break
+      case 'Quận 11':
+        setKeyword('Quận 11')
+        break
+      case 'Quận 6':
+        setKeyword('Quận 6')
+        break
+      case 'Thành Phố Thủ Đức':
+        setKeyword('Thành Phố Thủ Đức')
+        break
       case 'Quận Phú Nhuận':
         setKeyword('Quận Phú Nhuận')
         break
