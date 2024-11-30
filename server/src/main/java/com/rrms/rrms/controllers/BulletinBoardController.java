@@ -1,13 +1,5 @@
 package com.rrms.rrms.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.rrms.rrms.dto.request.BulletinBoardRequest;
 import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.dto.response.BulletinBoardResponse;
@@ -15,12 +7,18 @@ import com.rrms.rrms.dto.response.BulletinBoardSearchResponse;
 import com.rrms.rrms.dto.response.BulletinBoardTableResponse;
 import com.rrms.rrms.models.BulletinBoard;
 import com.rrms.rrms.services.IBulletinBoard;
-
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -120,7 +118,9 @@ public class BulletinBoardController {
         List<BulletinBoardSearchResponse> resultElastic = bulletinBoardService.searchBulletinBoards(address);
         List<BulletinBoardSearchResponse> result = new ArrayList<>();
         resultElastic.forEach(bulletinBoardSearchResponse -> {
-            result.add(bulletinBoardService.findByBulletinBoardId(bulletinBoardSearchResponse.getBulletinBoardId()));
+            if (bulletinBoardService.findByBulletinBoardId(bulletinBoardSearchResponse.getBulletinBoardId()) != null) {
+                result.add(bulletinBoardService.findByBulletinBoardId(bulletinBoardSearchResponse.getBulletinBoardId()));
+            }
         });
         log.info("Search bulletin board successfully");
         return ApiResponse.<List<BulletinBoardSearchResponse>>builder()

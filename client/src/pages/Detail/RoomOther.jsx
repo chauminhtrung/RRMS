@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Box, Card, CardContent, CardMedia, Chip, Rating, Typography } from '@mui/material'
 import Slider from 'react-slick'
-
 import Person4OutlinedIcon from '@mui/icons-material/Person4Outlined'
-
 import GppGoodIcon from '@mui/icons-material/GppGood'
 import PrevArrow from './PrevArrow'
 import NextArrow from './NextArrow'
@@ -78,7 +76,7 @@ const RoomOther = ({ items }) => {
             <Chip
               sx={{
                 position: 'absolute',
-                bottom: 115,
+                bottom: 135,
                 left: 20,
                 alignItems: 'center',
                 backgroundColor: 'rgba(255, 255, 255, 0.64)',
@@ -107,11 +105,32 @@ const RoomOther = ({ items }) => {
               />
               <CardContent sx={{ p: 1 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                  <Typography
-                    variant="h6"
-                    sx={{ color: (theme) => (theme.palette.mode === 'light' ? '#ff4757' : '#ff6b81') }}>
-                    {formatterAmount(item?.rentPrice)}
-                  </Typography>
+                  <Box>
+                    <Box>
+                      {!item.promotionalRentalPrice && (
+                        <Typography
+                          variant="subtitle1"
+                          sx={{ color: (theme) => (theme.palette.mode === 'light' ? '#ff4757' : '#ff6b81') }}>
+                          {formatterAmount(item.rentPrice)}/tháng
+                        </Typography>
+                      )}
+                      {item.promotionalRentalPrice && (
+                        <Box>
+                          <Typography
+                            variant="subtitle1"
+                            sx={{
+                              color: (theme) => (theme.palette.mode === 'light' ? '#ff4757' : '#ff6b81'),
+                              mr: 1
+                            }}>
+                            {formatterAmount(item.promotionalRentalPrice)}/tháng
+                          </Typography>
+                          <Typography sx={{ textDecoration: 'line-through' }}>
+                            {formatterAmount(item.rentPrice)}
+                          </Typography>
+                        </Box>
+                      )}
+                    </Box>
+                  </Box>
                   <Typography variant="subtitle1" color="text.secondary">
                     {item?.area} m²
                   </Typography>

@@ -1,12 +1,13 @@
 import { Avatar, Box, Card, CardContent, IconButton, Rating, Tooltip, Typography } from '@mui/material'
 import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined'
 import { deleteBulletinBoardReview } from '~/apis/bulletinBoardReviewsAPI'
+import { toast } from 'react-toastify'
 
 const Comment = ({ item, username, refreshBulletinBoards, setReview, roomId }) => {
   const handleDeleteComment = () => {
     try {
-      deleteBulletinBoardReview(item.bulletinBoardReviewsId).then((res) => {
-        console.log(res)
+      deleteBulletinBoardReview(item.bulletinBoardReviewsId).then(() => {
+        toast.success('Đã xóa bình luận thành công!')
         refreshBulletinBoards()
         setReview({
           username: username,
