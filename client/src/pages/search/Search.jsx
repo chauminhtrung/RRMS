@@ -94,6 +94,9 @@ const Search = ({ setIsAdmin }) => {
       case 'Ngoc To':
         setKeyword('Ngoc To')
         break
+      case 'Quận Bình Thạnh':
+        setKeyword('Quận Bình Thạnh')
+        break
       default:
         setKeyword('')
     }
