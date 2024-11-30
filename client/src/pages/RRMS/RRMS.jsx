@@ -108,7 +108,11 @@ const RRMS = ({ setIsAdmin }) => {
     const listItems = []
     for (let i = start; i < end; i++) {
       listItems.push(
-        <div className="col-md-3 mb-2">
+        <div
+          className="col-md-3 mb-2"
+          onClick={() => {
+            navigate(`/search?query=${card[i].district}`)
+          }}>
           <Link
             className="item-district small"
             style={{
@@ -643,13 +647,7 @@ const RRMS = ({ setIsAdmin }) => {
                                 <div className="info">
                                   <span>{card.name}</span>
                                   <span>
-                                    <strong
-                                      style={{ paddingLeft: '7px' }}
-                                      onClick={() => {
-                                        navigate(`/search?query=${card.district}`)
-                                      }}>
-                                      {card.district}
-                                    </strong>
+                                    <strong style={{ paddingLeft: '7px' }}>{card.district}</strong>
                                   </span>
                                   <div
                                     style={{
