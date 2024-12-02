@@ -152,7 +152,6 @@ public class StatisticsServiceTest {
     public void testGetRecentHosts() {
         LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
         List<Account> recentHosts = Arrays.asList(new Account(), new Account());
-
         // Sử dụng any() để cho phép bất kỳ LocalDateTime nào
         when(accountRepository.findRecentHosts(any(LocalDateTime.class))).thenReturn(recentHosts);
 
