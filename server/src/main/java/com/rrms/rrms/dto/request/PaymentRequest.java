@@ -2,6 +2,7 @@ package com.rrms.rrms.dto.request;
 
 import com.rrms.rrms.enums.Language;
 import com.rrms.rrms.enums.RequestType;
+
 import lombok.Data;
 
 @Data
@@ -20,10 +21,24 @@ public class PaymentRequest extends Request {
     private Long orderGroupId;
     private String signature;
 
-    public PaymentRequest(String partnerCode, String orderId, String requestId, Language lang, String orderInfo,
-                          long amount, String partnerName, String subPartnerCode, RequestType requestType, String redirectUrl,
-                          String ipnUrl, String storeId, String extraData, String partnerClientId, Boolean autoCapture,
-                          Long orderGroupId, String signature) {
+    public PaymentRequest(
+            String partnerCode,
+            String orderId,
+            String requestId,
+            Language lang,
+            String orderInfo,
+            long amount,
+            String partnerName,
+            String subPartnerCode,
+            RequestType requestType,
+            String redirectUrl,
+            String ipnUrl,
+            String storeId,
+            String extraData,
+            String partnerClientId,
+            Boolean autoCapture,
+            Long orderGroupId,
+            String signature) {
         super(partnerCode, orderId, requestId, lang);
         this.orderInfo = orderInfo;
         this.amount = amount;

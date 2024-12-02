@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import okhttp3.Headers;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

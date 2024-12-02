@@ -89,7 +89,7 @@ public class TenantController {
             tenantService.delete(id);
             log.info("Delete tenant successfully");
             return ApiResponse.<Boolean>builder()
-                    .code(HttpStatus.BAD_REQUEST.value())
+                    .code(HttpStatus.OK.value())
                     .message("success")
                     .result(true)
                     .build();
@@ -125,7 +125,7 @@ public class TenantController {
     }
 
     @RequestMapping("/roomId/{roomId}")
-    public ApiResponse<List<TenantResponse>> getAllTenantsRoomId(@PathVariable("roomId")  UUID roomId) {
+    public ApiResponse<List<TenantResponse>> getAllTenantsRoomId(@PathVariable("roomId") UUID roomId) {
         System.out.println(roomId);
         List<TenantResponse> tenantResponses = tenantService.getAllTenantsRoomId(roomId);
         log.info("Get all tenants by room id successfully");

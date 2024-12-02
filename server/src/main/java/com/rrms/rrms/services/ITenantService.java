@@ -20,5 +20,4 @@ public interface ITenantService {
     void deleteByRoomId(UUID roomId);
 
     List<TenantResponse> getAllTenantsRoomId(UUID roomId);
-
 }

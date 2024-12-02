@@ -2,15 +2,13 @@ package com.rrms.rrms.controllers;
 
 import java.util.UUID;
 
+import com.rrms.rrms.dto.response.*;
+import com.rrms.rrms.services.IBulletinBoard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import com.rrms.rrms.dto.request.AccountRequest;
-import com.rrms.rrms.dto.response.AccountResponse;
-import com.rrms.rrms.dto.response.ApiResponse;
-import com.rrms.rrms.dto.response.HeartResponse;
-import com.rrms.rrms.dto.response.RoomDetailResponse;
 import com.rrms.rrms.services.IRoom;
 import com.rrms.rrms.services.servicesImp.AccountService;
 import com.rrms.rrms.services.servicesImp.HeartService;
@@ -33,7 +31,7 @@ public class HeartController {
     private HeartService heartService;
 
     @Autowired
-    private IRoom roomService;
+    private IBulletinBoard iBulletinBoard;
 
     @Autowired
     private AccountService accountService;
@@ -61,11 +59,11 @@ public class HeartController {
     @Operation(summary = "Add heart")
     @PostMapping()
     public ApiResponse<Boolean> addHeart(
-            @RequestParam("username") String username, @RequestParam("idRoom") UUID idRoom) {
+            @RequestParam("username") String username, @RequestParam("bulletinBoard_id") UUID bulletinBoard_id) {
         AccountResponse accountResponse = accountService.findByUsername(username);
-        RoomDetailResponse roomDetailResponse = roomService.getRoomById(idRoom);
-        if (accountResponse != null && roomDetailResponse != null) {
-            HeartResponse statusAdd = heartService.addHeart(accountResponse, roomDetailResponse);
+        BulletinBoardResponse bulletinBoardResponse = iBulletinBoard.getBulletinBoardById(bulletinBoard_id);
+        if (accountResponse != null && bulletinBoardResponse != null) {
+            HeartResponse statusAdd = heartService.addHeart(accountResponse, bulletinBoardResponse);
             if (statusAdd != null) {
                 log.info("Add heart successfully: {}", statusAdd);
                 return ApiResponse.<Boolean>builder()
@@ -93,11 +91,11 @@ public class HeartController {
     @Operation(summary = "Remove heart")
     @PostMapping("/removeHeart")
     public ApiResponse<Boolean> removeHeart(
-            @RequestParam("username") String username, @RequestParam("idRoom") UUID idRoom) {
+            @RequestParam("username") String username,@RequestParam("bulletinBoard_id") UUID bulletinBoard_id) {
         AccountResponse accountResponse = accountService.findByUsername(username);
-        RoomDetailResponse roomDetailResponse = roomService.getRoomById(idRoom);
-        if (accountResponse != null && roomDetailResponse != null) {
-            HeartResponse statusAdd = heartService.removeHeart(accountResponse, roomDetailResponse);
+        BulletinBoardResponse bulletinBoardResponse = iBulletinBoard.getBulletinBoardById(bulletinBoard_id);
+        if (accountResponse != null && bulletinBoardResponse != null) {
+            HeartResponse statusAdd = heartService.removeHeart(accountResponse, bulletinBoardResponse);
             if (statusAdd != null) {
                 log.info("Remove heart successfully: {}", statusAdd);
                 return ApiResponse.<Boolean>builder()

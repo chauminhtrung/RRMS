@@ -46,8 +46,8 @@ public class CustomerEnvironment {
         switch (target) {
             case DEV:
                 MoMoEndpoint devEndpoint = new MoMoEndpoint("https://test-payment.momo.vn/v2/gateway/api", "/create");
-                PartnerInfo devInfo = new PartnerInfo("MOMOLRJZ20181206", "mTCKt9W3eU1m39TW",
-                        "SetA5RDnLHvt51AULf51DyauxUo3kDU6");
+                PartnerInfo devInfo =
+                        new PartnerInfo("MOMOLRJZ20181206", "mTCKt9W3eU1m39TW", "SetA5RDnLHvt51AULf51DyauxUo3kDU6");
                 CustomerEnvironment devEn = new CustomerEnvironment(devEndpoint, devInfo, target);
 
                 return devEn;
@@ -62,7 +62,8 @@ public class CustomerEnvironment {
     }
 
     public enum EnvTarget {
-        DEV("development"), PROD("production");
+        DEV("development"),
+        PROD("production");
 
         private String target;
 
@@ -76,11 +77,15 @@ public class CustomerEnvironment {
     }
 
     public enum ProcessType {
-        PAY_GATE, APP_IN_APP, PAY_POS, PAY_QUERY_STATUS, PAY_REFUND, PAY_CONFIRM;
+        PAY_GATE,
+        APP_IN_APP,
+        PAY_POS,
+        PAY_QUERY_STATUS,
+        PAY_REFUND,
+        PAY_CONFIRM;
 
         public String getSubDir(Properties prop) {
             return prop.getProperty(this.toString());
         }
     }
-
 }

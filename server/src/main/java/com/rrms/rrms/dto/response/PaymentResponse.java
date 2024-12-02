@@ -38,4 +38,3 @@ public class PaymentResponse extends Response {
 
     private String deeplinkMiniApp;
 }
-

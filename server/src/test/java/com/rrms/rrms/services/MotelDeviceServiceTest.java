@@ -1,5 +1,23 @@
 package com.rrms.rrms.services;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import com.rrms.rrms.enums.Unit;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.annotation.Import;
+
 import com.rrms.rrms.configs.SecurityConfigTest;
 import com.rrms.rrms.dto.request.MotelDeviceRequest;
 import com.rrms.rrms.dto.response.MotelDeviceResponse;
@@ -10,21 +28,6 @@ import com.rrms.rrms.models.MotelDevice;
 import com.rrms.rrms.repositories.MotelDeviceRepository;
 import com.rrms.rrms.repositories.MotelRepository;
 import com.rrms.rrms.services.servicesImp.MotelDeviceService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.annotation.Import;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @Import(SecurityConfigTest.class)
@@ -51,63 +54,6 @@ class MotelDeviceServiceTest {
         MockitoAnnotations.openMocks(this); // Mở các mock trước mỗi test
         motelDeviceId = UUID.randomUUID();
     }
-
-
-    // @Test
-    // public void testGetAllMotelDevicesByMotel_MotelExists() {
-    // // Setup mock data
-    // UUID motelId = UUID.randomUUID();
-    // Motel mockMotel = new Motel();
-    // mockMotel.setMotelId(motelId);
-    //
-    // MotelDevice motelDevice1 = new MotelDevice();
-    // motelDevice1.setDeviceName("Device1");
-    // motelDevice1.setUnit(Unit.CAI);
-    //
-    // MotelDevice motelDevice2 = new MotelDevice();
-    // motelDevice2.setDeviceName("Device2");
-    // motelDevice2.setUnit(Unit.BO);
-    //
-    // MotelDeviceResponse response1 = new MotelDeviceResponse();
-    // response1.setDeviceName("Device1");
-    //
-    // MotelDeviceResponse response2 = new MotelDeviceResponse();
-    // response2.setDeviceName("Device2");
-    //
-    // List<MotelDevice> motelDevices = Arrays.asList(motelDevice1, motelDevice2);
-    //
-    // // Mock repository behaviors
-    // when(motelRepository.findById(motelId)).thenReturn(Optional.of(mockMotel));
-    // // Giả lập findById
-    // when(motelDeviceRepository.findAllByMotel(mockMotel))
-    // .thenReturn(motelDevices); // Giả lập tìm tất cả thiết bị theo Motel
-    // when(motelDeviceMapper.motelDeviceToMotelDeviceResponse(motelDevice1)).thenReturn(response1);
-    // // Giả lập
-    // mapper
-    // when(motelDeviceMapper.motelDeviceToMotelDeviceResponse(motelDevice2)).thenReturn(response2);
-    // // Giả lập
-    // mapper
-    //
-    // // Call the service method
-    // List<MotelDeviceResponse> result =
-    // motelDeviceService.getAllMotelDevicesByMotel(motelId);
-    //
-    // // Assertions
-    // assertNotNull(result);
-    // assertEquals(2, result.size());
-    // assertEquals("Device1", result.get(0).getDeviceName());
-    // assertEquals("Device2", result.get(1).getDeviceName());
-    //
-    // // Verify interactions
-    // verify(motelRepository, times(1)).findById(motelId); // Verify gọi đúng
-    // phương thức
-    // verify(motelDeviceRepository, times(1)).findAllByMotel(mockMotel); // Verify
-    // tìm thiết bị theo Motel
-    // verify(motelDeviceMapper, times(2))
-    // .motelDeviceToMotelDeviceResponse(any(MotelDevice.class)); // Verify mapper
-    // được gọi đúng
-    // }
-
 
     @Test
     public void testGetAllMotelDevicesByMotel_MotelDoesNotExist() {

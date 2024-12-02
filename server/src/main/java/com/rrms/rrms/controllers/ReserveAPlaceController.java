@@ -1,21 +1,22 @@
 package com.rrms.rrms.controllers;
 
+import java.util.List;
+import java.util.UUID;
 
-import com.rrms.rrms.dto.request.ReserveAPlaceRequest;
-import com.rrms.rrms.dto.response.ReserveAPlaceResponse;
-import com.rrms.rrms.services.servicesImp.ReserveAPlaceService;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.UUID;
+import com.rrms.rrms.dto.request.ReserveAPlaceRequest;
+import com.rrms.rrms.dto.response.ReserveAPlaceResponse;
+import com.rrms.rrms.services.servicesImp.ReserveAPlaceService;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
 @Tag(name = "reserve-a-place Controller", description = "Controller for reserve-a-place")
 @RestController
@@ -52,8 +53,7 @@ public class ReserveAPlaceController {
     // Cập nhật thông tin ReserveAPlace theo ID
     @PutMapping("/{id}")
     public ResponseEntity<ReserveAPlaceResponse> updateReserveAPlace(
-            @PathVariable UUID id,
-            @RequestBody ReserveAPlaceRequest request) {
+            @PathVariable UUID id, @RequestBody ReserveAPlaceRequest request) {
         ReserveAPlaceResponse response = reserveAPlaceService.updateReserveAPlace(id, request);
         return ResponseEntity.ok(response);
     }

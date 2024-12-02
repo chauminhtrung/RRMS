@@ -96,7 +96,4 @@ public class TenantService implements ITenantService {
                 .map(tenantMapper::toTenantResponse)
                 .collect(Collectors.toList());
     }
-
-
-
 }

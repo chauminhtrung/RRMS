@@ -1,13 +1,14 @@
 package com.rrms.rrms.services;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.rrms.rrms.models.Account;
-import com.rrms.rrms.repositories.ContractRepository;
-import com.rrms.rrms.services.servicesImp.ContractService;
+import java.math.BigDecimal;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.StoredProcedureQuery;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +17,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.math.BigDecimal;
+import com.rrms.rrms.models.Account;
+import com.rrms.rrms.repositories.ContractRepository;
+import com.rrms.rrms.services.servicesImp.ContractService;
 
 @ExtendWith(MockitoExtension.class)
 public class ContractServiceTest {
@@ -65,7 +68,8 @@ public class ContractServiceTest {
         BigDecimal expectedDeposit = new BigDecimal("1000.00");
 
         // Thiết lập hành vi của contractRepository
-        when(contractRepository.sumActiveContractDepositsByLandlord(landlordAccount)).thenReturn(expectedDeposit);
+        when(contractRepository.sumActiveContractDepositsByLandlord(landlordAccount))
+                .thenReturn(expectedDeposit);
 
         // Gọi phương thức cần test
         BigDecimal actualDeposit = contractService.getTotalActiveContractsDepositByLandlord(landlordAccount);
@@ -84,8 +88,10 @@ public class ContractServiceTest {
         String username = "testUser";
 
         // Thiết lập hành vi của entityManager và storedProcedureQuery
-        when(entityManager.createStoredProcedureQuery("GetTotalExpiredContracts")).thenReturn(storedProcedureQuery);
-        when(storedProcedureQuery.registerStoredProcedureParameter(1, String.class, ParameterMode.IN)).thenReturn(storedProcedureQuery);
+        when(entityManager.createStoredProcedureQuery("GetTotalExpiredContracts"))
+                .thenReturn(storedProcedureQuery);
+        when(storedProcedureQuery.registerStoredProcedureParameter(1, String.class, ParameterMode.IN))
+                .thenReturn(storedProcedureQuery);
         when(storedProcedureQuery.setParameter(1, username)).thenReturn(storedProcedureQuery);
         when(storedProcedureQuery.getSingleResult()).thenReturn(expectedCount);
 
@@ -109,8 +115,11 @@ public class ContractServiceTest {
         String username = "testUser";
 
         // Thiết lập hành vi của entityManager và storedProcedureQuery
-        when(entityManager.createStoredProcedureQuery("GetTotalExpiringContractsProcedure")).thenReturn(storedProcedureQuery);
-        when(storedProcedureQuery.registerStoredProcedureParameter(1, String.class, jakarta.persistence.ParameterMode.IN)).thenReturn(storedProcedureQuery);
+        when(entityManager.createStoredProcedureQuery("GetTotalExpiringContractsProcedure"))
+                .thenReturn(storedProcedureQuery);
+        when(storedProcedureQuery.registerStoredProcedureParameter(
+                        1, String.class, jakarta.persistence.ParameterMode.IN))
+                .thenReturn(storedProcedureQuery);
         when(storedProcedureQuery.setParameter(1, username)).thenReturn(storedProcedureQuery);
         when(storedProcedureQuery.getSingleResult()).thenReturn(expectedCount);
 
@@ -122,7 +131,8 @@ public class ContractServiceTest {
 
         // Xác minh rằng các phương thức đã được gọi chính xác
         verify(entityManager).createStoredProcedureQuery("GetTotalExpiringContractsProcedure");
-        verify(storedProcedureQuery).registerStoredProcedureParameter(1, String.class, jakarta.persistence.ParameterMode.IN);
+        verify(storedProcedureQuery)
+                .registerStoredProcedureParameter(1, String.class, jakarta.persistence.ParameterMode.IN);
         verify(storedProcedureQuery).setParameter(1, username);
         verify(storedProcedureQuery).getSingleResult();
     }

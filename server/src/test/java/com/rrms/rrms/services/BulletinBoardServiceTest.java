@@ -146,7 +146,6 @@ public class BulletinBoardServiceTest {
                 .bulletinBoardId(bulletinBoardId)
                 .isActive(false) // Trạng thái ban đầu là không hoạt động
                 .build();
-
     }
 
     @Test
@@ -504,7 +503,8 @@ public class BulletinBoardServiceTest {
         BulletinBoardResponse response2 = new BulletinBoardResponse();
 
         // Thiết lập hành vi của repository
-        when(bulletinBoardRepository.findAllByIsActive(false)).thenReturn(Arrays.asList(bulletinBoard1, bulletinBoard2));
+        when(bulletinBoardRepository.findAllByIsActive(false))
+                .thenReturn(Arrays.asList(bulletinBoard1, bulletinBoard2));
 
         // Thiết lập hành vi của mapper cho từng đối tượng
         when(bulletinBoardMapper.toBulletinBoardResponse(bulletinBoard1)).thenReturn(response1);
@@ -558,7 +558,8 @@ public class BulletinBoardServiceTest {
 
         // Xác minh rằng phương thức findById đã được gọi
         verify(bulletinBoardRepository).findById(bulletinBoardId);
-        verify(bulletinBoardRepository, never()).save(any(BulletinBoard.class)); // Không nên gọi save nếu không tìm thấy
+        verify(bulletinBoardRepository, never())
+                .save(any(BulletinBoard.class)); // Không nên gọi save nếu không tìm thấy
     }
 
     @Test
@@ -569,7 +570,4 @@ public class BulletinBoardServiceTest {
         // Xác minh rằng phương thức deleteById đã được gọi với ID chính xác
         verify(bulletinBoardRepository).deleteById(bulletinBoardId);
     }
-
-
-
 }
