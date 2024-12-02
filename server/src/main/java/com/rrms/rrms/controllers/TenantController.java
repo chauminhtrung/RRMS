@@ -103,6 +103,27 @@ public class TenantController {
         }
     }
 
+    @Operation(summary = "Delete tenant by id")
+    @DeleteMapping("/room/{roomID}")
+    public ApiResponse<Boolean> deleteTenantByRoomId(@PathVariable("roomID") UUID roomID) {
+        try {
+            tenantService.deleteByRoomId(roomID);
+            log.info("Delete tenant successfully");
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("success")
+                    .result(true)
+                    .build();
+        } catch (Exception e) {
+            log.error("Delete tenant failed", e);
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("error")
+                    .result(false)
+                    .build();
+        }
+    }
+
     @RequestMapping("/roomId/{roomId}")
     public ApiResponse<List<TenantResponse>> getAllTenantsRoomId(@PathVariable("roomId") UUID roomId) {
         System.out.println(roomId);

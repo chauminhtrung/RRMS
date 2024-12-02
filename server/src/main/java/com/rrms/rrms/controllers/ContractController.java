@@ -1,9 +1,12 @@
 package com.rrms.rrms.controllers;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.rrms.rrms.enums.ContractStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -60,6 +63,13 @@ public class ContractController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    // Xóa hợp đồng theo room Id
+    @DeleteMapping("/room/{roomId}")
+    public ResponseEntity<Void> deleteContractByRoomId(@PathVariable UUID roomId) {
+        contractService.deleteContractByRoomId(roomId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     @GetMapping("/motel/{motelId}")
     public ResponseEntity<List<ContractResponse>> getAllContractsByMotelId(@PathVariable UUID motelId) {
         List<ContractResponse> responses = contractService.getAllContractsByMotelId(motelId);
@@ -71,5 +81,23 @@ public class ContractController {
     public ResponseEntity<ContractResponse> getContractByRoomId(@PathVariable UUID roomId) {
         ContractResponse response = contractService.getAllContractsByRoomId(roomId);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/update-status")
+    public ResponseEntity<String> updateContractStatus(
+            @RequestParam UUID roomId,
+            @RequestParam ContractStatus newStatus,
+            @RequestParam(name = "reportCloseDate", required = false)
+            @DateTimeFormat(pattern = "dd-MM-yyyy") Date reportCloseDate) {
+
+
+        // Thực hiện cập nhật trạng thái hợp đồng
+        int updatedRows = contractService.updateContractStatus(roomId, newStatus, reportCloseDate);
+
+        if (updatedRows > 0) {
+            return ResponseEntity.ok("Contract status updated successfully.");
+        } else {
+            return ResponseEntity.badRequest().body("No contracts found for the given roomId.");
+        }
     }
 }

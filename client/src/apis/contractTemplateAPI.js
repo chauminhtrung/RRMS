@@ -89,6 +89,18 @@ export const deleteContract = async (id) => {
   });
 };
 
+// Xóa hợp đồng theo roomId
+export const deleteContractByRoomId = async (id) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;
+
+  await axios.delete(`${env.API_URL}/contracts/room/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'ngrok-skip-browser-warning': '69420',
+    },
+  });
+};
+
 // Tạo hợp đồng
 export const createContract = async (contractData) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null;
