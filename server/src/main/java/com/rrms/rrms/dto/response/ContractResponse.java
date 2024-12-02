@@ -35,4 +35,5 @@ public class ContractResponse {
     private String language; // Language of the contract
     private Integer countTenant; // Number of tenants
     private ContractStatus status; // Contract status (ACTIVE, ENDED, etc.)
+    private Date reportcloseContract; // Contract end date
 }

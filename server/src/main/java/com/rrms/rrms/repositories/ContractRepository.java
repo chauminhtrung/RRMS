@@ -1,10 +1,14 @@
 package com.rrms.rrms.repositories;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.rrms.rrms.enums.ContractStatus;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -16,6 +20,19 @@ public interface ContractRepository extends JpaRepository<Contract, UUID> {
     List<Contract> findByRoom_Motel_MotelId(UUID MotelId);
 
     Contract findByRoom_RoomId(UUID MotelId);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Contract c SET c.status = :newStatus, c.reportcloseContract = :reportCloseDate WHERE c.room.roomId = :roomId")
+    int updateContractStatusByRoomId(
+            @Param("roomId") UUID roomId,
+            @Param("newStatus") ContractStatus newStatus,
+            @Param("reportCloseDate") Date reportCloseDate);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Contract c WHERE c.room.roomId = :roomId")
+    void deleteByRoomId(@Param("roomId") UUID roomId);
 
     // tinh tong contract da dc active
     @Query("SELECT COUNT(c) FROM Contract c WHERE c.account = :usernameLandlord AND c.status = 'ACTIVE'")

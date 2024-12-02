@@ -45,6 +45,44 @@ export const updateRoom = async (id, data) => {
   return response.data
 }
 
+export const updateContractStatus = async (roomId, newStatus, reportCloseDate) => {
+  // Lấy token từ sessionStorage
+  const token = sessionStorage.getItem('user')
+    ? JSON.parse(sessionStorage.getItem('user')).token
+    : null;
+
+  if (!token) {
+    throw new Error('User is not authenticated');
+  }
+
+  try {
+    // Gọi API
+    const response = await axios.put(
+      `${env.API_URL}/contracts/update-status`, 
+      null, // Không cần body vì backend sử dụng query parameters
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Truyền token để xác thực
+        },
+        params: {
+          roomId: roomId, // Truyền roomId dưới dạng query parameter
+          newStatus: newStatus, // Truyền newStatus dưới dạng query parameter
+          reportCloseDate: reportCloseDate, // Thêm reportCloseDate vào query parameters
+        },
+      }
+    );
+
+    // Trả về dữ liệu từ API
+    return response.data;
+  } catch (error) {
+    // Xử lý lỗi
+    console.error(error);
+    throw new Error(
+      error.response?.data?.message || 'Failed to update contract status'
+    );
+  }
+};
+
 export const postRoom = async (data) => {
   return await axios.post(`${env.API_URL}/room`, data, {
     headers: {
