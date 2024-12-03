@@ -1,5 +1,7 @@
 package com.rrms.rrms.controllers;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -100,4 +102,63 @@ public class ContractController {
             return ResponseEntity.badRequest().body("No contracts found for the given roomId.");
         }
     }
+
+    @PutMapping("/update-contract")
+    public ResponseEntity<String> updateContractDetailChangeRoom(
+            @RequestParam UUID ContractId,
+            @RequestParam UUID roomId,
+            @RequestParam Double deposit,
+            @RequestParam Double price, @RequestParam Double debt)
+            {
+
+
+        // Thực hiện cập nhật trạng thái hợp đồng
+   contractService.updateContractDetailsByContractId(ContractId,roomId, deposit, price,debt);
+   return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    }
+
+    @PutMapping("/update-status-by-days-difference")
+    public String updateContractsByDaysDifference(
+            @RequestParam ContractStatus newStatus,
+            @RequestParam int thresholdDays) {
+        try {
+            contractService.updateContractsBasedOnDaysDifference(newStatus, thresholdDays);
+            return "Contracts updated successfully.";
+        } catch (Exception e) {
+            return "Failed to update contracts: " + e.getMessage();
+        }
+    }
+
+    @PutMapping("/update-status-by-days-difference2")
+    public String updateContractsByDaysDifference2(
+            @RequestParam ContractStatus newStatus,
+            @RequestParam int thresholdDays) {
+        try {
+            contractService.updateContractsBasedOnDaysDifference2(newStatus, thresholdDays);
+            return "Contracts updated successfully.";
+        } catch (Exception e) {
+            return "Failed to update contracts: " + e.getMessage();
+        }
+    }
+
+
+    @PutMapping("/update-close-contract")
+    public ResponseEntity<String> updateCloseContract(
+            @RequestParam UUID contractId,
+            @RequestParam(name = "newCloseContract", required = false)
+            @DateTimeFormat(pattern = "dd-MM-yyyy") Date newCloseContract) {
+        if (newCloseContract == null) {
+            return ResponseEntity.badRequest().body("Ngày kết thúc hợp đồng không hợp lệ hoặc không được cung cấp!");
+        }
+
+        try {
+            contractService.updateCloseContract(contractId, newCloseContract);
+            return ResponseEntity.ok("Cập nhật ngày kết thúc hợp đồng thành công!");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
 }
