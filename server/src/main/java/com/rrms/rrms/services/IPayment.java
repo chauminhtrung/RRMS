@@ -3,6 +3,8 @@ package com.rrms.rrms.services;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 
+import java.util.List;
+
 public interface IPayment {
     Payment createPayment(
             Double total,
@@ -11,12 +13,10 @@ public interface IPayment {
             String intent,
             String description,
             String cancelUrl,
-            String successUrl
-    ) throws PayPalRESTException;
+            String successUrl)
+            throws PayPalRESTException;
 
-    Payment executePayment(
-            String paymentId,
-            String payerId
+    Payment executePayment(String paymentId, String payerId) throws PayPalRESTException;
 
-    ) throws PayPalRESTException;
+    List<com.rrms.rrms.models.Payment> getAllPayments();
 }

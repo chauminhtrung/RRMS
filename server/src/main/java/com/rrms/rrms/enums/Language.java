@@ -1,9 +1,9 @@
 package com.rrms.rrms.enums;
+
 import com.google.gson.annotations.SerializedName;
 import com.rrms.rrms.constants.Constant;
 
 public enum Language {
-
     @SerializedName("vi")
     VI(Constant.LANGUAGE_VI),
 
@@ -28,5 +28,4 @@ public enum Language {
     public String getLanguage() {
         return value;
     }
-
 }

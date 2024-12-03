@@ -8,6 +8,4 @@ public class MoMoException extends Exception {
     public MoMoException(Throwable cause) {
         super(cause);
     }
-
 }
-

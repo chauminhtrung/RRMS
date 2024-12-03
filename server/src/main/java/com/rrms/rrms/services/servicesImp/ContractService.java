@@ -1,9 +1,11 @@
 package com.rrms.rrms.services.servicesImp;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.rrms.rrms.enums.ContractStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.ParameterMode;
@@ -133,6 +135,14 @@ public class ContractService implements IContractService {
     }
 
     @Override
+    public void deleteContractByRoomId(UUID RoomId) {
+        if (!roomRepository.existsById(RoomId)) {
+            throw new ResourceNotFoundException("Contract not found with id " + RoomId);
+        }
+        contractRepository.deleteByRoomId(RoomId);
+    }
+
+    @Override
     public List<ContractResponse> getAllContractsByMotelId(UUID motelId) {
         List<Contract> contracts = contractRepository.findByRoom_Motel_MotelId(motelId);
         if (contracts.isEmpty()) {
@@ -144,6 +154,14 @@ public class ContractService implements IContractService {
                     return ContractMapper.INSTANCE.toResponse(contract);
                 })
                 .toList();
+    }
+
+    @Override
+    public int updateContractStatus(UUID roomId, ContractStatus newStatus, Date reportCloseDate) {
+        System.out.println(roomId);
+        System.out.println(newStatus);
+        System.out.println(reportCloseDate);
+        return contractRepository.updateContractStatusByRoomId(roomId, newStatus, reportCloseDate);
     }
 
     @Override

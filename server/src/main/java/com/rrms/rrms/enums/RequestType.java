@@ -3,17 +3,14 @@ package com.rrms.rrms.enums;
 import com.google.gson.annotations.SerializedName;
 
 public enum RequestType {
-
     @SerializedName("captureWallet")
     CAPTURE_WALLET("captureWallet"),
 
     @SerializedName("payWithATM")
     PAY_WITH_ATM("payWithATM"),
 
-
     @SerializedName("payWithMethod")
     PAY_WITH_METHOD("payWithMethod"),
-
 
     @SerializedName("payWithCC")
     PAY_WITH_CREDIT("payWithCC"),
@@ -40,4 +37,3 @@ public enum RequestType {
         return value;
     }
 }
-

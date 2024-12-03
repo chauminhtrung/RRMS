@@ -83,12 +83,17 @@ public class TenantService implements ITenantService {
     }
 
     @Override
+    public void deleteByRoomId(UUID roomId) {
+        Optional<Room> Room = roomRepository.findById(roomId);
+        if (Room.isPresent()) {
+            tenantRepository.deleteByRoomId(roomId);
+        }
+    }
+
+    @Override
     public List<TenantResponse> getAllTenantsRoomId(UUID roomId) {
         return tenantRepository.findByRoomRoomId(roomId).stream()
                 .map(tenantMapper::toTenantResponse)
                 .collect(Collectors.toList());
     }
-
-
-
 }

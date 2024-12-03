@@ -17,6 +17,7 @@ public interface ITenantService {
 
     void delete(UUID id);
 
-    List<TenantResponse> getAllTenantsRoomId(UUID roomId);
+    void deleteByRoomId(UUID roomId);
 
+    List<TenantResponse> getAllTenantsRoomId(UUID roomId);
 }

@@ -1,20 +1,27 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.rrms.rrms.repositories.PaymentRepository;
+import jakarta.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import com.rrms.rrms.services.IPayment;
-import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class PaymentService implements IPayment {
+
+    private final PaymentRepository paymentRepository;
     @Value("${paypal.client.id}")
     private String clientId;
 
@@ -39,8 +46,8 @@ public class PaymentService implements IPayment {
             String intent,
             String description,
             String cancelUrl,
-            String successUrl
-    ) throws PayPalRESTException {
+            String successUrl)
+            throws PayPalRESTException {
         Amount amount = new Amount();
         amount.setCurrency(currency);
         amount.setTotal(String.format("%.2f", total));
@@ -68,11 +75,8 @@ public class PaymentService implements IPayment {
     }
 
     @Override
-    public Payment executePayment(
-            String paymentId,
-            String payerId
+    public Payment executePayment(String paymentId, String payerId) throws PayPalRESTException {
 
-    ) throws PayPalRESTException {
         Payment payment = new Payment();
         payment.setId(paymentId);
 
@@ -80,5 +84,11 @@ public class PaymentService implements IPayment {
         paymentExecution.setPayerId(payerId);
         return payment.execute(apiContext, paymentExecution);
     }
+
+    @Override
+    public List<com.rrms.rrms.models.Payment> getAllPayments() {
+        return paymentRepository.findAll();
+    }
+
 
 }

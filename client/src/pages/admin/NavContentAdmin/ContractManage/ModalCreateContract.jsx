@@ -312,13 +312,6 @@ function ModalCreateContract({ toggleModal, modalOpen, roomId, motelId }) {
       // Chờ tất cả các yêu cầu API hoàn tất
       await Promise.all([...deletePromises, ...updateOrAddPromises])
 
-      // Hiển thị thông báo thành công
-      Swal.fire({
-        icon: 'success',
-        title: 'Thông báo',
-        text: 'Tất cả dịch vụ phòng đã được cập nhật thành công!'
-      })
-
       // Cập nhật danh sách dịch vụ trong phòng
       fetchDataServiceRooms(room.roomId)
     } catch (error) {
@@ -487,7 +480,7 @@ function ModalCreateContract({ toggleModal, modalOpen, roomId, motelId }) {
                   justifyContent: 'center',
                   alignItems: 'center',
                   display: 'flex',
-                  backgroundColor: '#b1e1b8'
+                  backgroundColor: 'rgb(32, 169, 231)'
                 }}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -506,7 +499,7 @@ function ModalCreateContract({ toggleModal, modalOpen, roomId, motelId }) {
                 </svg>
               </div>
               <h5 style={{ marginLeft: '10px', marginTop: '10px' }}>
-                Thêm hợp đồng mới - Phòng `{room ? room.name : <>ko co </>}`
+                Thêm hợp đồng mới - `{room ? room.name : <>ko co </>}`
               </h5>
             </div>
           </ModalHeader>

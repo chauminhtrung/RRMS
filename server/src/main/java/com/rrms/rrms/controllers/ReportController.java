@@ -14,7 +14,7 @@ import com.rrms.rrms.models.Account;
 import com.rrms.rrms.services.IMotelService;
 import com.rrms.rrms.services.servicesImp.AccountService;
 import com.rrms.rrms.services.servicesImp.ContractService;
-import com.rrms.rrms.services.servicesImp.InvoiceService;
+import com.rrms.rrms.services.servicesImp.InvoiceServiceService;
 
 @RestController
 @RequestMapping("/report")
@@ -29,7 +29,7 @@ public class ReportController {
     private AccountService accountService;
 
     @Autowired
-    private InvoiceService invoiceService;
+    private InvoiceServiceService invoiceService;
 
     @GetMapping("/total-rooms/{username}")
     // tổng nhà trọ

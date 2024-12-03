@@ -101,6 +101,7 @@ const Detail = ({ setIsAdmin }) => {
     Promise.all([
       getBulletinBoard(bulletinBoardId).then((res) => {
         setDetail(res.result)
+        console.log(res.result)
         searchByName(findProvinceRegex(res.result.address)).then((res) => {
           setRoomOrder(res.data.result)
         })
@@ -223,9 +224,21 @@ const Detail = ({ setIsAdmin }) => {
           </Typography>
           <Typography variant="h6">{detail.address}</Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Typography variant="h5" sx={{ my: 2, color: 'red' }}>
-              {formatterAmount(detail.rentPrice)}/{t('thang')}
-            </Typography>
+            <Box>
+              {!detail.promotionalRentalPrice && (
+                <Typography variant="h5" sx={{ my: 2, color: 'red' }}>
+                  {formatterAmount(detail.rentPrice)}/{t('thang')}
+                </Typography>
+              )}
+              {detail.promotionalRentalPrice && (
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Typography variant="h5" sx={{ my: 2, color: 'red', mr: 1 }}>
+                    {formatterAmount(detail.promotionalRentalPrice)}/{t('thang')}
+                  </Typography>
+                  <Typography sx={{ textDecoration: 'line-through' }}>{formatterAmount(detail.rentPrice)}</Typography>
+                </Box>
+              )}
+            </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', ml: 0 }}>
               <Rating
                 sx={{ alignItems: 'center', my: 0.5 }}

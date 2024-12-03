@@ -31,9 +31,6 @@ const UserDetail = ({ item }) => {
         {item?.account.fullname}
       </Avatar>
       <Typography variant="subtitle1">Chủ nhà: {item.account.fullname}</Typography>
-      <Typography sx={{ color: item.censor ? 'lime' : 'red' }} variant="overline">
-        {item.censor ? 'Đã được chứng thực' : 'Chưa chứng thực'}
-      </Typography>
       <Grid
         container
         spacing={1}
