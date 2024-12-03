@@ -212,7 +212,7 @@ const Search = ({ setIsAdmin }) => {
           setKeyword={setKeyword}
         />
       </Container>
-      <ListSearch />
+      <ListSearch keyword={keyword} />
       <Container>
         <Grid container>
           <Grid item md={9} sx={{ mb: 4 }}>
