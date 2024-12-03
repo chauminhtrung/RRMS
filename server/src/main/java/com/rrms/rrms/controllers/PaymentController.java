@@ -276,4 +276,10 @@ public class PaymentController {
         StripeResponse responseDto = new StripeResponse(intent.getId(), intent.getClientSecret());
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
+
+    @GetMapping("/list_payment")
+    public ResponseEntity<List<com.rrms.rrms.models.Payment>> getAllPayments() {
+        List<com.rrms.rrms.models.Payment> payments = paymentService.getAllPayments();
+        return ResponseEntity.ok(payments);
+    }
 }
