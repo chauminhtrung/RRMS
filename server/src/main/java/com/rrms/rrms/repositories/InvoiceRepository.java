@@ -21,4 +21,5 @@ public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
     Double getTotalInvoice(String username);
 
     List<Invoice> findByContractContractId(UUID contractId);
+
 }
