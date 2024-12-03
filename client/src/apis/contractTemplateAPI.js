@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { env } from '~/configs/environment'
+import dayjs from 'dayjs'; // Sử dụng thư viện dayjs để định dạng ngày
 
 // muc mau hop dong
 // Tạo mới một Contract Template
@@ -76,6 +77,162 @@ export const deleteContractTemplate = async (id) => {
 }
 
 // ---------------------------------------- hop dong
+
+//update hop dong
+export const updateContractDetail = async (ContractId,roomId, deposit, price,debt) => {
+  // Lấy token từ sessionStorage
+  const token = sessionStorage.getItem('user')
+    ? JSON.parse(sessionStorage.getItem('user')).token
+    : null;
+
+  if (!token) {
+    throw new Error('User is not authenticated');
+  }
+
+  try {
+    // Gọi API
+    const response = await axios.put(
+      `${env.API_URL}/contracts/update-contract`, 
+      null, // Không cần body vì backend sử dụng query parameters
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Truyền token để xác thực
+        },
+        params: {
+          ContractId: ContractId, 
+          roomId: roomId, 
+          deposit: deposit, 
+          price: price, 
+          debt: debt, 
+        },
+      }
+    );
+
+    // Trả về dữ liệu từ API
+    return response.data;
+  } catch (error) {
+    // Xử lý lỗi
+    console.error(error);
+    throw new Error(
+      error.response?.data?.message || 'Failed to update contract status'
+    );
+  }
+};
+
+
+//update trang thai hop dong khi sap het han
+export const updateContractStatusClose = async (newStatus,thresholdDays) => {
+  // Lấy token từ sessionStorage
+  const token = sessionStorage.getItem('user')
+    ? JSON.parse(sessionStorage.getItem('user')).token
+    : null;
+
+  if (!token) {
+    throw new Error('User is not authenticated');
+  }
+
+  try {
+    // Gọi API
+    const response = await axios.put(
+      `${env.API_URL}/contracts/update-status-by-days-difference`, 
+      null, // Không cần body vì backend sử dụng query parameters
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Truyền token để xác thực
+        },
+        params: {
+          newStatus: newStatus, 
+          thresholdDays: thresholdDays
+        },
+      }
+    );
+
+    // Trả về dữ liệu từ API
+    return response.data;
+  } catch (error) {
+    // Xử lý lỗi
+    console.error(error);
+    throw new Error(
+      error.response?.data?.message || 'Failed to update contract status'
+    );
+  }
+};
+
+//update trang thai hop dong khi sap het han
+export const updateContractStatusClose2 = async (newStatus,thresholdDays) => {
+  // Lấy token từ sessionStorage
+  const token = sessionStorage.getItem('user')
+    ? JSON.parse(sessionStorage.getItem('user')).token
+    : null;
+
+  if (!token) {
+    throw new Error('User is not authenticated');
+  }
+
+  try {
+    // Gọi API
+    const response = await axios.put(
+      `${env.API_URL}/contracts/update-status-by-days-difference2`, 
+      null, // Không cần body vì backend sử dụng query parameters
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Truyền token để xác thực
+        },
+        params: {
+          newStatus: newStatus, 
+          thresholdDays: thresholdDays
+        },
+      }
+    );
+
+    // Trả về dữ liệu từ API
+    return response.data;
+  } catch (error) {
+    // Xử lý lỗi
+    console.error(error);
+    throw new Error(
+      error.response?.data?.message || 'Failed to update contract status'
+    );
+  }
+};
+
+//update trang thai hop dong khi sap het han
+export const updateExtendContractStatusClose = async (contractId, newCloseContract) => {
+  const token = sessionStorage.getItem('user')
+    ? JSON.parse(sessionStorage.getItem('user')).token
+    : null;
+
+  if (!token) {
+    throw new Error('User is not authenticated');
+  }
+
+  try {
+    // Định dạng ngày thành dd-MM-yyyy trước khi gửi
+ 
+    const formattedDate = dayjs(newCloseContract).format('DD-MM-YYYY');
+
+    const response = await axios.put(
+      `${env.API_URL}/contracts/update-close-contract`, 
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          contractId: contractId,
+          newCloseContract: formattedDate, // Sử dụng ngày đã định dạng
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error(
+      error.response?.data?.message || 'Failed to update contract status'
+    );
+  }
+};
 
 // Xóa hợp đồng
 export const deleteContract = async (id) => {

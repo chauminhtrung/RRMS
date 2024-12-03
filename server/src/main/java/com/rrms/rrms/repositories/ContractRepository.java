@@ -31,6 +31,43 @@ public interface ContractRepository extends JpaRepository<Contract, UUID> {
 
     @Transactional
     @Modifying
+    @Query("UPDATE Contract c SET c.deposit = :deposit, c.price = :price, c.debt = :debt WHERE c.contractId = :contractId")
+    int updateContractDetailsByContractId(
+            @Param("contractId") UUID contractId,
+            @Param("deposit") Double deposit,
+            @Param("price") Double price,
+            @Param("debt") Double debt);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Contract c " +
+            "SET c.status = :newStatus " +
+            "WHERE DATEDIFF(c.closeContract, CURRENT_DATE) <= :thresholdDays and c.status = 'ACTIVE'")
+    int updateStatusForContractsBasedOnDaysDifference(
+            @Param("newStatus") ContractStatus newStatus,
+            @Param("thresholdDays") int thresholdDays);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Contract c " +
+            "SET c.status = :newStatus " +
+            "WHERE DATEDIFF(c.closeContract, CURRENT_DATE) >= :thresholdDays and c.status = 'IATExpire'")
+    int updateStatusForContractsBasedOnDaysDifference2(
+            @Param("newStatus") ContractStatus newStatus,
+            @Param("thresholdDays") int thresholdDays);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Contract c SET c.closeContract = :newCloseContract WHERE c.contractId = :contractId")
+    int updateCloseContractByContractId(
+            @Param("newCloseContract") Date newCloseContract,
+            @Param("contractId") UUID contractId
+    );
+
+
+
+    @Transactional
+    @Modifying
     @Query("DELETE FROM Contract c WHERE c.room.roomId = :roomId")
     void deleteByRoomId(@Param("roomId") UUID roomId);
 

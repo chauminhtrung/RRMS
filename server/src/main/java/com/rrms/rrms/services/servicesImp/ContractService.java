@@ -1,6 +1,8 @@
 package com.rrms.rrms.services.servicesImp;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -156,12 +158,52 @@ public class ContractService implements IContractService {
                 .toList();
     }
 
+
+    @Override
+    public void updateContractsBasedOnDaysDifference(ContractStatus newStatus, int thresholdDays) {
+        int updatedRows = contractRepository.updateStatusForContractsBasedOnDaysDifference(newStatus, thresholdDays);
+
+    }
+
+    @Override
+    public void updateContractsBasedOnDaysDifference2(ContractStatus newStatus, int thresholdDays) {
+        int updatedRows = contractRepository.updateStatusForContractsBasedOnDaysDifference2(newStatus, thresholdDays);
+
+    }
+
+    @Override
+    public void updateCloseContract(UUID contractId, Date newCloseContract) {
+        int rowsUpdated = contractRepository.updateCloseContractByContractId(newCloseContract, contractId);
+        if (rowsUpdated == 0) {
+            throw new RuntimeException("Không tìm thấy hợp đồng với contractId: " + contractId);
+        }
+    }
+
+
     @Override
     public int updateContractStatus(UUID roomId, ContractStatus newStatus, Date reportCloseDate) {
         System.out.println(roomId);
         System.out.println(newStatus);
         System.out.println(reportCloseDate);
         return contractRepository.updateContractStatusByRoomId(roomId, newStatus, reportCloseDate);
+    }
+
+    @Override
+    public void updateContractDetailsByContractId(UUID contractId, UUID roomId, Double deposit, Double price, Double debt) {
+        // Tìm Room mới
+        Room newRoom = roomRepository.findById(roomId)
+                .orElseThrow(() -> new EntityNotFoundException("Room not found"));
+
+        // Tìm Contract và cập nhật
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new EntityNotFoundException("Contract not found"));
+        contract.setRoom(newRoom); // Cập nhật Room
+        contract.setDeposit(deposit);
+        contract.setPrice(price);
+        contract.setDebt(debt);
+
+        // Lưu lại
+        contractRepository.save(contract);
     }
 
     @Override

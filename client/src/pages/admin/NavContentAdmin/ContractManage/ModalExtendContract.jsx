@@ -1,13 +1,15 @@
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import { useState, useEffect } from 'react'
-import { getRoomById, updateContractStatus } from '~/apis/roomAPI'
-import { getContractByIdRoom2 } from '~/apis/contractTemplateAPI'
+import { getRoomById } from '~/apis/roomAPI'
+import { getContractByIdRoom2, updateExtendContractStatusClose } from '~/apis/contractTemplateAPI'
 import Flatpickr from 'react-flatpickr'
 import Swal from 'sweetalert2'
+
 function ModalExtendContract({ toggleModal, modalOpen, roomId }) {
   const [room, setRoom] = useState({})
   const [contract, setContract] = useState({})
-
+  // State lưu trữ ngày kết thúc hợp đồng
+  const [dateTerminate, setDateTerminate] = useState('')
   // Hàm lấy dữ liệu phòng từ server
   const fetchDataRoom = async (roomId) => {
     if (roomId) {
@@ -22,6 +24,24 @@ function ModalExtendContract({ toggleModal, modalOpen, roomId }) {
     }
   }
 
+  // Hàm xử lý khi người dùng thay đổi ngày kết thúc hợp đồng
+  const handleDateChange = (date) => {
+    // Flatpickr trả về mảng, ta lấy phần tử đầu tiên (là một đối tượng Date)
+    const formattedDate = formatDate(date[0]) // Chuyển đối tượng Date thành chuỗi với định dạng dd-mm-yyyy
+    // Kiểm tra nếu ngày chọn nhỏ hơn hoặc bằng ngày hiện tại
+    if (formattedDate <= formatDate(contract.closeContract)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Cập nhật thất bại!',
+        text: 'Ngày gia hạn phải lớn hơn ngày hiện tại!',
+        confirmButtonText: 'OK'
+      })
+      setDateTerminate('')
+    } else {
+      setDateTerminate(formattedDate)
+    }
+  }
+
   // Hàm lấy dữ liệu phòng từ server
   const fetchDataContract = async (roomId) => {
     if (roomId) {
@@ -29,7 +49,6 @@ function ModalExtendContract({ toggleModal, modalOpen, roomId }) {
         const response = await getContractByIdRoom2(roomId) // Lấy dữ liệu phòng từ API
         if (response) {
           setContract(response)
-          console.log(response)
         }
       } catch (error) {
         console.log(error)
@@ -43,7 +62,7 @@ function ModalExtendContract({ toggleModal, modalOpen, roomId }) {
     const month = String(date.getMonth() + 1).padStart(2, '0') // Lấy tháng (tăng thêm 1 vì tháng trong JS bắt đầu từ 0)
     const year = date.getFullYear() // Lấy năm
 
-    return `${day}/${month}/${year}` // Trả về chuỗi theo định dạng DD/MM/YYYY
+    return `${month}/${day}/${year}` // Trả về chuỗi theo định dạng DD/MM/YYYY
   }
 
   useEffect(() => {
@@ -57,29 +76,39 @@ function ModalExtendContract({ toggleModal, modalOpen, roomId }) {
     handlFristData()
   }, [roomId]) // Chỉ chạy lại khi roomId hoặc motelId thay đổi
 
-  const ContractStatus = {
-    REPORTEND: 'ReportEnd',
-    ACTIVE: 'ACTIVE'
-    // Các trạng thái khác
-  }
   const handleSubmit = async () => {
-    if (roomId) {
+    if (roomId && contract) {
       try {
-        // Gọi hàm updateContractStatus và truyền roomId, "ReportEnd" và dateTerminate
-        await updateContractStatus(roomId, ContractStatus.ACTIVE, null)
+        const selectedDate = new Date(
+          dateTerminate.split('/').reverse().join('-') // Chuyển "DD/MM/YYYY" thành "MM/DD/YYYY"
+        )
+        const closeContractDate = new Date(formatDate(contract.closeContract).split('/').reverse().join('-'))
 
-        // Hiển thị thông báo thành công
+        // So sánh ngày
+        if (selectedDate <= closeContractDate) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Cập nhật thất bại!',
+            text: 'Ngày gia hạn phải lớn hơn ngày hiện tại!',
+            confirmButtonText: 'OK'
+          })
+          return
+        }
+
+        // Gọi API cập nhật
+        await updateExtendContractStatusClose(contract.contractId, dateTerminate)
+
         Swal.fire({
           icon: 'success',
           title: 'Cập nhật thành công!',
           text: 'Trạng thái hợp đồng đã được cập nhật thành công.',
           confirmButtonText: 'OK'
         })
+
         setTimeout(() => {
           window.location.reload()
         }, 1000)
       } catch (error) {
-        // Nếu có lỗi, hiển thị thông báo lỗi
         Swal.fire({
           icon: 'error',
           title: 'Cập nhật thất bại!',
@@ -138,17 +167,15 @@ function ModalExtendContract({ toggleModal, modalOpen, roomId }) {
                 <div className="col-6">
                   <div className="input-group">
                     <div className="form-floating">
-                      <Flatpickr
+                      <input
                         className="form-control date-flat-picker flatpickr-input active"
                         name="date_contract"
                         id="date_contract"
                         placeholder="Gia hạn đền ngày"
                         data-format="date"
+                        value={formatDate(contract.closeContract)}
+                        readOnly
                         required
-                        options={{
-                          allowInput: true,
-                          dateFormat: 'd-m-Y'
-                        }}
                       />
                       <label htmlFor="date_contract">Ngày gia hạn</label>
                     </div>
@@ -185,9 +212,11 @@ function ModalExtendContract({ toggleModal, modalOpen, roomId }) {
                         placeholder="Gia hạn đền ngày"
                         data-format="date"
                         required
+                        value={dateTerminate}
+                        onChange={handleDateChange}
                         options={{
                           allowInput: true,
-                          dateFormat: 'd-m-Y'
+                          dateFormat: 'm-d-Y'
                         }}
                       />
 
@@ -219,7 +248,7 @@ function ModalExtendContract({ toggleModal, modalOpen, roomId }) {
                 <div className="col-12">
                   <div className="input-group">
                     <div className="form-floating">
-                      <Flatpickr
+                      <input
                         className="form-control currency"
                         name="room_amount"
                         id="room_amount"
@@ -227,10 +256,8 @@ function ModalExtendContract({ toggleModal, modalOpen, roomId }) {
                         min="0"
                         placeholder="Nhập giá thuê"
                         required
-                        options={{
-                          allowInput: true,
-                          dateFormat: 'd-m-Y'
-                        }}
+                        readOnly
+                        value={contract.price?.toLocaleString('vi-VN')}
                       />
 
                       <label htmlFor="room_amount">Giá thuê (đ)</label>
@@ -261,7 +288,7 @@ function ModalExtendContract({ toggleModal, modalOpen, roomId }) {
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
-              Hủy báo kết thúc hợp đồng
+              Gia hạn
             </Button>
           </ModalFooter>
         </Modal>
