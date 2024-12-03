@@ -270,7 +270,7 @@ const RRMS = ({ setIsAdmin }) => {
                 </Link>
               </div>
               <div className="col">
-                <Link to="/ho-tro-tim-phong.html" className="item">
+                <Link to="/support" className="item">
                   <picture className="webpimg-container">
                     <img src="/hot.png" width="100%" alt="Hỗ trợ tìm kiếm phòng" />
                   </picture>
@@ -511,9 +511,8 @@ const RRMS = ({ setIsAdmin }) => {
                   {' '}
                   <article className="i-column" style={{ marginBottom: '14px' }}>
                     <Link
-                      target="_blank"
                       title="Cho thuê phòng trọ full nội thất, giá sinh viên Tam Đảo, Quận 10"
-                      tp="#"
+                      to={`/detail/${item.bulletinBoardId}`}
                       className="inner-item"
                       style={{ textDecoration: 'none', color: 'black' }}>
                       <div
