@@ -1,5 +1,7 @@
 package com.rrms.rrms.dto.response;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -24,4 +26,19 @@ public class IntrospecTokenResponse {
     Date issuedAt; // thời gian phát hành
     private List<String> roles; // Thêm roles
     private List<String> permissions; // Thêm permissions
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    public static class TransactionRequest {
+        private BigDecimal amount;
+        private Long paymentId;
+        private String payerName;
+        private String paymentDescription;
+        private String category;
+        private LocalDate transactionDate;
+        private boolean transactionType;
+    }
 }

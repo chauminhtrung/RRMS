@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
-const ListSearch = () => {
+const ListSearch = ({ keyword }) => {
   const { t } = useTranslation()
   return (
     <div className="container mt-3" style={{ maxWidth: '1180px' }}>
@@ -17,7 +17,7 @@ const ListSearch = () => {
           </Link>
         </li>
         <li className="breadcrumb-item breadcrumb-color">
-          <span>{t('quan-1')}</span>
+          <span>{keyword || 'Tất cả'}</span>
         </li>
       </ol>
       <h1
@@ -29,13 +29,20 @@ const ListSearch = () => {
           marginBottom: '10px',
           fontSize: '25px'
         }}>
-        <b>{t('duoi-phong-tro')}</b>
+        <b>
+          {t('duoi-phong-tro')} {keyword || 'Tất cả'}
+        </b>
       </h1>
       <p>
         <span className="item-filter">{t('ban-kinh-tim-kiem')}: 3 km</span>
       </p>
       <div className="warning">
-        {t('khi-tim-phong-tro-gan')} <strong> {t('tim-phong-tro-quan-1')} </strong> {t('chung-toi-se-hien-thi')}
+        {t('khi-tim-phong-tro-gan')}{' '}
+        <strong>
+          {' '}
+          {t('tim-phong-tro')} {keyword || 'Tất cả'}{' '}
+        </strong>{' '}
+        {t('chung-toi-se-hien-thi')}
         <b> {t('cach-dia-diem')} 3km</b>. {t('vi-the-co-the-phong-tro-khong-thuoc')} <b>{t('cac-quan')}</b>{' '}
         {t('ban-dang-tim-kiem')}. {t('chu-y-ket-qua')}
         <b> {t('mau-do')}</b> {t('la-khong-thuoc-quan-huyen-ban-tim-kiem')}

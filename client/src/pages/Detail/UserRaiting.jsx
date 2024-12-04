@@ -1,5 +1,6 @@
 import { Avatar, Box, Button, Rating, TextareaAutosize, Tooltip, Typography } from '@mui/material'
 import { useEffect } from 'react'
+import { toast } from 'react-toastify'
 import {
   getBulletinBoardReviewByBulletinBoardIdAndUsername,
   postBulletinBoardReview
@@ -28,6 +29,7 @@ const UserRating = ({ roomId, username, setReview, review, refreshBulletinBoards
     setReview({ ...review, username: username })
     postBulletinBoardReview(review)
       .then(() => {
+        toast.success('Đánh giá thành công!')
         refreshBulletinBoards()
       })
       .catch((error) => {

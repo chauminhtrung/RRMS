@@ -1,10 +1,14 @@
 package com.rrms.rrms.repositories;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.rrms.rrms.enums.ContractStatus;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -16,6 +20,56 @@ public interface ContractRepository extends JpaRepository<Contract, UUID> {
     List<Contract> findByRoom_Motel_MotelId(UUID MotelId);
 
     Contract findByRoom_RoomId(UUID MotelId);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Contract c SET c.status = :newStatus, c.reportcloseContract = :reportCloseDate WHERE c.room.roomId = :roomId")
+    int updateContractStatusByRoomId(
+            @Param("roomId") UUID roomId,
+            @Param("newStatus") ContractStatus newStatus,
+            @Param("reportCloseDate") Date reportCloseDate);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Contract c SET c.deposit = :deposit, c.price = :price, c.debt = :debt WHERE c.contractId = :contractId")
+    int updateContractDetailsByContractId(
+            @Param("contractId") UUID contractId,
+            @Param("deposit") Double deposit,
+            @Param("price") Double price,
+            @Param("debt") Double debt);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Contract c " +
+            "SET c.status = :newStatus " +
+            "WHERE DATEDIFF(c.closeContract, CURRENT_DATE) <= :thresholdDays and c.status = 'ACTIVE'")
+    int updateStatusForContractsBasedOnDaysDifference(
+            @Param("newStatus") ContractStatus newStatus,
+            @Param("thresholdDays") int thresholdDays);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Contract c " +
+            "SET c.status = :newStatus " +
+            "WHERE DATEDIFF(c.closeContract, CURRENT_DATE) >= :thresholdDays and c.status = 'IATExpire'")
+    int updateStatusForContractsBasedOnDaysDifference2(
+            @Param("newStatus") ContractStatus newStatus,
+            @Param("thresholdDays") int thresholdDays);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Contract c SET c.closeContract = :newCloseContract WHERE c.contractId = :contractId")
+    int updateCloseContractByContractId(
+            @Param("newCloseContract") Date newCloseContract,
+            @Param("contractId") UUID contractId
+    );
+
+
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Contract c WHERE c.room.roomId = :roomId")
+    void deleteByRoomId(@Param("roomId") UUID roomId);
 
     // tinh tong contract da dc active
     @Query("SELECT COUNT(c) FROM Contract c WHERE c.account = :usernameLandlord AND c.status = 'ACTIVE'")

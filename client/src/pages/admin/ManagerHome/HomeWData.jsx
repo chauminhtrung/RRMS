@@ -24,7 +24,7 @@ import {
   updateRoom
 } from '~/apis/roomAPI'
 import { deleteReserveAPlace } from '~/apis/ReserveAPlaceAPI'
-import { getContractByIdRoom2 } from '~/apis/contractTemplateAPI'
+import { getContractByIdRoom2, updateContractStatusClose, updateContractStatusClose2 } from '~/apis/contractTemplateAPI'
 import { Modal } from 'bootstrap' // Import Bootstrap Modal API
 import {
   changeQuantityRoomDevice,
@@ -39,6 +39,13 @@ import ReserveAPlaceModal from './ReserveAPlace/ReserveAPlaceModal'
 import ReserveAPlaceDetail from './ReserveAPlace/ReserveAPlaceDetail'
 const HomeWData = ({ Motel}) => {
   const { motelId, roomId } = useParams();
+import ModalReportContract from '../NavContentAdmin/ContractManage/ModalReportContract'
+import ModalCancelReportContract from '../NavContentAdmin/ContractManage/ModalCancelReportContract'
+import ModalEndContract from '../NavContentAdmin/ContractManage/ModalEndContract'
+import ModalChangeRoom from '../NavContentAdmin/ContractManage/ModalChangeRoom'
+import ModalExtendContract from '../NavContentAdmin/ContractManage/ModalExtendContract'
+const HomeWData = ({ Motel }) => {
+  const { motelId } = useParams()
   const [rooms, setRooms] = useState([])
   // State quản lý trạng thái của checkbox
   const [motelServices, setMotelServices] = useState([])
@@ -110,6 +117,11 @@ const HomeWData = ({ Motel}) => {
   const [modalOpenContract, setModalOpenContract] = useState(false)
   const [modalOpenReAPlace, setModalOpenReAPlace] = useState(false)
   const [detailOpenReAPlace, setDetailOpenReAPlace] = useState(false)
+  const [modalOpenReportContract, setModalOpenReportContract] = useState(false)
+  const [modalOpenCancelReportContract, setModalOpenCancelReportContract] = useState(false)
+  const [modalOpenEndContract, setModalOpenEndContract] = useState(false)
+  const [modalOpenChangeRoom, setModalOpenChangeRoom] = useState(false)
+  const [modalOpenExtendContract, setModalOpenExtendContract] = useState(false)
   const toggleModal = () => {
     setModalOpen(!modalOpen)
   }
@@ -123,6 +135,26 @@ const HomeWData = ({ Motel}) => {
   }
   const toggleDetailReAPlace = () => {
     setDetailOpenReAPlace(!detailOpenReAPlace)
+  }
+
+  const toggleReportContract = () => {
+    setModalOpenReportContract(!modalOpenReportContract)
+  }
+
+  const toggleCancelReportContract = () => {
+    setModalOpenCancelReportContract(!modalOpenCancelReportContract)
+  }
+
+  const toggleEndContract = () => {
+    setModalOpenEndContract(!modalOpenEndContract)
+  }
+
+  const toggleChangeRoom = () => {
+    setModalOpenChangeRoom(!modalOpenChangeRoom)
+  }
+
+  const toggleEntendContract = () => {
+    setModalOpenExtendContract(!modalOpenExtendContract)
   }
 
   // Hàm xử lý nhấn ngoài menu
@@ -143,6 +175,8 @@ const HomeWData = ({ Motel}) => {
   useEffect(() => {
     fetchRooms()
     fetchDevices()
+    UpdateContractStatusClose(ContractStatus.IATExpire, 10) // Gọi API update trạng thái
+    UpdateContractStatusClose2(ContractStatus.ACTIVE, 10) // Gọi API update trạng thái
   }, [])
 
   // Hàm xử lý thay đổi trạng thái checkbox
@@ -270,6 +304,24 @@ const HomeWData = ({ Motel}) => {
     }
   }
 
+  // Hàm lấy dữ liệu phòng từ server
+  const UpdateContractStatusClose = async (StartDate, newStatus) => {
+    try {
+      updateContractStatusClose(StartDate, newStatus)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  // Hàm lấy dữ liệu phòng từ server
+  const UpdateContractStatusClose2 = async (StartDate, newStatus) => {
+    try {
+      updateContractStatusClose2(StartDate, newStatus)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target
     if (type === 'checkbox') {
@@ -378,7 +430,7 @@ const HomeWData = ({ Motel}) => {
               setTimeout(() => {
                 window.location.reload()
               }, 1000)
-
+              UpdateContractStatusClose(ContractStatus.IATExpire, 10) // Gọi API update trạng thái
               // Cập nhật danh sách phòng
               fetchRooms()
 
@@ -524,22 +576,28 @@ const HomeWData = ({ Motel}) => {
   };
   
 
+  const ContractStatus = {
+    IATExpire: 'IATExpire',
+    ACTIVE: 'ACTIVE'
+    // Các trạng thái khác
+  }
   const fetchRooms = async () => {
-    //neu co motelId tren URL
-    if (motelId) {
-      try {
-        const dataRoom = await getRoomByMotelId(motelId)
-        setRooms(dataRoom)
-      } catch (error) {
-        console.log(error)
+    try {
+      let dataRoom
+
+      // Lấy danh sách phòng dựa trên motelId
+      if (motelId) {
+        dataRoom = await getRoomByMotelId(motelId)
+      } else {
+        dataRoom = await getRoomByMotelId(Motel[0]?.motelId)
       }
-    } else {
-      try {
-        const dataRoom = await getRoomByMotelId(Motel[0].motelId)
+
+      if (dataRoom) {
+        // Cập nhật state
         setRooms(dataRoom)
-      } catch (error) {
-        console.log(error)
       }
+    } catch (error) {
+      console.error('Failed to fetch rooms:', error)
     }
   }
 
@@ -686,8 +744,12 @@ const HomeWData = ({ Motel}) => {
     const reserveAPlaceId = data.reserveAPlace?.status // Kiểm tra giá trị reserveAPlaceId
 
     // Nếu status có giá trị, hiển thị status, nếu không hiển thị reserveAPlaceId
-    return status
+    return status === 'ACTIVE'
       ? `<span class="badge mt-2 " style="background-color: #7dc242; white-space: break-spaces;">Đang ở</span>`
+      : status === 'IATExpire'
+      ? `<span class="badge " style="background-color: #dc3545; white-space: break-spaces;">Sắp kết thúc hợp đồng</span>`
+      : status === 'ReportEnd'
+      ? `<span class="badge " style="background-color: #ED6004; white-space: break-spaces;">Đã báo kết thúc hợp đồng</span>`
       : reserveAPlaceId
       ? `<span class="badge " style="background-color: #ED6004; white-space: break-spaces;">Đang cọc giữ chỗ</span>`
       : `<span class="badge mt-2 " style="background-color: #ED6004; white-space: break-spaces;">Đang trống</span>` // Có thể thay 'Chưa xác định' bằng giá trị mặc định khác
@@ -933,6 +995,26 @@ const HomeWData = ({ Motel}) => {
       }
 
       setShowMenu(null) // Đóng menu
+    } else if (label === 'Báo kết thúc hợp đồng phòng') {
+      fetchDataRooms(showMenu)
+      toggleReportContract(!modalOpenReportContract)
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'Hủy Báo kết thúc hợp đồng phòng') {
+      fetchDataRooms(showMenu)
+      toggleCancelReportContract(!modalOpenCancelReportContract)
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'Kết thúc hợp đồng phòng') {
+      fetchDataRooms(showMenu)
+      toggleEndContract(!ModalEndContract)
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'Chuyển phòng') {
+      fetchDataRooms(showMenu)
+      toggleChangeRoom(!modalOpenChangeRoom)
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'Gia hạn hợp đồng') {
+      fetchDataRooms(showMenu)
+      toggleEntendContract(!modalOpenExtendContract)
+      setShowMenu(null) // Đóng menu
     } else {
       alert(`Action: ${label} on room ${showMenu}`)
     }
@@ -964,6 +1046,25 @@ const HomeWData = ({ Motel}) => {
     { id: 3, label: 'Danh sách khách thuê', icon: 'user' },
     { id: 4, label: 'Chuyển phòng', icon: 'refresh-ccw' },
     { id: 5, label: 'Báo kết thúc hợp đồng phòng', icon: 'bell' },
+    { id: 6, label: 'Cài đặt dịch vụ', icon: 'settings' },
+    { id: 7, label: 'Kết thúc hợp đồng phòng', icon: 'log-out' },
+    { id: 8, label: 'Thiết lập tài sản', icon: 'trello' },
+    { id: 9, label: 'Xem văn bản hợp đồng', icon: 'arrow-right-circle' },
+    { id: 10, label: 'Quản lý xe', icon: 'truck' },
+    { id: 11, label: 'In văn bản hợp đồng', icon: 'printer' },
+    { id: 12, label: 'Ghi chú', icon: 'edit-3', textClass: 'text-success' },
+    { id: 13, label: 'Chia sẻ văn bản hợp đồng', icon: 'share' },
+    { id: 14, label: 'Xóa phòng', icon: 'trash-2', textClass: 'text-danger' },
+    { id: 15, label: 'Chia sẻ mã kết nối', icon: 'share-2' },
+    { id: 16, label: 'Đóng menu', icon: 'x-circle', textClass: 'close-menu-action' }
+  ]
+
+  const menuItemsReportContract = [
+    { id: 1, label: 'Lập hóa đơn', icon: 'dollar-sign' },
+    { id: 2, label: 'Chi tiết phòng', icon: 'arrow-right-circle' },
+    { id: 3, label: 'Danh sách khách thuê', icon: 'user' },
+    { id: 4, label: 'Chuyển phòng', icon: 'refresh-ccw' },
+    { id: 5, label: 'Hủy Báo kết thúc hợp đồng phòng', icon: 'trash-2', textClass: 'text-danger' },
     { id: 6, label: 'Cài đặt dịch vụ', icon: 'settings' },
     { id: 7, label: 'Kết thúc hợp đồng phòng', icon: 'log-out' },
     { id: 8, label: 'Thiết lập tài sản', icon: 'trello' },
@@ -1183,6 +1284,12 @@ const HomeWData = ({ Motel}) => {
     return sum + contractDeposit
   }, 0)
 
+  // Tính tổng số tiền cọc giua phong
+  const totalReserveAPlace = rooms.reduce((sum, room) => {
+    const ReserveAPlace = room.reserveAPlace?.deposit || 0 // Lấy deposit từ latestContract, mặc định là 0 nếu không có
+    return sum + ReserveAPlace
+  }, 0)
+
   // Quản lý trạng thái hiển thị cột
   const [columnsVisibility, setColumnsVisibility] = useState(
     columns.reduce((acc, col) => {
@@ -1217,11 +1324,37 @@ const HomeWData = ({ Motel}) => {
   const handleStakeCheckboxChange = (event) => {
     setIsStake(event.target.checked)
   }
+
+  const [isReportEnd, setIsReportEnd] = useState(false) // Trạng thái checkbox "Đang bao ket thuc"
+  // Xử lý thay đổi trạng thái của checkbox "Đang bao ke thuc"
+  const handleReportEndCheckboxChange = (event) => {
+    setIsReportEnd(event.target.checked)
+  }
+
+  const [isIATExpire, setIsIATExpire] = useState(false) // Trạng thái checkbox "Đang ở"
+  // Xử lý thay đổi trạng thái của checkbox "Đang ở"
+  const handleIATExpireCheckboxChange = (event) => {
+    setIsIATExpire(event.target.checked)
+  }
+
   // Lọc danh sách phòng theo trạng thái
   const filteredRooms = rooms.filter((room) => {
-    if ((isActive && isEmpty) || (isActive && isStake) || (isEmpty && isStake) || (isActive && isEmpty && isStake)) {
-      // Nếu bất kỳ 2 checkbox hoặc cả 3 checkbox đều được chọn, không hiển thị phòng
-      return false
+    // Nếu bất kỳ điều kiện nào trong các điều kiện trên được thỏa mãn, trả về false (không hiển thị phòng)
+    if (
+      (isActive && isEmpty) ||
+      (isActive && isStake) ||
+      (isEmpty && isStake) ||
+      (isActive && isEmpty && isStake) ||
+      (isActive && isReportEnd) ||
+      (isEmpty && isReportEnd) ||
+      (isStake && isReportEnd) ||
+      (isActive && isEmpty && isStake && isReportEnd) ||
+      (isActive && isIATExpire) || // Thêm điều kiện kiểm tra khi cả isActive và isIATExpire đều được chọn
+      (isEmpty && isIATExpire) || // Thêm điều kiện kiểm tra khi cả isEmpty và isIATExpire đều được chọn
+      (isStake && isIATExpire) || // Thêm điều kiện kiểm tra khi cả isStake và isIATExpire đều được chọn
+      (isReportEnd && isIATExpire) // Thêm điều kiện kiểm tra khi cả isReportEnd và isIATExpire đều được chọn
+    ) {
+      return false // Không hiển thị phòng
     }
     if (isActive) {
       return room.latestContract?.status === 'ACTIVE' // Hiển thị các phòng có trạng thái "ACTIVE"
@@ -1231,6 +1364,12 @@ const HomeWData = ({ Motel}) => {
     }
     if (isStake) {
       return room.latestContract?.status === undefined && room.reserveAPlace?.status === 'Stake' // Hiển thị các phòng trống
+    }
+    if (isReportEnd) {
+      return room.latestContract?.status === 'ReportEnd' // Hiển thị các phòng có trạng thái "ACTIVE"
+    }
+    if (isIATExpire) {
+      return room.latestContract?.status === 'IATExpire' // Hiển thị các phòng có trạng thái "ACTIVE"
     }
     return true // Hiển thị tất cả các phòng nếu không có checkbox nào được chọn
   })
@@ -1514,7 +1653,7 @@ const HomeWData = ({ Motel}) => {
                       <span style={{ color: '#20a9e7' }} className="titleadmin">
                         Tổng số tiền cọc giữ phòng
                       </span>
-                      <h3 style={{ color: '#20a9e7' }}>0đ</h3>
+                      <h3 style={{ color: '#20a9e7' }}>{totalReserveAPlace.toLocaleString()}đ</h3>
                     </div>
                   </div>
                 </Link>
@@ -1746,13 +1885,15 @@ const HomeWData = ({ Motel}) => {
                       id="is_terminate_contract"
                       data-value="status"
                       value="is_terminate_contract"
+                      checked={isReportEnd} // Gán giá trị của checkbox
+                      onChange={handleReportEndCheckboxChange} // Gọi hàm xử lý khi checkbox thay đổi
                     />
                     <label className="form-check-label" htmlFor="is_terminate_contract">
                       Đang báo kết thúc{' '}
                     </label>
                     <span className="count-filter tick-terminate warning">
                       {' '}
-                      {rooms.filter((room) => room.latestContract?.status === 'ENDED').length}
+                      {rooms.filter((room) => room.latestContract?.status === 'ReportEnd').length}
                     </span>
                   </div>
                   <div className="form-check form-check-inline">
@@ -1762,6 +1903,8 @@ const HomeWData = ({ Motel}) => {
                       id="is_will_terminate_contract"
                       data-value="status"
                       value="is_will_terminate_contract"
+                      checked={isIATExpire} // Gán giá trị của checkbox
+                      onChange={handleIATExpireCheckboxChange} // Gọi hàm xử lý khi checkbox thay đổi
                     />
                     <label className="form-check-label" htmlFor="is_will_terminate_contract">
                       Sắp hết hạn hợp đồng
@@ -1880,7 +2023,7 @@ const HomeWData = ({ Motel}) => {
                       contract.status === 'ACTIVE'
                         ? menuPosition.y - 890
                         : contract.status === 'IATExpire'
-                        ? menuPosition.y - 800
+                        ? menuPosition.y - 940
                         : contract.status === 'Stake'
                         ? menuPosition.y - 720
                         : menuPosition.y - 720,
@@ -1897,6 +2040,8 @@ const HomeWData = ({ Motel}) => {
                   }}>
                   {(room && room.latestContract?.status === 'ACTIVE'
                     ? menuItems
+                    : room && room.latestContract?.status === 'ReportEnd'
+                    ? menuItemsReportContract
                     : room && room.latestContract?.status === 'IATExpire'
                     ? IATExpiremenuItems
                     : room && room.latestContract === null && room.reserveAPlace?.status === 'Stake'
@@ -1923,6 +2068,26 @@ const HomeWData = ({ Motel}) => {
                         }
                         if (item.icon === 'eye') {
                           toggleDetailReAPlace()
+                          setShowMenu(null)
+                        }
+                        if (item.icon === 'bell') {
+                          toggleReportContract()
+                          setShowMenu(null)
+                        }
+                        if (item.icon === 'trash-2' && item.label === 'Hủy Báo kết thúc hợp đồng phòng') {
+                          toggleCancelReportContract()
+                          setShowMenu(null)
+                        }
+                        if (item.icon === 'log-out') {
+                          toggleEndContract()
+                          setShowMenu(null)
+                        }
+                        if (item.icon === 'refresh-ccw') {
+                          toggleChangeRoom()
+                          setShowMenu(null)
+                        }
+                        if (item.icon === 'trello' && item.label === 'Gia hạn hợp đồng') {
+                          toggleEntendContract()
                           setShowMenu(null)
                         }
                       }}
@@ -3310,6 +3475,24 @@ const HomeWData = ({ Motel}) => {
         <> </>
       )}
       <RentRoomModal modalOpen={modalOpen} toggleModal={toggleModal} motelId={motelId} />
+      <ModalEndContract
+        modalOpen={modalOpenEndContract}
+        toggleModal={toggleEndContract}
+        roomId={room ? room.roomId : <></>}
+      />
+
+      <ModalChangeRoom
+        modalOpen={modalOpenChangeRoom}
+        toggleModal={toggleChangeRoom}
+        roomId={room ? room.roomId : <></>}
+      />
+
+      <ModalExtendContract
+        modalOpen={modalOpenExtendContract}
+        toggleModal={toggleEntendContract}
+        roomId={room ? room.roomId : <></>}
+      />
+
       <ReserveAPlaceModal
         modalOpen={modalOpenReAPlace}
         toggleModal={toggleModalReAPlace}
@@ -3324,6 +3507,16 @@ const HomeWData = ({ Motel}) => {
         modalOpen={modalOpenContract}
         toggleModal={toggleModalContract}
         motelId={motelId ? motelId : <></>}
+        roomId={room ? room.roomId : <></>}
+      />
+      <ModalReportContract
+        modalOpen={modalOpenReportContract}
+        toggleModal={toggleReportContract}
+        roomId={room ? room.roomId : <></>}
+      />
+      <ModalCancelReportContract
+        modalOpen={modalOpenCancelReportContract}
+        toggleModal={toggleCancelReportContract}
         roomId={room ? room.roomId : <></>}
       />
     </div>
