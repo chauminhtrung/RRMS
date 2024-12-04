@@ -6,9 +6,9 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.rrms.rrms.models.DetailInvoice;
+import com.rrms.rrms.models.InvoiceDetail;
 
 @Repository
-public interface DetailInvoiceRepository extends JpaRepository<DetailInvoice, UUID> {
-    List<DetailInvoice> findByInvoiceInvoiceId(UUID invoiceId);
+public interface DetailInvoiceRepository extends JpaRepository<InvoiceDetail, UUID> {
+    List<InvoiceDetail> findByInvoiceInvoiceId(UUID invoiceId);
 }

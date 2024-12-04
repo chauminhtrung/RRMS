@@ -2,6 +2,7 @@ package com.rrms.rrms.models;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -56,5 +57,8 @@ public class Invoice {
     private Payment payment;
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DetailInvoice> detailInvoices;
+    private List<InvoiceDetail> detailInvoices;
+
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<InvoiceAdditionItem> additionItems = new ArrayList<>();
 }

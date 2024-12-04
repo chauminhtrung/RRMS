@@ -19,11 +19,15 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InvoiceResponse {
     private UUID invoiceId; // ID hóa đơn
+    private String invoiceReason; // ly do thu tien
     private YearMonth invoiceCreateMonth; // tháng lập hóa đơn
     private LocalDate invoiceCreateDate; // Ngày tạo hóa đơn
     private LocalDate dueDate; // Hạn đóng tiền
     private LocalDate moveinDate; // Ngày vao o
     private LocalDate dueDateofmoveinDate; // Hạn đóng tiền
     private Double deposit; // Tiền đặt cọc
-    private List<ServiceDetailResponse> serviceDetails; // Chi tiết dịch vụ
+    private List<InvoiceServiceDetailResponse> serviceDetails; // Chi tiết dịch vụ
+    private List<InvoiceDeviceDetailResponse> deviceDetails;
+    private List<InvoiceAdditionItemResponse> additionItems;
+    private Double totalAmount;
 }

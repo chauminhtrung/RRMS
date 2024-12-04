@@ -2,14 +2,13 @@ package com.rrms.rrms.controllers;
 
 import java.util.UUID;
 
-import com.rrms.rrms.dto.response.*;
-import com.rrms.rrms.services.IBulletinBoard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import com.rrms.rrms.dto.request.AccountRequest;
-import com.rrms.rrms.services.IRoom;
+import com.rrms.rrms.dto.response.*;
+import com.rrms.rrms.services.IBulletinBoard;
 import com.rrms.rrms.services.servicesImp.AccountService;
 import com.rrms.rrms.services.servicesImp.HeartService;
 
@@ -91,7 +90,7 @@ public class HeartController {
     @Operation(summary = "Remove heart")
     @PostMapping("/removeHeart")
     public ApiResponse<Boolean> removeHeart(
-            @RequestParam("username") String username,@RequestParam("bulletinBoard_id") UUID bulletinBoard_id) {
+            @RequestParam("username") String username, @RequestParam("bulletinBoard_id") UUID bulletinBoard_id) {
         AccountResponse accountResponse = accountService.findByUsername(username);
         BulletinBoardResponse bulletinBoardResponse = iBulletinBoard.getBulletinBoardById(bulletinBoard_id);
         if (accountResponse != null && bulletinBoardResponse != null) {

@@ -12,10 +12,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ServiceDetailResponse {
-    private String serviceName;
-    private Double servicePrice;
-    private Double quantity;
-    private Double consumption;
-    private Double totalPrice;
+public class InvoiceServiceDetailResponse {
+    private String serviceName; // Tên dịch vụ
+    private Long servicePrice; // Giá dịch vụ
+    private Integer quantity; // Số lượng sử dụng
+    private Long totalPrice;
 }
