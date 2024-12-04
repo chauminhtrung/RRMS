@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "detail_invoices")
-public class DetailInvoice {
+public class InvoiceDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -31,9 +31,6 @@ public class DetailInvoice {
     @JoinColumn(name = "room_device_id")
     private RoomDevice roomDevice;
 
-    @Column(columnDefinition = "DECIMAL(10, 2)")
-    private Double servicePrice; // Giá dịch vụ
-
-    @Column(columnDefinition = "DECIMAL(10, 2)")
-    private Double quantity; // Số lượng
+    @Column(columnDefinition = "INT")
+    private Integer roomServiceQuantity;
 }

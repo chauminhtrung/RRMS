@@ -14,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DetailInvoiceRequest {
+public class InvoiceDetailServiceRequest {
     private UUID roomServiceId;
-    private UUID roomDeviceId;
+    private Integer quantity;
 }

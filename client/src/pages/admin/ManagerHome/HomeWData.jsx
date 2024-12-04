@@ -37,6 +37,8 @@ import RentRoomModal from '../NavContentAdmin/RentRoomModal'
 import ModalCreateContract from '../NavContentAdmin/ContractManage/ModalCreateContract'
 import ReserveAPlaceModal from './ReserveAPlace/ReserveAPlaceModal'
 import ReserveAPlaceDetail from './ReserveAPlace/ReserveAPlaceDetail'
+const HomeWData = ({ Motel}) => {
+  const { motelId, roomId } = useParams();
 import ModalReportContract from '../NavContentAdmin/ContractManage/ModalReportContract'
 import ModalCancelReportContract from '../NavContentAdmin/ContractManage/ModalCancelReportContract'
 import ModalEndContract from '../NavContentAdmin/ContractManage/ModalEndContract'
@@ -47,11 +49,18 @@ const HomeWData = ({ Motel }) => {
   const [rooms, setRooms] = useState([])
   // State quản lý trạng thái của checkbox
   const [motelServices, setMotelServices] = useState([])
-  const [showMenu, setShowMenu] = useState(null) // Trạng thái của menu hiện tại
+  const [showMenu, setShowMenu] = useState(null) 
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 })
   const menuRef = useRef(null) // Tham chiếu đến menu
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   const [additionItems, setAdditionItems] = useState([])
+  const [invoiceData, setInvoiceData] = useState({
+    invoiceCreateMonth: new Date().toISOString().slice(0, 7),
+    invoiceCreateDate: new Date().toISOString().slice(0, 10),
+    dueDate: '',
+    dueDateofmoveinDate: '',
+    serviceDetails: [],
+  });
   const [formData, setFormData] = useState({
     motelId: motelId ? motelId : Motel[0].motelId,
     deposit: null,
@@ -70,10 +79,11 @@ const HomeWData = ({ Motel }) => {
     prioritize: 'Tất cả',
     selectedServices: [] // Thêm trường này để lưu các dịch vụ đã chọn
   })
+
   const addNewItem = () => {
     const newItem = {
-      id: Date.now(), // Unique ID
-      addition: 1, // Default value for "Cộng [+]"
+      id: Date.now(),
+      addition: 1, 
       additionValue: '',
       additionReason: ''
     }
@@ -86,9 +96,19 @@ const HomeWData = ({ Motel }) => {
   }
 
   const handleChange = (id, field, value) => {
-    setAdditionItems(additionItems.map((item) => (item.id === id ? { ...item, [field]: value } : item)))
-  }
-
+    setAdditionItems(additionItems.map((item) => 
+      item.id === id ? { ...item, [field]: value } : item)
+    );
+  };
+  
+  const calculateTotalAddition = () => {
+    return additionItems.reduce((total, item) => {
+      const value = parseFloat(item.additionValue) || 0;
+      return total + (item.addition === 1 ? value : -value);  // Giảm trừ khi addition === 0
+    }, 0);
+  };
+  
+  
   const [roomSerivces, setRoomSerivces] = useState([])
   const [room, setRoom] = useState()
   const [note, setNote] = useState('') // Tạo state để lưu ghi chú
@@ -161,51 +181,91 @@ const HomeWData = ({ Motel }) => {
 
   // Hàm xử lý thay đổi trạng thái checkbox
   const handleCheckboxChange = (serviceId) => {
-    // Cập nhật lại trạng thái của `isSelected` cho dịch vụ với `serviceId`
     setRoomSerivces((prevState) =>
-      prevState.map((service) =>
-        service.service.motelServiceId === serviceId
-          ? { ...service, isSelected: !service.isSelected } // Đảo ngược trạng thái
-          : service
-      )
-    )
-  }
+      prevState.map((service) => {
+        if (service.service.motelServiceId === serviceId) {
+          const isSelected = !service.isSelected;
+  
+          if (isSelected) {
+            setInvoiceData((prev) => ({
+              ...prev,
+              serviceDetails: [
+                ...prev.serviceDetails,
+                { roomServiceId: service.service.motelServiceId }
+              ],
+            }));
+          } else {
+            setInvoiceData((prev) => ({
+              ...prev,
+              serviceDetails: prev.serviceDetails.filter(
+                (detail) => detail.roomServiceId !== service.service.motelServiceId
+              ),
+            }));
+          }
+  
+          return { ...service, isSelected };
+        }
+        return service;
+      })
+    );
+  };
+  
+  
 
   //lay hop dong cua room do
   const fetchRoomContract = async (id) => {
     try {
-      const response = await getContractByIdRoom2(id)
-
+      const response = await getContractByIdRoom2(id);
+  
       if (response) {
-        setContract(response)
+        setContract(response);
+  
+        setInvoiceData((prev) => ({
+          ...prev,
+          moveinDate: new Date(response.moveinDate).toISOString().slice(0, 10), 
+          contractId: response.contractId,
+          price: response.price,
+        }));
       } else {
-        setContract({})
+        setContract({});
       }
     } catch (error) {
-      console.error(error)
-      setContract({})
+      console.error(error);
+      setContract({});
     }
-  }
+  };
+  
+  
 
   //ham lay dich vu phong
   const fetchDataServiceRooms = async (id) => {
     try {
-      const response = await getServiceRoombyRoomId(id)
-      console.log(response)
-
-      // Thêm trường `isSelected` vào từng dịch vụ
-      const updatedServices = response.map((service) => ({
-        ...service,
-        isSelected: true // Mặc định là chọn (checked)
-      }))
-      console.log(updatedServices)
-
-      // Cập nhật lại trạng thái với danh sách dịch vụ đã có trường `isSelected`
-      setRoomSerivces(updatedServices)
+      const response = await getServiceRoombyRoomId(id);
+      console.log('Service Room Response:', response);
+  
+      // Thêm kiểm tra để đảm bảo dữ liệu hợp lệ
+      if (response && Array.isArray(response)) {
+        const updatedServices = response.map((service) => ({
+          ...service,
+          isSelected: true, // Default selected
+          quantity: service.quantity || 1, // Đảm bảo quantity có giá trị hợp lệ
+          totalPrice: (service.quantity || 1) * (service.service.price || 0),
+          service: {
+            ...service.service,
+            price: service.service.price || 0, // Đảm bảo price không undefined
+          },
+        }));
+        setRoomSerivces(updatedServices);
+      } else {
+        throw new Error('Invalid service room data');
+      }
     } catch (error) {
-      console.log(error)
+      console.error('Error fetching room services:', error);
     }
-  }
+  };
+  
+
+  //device
   const handleChangeQuantityRoomDevice = async (roomId, motel_device_id, quantity) => {
     const data = {
       roomId: roomId,
@@ -482,22 +542,39 @@ const HomeWData = ({ Motel }) => {
   }
 
   //ham input khi ng dung thay doi so luong
-  const handleInputChangeService = (e, motelServiceId) => {
-    const newQuantity = e.target.value // Lấy giá trị mới từ input
-    // Cập nhật lại trạng thái của roomSerivces
-    const updatedRoomServices = roomSerivces.map((roomService) => {
-      if (roomService.service.motelServiceId === motelServiceId) {
-        return {
-          ...roomService,
-          quantity: newQuantity // Cập nhật số lượng
+  const handleInputChangeService = (e, serviceId) => {
+    const quantity = parseFloat(e.target.value) || 0;
+  
+    setRoomSerivces((prevState) =>
+      prevState.map((service) => {
+        if (service.service.motelServiceId === serviceId) {
+          const updatedService = {
+            ...service,
+            quantity,
+            totalPrice: quantity * service.service.price, 
+          };
+  
+          // Cập nhật serviceDetails
+          setInvoiceData((prev) => ({
+            ...prev,
+            serviceDetails: prev.serviceDetails.map((detail) =>
+              detail.roomServiceId === serviceId
+                ? {
+                    ...detail,
+                    quantity,
+                    totalPrice: quantity * detail.servicePrice,
+                  }
+                : detail
+            ),
+          }));
+  
+          return updatedService;
         }
-      }
-      return roomService
-    })
-
-    // Cập nhật lại state hoặc dữ liệu của bạn
-    setRoomSerivces(updatedRoomServices) // Giả sử setRoomServices là hàm setState của bạn
-  }
+        return service;
+      })
+    );
+  };
+  
 
   const ContractStatus = {
     IATExpire: 'IATExpire',
@@ -551,37 +628,6 @@ const HomeWData = ({ Motel }) => {
     }
   }
 
-  const handleServiceSelection = (serviceId, isChecked) => {
-    setFormData((prevData) => {
-      let updatedServices = [...prevData.selectedServices]
-
-      if (isChecked) {
-        // Nếu checkbox được chọn, thêm dịch vụ vào mảng với quantity = 1
-        updatedServices.push({ serviceId, quantity: 1 })
-      } else {
-        // Nếu checkbox bị bỏ chọn, xóa dịch vụ khỏi mảng
-        updatedServices = updatedServices.filter((service) => service.serviceId !== serviceId)
-      }
-
-      return {
-        ...prevData,
-        selectedServices: updatedServices
-      }
-    })
-  }
-
-  const handleQuantityChange = (serviceId, quantity) => {
-    setFormData((prevData) => {
-      const updatedServices = prevData.selectedServices.map((service) =>
-        service.serviceId === serviceId ? { ...service, quantity } : service
-      )
-
-      return {
-        ...prevData,
-        selectedServices: updatedServices
-      }
-    })
-  }
   // Call this function when opening the "Add Room" modal
   useEffect(() => {
     if (motelId) {
@@ -812,19 +858,34 @@ const HomeWData = ({ Motel }) => {
   const [deviceByRoom, setdeviceByRoom] = useState([])
   const fetchDeviceByRoom = async (roomId) => {
     if (!roomId) {
-      console.warn('Room ID is invalid')
-      setdeviceByRoom([])
-      return
+      console.warn('Room ID is invalid');
+      setdeviceByRoom([]);
+      return;
     }
-    const response = await getAllDeviceByRomId(roomId)
-    console.log(response.result)
+    try {
+      const response = await getAllDeviceByRomId(roomId);
+      console.log(response.result);
 
-    if (response.result.length > 0) {
-      setdeviceByRoom(response.result)
-    } else {
-      setdeviceByRoom([])
+      if (response.result.length > 0) {
+        setdeviceByRoom(response.result);
+
+        // Cập nhật deviceDetails vào invoiceData
+        setInvoiceData((prev) => ({
+          ...prev,
+          deviceDetails: response.result.map((device) => ({
+            roomDeviceId: device.motel_device_id || device.roomDeviceId,
+            quantity: device.quantity || 1, // Đảm bảo có quantity
+          })),
+        }));
+      } else {
+        setdeviceByRoom([]);
+        setInvoiceData((prev) => ({ ...prev, deviceDetails: [] }));
+      }
+    } catch (error) {
+      console.error('Error fetching devices by room:', error);
     }
-  }
+};
+
 
   const handlePrintContract = () => {
     const contractUrl = `/quanlytro/${motelId}/Contract-Preview/${contract.contractId}`
@@ -862,6 +923,9 @@ const HomeWData = ({ Motel }) => {
       //ham o duoi dung de xac dinh dang nhan vao phong nao
       fetchDataRooms(showMenu)
     } else if (label === 'Lập hóa đơn') {
+      fetchDeviceByRoom(showMenu)
+      fetchDataServiceRooms(showMenu)
+      fetchDataRooms(showMenu)
       setShowMenu(null) // Đóng menu
     } else if (label === 'Danh sách khách thuê') {
       toggleModal(!modalOpen)
@@ -1309,6 +1373,166 @@ const HomeWData = ({ Motel }) => {
     }
     return true // Hiển thị tất cả các phòng nếu không có checkbox nào được chọn
   })
+
+
+  const handleQuantityChange = (serviceId, quantity) => {
+    setFormData((prevData) => {
+      const updatedServices = prevData.selectedServices.map((service) =>
+        service.serviceId === serviceId ? { ...service, quantity } : service
+      )
+
+      return {
+        ...prevData,
+        selectedServices: updatedServices
+      }
+    })
+  }
+  const handleServiceSelection = (serviceId, isChecked) => {
+    setFormData((prevData) => {
+      let updatedServices = [...prevData.selectedServices]
+
+      if (isChecked) {
+        // Nếu checkbox được chọn, thêm dịch vụ vào mảng với quantity = 1
+        updatedServices.push({ serviceId, quantity: 1 })
+      } else {
+        // Nếu checkbox bị bỏ chọn, xóa dịch vụ khỏi mảng
+        updatedServices = updatedServices.filter((service) => service.serviceId !== serviceId)
+      }
+
+      return {
+        ...prevData,
+        selectedServices: updatedServices
+      }
+    })
+  }
+  //invoice
+  // console.log('Dữ liệu gửi đi:', invoiceData);
+
+  const createInvoice = async () => {
+    try {
+      const updatedInvoiceData = {
+        ...invoiceData,
+        additionItems: additionItems.map(item => ({
+          reason: item.additionReason,
+          amount: parseFloat(item.additionValue) || 0,
+          isAddition: item.addition,
+        })),        
+      };
+      console.log("Dữ liệu gửi đi:", JSON.stringify(updatedInvoiceData, null, 2));
+      if (!updatedInvoiceData.contractId || updatedInvoiceData.serviceDetails.length === 0 || !updatedInvoiceData.deviceDetails) {
+        throw new Error('Thiếu thông tin hợp đồng, dịch vụ hoặc thiết bị.');
+      }
+        
+      const response = await axios.post(
+        'http://localhost:8080/invoices/create',
+        updatedInvoiceData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      Swal.fire({
+        icon: 'success',
+        title: 'Thành công',
+        text: 'Hóa đơn được tạo!',
+      });
+      console.log("tạo thành công:",response.data);
+    } catch (error) {
+      console.error('Lỗi khi tạo hóa đơn:', error.response?.data || error.message);
+      Swal.fire({
+        icon: 'error',
+        title: 'Thất bại',
+        text: 'Tạo hóa đơn không thành công!',
+      });
+    }
+  };
+  
+  const handleInputInvoice = (field, value) => {
+    if (field === 'moveinDate') {
+      const selectedDate = new Date(value);
+      const dueDateMoveIn = new Date(selectedDate);
+      dueDateMoveIn.setDate(selectedDate.getDate() + 30); // Cộng thêm 30 ngày
+  
+      setInvoiceData((prev) => ({
+        ...prev,
+        [field]: value,
+        dueDateofmoveinDate: dueDateMoveIn.toISOString().slice(0, 10), // Cập nhật `dueDateofmoveinDate`
+      }));
+    } else if (field === 'invoiceCreateDate') {
+      const selectedDate = new Date(value);
+      const dueDate = new Date(selectedDate);
+      dueDate.setDate(selectedDate.getDate() + 7); // Cộng thêm 7 ngày
+  
+      setInvoiceData((prev) => ({
+        ...prev,
+        [field]: value,
+        dueDate: dueDate.toISOString().slice(0, 10), // Cập nhật `dueDate`
+      }));
+    } else {
+      setInvoiceData((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    }
+  };
+  
+  
+  useEffect(() => {
+    const today = new Date();
+    const formattedToday = today.toISOString().slice(0, 10);
+    
+    const dueDate = new Date(today);
+    dueDate.setDate(today.getDate() + 7);
+    const formattedDueDate = dueDate.toISOString().slice(0, 10);
+    
+    const moveinDate = new Date();
+    const dueDateMoveIn = new Date(moveinDate);
+    dueDateMoveIn.setDate(moveinDate.getDate() + 30);
+    const formattedDueDateMoveIn = dueDateMoveIn.toISOString().slice(0, 10);
+  
+    setInvoiceData((prevData) => ({
+      ...prevData,
+      invoiceCreateDate: formattedToday,
+      dueDate: formattedDueDate,
+      moveinDate: formattedToday, // Gán ngày hiện tại cho moveinDate
+      dueDateofmoveinDate: formattedDueDateMoveIn, // Gán hạn đến ngày sau 30 ngày
+    }));
+  }, []);
+   // Lấy contractId
+   useEffect(() => {
+    if (roomId) {
+      fetchRoomContract(roomId); // Gọi API lấy contractId
+    }
+  }, [roomId]);
+
+  // Lấy danh sách dịch vụ và thiết bị
+  useEffect(() => {
+    if (roomId) {
+      fetchDataServiceRooms(roomId); // Gọi API lấy danh sách dịch vụ
+      fetchDeviceByRoom(roomId);    // Gọi API lấy danh sách thiết bị
+    }
+  }, [roomId]);
+  
+  useEffect(() => {
+    setInvoiceData((prev) => ({
+      ...prev,
+      serviceDetails: roomSerivces
+        .filter((service) => service.isSelected)
+        .map((service) => ({
+          roomServiceId: service.roomServiceId,
+          serviceName: service.service.nameService,
+          servicePrice: service.service.price,
+          quantity: service.quantity || 1,
+          totalPrice: (service.quantity || 1) * service.service.price,
+        })),
+    }));
+  }, [roomSerivces]);
+  // console.log('Q_roomSerivces:', roomSerivces);
+  // console.log('Q_invoiceData:', invoiceData);
+  // console.log('deviceDetails:', invoiceData.deviceDetails);
+
 
   return (
     <div
@@ -2715,20 +2939,7 @@ const HomeWData = ({ Motel }) => {
                     display: 'flex',
                     backgroundColor: 'rgb(111 171 232)'
                   }}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="feather feather-inbox">
-                    <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-                    <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-                  </svg>
+                 <i className="bi bi-inbox" style={{fontSize:'25px'}}></i>
                 </div>
                 <h5 className="modal-title" id="addRoomLabel">
                   Lập hóa đơn
@@ -2742,43 +2953,55 @@ const HomeWData = ({ Motel }) => {
                 <div className="row g-2">
                   <div className="col-12">
                     <div className="form-floating">
-                      <select name="chargetype" className="form-select" value={formData.chargetype}>
-                        <option value="kwh">Thu tiền hàng tháng</option>
-                        <option value="khoi">Thu tiền tháng đầu tiên</option>
-                        <option value="thang">Thu tiền khi kết thúc hợp đồng</option>
-                        <option value="nguoi">Thu tiền phòng chu kỳ</option>
-                        <option value="chiec">Thu tiền dịch vụ</option>
-                        <option value="lan">Thu tiền cọc</option>
-                        <option value="cai">Hoàn tiền cọc</option>
+                      <select
+                        name="chargetype"
+                        className="form-select"
+                        value={invoiceData.invoiceReason}
+                        onChange={(e) => {
+                          const selectedReason = e.target.value;
+                          console.log('Selected Reason:', selectedReason);
+                          setInvoiceData((prev) => ({
+                            ...prev,
+                            invoiceReason: selectedReason,
+                          }));
+                        }}
+                      >
+                        <option value="Thu tiền hàng tháng">Thu tiền hàng tháng</option>
+                        <option value="Thu tiền tháng đầu tiên">Thu tiền tháng đầu tiên</option>
+                        <option value="Thu tiền khi kết thúc hợp đồng">Thu tiền khi kết thúc hợp đồng</option>
+                        <option value="Thu tiền phòng chu kỳ">Thu tiền phòng chu kỳ</option>
+                        <option value="Thu tiền dịch vụ">Thu tiền dịch vụ</option>
+                        <option value="Thu tiền cọc">Thu tiền cọc</option>
+                        <option value="Hoàn tiền cọc">Hoàn tiền cọc</option>
                       </select>
                       <label htmlFor="chargetype">
                         Đơn vị <label style={{ color: 'red' }}>*</label>
                       </label>
                     </div>
                   </div>
+                  
                   <div className="col-12">
                     <div className="header-item">
                       <div className="input-group" style={{ marginTop: '20px' }}>
                         <div className="form-floating">
                           <Flatpickr
-                            className="form-control month-flat-picker flatpickr-input"
+                            className="form-control"
                             name="month"
                             id="month"
                             placeholder="Nhập tháng"
+                            value={invoiceData.invoiceCreateMonth}
                             options={{
                               locale: Vietnamese,
                               plugins: [
                                 new monthSelectPlugin({
                                   shorthand: true,
-                                  dateFormat: 'm/y'
+                                  dateFormat: 'Y-m'
                                 })
                               ]
                             }}
+                            onChange={(date) => handleInputInvoice("invoiceCreateMonth", date[0].toISOString().slice(0, 7))}
                           />
-
-                          <label htmlFor="month">
-                            Tháng lập phiếu <label style={{ color: 'red' }}>*</label>
-                          </label>
+                          <label htmlFor="month">Tháng lập phiếu <label style={{ color: 'red' }}>*</label></label>
                         </div>
                         <label className="input-group-text" htmlFor="month">
                           <i className="bi bi-calendar" style={{ fontSize: '25px' }}></i>
@@ -2786,140 +3009,128 @@ const HomeWData = ({ Motel }) => {
                       </div>
                     </div>
                   </div>
+
                   <div className="col-6">
                     <div className="header-item">
                       <div className="input-group" style={{ marginTop: '20px' }}>
                         <div className="form-floating">
-                          <Flatpickr
-                            className="form-control month-flat-picker flatpickr-input"
-                            name="month"
-                            id="month"
-                            placeholder="Nhập tháng"
-                            options={{
-                              locale: Vietnamese,
-                              plugins: [
-                                new monthSelectPlugin({
-                                  shorthand: true,
-                                  dateFormat: 'm/y'
-                                })
-                              ]
-                            }}
-                          />
+                        <Flatpickr
+                          className="form-control"
+                          name="invoiceCreateDate"
+                          id="invoiceCreateDate"
+                          placeholder="Ngày lập phiếu"
+                          required
+                          value={invoiceData.invoiceCreateDate}
+                          onChange={(date) => handleInputInvoice("invoiceCreateDate", date[0].toISOString().slice(0, 10))}
+                        />
 
-                          <label htmlFor="month">
-                            Ngày lập phiếu <label style={{ color: 'red' }}>*</label>
-                          </label>
+                          <label htmlFor="invoiceCreateDate">Ngày lập phiếu <label style={{ color: 'red' }}>*</label></label>
                         </div>
-                        <label className="input-group-text" htmlFor="month">
+                        <label className="input-group-text" htmlFor="invoiceCreateDate">
                           <i className="bi bi-calendar" style={{ fontSize: '25px' }}></i>
                         </label>
                       </div>
                     </div>
                   </div>
+
                   <div className="col-6">
                     <div className="header-item">
                       <div className="input-group" style={{ marginTop: '20px' }}>
                         <div className="form-floating">
-                          <Flatpickr
-                            className="form-control month-flat-picker flatpickr-input"
-                            name="month"
-                            id="month"
-                            placeholder="Nhập tháng"
-                            options={{
-                              locale: Vietnamese,
-                              plugins: [
-                                new monthSelectPlugin({
-                                  shorthand: true,
-                                  dateFormat: 'm/y'
-                                })
-                              ]
-                            }}
-                          />
-
-                          <label htmlFor="month">
-                            Hạn đóng tiền <label style={{ color: 'red' }}>*</label>
+                        <Flatpickr
+                          className="form-control"
+                          name="dueDate"
+                          id="dueDate"
+                          placeholder="Hạn đóng tiền"
+                          required
+                          value={invoiceData.dueDate}
+                          readOnly // Ngăn người dùng chỉnh sửa trực tiếp
+                        />
+                          <label htmlFor="dueDate">
+                          Hạn đóng tiền <label style={{ color: 'red' }}>*</label>
                           </label>
                         </div>
-                        <label className="input-group-text" htmlFor="month">
+                        <label className="input-group-text" htmlFor="dueDate">
                           <i className="bi bi-calendar" style={{ fontSize: '25px' }}></i>
                         </label>
                       </div>
                     </div>
                   </div>
+
                   <div className="col-12">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="feather feather-home me-2"
-                      style={{ marginTop: '15px' }}>
-                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"></path>
-                      <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                    </svg>
+                    <i className="bi bi-house me-2"style={{ fontSize: '25px', marginTop:'15px' }} ></i>
                     <div className="title-item-small">
                       <b>Thu tiền hàng tháng</b>
                       <i className="des">
-                        Ngày vào: <label style={{ color: 'rgb(255, 87, 34)' }}>16/11/2024</label>. Chu kỳ thu:
-                        <label style={{ color: 'rgb(255, 87, 34)' }}>1 tháng, thu cuối tháng</label>
+                        Ngày vào: <label style={{ color: 'rgb(255, 87, 34)' }}>{invoiceData.moveinDate}</label>. Chu kỳ thu:
+                        <label style={{ color: 'rgb(255, 87, 34)' }}> {contract.collectioncycle} tháng, thu cuối tháng</label>
                       </i>
                     </div>
                   </div>
+                  
                   <div className="col-6">
                     <div className="header-item">
                       <div className="input-group" style={{ marginTop: '20px' }}>
                         <div className="form-floating">
                           <Flatpickr
-                            className="form-control month-flat-picker flatpickr-input"
-                            name="birth"
-                            id="birth"
-                            placeholder="Nhập ngày/tháng/năm sinh"
+                            className="form-control"
+                            name="moveinDate"
+                            id="moveinDate"
+                            placeholder="Từ ngày"
+                            value={invoiceData.moveinDate}
+                            onChange={(date) => {
+                              const formattedDate = date.length > 0 ? date[0].toISOString().slice(0, 10) : '';
+                              setInvoiceData((prev) => ({ ...prev, moveinDate: formattedDate }));
+                            }}
                             required
                             options={{
                               allowInput: true,
-                              dateFormat: 'd/m/Y'
+                              dateFormat: 'Y-m-d', 
                             }}
                           />
-                          <label htmlFor="birth">
+                          <label htmlFor="moveinDate">
                             Từ ngày <label style={{ color: 'red' }}>*</label>
                           </label>
                         </div>
-                        <label className="input-group-text" htmlFor="birth">
+                        <label className="input-group-text" htmlFor="moveinDate">
                           <i className="bi bi-calendar" style={{ fontSize: '25px' }}></i>
                         </label>
                       </div>
                     </div>
                   </div>
+
                   <div className="col-6">
                     <div className="header-item">
                       <div className="input-group" style={{ marginTop: '20px' }}>
                         <div className="form-floating">
                           <Flatpickr
-                            className="form-control month-flat-picker flatpickr-input"
-                            name="birth"
-                            id="birth"
-                            placeholder="Nhập ngày/tháng/năm sinh"
+                            className="form-control"
+                            name="dueDateofmoveinDate"
+                            id="dueDateofmoveinDate"
+                            placeholder="Đến ngày"
+                            value={invoiceData.dueDateofmoveinDate}
+                            onChange={(date) => {
+                              const formattedDate = date.length > 0 ? date[0].toISOString().slice(0, 10) : ''; 
+                              setInvoiceData((prev) => ({ ...prev, dueDateofmoveinDate: formattedDate }));
+                            }}
                             required
                             options={{
                               allowInput: true,
-                              dateFormat: 'd/m/Y'
+                              dateFormat: 'Y-m-d', 
                             }}
                           />
-                          <label htmlFor="birth">
+                          <label htmlFor="dueDateofmoveinDate">
                             Đến ngày <label style={{ color: 'red' }}>*</label>
                           </label>
                         </div>
-                        <label className="input-group-text" htmlFor="birth">
+                        <label className="input-group-text" htmlFor="dueDateofmoveinDate">
                           <i className="bi bi-calendar" style={{ fontSize: '25px' }}></i>
                         </label>
                       </div>
                     </div>
                   </div>
+
+                            {/* tien roomm */}
                   <div
                     className="col-12"
                     style={{
@@ -2935,88 +3146,74 @@ const HomeWData = ({ Motel }) => {
                       <label className="form-check-label" htmlFor="subtraction">
                         <b>Thu tiền hàng tháng</b>
                         <p style={{ margin: '0', color: 'orange' }}>
-                          1 tháng, 0 ngày <span style={{ color: 'black' }}>x 2.000.000 ₫</span>
+                          {contract.collectioncycle} tháng, 0 ngày <span style={{ color: 'black' }}>x {contract.price} ₫</span>
                         </p>
                       </label>
                     </div>
                     <div>
                       <label className="form-check-label" htmlFor="subtraction">
                         <b>Thành tiền</b>
-                        <p style={{ margin: '0' }}>2.000.000 ₫</p>
+                        <p style={{ margin: '0' }}>{contract.price} ₫</p>
                       </label>
                     </div>
                   </div>
+                        {/* tien roomm */}
+
                   <div className="col-12">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="css-i6dzq1 me-2"
-                      style={{ marginTop: '15px' }}>
-                      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                      <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                      <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                    </svg>
+                    <i className="bi bi-shield me-2" style={{marginTop: '15px',fontSize: '25px'}}></i>
                     <div className="title-item-small">
                       <b>Tiền dịch vụ</b>
                       <i className="des">Tính tiền dịch vụ khách xài </i>
                     </div>
                   </div>
+
                   <div className="col-12">
                     <div className="price-items-checkout-layout">
-                      {motelServices.length > 0 ? (
-                        motelServices.map((service) => (
-                          <div key={service.motelServiceId} className="item mt-2">
-                            <div className="item-check-name">
-                              <input
-                                type="checkbox"
-                                className="form-check-input"
-                                checked={formData.selectedServices.some(
-                                  (item) => item.serviceId === service.motelServiceId
-                                )}
-                                onChange={(e) => handleServiceSelection(service.motelServiceId, e.target.checked)}
-                              />
-                              <label htmlFor={`service_${service.motelServiceId}`}>
-                                <b>{service.nameService}</b>
-                                <p>
-                                  Giá: <b>{service.price.toLocaleString('vi-VN')}đ</b> / {service.chargetype}
-                                </p>
-                              </label>
-                            </div>
-
-                            <div className="item-value">
-                              <div className="input-group">
-                                <input
-                                  className="form-control"
-                                  min="0"
-                                  type="number"
-                                  name="quantity"
-                                  value={
-                                    formData.selectedServices.find((item) => item.serviceId === service.motelServiceId)
-                                      ?.quantity || 0
-                                  }
-                                  onChange={(e) =>
-                                    handleQuantityChange(service.motelServiceId, parseInt(e.target.value))
-                                  }
-                                />
-                                <label style={{ fontSize: '12px' }} className="input-group-text">
-                                  {service.chargetype}
-                                </label>
-                              </div>
-                            </div>
+                      {roomSerivces.map((roomSerivce, index) => (
+                      <div className="item" key={index}>
+                        <div className="item-check-name">
+                          <input
+                            className="form-check-input"
+                            type="hidden"
+                            value="23660"
+                          />
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            id={`check_price_item_select_${roomSerivce.service.motelServiceId}`}
+                            checked={roomSerivce.isSelected}
+                            onChange={() => handleCheckboxChange(roomSerivce.service.motelServiceId)} 
+                            name={`price_items[${roomSerivce.service.id}][is_selected]`}
+                          />
+                          <label htmlFor="service">
+                            <b>{roomSerivce.service.nameService}</b>{' '}
+                            <p>
+                              Giá: <b>{roomSerivce.service.price.toLocaleString('vi-VN')}&nbsp;VNĐ</b> /{' '}
+                              {roomSerivce.service.chargetype}
+                            </p>{' '}
+                          </label>
+                        </div>
+                        <div className="item-value">
+                          <div className="input-group">
+                            <input
+                              className="form-control"
+                              min="0"
+                              type="number"
+                              id={`price_item_select_${roomSerivce.service.motelServiceId}`}
+                              placeholder="Nhập giá trị"
+                              value={roomSerivce.quantity}
+                              onChange={(e) => handleInputChangeService(e, roomSerivce.service.motelServiceId)} 
+                            />{' '}
+                            <label className="input-group-text" htmlFor="service">
+                              {roomSerivce.service.chargetype}
+                            </label>
                           </div>
-                        ))
-                      ) : (
-                        <p>Chưa có dịch vụ nào.</p>
-                      )}
+                        </div>
+                      </div>
+                    ))}
                     </div>
                   </div>
+
                   <div
                     className="col-12"
                     style={{
@@ -3031,39 +3228,31 @@ const HomeWData = ({ Motel }) => {
                     <div>
                       <label className="form-check-label" htmlFor="subtraction">
                         <b>Tính tiền dịch vụ</b>
-                        <p style={{ margin: '0' }}>1 dịch vụ </p>
-                        <p style={{ margin: '0', color: 'orange' }}>1 tháng, 0 ngày</p>
+                        <p style={{ margin: '0' }}>Số lượng sử dụng: <b>{roomSerivces.filter(service => service.isSelected).length} dịch vụ</b></p>
+                        <p style={{ margin: '0', color: 'orange' }}>{contract.collectioncycle} tháng, 0 ngày</p>
                       </label>
                     </div>
                     <div>
                       <label className="form-check-label" htmlFor="subtraction">
                         <b>Thành tiền</b>
-                        <p style={{ margin: '0' }}>0 ₫</p>
+                        <p style={{ margin: '0' }}>
+                          {roomSerivces
+                            .filter(service => service.isSelected)
+                            .reduce((total, service) => total + (service.totalPrice || 0), 0)
+                            .toLocaleString('vi-VN')} ₫
+                        </p>
                       </label>
                     </div>
                   </div>
+
                   <div className="col-12">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="css-i6dzq1 me-2"
-                      style={{ marginTop: '15px' }}>
-                      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                      <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                      <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                    </svg>
+                    <i className="bi bi-house" style={{ fontSize: '25px', marginRight: '8px' }}></i>
                     <div className="title-item-small">
                       <b>Cộng thêm / Giảm trừ:</b>
                       <i className="des">Ví dụ giảm ngày tết, giảm trừ covid, thêm tiền phạt... </i>
                     </div>
                   </div>
+
                   <div
                     className="col-12"
                     style={{
@@ -3077,21 +3266,7 @@ const HomeWData = ({ Motel }) => {
                       marginTop: '10px'
                     }}>
                     <div className="icon flex-0" style={{ marginRight: '10px' }}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="feather feather-info">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="16" x2="12" y2="12"></line>
-                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                      </svg>
+                    <i className="bi bi-info-circle" style={{ fontSize: '24px', marginRight: '8px' }}></i>
                     </div>
                     <div className="des flex-1">
                       <label className="form-check-label" htmlFor="subtraction">
@@ -3099,6 +3274,7 @@ const HomeWData = ({ Motel }) => {
                       </label>
                     </div>
                   </div>
+                  
                   <div className="col-12">
                     {additionItems.map((item, index) => (
                       <div key={item.id} className="row g-0 item mt-1 mb-1 border rounded">
@@ -3127,9 +3303,9 @@ const HomeWData = ({ Motel }) => {
                                   type="radio"
                                   name={`addition_items[${index}]['addition']`}
                                   id={`addition_b_bill_${item.id}`}
-                                  value="-1"
-                                  checked={item.addition === -1}
-                                  onChange={() => handleChange(item.id, 'addition', -1)}
+                                  value="0"
+                                  checked={item.addition === 0}
+                                  onChange={() => handleChange(item.id, 'addition', 0)}
                                 />
                                 <label className="form-check-label" htmlFor={`addition_b_bill_${item.id}`}>
                                   Giảm [-]
@@ -3196,47 +3372,51 @@ const HomeWData = ({ Motel }) => {
                       className="btn btn-secondary mt-2"
                       style={{ width: '100%' }}
                       onClick={addNewItem}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="feather feather-plus">
-                        <line x1="12" y1="5" x2="12" y2="19" />
-                        <line x1="5" y1="12" x2="19" y2="12" />
-                      </svg>
+                      <i className="bi bi-plus" style={{ fontSize: '24px', marginRight: '8px' }}></i>
                       Thêm mục cộng thêm / giảm trừ
                     </button>
                   </div>
-                  <div
-                    className="col-12"
-                    style={{
-                      border: '1px solid rgb(32, 169, 231)',
-                      borderRadius: '10px',
-                      backgroundColor: 'rgb(32, 169, 231)',
-                      padding: '10px 15px',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center'
-                    }}>
-                    <div>
-                      <label className="form-check-label" htmlFor="subtraction">
-                        <p style={{ margin: '0' }}>Cộng thêm</p>
-                        <p style={{ margin: '0' }}>Lý do: Chưa có lý do</p>
-                      </label>
-                    </div>
-                    <div>
-                      <label className="form-check-label" htmlFor="subtraction">
-                        <p style={{ margin: '0' }}>Thành tiền</p>
-                        <p style={{ margin: '0' }}>0 ₫</p>
-                      </label>
+
+                  <div className="col-12">
+                    <div
+                      style={{
+                        border: '1px solid rgb(32, 169, 231)',
+                        borderRadius: '10px',
+                        backgroundColor: 'rgb(32, 169, 231)',
+                        padding: '10px 15px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <div>
+                        <label className="form-check-label">
+                          <p style={{ margin: '0' }}>Phát sinh (Cộng/Trừ)</p>
+                          <p style={{ margin: '0', color: 'orange' }}>
+                            {additionItems.length > 0
+                              ? additionItems.map((item) => (
+                                  <span key={item.id}>
+                                    {item.addition === 1 ? 'Cộng: ' : 'Trừ: '}
+                                    {parseFloat(item.additionValue || 0).toLocaleString('vi-VN')} ₫ - Lý do: {item.additionReason || 'Không có'}
+                                    <br />
+                                  </span>
+                                ))
+                              : 'Không có khoản phát sinh'}
+                          </p>
+                        </label>
+                      </div>
+                      <div>
+                        <label className="form-check-label">
+                          <p style={{ margin: '0' }}>Thành tiền phát sinh</p>
+                          <p style={{ margin: '0' }}>
+                            {calculateTotalAddition().toLocaleString('vi-VN')} ₫
+                          </p>
+                        </label>
+                      </div>
                     </div>
                   </div>
+
+
                 </div>
               </div>
               <div className="modal-footer modal-footer--sticky" style={{ backgroundColor: 'white' }}>
@@ -3267,43 +3447,24 @@ const HomeWData = ({ Motel }) => {
                       <span>Tổng cộng hóa đơn</span>
                     </div>
                     <b className="show-total total-price bill-total" style={{ color: '#3c9e47' }}>
-                      2.000.000&nbsp;₫
+                      {(
+                        contract.price +
+                        roomSerivces
+                          .filter(service => service.isSelected)
+                          .reduce((total, service) => total + (service.totalPrice || 0), 0) +
+                        calculateTotalAddition()
+                      ).toLocaleString('vi-VN')} ₫
                     </b>
                   </div>
+
                 </div>
 
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="feather feather-x">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                  </svg>
+                  <i className="bi bi-x" ></i>
                   Đóng
                 </button>
-                <button type="button" id="submit-room" className="btn btn-primary" onClick={handleAppNote}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="feather feather-plus">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                  </svg>
+                <button type="button" id="submit-room" className="btn btn-primary" onClick={createInvoice}>
+                  <i className="bi bi-plus"></i>
                   Lưu
                 </button>
               </div>

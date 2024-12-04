@@ -19,7 +19,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InvoiceRequest {
     private UUID contractId; // ID hợp đồng
+    private String invoiceReason; // ly do thu tien
     private YearMonth invoiceCreateMonth; // Tháng lập phiếu
     private LocalDate invoiceCreateDate; // Ngày lập phiếu
-    private List<DetailInvoiceRequest> serviceDetails;
+    private List<InvoiceDetailServiceRequest> serviceDetails;
+    private List<InvoiceDetailDeviceRequest> DeviceDetails;
+    private List<InvoiceAdditionItemRequest> additionItems;
 }
