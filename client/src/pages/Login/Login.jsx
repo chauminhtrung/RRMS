@@ -8,7 +8,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import './Login.css'
 import { env } from '~/configs/environment'
-import { GOOGLE_AUTH_URL } from '~/apis/oauth2'
+import { GoogleLogin } from '@react-oauth/google'
+import { jwtDecode } from 'jwt-decode'
+import { checkRegister } from '~/apis/accountAPI'
+
 // import ValidCaptcha from '~/components/ValidCaptcha'
 // import { toast } from 'react-toastify'
 
@@ -18,7 +21,138 @@ const Login = ({ setUsername, setAvatar }) => {
   const [password, setPassword] = useState('')
   // const [validCaptcha, setValidCaptcha] = useState(false)
   const navigate = useNavigate()
+  const loginWithGoogle = async (credentialResponse) => {
+    try {
+      const decoded = jwtDecode(credentialResponse.credential)
+      console.log('Decoded JWT:', decoded)
+      console.log('Decoded JWT:', decoded.sub)
+      if (decoded != null) {
+        const response = await checkRegister(decoded.email)
+        if (!response.result) {
+          const accountnew = {
+            username: decoded.email,
+            phone: decoded.email,
+            password: decoded.sub,
+            userType: 'CUSTOMER'
+          }
+          try {
+            const response = await axios.post(`${env.API_URL}/authen/register`, accountnew, {
+              headers: {
+                'ngrok-skip-browser-warning': '69420'
+              }
+            })
+            if (response.data.status === true) {
+              const account = { phone: decoded.email, password: decoded.sub }
 
+              try {
+                const response = await axios.post(`${env.API_URL}/authen/login`, account)
+
+                if (response.status === 200) {
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Đăng nhập thành công!',
+                    text: 'Chào mừng bạn quay trở lại!'
+                  })
+
+                  const usernameFromResponse = response.data.data.username
+                  const avtFromResponse = response.data.data.avatar
+                  const token = response.data.data.token
+
+                  if (!usernameFromResponse) {
+                    throw new Error('Username không tồn tại trong phản hồi từ server')
+                  }
+                  const userData = {
+                    phone: phone,
+                    avatar: avtFromResponse,
+                    username: usernameFromResponse,
+                    token: token // Lưu trữ token
+                  }
+                  sessionStorage.setItem('user', JSON.stringify(userData)) // Lưu dữ liệu người dùng cùng với token
+
+                  // Cập nhật trạng thái trong App
+                  setUsername(usernameFromResponse)
+                  setAvatar(avtFromResponse)
+
+                  navigate('/RRMS') // Điều hướng về trang chính
+                  // window.location.href = '/RRMS'
+                }
+              } catch (error) {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Lỗi',
+                  text: 'Có lỗi xảy ra, vui lòng thử lại.'
+                })
+              }
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Có lỗi xảy ra, vui lòng thử lại.'
+              })
+            }
+          } catch (error) {
+            if (error.response && error.response.data) {
+              Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: error.response.data.message || 'Có lỗi xảy ra, vui lòng thử lại.'
+              })
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Có lỗi xảy ra, vui lòng thử lại.'
+              })
+            }
+          }
+        } else {
+          const account = { phone: decoded.email, password: decoded.sub }
+
+          try {
+            const response = await axios.post(`${env.API_URL}/authen/login`, account)
+
+            if (response.status === 200) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Đăng nhập thành công!',
+                text: 'Chào mừng bạn quay trở lại!'
+              })
+
+              const usernameFromResponse = response.data.data.username
+              const avtFromResponse = response.data.data.avatar
+              const token = response.data.data.token
+
+              if (!usernameFromResponse) {
+                throw new Error('Username không tồn tại trong phản hồi từ server')
+              }
+              const userData = {
+                phone: phone,
+                avatar: avtFromResponse,
+                username: usernameFromResponse,
+                token: token // Lưu trữ token
+              }
+              sessionStorage.setItem('user', JSON.stringify(userData)) // Lưu dữ liệu người dùng cùng với token
+
+              // Cập nhật trạng thái trong App
+              setUsername(usernameFromResponse)
+              setAvatar(avtFromResponse)
+
+              navigate('/RRMS') // Điều hướng về trang chính
+              // window.location.href = '/RRMS'
+            }
+          } catch (error) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Lỗi',
+              text: 'Có lỗi xảy ra, vui lòng thử lại.'
+            })
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
   const handleSubmit = async (event) => {
     event.preventDefault()
 
@@ -104,9 +238,6 @@ const Login = ({ setUsername, setAvatar }) => {
       }
     }
   }
-  const handleGoogleLogin = () => {
-    window.location.href = GOOGLE_AUTH_URL // Chuyển hướng người dùng đến Google OAuth2
-  }
 
   return (
     <div
@@ -177,21 +308,13 @@ const Login = ({ setUsername, setAvatar }) => {
                   </div>
                   <hr className="my-2" />
                   <div className="mt-2 text-center">
-                    <button type="button" className="btn-social btn-social-outline btn-facebook">
-                      <FacebookIcon />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleGoogleLogin}
-                      className="btn-social btn-social-outline btn-googleplus">
-                      <GoogleIcon />
-                    </button>
-                    <button type="button" className="btn-social btn-social-outline btn-twitter">
-                      <TwitterIcon />
-                    </button>
-                    <button type="button" className="btn-social btn-social-outline btn-Instagram">
-                      <InstagramIcon />
-                    </button>
+                    <GoogleLogin
+                      onSuccess={(credentialResponse) => loginWithGoogle(credentialResponse)}
+                      onError={() => {
+                        console.log('Login Failed')
+                      }}
+                    />
+                    ;
                   </div>
                   <div className="form-group d-flex justify-content-between">
                     <Link className="btn btn-link" to="/register">

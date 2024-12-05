@@ -49,3 +49,12 @@ export const acceptChangePassword = async (data) => {
   })
   return response.data
 }
+
+export const checkRegister = async (data) => {
+  const response = await axios.post(`${env.API_URL}/authen/checkregister/${data}`, {
+    headers: {
+      'ngrok-skip-browser-warning': '69420'
+    }
+  })
+  return response.data
+}

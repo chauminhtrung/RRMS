@@ -302,4 +302,22 @@ public class AuthenController {
                     .build();
         }
     }
+
+    @PostMapping("/checkregister/{phone}")
+    public ApiResponse<Boolean> checkRegister(@PathVariable("phone") String phone) {
+        boolean result = accountService.existsByPhone(phone);
+        if (result) {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("success")
+                    .result(true)
+                    .build();
+        } else {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.NOT_FOUND.value())
+                    .message("error")
+                    .result(false)
+                    .build();
+        }
+    }
 }
