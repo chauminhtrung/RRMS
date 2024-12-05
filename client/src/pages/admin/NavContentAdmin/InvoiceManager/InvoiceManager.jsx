@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
 import YearMonthFilter from '../YearMonthFilter'
 import Flatpickr from 'react-flatpickr'
@@ -14,15 +14,15 @@ import { ReactTabulator } from 'react-tabulator'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { env } from '~/configs/environment'
-
+import ModalEditInvoice from './ModalEditInvoice'
 
 const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
-  const [invoices, setInvoices] = useState([]); // Lưu danh sách hóa đơn
-  const [loading, setLoading] = useState(false); // Trạng thái tải dữ liệu
-  const [error, setError] = useState(null); // Trạng thái lỗi
-  const [ setShowMenu] = useState(null) 
-  const [ setMenuPosition] = useState({ x: 0, y: 0 })
-
+  const [invoice, setInvoice] = useState({}) // Lưu 1 hóa đơn ***************************************
+  const [invoices, setInvoices] = useState([]) // Lưu danh sách hóa đơn
+  const [setLoading] = useState(false) // Trạng thái tải dữ liệu
+  const [setError] = useState(null) // Trạng thái lỗi
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 })
+  const [showMenu, setShowMenu] = useState(null) // Trạng thái của menu hiện tại
   //2 thang nay la cho chon tu ngay --> den ngay (tu tinh den 1 thang sau)
   const [fromDate, setFromDate] = useState(null)
   const [toDate, setToDate] = useState(null)
@@ -30,54 +30,59 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   const [items, setItems] = useState([{}]) // Khởi tạo một mục
   // chuyen doi cac buoc
   const [step, setStep] = useState(1) // Bước mặc định là bước 1
+  const menuRef = useRef(null) // Tham chiếu đến menu
+  const [modalOpenInvoice, setModalOpenInvoice] = useState(false) //mo modal *****************
+
+  const toggleModalInvoice = () => {
+    setModalOpenInvoice(!modalOpenInvoice)
+  }
 
   const fetchInvoices = async (motelId) => {
-    setLoading(true);
-    setError(null);
+    setLoading(true)
+    setError(null)
 
     try {
-      const token = sessionStorage.getItem('user') 
-        ? JSON.parse(sessionStorage.getItem('user')).token 
-        : null;
+      const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
 
       const response = await axios.get(`${env.API_URL}/invoices/motel/${motelId}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setInvoices(response.data); // Gán dữ liệu vào state
+          Authorization: `Bearer ${token}`
+        }
+      })
+      setInvoices(response.data) // Gán dữ liệu vào state
     } catch (err) {
-      console.error(err);
-      setError('Không thể tải danh sách hóa đơn');
+      console.error(err)
+      setError('Không thể tải danh sách hóa đơn')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
+
+  // Hàm xử lý nhấn ngoài menu ***************************************
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      // Kiểm tra xem nhấn ngoài menu hay không
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setShowMenu(null)
+      }
+    }
+
+    document.addEventListener('click', handleClickOutside)
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [])
 
   useEffect(() => {
-    setIsAdmin(true);
+    setIsAdmin(true)
     // Thay '37e828fc-5bba-4fe4-907f-0058a7b6b94d' bằng ID nhà trọ cụ thể
-    const motelId = "37e828fc-5bba-4fe4-907f-0058a7b6b94d";
-    fetchInvoices(motelId);
-  }, []);
+    const motelId = '37e828fc-5bba-4fe4-907f-0058a7b6b94d'
+    fetchInvoices(motelId)
+  }, [])
 
-  
-  const handleActionClick = (e, roomId) => {
-    e.stopPropagation() // Ngừng sự kiện click để không bị bắt bởi sự kiện ngoài
-    // In ra tọa độ
-    // Sử dụng getBoundingClientRect để lấy vị trí chính xác của phần tử được nhấn
-    const targetElement = e.currentTarget
-    const rect = targetElement.getBoundingClientRect()
-
-    // Cập nhật vị trí của menu sao cho hiển thị gần biểu tượng Action
-    setMenuPosition({
-      x: rect.left + window.scrollX + rect.width / 2, // Centered horizontally
-      y: rect.top + window.scrollY + rect.height // Below the icon
-    })
-    setShowMenu(roomId) // Hiển thị menu cho hàng với roomId tương ứng
-  }
-  
   const columns = [
+    //an no di khoi table
+    { title: 'Id Hoa Don', field: 'InvoiceId', hozAlign: 'left', width: 165, visible: false },
     {
       title: '',
       field: 'drag',
@@ -97,19 +102,21 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
     },
     { title: 'Tên phòng', field: 'roomName', hozAlign: 'left', width: 165 },
     { title: 'Tiền phòng', field: 'roomPrice', formatter: 'money', hozAlign: 'right', width: 165 },
-    { title: 'Tiền điện', field: 'electricityCost',hozAlign: 'right', width: 165},
-    { title: 'Tiền nước', field: 'waterCost',hozAlign: 'right',width: 165},
+    { title: 'Tiền điện', field: 'electricityCost', hozAlign: 'right', width: 165 },
+    { title: 'Tiền nước', field: 'waterCost', hozAlign: 'right', width: 165 },
     { title: 'Thu/Trả cọc', field: 'deposit', formatter: 'money', hozAlign: 'right', width: 165 },
     { title: 'Cộng thêm/Giảm trừ', field: 'adjustments', formatter: 'money', hozAlign: 'right', width: 165 },
     { title: 'Tổng cộng', field: 'total', formatter: 'money', hozAlign: 'right', width: 165 },
     { title: 'Cần thu', field: 'amountDue', formatter: 'money', hozAlign: 'right', width: 165 },
-    { title: 'Trạng thái', field: 'status', hozAlign: 'center', width: 170, },
+    { title: 'Trạng thái', field: 'status', hozAlign: 'center', width: 170 },
     {
       title: 'Action',
       field: 'Action',
       hozAlign: 'center',
+      //thay bang Id hoa don
+      //lay Id cua hoa don ******************************
       formatter: (cell) => {
-        const rowId = cell.getRow().getData().roomId
+        const rowId = cell.getRow().getData().InvoiceId
         const element = document.createElement('div')
         element.classList.add('icon-menu-action')
         element.innerHTML = `
@@ -119,13 +126,12 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
             <circle cx="12" cy="19" r="1"></circle>
           </svg>
         `
-
+        //su kien gan Id hoa don cho ShowMenu ***********************************
         element.addEventListener('click', (e) => handleActionClick(e, rowId))
         return element
       }
     }
-  ];
-  
+  ]
 
   const data = invoices.map((invoice) => ({
     roomName: invoice.roomName,
@@ -139,9 +145,8 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
     ),
     total: invoice.totalAmount,
     amountDue: invoice.totalAmount, // Có thể điều chỉnh logic nếu cần
-    status: 'Chưa thu', // Thay bằng trạng thái thực tế nếu API cung cấp
-  }));
-  
+    status: 'Chưa thu' // Thay bằng trạng thái thực tế nếu API cung cấp
+  }))
 
   const options = {
     height: '400px', // Chiều cao của bảng
@@ -162,7 +167,6 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
     }
   }
 
-  
   //xoa muc
   const handleRemove = (index) => {
     setItems(items.filter((_, i) => i !== index)) // Xóa mục theo chỉ số
@@ -199,6 +203,180 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
     alert('Hóa đơn đã được lập thành công!')
   }
 
+  //ham de lay gia tri cua tk hoa don do r set vai tk hoa don [invoice,setInvoice] da tao (nua phai thay lai bang du lieu that goi api)
+  const fetchDataInvoice = async (id) => {
+    try {
+      // Lấy dữ liệu hóa đơn theo InvoiceId
+      const invoice = data2.find((item) => item.InvoiceId === id)
+      setInvoice(invoice)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  //data phai tra ve Id cua hoa don do de biet khi nao dang nhan vao hoa don gi ******************************************
+  const data2 = [
+    {
+      //invoiceId ko nhat thiet xuat hien nhung van phai co trong table de lay id cua no
+      InvoiceId: '3123y1783t123278t312378',
+      roomId: 1,
+      roomName: 'Phòng 101',
+      roomPrice: 2000000,
+      electricityCost: 500000,
+      waterCost: 300000,
+      deposit: 1000000,
+      adjustments: -200000,
+      total: 3600000,
+      amountDue: 3600000,
+      status: 'thu'
+    },
+    {
+      InvoiceId: 'dasbdiasybiy123',
+      roomId: 2,
+      roomName: 'Phòng 102',
+      roomPrice: 2500000,
+      electricityCost: 400000,
+      waterCost: 200000,
+      deposit: 1500000,
+      adjustments: 100000,
+      total: 4200000,
+      amountDue: 4200000,
+      status: 'chua'
+    },
+    {
+      InvoiceId: 'asasadas',
+      roomId: 3,
+      roomName: 'Phòng 103',
+      roomPrice: 1800000,
+      electricityCost: 450000,
+      waterCost: 250000,
+      deposit: 1200000,
+      adjustments: 0,
+      total: 3500000,
+      amountDue: 3500000,
+      status: 'thu'
+    }
+  ]
+
+  //nhan vao de set lay du lieu cua 1 hoa don do ***************************************
+  const handleActionClick = (e, InvoiceId) => {
+    e.stopPropagation() // Ngừng sự kiện click để không bị bắt bởi sự kiện ngoài
+    // In ra tọa độ
+    // Sử dụng getBoundingClientRect để lấy vị trí chính xác của phần tử được nhấn
+    const targetElement = e.currentTarget
+    const rect = targetElement.getBoundingClientRect()
+
+    // Cập nhật vị trí của menu sao cho hiển thị gần biểu tượng Action
+    setMenuPosition({
+      x: rect.left + window.scrollX + rect.width / 2, // Centered horizontally
+      y: rect.top + window.scrollY + rect.height // Below the icon
+    })
+    setShowMenu(InvoiceId) // Hiển thị menu cho hàng với roomId tương ứng
+    fetchDataInvoice(InvoiceId)
+  }
+
+  //Menu thu tien r ***************************************
+  const menuItems = [
+    { id: 1, label: 'Xem chi tiết hóa đơn', icon: 'arrow-right-circle' },
+    { id: 2, label: 'Gửi hóa đơn qua App', icon: 'share-2' },
+    { id: 3, label: 'In hóa đơn', icon: 'printer' },
+    { id: 4, label: 'Chia sẻ hóa đơn', icon: 'share' },
+    { id: 5, label: 'Gửi hóa đơn qua Zalo', icon: 'share-2' },
+    { id: 6, label: 'Xóa hóa đơn', icon: 'trash-2', textClass: 'text-danger' }
+  ]
+  //Menu chua thu tien r ***************************************
+  const menuItemsThu = [
+    {
+      id: 1,
+      label: 'Xem chi tiết hóa đơn',
+      icon: 'arrow-right-circle' // Feather icon
+    },
+    {
+      id: 2,
+      label: 'Thu tiền',
+      icon: 'dollar-sign', // Feather icon
+      textClass: 'text-success'
+    },
+    {
+      id: 3,
+      label: 'Chỉnh sửa',
+      icon: 'edit-3' // Feather icon
+    },
+    {
+      id: 4,
+      label: 'In hóa đơn',
+      icon: 'printer' // Feather icon
+    },
+    {
+      id: 5,
+      label: 'Chia sẻ hóa đơn',
+      icon: 'share' // Feather icon
+    },
+    {
+      id: 6,
+      label: 'Gửi hóa đơn qua App',
+      icon: 'share-2' // Feather icon
+    },
+    {
+      id: 7,
+      label: 'Gửi hóa đơn qua Zalo',
+      icon: 'share-2', // Custom image icon
+      isImage: true
+    },
+    {
+      id: 8,
+      label: 'Hủy hóa đơn',
+      icon: 'trash-2', // Feather icon
+      textClass: 'text-danger'
+    }
+  ]
+
+  //khi nhan vao may cai muc tren menu ***************************************
+  const handleItemClick = (label) => {
+    //showMenu no la cai Id cua hoa don set tu khi nhan vao mo menu
+    if (label === 'Xem chi tiết hóa đơn') {
+      alert(`Xem chi tiet hoa don cua hoa don ${showMenu}`)
+      //phai co ham o duoi trong moi khi nhan vao menu
+      fetchDataInvoice(showMenu)
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'Gửi hóa đơn qua App') {
+      alert(`gui hoa don cua hoa don ${showMenu}`)
+      fetchDataInvoice(showMenu)
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'In hóa đơn') {
+      alert(`in hoa don cua hoa don ${showMenu}`)
+      fetchDataInvoice(showMenu)
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'Chia sẻ hóa đơn') {
+      alert(`chia se hoa don cua hoa don ${showMenu}`)
+      fetchDataInvoice(showMenu)
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'Gửi hóa đơn qua Zalo') {
+      alert(`gui hoa don cua hoa don ${showMenu}`)
+      fetchDataInvoice(showMenu)
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'Xóa hóa đơn') {
+      alert(` Xóa hóa đơn cua hoa don ${showMenu}`)
+      fetchDataInvoice(showMenu)
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'Thu tiền') {
+      alert(`Thu tiền hóa đơn cua hoa don ${showMenu}`)
+      fetchDataInvoice(showMenu)
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'Hủy hóa đơn') {
+      alert(` Hủy hóa đơn  cua hoa don ${showMenu}`)
+      fetchDataInvoice(showMenu)
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'Chỉnh sửa') {
+      toggleModalInvoice(!modalOpenInvoice)
+      fetchDataInvoice(showMenu)
+      setShowMenu(null) // Đóng menu
+    } else {
+      setShowMenu(null) // Đóng menu
+      alert(`Action: ${label} on room ${showMenu}`)
+    }
+  }
+
   useEffect(() => {
     setIsAdmin(true)
   }, [])
@@ -233,7 +411,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                 data-bs-placement="left"
                 title=""
                 data-bs-original-title="Tạo hóa đơn mới">
-                <i className="bi bi-plus-lg" style={{fontSize: '25px'}}></i>
+                <i className="bi bi-plus-lg" style={{ fontSize: '25px' }}></i>
               </div>
             </div>
             <Link
@@ -248,7 +426,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                 padding: '11px 20px'
               }}
               data-bs-original-title="Cài đặt hiển thị hóa đơn. Xuất, gửi hóa đơn tự động...">
-                <i className="bi bi-gear-fill m-1" style={{ fontSize: '24px' }}></i>
+              <i className="bi bi-gear-fill m-1" style={{ fontSize: '24px' }}></i>
               <span>Cài đặt hóa đơn</span>
             </Link>
             <div className="d-flex">
@@ -257,7 +435,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                 style={{ marginLeft: '10px', marginRight: '10px', padding: '13px 20px' }}
                 id="print"
                 className="btn btn-primary">
-                <i className="bi bi-printer" style={{ fontSize: '24px' }}></i>  In h.đơn
+                <i className="bi bi-printer" style={{ fontSize: '24px' }}></i> In h.đơn
               </button>
               <button
                 style={{ marginRight: '10px', padding: '13px 20px' }}
@@ -331,45 +509,166 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
               <option value="date-desc">Sắp xếp theo ngày giảm dần</option>
               <option value="date-asc">Sắp xếp theo ngày tăng dần</option>
             </select>
-              <i className="bi bi-bar-chart" style={{ fontSize: '24px' }}></i>
+            <i className="bi bi-bar-chart" style={{ fontSize: '24px' }}></i>
           </div>
-        </div>
-
-        <div style={{ position: 'relative', height: '100%' }}>
-          {loading ? (
-            // Hiển thị trạng thái đang tải
-            <div className="loading-state">
-              <p>Đang tải dữ liệu...</p>
-            </div>
-          ) : error ? (
-            // Hiển thị trạng thái lỗi
-            <div className="error-state">
-              <p>{error}</p>
-            </div>
-          ) : data.length === 0 ? (
-            // Hiển thị placeholder nếu không có dữ liệu
-            <div className="custom-placeholder">
-              <img
-                src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Fempty-box-4085812-3385481.webp?alt=media&token=eaf37b59-00e3-4d16-8463-5441f54fb60e"
-                alt="Không có dữ liệu"
-                className="placeholder-image"
-              />
-              <div className="placeholder-text">Không tìm thấy dữ liệu!</div>
-            </div>
-          ) : (
-            // Hiển thị bảng dữ liệu
-            <ReactTabulator
-              className="my-custom-table"
-              columns={columns}
-              data={data}
-              options={options}
-              placeholder={<h1></h1>}
-            />
-          )}
         </div>
       </div>
 
-
+      {/* Table va xu ly menu o duoi **************************** */}
+      <div className="mt-3" style={{ marginLeft: '15px', marginRight: '10px', position: 'relative' }}>
+        <ReactTabulator
+          className="my-custom-table rounded" // Thêm lớp tùy chỉnh nếu cần
+          columns={columns}
+          options={options}
+          data={data2}
+          placeholder={<h1></h1>} // Sử dụng placeholder tùy chỉnh
+        />
+        {showMenu && (
+          <div
+            className="tabulator-menu tabulator-popup-container "
+            ref={menuRef} // Gán ref đúng cách cho menu
+            style={{
+              position: 'absolute',
+              top: menuPosition.y - 676,
+              left: menuPosition.x - 350,
+              transform: 'translateX(-50%)'
+            }}>
+            {/* menu thay doi theo trang trai */}
+            {(invoice && invoice.status === 'thu' ? menuItems : menuItemsThu).map((item) => (
+              <div
+                key={item.id}
+                // Gắn ref vào tag này
+                className={`tabulator-menu-item ${item.textClass || ''}`}
+                onClick={() => handleItemClick(item.label)} // Đóng menu khi chọn item
+                {...(item.label === 'Thiết lập tài sản' && {
+                  'data-bs-toggle': 'modal',
+                  'data-bs-target': '#assetSelect'
+                })}>
+                {item.icon && (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className={`feather feather-${item.icon}`}>
+                    {item.icon === 'dollar-sign' && (
+                      <>
+                        <line x1="12" y1="1" x2="12" y2="23" />
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                      </>
+                    )}
+                    {item.icon === 'arrow-right-circle' && (
+                      <>
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 16 16 12 12 8" />
+                        <line x1="8" y1="12" x2="16" y2="12" />
+                      </>
+                    )}
+                    {item.icon === 'user' && (
+                      <>
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                      </>
+                    )}
+                    {item.icon === 'refresh-ccw' && (
+                      <>
+                        <polyline points="1 4 1 10 7 10" />
+                        <polyline points="23 20 23 14 17 14" />
+                        <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" />
+                      </>
+                    )}
+                    {item.icon === 'bell' && (
+                      <>
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                      </>
+                    )}
+                    {item.icon === 'settings' && (
+                      <>
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                      </>
+                    )}
+                    {item.icon === 'log-out' && (
+                      <>
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                      </>
+                    )}
+                    {item.icon === 'trello' && (
+                      <>
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <rect x="7" y="7" width="3" height="9"></rect>
+                        <rect x="14" y="7" width="3" height="5"></rect>
+                      </>
+                    )}
+                    {item.icon === 'printer' && (
+                      <>
+                        <polyline points="6 9 6 2 18 2 18 9" />
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                        <rect x="6" y="14" width="12" height="8" />
+                      </>
+                    )}
+                    {item.icon === 'edit-3' && (
+                      <>
+                        <path d="M12 20h9" />
+                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                      </>
+                    )}
+                    {item.icon === 'share' && (
+                      <>
+                        <path d="M4 12v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4" />
+                        <polyline points="16 6 12 2 8 6" />
+                        <line x1="12" y1="2" x2="12" y2="15" />
+                      </>
+                    )}
+                    {item.icon === 'trash-2' && (
+                      <>
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m5 0V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" />
+                        <line x1="10" y1="11" x2="10" y2="17" />
+                        <line x1="14" y1="11" x2="14" y2="17" />
+                      </>
+                    )}
+                    {item.icon === 'share-2' && (
+                      <>
+                        <circle cx="18" cy="5" r="3" />
+                        <circle cx="6" cy="12" r="3" />
+                        <circle cx="18" cy="19" r="3" />
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                      </>
+                    )}
+                    {item.icon === 'x-circle' && (
+                      <>
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="15" y1="9" x2="9" y2="15" />
+                        <line x1="9" y1="9" x2="15" y2="15" />
+                      </>
+                    )}
+                    {item.icon === 'truck' && (
+                      <>
+                        <rect x="1" y="3" width="15" height="13" />
+                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                        <circle cx="5.5" cy="18.5" r="2.5" />
+                        <circle cx="18.5" cy="18.5" r="2.5" />
+                      </>
+                    )}
+                    {/* Thêm các biểu tượng khác nếu cần */}
+                  </svg>
+                )}
+                {item.label}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
       {/* Modal add block  */}
       <div
         className="modal fade"
@@ -478,7 +777,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                           }}>
                           <div>
                             <div style={{ color: 'rgb(78, 188, 237)' }}>
-                            <i className="bi bi-check" style={{ fontSize: '50px' }}></i>
+                              <i className="bi bi-check" style={{ fontSize: '50px' }}></i>
                             </div>
                             <div style={{ color: 'rgb(78, 188, 237)', fontWeight: '700', fontSize: '18px' }}>
                               Đã chốt <span className="count-deal-price-item">0</span> phòng
@@ -511,7 +810,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                                   <label htmlFor="month-series">Tháng lập phiếu</label>
                                 </div>
                                 <label className="input-group-text" htmlFor="month">
-                                <i className="bi bi-calendar" style={{ fontSize: '24px' }}></i>
+                                  <i className="bi bi-calendar" style={{ fontSize: '24px' }}></i>
                                 </label>
                               </div>
                             </div>
@@ -735,13 +1034,13 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                       </button>
                       {step === 2 && (
                         <button type="button" className="btn btn-primary m-1" onClick={handlePreviousStep}>
-                           <i className="bi bi-arrow-left" style={{ fontSize: '17px' }}></i> Bước 1: Chốt dịch vụ
+                          <i className="bi bi-arrow-left" style={{ fontSize: '17px' }}></i> Bước 1: Chốt dịch vụ
                         </button>
                       )}
                       {/* Nút chuyển đến bước tiếp theo hoặc nút lập hóa đơn (tùy theo bước hiện tại) */}
                       {step === 1 ? (
                         <button type="button" className="btn btn-primary m-1" onClick={handleNextStep}>
-                          Bước 2: Lập hóa đơn <i className="bi bi-arrow-right" style={{ fontSize: '17px' }}></i> 
+                          Bước 2: Lập hóa đơn <i className="bi bi-arrow-right" style={{ fontSize: '17px' }}></i>
                         </button>
                       ) : (
                         <button type="button" className="btn btn-primary m-1" onClick={handleSubmit}>
@@ -756,6 +1055,13 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
           </form>
         </div>
       </div>
+
+      <ModalEditInvoice
+        modalOpen={modalOpenInvoice}
+        toggleModal={toggleModalInvoice}
+        //invoice dang la du lieu ao
+        roomId={invoice ? invoice.InvoiceId : <></>}
+      />
     </div>
   )
 }
