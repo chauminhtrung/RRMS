@@ -20,7 +20,6 @@ createRoot(document.getElementById('root')).render(
         <GoogleOAuthProvider clientId="1019315956449-qqsk7qh3qenmdt9s6vvnrtchnii72mdn.apps.googleusercontent.com">
           <App />
         </GoogleOAuthProvider>
-        ;
       </BrowserRouter>
       <ToastContainer />
     </ThemeProvider>
