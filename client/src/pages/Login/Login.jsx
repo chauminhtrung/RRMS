@@ -1,8 +1,4 @@
 import { useState } from 'react'
-import FacebookIcon from '@mui/icons-material/Facebook'
-import GoogleIcon from '@mui/icons-material/Google'
-import TwitterIcon from '@mui/icons-material/Twitter'
-import InstagramIcon from '@mui/icons-material/Instagram'
 import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
@@ -11,6 +7,8 @@ import { env } from '~/configs/environment'
 import { GoogleLogin } from '@react-oauth/google'
 import { jwtDecode } from 'jwt-decode'
 import { checkRegister } from '~/apis/accountAPI'
+import { LoginSocialFacebook } from 'reactjs-social-login'
+import { FacebookLoginButton } from 'react-social-login-buttons'
 
 // import ValidCaptcha from '~/components/ValidCaptcha'
 // import { toast } from 'react-toastify'
@@ -24,8 +22,6 @@ const Login = ({ setUsername, setAvatar }) => {
   const loginWithGoogle = async (credentialResponse) => {
     try {
       const decoded = jwtDecode(credentialResponse.credential)
-      console.log('Decoded JWT:', decoded)
-      console.log('Decoded JWT:', decoded.sub)
       if (decoded != null) {
         const response = await checkRegister(decoded.email)
         if (!response.result) {
@@ -42,115 +38,114 @@ const Login = ({ setUsername, setAvatar }) => {
               }
             })
             if (response.data.status === true) {
-              const account = { phone: decoded.email, password: decoded.sub }
-
-              try {
-                const response = await axios.post(`${env.API_URL}/authen/login`, account)
-
-                if (response.status === 200) {
-                  Swal.fire({
-                    icon: 'success',
-                    title: 'Đăng nhập thành công!',
-                    text: 'Chào mừng bạn quay trở lại!'
-                  })
-
-                  const usernameFromResponse = response.data.data.username
-                  const avtFromResponse = response.data.data.avatar
-                  const token = response.data.data.token
-
-                  if (!usernameFromResponse) {
-                    throw new Error('Username không tồn tại trong phản hồi từ server')
-                  }
-                  const userData = {
-                    phone: phone,
-                    avatar: avtFromResponse,
-                    username: usernameFromResponse,
-                    token: token // Lưu trữ token
-                  }
-                  sessionStorage.setItem('user', JSON.stringify(userData)) // Lưu dữ liệu người dùng cùng với token
-
-                  // Cập nhật trạng thái trong App
-                  setUsername(usernameFromResponse)
-                  setAvatar(avtFromResponse)
-
-                  navigate('/RRMS') // Điều hướng về trang chính
-                  // window.location.href = '/RRMS'
-                }
-              } catch (error) {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Lỗi',
-                  text: 'Có lỗi xảy ra, vui lòng thử lại.'
-                })
-              }
+              loginSocial(decoded.email, decoded.sub)
             } else {
               Swal.fire({
                 icon: 'error',
                 title: 'Lỗi',
                 text: 'Có lỗi xảy ra, vui lòng thử lại.'
               })
-            }
-          } catch (error) {
-            if (error.response && error.response.data) {
-              Swal.fire({
-                icon: 'error',
-                title: 'Lỗi',
-                text: error.response.data.message || 'Có lỗi xảy ra, vui lòng thử lại.'
-              })
-            } else {
-              Swal.fire({
-                icon: 'error',
-                title: 'Lỗi',
-                text: 'Có lỗi xảy ra, vui lòng thử lại.'
-              })
-            }
-          }
-        } else {
-          const account = { phone: decoded.email, password: decoded.sub }
-
-          try {
-            const response = await axios.post(`${env.API_URL}/authen/login`, account)
-
-            if (response.status === 200) {
-              Swal.fire({
-                icon: 'success',
-                title: 'Đăng nhập thành công!',
-                text: 'Chào mừng bạn quay trở lại!'
-              })
-
-              const usernameFromResponse = response.data.data.username
-              const avtFromResponse = response.data.data.avatar
-              const token = response.data.data.token
-
-              if (!usernameFromResponse) {
-                throw new Error('Username không tồn tại trong phản hồi từ server')
-              }
-              const userData = {
-                phone: phone,
-                avatar: avtFromResponse,
-                username: usernameFromResponse,
-                token: token // Lưu trữ token
-              }
-              sessionStorage.setItem('user', JSON.stringify(userData)) // Lưu dữ liệu người dùng cùng với token
-
-              // Cập nhật trạng thái trong App
-              setUsername(usernameFromResponse)
-              setAvatar(avtFromResponse)
-
-              navigate('/RRMS') // Điều hướng về trang chính
-              // window.location.href = '/RRMS'
             }
           } catch (error) {
             Swal.fire({
               icon: 'error',
               title: 'Lỗi',
-              text: 'Có lỗi xảy ra, vui lòng thử lại.'
+              text: error.response.data.message || 'Có lỗi xảy ra, vui lòng thử lại.'
             })
           }
+        } else {
+          loginSocial(decoded.email, decoded.sub)
         }
       }
     } catch (error) {
       console.error('Error:', error)
+    }
+  }
+
+  const loginWithFacebook = async (param) => {
+    try {
+      if (param != null) {
+        const response = await checkRegister(param.data.userID)
+        console.log(response.result)
+
+        if (!response.result) {
+          const accountnew = {
+            username: param.data.email,
+            phone: param.data.userID,
+            password: param.data.userID,
+            userType: 'CUSTOMER'
+          }
+          try {
+            const response = await axios.post(`${env.API_URL}/authen/register`, accountnew, {
+              headers: {
+                'ngrok-skip-browser-warning': '69420'
+              }
+            })
+            if (response.data.status === true) {
+              loginSocial(param.data.userID, param.data.userID)
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Có lỗi xảy ra, vui lòng thử lại.'
+              })
+            }
+          } catch (error) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Lỗi',
+              text: error.response.data.message || 'Có lỗi xảy ra, vui lòng thử lại.'
+            })
+          }
+        } else {
+          loginSocial(param.data.userID, param.data.userID)
+        }
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
+  const loginSocial = async (phone, pass) => {
+    const account = { phone: phone, password: pass }
+
+    try {
+      const response = await axios.post(`${env.API_URL}/authen/login`, account)
+
+      if (response.status === 200) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Đăng nhập thành công!',
+          text: 'Chào mừng bạn quay trở lại!'
+        })
+
+        const usernameFromResponse = response.data.data.username
+        const avtFromResponse = response.data.data.avatar
+        const token = response.data.data.token
+
+        if (!usernameFromResponse) {
+          throw new Error('Username không tồn tại trong phản hồi từ server')
+        }
+        const userData = {
+          phone: phone,
+          avatar: avtFromResponse,
+          username: usernameFromResponse,
+          token: token // Lưu trữ token
+        }
+        sessionStorage.setItem('user', JSON.stringify(userData)) // Lưu dữ liệu người dùng cùng với token
+
+        // Cập nhật trạng thái trong App
+        setUsername(usernameFromResponse)
+        setAvatar(avtFromResponse)
+
+        navigate('/RRMS') // Điều hướng về trang chính
+        // window.location.href = '/RRMS'
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Lỗi',
+        text: 'Có lỗi xảy ra, vui lòng thử lại.'
+      })
     }
   }
   const handleSubmit = async (event) => {
@@ -307,15 +302,28 @@ const Login = ({ setUsername, setAvatar }) => {
                     </button>
                   </div>
                   <hr className="my-2" />
-                  <div className="mt-2 text-center">
-                    <GoogleLogin
-                      onSuccess={(credentialResponse) => loginWithGoogle(credentialResponse)}
-                      onError={() => {
-                        console.log('Login Failed')
-                      }}
-                    />
-                    ;
+                  <div className="login-container mt-1">
+                    <div className="row justify-content-center">
+                      <div className="col-5">
+                        <GoogleLogin
+                          className="google-login"
+                          onSuccess={(credentialResponse) => loginWithGoogle(credentialResponse)}
+                          onError={() => {
+                            console.log('Login Failed')
+                          }}
+                        />
+                      </div>
+                      <div className="col-5">
+                        <LoginSocialFacebook
+                          appId="601101715756733"
+                          onResolve={(param) => loginWithFacebook(param)}
+                          onReject={(error) => console.log(error)}>
+                          <FacebookLoginButton className="facebook-login" />
+                        </LoginSocialFacebook>
+                      </div>
+                    </div>
                   </div>
+
                   <div className="form-group d-flex justify-content-between">
                     <Link className="btn btn-link" to="/register">
                       Tạo tài khoản
