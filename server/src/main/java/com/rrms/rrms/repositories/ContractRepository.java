@@ -87,4 +87,6 @@ public interface ContractRepository extends JpaRepository<Contract, UUID> {
     //            "AND DATE_ADD(c.firstTime, INTERVAL (c.leaseTerm MONTH)) >= CURDATE() " +
     //            "AND c.landlord = :usernameLandlord")
     //    long countExpiringContracts(@Param("usernameLandlord") Account usernameLandlord);
+
+    List<Contract> findByRoomRoomId(UUID roomId);
 }

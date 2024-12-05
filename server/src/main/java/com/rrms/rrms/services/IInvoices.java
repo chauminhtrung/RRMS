@@ -9,5 +9,5 @@ import com.rrms.rrms.dto.response.InvoiceResponse;
 public interface IInvoices {
     InvoiceResponse createInvoice(InvoiceRequest request);
 
-    List<InvoiceResponse> getInvoicesByContractId(UUID contractId);
+    List<InvoiceResponse> getInvoicesByMotelId(UUID motelId);
 }

@@ -23,7 +23,7 @@ public class Invoice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID invoiceId;//test
+    private UUID invoiceId; // test
 
     @Column(columnDefinition = "VARCHAR(100)")
     private String invoiceReason;
