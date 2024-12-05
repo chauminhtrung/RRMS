@@ -8,11 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rrms.rrms.dto.request.InvoiceRequest;
+import com.rrms.rrms.dto.request.UpdateInvoiceRequest;
 import com.rrms.rrms.dto.response.InvoiceResponse;
 import com.rrms.rrms.services.IInvoices;
 
@@ -35,6 +37,12 @@ public class InvoiceController {
     @PostMapping("/create")
     public ResponseEntity<InvoiceResponse> createInvoice(@RequestBody InvoiceRequest request) {
         InvoiceResponse response = invoices.createInvoice(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<InvoiceResponse> updateInvoice(@RequestBody UpdateInvoiceRequest request) {
+        InvoiceResponse response = invoices.updateInvoice(request);
         return ResponseEntity.ok(response);
     }
 

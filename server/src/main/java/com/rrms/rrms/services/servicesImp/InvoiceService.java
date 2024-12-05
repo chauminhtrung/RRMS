@@ -15,6 +15,7 @@ import com.rrms.rrms.dto.request.InvoiceAdditionItemRequest;
 import com.rrms.rrms.dto.request.InvoiceDetailDeviceRequest;
 import com.rrms.rrms.dto.request.InvoiceDetailServiceRequest;
 import com.rrms.rrms.dto.request.InvoiceRequest;
+import com.rrms.rrms.dto.request.UpdateInvoiceRequest;
 import com.rrms.rrms.dto.response.InvoiceAdditionItemResponse;
 import com.rrms.rrms.dto.response.InvoiceDeviceDetailResponse;
 import com.rrms.rrms.dto.response.InvoiceResponse;
@@ -55,6 +56,51 @@ public class InvoiceService implements IInvoices {
 
     @Autowired
     private RoomRepository roomRepository;
+
+    @Override
+    public List<InvoiceResponse> getInvoicesByMotelId(UUID motelId) {
+        // Lấy danh sách tất cả các phòng thuộc về motel
+        List<Room> rooms = roomRepository.findByMotelMotelId(motelId);
+
+        // Từ danh sách phòng, lấy ra các hợp đồng
+        List<Contract> contracts = rooms.stream()
+                .flatMap(room -> contractRepository.findByRoomRoomId(room.getRoomId()).stream())
+                .collect(Collectors.toList());
+
+        // Từ danh sách hợp đồng, lấy ra tất cả các hóa đơn
+        List<Invoice> invoices = contracts.stream()
+                .flatMap(contract -> invoiceRepository.findByContractContractId(contract.getContractId()).stream())
+                .collect(Collectors.toList());
+
+        // Map dữ liệu hóa đơn sang response
+        return invoices.stream()
+                .map(invoice -> {
+                    List<InvoiceDetail> details =
+                            detailInvoiceRepository.findByInvoiceInvoiceId(invoice.getInvoiceId());
+
+                    LocalDate moveInDate = invoice.getContract()
+                            .getMoveinDate()
+                            .toInstant()
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate();
+                    LocalDate dueDateOfMoveInDate = moveInDate.plusDays(30);
+
+                    // Tính toán tổng tiền dịch vụ cho mỗi hóa đơn
+                    double totalServiceAmount = 0;
+                    if (details != null) {
+                        for (InvoiceDetail detail : details) {
+                            if (detail.getRoomService() != null) {
+                                MotelService service = detail.getRoomService().getService();
+                                int quantity = detail.getRoomServiceQuantity();
+                                totalServiceAmount += service.getPrice() * quantity;
+                            }
+                        }
+                    }
+
+                    return mapToResponse(invoice, details, moveInDate, dueDateOfMoveInDate, totalServiceAmount);
+                })
+                .collect(Collectors.toList());
+    }
 
     @Override
     public InvoiceResponse createInvoice(InvoiceRequest request) {
@@ -233,47 +279,101 @@ public class InvoiceService implements IInvoices {
     }
 
     @Override
-    public List<InvoiceResponse> getInvoicesByMotelId(UUID motelId) {
-        // Lấy danh sách tất cả các phòng thuộc về motel
-        List<Room> rooms = roomRepository.findByMotelMotelId(motelId);
+    public InvoiceResponse updateInvoice(UpdateInvoiceRequest request) {
 
-        // Từ danh sách phòng, lấy ra các hợp đồng
-        List<Contract> contracts = rooms.stream()
-                .flatMap(room -> contractRepository.findByRoomRoomId(room.getRoomId()).stream())
-                .collect(Collectors.toList());
+        // Bước 1: Lấy hóa đơn cần cập nhật từ cơ sở dữ liệu
+        Invoice invoice = invoiceRepository
+                .findById(request.getInvoiceId())
+                .orElseThrow(() -> new RuntimeException("Hóa đơn không tồn tại"));
 
-        // Từ danh sách hợp đồng, lấy ra tất cả các hóa đơn
-        List<Invoice> invoices = contracts.stream()
-                .flatMap(contract -> invoiceRepository.findByContractContractId(contract.getContractId()).stream())
-                .collect(Collectors.toList());
+        // Bước 2: Cập nhật thông tin cơ bản của hóa đơn
+        if (request.getInvoiceReason() != null) {
+            invoice.setInvoiceReason(request.getInvoiceReason());
+        }
 
-        // Map dữ liệu hóa đơn sang response
-        return invoices.stream()
-                .map(invoice -> {
-                    List<InvoiceDetail> details =
-                            detailInvoiceRepository.findByInvoiceInvoiceId(invoice.getInvoiceId());
+        if (request.getInvoiceUpdateMonth() != null) {
+            invoice.setInvoiceCreateMonth(request.getInvoiceUpdateMonth());
+        }
 
-                    LocalDate moveInDate = invoice.getContract()
-                            .getMoveinDate()
-                            .toInstant()
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDate();
-                    LocalDate dueDateOfMoveInDate = moveInDate.plusDays(30);
+        if (request.getInvoiceUpdateDate() != null) {
+            invoice.setInvoiceCreateDate(request.getInvoiceUpdateDate());
+            invoice.setDueDate(request.getInvoiceUpdateDate().plusDays(7)); // Cập nhật ngày hết hạn
+        }
 
-                    // Tính toán tổng tiền dịch vụ cho mỗi hóa đơn
-                    double totalServiceAmount = 0;
-                    if (details != null) {
-                        for (InvoiceDetail detail : details) {
-                            if (detail.getRoomService() != null) {
-                                MotelService service = detail.getRoomService().getService();
-                                int quantity = detail.getRoomServiceQuantity();
-                                totalServiceAmount += service.getPrice() * quantity;
-                            }
-                        }
-                    }
+        // Bước 3: Cập nhật chi tiết các dịch vụ
+        if (request.getServiceDetails() != null) {
+            List<InvoiceDetail> updatedServiceDetails = new ArrayList<>();
+            for (InvoiceDetailServiceRequest serviceRequest : request.getServiceDetails()) {
+                InvoiceDetail detail = new InvoiceDetail();
+                RoomService roomService = roomServiceRepository
+                        .findById(serviceRequest.getRoomServiceId())
+                        .orElseThrow(() -> new RuntimeException("Dịch vụ phòng không tồn tại"));
 
-                    return mapToResponse(invoice, details, moveInDate, dueDateOfMoveInDate, totalServiceAmount);
-                })
-                .collect(Collectors.toList());
+                MotelService service = roomService.getService();
+                if (service == null) {
+                    throw new RuntimeException("Dịch vụ nhà nghỉ không tồn tại");
+                }
+
+                int quantity = serviceRequest.getQuantity() != null ? serviceRequest.getQuantity() : 1;
+                detail.setInvoice(invoice);
+                detail.setRoomService(roomService);
+                detail.setRoomServiceQuantity(quantity);
+                updatedServiceDetails.add(detail);
+            }
+            invoice.setDetailInvoices(updatedServiceDetails); // Cập nhật lại danh sách chi tiết dịch vụ
+        }
+
+        // Bước 4: Cập nhật chi tiết các thiết bị
+        if (request.getDeviceDetails() != null) {
+            List<InvoiceDetail> updatedDeviceDetails = new ArrayList<>();
+            for (InvoiceDetailDeviceRequest deviceRequest : request.getDeviceDetails()) {
+                InvoiceDetail detail = new InvoiceDetail();
+                RoomDevice roomDevice = roomDeviceRepository
+                        .findById(deviceRequest.getRoomDeviceId())
+                        .orElseThrow(() -> new RuntimeException("Thiết bị phòng không tồn tại"));
+
+                detail.setInvoice(invoice);
+                detail.setRoomDevice(roomDevice);
+                updatedDeviceDetails.add(detail);
+            }
+            invoice.getDetailInvoices().addAll(updatedDeviceDetails); // Gộp các chi tiết thiết bị
+        }
+
+        // Bước 5: Cập nhật các khoản bổ sung
+        if (request.getAdditionItems() != null) {
+            List<InvoiceAdditionItem> updatedAdditions = new ArrayList<>();
+            for (InvoiceAdditionItemRequest additionRequest : request.getAdditionItems()) {
+                InvoiceAdditionItem addition = new InvoiceAdditionItem();
+                addition.setInvoice(invoice);
+                addition.setReason(additionRequest.getReason());
+                addition.setAmount(additionRequest.getAmount());
+                addition.setIsAddition(additionRequest.getIsAddition());
+                updatedAdditions.add(addition);
+            }
+            invoice.setAdditionItems(updatedAdditions); // Gán lại danh sách các khoản bổ sung
+        }
+
+        // Bước 6: Lưu hóa đơn sau khi cập nhật
+        invoiceRepository.save(invoice);
+
+        // Bước 7: Trả về phản hồi
+        return mapToResponse(
+                invoice,
+                invoice.getDetailInvoices(),
+                invoice.getContract()
+                        .getMoveinDate()
+                        .toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate(),
+                invoice.getDueDate(), // Ngày hết hạn đã được cập nhật
+                calculateTotalServiceAmount(invoice.getDetailInvoices()));
+    }
+
+    private double calculateTotalServiceAmount(List<InvoiceDetail> details) {
+        return details.stream()
+                .filter(detail -> detail.getRoomService() != null)
+                .mapToDouble(
+                        detail -> detail.getRoomService().getService().getPrice() * detail.getRoomServiceQuantity())
+                .sum();
     }
 }
