@@ -37,15 +37,13 @@ import RentRoomModal from '../NavContentAdmin/RentRoomModal'
 import ModalCreateContract from '../NavContentAdmin/ContractManage/ModalCreateContract'
 import ReserveAPlaceModal from './ReserveAPlace/ReserveAPlaceModal'
 import ReserveAPlaceDetail from './ReserveAPlace/ReserveAPlaceDetail'
-const HomeWData = ({ Motel}) => {
-  const { motelId, roomId } = useParams();
 import ModalReportContract from '../NavContentAdmin/ContractManage/ModalReportContract'
 import ModalCancelReportContract from '../NavContentAdmin/ContractManage/ModalCancelReportContract'
 import ModalEndContract from '../NavContentAdmin/ContractManage/ModalEndContract'
 import ModalChangeRoom from '../NavContentAdmin/ContractManage/ModalChangeRoom'
 import ModalExtendContract from '../NavContentAdmin/ContractManage/ModalExtendContract'
-const HomeWData = ({ Motel }) => {
-  const { motelId } = useParams()
+const HomeWData = ({ Motel}) => {
+  const { motelId, roomId } = useParams();
   const [rooms, setRooms] = useState([])
   // State quản lý trạng thái của checkbox
   const [motelServices, setMotelServices] = useState([])
