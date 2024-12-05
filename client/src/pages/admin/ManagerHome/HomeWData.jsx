@@ -1416,7 +1416,6 @@ const HomeWData = ({ Motel}) => {
           isAddition: item.addition,
         })),        
       };
-      console.log("Dữ liệu gửi đi:", JSON.stringify(updatedInvoiceData, null, 2));
       if (!updatedInvoiceData.contractId || updatedInvoiceData.serviceDetails.length === 0 || !updatedInvoiceData.deviceDetails) {
         throw new Error('Thiếu thông tin hợp đồng, dịch vụ hoặc thiết bị.');
       }

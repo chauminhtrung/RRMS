@@ -12,8 +12,71 @@ import 'react-tabulator/lib/styles.css' // required styles
 import 'react-tabulator/lib/css/tabulator.min.css' // theme
 import { ReactTabulator } from 'react-tabulator'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
+import { env } from '~/configs/environment'
+
 
 const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
+  const [invoices, setInvoices] = useState([]); // Lưu danh sách hóa đơn
+  const [loading, setLoading] = useState(false); // Trạng thái tải dữ liệu
+  const [error, setError] = useState(null); // Trạng thái lỗi
+  const [ setShowMenu] = useState(null) 
+  const [ setMenuPosition] = useState({ x: 0, y: 0 })
+
+  //2 thang nay la cho chon tu ngay --> den ngay (tu tinh den 1 thang sau)
+  const [fromDate, setFromDate] = useState(null)
+  const [toDate, setToDate] = useState(null)
+  //them cai muc cong tru vi li do
+  const [items, setItems] = useState([{}]) // Khởi tạo một mục
+  // chuyen doi cac buoc
+  const [step, setStep] = useState(1) // Bước mặc định là bước 1
+
+  const fetchInvoices = async (motelId) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const token = sessionStorage.getItem('user') 
+        ? JSON.parse(sessionStorage.getItem('user')).token 
+        : null;
+
+      const response = await axios.get(`${env.API_URL}/invoices/motel/${motelId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setInvoices(response.data); // Gán dữ liệu vào state
+    } catch (err) {
+      console.error(err);
+      setError('Không thể tải danh sách hóa đơn');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    setIsAdmin(true);
+    // Thay '37e828fc-5bba-4fe4-907f-0058a7b6b94d' bằng ID nhà trọ cụ thể
+    const motelId = "37e828fc-5bba-4fe4-907f-0058a7b6b94d";
+    fetchInvoices(motelId);
+  }, []);
+
+  
+  const handleActionClick = (e, roomId) => {
+    e.stopPropagation() // Ngừng sự kiện click để không bị bắt bởi sự kiện ngoài
+    // In ra tọa độ
+    // Sử dụng getBoundingClientRect để lấy vị trí chính xác của phần tử được nhấn
+    const targetElement = e.currentTarget
+    const rect = targetElement.getBoundingClientRect()
+
+    // Cập nhật vị trí của menu sao cho hiển thị gần biểu tượng Action
+    setMenuPosition({
+      x: rect.left + window.scrollX + rect.width / 2, // Centered horizontally
+      y: rect.top + window.scrollY + rect.height // Below the icon
+    })
+    setShowMenu(roomId) // Hiển thị menu cho hàng với roomId tương ứng
+  }
+  
   const columns = [
     {
       title: '',
@@ -32,49 +95,52 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
         return element
       }
     },
-    { title: 'Tên phòng', field: 'roomName', hozAlign: 'left', width: 169 },
-    { title: 'Tiền phòng', field: 'roomPrice', formatter: 'money', hozAlign: 'right', width: 169 },
-    { title: 'Tiền điện', field: 'electricityCost',hozAlign: 'right', width: 169},
-    { title: 'Tiền nước', field: 'waterCost',hozAlign: 'right',width: 169},
-    { title: 'Thu/Trả cọc', field: 'deposit', formatter: 'money', hozAlign: 'right', width: 169 },
-    { title: 'Cộng thêm/Giảm trừ', field: 'adjustments', formatter: 'money', hozAlign: 'right', width: 170 },
-    { title: 'Tổng cộng', field: 'total', formatter: 'money', hozAlign: 'right', width: 170 },
-    { title: 'Cần thu', field: 'amountDue', formatter: 'money', hozAlign: 'right', width: 170 },
+    { title: 'Tên phòng', field: 'roomName', hozAlign: 'left', width: 165 },
+    { title: 'Tiền phòng', field: 'roomPrice', formatter: 'money', hozAlign: 'right', width: 165 },
+    { title: 'Tiền điện', field: 'electricityCost',hozAlign: 'right', width: 165},
+    { title: 'Tiền nước', field: 'waterCost',hozAlign: 'right',width: 165},
+    { title: 'Thu/Trả cọc', field: 'deposit', formatter: 'money', hozAlign: 'right', width: 165 },
+    { title: 'Cộng thêm/Giảm trừ', field: 'adjustments', formatter: 'money', hozAlign: 'right', width: 165 },
+    { title: 'Tổng cộng', field: 'total', formatter: 'money', hozAlign: 'right', width: 165 },
+    { title: 'Cần thu', field: 'amountDue', formatter: 'money', hozAlign: 'right', width: 165 },
     { title: 'Trạng thái', field: 'status', hozAlign: 'center', width: 170, },
-    { title: 'Action', field: 'Action', hozAlign: 'center', width: 70, },
+    {
+      title: 'Action',
+      field: 'Action',
+      hozAlign: 'center',
+      formatter: (cell) => {
+        const rowId = cell.getRow().getData().roomId
+        const element = document.createElement('div')
+        element.classList.add('icon-menu-action')
+        element.innerHTML = `
+          <svg    xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" class="feather feather-more-vertical">
+            <circle cx="12" cy="12" r="1"></circle>
+            <circle cx="12" cy="5" r="1"></circle>
+            <circle cx="12" cy="19" r="1"></circle>
+          </svg>
+        `
+
+        element.addEventListener('click', (e) => handleActionClick(e, rowId))
+        return element
+      }
+    }
   ];
   
 
-  const data = [
-    {
-      id: 1,
-      roomName: 'nokia',
-      roomPrice: 2000000,
-      electricityCost: 1700, // Đơn giá điện
-      electricityUsage: 1, // kWh
-      waterCost: 18000, // Đơn giá nước
-      deposit: 0,
-      adjustments: 0,
-      total: 2020000,
-      amountDue: 2020000,
-      status: 'Chưa thu',
-    },
-    {
-      id: 2,
-      roomName: 'nokia',
-      rentPeriod: '30/11/2024 - 30/12/2024',
-      roomPrice: 2000000,
-      electricityCost: 0,
-      electricityUsage: 0,
-      waterCost: 0,
-      waterUsage: 0,
-      deposit: 0,
-      adjustments: 0,
-      total: 2000000,
-      amountDue: 0,
-      status: 'Đã thu xong',
-    },
-  ];
+  const data = invoices.map((invoice) => ({
+    roomName: invoice.roomName,
+    roomPrice: invoice.roomPrice,
+    electricityCost: invoice.serviceDetails.find((s) => s.serviceName === 'Dịch vụ điện')?.totalPrice || 0,
+    waterCost: invoice.serviceDetails.find((s) => s.serviceName === 'Dịch vụ nước')?.totalPrice || 0,
+    deposit: invoice.deposit,
+    adjustments: invoice.additionItems?.reduce(
+      (sum, item) => (item.addition ? sum + item.amount : sum - item.amount),
+      0
+    ),
+    total: invoice.totalAmount,
+    amountDue: invoice.totalAmount, // Có thể điều chỉnh logic nếu cần
+    status: 'Chưa thu', // Thay bằng trạng thái thực tế nếu API cung cấp
+  }));
   
 
   const options = {
@@ -96,14 +162,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
     }
   }
 
-  //2 thang nay la cho chon tu ngay --> den ngay (tu tinh den 1 thang sau)
-  const [fromDate, setFromDate] = useState(null)
-  const [toDate, setToDate] = useState(null)
-  //them cai muc cong tru vi li do
-  const [items, setItems] = useState([{}]) // Khởi tạo một mục
-  // chuyen doi cac buoc
-  const [step, setStep] = useState(1) // Bước mặc định là bước 1
-
+  
   //xoa muc
   const handleRemove = (index) => {
     setItems(items.filter((_, i) => i !== index)) // Xóa mục theo chỉ số
@@ -275,16 +334,20 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
               <i className="bi bi-bar-chart" style={{ fontSize: '24px' }}></i>
           </div>
         </div>
+
         <div style={{ position: 'relative', height: '100%' }}>
-          <ReactTabulator
-            className="my-custom-table" // Thêm lớp tùy chỉnh nếu cần
-            columns={columns}
-            data={data}
-            options={options}
-            placeholder={<h1></h1>} // Sử dụng placeholder tùy chỉnh
-          />
-          {/* Thêm div cho hình ảnh và chữ nếu không có dữ liệu */}
-          {data.length === 0 && (
+          {loading ? (
+            // Hiển thị trạng thái đang tải
+            <div className="loading-state">
+              <p>Đang tải dữ liệu...</p>
+            </div>
+          ) : error ? (
+            // Hiển thị trạng thái lỗi
+            <div className="error-state">
+              <p>{error}</p>
+            </div>
+          ) : data.length === 0 ? (
+            // Hiển thị placeholder nếu không có dữ liệu
             <div className="custom-placeholder">
               <img
                 src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Fempty-box-4085812-3385481.webp?alt=media&token=eaf37b59-00e3-4d16-8463-5441f54fb60e"
@@ -293,9 +356,20 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
               />
               <div className="placeholder-text">Không tìm thấy dữ liệu!</div>
             </div>
+          ) : (
+            // Hiển thị bảng dữ liệu
+            <ReactTabulator
+              className="my-custom-table"
+              columns={columns}
+              data={data}
+              options={options}
+              placeholder={<h1></h1>}
+            />
           )}
         </div>
       </div>
+
+
       {/* Modal add block  */}
       <div
         className="modal fade"
