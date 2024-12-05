@@ -34,7 +34,9 @@ public interface RoomRepository extends JpaRepository<Room, UUID> {
 
     List<Room> findByMotel(Motel motel); // Thêm phương thức truy vấn theo Motel
 
-    @Query("SELECT r FROM Room r LEFT JOIN r.contracts c WHERE c IS NULL AND r.motel = :motel")
+    @Query("SELECT r FROM Room r " + "LEFT JOIN r.contracts c "
+            + "LEFT JOIN r.reserveAPlaces ra "
+            + "WHERE c IS NULL AND ra IS NULL AND r.motel = :motel")
     List<Room> findRoomsWithoutContractsByMotel(Motel motel);
 
     @Query("SELECT r FROM Room r JOIN r.contracts c WHERE r.motel.motelId = :motelId AND c IS NOT NULL")

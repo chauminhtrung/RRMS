@@ -207,7 +207,7 @@ function FilterSearch({ setSearchData, searchKeyWord, setKeyword, keyword, setTo
                       <div>
                         <b className="province-location-show">Hồ Chí Minh</b>
                         <br />
-                        <span className="district-location-show">{t('quan-1')}</span>
+                        <span className="district-location-show">{keyword || 'Quận 1'}</span>
                       </div>
                     </div>
                     <div

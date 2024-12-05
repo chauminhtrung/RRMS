@@ -104,6 +104,11 @@ public class PaymentController {
         return "success";
     }
 
+    // vnpay
+    // 9704198526191432198
+    // NGUYEN VAN A
+    // 07/15
+    //	123456
     @PostMapping("/create_payment")
     @PermitAll
     public ResponseEntity<?> getPay(@RequestBody Map<String, Object> requestData, HttpServletRequest request)
@@ -269,5 +274,11 @@ public class PaymentController {
         // Trả về clientSecret cho frontend
         StripeResponse responseDto = new StripeResponse(intent.getId(), intent.getClientSecret());
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/list_payment")
+    public ResponseEntity<List<com.rrms.rrms.models.Payment>> getAllPayments() {
+        List<com.rrms.rrms.models.Payment> payments = paymentService.getAllPayments();
+        return ResponseEntity.ok(payments);
     }
 }

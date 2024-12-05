@@ -5,4 +5,5 @@ public enum ContractStatus {
     ENDED,
     IATExpire,
     Stake,
+    ReportEnd
 }

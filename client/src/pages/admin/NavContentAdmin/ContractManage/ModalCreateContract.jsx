@@ -312,13 +312,6 @@ function ModalCreateContract({ toggleModal, modalOpen, roomId, motelId }) {
       // Chờ tất cả các yêu cầu API hoàn tất
       await Promise.all([...deletePromises, ...updateOrAddPromises])
 
-      // Hiển thị thông báo thành công
-      Swal.fire({
-        icon: 'success',
-        title: 'Thông báo',
-        text: 'Tất cả dịch vụ phòng đã được cập nhật thành công!'
-      })
-
       // Cập nhật danh sách dịch vụ trong phòng
       fetchDataServiceRooms(room.roomId)
     } catch (error) {

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
+import com.rrms.rrms.repositories.PaymentRepository;
 import com.rrms.rrms.services.IPayment;
 
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,9 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class PaymentService implements IPayment {
+
+    private final PaymentRepository paymentRepository;
+
     @Value("${paypal.client.id}")
     private String clientId;
 
@@ -79,5 +83,10 @@ public class PaymentService implements IPayment {
         PaymentExecution paymentExecution = new PaymentExecution();
         paymentExecution.setPayerId(payerId);
         return payment.execute(apiContext, paymentExecution);
+    }
+
+    @Override
+    public List<com.rrms.rrms.models.Payment> getAllPayments() {
+        return paymentRepository.findAll();
     }
 }

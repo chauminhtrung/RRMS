@@ -120,7 +120,10 @@ public class BulletinBoardController {
         List<BulletinBoardSearchResponse> resultElastic = bulletinBoardService.searchBulletinBoards(address);
         List<BulletinBoardSearchResponse> result = new ArrayList<>();
         resultElastic.forEach(bulletinBoardSearchResponse -> {
-            result.add(bulletinBoardService.findByBulletinBoardId(bulletinBoardSearchResponse.getBulletinBoardId()));
+            if (bulletinBoardService.findByBulletinBoardId(bulletinBoardSearchResponse.getBulletinBoardId()) != null) {
+                result.add(
+                        bulletinBoardService.findByBulletinBoardId(bulletinBoardSearchResponse.getBulletinBoardId()));
+            }
         });
         log.info("Search bulletin board successfully");
         return ApiResponse.<List<BulletinBoardSearchResponse>>builder()

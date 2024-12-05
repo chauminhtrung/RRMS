@@ -10,8 +10,6 @@ function ReserveAPlaceDetail({ toggleModal, modalOpen, roomId }) {
     if (roomId) {
       try {
         const response = await getRoomById(roomId) // Lấy dữ liệu phòng từ API
-        console.log(response)
-
         if (response) {
           setRoom(response)
         }
