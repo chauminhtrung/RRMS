@@ -38,9 +38,9 @@ public class InvoiceController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/contract/{contractId}")
-    public ResponseEntity<List<InvoiceResponse>> getInvoicesByContractId(@PathVariable UUID contractId) {
-        List<InvoiceResponse> responses = invoices.getInvoicesByContractId(contractId);
+    @GetMapping("/motel/{motelId}")
+    public ResponseEntity<List<InvoiceResponse>> getInvoicesByMotelId(@PathVariable UUID motelId) {
+        List<InvoiceResponse> responses = invoices.getInvoicesByMotelId(motelId);
         return ResponseEntity.ok(responses);
     }
 }

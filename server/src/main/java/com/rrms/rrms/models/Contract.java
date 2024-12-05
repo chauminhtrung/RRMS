@@ -104,6 +104,4 @@ public class Contract {
     // Ngay ket thuc hop dong
     @Column(columnDefinition = "DATE")
     private Date reportcloseContract;
-
-
 }

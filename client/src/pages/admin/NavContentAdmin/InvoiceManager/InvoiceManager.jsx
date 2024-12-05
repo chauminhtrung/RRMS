@@ -14,9 +14,68 @@ import { ReactTabulator } from 'react-tabulator'
 import { Link } from 'react-router-dom'
 
 const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
-  const columns = []
+  const columns = [
+    {
+      title: '',
+      field: 'drag',
+      hozAlign: 'center',
+      width: 20,
+      rowHandle: true,
+      formatter: () => {
+        const element = document.createElement('div')
+        element.style.cursor = 'move' // Đổi con trỏ thành 4 hướng khi hover
+        element.innerHTML = `
+          <div class="tabulator-row-handle-bar" style="width: 50%;height: 3px;margin-top: 3px;background: #666;margin-left: 10px"></div>
+          <div class="tabulator-row-handle-bar" style="width: 50%;height: 3px;margin-top: 3px;background: #666;margin-left: 10px"></div>
+          <div class="tabulator-row-handle-bar" style="width: 50%;height: 3px;margin-top: 3px;background: #666;margin-left: 10px"></div>
+      `
+        return element
+      }
+    },
+    { title: 'Tên phòng', field: 'roomName', hozAlign: 'left', width: 169 },
+    { title: 'Tiền phòng', field: 'roomPrice', formatter: 'money', hozAlign: 'right', width: 169 },
+    { title: 'Tiền điện', field: 'electricityCost',hozAlign: 'right', width: 169},
+    { title: 'Tiền nước', field: 'waterCost',hozAlign: 'right',width: 169},
+    { title: 'Thu/Trả cọc', field: 'deposit', formatter: 'money', hozAlign: 'right', width: 169 },
+    { title: 'Cộng thêm/Giảm trừ', field: 'adjustments', formatter: 'money', hozAlign: 'right', width: 170 },
+    { title: 'Tổng cộng', field: 'total', formatter: 'money', hozAlign: 'right', width: 170 },
+    { title: 'Cần thu', field: 'amountDue', formatter: 'money', hozAlign: 'right', width: 170 },
+    { title: 'Trạng thái', field: 'status', hozAlign: 'center', width: 170, },
+    { title: 'Action', field: 'Action', hozAlign: 'center', width: 70, },
+  ];
+  
 
-  const data = []
+  const data = [
+    {
+      id: 1,
+      roomName: 'nokia',
+      roomPrice: 2000000,
+      electricityCost: 1700, // Đơn giá điện
+      electricityUsage: 1, // kWh
+      waterCost: 18000, // Đơn giá nước
+      deposit: 0,
+      adjustments: 0,
+      total: 2020000,
+      amountDue: 2020000,
+      status: 'Chưa thu',
+    },
+    {
+      id: 2,
+      roomName: 'nokia',
+      rentPeriod: '30/11/2024 - 30/12/2024',
+      roomPrice: 2000000,
+      electricityCost: 0,
+      electricityUsage: 0,
+      waterCost: 0,
+      waterUsage: 0,
+      deposit: 0,
+      adjustments: 0,
+      total: 2000000,
+      amountDue: 0,
+      status: 'Đã thu xong',
+    },
+  ];
+  
 
   const options = {
     height: '400px', // Chiều cao của bảng
@@ -115,20 +174,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                 data-bs-placement="left"
                 title=""
                 data-bs-original-title="Tạo hóa đơn mới">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="feather feather-plus">
-                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
+                <i className="bi bi-plus-lg" style={{fontSize: '25px'}}></i>
               </div>
             </div>
             <Link
@@ -143,20 +189,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                 padding: '11px 20px'
               }}
               data-bs-original-title="Cài đặt hiển thị hóa đơn. Xuất, gửi hóa đơn tự động...">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="feather feather-settings m-1">
-                <circle cx="12" cy="12" r="3"></circle>
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-              </svg>
+                <i className="bi bi-gear-fill m-1" style={{ fontSize: '24px' }}></i>
               <span>Cài đặt hóa đơn</span>
             </Link>
             <div className="d-flex">
@@ -165,65 +198,16 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                 style={{ marginLeft: '10px', marginRight: '10px', padding: '13px 20px' }}
                 id="print"
                 className="btn btn-primary">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="feather feather-printer">
-                  <polyline points="6 9 6 2 18 2 18 9"></polyline>
-                  <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-                  <rect x="6" y="14" width="12" height="8"></rect>
-                </svg>
-                In h.đơn
+                <i className="bi bi-printer" style={{ fontSize: '24px' }}></i>  In h.đơn
               </button>
               <button
                 style={{ marginRight: '10px', padding: '13px 20px' }}
                 id="download-excel-template-2"
                 className="btn btn-primary">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="feather feather-file-text">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <line x1="16" y1="13" x2="8" y2="13"></line>
-                  <line x1="16" y1="17" x2="8" y2="17"></line>
-                  <polyline points="10 9 9 9 8 9"></polyline>
-                </svg>
-                Xuất excel(Rút gọn)
+                <i className="bi bi-file-earmark-text" style={{ fontSize: '24px' }}></i> Xuất excel(Rút gọn)
               </button>
               <button id="download-excel-template-1" style={{ padding: '13px 20px' }} className="btn btn-primary">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="feather feather-file-text">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <line x1="16" y1="13" x2="8" y2="13"></line>
-                  <line x1="16" y1="17" x2="8" y2="17"></line>
-                  <polyline points="10 9 9 9 8 9"></polyline>
-                </svg>
-                Xuất excel(Đầy đủ)
+                <i className="bi bi-file-earmark-text" style={{ fontSize: '24px' }}></i> Xuất excel(Đầy đủ)
               </button>
             </div>
           </div>
@@ -231,19 +215,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
         <div className="header-table header-item">
           <div className="d-flex">
             <div className="icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="feather feather-filter">
-                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-              </svg>
+              <i className="bi bi-funnel" style={{ fontSize: '24px' }}></i>
               <span id="filter-count">0</span>
             </div>
             <div className="d-flex">
@@ -300,26 +272,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
               <option value="date-desc">Sắp xếp theo ngày giảm dần</option>
               <option value="date-asc">Sắp xếp theo ngày tăng dần</option>
             </select>
-            <svg
-              viewBox="0 0 24 24"
-              width="24"
-              height="24"
-              stroke="currentColor"
-              strokeWidth="2"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="css-i6dzq1">
-              <line x1="4" y1="21" x2="4" y2="14"></line>
-              <line x1="4" y1="10" x2="4" y2="3"></line>
-              <line x1="12" y1="21" x2="12" y2="12"></line>
-              <line x1="12" y1="8" x2="12" y2="3"></line>
-              <line x1="20" y1="21" x2="20" y2="16"></line>
-              <line x1="20" y1="12" x2="20" y2="3"></line>
-              <line x1="1" y1="14" x2="7" y2="14"></line>
-              <line x1="9" y1="8" x2="15" y2="8"></line>
-              <line x1="17" y1="16" x2="23" y2="16"></line>
-            </svg>
+              <i className="bi bi-bar-chart" style={{ fontSize: '24px' }}></i>
           </div>
         </div>
         <div style={{ position: 'relative', height: '100%' }}>
@@ -371,20 +324,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                       display: 'flex',
                       backgroundColor: 'rgb(111, 171, 232)'
                     }}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="feather feather-dollar-sign">
-                      <line x1="12" y1="1" x2="12" y2="23"></line>
-                      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                    </svg>
+                    <i className="bi bi-currency-dollar" style={{ fontSize: '24px' }}></i>
                   </div>
                   <h5 className="modal-title">
                     Lập hóa đơn nhiều phòng (Lập hóa đơn nhanh)
@@ -439,19 +379,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                                 borderradius: '10px'
                               }}>
                               <div className="text-center" style={{ margin: '20px 0' }}>
-                                <svg
-                                  viewBox="0 0 24 24"
-                                  width="24"
-                                  height="24"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  fill="none"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  className="css-i6dzq1">
-                                  <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-                                  <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-                                </svg>
+                                <i className="bi bi-inbox" style={{ fontSize: '24px' }}></i>
                                 <h6>Thực hiện chốt dịch vụ</h6>
                                 Vui lòng chọn một Chốt dịch vụ từ danh sách phòng để thực hiện chốt dịch vụ
                               </div>
@@ -476,18 +404,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                           }}>
                           <div>
                             <div style={{ color: 'rgb(78, 188, 237)' }}>
-                              <svg
-                                viewBox="0 0 24 24"
-                                width="32"
-                                height="32"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                fill="none"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="css-i6dzq1">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                              </svg>
+                            <i className="bi bi-check" style={{ fontSize: '50px' }}></i>
                             </div>
                             <div style={{ color: 'rgb(78, 188, 237)', fontWeight: '700', fontSize: '18px' }}>
                               Đã chốt <span className="count-deal-price-item">0</span> phòng
@@ -520,22 +437,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                                   <label htmlFor="month-series">Tháng lập phiếu</label>
                                 </div>
                                 <label className="input-group-text" htmlFor="month">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="feather feather-calendar">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                                  </svg>
+                                <i className="bi bi-calendar" style={{ fontSize: '24px' }}></i>
                                 </label>
                               </div>
                             </div>
@@ -571,22 +473,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                                   <label htmlFor="date-add-bill">Ngày lập hóa đơn</label>
                                 </div>
                                 <label className="input-group-text" htmlFor="date-add-bill">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="feather feather-calendar">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                                  </svg>
+                                  <i className="bi bi-calendar" style={{ fontSize: '24px' }}></i>
                                 </label>
                               </div>
                               <div className="invalid-feedback">Vui lòng nhập Ngày lập hóa đơn</div>
@@ -608,22 +495,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                                   <label htmlFor="deadline_bill_date">Hạn đóng tiền</label>
                                 </div>
                                 <label className="input-group-text" htmlFor="deadline_bill_date">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="feather feather-calendar">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                                  </svg>
+                                  <i className="bi bi-calendar" style={{ fontSize: '24px' }}></i>
                                 </label>
                               </div>
                               <div className="invalid-feedback">Vui lòng nhập hạn đóng tiền hóa đơn</div>
@@ -710,22 +582,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                           </div>
                           <div className="loz-alert info mt-2 mb-2">
                             <div className="icon flex-0">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="feather feather-info"
-                                size="20">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="16" x2="12" y2="12"></line>
-                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                              </svg>
+                              <i className="bi bi-info-circle" style={{ fontSize: '24px' }}></i>
                             </div>
                             <div className="des flex-1">
                               <b>Thông tin:</b> Các phòng/giường lập hóa đơn mặc định tính <strong>tròn 1 tháng</strong>
@@ -742,21 +599,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                             <div className="addition-item" id="addition-item">
                               <div className="loz-alert warning" style={{ marginBottom: '10px', marginTop: '10px' }}>
                                 <div className="icon flex-0">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="feather feather-info">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <line x1="12" y1="16" x2="12" y2="12"></line>
-                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                                  </svg>
+                                  <i className="bi bi-info-circle" style={{ fontSize: '24px' }}></i>
                                 </div>
                                 <div className="des flex-1">
                                   Chú ý: Cộng thêm / giảm trừ không nên là tiền cọc. Hãy chọn lý do có tiền cọc để nếu
@@ -775,20 +618,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                                   className="btn btn-secondary"
                                   onClick={handleAddItem}
                                   style={{ width: '100%' }}>
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="feather feather-plus">
-                                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                  </svg>
+                                  <i className="bi bi-plus" style={{ fontSize: '24px' }}></i>
                                   Thêm mục cộng thêm / giảm trừ
                                 </button>
                               </div>
@@ -806,21 +636,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                     <div className="col-12">
                       <div className="loz-alert warning" style={{ marginBottom: '10px', marginTop: '0px' }}>
                         <div className="icon flex-0">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="feather feather-info">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="16" x2="12" y2="12"></line>
-                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                          </svg>
+                          <i className="bi bi-info-circle" style={{ fontSize: '24px' }}></i>
                         </div>
                         <div className="des flex-1">
                           Để gửi hóa đơn tự đơn qua Zalo cho khách bạn phải tạo từng hóa đơn một. Việc gửi tự động cho
@@ -840,65 +656,22 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                     </div>
                     <div className="col-6 text-end">
                       <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="feather feather-x">
-                          <line x1="18" y1="6" x2="6" y2="18"></line>
-                          <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
+                        <i className="bi bi-x" style={{ fontSize: '17px' }}></i>
                         Đóng
                       </button>
                       {step === 2 && (
                         <button type="button" className="btn btn-primary m-1" onClick={handlePreviousStep}>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2">
-                            <polyline points="11 17 6 12 11 7"></polyline>
-                            <polyline points="18 17 13 12 18 7"></polyline>
-                          </svg>
-                          Bước 1: Chốt dịch vụ
+                           <i className="bi bi-arrow-left" style={{ fontSize: '17px' }}></i> Bước 1: Chốt dịch vụ
                         </button>
                       )}
                       {/* Nút chuyển đến bước tiếp theo hoặc nút lập hóa đơn (tùy theo bước hiện tại) */}
                       {step === 1 ? (
                         <button type="button" className="btn btn-primary m-1" onClick={handleNextStep}>
-                          Bước 2: Lập hóa đơn
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2">
-                            <polyline points="13 17 18 12 13 7"></polyline>
-                            <polyline points="6 17 11 12 6 7"></polyline>
-                          </svg>
+                          Bước 2: Lập hóa đơn <i className="bi bi-arrow-right" style={{ fontSize: '17px' }}></i> 
                         </button>
                       ) : (
                         <button type="button" className="btn btn-primary m-1" onClick={handleSubmit}>
-                          Lập hóa đơn
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2">
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                          </svg>
+                          Lập hóa đơn <i className="bi bi-plus" style={{ fontSize: '17px' }}></i>
                         </button>
                       )}
                     </div>

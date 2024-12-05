@@ -1,12 +1,9 @@
 package com.rrms.rrms.controllers;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import com.rrms.rrms.enums.ContractStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -16,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.rrms.rrms.dto.request.ContractRequest;
 import com.rrms.rrms.dto.response.ContractResponse;
+import com.rrms.rrms.enums.ContractStatus;
 import com.rrms.rrms.services.IContractService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -89,9 +87,8 @@ public class ContractController {
     public ResponseEntity<String> updateContractStatus(
             @RequestParam UUID roomId,
             @RequestParam ContractStatus newStatus,
-            @RequestParam(name = "reportCloseDate", required = false)
-            @DateTimeFormat(pattern = "dd-MM-yyyy") Date reportCloseDate) {
-
+            @RequestParam(name = "reportCloseDate", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy")
+                    Date reportCloseDate) {
 
         // Thực hiện cập nhật trạng thái hợp đồng
         int updatedRows = contractService.updateContractStatus(roomId, newStatus, reportCloseDate);
@@ -108,20 +105,17 @@ public class ContractController {
             @RequestParam UUID ContractId,
             @RequestParam UUID roomId,
             @RequestParam Double deposit,
-            @RequestParam Double price, @RequestParam Double debt)
-            {
-
+            @RequestParam Double price,
+            @RequestParam Double debt) {
 
         // Thực hiện cập nhật trạng thái hợp đồng
-   contractService.updateContractDetailsByContractId(ContractId,roomId, deposit, price,debt);
-   return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
+        contractService.updateContractDetailsByContractId(ContractId, roomId, deposit, price, debt);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/update-status-by-days-difference")
     public String updateContractsByDaysDifference(
-            @RequestParam ContractStatus newStatus,
-            @RequestParam int thresholdDays) {
+            @RequestParam ContractStatus newStatus, @RequestParam int thresholdDays) {
         try {
             contractService.updateContractsBasedOnDaysDifference(newStatus, thresholdDays);
             return "Contracts updated successfully.";
@@ -132,8 +126,7 @@ public class ContractController {
 
     @PutMapping("/update-status-by-days-difference2")
     public String updateContractsByDaysDifference2(
-            @RequestParam ContractStatus newStatus,
-            @RequestParam int thresholdDays) {
+            @RequestParam ContractStatus newStatus, @RequestParam int thresholdDays) {
         try {
             contractService.updateContractsBasedOnDaysDifference2(newStatus, thresholdDays);
             return "Contracts updated successfully.";
@@ -142,12 +135,11 @@ public class ContractController {
         }
     }
 
-
     @PutMapping("/update-close-contract")
     public ResponseEntity<String> updateCloseContract(
             @RequestParam UUID contractId,
-            @RequestParam(name = "newCloseContract", required = false)
-            @DateTimeFormat(pattern = "dd-MM-yyyy") Date newCloseContract) {
+            @RequestParam(name = "newCloseContract", required = false) @DateTimeFormat(pattern = "dd-MM-yyyy")
+                    Date newCloseContract) {
         if (newCloseContract == null) {
             return ResponseEntity.badRequest().body("Ngày kết thúc hợp đồng không hợp lệ hoặc không được cung cấp!");
         }
@@ -159,6 +151,4 @@ public class ContractController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
-
 }

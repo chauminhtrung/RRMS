@@ -1,7 +1,6 @@
 CREATE DATABASE rrms;
 
 USE rrms;
-
 DROP DATABASE rrms;
 
 CREATE TABLE accounts (

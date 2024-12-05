@@ -25,13 +25,20 @@ public interface IContractService {
     ContractResponse updateContract(UUID contractId, ContractRequest request);
 
     void deleteContract(UUID contractId);
+
     void deleteContractByRoomId(UUID contractId);
 
     List<ContractResponse> getAllContractsByMotelId(UUID motelId);
+
     void updateContractsBasedOnDaysDifference(ContractStatus newStatus, int thresholdDays);
+
     void updateContractsBasedOnDaysDifference2(ContractStatus newStatus, int thresholdDays);
+
     ContractResponse getAllContractsByRoomId(UUID motelId);
+
     int updateContractStatus(UUID roomId, ContractStatus newStatus, Date reportCloseDate);
+
     void updateContractDetailsByContractId(UUID contractId, UUID roomId, Double deposit, Double price, Double debt);
+
     void updateCloseContract(UUID contractId, Date newCloseContract);
 }

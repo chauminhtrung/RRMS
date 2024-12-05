@@ -3,16 +3,15 @@ package com.rrms.rrms.services.servicesImp;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.rrms.rrms.repositories.PaymentRepository;
 import jakarta.annotation.PostConstruct;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
+import com.rrms.rrms.repositories.PaymentRepository;
 import com.rrms.rrms.services.IPayment;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class PaymentService implements IPayment {
 
     private final PaymentRepository paymentRepository;
+
     @Value("${paypal.client.id}")
     private String clientId;
 
@@ -89,6 +89,4 @@ public class PaymentService implements IPayment {
     public List<com.rrms.rrms.models.Payment> getAllPayments() {
         return paymentRepository.findAll();
     }
-
-
 }

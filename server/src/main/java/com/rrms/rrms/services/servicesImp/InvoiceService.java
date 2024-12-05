@@ -24,12 +24,14 @@ import com.rrms.rrms.models.Invoice;
 import com.rrms.rrms.models.InvoiceAdditionItem;
 import com.rrms.rrms.models.InvoiceDetail;
 import com.rrms.rrms.models.MotelService;
+import com.rrms.rrms.models.Room;
 import com.rrms.rrms.models.RoomDevice;
 import com.rrms.rrms.models.RoomService;
 import com.rrms.rrms.repositories.ContractRepository;
 import com.rrms.rrms.repositories.DetailInvoiceRepository;
 import com.rrms.rrms.repositories.InvoiceRepository;
 import com.rrms.rrms.repositories.RoomDeviceRepository;
+import com.rrms.rrms.repositories.RoomRepository;
 import com.rrms.rrms.repositories.RoomServiceRepository;
 import com.rrms.rrms.services.IInvoices;
 
@@ -50,6 +52,9 @@ public class InvoiceService implements IInvoices {
 
     @Autowired
     private RoomServiceRepository roomServiceRepository;
+
+    @Autowired
+    private RoomRepository roomRepository;
 
     @Override
     public InvoiceResponse createInvoice(InvoiceRequest request) {
@@ -157,6 +162,12 @@ public class InvoiceService implements IInvoices {
         response.setMoveinDate(moveInDate);
         response.setDueDateofmoveinDate(dueDateOfMoveInDate);
 
+        Room room = invoice.getContract().getRoom();
+        if (room != null) {
+            response.setRoomName(room.getName());
+            response.setRoomPrice(room.getPrice());
+        }
+
         // Calculate total additional charges (additions and subtractions)
         double totalAddition = invoice.getAdditionItems() != null
                 ? invoice.getAdditionItems().stream()
@@ -222,12 +233,26 @@ public class InvoiceService implements IInvoices {
     }
 
     @Override
-    public List<InvoiceResponse> getInvoicesByContractId(UUID contractId) {
-        List<Invoice> invoices = invoiceRepository.findByContractContractId(contractId);
+    public List<InvoiceResponse> getInvoicesByMotelId(UUID motelId) {
+        // Lấy danh sách tất cả các phòng thuộc về motel
+        List<Room> rooms = roomRepository.findByMotelMotelId(motelId);
+
+        // Từ danh sách phòng, lấy ra các hợp đồng
+        List<Contract> contracts = rooms.stream()
+                .flatMap(room -> contractRepository.findByRoomRoomId(room.getRoomId()).stream())
+                .collect(Collectors.toList());
+
+        // Từ danh sách hợp đồng, lấy ra tất cả các hóa đơn
+        List<Invoice> invoices = contracts.stream()
+                .flatMap(contract -> invoiceRepository.findByContractContractId(contract.getContractId()).stream())
+                .collect(Collectors.toList());
+
+        // Map dữ liệu hóa đơn sang response
         return invoices.stream()
                 .map(invoice -> {
                     List<InvoiceDetail> details =
                             detailInvoiceRepository.findByInvoiceInvoiceId(invoice.getInvoiceId());
+
                     LocalDate moveInDate = invoice.getContract()
                             .getMoveinDate()
                             .toInstant()

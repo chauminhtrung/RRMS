@@ -1,15 +1,14 @@
 package com.rrms.rrms.models;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
+
+import jakarta.persistence.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
@@ -42,6 +41,4 @@ public class Transaction {
 
     @Column(name = "transaction_type", nullable = false)
     private boolean transactionType; // TRUE cho thu, FALSE cho chi
-
-
 }

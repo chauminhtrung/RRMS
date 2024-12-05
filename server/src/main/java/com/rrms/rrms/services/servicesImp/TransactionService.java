@@ -1,18 +1,18 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.rrms.rrms.dto.request.TransactionRequest;
 import com.rrms.rrms.dto.response.TransactionResponse;
 import com.rrms.rrms.models.Payment;
 import com.rrms.rrms.models.Transaction;
 import com.rrms.rrms.repositories.PaymentRepository;
 import com.rrms.rrms.repositories.TransactionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.UUID;
 
 @Service
 public class TransactionService {
@@ -32,7 +32,8 @@ public class TransactionService {
         transaction.setTransactionType(transactionDTO.isTransactionType());
 
         // Lấy Payment từ paymentId
-        Payment payment = paymentRepository.findById(transactionDTO.getPaymentId())
+        Payment payment = paymentRepository
+                .findById(transactionDTO.getPaymentId())
                 .orElseThrow(() -> new RuntimeException("Payment not found"));
 
         transaction.setPayment(payment);
@@ -67,16 +68,12 @@ public class TransactionService {
 
     public BigDecimal getTotalIncome() {
         List<Transaction> incomes = transactionRepository.findByTransactionType(true);
-        return incomes.stream()
-                .map(Transaction::getAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return incomes.stream().map(Transaction::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getTotalExpense() {
         List<Transaction> expenses = transactionRepository.findByTransactionType(false);
-        return expenses.stream()
-                .map(Transaction::getAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return expenses.stream().map(Transaction::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getProfit() {

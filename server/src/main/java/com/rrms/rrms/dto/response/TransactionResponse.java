@@ -1,11 +1,11 @@
 package com.rrms.rrms.dto.response;
 
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
@@ -20,5 +20,4 @@ public class TransactionResponse {
     private String category;
     private LocalDate transactionDate;
     private boolean transactionType;
-
 }

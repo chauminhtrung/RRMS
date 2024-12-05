@@ -3,6 +3,14 @@ package com.rrms.rrms.services;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.util.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import com.rrms.rrms.dto.request.TenantRequest;
 import com.rrms.rrms.dto.response.TenantResponse;
 import com.rrms.rrms.mapper.TenantMapper;
@@ -11,13 +19,6 @@ import com.rrms.rrms.models.Tenant;
 import com.rrms.rrms.repositories.RoomRepository;
 import com.rrms.rrms.repositories.TenantRepository;
 import com.rrms.rrms.services.servicesImp.TenantService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
-import java.util.*;
 
 class TenantServiceTest {
 
@@ -29,6 +30,7 @@ class TenantServiceTest {
 
     @Mock
     private RoomRepository roomRepository;
+
     @InjectMocks
     private TenantService tenantService;
 
@@ -36,7 +38,6 @@ class TenantServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-
 
     @Test
     void testGetAllTenants() {
@@ -95,6 +96,7 @@ class TenantServiceTest {
         verify(tenantRepository, times(1)).findAll();
         verifyNoInteractions(tenantMapper); // Không nên có tương tác với mapper
     }
+
     @Test
     void testGetAllTenants_MapperReturnsNull() {
         // Mock data
@@ -118,27 +120,25 @@ class TenantServiceTest {
         // Call the method under test
         List<TenantResponse> result = tenantService.getAllTenants();
 
-// Assertions
+        // Assertions
         assertEquals(2, result.size()); // Số lượng phần tử khớp với danh sách `tenants`
         assertNull(result.get(0)); // Phần tử đầu tiên là `null`
         assertNull(result.get(1)); // Phần tử thứ hai là `null`
-
 
         // Verify interactions with mocks
         verify(tenantRepository, times(1)).findAll();
         verify(tenantMapper, times(1)).toTenantResponse(tenant1);
         verify(tenantMapper, times(1)).toTenantResponse(tenant2);
     }
+
     @Test
     void testInsert_ValidRoom() {
         // Mock data
         UUID roomId = UUID.randomUUID();
         Room room = Room.builder().roomId(roomId).name("Room 1").build();
 
-        TenantRequest tenantRequest = TenantRequest.builder()
-                .fullname("John Doe")
-                .phone("123456789")
-                .build();
+        TenantRequest tenantRequest =
+                TenantRequest.builder().fullname("John Doe").phone("123456789").build();
 
         Tenant tenant = Tenant.builder()
                 .fullname("John Doe")
@@ -173,10 +173,8 @@ class TenantServiceTest {
     void testInsert_InvalidRoom() {
         // Mock data
         UUID roomId = UUID.randomUUID();
-        TenantRequest tenantRequest = TenantRequest.builder()
-                .fullname("Jane Doe")
-                .phone("987654321")
-                .build();
+        TenantRequest tenantRequest =
+                TenantRequest.builder().fullname("Jane Doe").phone("987654321").build();
 
         // Mock behaviors
         when(roomRepository.findById(roomId)).thenReturn(Optional.empty());
@@ -197,15 +195,10 @@ class TenantServiceTest {
         // Mock data
         UUID tenantId = UUID.randomUUID();
 
-        Tenant tenant = Tenant.builder()
-                .tenantId(tenantId)
-                .fullname("John Doe")
-                .build();
+        Tenant tenant = Tenant.builder().tenantId(tenantId).fullname("John Doe").build();
 
-        TenantResponse tenantResponse = TenantResponse.builder()
-                .tenantId(tenantId)
-                .fullname("John Doe")
-                .build();
+        TenantResponse tenantResponse =
+                TenantResponse.builder().tenantId(tenantId).fullname("John Doe").build();
 
         // Mock behaviors
         when(tenantRepository.findById(tenantId)).thenReturn(Optional.of(tenant));
@@ -223,6 +216,7 @@ class TenantServiceTest {
         verify(tenantRepository, times(1)).findById(tenantId);
         verify(tenantMapper, times(1)).toTenantResponse(tenant);
     }
+
     @Test
     void testFindById_TenantNotFound() {
         // Mock data
@@ -242,24 +236,20 @@ class TenantServiceTest {
         verify(tenantRepository, times(1)).findById(tenantId);
         verify(tenantMapper, never()).toTenantResponse(any());
     }
+
     @Test
     void testUpdate_ValidTenant() {
         // Mock data
         UUID tenantId = UUID.randomUUID();
 
-        Tenant existingTenant = Tenant.builder()
-                .tenantId(tenantId)
-                .fullname("John Doe")
-                .build();
+        Tenant existingTenant =
+                Tenant.builder().tenantId(tenantId).fullname("John Doe").build();
 
-        TenantRequest tenantRequest = TenantRequest.builder()
-                .fullname("Updated John Doe")
-                .build();
+        TenantRequest tenantRequest =
+                TenantRequest.builder().fullname("Updated John Doe").build();
 
-        Tenant updatedTenant = Tenant.builder()
-                .tenantId(tenantId)
-                .fullname("Updated John Doe")
-                .build();
+        Tenant updatedTenant =
+                Tenant.builder().tenantId(tenantId).fullname("Updated John Doe").build();
 
         TenantResponse tenantResponse = TenantResponse.builder()
                 .tenantId(tenantId)
@@ -269,10 +259,12 @@ class TenantServiceTest {
         // Mock behaviors
         when(tenantRepository.findById(tenantId)).thenReturn(Optional.of(existingTenant));
         doAnswer(invocation -> {
-            Tenant tenant = invocation.getArgument(1);
-            tenant.setFullname(tenantRequest.getFullname());
-            return null;
-        }).when(tenantMapper).updateTenantFromRequest(tenantRequest, existingTenant);
+                    Tenant tenant = invocation.getArgument(1);
+                    tenant.setFullname(tenantRequest.getFullname());
+                    return null;
+                })
+                .when(tenantMapper)
+                .updateTenantFromRequest(tenantRequest, existingTenant);
         when(tenantRepository.save(existingTenant)).thenReturn(updatedTenant);
         when(tenantMapper.toTenantResponse(updatedTenant)).thenReturn(tenantResponse);
 
@@ -295,9 +287,8 @@ class TenantServiceTest {
     void testUpdate_TenantNotFound() {
         // Mock data
         UUID tenantId = UUID.randomUUID();
-        TenantRequest tenantRequest = TenantRequest.builder()
-                .fullname("Updated John Doe")
-                .build();
+        TenantRequest tenantRequest =
+                TenantRequest.builder().fullname("Updated John Doe").build();
 
         // Mock behaviors
         when(tenantRepository.findById(tenantId)).thenReturn(Optional.empty());
@@ -320,10 +311,7 @@ class TenantServiceTest {
         // Mock data
         UUID tenantId = UUID.randomUUID();
 
-        Tenant tenant = Tenant.builder()
-                .tenantId(tenantId)
-                .fullname("John Doe")
-                .build();
+        Tenant tenant = Tenant.builder().tenantId(tenantId).fullname("John Doe").build();
 
         // Mock behavior
         when(tenantRepository.findById(tenantId)).thenReturn(Optional.of(tenant));
@@ -355,6 +343,7 @@ class TenantServiceTest {
         // Verify findById is called
         verify(tenantRepository, times(1)).findById(tenantId);
     }
+
     @Test
     void testGetAllTenantsRoomId_WithTenants() {
         // Mock data
@@ -415,6 +404,4 @@ class TenantServiceTest {
         verify(tenantRepository, times(1)).findByRoomRoomId(roomId);
         verify(tenantMapper, never()).toTenantResponse(any());
     }
-
-
 }

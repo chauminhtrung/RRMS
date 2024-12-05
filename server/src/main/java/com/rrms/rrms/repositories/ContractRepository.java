@@ -5,13 +5,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import com.rrms.rrms.enums.ContractStatus;
 import jakarta.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.rrms.rrms.enums.ContractStatus;
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Contract;
 
@@ -23,7 +24,8 @@ public interface ContractRepository extends JpaRepository<Contract, UUID> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE Contract c SET c.status = :newStatus, c.reportcloseContract = :reportCloseDate WHERE c.room.roomId = :roomId")
+    @Query(
+            "UPDATE Contract c SET c.status = :newStatus, c.reportcloseContract = :reportCloseDate WHERE c.room.roomId = :roomId")
     int updateContractStatusByRoomId(
             @Param("roomId") UUID roomId,
             @Param("newStatus") ContractStatus newStatus,
@@ -31,7 +33,8 @@ public interface ContractRepository extends JpaRepository<Contract, UUID> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE Contract c SET c.deposit = :deposit, c.price = :price, c.debt = :debt WHERE c.contractId = :contractId")
+    @Query(
+            "UPDATE Contract c SET c.deposit = :deposit, c.price = :price, c.debt = :debt WHERE c.contractId = :contractId")
     int updateContractDetailsByContractId(
             @Param("contractId") UUID contractId,
             @Param("deposit") Double deposit,
@@ -40,31 +43,23 @@ public interface ContractRepository extends JpaRepository<Contract, UUID> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE Contract c " +
-            "SET c.status = :newStatus " +
-            "WHERE DATEDIFF(c.closeContract, CURRENT_DATE) <= :thresholdDays and c.status = 'ACTIVE'")
+    @Query("UPDATE Contract c " + "SET c.status = :newStatus "
+            + "WHERE DATEDIFF(c.closeContract, CURRENT_DATE) <= :thresholdDays and c.status = 'ACTIVE'")
     int updateStatusForContractsBasedOnDaysDifference(
-            @Param("newStatus") ContractStatus newStatus,
-            @Param("thresholdDays") int thresholdDays);
+            @Param("newStatus") ContractStatus newStatus, @Param("thresholdDays") int thresholdDays);
 
     @Transactional
     @Modifying
-    @Query("UPDATE Contract c " +
-            "SET c.status = :newStatus " +
-            "WHERE DATEDIFF(c.closeContract, CURRENT_DATE) >= :thresholdDays and c.status = 'IATExpire'")
+    @Query("UPDATE Contract c " + "SET c.status = :newStatus "
+            + "WHERE DATEDIFF(c.closeContract, CURRENT_DATE) >= :thresholdDays and c.status = 'IATExpire'")
     int updateStatusForContractsBasedOnDaysDifference2(
-            @Param("newStatus") ContractStatus newStatus,
-            @Param("thresholdDays") int thresholdDays);
+            @Param("newStatus") ContractStatus newStatus, @Param("thresholdDays") int thresholdDays);
 
     @Transactional
     @Modifying
     @Query("UPDATE Contract c SET c.closeContract = :newCloseContract WHERE c.contractId = :contractId")
     int updateCloseContractByContractId(
-            @Param("newCloseContract") Date newCloseContract,
-            @Param("contractId") UUID contractId
-    );
-
-
+            @Param("newCloseContract") Date newCloseContract, @Param("contractId") UUID contractId);
 
     @Transactional
     @Modifying
@@ -92,4 +87,6 @@ public interface ContractRepository extends JpaRepository<Contract, UUID> {
     //            "AND DATE_ADD(c.firstTime, INTERVAL (c.leaseTerm MONTH)) >= CURDATE() " +
     //            "AND c.landlord = :usernameLandlord")
     //    long countExpiringContracts(@Param("usernameLandlord") Account usernameLandlord);
+
+    List<Contract> findByRoomRoomId(UUID roomId);
 }

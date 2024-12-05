@@ -23,30 +23,30 @@ public class Invoice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID invoiceId;
+    private UUID invoiceId; // test
 
     @Column(columnDefinition = "VARCHAR(100)")
-    private String invoiceReason; // Lý do thu tiền
+    private String invoiceReason;
 
     @Column(columnDefinition = "VARCHAR(7)")
     @Convert(converter = YearMonthAttributeConverter.class)
     private YearMonth invoiceCreateMonth;
 
     @Column(columnDefinition = "DATE")
-    private LocalDate invoiceCreateDate; // ngay tạo hóa đơn
+    private LocalDate invoiceCreateDate;
 
     @Column(columnDefinition = "DATE")
-    private LocalDate dueDate; // //hạn đóng tiền
+    private LocalDate dueDate;
 
     @ManyToOne
     @JoinColumn(name = "contract_id")
     private Contract contract;
 
     @Column(columnDefinition = "DATE")
-    private LocalDate dueDateofmoveinDate; // //hạn đóng tiền
+    private LocalDate dueDateofmoveinDate;
 
     @Column(columnDefinition = "DECIMAL(10, 2)")
-    private Double deposit; // Tiền cọc (lấy từ Contract)
+    private Double deposit;
 
     @ManyToOne
     @JoinColumn(name = "tenant_id")

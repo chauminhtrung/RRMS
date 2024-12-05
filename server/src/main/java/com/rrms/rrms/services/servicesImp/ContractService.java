@@ -1,13 +1,10 @@
 package com.rrms.rrms.services.servicesImp;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import com.rrms.rrms.enums.ContractStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.ParameterMode;
@@ -19,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.request.ContractRequest;
 import com.rrms.rrms.dto.response.ContractResponse;
+import com.rrms.rrms.enums.ContractStatus;
 import com.rrms.rrms.mapper.ContractMapper;
 import com.rrms.rrms.models.*;
 import com.rrms.rrms.repositories.*;
@@ -158,17 +156,14 @@ public class ContractService implements IContractService {
                 .toList();
     }
 
-
     @Override
     public void updateContractsBasedOnDaysDifference(ContractStatus newStatus, int thresholdDays) {
         int updatedRows = contractRepository.updateStatusForContractsBasedOnDaysDifference(newStatus, thresholdDays);
-
     }
 
     @Override
     public void updateContractsBasedOnDaysDifference2(ContractStatus newStatus, int thresholdDays) {
         int updatedRows = contractRepository.updateStatusForContractsBasedOnDaysDifference2(newStatus, thresholdDays);
-
     }
 
     @Override
@@ -179,7 +174,6 @@ public class ContractService implements IContractService {
         }
     }
 
-
     @Override
     public int updateContractStatus(UUID roomId, ContractStatus newStatus, Date reportCloseDate) {
         System.out.println(roomId);
@@ -189,13 +183,14 @@ public class ContractService implements IContractService {
     }
 
     @Override
-    public void updateContractDetailsByContractId(UUID contractId, UUID roomId, Double deposit, Double price, Double debt) {
+    public void updateContractDetailsByContractId(
+            UUID contractId, UUID roomId, Double deposit, Double price, Double debt) {
         // Tìm Room mới
-        Room newRoom = roomRepository.findById(roomId)
-                .orElseThrow(() -> new EntityNotFoundException("Room not found"));
+        Room newRoom = roomRepository.findById(roomId).orElseThrow(() -> new EntityNotFoundException("Room not found"));
 
         // Tìm Contract và cập nhật
-        Contract contract = contractRepository.findById(contractId)
+        Contract contract = contractRepository
+                .findById(contractId)
                 .orElseThrow(() -> new EntityNotFoundException("Contract not found"));
         contract.setRoom(newRoom); // Cập nhật Room
         contract.setDeposit(deposit);
