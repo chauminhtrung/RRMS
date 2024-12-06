@@ -1,3 +1,6 @@
+export const redirectUri = 'http://localhost:5173/oauth2/redirect'
+export const apiBaseUrl = 'http://localhost:8080'
+
 export const env = {
   API_URL: import.meta.env.VITE_APP_API_URL,
   PORT: import.meta.env.VITE_PORT,
@@ -10,7 +13,6 @@ export const env = {
   FIREBASE_APP_ID: import.meta.env.VITE_FIREBASE_APP_ID,
   FPT_AI_KEY: import.meta.env.VITE_FPT_AI_KEY,
   FPT_APP_CODE: import.meta.env.VITE_FPT_APP_CODE,
+  GOOGLE_CLIENT_ID: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+  FACEBOOK_APP_ID: import.meta.env.VITE_FACEBOOK_APP_ID
 }
-export const redirectUri = "http://localhost:5173/oauth2/redirect";
-export const apiBaseUrl = "http://localhost:8080";
-
