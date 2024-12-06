@@ -29,7 +29,7 @@ public class Contract {
     @JsonBackReference(value = "Room-Contract") // Đặt tên cho tham chiếu ngược
     private Room room;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "tenant_id")
     @JsonBackReference(value = "Tenant-Contract") // Đặt tên cho tham chiếu ngược
     private Tenant tenant;
@@ -100,8 +100,4 @@ public class Contract {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "ENUM('ACTIVE', 'ENDED','IATExpire','ReportEnd')")
     private ContractStatus status;
-
-    // Ngay ket thuc hop dong
-    @Column(columnDefinition = "DATE")
-    private Date reportcloseContract;
 }

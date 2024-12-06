@@ -86,7 +86,7 @@ public class Tenant {
     @JsonBackReference(value = "Room-Tenant") // Đặt tên cho tham chiếu ngược
     private Room room;
 
-    @OneToMany(mappedBy = "tenant", orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "tenant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference(value = "Tenant-Contract") // Đặt tên cho tham chiếu quản lý
     private List<Contract> contracts; // Một người thuê có nhiều hợp đồng
 }
