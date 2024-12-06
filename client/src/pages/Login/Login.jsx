@@ -10,14 +10,14 @@ import { checkRegister } from '~/apis/accountAPI'
 import { LoginSocialFacebook } from 'reactjs-social-login'
 import { FacebookLoginButton } from 'react-social-login-buttons'
 
-// import ValidCaptcha from '~/components/ValidCaptcha'
-// import { toast } from 'react-toastify'
+import ValidCaptcha from '~/components/ValidCaptcha'
+import { toast } from 'react-toastify'
 
 //test
 const Login = ({ setUsername, setAvatar }) => {
   const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
-  // const [validCaptcha, setValidCaptcha] = useState(false)
+  const [validCaptcha, setValidCaptcha] = useState(false)
   const navigate = useNavigate()
   const loginWithGoogle = async (credentialResponse) => {
     try {
@@ -27,6 +27,7 @@ const Login = ({ setUsername, setAvatar }) => {
         if (!response.result) {
           const accountnew = {
             username: decoded.email,
+            email: decoded.email,
             phone: decoded.email,
             password: decoded.sub,
             userType: 'CUSTOMER'
@@ -141,6 +142,8 @@ const Login = ({ setUsername, setAvatar }) => {
         // window.location.href = '/RRMS'
       }
     } catch (error) {
+      console.log('error', error)
+
       Swal.fire({
         icon: 'error',
         title: 'Lỗi',
@@ -151,10 +154,10 @@ const Login = ({ setUsername, setAvatar }) => {
   const handleSubmit = async (event) => {
     event.preventDefault()
 
-    // if (!validCaptcha) {
-    //   toast.error('Captcha xác thực không thành công!')
-    //   return
-    // }
+    if (!validCaptcha) {
+      toast.error('Captcha xác thực không thành công!')
+      return
+    }
 
     if (!phone || !password) {
       Swal.fire({
@@ -301,6 +304,7 @@ const Login = ({ setUsername, setAvatar }) => {
                       Đăng nhập
                     </button>
                   </div>
+                  <ValidCaptcha setValidCaptcha={setValidCaptcha} />
                   <hr className="my-2" />
                   <div className="login-container mt-1">
                     <div className="row justify-content-center">
@@ -315,7 +319,7 @@ const Login = ({ setUsername, setAvatar }) => {
                       </div>
                       <div className="col-5">
                         <LoginSocialFacebook
-                          appId="601101715756733"
+                          appId={env.FACEBOOK_APP_ID}
                           onResolve={(param) => loginWithFacebook(param)}
                           onReject={(error) => console.log(error)}>
                           <FacebookLoginButton className="facebook-login" />
@@ -325,10 +329,10 @@ const Login = ({ setUsername, setAvatar }) => {
                   </div>
 
                   <div className="form-group d-flex justify-content-between">
-                    <Link className="btn btn-link" to="/register">
+                    <Link style={{ color: '#1e90ff' }} className="btn" to="/register">
                       Tạo tài khoản
                     </Link>
-                    <Link className="btn btn-link" to="/forgot-password">
+                    <Link style={{ color: '#1e90ff' }} className="btn" to="/forgot-password">
                       Quên mật khẩu
                     </Link>
                   </div>

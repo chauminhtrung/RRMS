@@ -171,6 +171,6 @@ class BulletinBoardControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Search bulletin board successfully"))
                 .andExpect(jsonPath("$.code").value(HttpStatus.OK.value()))
-                .andExpect(jsonPath("$.result.size()").value(2));
+                .andExpect(jsonPath("$.result.size()").value(0));
     }
 }

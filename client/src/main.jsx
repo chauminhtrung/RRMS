@@ -11,13 +11,15 @@ import { ToastContainer } from 'react-toastify'
 import ChatAI from './pages/AI/ChatAI.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import { GoogleOAuthProvider } from '@react-oauth/google'
+import { env } from './configs/environment.js'
+
 createRoot(document.getElementById('root')).render(
   <>
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <ChatAI />
       <BrowserRouter>
-        <GoogleOAuthProvider clientId="1019315956449-qqsk7qh3qenmdt9s6vvnrtchnii72mdn.apps.googleusercontent.com">
+        <GoogleOAuthProvider clientId={env.GOOGLE_CLIENT_ID}>
           <App />
         </GoogleOAuthProvider>
       </BrowserRouter>
