@@ -1,14 +1,14 @@
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import { useState, useEffect } from 'react'
 import Swal from 'sweetalert2'
-function ModalEditInvoice({ toggleModal, modalOpen, InvoiceId }) {
+function ModalEditInvoice({ toggleModal, modalOpen, invoiceId }) {
   //mo modal edit thi chi co 1 hoa don
   const [invoice, setInvoice] = useState({})
 
   //ham de goi invoice khi mo modal de co du lieu cua hoa don
   //goi api
-  const fetchDataInvoice = async (InvoiceId) => {
-    if (InvoiceId) {
+  const fetchDataInvoice = async (invoiceId) => {
+    if (invoiceId) {
       try {
         setInvoice({})
       } catch (error) {
@@ -20,7 +20,7 @@ function ModalEditInvoice({ toggleModal, modalOpen, InvoiceId }) {
   useEffect(() => {
     const handlFristData = () => {
       if (invoice) {
-        fetchDataInvoice(InvoiceId)
+        fetchDataInvoice(invoiceId)
       }
     }
 

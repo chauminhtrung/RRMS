@@ -3126,9 +3126,9 @@ const HomeWData = ({ Motel }) => {
                   <div
                     className="col-12"
                     style={{
-                      border: '1px solid rgb(32, 169, 231)',
+                      border: '1px solid #e8f8ff',
                       borderRadius: '10px',
-                      backgroundColor: 'rgb(32, 169, 231)',
+                      backgroundColor: '#e8f8ff',
                       padding: '10px 15px',
                       display: 'flex',
                       justifyContent: 'space-between',
@@ -3206,9 +3206,9 @@ const HomeWData = ({ Motel }) => {
                   <div
                     className="col-12"
                     style={{
-                      border: '1px solid rgb(32, 169, 231)',
+                      border: '1px solid #e8f8ff',
                       borderRadius: '10px',
-                      backgroundColor: 'rgb(32, 169, 231)',
+                      backgroundColor: '#e8f8ff',
                       padding: '10px 15px',
                       display: 'flex',
                       justifyContent: 'space-between',
@@ -3245,25 +3245,14 @@ const HomeWData = ({ Motel }) => {
                     </div>
                   </div>
 
-                  <div
-                    className="col-12"
-                    style={{
-                      border: '1px solid #ed6003',
-                      borderRadius: '10px',
-                      backgroundColor: '#e4eef5',
-                      padding: '10px 15px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      marginBottom: '10px',
-                      marginTop: '10px'
-                    }}>
-                    <div className="icon flex-0" style={{ marginRight: '10px' }}>
-                      <i className="bi bi-info-circle" style={{ fontSize: '24px', marginRight: '8px' }}></i>
+                  
+                  <div className="loz-alert warning" style={{ marginBottom: '10px', marginTop: '10px' }}>
+                    <div className="icon flex-0">
+                      <i className="bi bi-info-circle" style={{ fontSize: '24px' }}></i>
                     </div>
                     <div className="des flex-1">
-                      <label className="form-check-label" htmlFor="subtraction">
-                        <b>Chú ý: Cộng thêm / giảm trừ không nên là tiền cọc. Hãy chọn lý do có tiền cọc để nếu cần</b>
-                      </label>
+                      Chú ý: Cộng thêm / giảm trừ không nên là tiền cọc. Hãy chọn lý do có tiền cọc để nếu
+                      cần
                     </div>
                   </div>
 
@@ -3372,9 +3361,9 @@ const HomeWData = ({ Motel }) => {
                   <div className="col-12">
                     <div
                       style={{
-                        border: '1px solid rgb(32, 169, 231)',
+                        border: '1px solid #e8f8ff',
                         borderRadius: '10px',
-                        backgroundColor: 'rgb(32, 169, 231)',
+                        backgroundColor: '#e8f8ff',
                         padding: '10px 15px',
                         display: 'flex',
                         justifyContent: 'space-between',
