@@ -20,6 +20,7 @@ import lombok.experimental.FieldDefaults;
 public class InvoiceResponse {
     private UUID invoiceId; // ID hóa đơn
     private String invoiceReason; // ly do thu tien
+    private UUID roomId;
     private String roomName;
     private Double roomPrice;
     private YearMonth invoiceCreateMonth; // tháng lập hóa đơn

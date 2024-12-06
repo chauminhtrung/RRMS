@@ -210,6 +210,7 @@ public class InvoiceService implements IInvoices {
 
         Room room = invoice.getContract().getRoom();
         if (room != null) {
+            response.setRoomId(room.getRoomId());
             response.setRoomName(room.getName());
             response.setRoomPrice(room.getPrice());
         }

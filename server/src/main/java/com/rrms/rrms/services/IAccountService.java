@@ -49,5 +49,6 @@ public interface IAccountService {
     boolean changePasswordByEmail(ChangePasswordByEmail changePasswordByEmail);
 
     boolean existsByEmail(String email);
+
     boolean existsByPhone(String phone);
 }
