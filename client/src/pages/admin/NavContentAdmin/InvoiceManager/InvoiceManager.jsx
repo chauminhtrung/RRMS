@@ -1,28 +1,28 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef,useMemo  } from 'react'
 import NavAdmin from '~/layouts/admin/NavbarAdmin'
 import YearMonthFilter from '../YearMonthFilter'
 import Flatpickr from 'react-flatpickr'
 import 'flatpickr/dist/themes/material_blue.css'
-import 'flatpickr/dist/plugins/monthSelect/style.css' // Thêm CSS của plugin monthSelect
+import 'flatpickr/dist/plugins/monthSelect/style.css'
 import monthSelectPlugin from 'flatpickr/dist/plugins/monthSelect'
-import { Vietnamese } from 'flatpickr/dist/l10n/vn' // Import ngôn ngữ tiếng Việt
+import { Vietnamese } from 'flatpickr/dist/l10n/vn' 
 import AdditionItem from './AdditionItem'
-import 'react-tabulator/lib/styles.css' // required styles
-import 'react-tabulator/lib/css/tabulator.min.css' // theme
+import 'react-tabulator/lib/styles.css'
+import 'react-tabulator/lib/css/tabulator.min.css' 
 import { ReactTabulator } from 'react-tabulator'
-import { Link } from 'react-router-dom'
+import { Link,useParams } from 'react-router-dom'
 import axios from 'axios'
 import { env } from '~/configs/environment'
 import ModalEditInvoice from './ModalEditInvoice'
-
+import ModalCollectMoneyInvoice from './ModalCollectMoneyInvoice'
 const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
-  const [invoice, setInvoice] = useState({}) // Lưu 1 hóa đơn ***************************************
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  const { motelId } = useParams()
+  const [invoice, setInvoice] = useState({}) // Lưu 1 hóa đơn 
   const [invoices, setInvoices] = useState([]) // Lưu danh sách hóa đơn
-  const [setLoading] = useState(false) // Trạng thái tải dữ liệu
-  const [setError] = useState(null) // Trạng thái lỗi
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 })
   const [showMenu, setShowMenu] = useState(null) // Trạng thái của menu hiện tại
+  const [services, setServices] = useState([]); // Lưu danh sách dịch vụ từ API
   //2 thang nay la cho chon tu ngay --> den ngay (tu tinh den 1 thang sau)
   const [fromDate, setFromDate] = useState(null)
   const [toDate, setToDate] = useState(null)
@@ -31,42 +31,36 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   // chuyen doi cac buoc
   const [step, setStep] = useState(1) // Bước mặc định là bước 1
   const menuRef = useRef(null) // Tham chiếu đến menu
-  const [modalOpenInvoice, setModalOpenInvoice] = useState(false) //mo modal *****************
+  const [modalOpenInvoice, setModalOpenInvoice] = useState(false) //mo modal 
+  const [modalOpenCollectMoney, setModalOpenCollectMoney] = useState(false)
 
   const toggleModalInvoice = () => {
     setModalOpenInvoice(!modalOpenInvoice)
   }
-
-  const fetchInvoices = async (motelId) => {
-    setLoading(true)
-    setError(null)
-
-    try {
-      const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
-
-      const response = await axios.get(`${env.API_URL}/invoices/motel/${motelId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      setInvoices(response.data) // Gán dữ liệu vào state
-    } catch (err) {
-      console.error(err)
-      setError('Không thể tải danh sách hóa đơn')
-    } finally {
-      setLoading(false)
-    }
+  const toggleModalCollectMoney = () => {
+  setModalOpenCollectMoney(!modalOpenCollectMoney)
   }
 
-  // Hàm xử lý nhấn ngoài menu ***************************************
+  const fetchInvoices = async (motelId) => {
+    try {  
+      const response = await axios.get(`${env.API_URL}/invoices/motel/${motelId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("Invoices from API:", response.data);
+      setInvoices(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (e) => {
-      // Kiểm tra xem nhấn ngoài menu hay không
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setShowMenu(null)
       }
     }
-
     document.addEventListener('click', handleClickOutside)
     return () => {
       document.removeEventListener('click', handleClickOutside)
@@ -75,48 +69,86 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
 
   useEffect(() => {
     setIsAdmin(true)
-    // Thay '37e828fc-5bba-4fe4-907f-0058a7b6b94d' bằng ID nhà trọ cụ thể
-    const motelId = '37e828fc-5bba-4fe4-907f-0058a7b6b94d'
     fetchInvoices(motelId)
   }, [])
 
+  const fetchMotelServices = async (motelId) => {
+    try {
+        const response = await axios.get(`${env.API_URL}/motels/get-motel-id?id=${motelId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const motelData = response.data.result;
+
+        if (motelData?.motelServices) {
+            const serviceNames = motelData.motelServices.map((service) => service.nameService);
+            setServices(serviceNames);
+        }
+    } catch (error) {
+        console.error("Error fetching motel services:", error);
+    }
+};
+
+  
+  useEffect(() => {
+    fetchMotelServices(motelId);
+  }, [motelId]);
+
+  const dynamicServiceColumns = useMemo(() => {
+    const serviceColumnWidth = services.length === 2 ? 177 : services.length === 3 ? 118 : 100; // Tùy chỉnh độ rộng
+    return services.map((serviceName) => ({
+        title: serviceName, // Tiêu đề cột là tên dịch vụ
+        field: serviceName, // Tên trường trong dữ liệu
+        hozAlign: "center", // Canh phải
+        width: serviceColumnWidth, // Tính toán độ rộng
+        formatter: "money", // Định dạng số tiền
+    }));
+  }, [services]);
+
+
+  const StatusFormatter = (cell) => {
+    const data = cell.getRow().getData(); // Lấy dữ liệu từ hàng hiện tại
+    const paymentStatus = data.paymentStatus; // Trạng thái thanh toán từ backend
+  
+    return paymentStatus === "PAID"
+      ? `<span class="badge mt-2" style="background-color: #7dc242; white-space: break-spaces;">Đã thu xong</span>` // Hiển thị trạng thái "Đã thu xong" với màu xanh
+      : `<span class="badge mt-2" style="background-color: #ED6004; white-space: break-spaces;">Chưa thu</span>`; // Hiển thị trạng thái "Chưa thu" với màu cam
+  };
+  
+
   const columns = [
-    //an no di khoi table
-    { title: 'Id Hoa Don', field: 'InvoiceId', hozAlign: 'left', width: 165, visible: false },
+    { title: 'Id Hoa Don', field: 'invoiceId', hozAlign: 'center', width: 165, visible: false },
     {
       title: '',
       field: 'drag',
       hozAlign: 'center',
-      width: 20,
+      width: 50,
       rowHandle: true,
       formatter: () => {
         const element = document.createElement('div')
-        element.style.cursor = 'move' // Đổi con trỏ thành 4 hướng khi hover
         element.innerHTML = `
-          <div class="tabulator-row-handle-bar" style="width: 50%;height: 3px;margin-top: 3px;background: #666;margin-left: 10px"></div>
-          <div class="tabulator-row-handle-bar" style="width: 50%;height: 3px;margin-top: 3px;background: #666;margin-left: 10px"></div>
-          <div class="tabulator-row-handle-bar" style="width: 50%;height: 3px;margin-top: 3px;background: #666;margin-left: 10px"></div>
-      `
+          <div class="icon-first" style="background-color: #ED6004;">
+            <img width="30px" src="https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Froom.png?alt=media&token=9f1a69c1-ce2e-4586-ba90-94db53443d49">
+          </div>
+        `
         return element
       }
     },
-    { title: 'Tên phòng', field: 'roomName', hozAlign: 'left', width: 165 },
-    { title: 'Tiền phòng', field: 'roomPrice', formatter: 'money', hozAlign: 'right', width: 165 },
-    { title: 'Tiền điện', field: 'electricityCost', hozAlign: 'right', width: 165 },
-    { title: 'Tiền nước', field: 'waterCost', hozAlign: 'right', width: 165 },
-    { title: 'Thu/Trả cọc', field: 'deposit', formatter: 'money', hozAlign: 'right', width: 165 },
-    { title: 'Cộng thêm/Giảm trừ', field: 'adjustments', formatter: 'money', hozAlign: 'right', width: 165 },
-    { title: 'Tổng cộng', field: 'total', formatter: 'money', hozAlign: 'right', width: 165 },
-    { title: 'Cần thu', field: 'amountDue', formatter: 'money', hozAlign: 'right', width: 165 },
-    { title: 'Trạng thái', field: 'status', hozAlign: 'center', width: 170 },
+    { title: 'Tên phòng', field: 'roomName', hozAlign: 'center', width: 165 },
+    { title: 'Tiền phòng', field: 'roomPrice', formatter: 'money', hozAlign: 'center', width: 165 },
+    ...dynamicServiceColumns, 
+    { title: 'Thu/Trả cọc', field: 'deposit', formatter: 'money', hozAlign: 'center', width: 165 },
+    { title: 'Cộng thêm/Giảm trừ', field: 'adjustments', formatter: 'money', hozAlign: 'center', width: 166 },
+    { title: 'Tổng cộng', field: 'total', formatter: 'money', hozAlign: 'center', width: 168 },
+    { title: 'Cần thu', field: 'total', formatter: 'money', hozAlign: 'center', width: 168 },
+    { title: 'Trạng thái', field: 'status', hozAlign: 'center', width: 168,formatter: StatusFormatter },
     {
       title: 'Action',
       field: 'Action',
-      hozAlign: 'center',
-      //thay bang Id hoa don
-      //lay Id cua hoa don ******************************
+      width: 92,
       formatter: (cell) => {
-        const rowId = cell.getRow().getData().InvoiceId
+        const rowId = cell.getRow().getData().invoiceId
         const element = document.createElement('div')
         element.classList.add('icon-menu-action')
         element.innerHTML = `
@@ -126,140 +158,82 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
             <circle cx="12" cy="19" r="1"></circle>
           </svg>
         `
-        //su kien gan Id hoa don cho ShowMenu ***********************************
         element.addEventListener('click', (e) => handleActionClick(e, rowId))
         return element
       }
     }
   ]
 
-  const data = invoices.map((invoice) => ({
-    roomName: invoice.roomName,
-    roomPrice: invoice.roomPrice,
-    electricityCost: invoice.serviceDetails.find((s) => s.serviceName === 'Dịch vụ điện')?.totalPrice || 0,
-    waterCost: invoice.serviceDetails.find((s) => s.serviceName === 'Dịch vụ nước')?.totalPrice || 0,
-    deposit: invoice.deposit,
-    adjustments: invoice.additionItems?.reduce(
-      (sum, item) => (item.addition ? sum + item.amount : sum - item.amount),
-      0
-    ),
-    total: invoice.totalAmount,
-    amountDue: invoice.totalAmount, // Có thể điều chỉnh logic nếu cần
-    status: 'Chưa thu' // Thay bằng trạng thái thực tế nếu API cung cấp
-  }))
-
   const options = {
-    height: '400px', // Chiều cao của bảng
-    movableColumns: true, // Cho phép di chuyển cột
-    resizableRows: true, // Cho phép thay đổi kích thước hàng
-    movableRows: true,
-    resizableColumns: true, // Cho phép thay đổi kích thước cột
-    resizableColumnFit: true,
-    layout: 'fitColumns',
-    responsiveLayout: 'collapse',
-    rowHeader: {
-      formatter: 'responsiveCollapse',
-      width: 30,
-      minWidth: 30,
-      hozAlign: 'center',
-      resizable: false,
-      headerSort: false
-    }
-  }
+    height: "400px", 
+    movableColumns: true, 
+    resizableRows: true,
+    movableRows: true, 
+    resizableColumns: true,
+    layout: "fitColumns", 
+    responsiveLayout: "collapse", 
+    horizontalScroll: true, 
+    frozenColumns: true, 
+  };
 
-  //xoa muc
-  const handleRemove = (index) => {
-    setItems(items.filter((_, i) => i !== index)) // Xóa mục theo chỉ số
-  }
-
-  //them
-  const handleAddItem = () => {
-    setItems([...items, {}]) // Thêm một mục mới
-  }
-
-  const handleFromDateChange = (selectedDates) => {
-    const selectedDate = selectedDates[0]
-    setFromDate(selectedDate)
-
-    // Tính ngày "Đến ngày" là 1 tháng sau
-    const nextMonthDate = new Date(selectedDate)
-    nextMonthDate.setMonth(selectedDate.getMonth() + 1)
-
-    // Chuyển thành chuỗi định dạng YYYY-MM-DD cho input
-    const formattedDate = nextMonthDate.toISOString().split('T')[0]
-    setToDate(formattedDate)
-  }
-
-  const handleNextStep = () => {
-    setStep(step + 1) // Chuyển sang bước tiếp theo
-  }
-
-  const handlePreviousStep = () => {
-    setStep(step - 1) // Quay lại bước trước
-  }
-
-  const handleSubmit = () => {
-    // Thực hiện hành động lập hóa đơn ở đây
-    alert('Hóa đơn đã được lập thành công!')
-  }
-
-  //ham de lay gia tri cua tk hoa don do r set vai tk hoa don [invoice,setInvoice] da tao (nua phai thay lai bang du lieu that goi api)
   const fetchDataInvoice = async (id) => {
     try {
-      // Lấy dữ liệu hóa đơn theo InvoiceId
-      const invoice = data2.find((item) => item.InvoiceId === id)
-      setInvoice(invoice)
+      const invoiceData = invoices.find((item) => item.invoiceId === id);
+      if (invoiceData) {
+        const serviceDetails = invoiceData.serviceDetails.map((service) => {
+          return {
+            roomServiceId: service.roomServiceId,
+            serviceName: service.serviceName,
+            servicePrice: service.servicePrice,
+            quantity: service.quantity,
+            chargetype: service.chargetype, 
+            totalPrice: service.totalPrice,
+            isSelected: true,
+          };
+        });
+        setInvoice({ ...invoiceData, serviceDetails });
+      }
     } catch (error) {
-      console.log(error)
+      console.error("Lỗi khi fetch dữ liệu hóa đơn:", error);
     }
-  }
+  };
+  
+  
+  const data = useMemo(() => {
+    return invoices.map((invoice) => {
+        const serviceData = {};
 
-  //data phai tra ve Id cua hoa don do de biet khi nao dang nhan vao hoa don gi ******************************************
-  const data2 = [
-    {
-      //invoiceId ko nhat thiet xuat hien nhung van phai co trong table de lay id cua no
-      InvoiceId: '3123y1783t123278t312378',
-      roomId: 1,
-      roomName: 'Phòng 101',
-      roomPrice: 2000000,
-      electricityCost: 500000,
-      waterCost: 300000,
-      deposit: 1000000,
-      adjustments: -200000,
-      total: 3600000,
-      amountDue: 3600000,
-      status: 'thu'
-    },
-    {
-      InvoiceId: 'dasbdiasybiy123',
-      roomId: 2,
-      roomName: 'Phòng 102',
-      roomPrice: 2500000,
-      electricityCost: 400000,
-      waterCost: 200000,
-      deposit: 1500000,
-      adjustments: 100000,
-      total: 4200000,
-      amountDue: 4200000,
-      status: 'chua'
-    },
-    {
-      InvoiceId: 'asasadas',
-      roomId: 3,
-      roomName: 'Phòng 103',
-      roomPrice: 1800000,
-      electricityCost: 450000,
-      waterCost: 250000,
-      deposit: 1200000,
-      adjustments: 0,
-      total: 3500000,
-      amountDue: 3500000,
-      status: 'thu'
-    }
-  ]
+        (services || []).forEach((serviceName) => {
+            const serviceDetail = invoice.serviceDetails?.find((s) => s.serviceName === serviceName);
+            serviceData[serviceName] = serviceDetail ? serviceDetail.totalPrice : 0;
+        });
 
-  //nhan vao de set lay du lieu cua 1 hoa don do ***************************************
-  const handleActionClick = (e, InvoiceId) => {
+        return {
+            invoiceId: invoice.invoiceId,
+            roomId:invoice.roomId,
+            roomName: invoice.roomName,
+            roomPrice: invoice.roomPrice,
+            invoiceCreateMonth:invoice.invoiceCreateMonth,
+            invoiceCreateDate:invoice.invoiceCreateDate,
+            dueDate: invoice.dueDate,
+            moveinDate:invoice.moveinDate,
+            dueDateofmoveinDate:invoice.dueDateofmoveinDate,
+            deposit: invoice.deposit,
+            ...serviceData, 
+            adjustments: invoice.additionItems?.reduce(
+                (sum, item) => (item.addition ? sum + item.amount : sum - item.amount),
+                0
+            ),
+            total: invoice.totalAmount,
+            status: invoice.paymentStatus === "PAID" ? "Đã thu xong" : "Chưa thu",
+        };
+    });
+  }, [invoices, services]);
+
+  
+  
+  //nhan vao de set lay du lieu cua 1 hoa don do 
+  const handleActionClick = (e, invoiceId) => {
     e.stopPropagation() // Ngừng sự kiện click để không bị bắt bởi sự kiện ngoài
     // In ra tọa độ
     // Sử dụng getBoundingClientRect để lấy vị trí chính xác của phần tử được nhấn
@@ -271,11 +245,11 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
       x: rect.left + window.scrollX + rect.width / 2, // Centered horizontally
       y: rect.top + window.scrollY + rect.height // Below the icon
     })
-    setShowMenu(InvoiceId) // Hiển thị menu cho hàng với roomId tương ứng
-    fetchDataInvoice(InvoiceId)
+    setShowMenu(invoiceId) // Hiển thị menu cho hàng với roomId tương ứng
+    fetchDataInvoice(invoiceId)
   }
 
-  //Menu thu tien r ***************************************
+  //Menu thu tien r 
   const menuItems = [
     { id: 1, label: 'Xem chi tiết hóa đơn', icon: 'arrow-right-circle' },
     { id: 2, label: 'Gửi hóa đơn qua App', icon: 'share-2' },
@@ -284,54 +258,54 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
     { id: 5, label: 'Gửi hóa đơn qua Zalo', icon: 'share-2' },
     { id: 6, label: 'Xóa hóa đơn', icon: 'trash-2', textClass: 'text-danger' }
   ]
-  //Menu chua thu tien r ***************************************
+  //Menu chua thu tien 
   const menuItemsThu = [
     {
       id: 1,
       label: 'Xem chi tiết hóa đơn',
-      icon: 'arrow-right-circle' // Feather icon
+      icon: 'arrow-right-circle' 
     },
     {
       id: 2,
       label: 'Thu tiền',
-      icon: 'dollar-sign', // Feather icon
+      icon: 'dollar-sign', 
       textClass: 'text-success'
     },
     {
       id: 3,
       label: 'Chỉnh sửa',
-      icon: 'edit-3' // Feather icon
+      icon: 'edit-3' 
     },
     {
       id: 4,
       label: 'In hóa đơn',
-      icon: 'printer' // Feather icon
+      icon: 'printer' 
     },
     {
       id: 5,
       label: 'Chia sẻ hóa đơn',
-      icon: 'share' // Feather icon
+      icon: 'share' 
     },
     {
       id: 6,
       label: 'Gửi hóa đơn qua App',
-      icon: 'share-2' // Feather icon
+      icon: 'share-2' 
     },
     {
       id: 7,
       label: 'Gửi hóa đơn qua Zalo',
-      icon: 'share-2', // Custom image icon
+      icon: 'share-2',
       isImage: true
     },
     {
       id: 8,
       label: 'Hủy hóa đơn',
-      icon: 'trash-2', // Feather icon
+      icon: 'trash-2', 
       textClass: 'text-danger'
     }
   ]
 
-  //khi nhan vao may cai muc tren menu ***************************************
+  //khi nhan vao may cai muc tren menu 
   const handleItemClick = (label) => {
     //showMenu no la cai Id cua hoa don set tu khi nhan vao mo menu
     if (label === 'Xem chi tiết hóa đơn') {
@@ -360,7 +334,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
       fetchDataInvoice(showMenu)
       setShowMenu(null) // Đóng menu
     } else if (label === 'Thu tiền') {
-      alert(`Thu tiền hóa đơn cua hoa don ${showMenu}`)
+      toggleModalCollectMoney(!toggleModalCollectMoney)
       fetchDataInvoice(showMenu)
       setShowMenu(null) // Đóng menu
     } else if (label === 'Hủy hóa đơn') {
@@ -381,6 +355,43 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
     setIsAdmin(true)
   }, [])
 
+  
+  //xoa muc
+  const handleRemove = (index) => {
+    setItems(items.filter((_, i) => i !== index)) 
+  }
+
+  //them
+  const handleAddItem = () => {
+    setItems([...items, {}]) 
+  }
+
+  const handleFromDateChange = (selectedDates) => {
+    const selectedDate = selectedDates[0]
+    setFromDate(selectedDate)
+
+    // Tính ngày "Đến ngày" là 1 tháng sau
+    const nextMonthDate = new Date(selectedDate)
+    nextMonthDate.setMonth(selectedDate.getMonth() + 1)
+
+    // Chuyển thành chuỗi định dạng YYYY-MM-DD cho input
+    const formattedDate = nextMonthDate.toISOString().split('T')[0]
+    setToDate(formattedDate)
+  }
+
+  const handleNextStep = () => {
+    setStep(step + 1)
+  }
+
+  const handlePreviousStep = () => {
+    setStep(step - 1)
+  }
+
+  const handleSubmit = () => {
+    alert('Hóa đơn đã được lập thành công!')
+  }
+
+  
   return (
     <div className="page-bills">
       <NavAdmin
@@ -514,13 +525,13 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
         </div>
       </div>
 
-      {/* Table va xu ly menu o duoi **************************** */}
-      <div className="mt-3" style={{ marginLeft: '15px', marginRight: '10px', position: 'relative' }}>
+      {/* Table va xu ly menu o duoi*/}
+      <div className="mt-3" style={{ marginLeft: '15px', marginRight: '10px', position: 'relative',marginBottom:'50px' }}>
         <ReactTabulator
           className="my-custom-table rounded" // Thêm lớp tùy chỉnh nếu cần
           columns={columns}
           options={options}
-          data={data2}
+          data={data}
           placeholder={<h1></h1>} // Sử dụng placeholder tùy chỉnh
         />
         {showMenu && (
@@ -534,7 +545,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
               transform: 'translateX(-50%)'
             }}>
             {/* menu thay doi theo trang trai */}
-            {(invoice && invoice.status === 'thu' ? menuItems : menuItemsThu).map((item) => (
+            {(invoice && invoice.status === 'Chưa thu' ? menuItems : menuItemsThu).map((item) => (
               <div
                 key={item.id}
                 // Gắn ref vào tag này
@@ -1059,9 +1070,14 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
       <ModalEditInvoice
         modalOpen={modalOpenInvoice}
         toggleModal={toggleModalInvoice}
-        //invoice dang la du lieu ao
-        roomId={invoice ? invoice.InvoiceId : <></>}
+        invoice={invoice}
       />
+      <ModalCollectMoneyInvoice
+        modalOpen={modalOpenCollectMoney}
+        toggleModal={toggleModalCollectMoney}
+        invoice={invoice}
+      />
+
     </div>
   )
 }

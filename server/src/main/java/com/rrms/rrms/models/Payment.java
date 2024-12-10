@@ -1,8 +1,10 @@
 package com.rrms.rrms.models;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -26,6 +28,10 @@ public class Payment {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @OneToMany(mappedBy = "payment")
+    @Column(nullable = false)
+    private LocalDate paymentDate;
+
+    @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference(value = "Payment-Invoice") // Đặt tên cho tham chiếu quản lý
     private List<Invoice> invoices;
 }

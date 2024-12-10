@@ -92,6 +92,7 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
         headers: { Authorization: `Bearer ${token}` }
       })
       setPayments(response.data) // Cập nhật danh sách phương thức thanh toán
+      console.log(response.data)
     } catch (error) {
       console.error('Có lỗi xảy ra khi lấy danh sách phương thức thanh toán:', error)
     }
@@ -230,12 +231,12 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
       `
       }
     },
-    { title: 'Danh mục thu chi', width: 250, field: 'category' },
-    { title: 'Số Tiền', width: 250, field: 'amount', formatter: (cell) => formatCurrency(cell.getValue()) },
-    { title: 'Tên Người Thanh Toán', width: 250, field: 'payerName' },
-    { title: 'Nội Dung Thanh Toán', width: 250, field: 'paymentDescription' },
-    { title: 'Phương thức thanh toán', width: 250, field: 'payment.paymentName' },
-    { title: 'Ngày lập phiếu', width: 250, field: 'transactionDate', sorter: 'date' },
+    { title: 'Danh mục thu chi', width: 220, field: 'category' },
+    { title: 'Số Tiền', width: 220, field: 'amount', formatter: (cell) => formatCurrency(cell.getValue()) },
+    { title: 'Tên Người Thanh Toán', width: 220, field: 'payerName' },
+    { title: 'Nội Dung Thanh Toán', width: 220, field: 'paymentDescription' },
+    { title: 'Phương thức thanh toán', width: 220, field: 'payment.paymentName' },
+    { title: 'Ngày lập phiếu', width: 220, field: 'transactionDate', sorter: 'date' },
     {
       title: 'Loại Giao Dịch',
       field: 'transactionType',

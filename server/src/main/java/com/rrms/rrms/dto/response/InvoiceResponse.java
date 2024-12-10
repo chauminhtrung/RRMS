@@ -5,6 +5,8 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.UUID;
 
+import com.rrms.rrms.enums.PaymentStatus;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +22,7 @@ import lombok.experimental.FieldDefaults;
 public class InvoiceResponse {
     private UUID invoiceId; // ID hóa đơn
     private String invoiceReason; // ly do thu tien
+    private UUID roomId;
     private String roomName;
     private Double roomPrice;
     private YearMonth invoiceCreateMonth; // tháng lập hóa đơn
@@ -32,4 +35,6 @@ public class InvoiceResponse {
     private List<InvoiceDeviceDetailResponse> deviceDetails;
     private List<InvoiceAdditionItemResponse> additionItems;
     private Double totalAmount;
+    private PaymentStatus paymentStatus;
+    private PaymentDetailsResponse paymentDetails;
 }

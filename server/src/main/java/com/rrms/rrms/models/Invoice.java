@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+import com.rrms.rrms.enums.PaymentStatus;
 import com.rrms.rrms.services.servicesImp.YearMonthAttributeConverter;
 
 import lombok.AllArgsConstructor;
@@ -23,7 +25,7 @@ public class Invoice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID invoiceId; // test
+    private UUID invoiceId;
 
     @Column(columnDefinition = "VARCHAR(100)")
     private String invoiceReason;
@@ -52,8 +54,10 @@ public class Invoice {
     @JoinColumn(name = "tenant_id")
     private Tenant tenant;
 
+
     @ManyToOne
-    @JoinColumn(name = "payment_id")
+    @JoinColumn(name = "payment_id", nullable = false)
+    @JsonBackReference(value = "Payment-Invoice") // Đặt tên cho tham chiếu ngược
     private Payment payment;
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -61,4 +65,8 @@ public class Invoice {
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<InvoiceAdditionItem> additionItems = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(10)", nullable = false)
+    private PaymentStatus paymentStatus = PaymentStatus.UNPAID;
 }

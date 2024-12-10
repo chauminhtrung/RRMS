@@ -33,7 +33,7 @@ public class Account {
     @Column(columnDefinition = "VARCHAR(255)")
     private String fullname;
 
-    @Column(columnDefinition = "VARCHAR(255)", unique = true)
+    @Column(columnDefinition = "VARCHAR(20)", unique = true)
     private String phone;
 
     @Column(columnDefinition = "VARCHAR(255)", unique = true) // unique = true để trường này là duy nhất
@@ -65,7 +65,7 @@ public class Account {
 
     // Thêm trường ngày tạo
     @Column(name = "created_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdDate;
+    private LocalDateTime createdDate = LocalDateTime.now();
 
     public List<String> getRoles() {
         return authorities.stream()
