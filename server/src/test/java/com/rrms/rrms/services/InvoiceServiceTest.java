@@ -1,12 +1,14 @@
 package com.rrms.rrms.services;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.Mockito.*;
 
-import com.rrms.rrms.dto.request.*;
-import com.rrms.rrms.dto.response.InvoiceResponse;
-import com.rrms.rrms.models.*;
-import com.rrms.rrms.repositories.*;
-import com.rrms.rrms.services.servicesImp.InvoiceService;
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,14 +18,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.util.*;
+import com.rrms.rrms.dto.request.*;
+import com.rrms.rrms.dto.response.InvoiceResponse;
+import com.rrms.rrms.models.*;
+import com.rrms.rrms.repositories.*;
+import com.rrms.rrms.services.servicesImp.InvoiceService;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyDouble;
-import static org.mockito.Mockito.*;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
@@ -84,11 +85,11 @@ public class InvoiceServiceTest {
         when(mockRoomService.getService()).thenReturn(mockMotelService); // Trả về mock MotelService
         when(roomServiceRepository.findById(any())).thenReturn(Optional.of(mockRoomService));
         when(mockMotelDevice.getDeviceName()).thenReturn("Test Device Name"); // Mock getDeviceName() để tránh NPE
-        when(mockRoomDevice.getMotelDevice()).thenReturn(mockMotelDevice); // Mock getMotelDevice() để trả về mockMotelDevice
+        when(mockRoomDevice.getMotelDevice())
+                .thenReturn(mockMotelDevice); // Mock getMotelDevice() để trả về mockMotelDevice
 
         when(roomDeviceRepository.findById(any())).thenReturn(Optional.of(mockRoomDevice));
     }
-
 
     @Test
     void testGetInvoicesByMotelId() {
@@ -101,16 +102,17 @@ public class InvoiceServiceTest {
         // Prepare mock data for Contract
 
         contract.setContractId(UUID.randomUUID());
-        contract.setRoom(room);  // Make sure the contract has a valid room
+        contract.setRoom(room); // Make sure the contract has a valid room
         List<Contract> contracts = Collections.singletonList(contract);
         when(contractRepository.findByRoomRoomId(room.getRoomId())).thenReturn(contracts);
 
         // Prepare mock data for Invoice
         Invoice invoice = new Invoice();
         invoice.setInvoiceId(UUID.randomUUID());
-        invoice.setContract(contract);  // Ensure the invoice has a contract
+        invoice.setContract(contract); // Ensure the invoice has a contract
         List<Invoice> invoices = Collections.singletonList(invoice);
-        when(invoiceRepository.findByContractContractId(contract.getContractId())).thenReturn(invoices);
+        when(invoiceRepository.findByContractContractId(contract.getContractId()))
+                .thenReturn(invoices);
 
         // Call the service method
         List<InvoiceResponse> result = invoiceService.getInvoicesByMotelId(motelId);
@@ -163,12 +165,13 @@ public class InvoiceServiceTest {
 
         // Prepare mock data for Contract
         contract.setContractId(UUID.randomUUID());
-        contract.setRoom(room);  // Ensure the contract has a valid room
+        contract.setRoom(room); // Ensure the contract has a valid room
         List<Contract> contracts = Collections.singletonList(contract);
         when(contractRepository.findByRoomRoomId(room.getRoomId())).thenReturn(contracts);
 
         // Prepare mock data for Invoice (no invoices for contract)
-        when(invoiceRepository.findByContractContractId(contract.getContractId())).thenReturn(Collections.emptyList());
+        when(invoiceRepository.findByContractContractId(contract.getContractId()))
+                .thenReturn(Collections.emptyList());
 
         // Call the service method
         List<InvoiceResponse> result = invoiceService.getInvoicesByMotelId(motelId);
@@ -188,19 +191,21 @@ public class InvoiceServiceTest {
 
         // Prepare mock data for Contract
         contract.setContractId(UUID.randomUUID());
-        contract.setRoom(room);  // Ensure the contract has a valid room
+        contract.setRoom(room); // Ensure the contract has a valid room
         List<Contract> contracts = Collections.singletonList(contract);
         when(contractRepository.findByRoomRoomId(room.getRoomId())).thenReturn(contracts);
 
         // Prepare mock data for Invoice
         Invoice invoice = new Invoice();
         invoice.setInvoiceId(UUID.randomUUID());
-        invoice.setContract(contract);  // Ensure the invoice has a contract
+        invoice.setContract(contract); // Ensure the invoice has a contract
         List<Invoice> invoices = Collections.singletonList(invoice);
-        when(invoiceRepository.findByContractContractId(contract.getContractId())).thenReturn(invoices);
+        when(invoiceRepository.findByContractContractId(contract.getContractId()))
+                .thenReturn(invoices);
 
         // Prepare mock data for InvoiceDetail (no details for invoice)
-        when(detailInvoiceRepository.findByInvoiceInvoiceId(invoice.getInvoiceId())).thenReturn(Collections.emptyList());
+        when(detailInvoiceRepository.findByInvoiceInvoiceId(invoice.getInvoiceId()))
+                .thenReturn(Collections.emptyList());
 
         // Call the service method
         List<InvoiceResponse> result = invoiceService.getInvoicesByMotelId(motelId);
@@ -208,7 +213,6 @@ public class InvoiceServiceTest {
         // Assert the result
         assertNotNull(result);
         assertEquals(1, result.size(), "There should be one invoice in the result.");
-
     }
 
     @Test
@@ -221,8 +225,7 @@ public class InvoiceServiceTest {
         when(contractRepository.findById(request.getContractId())).thenReturn(Optional.empty());
 
         // Call the service method and expect exception
-        assertThrows(RuntimeException.class, () -> invoiceService.createInvoice(request),
-                "Hợp đồng không tồn tại");
+        assertThrows(RuntimeException.class, () -> invoiceService.createInvoice(request), "Hợp đồng không tồn tại");
     }
 
     @Test
@@ -251,7 +254,6 @@ public class InvoiceServiceTest {
         assertEquals("RoomService không tồn tại", exception.getMessage());
     }
 
-
     @Test
     void testCreateInvoice_MotelServiceNotFound() {
         // Prepare mock data for InvoiceRequest
@@ -269,11 +271,11 @@ public class InvoiceServiceTest {
         when(contractRepository.findById(request.getContractId())).thenReturn(Optional.of(contract));
 
         // Mock roomServiceRepository.findById trả về RoomService hợp lệ
-        RoomService roomService = mock(RoomService.class);  // Mock RoomService
+        RoomService roomService = mock(RoomService.class); // Mock RoomService
         when(roomServiceRepository.findById(serviceRequest.getRoomServiceId())).thenReturn(Optional.of(roomService));
 
         // Mock getService trả về null (MotelService không tồn tại)
-        when(roomService.getService()).thenReturn(null);  // Mock getService trả về null
+        when(roomService.getService()).thenReturn(null); // Mock getService trả về null
 
         // Call the service method and expect exception
         RuntimeException exception = assertThrows(RuntimeException.class, () -> invoiceService.createInvoice(request));
@@ -281,7 +283,6 @@ public class InvoiceServiceTest {
         // Assert that the exception message matches the expected message
         assertEquals("MotelService không tồn tại", exception.getMessage());
     }
-
 
     @Test
     void testCreateInvoice_Success() {
@@ -399,8 +400,8 @@ public class InvoiceServiceTest {
         double totalServiceAmount = 1000.0; // Số tiền dịch vụ giả định
 
         // Khởi tạo phương thức trả về
-        InvoiceResponse response = new InvoiceService().mapToResponse(
-                invoice, details, moveInDate, dueDateOfMoveInDate, totalServiceAmount);
+        InvoiceResponse response = new InvoiceService()
+                .mapToResponse(invoice, details, moveInDate, dueDateOfMoveInDate, totalServiceAmount);
 
         // Kiểm tra các trường hợp
         assertNotNull(response);
@@ -422,7 +423,8 @@ public class InvoiceServiceTest {
         // Kiểm tra chi tiết dịch vụ
         assertEquals(1, response.getServiceDetails().size());
         assertEquals("Wi-Fi", response.getServiceDetails().get(0).getServiceName());
-        assertEquals(500.0, response.getServiceDetails().get(0).getServicePrice().doubleValue());
+        assertEquals(
+                500.0, response.getServiceDetails().get(0).getServicePrice().doubleValue());
         assertEquals(2, response.getServiceDetails().get(0).getQuantity());
         assertEquals(1000.0, response.getServiceDetails().get(0).getTotalPrice().doubleValue());
 
@@ -450,7 +452,6 @@ public class InvoiceServiceTest {
         UUID testRoomDeviceId = UUID.randomUUID();
         request.setDeviceDetails(List.of(new InvoiceDetailDeviceRequest(testRoomDeviceId)));
 
-
         // Call the service method
         InvoiceResponse response = invoiceService.updateInvoice(request);
 
@@ -469,12 +470,10 @@ public class InvoiceServiceTest {
         UUID capturedRoomServiceId = roomServiceIdCaptor.getValue();
         assertEquals(testRoomServiceId, capturedRoomServiceId); // Kiểm tra roomServiceId
 
-
         // Other verifications (if needed) - nên dùng any() hoặc giá trị cụ thể
         verify(roomDeviceRepository).findById(any()); // Hoặc giá trị cụ thể nếu có
         verify(invoiceService).mapToResponse(any(), anyList(), any(), any(), anyDouble());
     }
-
 
     @Test
     void testUpdateInvoice_InvoiceNotFound() {
@@ -487,8 +486,7 @@ public class InvoiceServiceTest {
         when(invoiceRepository.findById(invoiceId)).thenReturn(Optional.empty());
 
         // Call the service method and expect exception
-        assertThrows(RuntimeException.class, () -> invoiceService.updateInvoice(request),
-                "Hóa đơn không tồn tại");
+        assertThrows(RuntimeException.class, () -> invoiceService.updateInvoice(request), "Hóa đơn không tồn tại");
     }
 
     @Test
@@ -509,8 +507,8 @@ public class InvoiceServiceTest {
         when(roomServiceRepository.findById(any())).thenReturn(Optional.empty());
 
         // Call the service method and expect exception
-        assertThrows(RuntimeException.class, () -> invoiceService.updateInvoice(request),
-                "Dịch vụ phòng không tồn tại");
+        assertThrows(
+                RuntimeException.class, () -> invoiceService.updateInvoice(request), "Dịch vụ phòng không tồn tại");
     }
 
     @Test
@@ -537,9 +535,7 @@ public class InvoiceServiceTest {
         when(roomDeviceRepository.findById(any())).thenReturn(Optional.empty());
 
         // Call the service method and expect exception
-        assertThrows(RuntimeException.class, () -> invoiceService.updateInvoice(request),
-                "Thiết bị phòng không tồn tại");
+        assertThrows(
+                RuntimeException.class, () -> invoiceService.updateInvoice(request), "Thiết bị phòng không tồn tại");
     }
-
-
 }

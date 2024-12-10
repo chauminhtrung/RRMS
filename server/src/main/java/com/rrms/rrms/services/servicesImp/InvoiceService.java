@@ -24,37 +24,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.rrms.rrms.dto.request.CollectPaymentRequest;
-import com.rrms.rrms.dto.request.InvoiceAdditionItemRequest;
-import com.rrms.rrms.dto.request.InvoiceDetailDeviceRequest;
-import com.rrms.rrms.dto.request.InvoiceDetailServiceRequest;
-import com.rrms.rrms.dto.request.InvoiceRequest;
-import com.rrms.rrms.dto.request.UpdateInvoiceAdditionItemRequest;
-import com.rrms.rrms.dto.request.UpdateInvoiceRequest;
-import com.rrms.rrms.dto.response.InvoiceAdditionItemResponse;
-import com.rrms.rrms.dto.response.InvoiceDeviceDetailResponse;
-import com.rrms.rrms.dto.response.InvoiceResponse;
-import com.rrms.rrms.dto.response.InvoiceServiceDetailResponse;
-import com.rrms.rrms.dto.response.PaymentDetailsResponse;
-import com.rrms.rrms.enums.PaymentStatus;
-import com.rrms.rrms.models.Contract;
-import com.rrms.rrms.models.Invoice;
-import com.rrms.rrms.models.InvoiceAdditionItem;
-import com.rrms.rrms.models.InvoiceDetail;
-import com.rrms.rrms.models.MotelService;
-import com.rrms.rrms.models.Payment;
-import com.rrms.rrms.models.Room;
-import com.rrms.rrms.models.RoomDevice;
-import com.rrms.rrms.models.RoomService;
-import com.rrms.rrms.repositories.ContractRepository;
-import com.rrms.rrms.repositories.DetailInvoiceRepository;
-import com.rrms.rrms.repositories.InvoiceRepository;
-import com.rrms.rrms.repositories.PaymentRepository;
-import com.rrms.rrms.repositories.RoomDeviceRepository;
-import com.rrms.rrms.repositories.RoomRepository;
-import com.rrms.rrms.repositories.RoomServiceRepository;
-import com.rrms.rrms.services.IInvoices;
-
 @Service
 public class InvoiceService implements IInvoices {
 
@@ -93,8 +62,8 @@ public class InvoiceService implements IInvoices {
 
         return invoices.stream()
                 .map(invoice -> {
-                    List<InvoiceDetail> details =
-                            detailInvoiceRepository.findByInvoiceInvoiceId(invoice.getInvoiceId());
+                    List<InvoiceDetail> details = detailInvoiceRepository
+                            .findByInvoiceInvoiceId(invoice.getInvoiceId());
 
                     LocalDate moveInDate = invoice.getContract()
                             .getMoveinDate()
@@ -226,8 +195,8 @@ public class InvoiceService implements IInvoices {
 
         double totalAddition = invoice.getAdditionItems() != null
                 ? invoice.getAdditionItems().stream()
-                .mapToDouble(charge -> charge.getIsAddition() ? charge.getAmount() : -charge.getAmount())
-                .sum()
+                        .mapToDouble(charge -> charge.getIsAddition() ? charge.getAmount() : -charge.getAmount())
+                        .sum()
                 : 0;
 
         double totalInvoice = invoice.getContract().getPrice() + totalServiceAmount + totalAddition;
@@ -295,8 +264,8 @@ public class InvoiceService implements IInvoices {
 
     @Override
     public InvoiceResponse updateInvoice(UUID invoiceId, UpdateInvoiceRequest request) {
-        Invoice invoice =
-                invoiceRepository.findById(invoiceId).orElseThrow(() -> new RuntimeException("Hóa đơn không tồn tại"));
+        Invoice invoice = invoiceRepository.findById(invoiceId)
+                .orElseThrow(() -> new RuntimeException("Hóa đơn không tồn tại"));
 
         if (request.getInvoiceReason() != null) {
             invoice.setInvoiceReason(request.getInvoiceReason());
@@ -434,8 +403,8 @@ public class InvoiceService implements IInvoices {
     @Override
     public void collectPayment(UUID invoiceId, CollectPaymentRequest request) {
         // Tìm hóa đơn
-        Invoice invoice =
-                invoiceRepository.findById(invoiceId).orElseThrow(() -> new RuntimeException("Invoice không tồn tại"));
+        Invoice invoice = invoiceRepository.findById(invoiceId)
+                .orElseThrow(() -> new RuntimeException("Invoice không tồn tại"));
 
         // Kiểm tra trạng thái thanh toán
         if (invoice.getPaymentStatus() == PaymentStatus.PAID) {

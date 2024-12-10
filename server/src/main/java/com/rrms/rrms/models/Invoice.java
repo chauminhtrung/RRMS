@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.rrms.rrms.enums.PaymentStatus;
 import com.rrms.rrms.services.servicesImp.YearMonthAttributeConverter;
 
@@ -53,7 +53,6 @@ public class Invoice {
     @ManyToOne
     @JoinColumn(name = "tenant_id")
     private Tenant tenant;
-
 
     @ManyToOne
     @JoinColumn(name = "payment_id", nullable = false)
