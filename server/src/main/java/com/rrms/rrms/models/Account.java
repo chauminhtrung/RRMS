@@ -65,7 +65,7 @@ public class Account {
 
     // Thêm trường ngày tạo
     @Column(name = "created_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdDate;
+    private LocalDateTime createdDate = LocalDateTime.now();
 
     public List<String> getRoles() {
         return authorities.stream()

@@ -22,6 +22,8 @@ const Login = ({ setUsername, setAvatar }) => {
   const loginWithGoogle = async (credentialResponse) => {
     try {
       const decoded = jwtDecode(credentialResponse.credential)
+      console.log(decoded)
+
       if (decoded != null) {
         const response = await checkRegister(decoded.email)
         if (!response.result) {
@@ -64,6 +66,8 @@ const Login = ({ setUsername, setAvatar }) => {
   }
 
   const loginWithFacebook = async (param) => {
+    console.log(param)
+
     try {
       if (param != null) {
         const response = await checkRegister(param.data.userID)

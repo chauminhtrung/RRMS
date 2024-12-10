@@ -23,6 +23,8 @@ public class Transaction {
     @Column(name = "amount", nullable = false, columnDefinition = "DECIMAL(10, 2)")
     private BigDecimal amount; // Số tiền thu
 
+
+
     @ManyToOne
     @JoinColumn(name = "payment_id")
     private Payment payment;
