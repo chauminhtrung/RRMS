@@ -1,5 +1,7 @@
 package com.rrms.rrms.dto.response;
 
+import java.util.UUID;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,8 +15,10 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InvoiceServiceDetailResponse {
-    private String serviceName; // Tên dịch vụ
-    private Long servicePrice; // Giá dịch vụ
-    private Integer quantity; // Số lượng sử dụng
+    private UUID roomServiceId;
+    private String serviceName;
+    private Long servicePrice;
+    private Integer quantity;
+    private String chargetype;
     private Long totalPrice;
 }

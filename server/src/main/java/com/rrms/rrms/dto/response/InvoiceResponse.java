@@ -5,6 +5,8 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.UUID;
 
+import com.rrms.rrms.enums.PaymentStatus;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,4 +35,6 @@ public class InvoiceResponse {
     private List<InvoiceDeviceDetailResponse> deviceDetails;
     private List<InvoiceAdditionItemResponse> additionItems;
     private Double totalAmount;
+    private PaymentStatus paymentStatus;
+    private PaymentDetailsResponse paymentDetails;
 }

@@ -3,9 +3,11 @@ package com.rrms.rrms.services;
 import java.util.List;
 import java.util.UUID;
 
+import com.rrms.rrms.dto.request.CollectPaymentRequest;
 import com.rrms.rrms.dto.request.InvoiceRequest;
 import com.rrms.rrms.dto.request.UpdateInvoiceRequest;
 import com.rrms.rrms.dto.response.InvoiceResponse;
+import com.rrms.rrms.models.Invoice;
 
 public interface IInvoices {
 
@@ -13,5 +15,11 @@ public interface IInvoices {
 
     InvoiceResponse createInvoice(InvoiceRequest request);
 
-    InvoiceResponse updateInvoice(UpdateInvoiceRequest request);
+    InvoiceResponse updateInvoice(UUID invoiceId, UpdateInvoiceRequest request);
+
+    Invoice findInvoiceById(UUID invoiceId);
+
+    InvoiceResponse mapToResponse(Invoice invoice);
+
+    void collectPayment(UUID invoiceId, CollectPaymentRequest request);
 }
