@@ -1,4 +1,4 @@
-package com.rrms.rrms.util;
+package com.rrms.rrms.exceptions;
 
 public class MoMoException extends Exception {
     public MoMoException(String message) {

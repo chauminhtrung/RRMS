@@ -1,5 +1,18 @@
 package com.rrms.rrms.services.servicesImp;
 
+import com.rrms.rrms.dto.request.*;
+import com.rrms.rrms.dto.response.InvoiceAdditionItemResponse;
+import com.rrms.rrms.dto.response.InvoiceDeviceDetailResponse;
+import com.rrms.rrms.dto.response.InvoiceResponse;
+import com.rrms.rrms.dto.response.InvoiceServiceDetailResponse;
+import com.rrms.rrms.models.MotelService;
+import com.rrms.rrms.models.RoomService;
+import com.rrms.rrms.models.*;
+import com.rrms.rrms.repositories.*;
+import com.rrms.rrms.services.IInvoices;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
@@ -7,34 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.rrms.rrms.dto.request.InvoiceAdditionItemRequest;
-import com.rrms.rrms.dto.request.InvoiceDetailDeviceRequest;
-import com.rrms.rrms.dto.request.InvoiceDetailServiceRequest;
-import com.rrms.rrms.dto.request.InvoiceRequest;
-import com.rrms.rrms.dto.request.UpdateInvoiceRequest;
-import com.rrms.rrms.dto.response.InvoiceAdditionItemResponse;
-import com.rrms.rrms.dto.response.InvoiceDeviceDetailResponse;
-import com.rrms.rrms.dto.response.InvoiceResponse;
-import com.rrms.rrms.dto.response.InvoiceServiceDetailResponse;
-import com.rrms.rrms.models.Contract;
-import com.rrms.rrms.models.Invoice;
-import com.rrms.rrms.models.InvoiceAdditionItem;
-import com.rrms.rrms.models.InvoiceDetail;
-import com.rrms.rrms.models.MotelService;
-import com.rrms.rrms.models.Room;
-import com.rrms.rrms.models.RoomDevice;
-import com.rrms.rrms.models.RoomService;
-import com.rrms.rrms.repositories.ContractRepository;
-import com.rrms.rrms.repositories.DetailInvoiceRepository;
-import com.rrms.rrms.repositories.InvoiceRepository;
-import com.rrms.rrms.repositories.RoomDeviceRepository;
-import com.rrms.rrms.repositories.RoomRepository;
-import com.rrms.rrms.repositories.RoomServiceRepository;
-import com.rrms.rrms.services.IInvoices;
 
 @Service
 public class InvoiceService implements IInvoices {
@@ -192,7 +177,7 @@ public class InvoiceService implements IInvoices {
         return mapToResponse(invoice, details, moveInDate, dueDateOfMoveInDate, totalServiceAmount);
     }
 
-    private InvoiceResponse mapToResponse(
+    public InvoiceResponse mapToResponse(
             Invoice invoice,
             List<InvoiceDetail> details,
             LocalDate moveInDate,
@@ -217,8 +202,8 @@ public class InvoiceService implements IInvoices {
         // Calculate total additional charges (additions and subtractions)
         double totalAddition = invoice.getAdditionItems() != null
                 ? invoice.getAdditionItems().stream()
-                        .mapToDouble(charge -> charge.getIsAddition() ? charge.getAmount() : -charge.getAmount())
-                        .sum()
+                .mapToDouble(charge -> charge.getIsAddition() ? charge.getAmount() : -charge.getAmount())
+                .sum()
                 : 0;
 
         // Calculate the total invoice amount
