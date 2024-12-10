@@ -1,4 +1,4 @@
-package com.rrms.rrms.dto.response;
+package com.rrms.rrms.dto.request;
 
 import java.util.UUID;
 
@@ -14,10 +14,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class InvoiceDeviceDetailResponse {
-    private UUID roomDeviceId;
-    private String deviceName;
-    private Double devicePrice;
-    private Double quantity;
-    private Double totalPrice;
+public class UpdateInvoiceAdditionItemRequest {
+    private UUID additionalChargeId;
+    private String reason;
+    private Double amount;
+    private Boolean isAddition;
 }

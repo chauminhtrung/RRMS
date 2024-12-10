@@ -1,6 +1,6 @@
-package com.rrms.rrms.dto.response;
+package com.rrms.rrms.dto.request;
 
-import java.util.UUID;
+import java.time.LocalDate;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,10 +14,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class InvoiceDeviceDetailResponse {
-    private UUID roomDeviceId;
-    private String deviceName;
-    private Double devicePrice;
-    private Double quantity;
-    private Double totalPrice;
+public class CollectPaymentRequest {
+    private Double totalAmount;
+    private String paymentName;
+    private String description;
+    private LocalDate paymentDate;
 }
