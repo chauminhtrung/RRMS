@@ -31,11 +31,13 @@ import NavAdmin from '~/layouts/admin/NavbarAdmin'
 import { ReactTabulator } from 'react-tabulator'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import * as XLSX from 'xlsx';
 
 const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   const [modalOpen, setModalOpen] = useState(false)
   const userData = JSON.parse(sessionStorage.getItem('user')) // Lấy dữ liệu người dùng từ session storage
   const token = userData?.token // Lấy token
+  const username = userData?.username; // **** Lấy tên tài khoản từ sessionStorage
   const [transactionType, setTransactionType] = useState('receipt') // 'receipt' or 'expense'
   const [payments, setPayments] = useState([])
   const [loading, setLoading] = useState(true)
@@ -49,55 +51,33 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
 
   useEffect(() => {
     setIsAdmin(true)
-    fetchTransactions() // Gọi hàm để lấy dữ liệu
-    fetchPayments()
-    fetchSummary()
+    fetchData();
   }, [setIsAdmin])
 
-  const fetchSummary = async () => {
+  // **** Hàm để lấy dữ liệu giao dịch, phương thức thanh toán và tóm tắt
+  const fetchData = async () => {
     try {
-      const response = await axios.get(`${env.API_URL}/transactions/summary`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      setSummary(response.data) // Cập nhật dữ liệu tổng hợp vào state
-    } catch (err) {
-      setError(err.message) // Cập nhật lỗi vào state
-      console.error('Có lỗi xảy ra khi lấy dữ liệu tổng hợp:', err)
-    }
-  }
+      console.log("Tên tài khoản:", username); // **** In ra tên tài khoản
 
-  const fetchTransactions = async () => {
-    setLoading(true)
-    try {
-      const response = await axios.get(`${env.API_URL}/transactions`, {
-        headers: {
-          Authorization: `Bearer ${token}` // Thêm token vào header
-        }
-      })
-      setTransactions(response.data) // Cập nhật dữ liệu vào state
-      console.log(response.data) // In dữ liệu ra console
+      const [transactionsResponse, paymentsResponse, summaryResponse] = await Promise.all([
+        axios.get(`${env.API_URL}/transactions/${username}`, { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get(`${env.API_URL}/payment/list_payment`, { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get(`${env.API_URL}/transactions/summary`, { headers: { Authorization: `Bearer ${token}` }, params: { username } }),
+      ]);
+
+      // **** Cập nhật trạng thái với dữ liệu lấy được
+      setTransactions(transactionsResponse.data);
+      setPayments(paymentsResponse.data);
+      setSummary(summaryResponse.data);
     } catch (err) {
-      setError(err.message) // Cập nhật lỗi vào state
-      console.error('Có lỗi xảy ra khi lấy dữ liệu:', err)
+      setError(err.message);
+      console.error('Có lỗi xảy ra khi lấy dữ liệu:', err);
     } finally {
-      setLoading(false) // Đặt loading là false sau khi hoàn thành
+      setLoading(false);
     }
-  }
+  };
 
-  const fetchPayments = async () => {
-    try {
-      const response = await axios.get(`${env.API_URL}/payment/list_payment`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      setPayments(response.data) // Cập nhật danh sách phương thức thanh toán
-      console.log(response.data)
-    } catch (error) {
-      console.error('Có lỗi xảy ra khi lấy danh sách phương thức thanh toán:', error)
-    }
-  }
-
+  // **** Hàm xóa giao dịch
   const deleteTransaction = async (id) => {
     const { isConfirmed } = await Swal.fire({
       title: 'Xác nhận',
@@ -105,46 +85,53 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Có',
-      cancelButtonText: 'Hủy'
-    })
+      cancelButtonText: 'Hủy',
+    });
 
     if (isConfirmed) {
       try {
-        const response = await axios.delete(`${env.API_URL}/transactions/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-
-        Swal.fire('Thành công!', response.data, 'success')
-        fetchTransactions() // Cập nhật lại danh sách giao dịch
-        fetchSummary()
+        await axios.delete(`${env.API_URL}/transactions/${id}`, { headers: { Authorization: `Bearer ${token}` }, params: { username } });
+        Swal.fire('Thành công!', 'Giao dịch đã được xóa.', 'success');
+        fetchData(); // **** Cập nhật lại dữ liệu sau khi xóa
       } catch (error) {
-        console.error('Có lỗi xảy ra khi xóa giao dịch:', error.response ? error.response.data : error.message)
-        Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa giao dịch.', 'error')
+        console.error('Có lỗi xảy ra khi xóa giao dịch:', error);
+        Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa giao dịch.', 'error');
       }
     }
-  }
+  };
 
-  // Đảm bảo hàm này có thể được truy cập từ global scope
-  window.deleteTransaction = deleteTransaction
-
+  // **** Mở modal để thêm giao dịch
   const handleOpenModal = (type) => {
-    setTransactionType(type)
-    setModalOpen(true)
-  }
-  const handleCloseModal = () => setModalOpen(false)
+    setTransactionType(type);
+    setModalOpen(true);
+  };
 
+  const handleCloseModal = () => setModalOpen(false);
+
+  // **** Hàm xử lý nộp giao dịch
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const dateInput = formData.get('date');
+    const date = new Date(dateInput); // Lấy ngày từ form
+    const today = new Date(); // Ngày hiện tại
 
-    const formData = new FormData(e.target)
+    // Đặt thời gian của ngày hiện tại về 00:00:00 để so sánh chỉ ngày
 
-    const amount = parseFloat(formData.get('amount'))
+
+    // Kiểm tra xem ngày lập phiếu có lớn hơn ngày hiện tại không
+    if (date > today) {
+      // Nếu lớn hơn, đặt ngày lập phiếu bằng ngày hiện tại
+      Swal.fire('Thông báo', 'Ngày lập phiếu đã được đặt về ngày hiện tại.', 'info');
+      // Đặt ngày về ngày hiện tại
+      e.target.date.value = today.toISOString().split('T')[0];
+      return;
+    }
+
+    const amount = parseFloat(formData.get('amount'));
     if (isNaN(amount) || amount <= 0) {
-      console.error('Số tiền không hợp lệ')
-      Swal.fire('Lỗi!', 'Số tiền không hợp lệ.', 'error') // Thông báo lỗi
-      return // Ngăn không cho gửi yêu cầu
+      Swal.fire('Lỗi!', 'Số tiền không hợp lệ.', 'error');
+      return;
     }
 
     const paymentMethod = formData.get('paymentMethod')
@@ -161,7 +148,7 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
       payerName: formData.get('payer'),
       paymentDescription: formData.get('description'),
       category: formData.get('category'),
-      transactionDate: formData.get('date')
+      transactionDate: date.toISOString().split('T')[0],
     }
 
     // Hiển thị thông báo xác nhận trước khi gửi
@@ -185,15 +172,17 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
-          }
-        })
+          },
+          params: { username },
 
+        })
+        console.log(data);
         // Cập nhật danh sách giao dịch
         setTransactions((prev) => [...prev, response.data])
 
-        fetchSummary()
+        await fetchData();
         // Gọi lại fetchTransactions để đảm bảo dữ liệu mới
-        await fetchTransactions()
+
         handleCloseModal()
         Swal.fire('Thành công!', 'Giao dịch đã được thêm thành công!', 'success') // Thông báo thành công
       } catch (error) {
@@ -212,6 +201,7 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount)
   }
+  window.deleteTransaction = deleteTransaction;
   // Cấu hình các cột của bảng
   const columns = [
     {
@@ -277,6 +267,120 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
     placeholder: 'Không có dữ liệu để hiển thị'
   }
 
+  //Xuất excel
+  const downloadExcel = () => {
+    const data = transactions.map(transaction => ({
+      'Danh mục thu chi': transaction.category,
+      'Số Tiền': transaction.amount,
+      'Tên Người Thanh Toán': transaction.payerName,
+      'Nội Dung Thanh Toán': transaction.paymentDescription,
+      'Ngày lập phiếu': transaction.transactionDate,
+      'Loại Giao Dịch': transaction.transactionType ? 'Thu' : 'Chi',
+    }));
+
+    // Thêm thông tin tổng quan vào mảng dữ liệu
+    const summaryData = [
+      {
+        'Danh mục thu chi': 'Tổng khoản thu (tiền vào)',
+        'Số Tiền': summary.totalIncome,
+      },
+      {
+        'Danh mục thu chi': 'Tổng khoản chi (tiền ra)',
+        'Số Tiền': summary.totalExpense,
+      },
+      {
+        'Danh mục thu chi': 'Lợi nhuận',
+        'Số Tiền': summary.profit,
+      },
+    ];
+
+    // Kết hợp dữ liệu giao dịch và dữ liệu tổng quan
+    const combinedData = [...data, ...summaryData];
+
+    const worksheet = XLSX.utils.json_to_sheet(combinedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Báo cáo thu chi');
+
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const file = new Blob([excelBuffer], { type: 'application/octet-stream' });
+
+    const fileURL = URL.createObjectURL(file);
+    const link = document.createElement('a');
+    link.href = fileURL;
+    link.setAttribute('download', 'transactions.xlsx');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handlePrint = () => {
+    const printContent = `
+      <html>
+        <head>
+          <title>In thu/chi</title>
+          <style>
+            body { font-family: Arial, sans-serif; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { border: 1px solid #000; padding: 8px; text-align: left; }
+            th { background-color: #f2f2f2; }
+            .summary { margin-top: 20px; }
+            .summary-card { border: 1px solid #000; padding: 10px; margin-top: 10px; }
+          </style>
+        </head>
+        <body>
+          <h2>Bảng thu/chi</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Danh mục thu chi</th>
+                <th>Số Tiền</th>
+                <th>Tên Người Thanh Toán</th>
+                <th>Nội Dung Thanh Toán</th>
+                <th>Ngày lập phiếu</th>
+                <th>Loại Giao Dịch</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${transactions.map(transaction => `
+                <tr>
+                  <td>${transaction.category}</td>
+                  <td>${formatCurrency(transaction.amount)}</td>
+                  <td>${transaction.payerName}</td>
+                  <td>${transaction.paymentDescription}</td>
+                  <td>${transaction.transactionDate}</td>
+                  <td>${transaction.transactionType ? 'Thu' : 'Chi'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          <div class="summary">
+            <div class="summary-card">
+              <strong>Tổng khoản thu (tiền vào):</strong> ${formatCurrency(summary.totalIncome)}
+            </div>
+            <div class="summary-card">
+              <strong>Tổng khoản chi (tiền ra):</strong> ${formatCurrency(summary.totalExpense)}
+            </div>
+            <div class="summary-card">
+              <strong>Lợi nhuận:</strong> ${formatCurrency(summary.profit)}
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    const WinPrint = window.open('', '', 'width=900,height=650');
+    WinPrint.document.write(printContent);
+    WinPrint.document.close();
+    WinPrint.focus();
+    WinPrint.print();
+    WinPrint.close();
+  };
+
+  const totalIncomeReceipts = transactions.filter(transaction => transaction.transactionType).length;
+  const totalExpenseReceipts = transactions.filter(transaction => !transaction.transactionType).length;
+
+  console.log(totalIncomeReceipts);
+  console.log(totalExpenseReceipts);
   return (
     <div>
       <NavAdmin
@@ -327,7 +431,7 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
             variant="outlined"
             sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1, mt: 2 }}>
             <Badge
-              badgeContent={4}
+              badgeContent={totalIncomeReceipts + totalExpenseReceipts}
               sx={{
                 '.MuiBadge-badge': {
                   backgroundColor: '#7bed9f',
@@ -343,7 +447,7 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
             </Badge>
 
             <Badge
-              badgeContent={4}
+              badgeContent={totalIncomeReceipts}
               sx={{
                 '& .MuiBadge-badge': {
                   backgroundColor: '#2ed573',
@@ -357,7 +461,7 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
             </Badge>
 
             <Badge
-              badgeContent={4}
+              badgeContent={totalExpenseReceipts}
               sx={{
                 '& .MuiBadge-badge': {
                   backgroundColor: '#ff4757',
@@ -387,11 +491,11 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
               Thêm phiếu chi
             </Button>
 
-            <Button variant="contained" startIcon={<PrintIcon />}>
+            <Button variant="contained" startIcon={<PrintIcon />} onClick={handlePrint}>
               In thu/chi
             </Button>
 
-            <Button variant="contained" startIcon={<FileDownloadIcon />}>
+            <Button variant="contained" startIcon={<FileDownloadIcon />} onClick={downloadExcel}>
               Xuất excel
             </Button>
           </Paper>
