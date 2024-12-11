@@ -44,16 +44,17 @@ public interface ContractRepository extends JpaRepository<Contract, UUID> {
     @Transactional
     @Modifying
     @Query("UPDATE Contract c " + "SET c.status = :newStatus "
-            + "WHERE DATEDIFF(c.closeContract, CURRENT_DATE) <= :thresholdDays and c.status = 'ACTIVE'")
+            + "WHERE c.closeContract <= :thresholdDate AND c.status = 'ACTIVE'")
+    // So sánh với ngày
     int updateStatusForContractsBasedOnDaysDifference(
-            @Param("newStatus") ContractStatus newStatus, @Param("thresholdDays") int thresholdDays);
+            @Param("newStatus") ContractStatus newStatus, @Param("thresholdDate") Date thresholdDate);
 
     @Transactional
     @Modifying
     @Query("UPDATE Contract c " + "SET c.status = :newStatus "
-            + "WHERE DATEDIFF(c.closeContract, CURRENT_DATE) >= :thresholdDays and c.status = 'IATExpire'")
+            + "WHERE c.closeContract >= :thresholdDate AND c.status = 'IATExpire'")
     int updateStatusForContractsBasedOnDaysDifference2(
-            @Param("newStatus") ContractStatus newStatus, @Param("thresholdDays") int thresholdDays);
+            @Param("newStatus") ContractStatus newStatus, @Param("thresholdDate") Date thresholdDate);
 
     @Transactional
     @Modifying

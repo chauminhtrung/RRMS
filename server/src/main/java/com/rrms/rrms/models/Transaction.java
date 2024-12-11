@@ -41,4 +41,9 @@ public class Transaction {
 
     @Column(name = "transaction_type", nullable = false)
     private boolean transactionType; // TRUE cho thu, FALSE cho chi
+
+    // Thêm trường username
+    @ManyToOne
+    @JoinColumn(name = "username", nullable = false)
+    private Account account; // Tài khoản liên quan đến giao dịch
 }

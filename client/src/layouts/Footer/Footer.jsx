@@ -4,7 +4,6 @@ import { Facebook, Instagram, Twitter } from '@mui/icons-material'
 import LinkedInIcon from '@mui/icons-material/LinkedIn'
 import YouTubeIcon from '@mui/icons-material/YouTube'
 import SendIcon from '@mui/icons-material/Send'
-import FavoriteIcon from '@mui/icons-material/Favorite'
 import { Box, useMediaQuery } from '@mui/material'
 import './Footer.css'
 export default function Footer() {
@@ -50,18 +49,33 @@ export default function Footer() {
               </div>
               <div className="col-lg-3 offset-lg-1">
                 <div className="ft-contact">
-                  <h6>Contact Us</h6>
+                  <h6>Liên hệ với chúng tôi</h6>
                   <ul>
-                    <li>(12) 345 67890</li>
-                    <li>info.colorlib@gmail.com</li>
-                    <li>856 Cordia Extension Apt. 356, Lake, United State</li>
+                    <li>
+                      Dương Trí Dũng <span style={{ color: '#5eb7ff', fontWeight: 'bold' }}>- PS31407</span>
+                    </li>
+                    <li>
+                      Châu Minh Trung <span style={{ color: '#5eb7ff', fontWeight: 'bold' }}>- PS31761</span>
+                    </li>
+                    <li>
+                      Kiều Kiến Quốc <span style={{ color: '#5eb7ff', fontWeight: 'bold' }}>- PS31817</span>
+                    </li>
+                    <li>
+                      Vũ Cao Trí <span style={{ color: '#5eb7ff', fontWeight: 'bold' }}>- PS31493</span>
+                    </li>
+                    <li>
+                      Trần Quốc Thuận <span style={{ color: '#5eb7ff', fontWeight: 'bold' }}>- PS31471</span>
+                    </li>
+                    <li>
+                      Nguyễn Tấn Tài <span style={{ color: '#5eb7ff', fontWeight: 'bold' }}>- PS31612</span>
+                    </li>
                   </ul>
                 </div>
               </div>
               <div className="col-lg-3 offset-lg-1">
                 <div className="ft-newslatter">
-                  <h6>New latest</h6>
-                  <p>Get the latest updates and offers.</p>
+                  <h6>Nhận thông báo mới nhất</h6>
+                  <p>Hãy cho chúng tôi email để bạn có thể nhận được thông tin mới nhất từ chúng tôi!</p>
                   <form action="#" className="fn-form">
                     <input type="text" name="" id="" placeholder="Email" />
                     <button type="submit">
@@ -79,16 +93,16 @@ export default function Footer() {
               <div className="col-lg-7">
                 <ul>
                   <li>
-                    <Link to="#">Contact</Link>
+                    <Link to="#">Liên hệ</Link>
                   </li>
                   <li>
-                    <Link to="#">Terms of use</Link>
+                    <Link to="#">Điều khoản sử dụng</Link>
                   </li>
                   <li>
-                    <Link to="#">Privacy</Link>
+                    <Link to="#">Bảo mật</Link>
                   </li>
                   <li>
-                    <Link to="#">Environmental Policy</Link>
+                    <Link to="#">Chính sách môi trường</Link>
                   </li>
                 </ul>
               </div>
@@ -101,11 +115,7 @@ export default function Footer() {
                       textAlign: isMobile ? 'center' : 'right',
                       marginTop: isMobile ? '15px' : ''
                     }}>
-                    Copyright ©<script>document.write(new Date().getFullYear());</script>
-                    2024 All rights reserved | This template is made with <FavoriteIcon /> by{' '}
-                    <Link to="https://colorlib.com" target="_blank">
-                      RRMS
-                    </Link>
+                    Copyright © <span style={{ color: '#5eb7ff' }}>RRMS - Hệ thống quản lý trọ</span>
                   </Typography>
                 </div>
               </div>

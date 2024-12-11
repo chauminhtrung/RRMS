@@ -70,7 +70,7 @@ public class Contract {
 
     // gia tien
     @Column(columnDefinition = "DECIMAL(10, 2)")
-    private Double price;
+    private Double price = 0.0;
 
     // tien coc
     @Column(columnDefinition = "DECIMAL(10, 2)")

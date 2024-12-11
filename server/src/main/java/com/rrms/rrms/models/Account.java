@@ -65,7 +65,7 @@ public class Account {
 
     // Thêm trường ngày tạo
     @Column(name = "created_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdDate;
+    private LocalDateTime createdDate = LocalDateTime.now();
 
     public List<String> getRoles() {
         return authorities.stream()
@@ -80,4 +80,6 @@ public class Account {
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference(value = "account-motel") // Đặt tên cho tham chiếu quản lý
     private List<Motel> motels;
+
+
 }

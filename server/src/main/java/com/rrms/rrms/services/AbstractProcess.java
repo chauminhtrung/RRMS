@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.rrms.rrms.configs.CustomerEnvironment;
 import com.rrms.rrms.configs.PartnerInfo;
-import com.rrms.rrms.util.Execute;
+import com.rrms.rrms.utils.Execute;
 
 public abstract class AbstractProcess<T, V> {
 

@@ -1,4 +1,4 @@
-package com.rrms.rrms.util;
+package com.rrms.rrms.utils;
 
 import java.io.IOException;
 

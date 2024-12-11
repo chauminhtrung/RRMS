@@ -21,7 +21,7 @@ import com.rrms.rrms.services.servicesImp.AuthorityService;
 public class CustomJwtDecoder implements JwtDecoder {
 
     @Value("${jwt.signer-key}")
-    private String signerKey;
+    public String signerKey;
 
     @Autowired
     private AuthorityService authenticationService;

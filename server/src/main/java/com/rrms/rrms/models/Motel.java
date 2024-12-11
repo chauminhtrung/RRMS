@@ -61,7 +61,7 @@ public class Motel {
 
     // them trường ngày tạo phoing
     @Column(name = "created_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdDate;
+    private LocalDateTime createdDate = LocalDateTime.now();
 
     // de xoa motell xoa luon dich vu
     @OneToMany(mappedBy = "motel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)

@@ -19,45 +19,53 @@ import com.rrms.rrms.services.servicesImp.TransactionService;
 @RestController
 @RequestMapping("/transactions")
 public class TransactionController {
+
     @Autowired
     private TransactionService transactionService;
 
-    @GetMapping
-    public ResponseEntity<List<Transaction>> getTransactions() {
-        List<Transaction> transactions = transactionService.getAllTransactions();
-        return ResponseEntity.ok(transactions);
+
+    @GetMapping("/{username}")
+    public ResponseEntity<List<Transaction>> getTransactionsByUsername(@PathVariable String username) {
+        List<Transaction> transactions = transactionService.getTransactionsByUsername(username);
+        if (transactions.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Trả về 204 nếu không có giao dịch
+        }
+        return ResponseEntity.ok(transactions); // Trả về 200 với danh sách giao dịch
     }
 
     @PostMapping("/receipts")
-    public ResponseEntity<TransactionResponse> createReceipt(@RequestBody TransactionRequest transactionDTO) {
+    public ResponseEntity<TransactionResponse> createReceipt(@RequestBody TransactionRequest transactionDTO,
+                                                             @RequestParam String username) {
         transactionDTO.setTransactionType(true); // Đặt loại giao dịch là phiếu thu
-        TransactionResponse newTransaction = transactionService.createTransaction(transactionDTO);
+        TransactionResponse newTransaction = transactionService.createTransaction(transactionDTO, username);
         return ResponseEntity.ok(newTransaction);
     }
 
     @PostMapping("/expenses")
-    public ResponseEntity<TransactionResponse> createExpense(@RequestBody TransactionRequest transactionDTO) {
+    public ResponseEntity<TransactionResponse> createExpense(@RequestBody TransactionRequest transactionDTO,
+                                                             @RequestParam String username) {
         transactionDTO.setTransactionType(false); // Đặt loại giao dịch là phiếu chi
-        TransactionResponse newTransaction = transactionService.createTransaction(transactionDTO);
+        TransactionResponse newTransaction = transactionService.createTransaction(transactionDTO, username);
         return ResponseEntity.ok(newTransaction);
     }
 
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteTransaction(@PathVariable UUID id) {
-        boolean isDeleted = transactionService.deleteTransaction(id);
+    public ResponseEntity<String> deleteTransaction(@PathVariable UUID id, @RequestParam String username) {
+        boolean isDeleted = transactionService.deleteTransaction(id, username);
         if (isDeleted) {
             return ResponseEntity.ok("Xóa thành công");
         } else {
-            return ResponseEntity.status(404).body("Giao dịch không tồn tại");
+            return ResponseEntity.status(404).body("Giao dịch không tồn tại hoặc không thuộc tài khoản này");
         }
     }
 
     @GetMapping("/summary")
-    public Map<String, BigDecimal> getSummary() {
+    public ResponseEntity<Map<String, BigDecimal>> getSummary(@RequestParam String username) {
         Map<String, BigDecimal> summary = new HashMap<>();
-        summary.put("totalIncome", transactionService.getTotalIncome());
-        summary.put("totalExpense", transactionService.getTotalExpense());
-        summary.put("profit", transactionService.getProfit());
-        return summary;
+        summary.put("totalIncome", transactionService.getTotalIncome(username));
+        summary.put("totalExpense", transactionService.getTotalExpense(username));
+        summary.put("profit", transactionService.getProfit(username));
+        return ResponseEntity.ok(summary);
     }
 }
