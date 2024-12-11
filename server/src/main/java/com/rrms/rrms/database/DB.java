@@ -24,8 +24,11 @@ import net.datafaker.Faker;
 public class DB {
     private final BulletinBoardRuleRepository bulletinBoardRuleRepository;
 
-    public DB(BulletinBoardRuleRepository bulletinBoardRuleRepository) {
+    private  final PaymentRepository paymentsRepository;
+
+    public DB(BulletinBoardRuleRepository bulletinBoardRuleRepository,PaymentRepository paymentRepository) {
         this.bulletinBoardRuleRepository = bulletinBoardRuleRepository;
+        this.paymentsRepository = paymentRepository;
     }
 
     int imageIndex = 0;
@@ -54,7 +57,7 @@ public class DB {
             TenantRepository tenantRepository) {
         return args -> {
             int roomsLength = 5;
-            int bulletinBoardsLength = 50;
+            int bulletinBoardsLength = 5;
             log.info("Starting to create data... length: {}", roomsLength);
 
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
@@ -147,12 +150,37 @@ public class DB {
                         accountRepository.findByUsername("admin").get(),
                         bulletinBoardReviewsRepository);
             }
+            // Tạo dữ liệu mẫu cho thanh toán
+            if (paymentsRepository.count() == 0) {
+                // Tạo dữ liệu mẫu cho thanh toán
+                createSamplePayments(new Faker(new Locale("vi")), paymentsRepository);
+            }
             Tenant tenant = generateFakeTenant();
             tenantRepository.save(tenant);
             log.info("All data created");
         };
     }
 
+    private void createSamplePayments(Faker faker, PaymentRepository paymentRepository) {
+        List<Payment> payments = new ArrayList<>();
+
+        // Tạo giao dịch thanh toán tiền mặt
+        Payment cashPayment = new Payment();
+        cashPayment.setPaymentName("Thanh toán tiền mặt");
+        cashPayment.setDescription("Thanh toán bằng tiền mặt cho dịch vụ");
+        cashPayment.setPaymentDate(LocalDate.now());
+        payments.add(cashPayment);
+
+        // Tạo giao dịch thanh toán chuyển khoản
+        Payment transferPayment = new Payment();
+        transferPayment.setPaymentName("Thanh toán chuyển khoản");
+        transferPayment.setDescription("Thanh toán qua chuyển khoản ngân hàng");
+        transferPayment.setPaymentDate(LocalDate.now());
+        payments.add(transferPayment);
+
+        // Lưu tất cả giao dịch vào cơ sở dữ liệu
+        paymentRepository.saveAll(payments);
+    }
     // Phương thức để tạo dữ liệu mẫu cho roles
     private void createSampleRolesAndPermissions(
             RoleRepository roleRepository, PermissionRepository permissionRepository) {
@@ -697,4 +725,5 @@ public class DB {
 
         return tenant;
     }
+
 }
