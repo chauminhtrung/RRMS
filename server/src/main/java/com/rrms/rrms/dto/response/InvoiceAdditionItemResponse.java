@@ -1,5 +1,7 @@
 package com.rrms.rrms.dto.response;
 
+import java.util.UUID;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InvoiceAdditionItemResponse {
+    private UUID additionalChargeId;
     private String reason;
     private Double amount;
     private boolean isAddition;

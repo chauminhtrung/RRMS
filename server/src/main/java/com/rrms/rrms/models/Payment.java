@@ -1,5 +1,6 @@
 package com.rrms.rrms.models;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,6 +26,9 @@ public class Payment {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @Column(nullable = false)
+    private LocalDate paymentDate;
 
     @OneToMany(mappedBy = "payment")
     private List<Invoice> invoices;

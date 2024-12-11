@@ -23,13 +23,12 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   const [selectedService, setSelectedService] = useState(null)
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
   const [roomData, setRoomData] = useState([]);
-  const [tableWidth, setTableWidth] = useState(0);
   const generateColumns = () => {
     const dynamicColumns = motelServices.map(service => ({
       title: service.nameService, // Tiêu đề là tên dịch vụ
       columns: [
         { title: 'Sử dụng', field: `usage_${service.motelServiceId}`, hozAlign: 'right', sorter: 'number', width: 75 },
-        { title: 'Thành tiền', field: `total_${service.motelServiceId}`, hozAlign: 'center', width: 135 }
+        { title: 'Thành tiền', field: `total_${service.motelServiceId}`, hozAlign: 'center', width: 100 }
       ]
     }));
     
@@ -43,6 +42,7 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
 
   const options = {
     height: '400px', // Chiều cao của bảng
+    maxWidth: '100%',
     movableColumns: true, // Cho phép di chuyển cột
     resizableRows: true, // Cho phép thay đổi kích thước hàng
     movableRows: true,
@@ -60,10 +60,7 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
     },
     columnHeaderVertAlign: 'bottom'
   }
-  useEffect(() => {
-    const totalColumnWidth = columns.reduce((acc, column) => acc + (column.width || 206), 10); // Giả sử mỗi cột có width 150 nếu không có width nào khác được định nghĩa
-    setTableWidth(totalColumnWidth);
-  }, [columns]);
+
 
 
   const fetchMotelServicesWithCount = async (id) => {
@@ -216,11 +213,11 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
           backgroundColor: '#fff',
           padding: '15px 15px 15px 15px',
           borderRadius: '10px',
-          margin: '0 10px 10px 10px'
+          margin: '0 10px 10px 10px',
         }}>
         <div className="page-price-item" id="managePriceItem">
-          <div className="row g-3">
-            <div className="col-md-4">
+          <div className="row g-3" >
+            <div className="col-md-4" style={{marginTop:'-230px'}}>
               <div className="header-item">
                 <h4 className="title-item">
                   Quản lý dịch vụ
@@ -329,7 +326,7 @@ const ServiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
               </div>
 
               <div style={{ overflowX: 'auto' }}>
-                <div style={{ height: '100%', width: `${tableWidth}px` }}> 
+                <div style={{ height: '100%' }}> 
                   <ReactTabulator
                     className="my-custom-table"
                     columns={columns}
