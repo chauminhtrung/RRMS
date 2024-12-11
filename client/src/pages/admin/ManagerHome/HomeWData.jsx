@@ -42,6 +42,7 @@ import ModalCancelReportContract from '../NavContentAdmin/ContractManage/ModalCa
 import ModalEndContract from '../NavContentAdmin/ContractManage/ModalEndContract'
 import ModalChangeRoom from '../NavContentAdmin/ContractManage/ModalChangeRoom'
 import ModalExtendContract from '../NavContentAdmin/ContractManage/ModalExtendContract'
+import ModalListCar from './ManagerCar/ModalListCar'
 const HomeWData = ({ Motel }) => {
   const { motelId, roomId } = useParams()
   const [rooms, setRooms] = useState([])
@@ -117,6 +118,8 @@ const HomeWData = ({ Motel }) => {
   const [modalOpenEndContract, setModalOpenEndContract] = useState(false)
   const [modalOpenChangeRoom, setModalOpenChangeRoom] = useState(false)
   const [modalOpenExtendContract, setModalOpenExtendContract] = useState(false)
+  const [modalOpenCar, setModalOpenCar] = useState(false)
+
   const toggleModal = () => {
     setModalOpen(!modalOpen)
   }
@@ -150,6 +153,10 @@ const HomeWData = ({ Motel }) => {
 
   const toggleEntendContract = () => {
     setModalOpenExtendContract(!modalOpenExtendContract)
+  }
+
+  const toggleCar = () => {
+    setModalOpenCar(!modalOpenCar)
   }
 
   // Hàm xử lý nhấn ngoài menu
@@ -999,6 +1006,10 @@ const HomeWData = ({ Motel }) => {
     } else if (label === 'Gia hạn hợp đồng') {
       fetchDataRooms(showMenu)
       toggleEntendContract(!modalOpenExtendContract)
+      setShowMenu(null) // Đóng menu
+    } else if (label === 'Quản lý xe') {
+      fetchDataRooms(showMenu)
+      toggleCar(!modalOpenCar)
       setShowMenu(null) // Đóng menu
     } else {
       alert(`Action: ${label} on room ${showMenu}`)
@@ -2069,6 +2080,10 @@ const HomeWData = ({ Motel }) => {
                         }
                         if (item.icon === 'trello' && item.label === 'Gia hạn hợp đồng') {
                           toggleEntendContract()
+                          setShowMenu(null)
+                        }
+                        if (item.icon === 'truck') {
+                          toggleCar()
                           setShowMenu(null)
                         }
                       }}
@@ -3245,14 +3260,12 @@ const HomeWData = ({ Motel }) => {
                     </div>
                   </div>
 
-                  
                   <div className="loz-alert warning" style={{ marginBottom: '10px', marginTop: '10px' }}>
                     <div className="icon flex-0">
                       <i className="bi bi-info-circle" style={{ fontSize: '24px' }}></i>
                     </div>
                     <div className="des flex-1">
-                      Chú ý: Cộng thêm / giảm trừ không nên là tiền cọc. Hãy chọn lý do có tiền cọc để nếu
-                      cần
+                      Chú ý: Cộng thêm / giảm trừ không nên là tiền cọc. Hãy chọn lý do có tiền cọc để nếu cần
                     </div>
                   </div>
 
@@ -3496,6 +3509,8 @@ const HomeWData = ({ Motel }) => {
         toggleModal={toggleCancelReportContract}
         roomId={room ? room.roomId : <></>}
       />
+
+      <ModalListCar modalOpen={modalOpenCar} toggleModal={toggleCar} roomId={room ? room.roomId : <></>} />
     </div>
   )
 }
