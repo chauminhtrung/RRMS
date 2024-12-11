@@ -1,18 +1,5 @@
 package com.rrms.rrms.services.servicesImp;
 
-import com.rrms.rrms.dto.request.*;
-import com.rrms.rrms.dto.response.InvoiceAdditionItemResponse;
-import com.rrms.rrms.dto.response.InvoiceDeviceDetailResponse;
-import com.rrms.rrms.dto.response.InvoiceResponse;
-import com.rrms.rrms.dto.response.InvoiceServiceDetailResponse;
-import com.rrms.rrms.models.MotelService;
-import com.rrms.rrms.models.RoomService;
-import com.rrms.rrms.models.*;
-import com.rrms.rrms.repositories.*;
-import com.rrms.rrms.services.IInvoices;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
@@ -23,6 +10,17 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.rrms.rrms.dto.request.*;
+import com.rrms.rrms.dto.response.*;
+import com.rrms.rrms.enums.ErrorCode;
+import com.rrms.rrms.enums.PaymentStatus;
+import com.rrms.rrms.exceptions.AppException;
+import com.rrms.rrms.models.*;
+import com.rrms.rrms.models.MotelService;
+import com.rrms.rrms.models.RoomService;
+import com.rrms.rrms.repositories.*;
+import com.rrms.rrms.services.IInvoices;
 
 @Service
 public class InvoiceService implements IInvoices {
@@ -62,8 +60,8 @@ public class InvoiceService implements IInvoices {
 
         return invoices.stream()
                 .map(invoice -> {
-                    List<InvoiceDetail> details = detailInvoiceRepository
-                            .findByInvoiceInvoiceId(invoice.getInvoiceId());
+                    List<InvoiceDetail> details =
+                            detailInvoiceRepository.findByInvoiceInvoiceId(invoice.getInvoiceId());
 
                     LocalDate moveInDate = invoice.getContract()
                             .getMoveinDate()
@@ -94,7 +92,7 @@ public class InvoiceService implements IInvoices {
         double totalServiceAmount = 0;
         Contract contract = contractRepository
                 .findById(request.getContractId())
-                .orElseThrow(() -> new RuntimeException("Hợp đồng không tồn tại"));
+                .orElseThrow(() -> new AppException(ErrorCode.INVOICE_NOT_FOUND));
 
         LocalDate moveInDate = contract.getMoveinDate()
                 .toInstant()
@@ -264,8 +262,8 @@ public class InvoiceService implements IInvoices {
 
     @Override
     public InvoiceResponse updateInvoice(UUID invoiceId, UpdateInvoiceRequest request) {
-        Invoice invoice = invoiceRepository.findById(invoiceId)
-                .orElseThrow(() -> new RuntimeException("Hóa đơn không tồn tại"));
+        Invoice invoice =
+                invoiceRepository.findById(invoiceId).orElseThrow(() -> new RuntimeException("Hóa đơn không tồn tại"));
 
         if (request.getInvoiceReason() != null) {
             invoice.setInvoiceReason(request.getInvoiceReason());
@@ -403,8 +401,8 @@ public class InvoiceService implements IInvoices {
     @Override
     public void collectPayment(UUID invoiceId, CollectPaymentRequest request) {
         // Tìm hóa đơn
-        Invoice invoice = invoiceRepository.findById(invoiceId)
-                .orElseThrow(() -> new RuntimeException("Invoice không tồn tại"));
+        Invoice invoice =
+                invoiceRepository.findById(invoiceId).orElseThrow(() -> new RuntimeException("Invoice không tồn tại"));
 
         // Kiểm tra trạng thái thanh toán
         if (invoice.getPaymentStatus() == PaymentStatus.PAID) {

@@ -30,6 +30,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.rrms.rrms.configs.SecurityConfigTest;
 import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.request.ChangePasswordRequest;
@@ -425,18 +427,23 @@ public class AccountControllerTest {
         updatedAccount.setFullname("Updated Name");
         updatedAccount.setAuthorities(new ArrayList<>()); // Đảm bảo authorities cũng được thiết lập
 
+        // Mock service để trả về kết quả
         when(accountService.updateAcc(eq(username), any(Account.class))).thenReturn(updatedAccount);
+
+        // Tạo ObjectMapper với cấu hình xử lý LocalDateTime
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // Định dạng ISO 8601
 
         // Gửi yêu cầu PUT và kiểm tra phản hồi
         mockMvc.perform(put("/api-accounts/update-acc")
                         .param("username", username)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(inputAccount))) // Serialize JSON
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value(true))
-                .andExpect(jsonPath("$.message").value("Update product successful"))
-                .andExpect(jsonPath("$.data.fullname").value("Updated Name")); // Sửa lại jsonPath cho
-        // fullname
+                        .content(objectMapper.writeValueAsString(inputAccount))) // Serialize JSON
+                .andExpect(status().isOk()) // Kiểm tra mã trạng thái 200
+                .andExpect(jsonPath("$.status").value(true)) // Kiểm tra status là true
+                .andExpect(jsonPath("$.message").value("Update product successful")) // Kiểm tra thông điệp phản hồi
+                .andExpect(jsonPath("$.data.fullname").value("Updated Name")); // Kiểm tra fullname trong dữ liệu trả về
 
         // Kiểm tra phương thức service được gọi
         verify(accountService, times(1)).updateAcc(eq(username), any(Account.class));
@@ -450,21 +457,24 @@ public class AccountControllerTest {
         inputAccount.setFullname("Test Name");
         inputAccount.setAuthorities(new ArrayList<>()); // Khởi tạo authorities với danh sách trống
 
+        // Mock service để giả lập ngoại lệ
         when(accountService.updateAcc(eq(username), any(Account.class)))
                 .thenThrow(new EntityNotFoundException("Account not found"));
+
+        // Tạo ObjectMapper với cấu hình xử lý LocalDateTime
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // Định dạng ISO 8601
 
         // Gửi yêu cầu PUT và kiểm tra phản hồi
         mockMvc.perform(put("/api-accounts/update-acc")
                         .param("username", username)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(inputAccount))) // Serialize JSON
+                        .content(objectMapper.writeValueAsString(inputAccount))) // Serialize JSON
                 .andExpect(status().isNotFound()) // Kiểm tra mã lỗi 404
                 .andExpect(jsonPath("$.status").value(false)) // Kiểm tra status là false
-                .andExpect(jsonPath("$.message").value("Account not found: Account not found")) // Kiểm
-                // tra
-                // thông
-                // điệp
-                // lỗi
+                .andExpect(
+                        jsonPath("$.message").value("Account not found: Account not found")) // Kiểm tra thông điệp lỗi
                 .andExpect(jsonPath("$.data").isEmpty()); // Kiểm tra dữ liệu trả về rỗng
 
         // Kiểm tra phương thức service được gọi
