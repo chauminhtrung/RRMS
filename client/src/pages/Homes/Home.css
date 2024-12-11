@@ -273,3 +273,98 @@
     height: 410px;
   }
 }
+
+.marquee {
+  display: flex;
+  block-size: var(--marquee-item-height);
+  margin-block: var(--marquee-item-height);
+  position: relative;
+  overflow-x: hidden;
+  mask-image: linear-gradient(to right, hsl(0 0% 0% / 0), hsl(0 0% 0% / 1) 20%, hsl(0 0% 0% / 1) 80%, hsl(0 0% 0% / 0));
+}
+
+.marquee--8 {
+  --marquee-item-width: 100px;
+  --marquee-item-height: 100px;
+  --marquee-duration: 36s;
+  --marquee-items: 8;
+}
+
+.marquee__item {
+  --marquee-item-offset: max(
+    calc(var(--marquee-item-width) * var(--marquee-items)),
+    calc(100% + var(--marquee-item-width))
+  );
+  --marquee-delay: calc(
+    var(--marquee-duration) / var(--marquee-items) * (var(--marquee-items) - var(--marquee-item-index)) * -1
+  );
+  position: absolute;
+  inset-inline-start: var(--marquee-item-offset);
+  transform: translateX(-50%);
+  animation: go linear var(--marquee-duration) var(--marquee-delay, 0s) infinite;
+}
+
+.marquee__item:nth-child(4n) {
+  border-top-right-radius: 1rem;
+}
+
+.marquee__item:nth-child(4n + 1) {
+  border-bottom-right-radius: 1rem;
+}
+
+.marquee__item:nth-child(4n + 2) {
+  border-bottom-left-radius: 1rem;
+}
+
+.marquee__item:nth-child(4n + 3) {
+  border-top-left-radius: 1rem;
+}
+
+.marquee--8 .marquee__item:nth-of-type(1) {
+  --marquee-item-index: 1;
+}
+
+.marquee--8 .marquee__item:nth-of-type(2) {
+  --marquee-item-index: 2;
+}
+
+.marquee--8 .marquee__item:nth-of-type(3) {
+  --marquee-item-index: 3;
+}
+
+.marquee--8 .marquee__item:nth-of-type(4) {
+  --marquee-item-index: 4;
+}
+
+.marquee--8 .marquee__item:nth-of-type(5) {
+  --marquee-item-index: 5;
+}
+
+.marquee--8 .marquee__item:nth-of-type(6) {
+  --marquee-item-index: 6;
+}
+
+.marquee--8 .marquee__item:nth-of-type(7) {
+  --marquee-item-index: 7;
+}
+
+.marquee--8 .marquee__item:nth-of-type(8) {
+  --marquee-item-index: 8;
+}
+
+@keyframes go {
+  to {
+    inset-inline-start: calc(var(--marquee-item-width) * -1);
+  }
+}
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.6s, transform 0.6s;
+}
+
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}

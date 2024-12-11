@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Typography, Button, Box, Grid, Container, Paper, Tab, Tabs, CardContent, Card, useTheme } from '@mui/material'
 import './Home.css'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import FormatQuoteIcon from '@mui/icons-material/FormatQuote'
 
 // Define the tab components with unique content
 const Tab1 = () => {
@@ -206,6 +207,33 @@ export default function HomePage({ setIsAdmin }) {
   const { t } = useTranslation()
   const [value, setValue] = React.useState(0)
   const theme = useTheme()
+
+  const [isVisible, setIsVisible] = useState(false)
+  const elementRef = useRef(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        console.log('entry')
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+        } else {
+          setIsVisible(false)
+        }
+      },
+      { threshold: 0.5 }
+    )
+
+    if (elementRef.current) {
+      observer.observe(elementRef.current)
+    }
+
+    return () => {
+      if (elementRef.current) {
+        observer.unobserve(elementRef.current)
+      }
+    }
+  }, [])
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
@@ -429,7 +457,7 @@ export default function HomePage({ setIsAdmin }) {
             <div className="grid-row mt-4">
               <Grid container spacing={2}>
                 <Grid item xs={12} md={4}>
-                  <Card className="imagebox-card">
+                  <Card className="imagebox-card" sx={{ height: '420px' }}>
                     <a className="perlink">
                       <div className="image">
                         <img
@@ -450,7 +478,7 @@ export default function HomePage({ setIsAdmin }) {
                   </Card>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <Card className="imagebox-card">
+                  <Card className="imagebox-card" sx={{ height: '420px' }}>
                     <a className="perlink">
                       <div className="image">
                         <img
@@ -479,7 +507,7 @@ export default function HomePage({ setIsAdmin }) {
                   </Card>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <Card className="imagebox-card">
+                  <Card className="imagebox-card" sx={{ height: '420px' }}>
                     <a className="perlink">
                       <div className="image">
                         <img
@@ -513,7 +541,7 @@ export default function HomePage({ setIsAdmin }) {
               <Typography color="#5eb7ff" sx={{ fontSize: '40px', fontWeight: 'bold' }}>
                 Cảm nhận từ khách hàng
               </Typography>
-              <Typography className="section-description">
+              <Typography className="section-description" sx={{ mb: 3 }}>
                 Sự hài lòng của khách hàng là động lực giúp chúng tôi hoàn thiện ứng dụng, đồng thời mở ra cơ hội có
                 thêm nhiều khách hàng mới trong tương lai.
                 <br />
@@ -522,21 +550,33 @@ export default function HomePage({ setIsAdmin }) {
               </Typography>
             </article>
 
-            <div className="testimonial-wrapper testimonial-1 text-center">
+            <div
+              className={`testimonial-wrapper testimonial-1 text-center fade-up ${isVisible ? 'visible' : ''}`}
+              ref={elementRef}>
               <Grid container spacing={3}>
                 {testimonials.map((testimonial, index) => (
                   <Grid item xs={12} md={6} lg={3} key={index}>
-                    <Paper className="testimonial-inner rounded">
+                    <Paper variant="outlined" className="testimonial-inner rounded">
                       <div className="testimonial-abs-part">
                         <div className="testimonial-thumb">
-                          <img src={testimonial.image} className="rounded-circle" alt={testimonial.name} />
+                          <img width={75} src={testimonial.image} className="rounded-circle" alt={testimonial.name} />
+                          <div className="testimonial-title">{testimonial.name}</div>
+                          <b>{testimonial.rooms}</b>
+                          <p>{testimonial.role}</p>
                         </div>
                       </div>
                       <article className="testimonial-info-wrap">
-                        <p>{testimonial.feedback}</p>
-                        <div className="testimonial-title">{testimonial.name}</div>
-                        <b>{testimonial.rooms}</b>
-                        <p>{testimonial.role}</p>
+                        <p
+                          style={{
+                            whiteSpace: 'pre-wrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 5,
+                            WebkitBoxOrient: 'vertical'
+                          }}>
+                          {testimonial.feedback}
+                        </p>
                       </article>
                     </Paper>
                   </Grid>
@@ -560,25 +600,25 @@ export default function HomePage({ setIsAdmin }) {
             </div>
 
             <div className="logo-customer mt-5">
-              <Grid container spacing={2}>
+              <div className="marquee marquee--8">
                 {logos.map((logo, index) => (
-                  <Grid item md={2} xs={6} key={index} className="item-logo">
-                    <div className="inner-item">
-                      <img loading="lazy" src={logo} width="100%" alt={`logo ${index + 1}`} />
-                    </div>
-                  </Grid>
+                  <img key={index} className="marquee__item" src={logo} height={100} width={100} alt="" />
                 ))}
-              </Grid>
+              </div>
             </div>
 
             <section className="about-us mt-3">
               <Grid container spacing={3}>
                 <Grid item sm={12} md={6}>
-                  <article className="card-feature">
-                    <Typography className="item-wraptext" sx={{ fontSize: '40px', fontWeight: 'bold' }}>
-                      Sự ra đời của RRMS - Quản lý nhà cho thuê
-                    </Typography>
-                    <Typography paragraph style={{ textAlign: 'justify' }}>
+                  <article className="card-feature" style={{ height: '340px' }}>
+                    <FormatQuoteIcon sx={{ fontSize: '50px', display: 'inline-block', mr: 0.5, color: '#5eb7ff' }} />
+                    <span
+                      // className="item-wraptext"
+                      style={{ borderBottom: '3px solid #5eb7ff', fontSize: '30px', fontWeight: 'bold' }}>
+                      Sự ra đời của RRMS
+                    </span>
+                    <span style={{ fontSize: '30px', fontWeight: 'bold' }}>{' -'} Hệ thống quản lý trọ</span>
+                    <Typography style={{ textAlign: 'justify' }}>
                       Với số lượng phòng trọ ngày càng tăng theo nhu cầu, các chủ nhà sẽ gặp khó khăn trong việc quản lý
                       theo cách truyền thống. Sử dụng các cuốn sổ dày cộm rồi ghi chép tất cả các thông tin hay các file
                       excel phức tạp, đến các khoản tiền dịch vụ khách sử dụng, đến phiếu thu tiền, hóa đơn, thống kê
@@ -590,10 +630,14 @@ export default function HomePage({ setIsAdmin }) {
                   </article>
                 </Grid>
                 <Grid item sm={12} md={6}>
-                  <article className="card-feature">
-                    <Typography className="item-wraptext" sx={{ fontSize: '40px', fontWeight: 'bold' }}>
-                      Giá trị cốt lõi của RRMS - Quản lý nhà cho thuê
-                    </Typography>
+                  <article className="card-feature" style={{ height: '340px' }}>
+                    <FormatQuoteIcon sx={{ fontSize: '50px', display: 'inline-block', mr: 0.5, color: '#5eb7ff' }} />
+                    <span
+                      // className="item-wraptext"
+                      style={{ borderBottom: '3px solid #5eb7ff', fontSize: '30px', fontWeight: 'bold' }}>
+                      Giá trị cốt lõi của RRMS
+                    </span>
+                    <span style={{ fontSize: '30px', fontWeight: 'bold' }}>{' -'} Hệ thống quản lý trọ</span>
                     <Typography paragraph style={{ textAlign: 'justify' }}>
                       Hiểu được nỗi khó khăn trong việc quản lý nhà cho thuê, mục tiêu của đội ngủ RRMS là phải mang sản
                       phẩm chất lượng, tiện ích tới khách hàng. Phần mềm phải được cập nhật, gia cố thường xuyên để đáp
@@ -664,8 +708,9 @@ const testimonials = [
     name: 'Dương Trí Dũng',
     rooms: '69 phòng',
     role: 'Hacker Lỏd',
-    feedback: 'Sau khi đọc xong 300 bài code thiếu nhi tôi đã code.',
-    image: 'https://quanlytro.me/images/owner_avatars/chu-tro-01-80x80.webp?version=29842'
+    feedback:
+      'Sau khi đọc xong 300 bài code thiếu nhi, tôi đã trở thành "thần đồng lập trình", ít nhất là trong mắt mình. Bây giờ, tôi có thể giải quyết bài toán cộng trừ nhân chia trong code như ăn kẹo!',
+    image: 'https://lienquan.garena.vn/wp-content/uploads/2024/05/b4df1c0fa5e24e16da5a9c9541bf50b95bc98fca9bba71.jpg'
   },
   {
     name: 'Chị Lê Thị Huyên',
@@ -700,10 +745,5 @@ const logos = [
   'https://quanlytro.me/images/logo-customer/logo-3.png',
   'https://quanlytro.me/images/logo-customer/logo-5.png',
   'https://quanlytro.me/images/logo-customer/logo-6.png',
-  'https://quanlytro.me/images/logo-customer/logo-7.png',
-  'https://quanlytro.me/images/logo-customer/logo-8.png',
-  'https://quanlytro.me/images/logo-customer/logo-9.png',
-  'https://quanlytro.me/images/logo-customer/logo-10.png',
-  'https://quanlytro.me/images/logo-customer/logo-11.png',
-  'https://quanlytro.me/images/logo-customer/logo-12.png'
+  'https://quanlytro.me/images/logo-customer/logo-7.png'
 ]
