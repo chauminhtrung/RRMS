@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
-import com.rrms.rrms.configs.Config;
 import com.rrms.rrms.configs.CustomerEnvironment;
+import com.rrms.rrms.configs.VNPayConfig;
 import com.rrms.rrms.dto.PaymentRestDTO;
 import com.rrms.rrms.dto.request.StripeRequest;
 import com.rrms.rrms.dto.response.PaymentResponse;
@@ -29,7 +29,7 @@ import com.rrms.rrms.dto.response.StripeResponse;
 import com.rrms.rrms.enums.RequestType;
 import com.rrms.rrms.services.IPayment;
 import com.rrms.rrms.services.servicesImp.CreateOrderMoMo;
-import com.rrms.rrms.util.LogUtils;
+import com.rrms.rrms.utils.LogUtils;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
@@ -124,10 +124,10 @@ public class PaymentController {
         int amount = (int) (totalPrice * 100);
         String bankCode = "NCB";
 
-        String vnp_TxnRef = Config.getRandomNumber(6);
+        String vnp_TxnRef = VNPayConfig.getRandomNumber(6);
         String vnp_IpAddr = "127.0.0.1";
 
-        String vnp_TmnCode = Config.vnp_TmnCode;
+        String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", vnp_Version);
         vnp_Params.put("vnp_Command", vnp_Command);
@@ -142,7 +142,7 @@ public class PaymentController {
         vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + vnp_TxnRef);
         vnp_Params.put("vnp_OrderType", orderType);
         vnp_Params.put("vnp_Locale", "vn");
-        vnp_Params.put("vnp_ReturnUrl", Config.vnp_ReturnUrl);
+        vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
@@ -177,10 +177,10 @@ public class PaymentController {
         }
 
         String queryUrl = query.toString();
-        String vnp_SecureHash = Config.hmacSHA512(secretKey, hashData.toString());
+        String vnp_SecureHash = VNPayConfig.hmacSHA512(secretKey, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
 
-        String paymentUrl = Config.vnp_PayUrl + "?" + queryUrl;
+        String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
 
         PaymentRestDTO paymentRestDTO = new PaymentRestDTO();
         paymentRestDTO.setURL(paymentUrl);
@@ -226,7 +226,7 @@ public class PaymentController {
         session.setAttribute("username", username);
         LogUtils.init();
         String requestId = String.valueOf(System.currentTimeMillis());
-        String orderId = Config.getRandomNumber(6);
+        String orderId = VNPayConfig.getRandomNumber(6);
         Long transId = 2L;
         double totalPrice = Double.valueOf(requestData.get("totalPrice").toString());
         long amount = (long) (totalPrice * 100);
