@@ -6,16 +6,16 @@ import { Vietnamese } from 'flatpickr/dist/l10n/vn'
 import monthSelectPlugin from 'flatpickr/dist/plugins/monthSelect'
 import axios from 'axios'
 import { env } from '~/configs/environment'
-function ModalEditInvoice({ toggleModal, modalOpen, invoice  }) {
+function ModalEditInvoice({ toggleModal, modalOpen, invoice,onUpdateInvoice   }) {
   const [formData, setFormData] = useState({});
   const [additionItems, setAdditionItems] = useState([])
+  
   const addNewItem = () => {
     setAdditionItems((prevItems) => [
         ...prevItems,
         { id: '', addition: 1, additionValue: '', additionReason: '' },
     ]);
   };
-
 
   const removeItem = (id) => {
     setAdditionItems((prevItems) => prevItems.filter((item) => item.id !== id));
@@ -36,28 +36,25 @@ function ModalEditInvoice({ toggleModal, modalOpen, invoice  }) {
       return total + (item.addition === 1 ? value : -value) 
     }, 0)
   }
-  
 
   useEffect(() => {
     if (invoice) {
-      setFormData({ ...invoice }); 
+      setFormData({ ...invoice });
       if (invoice.additionItems) {
-        setAdditionItems(invoice.additionItems.map((item) => ({
-          additionalChargeId: item.additionalChargeId,
-          addition: item.addition ? 1 : 0,
-          additionValue: item.amount,
-          additionReason: item.reason,
-        })));
+        setAdditionItems(
+          invoice.additionItems.map((item) => ({
+            additionalChargeId: item.additionalChargeId,
+            addition: item.addition ? 1 : 0,
+            additionValue: item.amount,
+            additionReason: item.reason,
+          }))
+        );
       }
-      const mappedServiceDetails = invoice.serviceDetails?.map(({ roomServiceId, quantity }) => ({
-        roomServiceId,
-        quantity,
-      }));
-      console.log("Mapped Service Details (on load):", mappedServiceDetails);
     }
   }, [invoice]);
   
-  
+const roomPrice = invoice?.roomPrice || 0; // Giá phòng
+const totalAddition = calculateTotalAddition(); // Tổng cộng/trừ phát sinh
 
   const handleServiceCheckboxChange = (index, isChecked) => {
     const updatedServiceDetails = [...formData.serviceDetails];
@@ -81,46 +78,47 @@ function ModalEditInvoice({ toggleModal, modalOpen, invoice  }) {
   const { count, total } = calculateServiceUsage();
   
   
-  console.log('Form Data:', formData);
-
   const handleSubmit = async () => {
     try {
       const token = sessionStorage.getItem('user') 
         ? JSON.parse(sessionStorage.getItem('user')).token 
         : null;
-        const mappedServiceDetails = formData.serviceDetails.map(({ roomServiceId, quantity }) => ({
-          roomServiceId,
-          quantity,
-        }));
-        console.log("Mapped Service Details (before submit):", mappedServiceDetails);
       const payload = {
         ...formData,
-        additionItems: additionItems.map(item => ({
+        roomPrice: roomPrice,
+        additionItems: additionItems.map((item) => ({
           additionalChargeId: item.additionalChargeId,
           isAddition: item.addition === 1 ? 1 : 0,
           amount: parseFloat(item.additionValue) || 0,
-          reason: item.additionReason || ''
+          reason: item.additionReason || '',
         })),
         serviceDetails: formData.serviceDetails.map(({ roomServiceId, quantity }) => ({
           roomServiceId,
           quantity,
         })),
-      
         deviceDetails: formData.deviceDetails.map(({ roomDeviceId }) => ({
           roomDeviceId,
         })),
       };
   
-      console.log("Payload gửi đi:", payload);
-  
-      await axios.put(`${env.API_URL}/invoices/update/${invoice.invoiceId}`, payload, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.put(
+        `${env.API_URL}/invoices/update/${invoice.invoiceId}`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
   
       Swal.fire('Thành công', 'Hóa đơn đã được cập nhật', 'success');
-      toggleModal(); 
+      
+      // Call the passed update function to update the parent state
+      if (onUpdateInvoice) {
+        onUpdateInvoice(response.data);
+      }
+  
+      toggleModal(); // Close the modal
     } catch (error) {
       if (error.response) {
         console.error("Response error:", error.response.data);
@@ -131,6 +129,8 @@ function ModalEditInvoice({ toggleModal, modalOpen, invoice  }) {
       }
     }
   };
+  
+
   
   return (
     <div>
@@ -323,14 +323,14 @@ function ModalEditInvoice({ toggleModal, modalOpen, invoice  }) {
                     <b>Thu tiền hàng tháng</b>
                     <p style={{ margin: '0', color: 'orange' }}>
                       1 tháng, 0 ngày{' '}
-                      <span style={{ color: 'black' }}>x {invoice.roomPrice} VNĐ</span>
+                      <span style={{ color: 'black' }}>x {roomPrice.toLocaleString('vi-VN')} VNĐ</span>
                     </p>
                   </label>
                 </div>
                 <div>
                   <label className="form-check-label" htmlFor="subtraction">
                     <b>Thành tiền</b>
-                    <p style={{ margin: '0' }}>{invoice.roomPrice} VNĐ</p>
+                    <p style={{ margin: '0' }}>{roomPrice.toLocaleString('vi-VN')} VNĐ</p>
                   </label>
                 </div>
               </div>
@@ -573,7 +573,7 @@ function ModalEditInvoice({ toggleModal, modalOpen, invoice  }) {
                   <div>
                     <label className="form-check-label">
                       <p style={{ margin: '0' }}>Thành tiền phát sinh</p>
-                      <p style={{ margin: '0' }}>{calculateTotalAddition().toLocaleString('vi-VN')} ₫</p>
+                      <p style={{ margin: '0' }}>{totalAddition.toLocaleString('vi-VN')} ₫</p>
                     </label>
                   </div>
                 </div>

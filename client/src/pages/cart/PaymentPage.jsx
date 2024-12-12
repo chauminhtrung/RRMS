@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom';
 import {
   Box,
   Grid,
@@ -36,77 +37,115 @@ import { loadStripe } from '@stripe/stripe-js'
 import { CardElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js'
 import StripePayment from './StripePayment'
 
+
 const stripePromise = loadStripe(
   'pk_test_51POubLIe2vfQhSWEYarMBn27sc4ydF1n0nhgwSjgy66cojdCizekyBhLqjLpMyvKFmx4FV8BDaoOVCcjaftzhhDu00JImFrcBU'
 )
 
-const PaymentPage = ({ setIsAdmin }) => {
-  const [cardOwner, setCardOwner] = useState('')
-  const [cardType, setCardType] = useState('')
-  const [paymentMethod, setPaymentMethod] = useState('')
-  const [cardNumber, setCardNumber] = useState('')
-  const [expiryDate, setExpiryDate] = useState('')
-  const [cvc, setCvc] = useState('')
-  const [isChecked, setIsChecked] = useState(false)
+const PaymentPage = ({ setIsAdmin}) => {
+  const location = useLocation();
+  const [amount, setAmount] = useState(0);
+  const [invoiceId, setInvoiceId] = useState('');
+  const [roomPrice, setRoomPrice] = useState(0); 
+  const [totalAddition, setTotalAddition] = useState(0);
+  const [cardOwner, setCardOwner] = useState('');
+  const [cardType, setCardType] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('');
+  const [cardNumber, setCardNumber] = useState('');
+  const [expiryDate, setExpiryDate] = useState('');
+  const [cvc, setCvc] = useState('');
+  const [isChecked, setIsChecked] = useState(false);
   const [stripeDetails, setStripeDetails] = useState({
     amount: 69,
     email: 'tringu@gmail.com',
     productName: 'Sẽ toy'
   })
+  
 
   useEffect(() => {
-    setIsAdmin(false)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    setIsAdmin(false); 
+    const params = new URLSearchParams(location.search); 
+    const urlAmount = params.get('amount');
+    const urlInvoiceId = params.get('invoiceId');
+    const urlRoomPrice = params.get('roomPrice');
+    if (urlAmount) setAmount(parseFloat(urlAmount));
+    if (urlInvoiceId) setInvoiceId(urlInvoiceId); 
+    console.log('urlInvoiceId',urlInvoiceId);
+    if (urlRoomPrice) setRoomPrice(parseFloat(urlRoomPrice));
+    setStripeDetails((prev) => ({
+      ...prev,
+      amount: urlAmount ? parseFloat(urlAmount) : prev.amount,
+    }));
+  }, [location, setIsAdmin]);
+  
 
   const handlePayment = () => {
-    console.log('Thông tin thanh toán:', {
-      cardOwner,
-      cardType,
-      cardNumber,
-      expiryDate,
-      cvc
-    })
-    toast.info('Đang tiến hành thanh toán, vui lòng chờ trong giây lát...')
-    if (paymentMethod === 'paypal') {
-      handlePaymentPaypal()
-    } else if (paymentMethod === 'vnPay') {
-      handlePaymentVNPay()
-    } else if (paymentMethod === 'momo') {
-      handlePaymentMomo()
-    } else if (paymentMethod === 'stripe') {
-      console.log('handlePaymentStripe')
-    } else {
-      toast.info('Phương thức thanh toán hiện tại chưa được hỗ trợ')
+    if (!invoiceId) {
+      toast.error('Invoice ID không hợp lệ!');
+      return;
     }
-  }
+  
+    console.log('Thông tin thanh toán:', {
+      paymentMethod,
+      amount,
+      invoiceId
+    });
+  
+    // Kiểm tra phương thức thanh toán và truyền `amount` vào hàm API
+    toast.info('Đang tiến hành thanh toán, vui lòng chờ trong giây lát...');
+    if (paymentMethod === 'paypal') {
+      handlePaymentPaypal(amount);
+    } else if (paymentMethod === 'vnPay') {
+      handlePaymentVNPay(amount);
+    } else if (paymentMethod === 'momo') {
+      handlePaymentMomo(amount);
+    } else {
+      toast.info('Phương thức thanh toán hiện tại chưa được hỗ trợ');
+    }
+  };
+  
 
-  const handlePaymentPaypal = () => {
-    paymentPaypal(289).then((res) => {
+
+  const handlePaymentPaypal = (amount) => {
+    paymentPaypal(amount).then((res) => {
       if (res.data.redirectUrl) {
-        window.location.href = res.data.redirectUrl
+        window.location.href = res.data.redirectUrl;
       }
-    })
-  }
+    });
+  };
 
-  const handlePaymentVNPay = () => {
-    paymentVNPay().then((res) => {
+  const handlePaymentVNPay = (amount) => {
+    paymentVNPay(amount).then((res) => {
       if (res.redirectUrl) {
-        window.location.href = res.redirectUrl
+        window.location.href = res.redirectUrl;
       } else {
-        toast('Có lỗi xảy ra khi tạo thanh toán VNPAY.')
+        toast('Có lỗi xảy ra khi tạo thanh toán VNPAY.');
       }
-    })
-  }
-  const handlePaymentMomo = () => {
-    paymentMoMo().then((res) => {
+    });
+  };
+  
+  const handlePaymentMomo = (amount) => {
+    paymentMoMo(amount).then((res) => {
       if (res && res.payUrl) {
-        window.location.href = res.payUrl
+        window.location.href = res.payUrl;
       } else {
-        toast('Có lỗi xảy ra khi tạo thanh toán MoMo.')
+        toast('Có lỗi xảy ra khi tạo thanh toán MoMo.');
       }
-    })
-  }
+    });
+  };
+
+  const handleTransferClick = (invoice) => {
+    const queryParams = new URLSearchParams({
+      amount: invoice.total, // Tổng số tiền
+      invoiceId: invoice.invoiceId, // ID hóa đơn
+      roomPrice: invoice.roomPrice, // Giá phòng
+    }).toString();
+    window.location.href = `/payment?${queryParams}`; // Điều hướng sang PaymentPage với dữ liệu
+  };
+  
+  
+  const formatterAmount = (value) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+
 
   return (
     <Box
@@ -218,20 +257,21 @@ const PaymentPage = ({ setIsAdmin }) => {
                     Tóm tắt giá
                   </Typography>
                   <Typography variant="body1" color="#d63031">
-                    Giá gốc: {formatterAmount(2890000)}
+                    Giá phòng: {formatterAmount(roomPrice)}
                   </Typography>
                   <Typography variant="body1" color="#d63031">
-                    Giảm giá: - {formatterAmount(867000)} /Tháng
+                    Giá cộng/ trừ phát sinh: - {formatterAmount(totalAddition)}
                   </Typography>
                   <Typography variant="h5" fontWeight="bold" color="#00b894">
                     <AttachMoneyIcon />
-                    Tổng cộng: {formatterAmount(2023000)} /Tháng
+                    Tổng cộng: {formatterAmount(amount)} VNĐ
                   </Typography>
                   <Typography variant="body1" fontWeight="bold">
                     Đã bao gồm thuế và phí
                   </Typography>
                 </CardContent>
               </Card>
+
             </Box>
           </Grid>
 
