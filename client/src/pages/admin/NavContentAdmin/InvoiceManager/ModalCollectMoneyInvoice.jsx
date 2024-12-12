@@ -4,19 +4,18 @@ import Swal from 'sweetalert2'
 import Flatpickr from 'react-flatpickr'
 import 'flatpickr/dist/themes/material_blue.css'
 import axios from 'axios'
+import { env } from '~/configs/environment'
 
-function ModalCollectMoneyInvoice({ toggleModal, modalOpen, invoice  }) {
+function ModalCollectMoneyInvoice({ toggleModal, modalOpen, invoice,fetchInvoices,updateInvoiceStatus }) {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [paidAmount, setPaidAmount] = useState(invoice ? invoice.totalAmount : 0); // Đảm bảo khởi tạo với giá trị đúng từ invoice
+  const [paidAmount, setPaidAmount] = useState(invoice ? invoice.totalAmount : 0); 
   const [paymentMethod, setPaymentMethod] = useState('cash'); 
   const [note, setNote] = useState('');
   const token = sessionStorage.getItem('user') 
         ? JSON.parse(sessionStorage.getItem('user')).token 
         : null;
 
-
   const handleSubmit = async () => {
-  // Kiểm tra số tiền thanh toán có hợp lệ
   if (paidAmount <= 0) {
     Swal.fire({
       icon: 'error',
@@ -27,23 +26,26 @@ function ModalCollectMoneyInvoice({ toggleModal, modalOpen, invoice  }) {
     return;
   }
 
-  // Cấu trúc request gửi đến API
   const requestData = {
     paymentName: `Thanh toán tiền phòng ${invoice.roomName}`,
     description: `Thanh toán đầy đủ hóa đơn tháng ${new Date().getMonth() + 1}`,
-    paymentDate: currentDate.toISOString(), // Chuyển đổi ngày sang định dạng ISO
-    totalAmount: paidAmount, // Số tiền thanh toán
+    paymentDate: currentDate.toISOString(),
+    totalAmount: paidAmount,
   };
 
   try {
-    // Gửi request đến backend API
+    if (paymentMethod === 'transfer_by_bank') {
+      const paymentUrl = `/payment?amount=${paidAmount}&invoiceId=${invoice.invoiceId}&roomPrice=${invoice.roomPrice}`;
+      window.location.href = paymentUrl;
+      return;
+    }
+
     await axios.patch(
-      `http://localhost:8080/invoices/${invoice.invoiceId}/collect-payment`,
+      `${env.API_URL}/invoices/${invoice.invoiceId}/collect-payment`,
       requestData,
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
-    // Kiểm tra nếu thành công, hiển thị thông báo
     Swal.fire({
       icon: 'success',
       title: 'Cập nhật thành công!',
@@ -51,23 +53,34 @@ function ModalCollectMoneyInvoice({ toggleModal, modalOpen, invoice  }) {
       confirmButtonText: 'OK',
     });
 
-    // Đóng modal sau khi gửi thành công
+     // Update the parent component's state
+     if (typeof updateInvoiceStatus === 'function') {
+      updateInvoiceStatus({
+        ...invoice,
+        paymentStatus: 'PAID', // Update status
+        status: 'Đã thu xong', // Optional display field for status
+      });
+    }
     toggleModal();
 
+    if (typeof fetchInvoices === 'function') {
+      fetchInvoices();
+    }
   } catch (error) {
-    // In thông tin lỗi chi tiết ra console
     console.error('Error details:', error.response ? error.response.data : error.message);
-    
-    // Hiển thị thông báo lỗi nếu gặp sự cố khi gọi API
+
     Swal.fire({
       icon: 'error',
       title: 'Lỗi',
-      text: error.response ? error.response.data.message || 'Có lỗi xảy ra trong quá trình thanh toán!' : 'Không thể kết nối với server!',
+      text: error.response
+        ? error.response.data.message || 'Có lỗi xảy ra trong quá trình thanh toán!'
+        : 'Không thể kết nối với server!',
       confirmButtonText: 'OK',
     });
   }
 };
 
+        
   useEffect(() => {
     if (invoice) {
       setPaidAmount(invoice.totalAmount);
