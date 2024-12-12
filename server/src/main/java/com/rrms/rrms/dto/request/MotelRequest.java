@@ -1,5 +1,6 @@
 package com.rrms.rrms.dto.request;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.rrms.rrms.dto.response.MotelServiceResponse;
@@ -23,6 +24,7 @@ public class MotelRequest {
     int maxperson;
     int invoicedate;
     int paymentdeadline;
+    LocalDateTime createdDate = LocalDateTime.now();
     TypeRoom typeRoom;
     AccountRequest account;
     List<MotelServiceResponse> motelServices;

@@ -32,6 +32,8 @@ public enum ErrorCode {
     ROLE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Role not found", HttpStatus.NOT_FOUND),
     ROLE_NOT_PROVIDED(HttpStatus.NOT_FOUND.value(), "ROLE NOT PROVIDED", HttpStatus.NOT_FOUND),
     INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST.value(), "Invalid refresh token", HttpStatus.BAD_REQUEST),
+
+    INVOICE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Hợp đồng không tồn tại", HttpStatus.NOT_FOUND),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

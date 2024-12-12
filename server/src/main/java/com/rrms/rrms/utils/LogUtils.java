@@ -1,4 +1,4 @@
-package com.rrms.rrms.util;
+package com.rrms.rrms.utils;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -11,35 +11,15 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.rrms.rrms.dto.request.CollectPaymentRequest;
-import com.rrms.rrms.dto.request.InvoiceAdditionItemRequest;
-import com.rrms.rrms.dto.request.InvoiceDetailDeviceRequest;
-import com.rrms.rrms.dto.request.InvoiceDetailServiceRequest;
-import com.rrms.rrms.dto.request.InvoiceRequest;
-import com.rrms.rrms.dto.request.UpdateInvoiceAdditionItemRequest;
-import com.rrms.rrms.dto.request.UpdateInvoiceRequest;
-import com.rrms.rrms.dto.response.InvoiceAdditionItemResponse;
-import com.rrms.rrms.dto.response.InvoiceDeviceDetailResponse;
-import com.rrms.rrms.dto.response.InvoiceResponse;
-import com.rrms.rrms.dto.response.InvoiceServiceDetailResponse;
-import com.rrms.rrms.dto.response.PaymentDetailsResponse;
+import com.rrms.rrms.dto.request.*;
+import com.rrms.rrms.dto.response.*;
+import com.rrms.rrms.enums.ErrorCode;
 import com.rrms.rrms.enums.PaymentStatus;
-import com.rrms.rrms.models.Contract;
-import com.rrms.rrms.models.Invoice;
-import com.rrms.rrms.models.InvoiceAdditionItem;
-import com.rrms.rrms.models.InvoiceDetail;
+import com.rrms.rrms.exceptions.AppException;
+import com.rrms.rrms.models.*;
 import com.rrms.rrms.models.MotelService;
-import com.rrms.rrms.models.Payment;
-import com.rrms.rrms.models.Room;
-import com.rrms.rrms.models.RoomDevice;
 import com.rrms.rrms.models.RoomService;
-import com.rrms.rrms.repositories.ContractRepository;
-import com.rrms.rrms.repositories.DetailInvoiceRepository;
-import com.rrms.rrms.repositories.InvoiceRepository;
-import com.rrms.rrms.repositories.PaymentRepository;
-import com.rrms.rrms.repositories.RoomDeviceRepository;
-import com.rrms.rrms.repositories.RoomRepository;
-import com.rrms.rrms.repositories.RoomServiceRepository;
+import com.rrms.rrms.repositories.*;
 import com.rrms.rrms.services.IInvoices;
 
 @Service
@@ -112,7 +92,7 @@ public class InvoiceService implements IInvoices {
         double totalServiceAmount = 0;
         Contract contract = contractRepository
                 .findById(request.getContractId())
-                .orElseThrow(() -> new RuntimeException("Hợp đồng không tồn tại"));
+                .orElseThrow(() -> new AppException(ErrorCode.INVOICE_NOT_FOUND));
 
         LocalDate moveInDate = contract.getMoveinDate()
                 .toInstant()
@@ -188,7 +168,7 @@ public class InvoiceService implements IInvoices {
         return mapToResponse(invoice, details, moveInDate, dueDateOfMoveInDate, totalServiceAmount);
     }
 
-    private InvoiceResponse mapToResponse(
+    public InvoiceResponse mapToResponse(
             Invoice invoice,
             List<InvoiceDetail> details,
             LocalDate moveInDate,

@@ -1,6 +1,7 @@
 package com.rrms.rrms.services.servicesImp;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -158,12 +159,20 @@ public class ContractService implements IContractService {
 
     @Override
     public void updateContractsBasedOnDaysDifference(ContractStatus newStatus, int thresholdDays) {
-        int updatedRows = contractRepository.updateStatusForContractsBasedOnDaysDifference(newStatus, thresholdDays);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, thresholdDays);
+        Date thresholdDate = cal.getTime();
+
+        int updatedRows = contractRepository.updateStatusForContractsBasedOnDaysDifference(newStatus, thresholdDate);
     }
 
     @Override
     public void updateContractsBasedOnDaysDifference2(ContractStatus newStatus, int thresholdDays) {
-        int updatedRows = contractRepository.updateStatusForContractsBasedOnDaysDifference2(newStatus, thresholdDays);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, thresholdDays);
+        Date thresholdDate = cal.getTime();
+
+        int updatedRows = contractRepository.updateStatusForContractsBasedOnDaysDifference2(newStatus, thresholdDate);
     }
 
     @Override
