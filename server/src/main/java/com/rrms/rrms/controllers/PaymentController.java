@@ -27,6 +27,8 @@ import com.rrms.rrms.dto.request.StripeRequest;
 import com.rrms.rrms.dto.response.PaymentResponse;
 import com.rrms.rrms.dto.response.StripeResponse;
 import com.rrms.rrms.enums.RequestType;
+import com.rrms.rrms.repositories.InvoiceRepository;
+import com.rrms.rrms.repositories.PaymentRepository;
 import com.rrms.rrms.services.IPayment;
 import com.rrms.rrms.services.servicesImp.CreateOrderMoMo;
 import com.rrms.rrms.util.LogUtils;
@@ -58,6 +60,12 @@ public class PaymentController {
 
     @Autowired
     private CreateOrderMoMo createOrderMoMo;
+
+    @Autowired
+    private InvoiceRepository invoiceRepository;
+
+    @Autowired
+    private PaymentRepository paymentRepository;
 
     // Paypal payment
     // sb-fo7f331992187@personal.example.com
