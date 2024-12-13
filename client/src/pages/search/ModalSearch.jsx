@@ -18,6 +18,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import { useTranslation } from 'react-i18next'
 
 const ModalSearch = ({ open, handleClose }) => {
+  const [keyword, setKeyword] = useState('')
   const { t } = useTranslation()
   const [propertyType, setPropertyType] = useState('Phòng trọ, nhà trọ')
   const [occupation, setOccupation] = useState('Ngành nghề khác')
@@ -60,12 +61,28 @@ const ModalSearch = ({ open, handleClose }) => {
   const handleProvinceChange = (event) => {
     const provinceId = event.target.value
     setSelectedProvince(provinceId)
+
+    const selectedProvinceObject = provinces.find((province) => province.id === provinceId)
+
+    if (selectedProvinceObject) {
+      setKeyword(selectedProvinceObject.full_name)
+    } else {
+      setKeyword('')
+    }
     fetchDistricts(provinceId)
   }
 
   // Hàm xử lý khi chọn quận/huyện
   const handleDistrictChange = (event) => {
-    setSelectedDistrict(event.target.value)
+    const selectedValue = event.target.value
+    setSelectedDistrict(selectedValue)
+
+    const selectedDistrictObject = districts.find((district) => district.id === selectedValue)
+    if (selectedDistrictObject) {
+      setKeyword(selectedDistrictObject.full_name)
+    } else {
+      setKeyword('')
+    }
   }
 
   const propertyTypes = ['phong-tro', 'nha-cho-thue', 'van-phong', 'can-ho', 'kho', 'ky-tuc-xa', 'pass-phong']
@@ -89,12 +106,12 @@ const ModalSearch = ({ open, handleClose }) => {
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: isMobile ? '95%' : 800, // Responsive kích thước cho mobile
+            width: isMobile ? '95%' : 800,
             bgcolor: 'background.paper',
             border: 'none',
             boxShadow: 24,
             borderRadius: 2,
-            p: isMobile ? 2 : 4 // Giảm padding cho mobile
+            p: isMobile ? 2 : 4
           }}>
           <Paper elevation={3} sx={{ maxWidth: '100%', padding: isMobile ? 2 : 3, borderRadius: 2 }}>
             {/* Tiêu đề */}
@@ -239,7 +256,12 @@ const ModalSearch = ({ open, handleClose }) => {
               </Button>
               <Button
                 variant="contained"
-                sx={{ width: isMobile ? '100%' : '48%', textTransform: 'none', backgroundColor: '#1e90ff' }}>
+                sx={{ width: isMobile ? '100%' : '48%', textTransform: 'none', backgroundColor: '#1e90ff' }}
+                onClick={() => {
+                  keyword
+                  console.log('Keyword:', keyword)
+                  handleClose()
+                }}>
                 {t('tim-kiem-ngay')}
               </Button>
             </Box>
