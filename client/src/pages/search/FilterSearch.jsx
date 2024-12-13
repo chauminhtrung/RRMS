@@ -22,15 +22,19 @@ function FilterSearch({ setSearchData, searchKeyWord, setKeyword, keyword, setTo
   const [range, setRange] = useState([0, 50])
   const [selectedValue, setSelectedValue] = useState('Dưới 50 triệu')
   const [area, setArea] = useState([0, 50])
-
+  // const [keyfilter, setkeyfilter] = useState('')
   const [isRecording, setIsRecording] = useState(false)
-
+  const [cityValue, setcityValue] = useState('Hồ Chí Minh')
   const [selectedValueArea, setSelectedValueArea] = useState('Dưới 50 m2')
 
   const debouncedKeyword = useDebounce(keyword, 300)
   // const handleInputChange = (event) => {
   //   setSearchValue(event.target.value)
   // }
+  const filterSearchfunc = (vl) => {
+    setcityValue(vl)
+    setKeyword(vl)
+  }
 
   useEffect(() => {
     if (!searchKeyWord) {
@@ -205,7 +209,7 @@ function FilterSearch({ setSearchData, searchKeyWord, setKeyword, keyword, setTo
                         </svg>
                       </div>
                       <div>
-                        <b className="province-location-show">Hồ Chí Minh</b>
+                        <b className="province-location-show">{cityValue}</b>
                         <br />
                         <span className="district-location-show">{keyword || 'Quận 1'}</span>
                       </div>
@@ -377,7 +381,7 @@ function FilterSearch({ setSearchData, searchKeyWord, setKeyword, keyword, setTo
         </div>
       </div>
 
-      <ModalSearch open={open} handleClose={handleClose} />
+      <ModalSearch filterSearch={filterSearchfunc} open={open} handleClose={handleClose} />
 
       <AudioRecorderModal
         open={openAudio}

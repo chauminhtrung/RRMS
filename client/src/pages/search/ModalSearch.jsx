@@ -17,7 +17,7 @@ import LoadingPage from '~/components/LoadingPage/LoadingPage'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import { useTranslation } from 'react-i18next'
 
-const ModalSearch = ({ open, handleClose }) => {
+const ModalSearch = ({ filterSearch, open, handleClose }) => {
   const [keyword, setKeyword] = useState('')
   const { t } = useTranslation()
   const [propertyType, setPropertyType] = useState('Phòng trọ, nhà trọ')
@@ -29,7 +29,10 @@ const ModalSearch = ({ open, handleClose }) => {
 
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm')) // Sử dụng breakpoint để xác định màn hình nhỏ
-
+  // const [keyfilter, setkeyfilter] = useState('')
+  const handleFilter = (vl) => {
+    filterSearch(vl)
+  }
   // Hàm để lấy danh sách tỉnh/thành từ API
   const fetchProvinces = async () => {
     try {
@@ -158,7 +161,6 @@ const ModalSearch = ({ open, handleClose }) => {
                       </Select>
                     </FormControl>
                   </Grid>
-
                   {/* Chọn Quận/Huyện */}
                   <Grid item xs={12} sm={6} md={6}>
                     <FormControl fullWidth>
@@ -259,7 +261,7 @@ const ModalSearch = ({ open, handleClose }) => {
                 sx={{ width: isMobile ? '100%' : '48%', textTransform: 'none', backgroundColor: '#1e90ff' }}
                 onClick={() => {
                   keyword
-                  console.log('Keyword:', keyword)
+                  handleFilter(keyword)
                   handleClose()
                 }}>
                 {t('tim-kiem-ngay')}
