@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.rrms.rrms.dto.request.TenantRequest;
 import com.rrms.rrms.dto.response.TenantResponse;
+import com.rrms.rrms.dto.response.TenantSummaryDTO;
 
 public interface ITenantService {
     TenantResponse findById(UUID id);
@@ -20,4 +21,6 @@ public interface ITenantService {
     void deleteByRoomId(UUID roomId);
 
     List<TenantResponse> getAllTenantsRoomId(UUID roomId);
+
+    List<TenantSummaryDTO> getTenantSummary();
 }

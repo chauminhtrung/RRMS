@@ -80,10 +80,9 @@ const RentalStatus = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmotels
 }
 
 const HouseRentalTable = ({ username }) => {
-  const [totalRooms, setTotalRooms] = useState(0);
-  const [totalActiveContracts, setTotalActiveContracts] = useState(0);
-  const [totalExpiredContracts, setTotalExpiredContracts] = useState(0);
-  const [totalExpiringContracts, setTotalExpiringContracts] = useState(0);
+  const [houses, setHouses] = useState([]);
+  const [roomCounts, setRoomCounts] = useState([]);
+  const [tenantSummaries, setTenantSummaries] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -100,38 +99,50 @@ const HouseRentalTable = ({ username }) => {
       try {
         console.log(userData);
 
-        const totalrooms = await axios.get(`${env.API_URL}/report/total-rooms/${username}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const totalactiveContracts = await axios.get(`${env.API_URL}/report/total-active-contracts/${username}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        // gọi các nhà trọ của ac
+        const housesResponse = await axios.get(`${env.API_URL}/motels/get-motel-account?username=${username}`, {
+          headers: { Authorization: `Bearer ${token}` },
         });
 
-        const totalexpiredcontracts = await axios.get(`${env.API_URL}/report/contracts-expired/${username}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const totalexpiringcontracts = await axios.get(`${env.API_URL}/report/contracts-expiring/${username}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        // Sửa đổi: Gọi API để lấy tổng số phòng cho từng nhà trọ
+        const updatedHouses = await Promise.all(housesResponse.data.result.map(async (house) => {
+          const totalRoomsResponse = await axios.get(`${env.API_URL}/report/total-rooms?motelId=${house.motelId}&username=${username}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          // Cập nhật tổng phòng, nếu null thì gán bằng 0
+          const totalRooms = totalRoomsResponse.data || 0; // Nếu null, gán bằng 0
+
+          const totalTenantsResponse = await axios.get(`${env.API_URL}/report/${house.motelId}/tenants/count`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          const totalTenants = totalTenantsResponse.data || 0; // Nếu null, gán bằng 0
+
+          return {
+            ...house,
+            totalRooms: totalRooms,
+            totalTenants: totalTenants,
+          };
+        }));
+
+        const roomCountsResponse = await axios.get(`${env.API_URL}/report/room-counts`, {
+          headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (totalrooms.data.status) {
-          setTotalRooms(totalrooms.data.data);
-          setTotalActiveContracts(totalactiveContracts.data.data);
-          setTotalExpiredContracts(totalexpiredcontracts.data.data);
-          setTotalExpiringContracts(totalexpiringcontracts.data.data);
+        const tenantSummaryResponse = await axios.get(`${env.API_URL}/report/tenant/summary`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        // Ghi log phản hồi từ tenantSummaryResponse
+        console.log('Tenant Summary Response:', tenantSummaryResponse.data);
+
+        if (housesResponse.data.result) {
+          setHouses(updatedHouses);
+          setRoomCounts(roomCountsResponse.data);
+          setTenantSummaries(tenantSummaryResponse.data);
         } else {
-          setError(totalrooms.data.message);
-          setError(totalactiveContracts.data.message);
-          setError(totalexpiredcontracts.data.message);
-          setError(totalexpiringcontracts.data.message);
+          alert('lỗi');
         }
       } catch (err) {
         setError('Failed to fetch total rooms');
@@ -139,6 +150,7 @@ const HouseRentalTable = ({ username }) => {
       } finally {
 
       }
+
     };
 
     fetchTotalRooms();
@@ -185,40 +197,35 @@ const HouseRentalTable = ({ username }) => {
                   <TableCell>
                     <b>Quá hạn hợp đồng</b>
                   </TableCell>
-                  <TableCell>
-                    <b>Hợp đồng đã liên kết</b>
-                  </TableCell>
+
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableRow>
-                  <TableCell className="username" style={{ fontWeight: 'bold' }}>{username}</TableCell>
-                  <TableCell className="countRom">{totalRooms !== null ? totalRooms : 'Loading...'}</TableCell>
-                  <TableCell className="RomTrong">
-                    <span className="RoomConstract">{totalRooms - totalActiveContracts} (0%)</span>
-                  </TableCell>
-                  <TableCell className="number">
-                    <span className="text-success">{totalActiveContracts !== null ? totalActiveContracts : 'Loading...'} (0%)</span>
-                  </TableCell>
-                  <TableCell className="number">{totalActiveContracts}</TableCell>
-                  <TableCell className="number">0</TableCell>
-                  <TableCell className="HopdongEnded">{totalExpiredContracts}</TableCell>
-                  <TableCell className="HopdongEnding">{totalExpiringContracts}</TableCell>
-                  <TableCell className="number">0</TableCell>
-                  <TableCell className="number">0</TableCell>
-                </TableRow>
+                {houses.map((house) => (
+                  <TableRow key={house.motelId}>
+                    <TableCell className="username" style={{ fontWeight: 'bold' }}>{house.motelName}</TableCell>
+                    <TableCell>{house.totalRooms}</TableCell>
+                    <TableCell>{roomCounts.find(rc => rc.motelId === house.motelId)?.noContractCount || 0}</TableCell>
+                    <TableCell><span className="text-success">{roomCounts.find(rc => rc.motelId === house.motelId)?.activeCount || 0}</span></TableCell>
+                    <TableCell>{roomCounts.find(rc => rc.motelId === house.motelId)?.reservedCount || 0}</TableCell>
+                    <TableCell>0</TableCell>
+                    <TableCell>{roomCounts.find(rc => rc.motelId === house.motelId)?.endedCount || 0}</TableCell>
+                    <TableCell>{roomCounts.find(rc => rc.motelId === house.motelId)?.iatExpireCount || 0}</TableCell>
+                    <TableCell>0</TableCell>
+
+                  </TableRow>
+                ))}
+                {houses.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={10} style={{ textAlign: 'center' }}>Không có dữ liệu</TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </div>
         </div>
       </div>
-      <Typography variant="h4" className="title-item">
-        Hợp đồng sắp kết thúc <br />
-        <i className="des" style={{ fontSize: '15px' }}>
-          Hợp đồng báo kết thúc, sắp hết hạn.
-        </i>
-      </Typography>
-      <Alert severity="warning">Không có hợp đồng nào sắp kết thúc.</Alert>
+
 
       <div className="col-12">
         <div className="mt-3">
@@ -247,12 +254,19 @@ const HouseRentalTable = ({ username }) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableRow>
-                  <TableCell style={{ fontWeight: 'bold' }}>trungkien</TableCell>
-                  <TableCell className="number">0</TableCell>
-                  <TableCell className="number">0</TableCell>
-                  <TableCell className="number">0</TableCell>
-                </TableRow>
+                {houses.map((house) => (
+                  <TableRow key={house.motelId}>
+                    <TableCell className="username" style={{ fontWeight: 'bold' }}>{house.motelName}</TableCell>
+                    <TableCell>{house.totalTenants}</TableCell>
+                    <TableCell>{tenantSummaries.find(ts => ts.motelId === house.motelId)?.temporaryResidenceCount || 0}</TableCell>
+                    <TableCell>{tenantSummaries.find(ts => ts.motelId === house.motelId)?.verifiedInformationCount || 0}</TableCell>
+                  </TableRow>
+                ))}
+                {houses.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={4} style={{ textAlign: 'center' }}>Không có dữ liệu</TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </div>
@@ -264,10 +278,12 @@ const HouseRentalTable = ({ username }) => {
 
 const ContractEndingTable = ({ username }) => {
 
-  const [totalcontracts, setTotalContracts] = useState(0);
-  const [totalinvoice, setTotalInvoice] = useState(0);
-  const [totalroom, setTotalRoom] = useState(0);
-  const [totalservice, setTotalService] = useState(0);
+
+  const [houses, setHouses] = useState([]);
+  const [selectedHouse, setSelectedHouse] = useState('');
+  const [transactions, setTransactions] = useState([]);
+  const [totalInvoices, setTotalInvoices] = useState({});
+  const [totalRoomPrices, setTotalRoomPrices] = useState({});
   const [error, setError] = useState(null);
 
   const formatCurrency = (value) => {
@@ -291,38 +307,20 @@ const ContractEndingTable = ({ username }) => {
 
       try {
 
-        const totalcontracts = await axios.get(`${env.API_URL}/report/total-active-contracts-deposit/${username}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const totalinvoice = await axios.get(`${env.API_URL}/report/total-invoice-price/${username}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const housesResponse = await axios.get(`${env.API_URL}/motels/get-motel-account?username=${username}`, {
+          headers: { Authorization: `Bearer ${token}` },
         });
 
-        const totalroom = await axios.get(`${env.API_URL}/report/total-room-price/${username}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const totalservice = await axios.get(`${env.API_URL}/report/total-service-price/${username}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
 
-        if (totalcontracts.data.status) {
-          setTotalContracts(totalcontracts.data.data);
-          setTotalInvoice(totalinvoice.data.data);
-          setTotalRoom(totalroom.data.data);
-          setTotalService(totalservice.data.data);
+
+        if (housesResponse.data.result) {
+          setHouses(housesResponse.data.result);
+          fetchTransactions(username); // Gọi hàm để lấy giao dịch ngay sau khi lấy nhà cho thuê
+          console.log('hehee: ' + housesResponse.data.result);
+
         } else {
-          setError(totalcontracts.data.message);
-          setError(totalinvoice.data.message);
-          setError(totalroom.data.message);
-          setError(totalservice.data.message);
+          setError(housesResponse.data.message);
+
         }
       } catch (err) {
         setError('Failed to fetch total rooms');
@@ -336,6 +334,118 @@ const ContractEndingTable = ({ username }) => {
 
     fetchInvoid();
   }, []);
+
+
+  // Hàm để gọi API lấy danh sách giao dịch
+  const fetchTransactions = async (username) => {
+    const userData = JSON.parse(sessionStorage.getItem('user'));
+    const token = userData?.token;
+
+    try {
+      const response = await axios.get(`${env.API_URL}/transactions/${username}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      console.log('Dữ liệu giao dịch:', response.data);
+      setTransactions(response.data || []); // Cập nhật danh sách giao dịch
+    } catch (err) {
+      setError('Failed to fetch transactions'); // Thông báo lỗi khi gọi API không thành công
+      console.error(err);
+    }
+  };
+
+  // Lọc giao dịch theo transactionType
+  const filteredTransactions = {
+    thu: transactions.filter(transaction => transaction.transactionType === true), // Giao dịch thu
+    chi: transactions.filter(transaction => transaction.transactionType === false), // Giao dịch chi
+  };
+  // Hàm để gọi API lấy tổng tiền cọc và tổng tiền giữ chân
+  const fetchDepositData = async (motelId) => {
+    const userData = JSON.parse(sessionStorage.getItem('user'));
+    const token = userData?.token;
+
+    try {
+      // Gọi API để lấy tổng tiền cọc
+      const depositResponse = await axios.get(`${env.API_URL}/report/${motelId}/deposits`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      // Gọi API để lấy tổng tiền giữ chân
+      const reserveResponse = await axios.get(`${env.API_URL}/report/${motelId}/reserve-deposits`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      return {
+        totalDeposit: depositResponse.data || 0,
+        totalReserveDeposit: reserveResponse.data || 0,
+      };
+    } catch (err) {
+      console.error('Failed to fetch deposit data:', err);
+      return { totalDeposit: 0, totalReserveDeposit: 0 };
+    }
+  };
+
+
+  // Component để lấy và hiển thị tổng tiền cọc
+  const FetchDepositData = ({ motelId }) => {
+    const [totalDeposit, setTotalDeposit] = useState(0);
+
+    useEffect(() => {
+      const fetchData = async () => {
+        const depositData = await fetchDepositData(motelId);
+        setTotalDeposit(depositData.totalDeposit);
+      };
+      fetchData();
+    }, [motelId]);
+
+    return <span>{formatCurrency(totalDeposit)}</span>;
+  };
+
+  // Component để lấy và hiển thị tổng tiền giữ chân
+  const FetchReserveDepositData = ({ motelId }) => {
+    const [totalReserveDeposit, setTotalReserveDeposit] = useState(0);
+
+    useEffect(() => {
+      const fetchData = async () => {
+        const depositData = await fetchDepositData(motelId);
+        setTotalReserveDeposit(depositData.totalReserveDeposit);
+      };
+      fetchData();
+    }, [motelId]);
+
+    return <span>{formatCurrency(totalReserveDeposit)}</span>;
+  };
+
+  const handleChange = (event) => {
+    setSelectedHouse(event.target.value);
+  };
+
+  useEffect(() => {
+    const fetchFinancialData = async (motelId) => { // Hàm lấy dữ liệu tài chính cho nhà cho thuê được chọn
+      const userData = JSON.parse(sessionStorage.getItem('user'));
+      const token = userData?.token;
+
+      try {
+        const invoicesResponse = await axios.get(`${env.API_URL}/report/${motelId}/total-paid-invoices`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const roomPriceResponse = await axios.get(`${env.API_URL}/report/${motelId}/total-paid-room-price`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        setTotalInvoices(invoicesResponse.data || 0); // Lưu tổng tiền hóa đơn
+        setTotalRoomPrices(roomPriceResponse.data || 0); // Lưu tổng tiền phòng
+      } catch (err) {
+        console.error('Failed to fetch financial data:', err);
+      }
+    };
+
+    if (selectedHouse) { // Nếu có nhà cho thuê được chọn
+      fetchFinancialData(selectedHouse); // Gọi hàm lấy dữ liệu tài chính
+    } else {
+      setTotalInvoices(0); // Đặt tổng tiền hóa đơn về 0 nếu không có nhà nào được chọn
+      setTotalRoomPrices(0); // Đặt tổng tiền phòng về 0 nếu không có nhà nào được chọn
+    }
+  }, [selectedHouse]); // Theo dõi sự thay đổi của selectedHouse
 
   // Một giả định đơn giản về cách hiện thị thông tin hợp đồng kết thúc
   return (
@@ -367,34 +477,28 @@ const ContractEndingTable = ({ username }) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableRow>
-                  <TableCell style={{ fontWeight: 'bold' }}>{username}</TableCell>
-                  <TableCell className="totalConstrat">{formatCurrency(totalcontracts)}</TableCell>
-                  <TableCell className="number">0</TableCell>
-                  <TableCell className="number">0</TableCell>
-                </TableRow>
+                {houses.map((house) => (
+                  <TableRow key={house.motelId}>
+                    <TableCell style={{ fontWeight: 'bold' }}>{house.motelName}</TableCell>
+                    <TableCell className="totalConstrat">
+                      <FetchDepositData motelId={house.motelId} formatCurrency={formatCurrency} />
+                    </TableCell>
+                    <TableCell className="number">
+                      <FetchReserveDepositData motelId={house.motelId} formatCurrency={formatCurrency} />
+                    </TableCell>
+                    <TableCell className="number">0</TableCell>
+                  </TableRow>
+                ))}
+                {houses.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={10} style={{ textAlign: 'center' }}>Không có dữ liệu</TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </div>
         </div>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Typography variant="h4" className="title-item">
-          Thống kê dịch vụ <br />
-          <i className="des" style={{ fontSize: '15px' }}>
-            Mức sử dụng, chỉ số tiêu thụ trong các nhà cho thuê
-          </i>
-        </Typography>
-
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={['DatePicker', 'DesktopDatePicker', 'MobileDatePicker']}>
-            <DemoItem>
-              <DatePicker defaultValue={dayjs('2024-01-10')} />
-            </DemoItem>
-          </DemoContainer>
-        </LocalizationProvider>
-      </div>
-      <Alert severity="warning">Trong tháng 9 chưa có dịch vụ nào được sử dụng</Alert>
 
       <div className="col-12">
         <div className="mt-3">
@@ -409,9 +513,20 @@ const ContractEndingTable = ({ username }) => {
             <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
               <FormControl variant="outlined" style={{ width: '20%', marginRight: '15px' }}>
                 <InputLabel id="select_block">Nhà cho thuê</InputLabel>
-                <Select labelId="select_block" name="block_id" defaultValue="6852" label="Nhà cho thuê">
-                  <MenuItem value="">Tất cả nhà cho thuê</MenuItem>
-                  <MenuItem value="6852">trungkien</MenuItem>
+                <Select
+                  labelId="select_block"
+                  value={selectedHouse}
+                  onChange={handleChange}
+                  label="Nhà cho thuê"
+                >
+                  <MenuItem value="">
+                    Tất cả nhà cho thuê
+                  </MenuItem>
+                  {houses.map((house) => (
+                    <MenuItem key={house.motelId} value={house.motelId}>
+                      {house.motelName}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
 
@@ -440,28 +555,20 @@ const ContractEndingTable = ({ username }) => {
 
             <Box className="container mt-4" sx={{ flexGrow: 1 }}>
               <Grid container spacing={2}>
-                <Grid item xs={6} sm={6} md={6} lg={4}>
+                <Grid item xs={6} sm={6} md={6} lg={6}>
                   <Box className="btn-colo1" flex="1" m={1}>
                     <Typography variant="h5" className='sumInvoicd'>Tổng tiền hóa đơn</Typography>
                     <Box>
-                      <Typography>{formatCurrency(totalinvoice)}</Typography>
+                      <Typography>{formatCurrency(totalInvoices)}</Typography>
                     </Box>
                   </Box>
                 </Grid>
-                <Grid item xs={6} sm={6} md={6} lg={4}>
+                <Grid item xs={6} sm={6} md={6} lg={6}>
                   <Box className="btn-colo2" flex="1" m={1}>
                     <Typography variant="h5" className='sumRoom'>Tổng tiền phòng</Typography>
 
                     <Box>
-                      <Typography>{formatCurrency(totalroom)}</Typography>
-                    </Box>
-                  </Box>
-                </Grid>
-                <Grid item xs={6} sm={6} md={6} lg={4}>
-                  <Box className="btn-colo3" flex="1" m={1}>
-                    <Typography variant="h5" className='sumService'>Tổng tiền dịch vụ</Typography>
-                    <Box>
-                      <Typography>{formatCurrency(totalservice)}</Typography>
+                      <Typography>{formatCurrency(totalRoomPrices)}</Typography>
                     </Box>
                   </Box>
                 </Grid>
@@ -484,16 +591,34 @@ const ContractEndingTable = ({ username }) => {
                           <TableCell>
                             <b>Nội dung</b>
                           </TableCell>
+                          <TableCell>
+                            <b>Ngày lập phiếu</b>
+                          </TableCell>
+                          <TableCell>
+                            <b>Phương thức thanh toán</b>
+                          </TableCell>
                           <TableCell align="right">
-                            <b>Tổng tiền thu</b>
+                            <b>Tiền thu</b>
                           </TableCell>
                         </TableRow>
                       </TableHead>
-                      <TableBody></TableBody>
+                      <TableBody>
+                        {filteredTransactions.thu.map((transaction) => (
+                          <TableRow key={transaction.transactionId}>
+                            <TableCell>{transaction.paymentDescription}</TableCell>
+                            <TableCell>{transaction.transactionDate}</TableCell>
+                            <TableCell>{transaction.payment.description}</TableCell>
+                            <TableCell align="right">{formatCurrency(transaction.amount)}</TableCell>
+                          </TableRow>
+                        ))}
+                        {filteredTransactions.thu.length === 0 && (
+                          <TableRow>
+                            <TableCell colSpan={2} style={{ textAlign: 'center' }}>Chưa có phiếu thu nào</TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
                     </Table>
-                    <Alert severity="error" style={{ marginTop: '20px' }} className="mt-3">
-                      Chưa có phiếu thu nào
-                    </Alert>
+
                   </Paper>
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -510,16 +635,34 @@ const ContractEndingTable = ({ username }) => {
                           <TableCell>
                             <b>Nội dung</b>
                           </TableCell>
+                          <TableCell>
+                            <b>Ngày lập phiếu</b>
+                          </TableCell>
+                          <TableCell>
+                            <b>Phương thức thanh toán</b>
+                          </TableCell>
                           <TableCell align="right">
-                            <b>Tổng tiền Chi</b>
+                            <b>Tiền Chi</b>
                           </TableCell>
                         </TableRow>
                       </TableHead>
-                      <TableBody></TableBody>
+                      <TableBody>
+                        {filteredTransactions.chi.map((transaction) => (
+                          <TableRow key={transaction.transactionId}>
+                            <TableCell>{transaction.paymentDescription}</TableCell>
+                            <TableCell>{transaction.transactionDate}</TableCell>
+                            <TableCell>{transaction.payment.description}</TableCell>
+                            <TableCell align="right">{formatCurrency(transaction.amount)}</TableCell>
+                          </TableRow>
+                        ))}
+                        {filteredTransactions.chi.length === 0 && (
+                          <TableRow>
+                            <TableCell colSpan={2} style={{ textAlign: 'center' }}>Chưa có phiếu thu nào</TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
                     </Table>
-                    <Alert severity="error" style={{ marginTop: '20px' }} className="mt-3">
-                      Chưa có phiếu chi nào
-                    </Alert>
+
                   </Paper>
                 </Grid>
               </Grid>
