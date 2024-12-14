@@ -18,24 +18,5 @@ public class InvoiceServiceService implements IInvoiceService {
     @Autowired
     private EntityManager entityManager;
 
-    public Double getTotalRoomPrice(String username) {
-        StoredProcedureQuery query = entityManager.createStoredProcedureQuery("GetTotalRoomPriceProcedure");
-        query.registerStoredProcedureParameter(1, String.class, ParameterMode.IN);
-        query.setParameter(1, username);
-        return (Double) query.getSingleResult();
-    }
 
-    public Double getTotalServicePrice(String username) {
-        StoredProcedureQuery query = entityManager.createStoredProcedureQuery("GetTotalServicePriceProcedure");
-        query.registerStoredProcedureParameter(1, String.class, ParameterMode.IN);
-        query.setParameter(1, username);
-        return (Double) query.getSingleResult();
-    }
-
-    public Double getTotalInvoice(String username) {
-        StoredProcedureQuery query = entityManager.createStoredProcedureQuery("GetTotalInvoiceProcedure");
-        query.registerStoredProcedureParameter(1, String.class, ParameterMode.IN);
-        query.setParameter(1, username);
-        return (Double) query.getSingleResult();
-    }
 }

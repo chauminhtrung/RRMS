@@ -80,6 +80,4 @@ public class Account {
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference(value = "account-motel") // Đặt tên cho tham chiếu quản lý
     private List<Motel> motels;
-
-
 }

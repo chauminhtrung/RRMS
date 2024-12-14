@@ -1,7 +1,125 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import './Support.css'
 import { Link } from 'react-router-dom'
+import Swal from 'sweetalert2'
+import { insertSupport } from '~/apis/supportAPI'
 const Support = ({ setIsAdmin }) => {
+  const [name, setName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [dateOfStay, setDateOfStay] = useState('')
+  const [priceFirst, setPriceFirst] = useState('')
+  const [priceEnd, setPriceEnd] = useState('')
+  const handleSupportRequest = async () => {
+    if (validate()) {
+      const user = JSON.parse(sessionStorage.getItem('user'))
+      const dataNew = {
+        account: {
+          username: user.username
+        },
+        nameContact: name,
+        phoneContact: phone,
+        dateOfStay: dateOfStay,
+        priceFirst: priceFirst,
+        priceEnd: priceEnd
+      }
+      const response = await insertSupport(dataNew)
+      console.log(response)
+
+      if (response.code == 201) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Thành công',
+          text: 'Gửi yêu cầu hỗ trợ thành công'
+        })
+        setName('')
+        setPhone('')
+        setDateOfStay('')
+        setPriceFirst('')
+        setPriceEnd('')
+        document.getElementById('boxkhunggia').value = '-1'
+      }
+    }
+  }
+  const validate = () => {
+    let valid = true
+    if (name == '') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Thông báo',
+        text: 'Vui lòng nhập tên'
+      })
+      valid = false
+      return
+    }
+    if (phone == '') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Thông báo',
+        text: 'Vui lòng nhập số điện thoại'
+      })
+      valid = false
+      return
+    }
+    if (dateOfStay == '') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Thông báo',
+        text: 'Vui lòng chọn ngày vào ở'
+      })
+      valid = false
+      return
+    }
+    if (priceFirst == '') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Thông báo',
+        text: 'Vui lòng chọn khung giá'
+      })
+      valid = false
+      return
+    }
+    if (priceEnd == '') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Thông báo',
+        text: 'Vui lòng chọn khung giá'
+      })
+      valid = false
+      return
+    }
+    return valid
+  }
+  const changePrice = (value) => {
+    switch (Number(value)) {
+      case 1:
+        setPriceFirst(1)
+        setPriceEnd(1000)
+        break
+      case 2:
+        setPriceFirst(1000)
+        setPriceEnd(2000)
+        break
+      case 3:
+        setPriceFirst(2000)
+        setPriceEnd(3000)
+        break
+      case 4:
+        setPriceFirst(3000)
+        setPriceEnd(4000)
+        break
+      case 5:
+        setPriceFirst(4000)
+        setPriceEnd(5000)
+        break
+      case 6:
+        setPriceFirst(5000)
+        setPriceEnd(100000)
+        break
+      default:
+        setPriceFirst('')
+        setPriceEnd('')
+    }
+  }
   useEffect(() => {
     setIsAdmin(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -68,7 +186,8 @@ const Support = ({ setIsAdmin }) => {
                       className="form-control"
                       name="name"
                       id="post-name"
-                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                       placeholder="Tên"
                     />
                   </div>
@@ -82,7 +201,9 @@ const Support = ({ setIsAdmin }) => {
                       className="form-control"
                       name="phone"
                       id="post-phone"
-                      required=""
+                      required
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
                       placeholder="Số điện thoại liên hệ"
                     />
                   </div>
@@ -96,7 +217,8 @@ const Support = ({ setIsAdmin }) => {
                       className="form-control flatpickr-input"
                       name="available_date"
                       id="post-date"
-                      required=""
+                      value={dateOfStay}
+                      onChange={(e) => setDateOfStay(e.target.value)}
                       placeholder="Ngày vào ở"
                     />
                   </div>
@@ -105,7 +227,12 @@ const Support = ({ setIsAdmin }) => {
                   <div>
                     <label htmlFor="date">Khoản giá</label>
 
-                    <select data-format="int" name="price_range" className="form-select">
+                    <select
+                      data-format="int"
+                      id="boxkhunggia"
+                      name="price_range"
+                      className="form-select"
+                      onChange={(e) => changePrice(e.target.value)}>
                       <option value="-1">Khung giá</option>
                       <option data-slug="1" value="1">
                         Dưới 1 triệu
@@ -197,7 +324,9 @@ const Support = ({ setIsAdmin }) => {
                         <line x1="22" y1="2" x2="11" y2="13"></line>
                         <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                       </svg>
-                      <span style={{ marginLeft: '5px', fontSize: '13px' }}>Yêu cầu hỗ trợ</span>
+                      <span onClick={handleSupportRequest} style={{ marginLeft: '5px', fontSize: '13px' }}>
+                        Yêu cầu hỗ trợ
+                      </span>
                     </div>
                   </div>
                 </div>

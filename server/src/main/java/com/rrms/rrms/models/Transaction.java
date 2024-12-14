@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -45,5 +46,6 @@ public class Transaction {
     // Thêm trường username
     @ManyToOne
     @JoinColumn(name = "username", nullable = false)
+    @JsonIgnore // Tránh serialize account
     private Account account; // Tài khoản liên quan đến giao dịch
 }

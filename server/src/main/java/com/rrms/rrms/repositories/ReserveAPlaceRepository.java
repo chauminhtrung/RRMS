@@ -19,4 +19,8 @@ public interface ReserveAPlaceRepository extends JpaRepository<Reserve_a_place, 
     @Transactional
     @Query("DELETE FROM Reserve_a_place r WHERE HEX(r.ReserveaplaceId) = :hexId")
     void deleteByIdInHex(@Param("hexId") String hexId);
+
+    // tính tổng tiền giữ chân
+    @Query("SELECT SUM(rp.deposit) FROM Reserve_a_place rp JOIN rp.room r WHERE r.motel.motelId = :motelId")
+    Double findTotalReserveDepositByMotelId(@Param("motelId") UUID motelId);
 }

@@ -11,14 +11,6 @@ import com.rrms.rrms.models.Invoice;
 
 @Repository
 public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
-    @Query(value = "CALL GetTotalRoomPriceProcedure(?1)", nativeQuery = true)
-    Double getTotalRoomPrice(String username);
-
-    @Query(value = "CALL GetTotalServicePriceProcedure(?1)", nativeQuery = true)
-    Double getTotalServicePrice(String username);
-
-    @Query(value = "CALL GetTotalInvoiceProcedure(?1)", nativeQuery = true)
-    Double getTotalInvoice(String username);
 
     List<Invoice> findByContractContractId(UUID contractId);
 }

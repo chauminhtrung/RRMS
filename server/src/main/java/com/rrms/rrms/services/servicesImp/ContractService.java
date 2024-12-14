@@ -184,6 +184,11 @@ public class ContractService implements IContractService {
     }
 
     @Override
+    public Integer getTotalTenantsByMotelId(UUID motelId) {
+        return contractRepository.countTenantsByMotelId(motelId);
+    }
+
+    @Override
     public int updateContractStatus(UUID roomId, ContractStatus newStatus, Date reportCloseDate) {
         System.out.println(roomId);
         System.out.println(newStatus);

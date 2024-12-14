@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 @Data
 @NoArgsConstructor
@@ -14,8 +15,10 @@ import java.util.UUID;
 public class SupportResponse {
     private UUID supportId;
     private AccountResponse account;
+    private String nameContact;
+    private String phoneContact;
     private Date dateOfStay;
-    private Date createDate;
+    private LocalDateTime createDate;
     private long priceFirst;
     private long priceEnd;
 }

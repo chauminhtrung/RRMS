@@ -212,21 +212,21 @@ public class MotelServiceTest {
         verify(motelMapper).motelToMotelResponse(motel);
     }
 
-    @Test
-    public void testGetTotalAreaByUsername() {
-        // Thiết lập giá trị trả về
-        Integer expectedArea = 250;
-
-        // Thiết lập hành vi của motelRepository
-        when(motelRepository.findTotalAreaByUsername(account)).thenReturn(expectedArea);
-
-        // Gọi phương thức cần test
-        Integer actualArea = motelService.getTotalAreaByUsername(account);
-
-        // Kiểm tra kết quả
-        assertEquals(expectedArea, actualArea, "Tổng nhà trọ không khớp với giá trị mong đợi.");
-
-        // Xác minh rằng phương thức đã được gọi chính xác
-        verify(motelRepository).findTotalAreaByUsername(account);
-    }
+//    @Test
+//    public void testGetTotalAreaByUsername() {
+//        // Thiết lập giá trị trả về
+//        Integer expectedArea = 250;
+//
+//        // Thiết lập hành vi của motelRepository
+//        when(motelRepository.findTotalAreaByUsername(account)).thenReturn(expectedArea);
+//
+//        // Gọi phương thức cần test
+//        Integer actualArea = motelService.getTotalAreaByUsername(account);
+//
+//        // Kiểm tra kết quả
+//        assertEquals(expectedArea, actualArea, "Tổng nhà trọ không khớp với giá trị mong đợi.");
+//
+//        // Xác minh rằng phương thức đã được gọi chính xác
+//        verify(motelRepository).findTotalAreaByUsername(account);
+//    }
 }

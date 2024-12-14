@@ -24,9 +24,9 @@ import net.datafaker.Faker;
 public class DB {
     private final BulletinBoardRuleRepository bulletinBoardRuleRepository;
 
-    private  final PaymentRepository paymentsRepository;
+    private final PaymentRepository paymentsRepository;
 
-    public DB(BulletinBoardRuleRepository bulletinBoardRuleRepository,PaymentRepository paymentRepository) {
+    public DB(BulletinBoardRuleRepository bulletinBoardRuleRepository, PaymentRepository paymentRepository) {
         this.bulletinBoardRuleRepository = bulletinBoardRuleRepository;
         this.paymentsRepository = paymentRepository;
     }
@@ -725,5 +725,4 @@ public class DB {
 
         return tenant;
     }
-
 }

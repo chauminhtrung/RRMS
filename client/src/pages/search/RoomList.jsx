@@ -21,6 +21,8 @@ import MuiAlert from '@mui/material/Alert'
 import SearchList from './SearchList'
 import FilterSearch from './FilterSearch'
 import LoadingPage from '~/components/LoadingPage/LoadingPage'
+import { insertHeart } from '~/apis/heartAPI'
+import Swal from 'sweetalert2'
 
 const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
   const [favorites, setFavorites] = useState({})
@@ -38,7 +40,22 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
       [id]: !prev[id]
     }))
   }
-
+  const handleAddHeart = async (it) => {
+    const response = await insertHeart('abc', it)
+    if (response.code == 201) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Thành công',
+        text: 'Đã thêm vào yêu thích'
+      })
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Thất bại',
+        text: 'Thêm yêu thích thất bại'
+      })
+    }
+  }
   const handleClick = () => {
     const linkToCopy = 'https://www.youtube.com/watch?v=sshkYoROZrI'
 
@@ -247,7 +264,7 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
                           alignItems: 'center',
                           justifyContent: 'center'
                         }}>
-                        <FavoriteIcon sx={{ fontSize: '35px' }} />
+                        <FavoriteIcon onClick={() => handleAddHeart(item1.bulletinBoardId)} sx={{ fontSize: '35px' }} />
                       </IconButton>
                     </Box>
                   </CardContent>

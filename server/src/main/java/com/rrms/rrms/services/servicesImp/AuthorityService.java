@@ -134,6 +134,9 @@ public class AuthorityService implements IAuthorityService {
         // Tạo token JWT cho tài khoản sau khi đăng nhập thành công
         var token = generateToken(account);
 
+        // Lấy danh sách vai trò của tài khoản
+        List<String> roles = account.getRoles();
+
         // Xây dựng đối tượng LoginResponse với các thông tin cần thiết
         return LoginResponse.builder()
                 .token(token) // Token JWT
@@ -146,6 +149,7 @@ public class AuthorityService implements IAuthorityService {
                 .birthday(account.getBirthday()) // Ngày sinh của người dùng
                 .gender(account.getGender()) // Giới tính
                 .cccd(account.getCccd()) // CCCD (Chứng minh nhân dân)
+                .roles(roles)
                 .build(); // Hoàn thành việc xây dựng LoginResponse
     }
 
