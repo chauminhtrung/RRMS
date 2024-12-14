@@ -121,7 +121,7 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
   return (
     <Box>
       {/* <FilterSearch onSearch={handleSearchResult} /> */}
-      <SearchList totalRooms={totalRooms} />
+      <SearchList totalRooms={totalRooms} searchData={searchData} />
       <Box sx={{ width: '100%', overflow: 'hidden', mt: 2 }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
