@@ -5,11 +5,13 @@ import com.rrms.rrms.dto.response.AccountResponse;
 import com.rrms.rrms.dto.response.BulletinBoardResponse;
 import com.rrms.rrms.dto.response.HeartResponse;
 
+import java.util.UUID;
+
 public interface IHeartService {
 
-    HeartResponse getHeartByAccount(AccountRequest accountRequest);
+    HeartResponse getHeartByUsername(String username);
 
-    HeartResponse addHeart(AccountResponse accountResponse, BulletinBoardResponse bulletinBoardResponse);
+    HeartResponse addHeart(String username, UUID uuidBulletinBoard);
 
-    HeartResponse removeHeart(AccountResponse accountResponse, BulletinBoardResponse bulletinBoardResponse);
+    HeartResponse removeHeart(String username, UUID uuidBulletinBoard);
 }
