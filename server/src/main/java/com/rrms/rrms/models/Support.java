@@ -1,5 +1,6 @@
 package com.rrms.rrms.models;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -25,11 +26,13 @@ public class Support {
     private Account account;
 
     @Column(columnDefinition = "DATE")
-    private LocalDate dateOfStay;
+    private Date dateOfStay;
 
     @Column(columnDefinition = "DATE")
-    private LocalDate createDate;
+    private Date createDate;
 
     @Column(columnDefinition = "DECIMAL(10, 2)")
-    private long price;
+    private long priceFirst;
+    @Column(columnDefinition = "DECIMAL(10, 2)")
+    private long priceEnd;
 }
