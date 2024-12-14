@@ -20,21 +20,19 @@ const SearchList = ({ totalRooms, searchData }) => {
       toast.success(error)
     }
   }
+  const fetchRooms = async () => {
+    try {
+      const response = await roomASC(sortByPrice)
+      console.log(response)
+      searchData(response)
+    } catch (error) {
+      console.error('Error loading rooms:', error)
+    }
+  }
 
   useEffect(() => {
-    const fetchRooms = async () => {
-      try {
-        const response = await roomASC(sortByPrice)
-        console.log(response)
-      } catch (error) {
-        console.error('Error loading rooms:', error)
-      }
-    }
-
     fetchRooms()
   }, [sortByPrice])
-
-  useEffect(() => {}, [totalRooms])
 
   const handleAreaChange = (event) => {
     setSortByArea(event.target.value)
