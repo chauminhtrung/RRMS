@@ -13,6 +13,7 @@ import java.sql.Date;
 @Builder
 public class SupportRequest {
     private AccountRequest account;
+    private String nameContact;
     private Date dateOfStay;
     private long priceFirst;
     private long priceEnd;
