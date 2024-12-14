@@ -16,6 +16,7 @@ public class SupportResponse {
     private UUID supportId;
     private AccountResponse account;
     private String nameContact;
+    private String phoneContact;
     private Date dateOfStay;
     private LocalDateTime createDate;
     private long priceFirst;
