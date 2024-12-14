@@ -1,11 +1,11 @@
 package com.rrms.rrms.dto.response;
 
-import com.rrms.rrms.models.Account;
+import java.sql.Date;
+import java.util.UUID;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.sql.Date;
-import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

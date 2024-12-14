@@ -1,7 +1,6 @@
 package com.rrms.rrms.models;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.UUID;
 
 import jakarta.persistence.*;
@@ -33,6 +32,7 @@ public class Support {
 
     @Column(columnDefinition = "DECIMAL(10, 2)")
     private long priceFirst;
+
     @Column(columnDefinition = "DECIMAL(10, 2)")
     private long priceEnd;
 }

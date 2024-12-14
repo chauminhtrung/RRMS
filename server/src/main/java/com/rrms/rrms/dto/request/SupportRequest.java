@@ -1,10 +1,9 @@
 package com.rrms.rrms.dto.request;
 
-import com.rrms.rrms.models.Account;
+import java.sql.Date;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.sql.Date;
 
 @Data
 @NoArgsConstructor
