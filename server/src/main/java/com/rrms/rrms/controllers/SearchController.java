@@ -46,6 +46,28 @@ public class SearchController {
     //        return apiResponse;
     //    }
 
+    @Operation(summary = "Get all rooms sorted by price")
+    @GetMapping("/asc")
+    public ApiResponse<List<BulletinBoardSearchResponse>> getRoomsSortedByPrice(
+            @RequestParam(defaultValue = "ASC") String sortOrder) {
+        ApiResponse<List<BulletinBoardSearchResponse>> apiResponse = new ApiResponse<>();
+        List<BulletinBoardSearchResponse> rooms;
+        if ("ASC".equalsIgnoreCase(sortOrder)) {
+            rooms = searchService.getRoomsSortedByPriceASC();
+        } else if ("DESC".equalsIgnoreCase(sortOrder)) {
+            rooms = searchService.getRoomsSortedByPriceASC();
+        } else {
+            apiResponse.setCode(HttpStatus.BAD_REQUEST.value());
+            apiResponse.setMessage("Invalid sortOrder. Valid values are 'ASC' or 'DESC'.");
+            return apiResponse;
+        }
+        apiResponse.setCode(HttpStatus.OK.value());
+        apiResponse.setMessage("Tìm kiếm thành công");
+        apiResponse.setResult(rooms);
+        return apiResponse;
+    }
+
+
     @Operation(summary = "Get all rooms")
     @GetMapping
     public ApiResponse<List<BulletinBoardSearchResponse>> getRoom() {
