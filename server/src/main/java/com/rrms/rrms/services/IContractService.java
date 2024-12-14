@@ -41,4 +41,6 @@ public interface IContractService {
     void updateContractDetailsByContractId(UUID contractId, UUID roomId, Double deposit, Double price, Double debt);
 
     void updateCloseContract(UUID contractId, Date newCloseContract);
+
+    Integer getTotalTenantsByMotelId(UUID motelId);
 }

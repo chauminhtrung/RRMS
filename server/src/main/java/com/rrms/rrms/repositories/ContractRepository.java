@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.rrms.rrms.models.Motel;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -89,5 +90,23 @@ public interface ContractRepository extends JpaRepository<Contract, UUID> {
     //            "AND c.landlord = :usernameLandlord")
     //    long countExpiringContracts(@Param("usernameLandlord") Account usernameLandlord);
 
+    // tìm trạng thái phòng
+    @Query("SELECT c FROM Contract c WHERE c.room.motel.motelId = :motelId AND c.status = :status")
+    List<Contract> findContractsByMotelIdAndStatus(@Param("motelId") UUID motelId, @Param("status") ContractStatus status);
+
     List<Contract> findByRoomRoomId(UUID roomId);
+
+    //tim hop dong theo phong
+    @Query("SELECT c FROM Contract c WHERE c.room.roomId = :roomId")
+    List<Contract> findContractsByRoomId(UUID roomId);
+
+    // tính số ng ở trọ
+    @Query("SELECT SUM(c.countTenant) FROM Contract c WHERE c.room.motel.motelId = :motelId")
+    Integer countTenantsByMotelId(@Param("motelId") UUID motelId);
+
+    List<Contract> findByRoom_Motel(Motel motel);
+
+    // tính tổng tiền cọc
+    @Query("SELECT SUM(c.deposit) FROM Contract c JOIN c.room r WHERE r.motel.motelId = :motelId")
+    Double findTotalDepositByMotelId(@Param("motelId") UUID motelId);
 }
