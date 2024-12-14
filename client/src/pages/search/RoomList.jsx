@@ -41,7 +41,8 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
     }))
   }
   const handleAddHeart = async (it) => {
-    const response = await insertHeart('abc', it)
+    const username = JSON.parse(sessionStorage.getItem('user')).username
+    const response = await insertHeart(username, it)
     if (response.code == 201) {
       Swal.fire({
         icon: 'success',
