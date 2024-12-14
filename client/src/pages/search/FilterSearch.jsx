@@ -10,6 +10,7 @@ import './SearchWHome.css'
 import AudioRecorderModal from '../AI/Audio'
 import { searchByName } from '~/apis/searchAPI'
 import { useTranslation } from 'react-i18next'
+import ListSearch from './ListSearch'
 
 function FilterSearch({ setSearchData, searchKeyWord, setKeyword, keyword, setTotalRooms }) {
   const { t } = useTranslation()
@@ -22,15 +23,50 @@ function FilterSearch({ setSearchData, searchKeyWord, setKeyword, keyword, setTo
   const [range, setRange] = useState([0, 50])
   const [selectedValue, setSelectedValue] = useState('Dưới 50 triệu')
   const [area, setArea] = useState([0, 50])
-
+  // const [keyfilter, setkeyfilter] = useState('')
   const [isRecording, setIsRecording] = useState(false)
-
+  const [cityValue, setcityValue] = useState('Hồ Chí Minh')
+  const [districValue, setDistrictValue] = useState('Quận 1')
   const [selectedValueArea, setSelectedValueArea] = useState('Dưới 50 m2')
+  const [isFirstSelection, setIsFirstSelection] = useState(true)
 
   const debouncedKeyword = useDebounce(keyword, 300)
   // const handleInputChange = (event) => {
   //   setSearchValue(event.target.value)
   // }
+
+  const filterSearchfunc = (tinhThanh, quanHuyen) => {
+    if (tinhThanh && !quanHuyen) {
+      // Chỉ có tỉnh thành được chọn
+      setcityValue(tinhThanh)
+      setDistrictValue('') // Đặt quận huyện rỗng
+      setKeyword(tinhThanh) // Sử dụng tỉnh thành
+      setIsFirstSelection(false)
+    } else if (!tinhThanh && quanHuyen) {
+      // Chỉ có quận huyện được chọn
+      setDistrictValue(quanHuyen)
+      setKeyword(quanHuyen) // Sử dụng quận huyện
+      setIsFirstSelection(false)
+    } else if (tinhThanh && quanHuyen) {
+      if (isFirstSelection) {
+        // Lần đầu tiên chọn cả 2, giữ nguyên cả hai
+        setcityValue(tinhThanh)
+        setDistrictValue(quanHuyen)
+        setKeyword(quanHuyen) // Ưu tiên quận huyện
+        setIsFirstSelection(false)
+      } else if (tinhThanh !== cityValue) {
+        // Nếu tỉnh thành thay đổi
+        setcityValue(tinhThanh)
+        setDistrictValue('') // Đặt quận huyện rỗng
+        setKeyword(tinhThanh) // Sử dụng tỉnh thành
+      } else {
+        // Nếu tỉnh thành không thay đổi
+        setcityValue(tinhThanh)
+        setDistrictValue(quanHuyen)
+        setKeyword(quanHuyen) // Ưu tiên quận huyện
+      }
+    }
+  }
 
   useEffect(() => {
     if (!searchKeyWord) {
@@ -205,9 +241,9 @@ function FilterSearch({ setSearchData, searchKeyWord, setKeyword, keyword, setTo
                         </svg>
                       </div>
                       <div>
-                        <b className="province-location-show">Hồ Chí Minh</b>
+                        <b className="province-location-show">{cityValue}</b>
                         <br />
-                        <span className="district-location-show">{keyword || 'Quận 1'}</span>
+                        <span className="district-location-show">{districValue}</span>
                       </div>
                     </div>
                     <div
@@ -376,9 +412,9 @@ function FilterSearch({ setSearchData, searchKeyWord, setKeyword, keyword, setTo
           </form>
         </div>
       </div>
+      <ListSearch cityValue={cityValue} districValue={districValue} keyword={keyword} />
 
-      <ModalSearch open={open} handleClose={handleClose} />
-
+      <ModalSearch filterSearch={filterSearchfunc} open={open} handleClose={handleClose} />
       <AudioRecorderModal
         open={openAudio}
         setRecordedText={setKeyword}

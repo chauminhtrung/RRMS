@@ -17,7 +17,9 @@ import LoadingPage from '~/components/LoadingPage/LoadingPage'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import { useTranslation } from 'react-i18next'
 
-const ModalSearch = ({ open, handleClose }) => {
+const ModalSearch = ({ filterSearch, open, handleClose }) => {
+  const [tinhThanh, setTinhThanh] = useState('')
+  const [quanHuyen, setQuanHuyen] = useState('')
   const { t } = useTranslation()
   const [propertyType, setPropertyType] = useState('Phòng trọ, nhà trọ')
   const [occupation, setOccupation] = useState('Ngành nghề khác')
@@ -28,7 +30,10 @@ const ModalSearch = ({ open, handleClose }) => {
 
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm')) // Sử dụng breakpoint để xác định màn hình nhỏ
-
+  // const [keyfilter, setkeyfilter] = useState('')
+  const handleFilter = (tinhThanh, quanHuyen) => {
+    filterSearch(tinhThanh, quanHuyen)
+  }
   // Hàm để lấy danh sách tỉnh/thành từ API
   const fetchProvinces = async () => {
     try {
@@ -60,12 +65,28 @@ const ModalSearch = ({ open, handleClose }) => {
   const handleProvinceChange = (event) => {
     const provinceId = event.target.value
     setSelectedProvince(provinceId)
+
+    const selectedProvinceObject = provinces.find((province) => province.id === provinceId)
+
+    if (selectedProvinceObject) {
+      setTinhThanh(selectedProvinceObject.full_name)
+    } else {
+      setTinhThanh('')
+    }
     fetchDistricts(provinceId)
   }
 
   // Hàm xử lý khi chọn quận/huyện
   const handleDistrictChange = (event) => {
-    setSelectedDistrict(event.target.value)
+    const selectedValue = event.target.value
+    setSelectedDistrict(selectedValue)
+
+    const selectedDistrictObject = districts.find((district) => district.id === selectedValue)
+    if (selectedDistrictObject) {
+      setQuanHuyen(selectedDistrictObject.full_name)
+    } else {
+      setQuanHuyen('')
+    }
   }
 
   const propertyTypes = ['phong-tro', 'nha-cho-thue', 'van-phong', 'can-ho', 'kho', 'ky-tuc-xa', 'pass-phong']
@@ -89,12 +110,12 @@ const ModalSearch = ({ open, handleClose }) => {
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: isMobile ? '95%' : 800, // Responsive kích thước cho mobile
+            width: isMobile ? '95%' : 800,
             bgcolor: 'background.paper',
             border: 'none',
             boxShadow: 24,
             borderRadius: 2,
-            p: isMobile ? 2 : 4 // Giảm padding cho mobile
+            p: isMobile ? 2 : 4
           }}>
           <Paper elevation={3} sx={{ maxWidth: '100%', padding: isMobile ? 2 : 3, borderRadius: 2 }}>
             {/* Tiêu đề */}
@@ -141,7 +162,6 @@ const ModalSearch = ({ open, handleClose }) => {
                       </Select>
                     </FormControl>
                   </Grid>
-
                   {/* Chọn Quận/Huyện */}
                   <Grid item xs={12} sm={6} md={6}>
                     <FormControl fullWidth>
@@ -239,7 +259,11 @@ const ModalSearch = ({ open, handleClose }) => {
               </Button>
               <Button
                 variant="contained"
-                sx={{ width: isMobile ? '100%' : '48%', textTransform: 'none', backgroundColor: '#1e90ff' }}>
+                sx={{ width: isMobile ? '100%' : '48%', textTransform: 'none', backgroundColor: '#1e90ff' }}
+                onClick={() => {
+                  handleFilter(tinhThanh, quanHuyen)
+                  handleClose()
+                }}>
                 {t('tim-kiem-ngay')}
               </Button>
             </Box>
