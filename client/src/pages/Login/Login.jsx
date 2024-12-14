@@ -19,6 +19,7 @@ const Login = ({ setUsername, setAvatar }) => {
   const [password, setPassword] = useState('')
   const [validCaptcha, setValidCaptcha] = useState(false)
   const navigate = useNavigate()
+
   const loginWithGoogle = async (credentialResponse) => {
     try {
       const decoded = jwtDecode(credentialResponse.credential)
@@ -110,6 +111,8 @@ const Login = ({ setUsername, setAvatar }) => {
       console.error('Error:', error)
     }
   }
+
+  //loginSocial
   const loginSocial = async (phone, pass) => {
     const account = { phone: phone, password: pass }
 
@@ -135,6 +138,7 @@ const Login = ({ setUsername, setAvatar }) => {
           avatar: avtFromResponse,
           username: usernameFromResponse,
           token: token // Lưu trữ token
+
         }
         sessionStorage.setItem('user', JSON.stringify(userData)) // Lưu dữ liệu người dùng cùng với token
 
@@ -155,6 +159,9 @@ const Login = ({ setUsername, setAvatar }) => {
       })
     }
   }
+
+
+  //login
   const handleSubmit = async (event) => {
     event.preventDefault()
 
@@ -187,6 +194,7 @@ const Login = ({ setUsername, setAvatar }) => {
         const usernameFromResponse = response.data.data.username
         const avtFromResponse = response.data.data.avatar
         const token = response.data.data.token
+        const roles = response.data.data.roles
 
         if (!usernameFromResponse) {
           throw new Error('Username không tồn tại trong phản hồi từ server')
@@ -196,7 +204,8 @@ const Login = ({ setUsername, setAvatar }) => {
           phone: phone,
           avatar: avtFromResponse,
           username: usernameFromResponse,
-          token: token // Lưu trữ token
+          token: token, // Lưu trữ token
+          roles:roles
         }
 
         sessionStorage.setItem('user', JSON.stringify(userData)) // Lưu dữ liệu người dùng cùng với token
@@ -205,8 +214,8 @@ const Login = ({ setUsername, setAvatar }) => {
         setUsername(usernameFromResponse)
         setAvatar(avtFromResponse)
 
-        navigate('/RRMS') // Điều hướng về trang chính
-        // window.location.href = '/RRMS'
+         // Điều hướng sau khi login thành công
+        navigate('/RRMS');
       }
     } catch (error) {
       if (error.response) {

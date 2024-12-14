@@ -365,8 +365,6 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   useEffect(() => {
     setIsAdmin(true)
   }, [])
-  console.log('Invoice Status:', invoice?.status);
-
   
   //xoa muc
   const handleRemove = (index) => {
@@ -1149,7 +1147,6 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
         fetchInvoices={() => fetchInvoices(motelId)}
         updateInvoiceStatus={updateInvoiceStatus}
       />
-
     </div>
   )
 }

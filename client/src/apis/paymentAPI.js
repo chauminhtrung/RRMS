@@ -7,13 +7,14 @@ export const paymentPaypal = async (totalPrice) => {
   return await axios.post(`${env.API_URL}/payment/payment-paypal?totalPrice=${totalPrice}&userName=${username}`)
 }
 
-export const paymentVNPay = async (amount ) => {
+export const paymentVNPay = async () => {
   const username = JSON.parse(sessionStorage.getItem('user')).username
+  const totalPrice = 1000000
 
   try {
     const response = await axios.post(`${env.API_URL}/payment/create_payment`, {
       userName: username,
-      totalPrice: amount 
+      totalPrice: totalPrice
     })
 
     if (response.status === 200) {
@@ -28,11 +29,12 @@ export const paymentVNPay = async (amount ) => {
   }
 }
 
-export const paymentMoMo = async (amount ) => {
+export const paymentMoMo = async () => {
   const username = JSON.parse(sessionStorage.getItem('user')).username
+  const totalPrice = 1000000
   try {
     const requestData = {
-      totalPrice: amount,
+      totalPrice,
       username
     }
     const response = await axios.post(`${env.API_URL}/payment/payMoMo`, requestData)

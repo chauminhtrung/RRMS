@@ -1,37 +1,36 @@
-    package com.rrms.rrms.models;
+package com.rrms.rrms.models;
 
+import java.util.UUID;
 
-    import com.fasterxml.jackson.annotation.JsonBackReference;
-    import jakarta.persistence.*;
-    import lombok.AllArgsConstructor;
-    import lombok.Data;
-    import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
 
-    import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
-    @Entity
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Table(name = "cars")
-    public class Car {
-        @Id
-        @GeneratedValue(strategy = GenerationType.UUID)
-        private UUID carId;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-        @ManyToOne
-        @JoinColumn(name = "room_id")
-        @JsonBackReference(value = "Room-Contract") // Đặt tên cho tham chiếu ngược
-        private Room room;
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "cars")
+public class Car {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID carId;
 
-        @Column(columnDefinition = "TEXT")
-        private String name;
+    @ManyToOne
+    @JoinColumn(name = "room_id")
+    @JsonBackReference(value = "Room-Contract") // Đặt tên cho tham chiếu ngược
+    private Room room;
 
+    @Column(columnDefinition = "TEXT")
+    private String name;
 
-        @Column(columnDefinition = "TEXT")
-        private String number;
+    @Column(columnDefinition = "TEXT")
+    private String number;
 
-        @Column(columnDefinition = "TEXT")
-        private String image;
-
-    }
+    @Column(columnDefinition = "TEXT")
+    private String image;
+}
