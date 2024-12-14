@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
-const ListSearch = ({ cityValue, districValue, keyword }) => {
+const ListSearch = ({ cityValue, keyword, districvalue }) => {
   const { t } = useTranslation()
   return (
     <div className="container mt-3" style={{ maxWidth: '1180px' }}>
@@ -13,11 +13,11 @@ const ListSearch = ({ cityValue, districValue, keyword }) => {
         </li>
         <li className="breadcrumb-item">
           <Link to="/thue-phong-tro-ho-chi-minh-id-79">
-            <span>{keyword ? cityValue : 'Tất cả'}</span>
+            <span>{keyword || 'Tất cả'}</span>
           </Link>
         </li>
         <li className="breadcrumb-item breadcrumb-color">
-          <span>{keyword ? districValue : 'Tất cả'}</span>
+          <span>{districvalue || 'Tất cả'}</span>
         </li>
       </ol>
       <h1

@@ -23,4 +23,9 @@ public interface BulletinBoardRepository extends JpaRepository<BulletinBoard, UU
 
     @Query("SELECT r FROM BulletinBoard r WHERE r.isActive = :isActive")
     List<BulletinBoard> findAllByIsActive(@Param("isActive") Boolean isActive);
+
+    @Query("SELECT b FROM BulletinBoard b WHERE b.isActive = true ORDER BY b.rentPrice ASC")
+    List<BulletinBoard> findAllActiveOrderByPriceAsc();
+
+
 }

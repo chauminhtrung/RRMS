@@ -22,6 +22,8 @@ import AutorenewIcon from '@mui/icons-material/Autorenew'
 import NextArrow from '../Detail/NextArrow'
 import PrevArrow from '../Detail/PrevArrow'
 import { getHeartByUsername } from '~/apis/heartAPI'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { blue } from '@mui/material/colors'
 
 const Heart = ({ setIsAdmin }) => {
   const [age, setAge] = useState(10)
@@ -74,14 +76,6 @@ const Heart = ({ setIsAdmin }) => {
     nextArrow: <NextArrow visible={showArrows} />,
     prevArrow: <PrevArrow visible={showArrows} />
   }
-  const slides = [
-    { id: 1, src: 'https://picsum.photos/1000/580?random=20' },
-    { id: 2, src: 'https://picsum.photos/1000/580?random=19' },
-    { id: 3, src: 'https://picsum.photos/1000/580?random=18' },
-    { id: 4, src: 'https://picsum.photos/1000/580?random=15' },
-    { id: 5, src: 'https://picsum.photos/1000/580?random=12' },
-    { id: 6, src: 'https://picsum.photos/1000/580?random=10' }
-  ]
 
   return (
     <Container sx={{ mt: 3 }}>
@@ -115,12 +109,13 @@ const Heart = ({ setIsAdmin }) => {
           </FormControl>
         </Grid>
       </Grid>
+
       <Grid container spacing={4}>
-        <Grid item xs={12} md={6} sx={{}}>
-          <Slider {...settings}>
-            {slides.map((slide) => (
+        <Grid item xs={12} md={6}>
+          {/* <Slider {...settings}>
+            {hearts.map((heart) => (
               <Card
-                key={slide.id}
+                key={heart.bulletinBoardId}
                 sx={{
                   position: 'relative',
                   borderRadius: '8px',
@@ -130,8 +125,8 @@ const Heart = ({ setIsAdmin }) => {
                 }}>
                 <Box>
                   <img
-                    src={slide.src}
-                    alt={`Slide ${slide.id}`}
+                    src={heart.bulletinBoardImages[0].imageLink}
+                    alt={`Slide ${heart.bulletinBoardId}`}
                     onMouseEnter={() => setShowArrows(true)}
                     onMouseLeave={() => setShowArrows(false)}
                     style={{ width: '100%', maxHeight: '380px', objectFit: 'cover' }}
@@ -154,74 +149,89 @@ const Heart = ({ setIsAdmin }) => {
                 </IconButton>
               </Card>
             ))}
-          </Slider>
+          </Slider> */}
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            {hearts.map((heart) => (
+              <Card
+                key={heart.bulletinBoardId}
+                sx={{
+                  position: 'relative',
+                  borderRadius: '8px',
+                  overflow: 'hidden',
+                  boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+                  mb: 4
+                }}>
+                <Box>
+                  <img
+                    src={heart.bulletinBoardImages[0]?.imageLink} // Assuming the image is in this structure
+                    alt={`Slide ${heart.bulletinBoardId}`}
+                    style={{ width: '100%', maxHeight: '380px', objectFit: 'cover' }}
+                  />
+                </Box>
+
+                <IconButton
+                  onClick={() => handleHeartClick(heart.bulletinBoardId)}
+                  sx={{
+                    position: 'absolute',
+                    bottom: '10px',
+                    right: '25px',
+                    transition: 'color 0.3s ease, border 0.3s ease',
+                    borderRadius: '50%',
+                    padding: '6px'
+                  }}>
+                  <DeleteIcon sx={{ fontSize: '40px', color: blue[500] }} />
+                </IconButton>
+              </Card>
+            ))}
+          </Box>
         </Grid>
+
         <Grid item xs={12} md={6}>
           <Box sx={{ mt: 2 }}>
             <Typography variant="h5" gutterBottom sx={{ color: '#3f51b5', mb: 2, fontWeight: 'bold' }}>
               Chi tiết nhà trọ
             </Typography>
-
             <Divider sx={{ my: 1 }} />
-
-            <Grid container spacing={2}>
-              {[
-                {
-                  label: 'Giá tiền:',
-                  value: '5,000,000 VNĐ/tháng',
-                  icon: <MonetizationOnIcon />
-                },
-                {
-                  label: 'Diện tích:',
-                  value: '30 m²',
-                  icon: <ShowChartIcon />
-                },
-                {
-                  label: 'Địa chỉ:',
-                  value: '123 Đường ABC, Quận XYZ, TP.HCM',
-                  icon: <HomeIcon />
-                },
-                {
-                  label: 'Tiện ích:',
-                  value: 'Có chỗ để xe, Wifi miễn phí, Gần trường học',
-                  icon: <DesignServicesIcon />
-                },
-                {
-                  label: 'Tình trạng phòng:',
-                  value: 'Còn phòng',
-                  icon: <AutorenewIcon />
-                }
-              ].map((info, idx) => (
-                <Grid item xs={12} sm={6} md={6} key={idx}>
-                  {' '}
-                  {/* Chỉnh sửa ở đây */}
-                  <Typography
-                    variant="span"
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      whiteSpace: 'nowrap',
-                      mt: 3
-                    }}>
-                    {info.icon}
-                    <span style={{ marginLeft: '8px', mt: 4 }}>{info.label}</span>
-                  </Typography>
-                  <Typography variant="span" sx={{ whiteSpace: 'nowrap', mt: 2 }}>
-                    {info.value}
-                  </Typography>
+            {hearts.length > 0 &&
+              hearts.map((heart, idx) => (
+                <Grid container spacing={2} key={idx}>
+                  {[
+                    { label: 'Giá tiền:', value: `${heart.rentPrice} VNĐ/tháng`, icon: <MonetizationOnIcon /> },
+                    { label: 'Diện tích:', value: `${heart.area} m²`, icon: <ShowChartIcon /> },
+                    { label: 'Địa chỉ:', value: heart.address, icon: <HomeIcon /> },
+                    {
+                      label: 'Tiện ích:',
+                      value: heart.bulletinBoards_RentalAm?.rentalAmenities?.[0]?.name || 'Không có tiện ích',
+                      icon: <DesignServicesIcon />
+                    },
+                    {
+                      label: 'Tình trạng phòng:',
+                      value: heart.isActive ? 'Còn phòng' : 'Hết phòng',
+                      icon: <AutorenewIcon />
+                    }
+                  ].map((info, index) => (
+                    <Grid item xs={12} sm={6} md={6} key={index}>
+                      <Typography
+                        variant="span"
+                        sx={{ display: 'flex', alignItems: 'center', whiteSpace: 'nowrap', mt: 3 }}>
+                        {info.icon}
+                        <span style={{ marginLeft: '8px', fontWeight: 'bold' }}>{info.label}</span>
+                      </Typography>
+                      <Typography variant="span" sx={{ whiteSpace: 'nowrap', mt: 1 }}>
+                        {info.value}
+                      </Typography>
+                    </Grid>
+                  ))}
+                  <Box sx={{ mt: 5, textAlign: 'center', mx: 2.5 }}>
+                    <Button variant="contained" onClick={handleToggle} sx={{ width: '180px', textAlign: 'center' }}>
+                      {showPhoneNumber ? '0123-456-789' : 'Lấy số điện thoại'}
+                    </Button>
+                  </Box>
                 </Grid>
               ))}
-
-              <Box sx={{ mt: 5, textAlign: 'center', mx: 2.5 }}>
-                <Button variant="contained" onClick={handleToggle} sx={{ width: '180px', textAlign: 'center' }}>
-                  {showPhoneNumber ? '0123-456-789' : 'Lấy số điện thoại'}
-                </Button>
-              </Box>
-            </Grid>
           </Box>
         </Grid>
       </Grid>
-
       <Divider sx={{ my: 5 }} />
     </Container>
   )
