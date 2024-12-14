@@ -36,6 +36,7 @@ const Heart = ({ setIsAdmin }) => {
     console.log(response.data.result.bulletinBoards)
     if (response.data.code == 200) {
       setHearts(response.data.result.bulletinBoards)
+      console.log(hearts)
     } else {
       setHearts([])
     }
