@@ -33,6 +33,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   const menuRef = useRef(null) // Tham chiếu đến menu
   const [modalOpenInvoice, setModalOpenInvoice] = useState(false) //mo modal 
   const [modalOpenCollectMoney, setModalOpenCollectMoney] = useState(false)
+  const [filterStatus, setFilterStatus] = useState({ done: false, new: false }); // Trạng thái bộ lọc
 
   const toggleModalInvoice = () => {
     setModalOpenInvoice(!modalOpenInvoice)
@@ -108,14 +109,13 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
 
 
   const StatusFormatter = (cell) => {
-    const data = cell.getRow().getData(); // Lấy dữ liệu từ hàng hiện tại
-    const paymentStatus = data.paymentStatus; // Trạng thái thanh toán từ backend
-  
-    return paymentStatus === "PAID"
-      ? `<span class="badge mt-2" style="background-color: #7dc242; white-space: break-spaces;">Đã thu xong</span>` // Hiển thị trạng thái "Đã thu xong" với màu xanh
-      : `<span class="badge mt-2" style="background-color: #ED6004; white-space: break-spaces;">Chưa thu</span>`; // Hiển thị trạng thái "Chưa thu" với màu cam
+    const data = cell.getRow().getData();
+    const paymentStatus = data.status; 
+    return paymentStatus === "Chưa thu"
+        ? `<span class="badge mt-2" style="background-color: #ED6004; white-space: break-spaces;">Chưa thu</span>`
+        : `<span class="badge mt-2" style="background-color: #7dc242; white-space: break-spaces;">Đã thu xong</span>`;
   };
-  
+
 
   const columns = [
     { title: 'Id Hoa Don', field: 'invoiceId', hozAlign: 'center', width: 165, visible: false },
@@ -135,14 +135,14 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
         return element
       }
     },
-    { title: 'Tên phòng', field: 'roomName', hozAlign: 'center', width: 165 },
-    { title: 'Tiền phòng', field: 'roomPrice', formatter: 'money', hozAlign: 'center', width: 165 },
+    { title: 'Tên phòng', field: 'roomName', hozAlign: 'center', width: 163 },
+    { title: 'Tiền phòng', field: 'roomPrice', formatter: 'money', hozAlign: 'center', width: 164 },
     ...dynamicServiceColumns, 
-    { title: 'Thu/Trả cọc', field: 'deposit', formatter: 'money', hozAlign: 'center', width: 165 },
-    { title: 'Cộng thêm/Giảm trừ', field: 'adjustments', formatter: 'money', hozAlign: 'center', width: 166 },
-    { title: 'Tổng cộng', field: 'total', formatter: 'money', hozAlign: 'center', width: 168 },
-    { title: 'Cần thu', field: 'total', formatter: 'money', hozAlign: 'center', width: 168 },
-    { title: 'Trạng thái', field: 'status', hozAlign: 'center', width: 168,formatter: StatusFormatter },
+    { title: 'Thu/Trả cọc', field: 'deposit', formatter: 'money', hozAlign: 'center', width: 164 },
+    { title: 'Cộng thêm/Giảm trừ', field: 'adjustments', formatter: 'money', hozAlign: 'center', width: 164 },
+    { title: 'Tổng cộng', field: 'total', formatter: 'money', hozAlign: 'center', width: 164 },
+    { title: 'Cần thu', field: 'total', formatter: 'money', hozAlign: 'center', width: 164 },
+    { title: 'Trạng thái', field: 'status', hozAlign: 'center', width: 164,formatter: StatusFormatter },
     {
       title: 'Action',
       field: 'Action',
@@ -180,23 +180,26 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
     try {
       const invoiceData = invoices.find((item) => item.invoiceId === id);
       if (invoiceData) {
-        const serviceDetails = invoiceData.serviceDetails.map((service) => {
-          return {
-            roomServiceId: service.roomServiceId,
-            serviceName: service.serviceName,
-            servicePrice: service.servicePrice,
-            quantity: service.quantity,
-            chargetype: service.chargetype, 
-            totalPrice: service.totalPrice,
-            isSelected: true,
-          };
-        });
-        setInvoice({ ...invoiceData, serviceDetails });
+        const serviceDetails = invoiceData.serviceDetails.map((service) => ({
+          roomServiceId: service.roomServiceId,
+          serviceName: service.serviceName,
+          servicePrice: service.servicePrice,
+          quantity: service.quantity,
+          chargetype: service.chargetype,
+          totalPrice: service.totalPrice,
+          isSelected: true,
+        }));
+  
+        const status = invoiceData.paymentStatus === "PAID" ? "Đã thu xong" : "Chưa thu";
+        setInvoice({ ...invoiceData, serviceDetails, status });
+      } else {
+        console.warn(`Invoice with ID ${id} not found in invoices list.`);
       }
     } catch (error) {
-      console.error("Lỗi khi fetch dữ liệu hóa đơn:", error);
+      console.error("Error fetching invoice data:", error);
     }
   };
+  
   
   
   const data = useMemo(() => {
@@ -245,10 +248,18 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
       x: rect.left + window.scrollX + rect.width / 2, // Centered horizontally
       y: rect.top + window.scrollY + rect.height // Below the icon
     })
-    setShowMenu(invoiceId) // Hiển thị menu cho hàng với roomId tương ứng
     fetchDataInvoice(invoiceId)
+    setShowMenu(invoiceId) // Hiển thị menu cho hàng với roomId tương ứng
   }
 
+  const updateInvoiceStatus = (updatedInvoice) => {
+    setInvoices((prevInvoices) =>
+      prevInvoices.map((invoice) =>
+        invoice.invoiceId === updatedInvoice.invoiceId ? updatedInvoice : invoice
+      )
+    );
+  };
+  
   //Menu thu tien r 
   const menuItems = [
     { id: 1, label: 'Xem chi tiết hóa đơn', icon: 'arrow-right-circle' },
@@ -354,7 +365,6 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   useEffect(() => {
     setIsAdmin(true)
   }, [])
-
   
   //xoa muc
   const handleRemove = (index) => {
@@ -390,8 +400,50 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   const handleSubmit = () => {
     alert('Hóa đơn đã được lập thành công!')
   }
-
+  const handleFilterChange = (e) => {
+    const { id, checked } = e.target;
+    setFilterStatus((prev) => ({
+      ...prev,
+      [id]: checked,
+    }));
+  };
   
+  const filteredData = useMemo(() => {
+    // Lọc danh sách hóa đơn dựa trên bộ lọc trạng thái
+    return invoices.filter((invoice) => {
+      if (filterStatus.done && invoice.paymentStatus === "PAID") return true;
+      if (filterStatus.new && invoice.paymentStatus !== "PAID") return true;
+      return !filterStatus.done && !filterStatus.new; // Hiển thị tất cả nếu không có bộ lọc
+    }).map((invoice) => {
+      const serviceData = {};
+  
+      (services || []).forEach((serviceName) => {
+        const serviceDetail = invoice.serviceDetails?.find((s) => s.serviceName === serviceName);
+        serviceData[serviceName] = serviceDetail ? serviceDetail.totalPrice : 0;
+      });
+  
+      return {
+        invoiceId: invoice.invoiceId,
+        roomId: invoice.roomId,
+        roomName: invoice.roomName,
+        roomPrice: invoice.roomPrice,
+        invoiceCreateMonth: invoice.invoiceCreateMonth,
+        invoiceCreateDate: invoice.invoiceCreateDate,
+        dueDate: invoice.dueDate,
+        moveinDate: invoice.moveinDate,
+        dueDateofmoveinDate: invoice.dueDateofmoveinDate,
+        deposit: invoice.deposit,
+        ...serviceData,
+        adjustments: invoice.additionItems?.reduce(
+          (sum, item) => (item.addition ? sum + item.amount : sum - item.amount),
+          0
+        ),
+        total: invoice.totalAmount,
+        status: invoice.paymentStatus === "PAID" ? "Đã thu xong" : "Chưa thu",
+      };
+    });
+  }, [invoices, services, filterStatus]);
+
   return (
     <div className="page-bills">
       <NavAdmin
@@ -464,23 +516,34 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
           <div className="d-flex">
             <div className="icon">
               <i className="bi bi-funnel" style={{ fontSize: '24px' }}></i>
-              <span id="filter-count">0</span>
+              <span id="filter-count">{filteredData.length}</span>
             </div>
             <div className="d-flex">
               <div className="form-check form-check-inline">
-                <input className="form-check-input" type="checkbox" id="filter_done" data-value="status" value="done" />
+                <input className="form-check-input" 
+                type="checkbox" id="filter_done" 
+                data-value="status" value="done" 
+                checked={filterStatus.done}
+                onChange={handleFilterChange} />
                 <label className="form-check-label" htmlFor="filter_done">
                   Hóa đơn đã thu
                 </label>
-                <span className="count-filter done success">0</span>
+                <span className="count-filter done success">{invoices.filter((invoice) => invoice.paymentStatus === "PAID").length}</span>
               </div>
 
               <div className="form-check form-check-inline">
-                <input className="form-check-input" type="checkbox" id="filter_new" data-value="status" value="new" />
+                <input className="form-check-input" 
+                type="checkbox" id="filter_new" 
+                data-value="status" 
+                value="new"
+                checked={filterStatus.new}
+                onChange={handleFilterChange} />
                 <label className="form-check-label" htmlFor="filter_new">
                   Hóa đơn chưa thu
                 </label>
-                <span className="count-filter new warning">0</span>
+                <span className="count-filter new warning">
+                  {invoices.filter((invoice) => invoice.paymentStatus !== "PAID").length}
+                </span>
               </div>
 
               <div className="form-check form-check-inline">
@@ -534,7 +597,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
           data={data}
           placeholder={<h1></h1>} // Sử dụng placeholder tùy chỉnh
         />
-        {showMenu && (
+        {showMenu && invoice && invoice.status && (
           <div
             className="tabulator-menu tabulator-popup-container "
             ref={menuRef} // Gán ref đúng cách cho menu
@@ -545,7 +608,7 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
               transform: 'translateX(-50%)'
             }}>
             {/* menu thay doi theo trang trai */}
-            {(invoice && invoice.status === 'Chưa thu' ? menuItems : menuItemsThu).map((item) => (
+            {(invoice.status === 'Chưa thu' ? menuItemsThu : menuItems).map((item) => (
               <div
                 key={item.id}
                 // Gắn ref vào tag này
@@ -1071,13 +1134,19 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
         modalOpen={modalOpenInvoice}
         toggleModal={toggleModalInvoice}
         invoice={invoice}
+        onUpdateInvoice={(updatedInvoice) => {
+            setInvoices((prevInvoices) => prevInvoices.map(inv => 
+                inv.invoiceId === updatedInvoice.invoiceId ? updatedInvoice : inv
+            ));
+        }}
       />
       <ModalCollectMoneyInvoice
         modalOpen={modalOpenCollectMoney}
         toggleModal={toggleModalCollectMoney}
         invoice={invoice}
+        fetchInvoices={() => fetchInvoices(motelId)}
+        updateInvoiceStatus={updateInvoiceStatus}
       />
-
     </div>
   )
 }

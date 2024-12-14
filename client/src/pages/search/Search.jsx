@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { Box, Container, Grid } from '@mui/material'
 import RoomList from './RoomList'
 import Name from './Name'
-import ListSearch from './ListSearch'
 import DistrictList from './DistrictList'
 import BannerHorizontal from '~/components/BannerHorizontal'
 import Text from './Text'
@@ -12,7 +11,6 @@ import ItemSearch from './ItemSearch'
 import LoadingPage from '~/components/LoadingPage/LoadingPage'
 import FilterSearch from './FilterSearch'
 import axios from 'axios'
-import ChatAI from '../AI/ChatAI'
 import { getTinhThanh } from '~/apis/addressAPI'
 import { env } from '~/configs/environment'
 import { useLocation, useSearchParams } from 'react-router-dom'
@@ -212,7 +210,6 @@ const Search = ({ setIsAdmin }) => {
           setKeyword={setKeyword}
         />
       </Container>
-      <ListSearch keyword={keyword} />
       <Container>
         <Grid container>
           <Grid item md={9} sx={{ mb: 4 }}>

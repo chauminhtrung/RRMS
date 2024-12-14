@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import jakarta.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.rrms.rrms.enums.PaymentStatus;
 import com.rrms.rrms.services.servicesImp.YearMonthAttributeConverter;
 
@@ -55,8 +54,7 @@ public class Invoice {
     private Tenant tenant;
 
     @ManyToOne
-    @JoinColumn(name = "payment_id", nullable = false)
-    @JsonBackReference(value = "Payment-Invoice") // Đặt tên cho tham chiếu ngược
+    @JoinColumn(name = "payment_id")
     private Payment payment;
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)

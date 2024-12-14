@@ -8,6 +8,8 @@ import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +40,7 @@ public class AccountController {
 
     @Operation(summary = "Get all account")
     @GetMapping("/get-all-account")
-    //    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
     public ResponseEntity<?> getAllAccount() {
         var authen = SecurityContextHolder.getContext().getAuthentication();
 
@@ -63,6 +65,7 @@ public class AccountController {
     }
 
     @GetMapping("/by-host-role")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
     public ResponseEntity<?> getAccountsByHostRole() {
         Map<String, Object> rs = new HashMap<>();
         try {
@@ -88,7 +91,7 @@ public class AccountController {
 
     @Operation(summary = "Get account by username")
     @GetMapping("/{username}")
-    // @PostAuthorize("returnObject.body.phone == authentication.name")
+    @PostAuthorize("returnObject.body.phone == authentication.name")
     public ResponseEntity<?> getAccountByUsername(@PathVariable String username) {
         Map<String, Object> rs = new HashMap<>();
         try {
@@ -108,6 +111,7 @@ public class AccountController {
     }
 
     @PostMapping("/createAccount")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
     public ResponseEntity<?> createAccount(@RequestBody AccountRequest accountRequest) {
         Map<String, Object> response = new HashMap<>();
         try {
@@ -131,6 +135,7 @@ public class AccountController {
 
     @Operation(summary = "Update an existing host account")
     @PutMapping("/updateAccount/{username}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
     public ResponseEntity<Map<String, Object>> updateAccount(
             @PathVariable String username, @RequestBody AccountRequest accountRequest) {
         Map<String, Object> response = new HashMap<>();
@@ -155,6 +160,7 @@ public class AccountController {
 
     @Operation(summary = "Delete an existing account")
     @DeleteMapping("/deleteAccount/{username}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
     public ResponseEntity<Map<String, Object>> deleteAccount(@PathVariable String username) {
         Map<String, Object> response = new HashMap<>();
         try {
@@ -178,6 +184,7 @@ public class AccountController {
 
     @Operation(summary = "Update account by username")
     @PutMapping("/update-acc")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
     public ResponseEntity<?> updateAccount(@RequestParam("username") String username, @RequestBody Account account) {
         Map<String, Object> rs = new HashMap<>();
         try {
@@ -239,6 +246,7 @@ public class AccountController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_HOST')")
     public ResponseEntity<?> searchAccounts(@RequestParam(required = false) String search) {
         Map<String, Object> response = new HashMap<>();
         try {
