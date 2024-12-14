@@ -32,6 +32,7 @@ public class SupportService implements ISupportService {
             Support support = new Support();
             support.setAccount(account);
             support.setNameContact(request.getNameContact());
+            support.setPhoneContact(request.getPhoneContact());
             support.setDateOfStay(request.getDateOfStay());
             support.setPriceFirst(request.getPriceFirst());
             support.setPriceEnd(request.getPriceEnd());
@@ -45,6 +46,7 @@ public class SupportService implements ISupportService {
         response.setSupportId(support.getSupportId());
         response.setAccount(accountMapper.toAccountResponse(support.getAccount()));
         response.setNameContact(support.getNameContact());
+        response.setPhoneContact(support.getPhoneContact());
         response.setDateOfStay(support.getDateOfStay());
         response.setPriceFirst(support.getPriceFirst());
         response.setPriceEnd(support.getPriceEnd());

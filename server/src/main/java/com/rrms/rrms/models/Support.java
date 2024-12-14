@@ -28,6 +28,8 @@ public class Support {
 
     private String nameContact;
 
+    private String phoneContact;
+
     @Column(columnDefinition = "DATE")
     private Date dateOfStay;
 

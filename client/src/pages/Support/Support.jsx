@@ -17,6 +17,7 @@ const Support = ({ setIsAdmin }) => {
           username: user.username
         },
         nameContact: name,
+        phoneContact: phone,
         dateOfStay: dateOfStay,
         priceFirst: priceFirst,
         priceEnd: priceEnd
