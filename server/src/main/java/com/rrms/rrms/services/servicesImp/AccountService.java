@@ -3,6 +3,7 @@ package com.rrms.rrms.services.servicesImp;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.rrms.rrms.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,6 @@ import com.rrms.rrms.enums.ErrorCode;
 import com.rrms.rrms.enums.Roles;
 import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.mapper.AccountMapper;
-import com.rrms.rrms.models.Account;
-import com.rrms.rrms.models.Auth;
-import com.rrms.rrms.models.Permission;
-import com.rrms.rrms.models.Role;
 import com.rrms.rrms.repositories.AccountRepository;
 import com.rrms.rrms.repositories.AuthRepository;
 import com.rrms.rrms.repositories.RoleRepository;
@@ -94,10 +91,13 @@ public class AccountService implements IAccountService {
 
         // Tạo đối tượng Account mới
         Account account = new Account();
+        Heart heart = new Heart();
         account.setUsername(request.getUsername());
         account.setPhone(request.getPhone());
         account.setPassword(encodedPassword);
         account.setEmail(request.getEmail());
+        account.setHeart(heart);
+        heart.setAccount(account);
         // Lưu tài khoản vào cơ sở dữ liệu
         Account savedAccount = accountRepository.save(account);
 

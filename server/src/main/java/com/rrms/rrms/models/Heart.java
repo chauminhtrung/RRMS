@@ -28,8 +28,8 @@ public class Heart {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "heart_room",
+            name = "heart_bulletinBoard",
             joinColumns = @JoinColumn(name = "heart_id"),
             inverseJoinColumns = @JoinColumn(name = "bulletinBoard_id"))
-    private List<BulletinBoard> rooms = new ArrayList<>();
+    private List<BulletinBoard> bulletinBoards = new ArrayList<>();
 }

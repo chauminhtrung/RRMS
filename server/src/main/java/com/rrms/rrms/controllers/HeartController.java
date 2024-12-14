@@ -36,9 +36,9 @@ public class HeartController {
     private AccountService accountService;
 
     @Operation(summary = "Get heart by username")
-    @GetMapping()
-    public ApiResponse<HeartResponse> getHeart(@RequestBody AccountRequest accountRequest) {
-        HeartResponse heartResponse = heartService.getHeartByAccount(accountRequest);
+    @GetMapping("/{username}")
+    public ApiResponse<HeartResponse> getHeart(@PathVariable("username") String username) {
+        HeartResponse heartResponse = heartService.getHeartByUsername(username);
         if (heartResponse != null) {
             log.info("Get heart successfully: {}", heartResponse);
             return ApiResponse.<HeartResponse>builder()
@@ -56,66 +56,47 @@ public class HeartController {
     }
 
     @Operation(summary = "Add heart")
-    @PostMapping()
+    @PostMapping("/{username}/{bulletinBoard_id}")
     public ApiResponse<Boolean> addHeart(
-            @RequestParam("username") String username, @RequestParam("bulletinBoard_id") UUID bulletinBoard_id) {
-        AccountResponse accountResponse = accountService.findByUsername(username);
-        BulletinBoardResponse bulletinBoardResponse = iBulletinBoard.getBulletinBoardById(bulletinBoard_id);
-        if (accountResponse != null && bulletinBoardResponse != null) {
-            HeartResponse statusAdd = heartService.addHeart(accountResponse, bulletinBoardResponse);
-            if (statusAdd != null) {
-                log.info("Add heart successfully: {}", statusAdd);
-                return ApiResponse.<Boolean>builder()
-                        .code(HttpStatus.CREATED.value())
-                        .message("add heart successfully")
-                        .result(true)
-                        .build();
-            } else {
-                log.info("Add heart fail: {}", "null");
-                return ApiResponse.<Boolean>builder()
-                        .code(HttpStatus.BAD_REQUEST.value())
-                        .message("room has already been added")
-                        .result(false)
-                        .build();
-            }
+            @PathVariable("username") String username, @PathVariable("bulletinBoard_id") UUID bulletinBoard_id) {
+        HeartResponse statusAdd = heartService.addHeart(username, bulletinBoard_id);
+        if (statusAdd != null) {
+            log.info("Add heart successfully: {}", statusAdd);
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.CREATED.value())
+                    .message("add heart successfully")
+                    .result(true)
+                    .build();
+        } else {
+            log.info("Add heart fail: {}", "null");
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("failed to add heart")
+                    .result(false)
+                    .build();
         }
-        log.info("Valid Error: {}", "null");
-        return ApiResponse.<Boolean>builder()
-                .code(HttpStatus.BAD_REQUEST.value())
-                .message("Valid Error")
-                .result(false)
-                .build();
     }
 
+
     @Operation(summary = "Remove heart")
-    @PostMapping("/removeHeart")
+    @DeleteMapping("/removeHeart/{username}/{bulletinBoard_id}")
     public ApiResponse<Boolean> removeHeart(
-            @RequestParam("username") String username, @RequestParam("bulletinBoard_id") UUID bulletinBoard_id) {
-        AccountResponse accountResponse = accountService.findByUsername(username);
-        BulletinBoardResponse bulletinBoardResponse = iBulletinBoard.getBulletinBoardById(bulletinBoard_id);
-        if (accountResponse != null && bulletinBoardResponse != null) {
-            HeartResponse statusAdd = heartService.removeHeart(accountResponse, bulletinBoardResponse);
-            if (statusAdd != null) {
-                log.info("Remove heart successfully: {}", statusAdd);
-                return ApiResponse.<Boolean>builder()
-                        .code(HttpStatus.CREATED.value())
-                        .message("remove heart successfully")
-                        .result(true)
-                        .build();
-            } else {
-                log.info("Remove heart fail: {}", "null");
-                return ApiResponse.<Boolean>builder()
-                        .code(HttpStatus.BAD_REQUEST.value())
-                        .message("room has already been removed")
-                        .result(false)
-                        .build();
-            }
+            @PathVariable("username") String username, @PathVariable("bulletinBoard_id") UUID bulletinBoard_id) {
+        HeartResponse statusAdd = heartService.removeHeart(username, bulletinBoard_id);
+        if (statusAdd != null) {
+            log.info("Remove heart successfully: {}", statusAdd);
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("remove heart successfully")
+                    .result(true)
+                    .build();
+        } else {
+            log.info("Remove heart fail: {}", "null");
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("Remove failed")
+                    .result(false)
+                    .build();
         }
-        log.info("Valid Error: {}", "null");
-        return ApiResponse.<Boolean>builder()
-                .code(HttpStatus.BAD_REQUEST.value())
-                .message("Valid Error")
-                .result(false)
-                .build();
     }
 }
