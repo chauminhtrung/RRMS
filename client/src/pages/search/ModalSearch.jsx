@@ -18,7 +18,8 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import { useTranslation } from 'react-i18next'
 
 const ModalSearch = ({ filterSearch, open, handleClose }) => {
-  const [keyword, setKeyword] = useState('')
+  const [tinhThanh, setTinhThanh] = useState('')
+  const [quanHuyen, setQuanHuyen] = useState('')
   const { t } = useTranslation()
   const [propertyType, setPropertyType] = useState('Phòng trọ, nhà trọ')
   const [occupation, setOccupation] = useState('Ngành nghề khác')
@@ -30,8 +31,8 @@ const ModalSearch = ({ filterSearch, open, handleClose }) => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm')) // Sử dụng breakpoint để xác định màn hình nhỏ
   // const [keyfilter, setkeyfilter] = useState('')
-  const handleFilter = (vl) => {
-    filterSearch(vl)
+  const handleFilter = (tinhThanh, quanHuyen) => {
+    filterSearch(tinhThanh, quanHuyen)
   }
   // Hàm để lấy danh sách tỉnh/thành từ API
   const fetchProvinces = async () => {
@@ -68,9 +69,9 @@ const ModalSearch = ({ filterSearch, open, handleClose }) => {
     const selectedProvinceObject = provinces.find((province) => province.id === provinceId)
 
     if (selectedProvinceObject) {
-      setKeyword(selectedProvinceObject.full_name)
+      setTinhThanh(selectedProvinceObject.full_name)
     } else {
-      setKeyword('')
+      setTinhThanh('')
     }
     fetchDistricts(provinceId)
   }
@@ -82,9 +83,9 @@ const ModalSearch = ({ filterSearch, open, handleClose }) => {
 
     const selectedDistrictObject = districts.find((district) => district.id === selectedValue)
     if (selectedDistrictObject) {
-      setKeyword(selectedDistrictObject.full_name)
+      setQuanHuyen(selectedDistrictObject.full_name)
     } else {
-      setKeyword('')
+      setQuanHuyen('')
     }
   }
 
@@ -260,8 +261,7 @@ const ModalSearch = ({ filterSearch, open, handleClose }) => {
                 variant="contained"
                 sx={{ width: isMobile ? '100%' : '48%', textTransform: 'none', backgroundColor: '#1e90ff' }}
                 onClick={() => {
-                  keyword
-                  handleFilter(keyword)
+                  handleFilter(tinhThanh, quanHuyen)
                   handleClose()
                 }}>
                 {t('tim-kiem-ngay')}
