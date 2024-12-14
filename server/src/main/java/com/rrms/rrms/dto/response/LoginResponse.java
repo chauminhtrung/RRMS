@@ -1,6 +1,7 @@
 package com.rrms.rrms.dto.response;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.rrms.rrms.enums.Gender;
 
@@ -27,4 +28,5 @@ public class LoginResponse {
     private LocalDate birthday;
     private Gender gender;
     private String cccd;
+    private List<String> roles;
 }

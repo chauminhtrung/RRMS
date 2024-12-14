@@ -4,15 +4,15 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-import com.rrms.rrms.models.Account;
-import com.rrms.rrms.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rrms.rrms.dto.request.TransactionRequest;
 import com.rrms.rrms.dto.response.TransactionResponse;
+import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Payment;
 import com.rrms.rrms.models.Transaction;
+import com.rrms.rrms.repositories.AccountRepository;
 import com.rrms.rrms.repositories.PaymentRepository;
 import com.rrms.rrms.repositories.TransactionRepository;
 
@@ -23,7 +23,6 @@ public class TransactionService {
 
     @Autowired
     private PaymentRepository paymentRepository; // Thêm repository cho Payment
-
 
     @Autowired
     private AccountRepository accountRepository;
@@ -54,8 +53,8 @@ public class TransactionService {
         transaction.setPayment(payment);
 
         // Tìm tài khoản dựa trên username
-        Account account = accountRepository.findById(username)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
+        Account account =
+                accountRepository.findById(username).orElseThrow(() -> new RuntimeException("Account not found"));
 
         // Liên kết giao dịch với tài khoản
         transaction.setAccount(account);
@@ -71,8 +70,7 @@ public class TransactionService {
                 savedTransaction.getPaymentDescription(),
                 savedTransaction.getCategory(),
                 savedTransaction.getTransactionDate(),
-                savedTransaction.isTransactionType()
-        );
+                savedTransaction.isTransactionType());
     }
 
     public List<Transaction> getAllTransactions() {
@@ -81,12 +79,12 @@ public class TransactionService {
 
     public boolean deleteTransaction(UUID id, String username) {
         // Tìm tài khoản dựa trên username
-        Account account = accountRepository.findById(username)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
+        Account account =
+                accountRepository.findById(username).orElseThrow(() -> new RuntimeException("Account not found"));
 
         // Kiểm tra giao dịch có thuộc về tài khoản không
-        Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+        Transaction transaction =
+                transactionRepository.findById(id).orElseThrow(() -> new RuntimeException("Transaction not found"));
 
         if (transaction.getAccount().equals(account)) {
             transactionRepository.deleteById(id);
@@ -96,23 +94,19 @@ public class TransactionService {
     }
 
     public BigDecimal getTotalIncome(String username) {
-        Account account = accountRepository.findById(username)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
+        Account account =
+                accountRepository.findById(username).orElseThrow(() -> new RuntimeException("Account not found"));
 
         List<Transaction> incomes = transactionRepository.findByTransactionTypeAndAccount(true, account);
-        return incomes.stream()
-                .map(Transaction::getAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return incomes.stream().map(Transaction::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getTotalExpense(String username) {
-        Account account = accountRepository.findById(username)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
+        Account account =
+                accountRepository.findById(username).orElseThrow(() -> new RuntimeException("Account not found"));
 
         List<Transaction> expenses = transactionRepository.findByTransactionTypeAndAccount(false, account);
-        return expenses.stream()
-                .map(Transaction::getAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return expenses.stream().map(Transaction::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getProfit(String username) {
