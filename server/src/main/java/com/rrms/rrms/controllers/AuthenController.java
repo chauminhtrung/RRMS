@@ -224,6 +224,7 @@ public class AuthenController {
     }
 
     private static int randomNumber = 0;
+    private static int randomNumberRegister = 0;
 
     @GetMapping("/checkMail")
     public ApiResponse<Boolean> forget(@RequestParam("email") String email) {
@@ -270,6 +271,34 @@ public class AuthenController {
         }
     }
 
+    @PostMapping("/authenticationRegister")
+    public ApiResponse<Boolean> authenticationRegister(@RequestBody AuthenticationRegister authenticationRegister) {
+        System.out.println(authenticationRegister);
+        if (authenticationRegister == null) {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("error")
+                    .result(false)
+                    .build();
+        }
+        randomNumberRegister = (int) (Math.random() * 90000) + 10000;
+        try {
+            boolean result = mailService.Send_ForgetPassword(
+                    authenticationRegister.getGmail(), "Xác thực tài khoản", String.valueOf(randomNumberRegister));
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("success")
+                    .result(result)
+                    .build();
+        } catch (Exception e) {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("error")
+                    .result(false)
+                    .build();
+        }
+    }
+
     @PostMapping("/acceptChangePassword")
     public ApiResponse<Boolean> acceptChangePassword(@RequestBody ChangePasswordByEmail changePasswordByEmail) {
         if (!changePasswordByEmail.getCode().equals(String.valueOf(randomNumber))) {
@@ -299,6 +328,24 @@ public class AuthenController {
                     .code(HttpStatus.BAD_REQUEST.value())
                     .message("error")
                     .result(false)
+                    .build();
+        }
+    }
+
+    @PostMapping("/acceptAuthenticationRegister")
+    public ApiResponse<Boolean> acceptAuthenticationRegister(@RequestBody AuthenticationRegister authenticationRegister) {
+        if (!authenticationRegister.getCode().equals(String.valueOf(randomNumberRegister))) {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("error")
+                    .result(false)
+                    .build();
+        } else {
+            randomNumberRegister = 0;
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("success")
+                    .result(true)
                     .build();
         }
     }

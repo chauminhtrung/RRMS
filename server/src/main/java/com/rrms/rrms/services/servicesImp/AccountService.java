@@ -94,6 +94,7 @@ public class AccountService implements IAccountService {
         Heart heart = new Heart();
         account.setUsername(request.getUsername());
         account.setPhone(request.getPhone());
+        account.setEmail(request.getEmail());
         account.setPassword(encodedPassword);
         account.setEmail(request.getEmail());
         account.setHeart(heart);
