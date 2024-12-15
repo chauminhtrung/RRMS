@@ -4,7 +4,7 @@ import { Line } from 'react-chartjs-2'
 import { BarChart } from '@mui/x-charts/BarChart'
 import { LineChart } from '@mui/x-charts/LineChart'
 import 'chart.js/auto'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { env } from '~/configs/environment'
 

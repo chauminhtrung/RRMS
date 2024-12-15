@@ -26,6 +26,7 @@ import { env } from '~/configs/environment'
 import Swal from 'sweetalert2'
 
 const AddUsers = () => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   const [form, setForm] = useState({
     username: '',
     password: '',
@@ -58,38 +59,43 @@ const AddUsers = () => {
     { id: 'BROKER', name: 'Broker' }
   ]
 
-  useEffect(() => {
-    const fetchAccountData = async () => {
-      if (accountId) {
-        try {
-          const response = await axios.get(`${env.API_URL}/api-accounts/${accountId}`)
-
-          if (response.data) {
-            setForm({
-              username: response.data.username || '',
-              fullname: response.data.fullname || '',
-              phone: response.data.phone || '',
-              email: response.data.email || '',
-              avatar: response.data.avatar || '',
-              birthday: response.data.birthday ? response.data.birthday.split('T')[0] : '',
-              gender: response.data.gender || '',
-              role: response.data.role || '',
-              cccd: response.data.cccd || '',
-              password: '',
-              comfirmpassword: ''
-            })
-            console.log('Username:', response.data.username)
-          } else {
-            console.error('Unexpected response structure:', response.data)
+  const fetchAccountData = async () => {
+    if (accountId) {
+      try {
+        const response = await axios.get(
+          `${env.API_URL}/api-accounts/${accountId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
           }
-        } catch (error) {
-          console.error('Error fetching account data:', error)
+        );
+
+        if (response.data) {
+          setForm({
+            username: response.data.username || '',
+            fullname: response.data.fullname || '',
+            phone: response.data.phone || '',
+            email: response.data.email || '',
+            avatar: response.data.avatar || '',
+            birthday: response.data.birthday ? response.data.birthday.split('T')[0] : '',
+            gender: response.data.gender || '',
+            role: response.data.role || '',
+            cccd: response.data.cccd || '',
+            password: '',
+            comfirmpassword: '',
+          });
         }
+      } catch (error) {
+        console.error('Error fetching account data:', error);
+        // Log lỗi mà không hiển thị Swal
       }
     }
+  };
 
-    fetchAccountData()
-  }, [accountId])
+  useEffect(() => {
+    fetchAccountData();
+  }, [accountId]);
+  
+  
 
   const createAccount = async () => {
     // Kiểm tra xem tất cả các trường bắt buộc có được điền hay không
@@ -122,7 +128,12 @@ const AddUsers = () => {
         birthday: form.birthday,
         gender: form.gender,
         cccd: form.cccd,
-        role: [form.role]
+        role: form.role
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
 
       if (response.data.status) {
@@ -171,47 +182,65 @@ const AddUsers = () => {
         icon: 'warning',
         title: 'Thông báo',
         text: 'Vui lòng điền đầy đủ thông tin.'
-      })
-      return
+      });
+      return;
     }
-
+  
+    // Kiểm tra định dạng các trường
+    if (!/^\d{12}$/.test(form.cccd)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Lỗi',
+        text: 'Số CCCD không hợp lệ. Vui lòng nhập lại.'
+      });
+      return;
+    }
+  
     try {
-      const response = await axios.put(`${env.API_URL}/api-accounts/updateAccount/${form.username}`, {
-        username: form.username,
-        password: form.password,
-        fullname: form.fullname,
-        phone: form.phone,
-        email: form.email,
-        avatar: form.avatar,
-        birthday: form.birthday,
-        gender: form.gender,
-        cccd: form.cccd,
-        role: [form.role]
-      })
-
+      const response = await axios.put(
+        `${env.API_URL}/api-accounts/updateAccount/${form.username}`,
+        {
+          username: form.username,
+          fullname: form.fullname,
+          phone: form.phone,
+          email: form.email,
+          avatar: form.avatar,
+          birthday: form.birthday,
+          gender: form.gender,
+          cccd: form.cccd,
+          role: form.role,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
       if (response.data.status) {
         Swal.fire({
           icon: 'success',
           title: 'Thành công',
           text: 'Cập nhật tài khoản thành công!'
-        })
-        ClearInputFields()
+        });
+        ClearInputFields();
       } else {
         Swal.fire({
           icon: 'error',
           title: 'Thất bại',
           text: response.data.message || 'Cập nhật tài khoản không thành công.'
-        })
+        });
       }
     } catch (error) {
-      console.error('Error updating account:', error)
+      console.error('Error updating account:', error.response?.data || error.message);
       Swal.fire({
         icon: 'error',
         title: 'Lỗi',
-        text: 'Đã xảy ra lỗi. Vui lòng thử lại sau.'
-      })
+        text: error.response?.data.message || 'Đã xảy ra lỗi khi cập nhật tài khoản.'
+      });
     }
-  }
+  };
+  
 
   const deleteAccount = async () => {
     if (!form.username) {
@@ -236,7 +265,11 @@ const AddUsers = () => {
     }
 
     try {
-      const response = await axios.delete(`${env.API_URL}/api-accounts/deleteAccount/${form.username}`)
+      const response = await axios.delete(`${env.API_URL}/api-accounts/deleteAccount/${form.username}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (response.data.status) {
         Swal.fire({
