@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Rating, TextareaAutosize, Tooltip, Typography } from '@mui/material'
+import { Avatar, Box, Button, Rating, TextareaAutosize, Tooltip, Typography, useTheme } from '@mui/material'
 import { useEffect } from 'react'
 import { toast } from 'react-toastify'
 import {
@@ -7,6 +7,9 @@ import {
 } from '~/apis/bulletinBoardReviewsAPI'
 
 const UserRating = ({ roomId, username, setReview, review, refreshBulletinBoards, account }) => {
+  const theme = useTheme()
+  const backgroundColor = theme.palette.mode === 'light' ? '#FFFFFF' : '#1E1E1E'
+
   useEffect(() => {
     getBulletinBoardReviewByBulletinBoardIdAndUsername(roomId, username).then((res) => {
       const result = res.result
@@ -66,7 +69,8 @@ const UserRating = ({ roomId, username, setReview, review, refreshBulletinBoards
               padding: '10px',
               overflow: 'hidden',
               resize: 'none',
-              width: '715px'
+              width: '715px',
+              backgroundColor: backgroundColor
             }}
             value={review.content}
             placeholder="Vui lòng đánh giá: "
