@@ -41,24 +41,27 @@ const ListUsers = () => {
   const [search, setSearch] = useState('');  
   const [noResults, setNoResults] = useState(false);  
   const navigate = useNavigate();
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
 
   const fetchAccounts = async (query) => {  
     setLoading(true);  
     setNoResults(false);  
     try {  
-      let url;  
-      // Chỉ cần gửi một tham số tìm kiếm chung cho tất cả các trường  
-      if (query) {  
-        const params = new URLSearchParams();  
+      let url;
+      if (query) {
+        const params = new URLSearchParams();
+        params.append("search", query);
+        url = `${env.API_URL}/api-accounts/search?${params.toString()}`;
+      } else {
+        url = `${env.API_URL}/api-accounts/get-all-account`;
+      }
+
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
   
-        // Thay vì gửi nhiều tham số trống, bạn chỉ định query tìm kiếm cho tất cả các trường cùng một lúc  
-        params.append("search", query); 
-        url = `${env.API_URL}/api-accounts/search?${params.toString()}`;  
-      } else {  
-        url = `${env.API_URL}/api-accounts/get-all-account`;;  
-      }  
-  
-      const response = await axios.get(url);  
       if (response.data && response.data.status) {  
         setAccounts(response.data.data);  
       } else {  

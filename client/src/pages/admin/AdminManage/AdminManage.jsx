@@ -168,7 +168,7 @@ const AdminManage = ({ setIsAdmin }) => {
           </List>
         </Box>
       </aside>
-      <div className="main">
+      <div className="main" style={{width:'1500px'}}>
         <nav className="navbar navbar-expand px-3 border-bottom d-flex justify-content-between align-items-center">
           {/* Sidebar Toggle Button */}
           <button className="btn" type="button" onClick={toggleSidebar}>

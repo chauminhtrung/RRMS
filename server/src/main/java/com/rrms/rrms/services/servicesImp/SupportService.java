@@ -1,7 +1,13 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.sql.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.rrms.rrms.dto.request.SupportRequest;
-import com.rrms.rrms.dto.response.AccountResponse;
 import com.rrms.rrms.dto.response.SupportResponse;
 import com.rrms.rrms.mapper.AccountMapper;
 import com.rrms.rrms.models.Account;
@@ -21,13 +27,17 @@ import java.util.stream.Collectors;
 public class SupportService implements ISupportService {
     @Autowired
     private SupportRepository supportRepository;
+
     @Autowired
     private AccountRepository accountRepository;
+
     @Autowired
     private AccountMapper accountMapper;
 
     Support toSupport(SupportRequest request) {
-        Account account = accountRepository.findByUsername(request.getAccount().getUsername()).orElse(null);
+        Account account = accountRepository
+                .findByUsername(request.getAccount().getUsername())
+                .orElse(null);
         if (account != null) {
             Support support = new Support();
             support.setAccount(account);

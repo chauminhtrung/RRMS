@@ -1,22 +1,21 @@
 package com.rrms.rrms.controllers;
 
-import com.rrms.rrms.dto.request.MotelRequest;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
 import com.rrms.rrms.dto.request.SupportRequest;
 import com.rrms.rrms.dto.response.ApiResponse;
-import com.rrms.rrms.dto.response.MotelResponse;
 import com.rrms.rrms.dto.response.SupportResponse;
 import com.rrms.rrms.services.ISupportService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -46,7 +45,6 @@ public class SupportControlller {
                     .result(false)
                     .build();
         }
-
     }
 
     @Operation(summary = "Get All support")

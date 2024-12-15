@@ -39,6 +39,7 @@ public class Support {
 
     @Column(columnDefinition = "DECIMAL(10, 2)")
     private long priceFirst;
+
     @Column(columnDefinition = "DECIMAL(10, 2)")
     private long priceEnd;
 
