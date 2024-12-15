@@ -21,7 +21,7 @@ import MuiAlert from '@mui/material/Alert'
 import SearchList from './SearchList'
 import FilterSearch from './FilterSearch'
 import LoadingPage from '~/components/LoadingPage/LoadingPage'
-import { insertHeart } from '~/apis/heartAPI'
+import { getHeartByUsername, insertHeart } from '~/apis/heartAPI'
 import Swal from 'sweetalert2'
 
 const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
@@ -33,6 +33,20 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
   // Thêm trạng thái cho trang hiện tại
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 6 // Số lượng item hiển thị mỗi trang
+  const [hearts, setHearts] = useState([])
+  const getAllHeartByAccount = async () => {
+    const username = JSON.parse(sessionStorage.getItem('user')).username
+    const response = await getHeartByUsername(username)
+    console.log(response.data.result.bulletinBoards)
+    if (response.data.code == 200) {
+      setHearts(response.data.result.bulletinBoards)
+      console.log(hearts)
+    } else {
+      setHearts([])
+    }
+  }
+  console.log('77777')
+  console.log(hearts)
 
   const handleToggle = (id) => {
     setVisiblePhoneNumbers((prev) => ({
@@ -49,6 +63,7 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
         title: 'Thành công',
         text: 'Đã thêm vào yêu thích'
       })
+      getAllHeartByAccount()
     } else {
       Swal.fire({
         icon: 'error',
@@ -77,6 +92,9 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
     }
     setOpen(false)
   }
+  function hasMatchingItem(array, item) {
+    return array.some((element) => element.bulletinBoardId === item.bulletinBoardId) // Thay đổi tùy thuộc vào cấu trúc dữ liệu của bạn
+  }
 
   const handleHeartClick = (cardId) => {
     setFavorites((prevFavorites) => {
@@ -98,7 +116,9 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
     navigate(`/detail/${roomId}`)
   }
 
-  useEffect(() => {}, [])
+  useEffect(() => {
+    getAllHeartByAccount()
+  }, [])
 
   // Gọi loadData khi searchValue thay đổi
 
@@ -117,11 +137,30 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
   } else {
     currentItems = []
   }
+  const [message, setMessage] = useState('')
+
+  // Hàm sẽ được gọi từ component con
+  const handleFilter = (e) => {
+    console.log(e) // Kiểm tra giá trị, ví dụ: "asc" hoặc "desc"
+
+    // Tạo bản sao mảng `currentItems` (đảm bảo bạn định nghĩa trước đó)
+    const sortedItems = [...currentItems].sort((a, b) => {
+      if (e === 'asc') {
+        return a.rentPrice - b.rentPrice // Sắp xếp tăng dần
+      } else if (e === 'desc') {
+        return b.rentPrice - a.rentPrice // Sắp xếp giảm dần
+      }
+      return 0 // Nếu không phải "asc" hoặc "desc", không thay đổi thứ tự
+    })
+
+    console.log(sortedItems) // Kiểm tra mảng đã sắp xếp
+    currentItems = sortedItems // Cập nhật state
+  }
 
   return (
     <Box>
       {/* <FilterSearch onSearch={handleSearchResult} /> */}
-      <SearchList totalRooms={totalRooms} searchData={searchData} />
+      <SearchList setFilter={handleFilter} totalRooms={totalRooms} searchData={searchData} />
       <Box sx={{ width: '100%', overflow: 'hidden', mt: 2 }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -246,27 +285,56 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
                       <Typography variant="caption" color="textSecondary" noWrap>
                         {item1?.account?.username || 'Người dùng không có sẵn'}, 2 ngày trước
                       </Typography>
-                      <IconButton
-                        onClick={() => handleHeartClick(item1?.bulletinBoardRules[0].bulletinBoardRuleId)} // Here we access the bulletinBoardRuleId of the first rule (adjust as necessary)
-                        sx={{
-                          ml: 'auto',
-                          // color: favorites[item1?.bulletinBoardRules[0]?.bulletinBoardRuleId] ? 'red' : 'gray',
-                          // transition: 'color 0.3s ease, border 0.3s ease',
-                          // border: favorites[item1?.bulletinBoardRules[0].bulletinBoardRuleId]
-                          //   ? '2px solid red'
-                          //   : '1px solid transparent',
-                          borderRadius: '50%',
-                          padding: '5px',
-                          mx: 3,
-                          marginLeft: 8,
-                          width: '40px',
-                          height: '40px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}>
-                        <FavoriteIcon onClick={() => handleAddHeart(item1.bulletinBoardId)} sx={{ fontSize: '35px' }} />
-                      </IconButton>
+                      {console.log(hasMatchingItem(hearts, item1))}
+                      {hasMatchingItem(hearts, item1) ? (
+                        <IconButton
+                          sx={{
+                            ml: 'auto',
+                            color: 'red',
+                            transition: 'color 0.3s ease, border 0.3s ease',
+                            border: '2px solid red',
+                            borderRadius: '50%',
+                            padding: '5px',
+                            mx: 3,
+                            marginLeft: 8,
+                            width: '40px',
+                            height: '40px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}>
+                          <FavoriteIcon
+                            onClick={() =>
+                              Swal.fire({
+                                icon: 'error',
+                                title: 'Thông báo',
+                                text: 'Phòng này đã được thêm trước đó'
+                              })
+                            }
+                            sx={{ fontSize: '35px' }}
+                          />
+                        </IconButton>
+                      ) : (
+                        <IconButton
+                          onClick={() => handleHeartClick(item1?.bulletinBoardRules[0].bulletinBoardRuleId)} // Here we access the bulletinBoardRuleId of the first rule (adjust as necessary)
+                          sx={{
+                            ml: 'auto',
+                            borderRadius: '50%',
+                            padding: '5px',
+                            mx: 3,
+                            marginLeft: 8,
+                            width: '40px',
+                            height: '40px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}>
+                          <FavoriteIcon
+                            onClick={() => handleAddHeart(item1.bulletinBoardId)}
+                            sx={{ fontSize: '35px' }}
+                          />
+                        </IconButton>
+                      )}
                     </Box>
                   </CardContent>
 

@@ -4,22 +4,9 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 import { roomASC } from '~/apis/searchAPI'
 
-const SearchList = ({ totalRooms, searchData }) => {
+const SearchList = ({ totalRooms, searchData, setFilter }) => {
   const [sortByPrice, setSortByPrice] = useState('ASC')
   const [sortByArea, setSortByArea] = useState('asc')
-
-  const handlePriceChange = async (event) => {
-    const value = event.target.value
-    setSortByPrice(value)
-    console.log(value)
-    try {
-      const response = await roomASC(value)
-      toast.success('aaaa')
-      searchData(response)
-    } catch (error) {
-      toast.success(error)
-    }
-  }
   const fetchRooms = async () => {
     try {
       const response = await roomASC(sortByPrice)
@@ -29,7 +16,9 @@ const SearchList = ({ totalRooms, searchData }) => {
       console.error('Error loading rooms:', error)
     }
   }
-
+  const changeFilter = (e) => {
+    setFilter(e)
+  }
   useEffect(() => {
     fetchRooms()
   }, [sortByPrice])
@@ -49,7 +38,7 @@ const SearchList = ({ totalRooms, searchData }) => {
         <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
           <FormControl sx={{ minWidth: 150 }}>
             <InputLabel>{t('muc-gia')}</InputLabel>
-            <Select value={sortByPrice} label={t('muc-gia')} onChange={handlePriceChange}>
+            <Select label={t('muc-gia')} onChange={(e) => changeFilter(e.target.value)}>
               <MenuItem value="asc">{t('tu-thap-den-cao')}</MenuItem>
               <MenuItem value="desc">{t('tu-cao-den-thap')}</MenuItem>
             </Select>
