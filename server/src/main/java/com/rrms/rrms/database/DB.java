@@ -284,12 +284,13 @@ public class DB {
             Account adminAccount = Account.builder()
                     .username("admin")
                     .password(pe.encode("123"))
-                    .fullname("Administrator")
-                    .email("admin@example.com")
+                    .fullname("Dương Trí Dũng")
+                    .email("dungdtps31407@fpt.edu.vn")
                     .phone("0123456789")
                     .cccd("012345678901")
                     .gender(Gender.MALE)
-                    .avatar("AVT_ADMIN.jpg")
+                    .avatar(
+                            "https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2Fz5151390778103_9e97d57d023943d670d62148a0d5b7bd.jpg?alt=media&token=ff7703e2-7e90-48b7-b565-1c4993795b6d")
                     .birthday(LocalDate.now())
                     .build();
 
@@ -319,13 +320,13 @@ public class DB {
             Account userAccount = Account.builder()
                     .username("employee")
                     .password(pe.encode("123")) // Encode the password
-                    .fullname("Minh Trung")
-                    .email("minhtrung@gmail.com")
+                    .fullname("Châu Minh Trung")
+                    .email("trungcmps31761@fpt.edu.vn")
                     .phone("03333345553")
                     .cccd("012345678900")
                     .gender(Gender.FEMALE)
                     .avatar(
-                            "https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
+                            "https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2Fz6133716559940_7c9350d11192987a3023cbab04233243.jpg?alt=media&token=53e9681c-70fa-4786-a131-d6e5c5989b13")
                     .birthday(LocalDate.now())
                     .build();
 
@@ -355,13 +356,13 @@ public class DB {
             Account userAccount = Account.builder()
                     .username("host")
                     .password(pe.encode("123")) // Encode the password
-                    .fullname("KienQuoc")
+                    .fullname("Kiều Kiến Quốc")
                     .email("quockkps31817@fpt.edu.vn")
                     .phone("0919925302")
                     .cccd("012345678900")
                     .gender(Gender.FEMALE)
                     .avatar(
-                            "https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
+                            "https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2Fz5257432427901_de429dc26db211ec1dec296bdb854176.jpg?alt=media&token=93e85ab2-1eab-4ad5-9a2d-5c82237f7554")
                     .birthday(LocalDate.now())
                     .build();
 
@@ -391,13 +392,13 @@ public class DB {
             Account userAccount = Account.builder()
                     .username("customer")
                     .password(pe.encode("123"))
-                    .fullname("Thuan")
-                    .email("thuan@gmail.com")
+                    .fullname("Trần Quốc Thuận")
+                    .email("thuantqps31471@fpt.edu.vn")
                     .phone("0829280927")
                     .cccd("012345678900")
                     .gender(Gender.FEMALE)
                     .avatar(
-                            "https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2F1493af7e-ba1f-48d8-b2c8-f4e88b55e07f?alt=media&token=9e82b5f9-3f49-4856-b009-bfd09fa474c9")
+                            "https://firebasestorage.googleapis.com/v0/b/rrms-b7c18.appspot.com/o/images%2Faccount-avatar%2Fz6133716570498_6c5d5fc93027da36707542b837c41f88.jpg?alt=media&token=f6f0290d-0197-4a97-91b4-13fad8bc7eea")
                     .birthday(LocalDate.now())
                     .build();
 
