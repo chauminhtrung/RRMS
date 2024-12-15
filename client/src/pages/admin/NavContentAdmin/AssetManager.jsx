@@ -64,7 +64,7 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
       Swal.fire('Xóa thành công', 'Đã xóa thành công!', 'success')
       getAllMotelDevice()
     } else {
-      Swal.fire('Xóa thất bại', 'Đã xóa thất bại!', 'error')
+      Swal.fire('Xóa thất bại', 'Có phòng đang sử dụng thiết bị, không thể xóa!', 'error')
     }
   }
   const [deviceName, setdeviceName] = useState('')
@@ -160,6 +160,9 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
     },
     { title: 'Tổng Số Lượng', field: 'totalQuantity', hozAlign: 'center', minWidth: 40, editor: 'input' },
     { title: 'Đơn Vị', field: 'unitDescription', hozAlign: 'center', minWidth: 40, editor: 'input' },
+    { title: 'Tổng Số Lượng', field: 'totalQuantity', hozAlign: 'center', minWidth: 40, editor: 'input' },
+    { title: 'Đã Sử Dụng', field: 'totalUsing', hozAlign: 'center', minWidth: 40, editor: 'input' },
+    { title: 'Còn dư', field: 'totalNull', hozAlign: 'center', minWidth: 40, editor: 'input' },
     { title: 'Đơn Vị Cung Cấp', field: 'supplier', hozAlign: 'center', minWidth: 40, editor: 'input' },
     {
       title: 'Thao tác',
@@ -209,6 +212,7 @@ const AssetManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
       delete: 'Xóa'
     }))
     setDevice(customdata)
+    console.log(device)
   }
   useEffect(() => {
     setIsAdmin(true)

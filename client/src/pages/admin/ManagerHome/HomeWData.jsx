@@ -260,27 +260,29 @@ const HomeWData = ({ Motel }) => {
   }
 
   //device
-  const handleChangeQuantityRoomDevice = async (roomId, motel_device_id, quantity) => {
-    const data = {
-      roomId: roomId,
-      motel_device_id: motel_device_id,
-      quantity: quantity
-    }
-    const response = await changeQuantityRoomDevice(data)
-    if (response.result == true) {
-      Swal.fire({
-        icon: 'success',
-        title: 'Thành công',
-        text: 'change quantity successfully!'
-      })
-    } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Thành công',
-        text: 'change quantity failed!'
-      })
-    }
-  }
+  // const handleChangeQuantityRoomDevice = async (roomId, motel_device_id, quantity) => {
+  //   console.log(roomId, motel_device_id, quantity)
+
+  //   // const data = {
+  //   //   roomId: roomId,
+  //   //   motel_device_id: motel_device_id,
+  //   //   quantity: quantity
+  //   // }
+  //   // const response = await changeQuantityRoomDevice(data)
+  //   // if (response.result == true) {
+  //   //   Swal.fire({
+  //   //     icon: 'success',
+  //   //     title: 'Thành công',
+  //   //     text: 'change quantity successfully!'
+  //   //   })
+  //   // } else {
+  //   //   Swal.fire({
+  //   //     icon: 'error',
+  //   //     title: 'Thành công',
+  //   //     text: 'change quantity failed!'
+  //   //   })
+  //   // }
+  // }
 
   // Hàm lấy dữ liệu phòng từ server
   const fetchDataRooms = async (id) => {
@@ -357,7 +359,7 @@ const HomeWData = ({ Motel }) => {
       Swal.fire({
         icon: 'error',
         title: 'Thất bại',
-        text: 'RoomDevice apply failed!'
+        text: 'Không đủ số lượng vui lòng bổ xung!'
       })
     }
   }
@@ -2730,16 +2732,11 @@ const HomeWData = ({ Motel }) => {
                         <div className="d-flex align-items-center">
                           <input
                             type="number"
-                            onChange={() => {
-                              handleChangeQuantityRoomDevice(room.roomId, item.motel_device_id, 200)
-                            }}
+                            value={1}
+                            // onChange={() => {
+                            //   handleChangeQuantityRoomDevice(room.roomId, item.motel_device_id, 200)
+                            // }}
                             className="form-control text-center"
-                            value={
-                              deviceByRoom.some((it) => it.motelDevice.motel_device_id === item.motel_device_id)
-                                ? deviceByRoom.find((it) => it.motelDevice.motel_device_id === item.motel_device_id)
-                                    .quantity
-                                : 1
-                            }
                             style={{ width: '100px' }}
                           />
                           <span className="mx-2">Số lượng</span>
