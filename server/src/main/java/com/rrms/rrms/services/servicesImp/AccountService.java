@@ -389,7 +389,7 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public boolean existsByPhone(String phone) {
-        return accountRepository.existsByPhone(phone);
+    public boolean existsByUsername(String username) {
+        return accountRepository.existsByUsername(username);
     }
 }

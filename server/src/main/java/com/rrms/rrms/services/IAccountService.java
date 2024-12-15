@@ -50,5 +50,5 @@ public interface IAccountService {
 
     boolean existsByEmail(String email);
 
-    boolean existsByPhone(String phone);
+    boolean existsByUsername(String username);
 }
