@@ -21,9 +21,10 @@ import DesignServicesIcon from '@mui/icons-material/DesignServices'
 import AutorenewIcon from '@mui/icons-material/Autorenew'
 import NextArrow from '../Detail/NextArrow'
 import PrevArrow from '../Detail/PrevArrow'
-import { getHeartByUsername } from '~/apis/heartAPI'
+import { deleteHeart, getHeartByUsername } from '~/apis/heartAPI'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { blue } from '@mui/material/colors'
+import Swal from 'sweetalert2'
 
 const Heart = ({ setIsAdmin }) => {
   const [age, setAge] = useState(10)
@@ -41,6 +42,24 @@ const Heart = ({ setIsAdmin }) => {
       console.log(hearts)
     } else {
       setHearts([])
+    }
+  }
+  const handleDelete = async (vl) => {
+    const username = JSON.parse(sessionStorage.getItem('user')).username
+    const response = await deleteHeart(username, vl)
+    if (response.code == 200) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Thành công',
+        text: 'Xóa thành công'
+      })
+      getAllHeartByAccount()
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Thất bại',
+        text: 'Xóa thất bại'
+      })
     }
   }
   useEffect(() => {
@@ -179,7 +198,10 @@ const Heart = ({ setIsAdmin }) => {
                     borderRadius: '50%',
                     padding: '6px'
                   }}>
-                  <DeleteIcon sx={{ fontSize: '40px', color: blue[500] }} />
+                  <DeleteIcon
+                    onClick={() => handleDelete(heart.bulletinBoardId)}
+                    sx={{ fontSize: '40px', color: blue[500] }}
+                  />
                 </IconButton>
               </Card>
             ))}

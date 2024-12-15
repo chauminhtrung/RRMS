@@ -24,3 +24,13 @@ export const insertHeart = async (username, idbull) => {
   )
   return response.data
 }
+export const deleteHeart = async (username, idbull) => {
+  const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
+  const response = await axios.delete(`${env.API_URL}/hearts/removeHeart/${username}/${idbull}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'ngrok-skip-browser-warning': '69420'
+    }
+  })
+  return response.data
+}
