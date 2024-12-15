@@ -3,6 +3,7 @@ package com.rrms.rrms.controllers;
 import java.util.List;
 import java.util.UUID;
 
+import com.rrms.rrms.dto.request.ChangeQuantityRoomDevice;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,7 @@ public class RoomDeviceController {
 
     @Operation(summary = "insert roomDevice")
     @PostMapping()
-    public ApiResponse<RoomDeviceResponse> insertMotelDevice(@RequestBody RoomDeviceRequest roomDeviceRequest) {
+    public ApiResponse<RoomDeviceResponse> insertRoomDevice(@RequestBody RoomDeviceRequest roomDeviceRequest) {
         RoomDeviceResponse roomDeviceResponse = roomDeviceService.insertRoomDevice(roomDeviceRequest);
         if (roomDeviceResponse != null) {
             log.info("Insert roomDevice successfully");
