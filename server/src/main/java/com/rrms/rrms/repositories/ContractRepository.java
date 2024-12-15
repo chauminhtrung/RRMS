@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import com.rrms.rrms.models.Motel;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +15,7 @@ import org.springframework.data.repository.query.Param;
 import com.rrms.rrms.enums.ContractStatus;
 import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Contract;
+import com.rrms.rrms.models.Motel;
 
 public interface ContractRepository extends JpaRepository<Contract, UUID> {
 
@@ -92,11 +92,12 @@ public interface ContractRepository extends JpaRepository<Contract, UUID> {
 
     // tìm trạng thái phòng
     @Query("SELECT c FROM Contract c WHERE c.room.motel.motelId = :motelId AND c.status = :status")
-    List<Contract> findContractsByMotelIdAndStatus(@Param("motelId") UUID motelId, @Param("status") ContractStatus status);
+    List<Contract> findContractsByMotelIdAndStatus(
+            @Param("motelId") UUID motelId, @Param("status") ContractStatus status);
 
     List<Contract> findByRoomRoomId(UUID roomId);
 
-    //tim hop dong theo phong
+    // tim hop dong theo phong
     @Query("SELECT c FROM Contract c WHERE c.room.roomId = :roomId")
     List<Contract> findContractsByRoomId(UUID roomId);
 

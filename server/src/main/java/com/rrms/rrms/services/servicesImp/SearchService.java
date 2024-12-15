@@ -63,7 +63,6 @@ public class SearchService implements ISearchService {
                 .toList();
     }
 
-
     //        @Override
     //        public List<RoomDetailResponse> listRoomPrice(Double startPrice, Double endPrice) {
     //            // Tìm kiếm các phòng trong khoảng giá

@@ -333,7 +333,8 @@ public class AuthenController {
     }
 
     @PostMapping("/acceptAuthenticationRegister")
-    public ApiResponse<Boolean> acceptAuthenticationRegister(@RequestBody AuthenticationRegister authenticationRegister) {
+    public ApiResponse<Boolean> acceptAuthenticationRegister(
+            @RequestBody AuthenticationRegister authenticationRegister) {
         if (!authenticationRegister.getCode().equals(String.valueOf(randomNumberRegister))) {
             return ApiResponse.<Boolean>builder()
                     .code(HttpStatus.BAD_REQUEST.value())

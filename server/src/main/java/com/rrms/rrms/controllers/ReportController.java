@@ -3,16 +3,14 @@ package com.rrms.rrms.controllers;
 import java.math.BigDecimal;
 import java.util.*;
 
-import com.rrms.rrms.dto.response.MotelRoomCountResponse;
-import com.rrms.rrms.dto.response.TenantSummaryDTO;
-import com.rrms.rrms.services.ITenantService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.rrms.rrms.models.Account;
+import com.rrms.rrms.dto.response.MotelRoomCountResponse;
+import com.rrms.rrms.dto.response.TenantSummaryDTO;
 import com.rrms.rrms.services.IMotelService;
+import com.rrms.rrms.services.ITenantService;
 import com.rrms.rrms.services.servicesImp.AccountService;
 import com.rrms.rrms.services.servicesImp.ContractService;
 import com.rrms.rrms.services.servicesImp.InvoiceServiceService;
@@ -89,5 +87,4 @@ public class ReportController {
         BigDecimal totalPaidRoomPrice = motelService.getTotalPaidRoomPrice(motelId);
         return ResponseEntity.ok(totalPaidRoomPrice);
     }
-
 }

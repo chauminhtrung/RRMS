@@ -1,10 +1,10 @@
 package com.rrms.rrms.dto.response;
 
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -18,5 +18,5 @@ public class MotelRoomCountResponse {
     private int stakeCount;
     private int reportEndCount;
     private int noContractCount; // Số phòng không có hợp đồng
-    private int reservedCount;    // Số phòng đã đặt cọc
+    private int reservedCount; // Số phòng đã đặt cọc
 }
