@@ -1,19 +1,13 @@
 import { Box, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material'
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-const SearchList = ({ totalRooms }) => {
-  const [sortByPrice, setSortByPrice] = useState('')
-  const [sortByArea, setSortByArea] = useState('')
-
-  const handlePriceChange = (event) => {
-    setSortByPrice(event.target.value)
+const SearchList = ({ totalRooms, setFilter, setArea }) => {
+  const changeFilter = (e) => {
+    setFilter(e)
   }
 
-  useEffect(() => {}, [totalRooms])
-
-  const handleAreaChange = (event) => {
-    setSortByArea(event.target.value)
+  const changeArea = (event) => {
+    setArea(event)
   }
   const { t } = useTranslation()
   return (
@@ -27,23 +21,17 @@ const SearchList = ({ totalRooms }) => {
         <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
           <FormControl sx={{ minWidth: 150 }}>
             <InputLabel>{t('muc-gia')}</InputLabel>
-            <Select value={sortByPrice} label={t('muc-gia')} onChange={handlePriceChange}>
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>{t('tu-thap-den-cao')}</MenuItem>
-              <MenuItem value={20}>{t('tu-cao-den-thap')}</MenuItem>
+            <Select label={t('muc-gia')} onChange={(e) => changeFilter(e.target.value)}>
+              <MenuItem value="asc">{t('tu-thap-den-cao')}</MenuItem>
+              <MenuItem value="desc">{t('tu-cao-den-thap')}</MenuItem>
             </Select>
           </FormControl>
 
           <FormControl sx={{ minWidth: 150 }}>
             <InputLabel>{t('dien-tich')}</InputLabel>
-            <Select value={sortByArea} label={t('dien-tich')} onChange={handleAreaChange}>
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>{t('nho-den-lon')}</MenuItem>
-              <MenuItem value={20}>{t('lon-den-nho')}</MenuItem>
+            <Select label={t('dien-tich')} onChange={(e) => changeArea(e.target.value)}>
+              <MenuItem value="asc">{t('nho-den-lon')}</MenuItem>
+              <MenuItem value="desc">{t('lon-den-nho')}</MenuItem>
             </Select>
           </FormControl>
         </Box>

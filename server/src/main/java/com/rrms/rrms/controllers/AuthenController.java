@@ -97,7 +97,7 @@ public class AuthenController {
             Optional<Account> accountOptional = accountService.findByPhone(loginRequest.getPhone());
             if (accountOptional.isEmpty()) {
                 response.put("status", false);
-                response.put("message", "Tài khoản không tồn tại.");
+                response.put("message", "Sai thông tin đăng nhập");
                 response.put("data", null);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
@@ -110,7 +110,7 @@ public class AuthenController {
 
         } catch (AppException ex) {
             response.put("status", false);
-            response.put("message", "Sai mật khẩu");
+            response.put("message", "Sai thông tin đăng nhập");
             response.put("data", null);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         } catch (Exception ex) {
@@ -224,6 +224,7 @@ public class AuthenController {
     }
 
     private static int randomNumber = 0;
+    private static int randomNumberRegister = 0;
 
     @GetMapping("/checkMail")
     public ApiResponse<Boolean> forget(@RequestParam("email") String email) {
@@ -256,6 +257,34 @@ public class AuthenController {
         try {
             boolean result = mailService.Send_ForgetPassword(
                     changePasswordByEmail.getEmail(), "Yêu cầu thay đổi mật khẩu", String.valueOf(randomNumber));
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("success")
+                    .result(result)
+                    .build();
+        } catch (Exception e) {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("error")
+                    .result(false)
+                    .build();
+        }
+    }
+
+    @PostMapping("/authenticationRegister")
+    public ApiResponse<Boolean> authenticationRegister(@RequestBody AuthenticationRegister authenticationRegister) {
+        System.out.println(authenticationRegister);
+        if (authenticationRegister == null) {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("error")
+                    .result(false)
+                    .build();
+        }
+        randomNumberRegister = (int) (Math.random() * 90000) + 10000;
+        try {
+            boolean result = mailService.Send_ForgetPassword(
+                    authenticationRegister.getGmail(), "Xác thực tài khoản", String.valueOf(randomNumberRegister));
             return ApiResponse.<Boolean>builder()
                     .code(HttpStatus.OK.value())
                     .message("success")
@@ -303,9 +332,27 @@ public class AuthenController {
         }
     }
 
-    @PostMapping("/checkregister/{phone}")
-    public ApiResponse<Boolean> checkRegister(@PathVariable("phone") String phone) {
-        boolean result = accountService.existsByPhone(phone);
+    @PostMapping("/acceptAuthenticationRegister")
+    public ApiResponse<Boolean> acceptAuthenticationRegister(@RequestBody AuthenticationRegister authenticationRegister) {
+        if (!authenticationRegister.getCode().equals(String.valueOf(randomNumberRegister))) {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("error")
+                    .result(false)
+                    .build();
+        } else {
+            randomNumberRegister = 0;
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("success")
+                    .result(true)
+                    .build();
+        }
+    }
+
+    @PostMapping("/checkregister/{username}")
+    public ApiResponse<Boolean> checkRegister(@PathVariable("username") String username) {
+        boolean result = accountService.existsByUsername(username);
         if (result) {
             return ApiResponse.<Boolean>builder()
                     .code(HttpStatus.OK.value())

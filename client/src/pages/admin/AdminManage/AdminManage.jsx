@@ -1,14 +1,12 @@
-import { useEffect, useState } from 'react';
-import { Link, Route, Routes } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './AdminManage.css';
-import AddUsers from './Dashboard/AddUsers';
-import AddPosts from './Dashboard/AddPosts';
-import AddReports from './Dashboard/AddReports';
-import ListUsers from './Dashboard/ListUsers';
-import ListReports from './Dashboard/ListReports';
-import ListPosts from './Dashboard/ListPosts';
-import DashboardHome from './Dashboard/DashboardHome';
+import { useEffect, useState } from 'react'
+import { Link, Route, Routes } from 'react-router-dom'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import './AdminManage.css'
+import AddUsers from './Dashboard/AddUsers'
+import AddPosts from './Dashboard/AddPosts'
+import ListUsers from './Dashboard/ListUsers'
+import ListPosts from './Dashboard/ListPosts'
+import DashboardHome from './Dashboard/DashboardHome'
 import {
   Box,
   List,
@@ -22,8 +20,8 @@ import {
   Menu,
   MenuItem,
   Divider,
-  Badge,
-} from '@mui/material';
+  Badge
+} from '@mui/material'
 import {
   Search as SearchIcon,
   Notifications,
@@ -34,51 +32,51 @@ import {
   Report,
   PostAdd,
   ListAlt
-} from '@mui/icons-material';
-
+} from '@mui/icons-material'
+import ListSupports from './Dashboard/ListSupports'
 
 const AdminManage = ({ setIsAdmin }) => {
-  const [openLandlords, setOpenLandlords] = useState(false);
-  const [openUsers, setOpenUsers] = useState(false);
-  const [openPosts, setOpenPosts] = useState(false);
-  const [openReports, setOpenReports] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
-
+  const [openLandlords, setOpenLandlords] = useState(false)
+  const [openUsers, setOpenUsers] = useState(false)
+  const [openPosts, setOpenPosts] = useState(false)
+  const [openReports, setOpenReports] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [anchorEl, setAnchorEl] = useState(null)
+  const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('user')))
   const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
 
   const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
 
-  const isMenuOpen = Boolean(anchorEl);
+  const isMenuOpen = Boolean(anchorEl)
   const handleToggle = (menu) => {
     switch (menu) {
       case 'landlords':
-        setOpenLandlords(!openLandlords);
-        break;
+        setOpenLandlords(!openLandlords)
+        break
       case 'users':
-        setOpenUsers(!openUsers);
-        break;
+        setOpenUsers(!openUsers)
+        break
       case 'posts':
-        setOpenPosts(!openPosts);
-        break;
+        setOpenPosts(!openPosts)
+        break
       case 'reports':
-        setOpenReports(!openReports);
-        break;
+        setOpenReports(!openReports)
+        break
       default:
-        break;
+        break
     }
-  };
+  }
   useEffect(() => {
-    setIsAdmin(true);
-  }, [setIsAdmin]);
+    setIsAdmin(true)
+  }, [setIsAdmin])
 
   const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
-  };
+    setIsCollapsed(!isCollapsed)
+  }
 
   return (
     <div className="wrapper">
@@ -154,22 +152,16 @@ const AdminManage = ({ setIsAdmin }) => {
               <ListItemIcon>
                 <Report />
               </ListItemIcon>
-              <ListItemText primary="Quản Lý Báo Cáo" />
+              <ListItemText primary="Hỗ Trợ Tìm Phòng" />
               {openReports ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
             <Collapse in={openReports} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <ListItemButton component={Link} to="/adminManage/manage-reports/add" sx={{ pl: 4 }}>
+                <ListItemButton component={Link} to="/adminManage/manage-supports/list" sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <PostAdd />
                   </ListItemIcon>
-                  <ListItemText primary="Thêm Báo Cáo" />
-                </ListItemButton>
-                <ListItemButton component={Link} to="/adminManage/manage-reports/list" sx={{ pl: 4 }}>
-                  <ListItemIcon>
-                    <ListAlt />
-                  </ListItemIcon>
-                  <ListItemText primary="Danh Sách Báo Cáo" />
+                  <ListItemText primary="Tất Cả Danh Sách" />
                 </ListItemButton>
               </List>
             </Collapse>
@@ -184,7 +176,18 @@ const AdminManage = ({ setIsAdmin }) => {
           </button>
 
           {/* Search Bar */}
-          <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', maxWidth: 400, mx: 2, px: 2, py: 0.5, bgcolor: 'background.paper', borderRadius: 1 }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: 'flex',
+              alignItems: 'center',
+              maxWidth: 400,
+              mx: 2,
+              px: 2,
+              py: 0.5,
+              bgcolor: 'background.paper',
+              borderRadius: 1
+            }}>
             <SearchIcon sx={{ mr: 1, color: 'text.secondary' }} />
             <InputBase placeholder="Tìm kiếm..." fullWidth />
           </Box>
@@ -192,23 +195,29 @@ const AdminManage = ({ setIsAdmin }) => {
           {/* Right Actions */}
           <div className="d-flex align-items-center ms-auto">
             {/* Notification Icon */}
-            <Badge style={{marginRight:'20px'}} badgeContent={4} color="primary">
+            <Badge style={{ marginRight: '20px' }} badgeContent={4} color="primary">
               <Notifications color="action" />
             </Badge>
 
             {/* Profile Avatar with Dropdown Menu */}
-            <Box className="mx-2 d-flex align-items-center" onClick={handleProfileMenuOpen} aria-label="open profile" sx={{ cursor: 'pointer' }}>
+            <Box
+              className="mx-2 d-flex align-items-center"
+              onClick={handleProfileMenuOpen}
+              aria-label="open profile"
+              sx={{ cursor: 'pointer' }}>
               <Avatar
-                src="/free/assets/avatar-1-B0hIH1z9.png"
+                src={user.avatar}
                 alt="profile user"
                 sx={{
                   width: 36,
                   height: 36,
                   border: '2px solid #3f51b5',
-                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
                 }}
               />
-              <Typography variant="subtitle1" sx={{ ml: 1 }}>John Doe</Typography>
+              <Typography variant="subtitle1" sx={{ ml: 1 }}>
+                {user.username}
+              </Typography>
               <ExpandMore />
             </Box>
           </div>
@@ -219,41 +228,39 @@ const AdminManage = ({ setIsAdmin }) => {
             keepMounted
             transformOrigin={{ vertical: 'top', horizontal: 'center' }}
             open={isMenuOpen}
-            onClose={handleMenuClose}
-          >
+            onClose={handleMenuClose}>
             <MenuItem onClick={handleMenuClose}>
-            <i className="bi bi-person" style={{ marginRight: '8px' }}></i> Profile
+              <i className="bi bi-person" style={{ marginRight: '8px' }}></i> Profile
             </MenuItem>
-            
+
             <Divider />
-            <MenuItem onClick={handleMenuClose}>  
-              <i className="bi bi-gear" style={{ marginRight: '8px' }}></i> Cài đặt  
-            </MenuItem>  
-            <MenuItem onClick={handleMenuClose}>  
-              <i className="bi bi-clock-history" style={{ marginRight: '8px' }}></i> Lịch sử  
-            </MenuItem>  
-            <MenuItem onClick={handleMenuClose}>  
-              <i className="bi bi-question-circle" style={{ marginRight: '8px' }}></i> Trợ giúp  
-            </MenuItem>  
-            <MenuItem onClick={handleMenuClose}>  
-              <i className="bi bi-lock" style={{ marginRight: '8px' }}></i> Đổi Mật Khẩu  
-            </MenuItem>  
-            <MenuItem onClick={handleMenuClose}>  
-              <i className="bi bi-box-arrow-right" style={{ marginRight: '8px' }}></i> Đăng xuất  
+            <MenuItem onClick={handleMenuClose}>
+              <i className="bi bi-gear" style={{ marginRight: '8px' }}></i> Cài đặt
+            </MenuItem>
+            <MenuItem onClick={handleMenuClose}>
+              <i className="bi bi-clock-history" style={{ marginRight: '8px' }}></i> Lịch sử
+            </MenuItem>
+            <MenuItem onClick={handleMenuClose}>
+              <i className="bi bi-question-circle" style={{ marginRight: '8px' }}></i> Trợ giúp
+            </MenuItem>
+            <MenuItem onClick={handleMenuClose}>
+              <i className="bi bi-lock" style={{ marginRight: '8px' }}></i> Đổi Mật Khẩu
+            </MenuItem>
+            <MenuItem onClick={handleMenuClose}>
+              <i className="bi bi-box-arrow-right" style={{ marginRight: '8px' }}></i> Đăng xuất
             </MenuItem>
           </Menu>
         </nav>
 
-        <main className="content px-2 py-2" style={{backgroundColor:'rgb(228, 238, 245)'}}>
+        <main className="content px-2 py-2" style={{ backgroundColor: 'rgb(228, 238, 245)' }}>
           <div className="container-fluid">
             <Routes>
               <Route index element={<DashboardHome />} />
-              <Route path="manage-users/add" element={<AddUsers/>} />
+              <Route path="manage-users/add" element={<AddUsers />} />
               <Route path="manage-users/list" element={<ListUsers />} />
               <Route path="manage-posts/add" element={<AddPosts />} />
               <Route path="manage-posts/list" element={<ListPosts />} />
-              <Route path="manage-reports/add" element={<AddReports />} />
-              <Route path="manage-reports/list" element={<ListReports />} />
+              <Route path="manage-supports/list" element={<ListSupports />} />
             </Routes>
           </div>
         </main>

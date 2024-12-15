@@ -1,6 +1,8 @@
 package com.rrms.rrms.models;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.*;
@@ -24,15 +26,25 @@ public class Support {
     @JoinColumn(name = "username")
     private Account account;
 
+    private String nameContact;
+
+    private String phoneContact;
+
     @Column(columnDefinition = "DATE")
     private Date dateOfStay;
 
-    @Column(columnDefinition = "DATE")
-    private Date createDate;
+
+    @Column(columnDefinition = "TIMESTAMP", nullable = false, updatable = false)
+    private LocalDateTime createDate;
 
     @Column(columnDefinition = "DECIMAL(10, 2)")
     private long priceFirst;
 
     @Column(columnDefinition = "DECIMAL(10, 2)")
     private long priceEnd;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createDate = LocalDateTime.now();
+    }
 }

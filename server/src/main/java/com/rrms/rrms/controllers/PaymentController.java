@@ -135,6 +135,7 @@ public class PaymentController {
         String vnp_TxnRef = VNPayConfig.getRandomNumber(6);
         String vnp_IpAddr = "127.0.0.1";
 
+        // cấu hình của vnpay
         String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", vnp_Version);
@@ -153,6 +154,7 @@ public class PaymentController {
         vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
+        //xử lý thời gian ngày giờ thanh toán
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         String vnp_CreateDate = formatter.format(cld.getTime());
@@ -162,6 +164,7 @@ public class PaymentController {
         String vnp_ExpireDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
 
+        //Tạo chuỗi dữ liệu và bảo mật của thanh toán
         List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
         Collections.sort(fieldNames);
         StringBuilder hashData = new StringBuilder();
@@ -186,10 +189,12 @@ public class PaymentController {
 
         String queryUrl = query.toString();
         String vnp_SecureHash = VNPayConfig.hmacSHA512(secretKey, hashData.toString());
-        queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
+        queryUrl += "&vnp_SecureHash=" + vnp_SecureHash; // mã hóa
 
+        // Tạo đường dẫn cho thanh toán
         String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
 
+        // Trả kết quả về cho client
         PaymentRestDTO paymentRestDTO = new PaymentRestDTO();
         paymentRestDTO.setURL(paymentUrl);
         return ResponseEntity.status(HttpStatus.OK).body(paymentRestDTO);
@@ -233,6 +238,7 @@ public class PaymentController {
         String username = (String) requestData.get("username");
         session.setAttribute("username", username);
         LogUtils.init();
+        //Khởi tạo các tham số để giao dịch
         String requestId = String.valueOf(System.currentTimeMillis());
         String orderId = VNPayConfig.getRandomNumber(6);
         Long transId = 2L;
@@ -242,6 +248,8 @@ public class PaymentController {
         String orderInfo = "Pay With MoMo";
         String returnUrl = "http://localhost:8080/payment/paymentMoMoSuccess";
         String notifyURL = "http://google.com.vn";
+
+        // Chọn môi trường và thanh toán bằng momo
         CustomerEnvironment environment = CustomerEnvironment.selectEnv("dev");
         PaymentResponse captureWalletMoMoResponse = createOrderMoMo.process(
                 environment,

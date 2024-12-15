@@ -1,25 +1,23 @@
 package com.rrms.rrms.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.dto.response.BulletinBoardSearchResponse;
 import com.rrms.rrms.services.IRoom;
 import com.rrms.rrms.services.ISearchService;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Tag(name = "Search Controller")
 @RestController
@@ -45,6 +43,28 @@ public class SearchController {
     //        apiResponse.setResult(rooms);
     //        return apiResponse;
     //    }
+
+    @Operation(summary = "Get all rooms sorted by price")
+    @GetMapping("/asc")
+    public ApiResponse<List<BulletinBoardSearchResponse>> getRoomsSortedByPrice(
+            @RequestParam(defaultValue = "ASC") String sortOrder) {
+        ApiResponse<List<BulletinBoardSearchResponse>> apiResponse = new ApiResponse<>();
+        List<BulletinBoardSearchResponse> rooms;
+        if ("ASC".equalsIgnoreCase(sortOrder)) {
+            rooms = searchService.getRoomsSortedByPriceASC();
+        } else if ("DESC".equalsIgnoreCase(sortOrder)) {
+            rooms = searchService.getRoomsSortedByPriceASC();
+        } else {
+            apiResponse.setCode(HttpStatus.BAD_REQUEST.value());
+            apiResponse.setMessage("Invalid sortOrder. Valid values are 'ASC' or 'DESC'.");
+            return apiResponse;
+        }
+        apiResponse.setCode(HttpStatus.OK.value());
+        apiResponse.setMessage("Tìm kiếm thành công");
+        apiResponse.setResult(rooms);
+        return apiResponse;
+    }
+
 
     @Operation(summary = "Get all rooms")
     @GetMapping
@@ -92,7 +112,7 @@ public class SearchController {
             return apiResponse;
         }
         apiResponse.setCode(HttpStatus.OK.value());
-        apiResponse.setMessage("Tìm kiếm thành công");
+        apiResponse.setMessage("Tìm kiếm thành công: " + rooms.size());
         apiResponse.setResult(rooms);
         return apiResponse;
     }

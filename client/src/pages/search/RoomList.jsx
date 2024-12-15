@@ -21,16 +21,30 @@ import MuiAlert from '@mui/material/Alert'
 import SearchList from './SearchList'
 import FilterSearch from './FilterSearch'
 import LoadingPage from '~/components/LoadingPage/LoadingPage'
+import { getHeartByUsername, insertHeart } from '~/apis/heartAPI'
+import Swal from 'sweetalert2'
 
 const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
   const [favorites, setFavorites] = useState({})
   const [visiblePhoneNumbers, setVisiblePhoneNumbers] = useState({})
   const [open, setOpen] = useState(false)
   const [linkCopied, setLinkCopied] = useState(false)
+  const [currentItems, setCurrentItems] = useState([])
 
   // Thêm trạng thái cho trang hiện tại
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 6 // Số lượng item hiển thị mỗi trang
+  const [hearts, setHearts] = useState([])
+  const getAllHeartByAccount = async () => {
+    const username = JSON.parse(sessionStorage.getItem('user')).username
+    const response = await getHeartByUsername(username)
+    console.log(response.data.result.bulletinBoards)
+    if (response.data.code == 200) {
+      setHearts(response.data.result.bulletinBoards)
+    } else {
+      setHearts([])
+    }
+  }
 
   const handleToggle = (id) => {
     setVisiblePhoneNumbers((prev) => ({
@@ -38,7 +52,24 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
       [id]: !prev[id]
     }))
   }
-
+  const handleAddHeart = async (it) => {
+    const username = JSON.parse(sessionStorage.getItem('user')).username
+    const response = await insertHeart(username, it)
+    if (response.code == 201) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Thành công',
+        text: 'Đã thêm vào yêu thích'
+      })
+      getAllHeartByAccount()
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Thất bại',
+        text: 'Thêm yêu thích thất bại'
+      })
+    }
+  }
   const handleClick = () => {
     const linkToCopy = 'https://www.youtube.com/watch?v=sshkYoROZrI'
 
@@ -59,6 +90,9 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
     }
     setOpen(false)
   }
+  function hasMatchingItem(array, item) {
+    return array.some((element) => element.bulletinBoardId === item.bulletinBoardId) // Thay đổi tùy thuộc vào cấu trúc dữ liệu của bạn
+  }
 
   const handleHeartClick = (cardId) => {
     setFavorites((prevFavorites) => {
@@ -70,17 +104,15 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
       return newFavorites
     })
   }
-  // Hàm xử lý sự kiện thay đổi trang
-  const handlePageChangeNumber = (event, value) => {
-    setCurrentPage(value)
-  }
   const navigate = useNavigate()
 
   const handlePageChange = (roomId) => {
     navigate(`/detail/${roomId}`)
   }
 
-  useEffect(() => {}, [])
+  useEffect(() => {
+    getAllHeartByAccount()
+  }, [])
 
   // Gọi loadData khi searchValue thay đổi
 
@@ -89,21 +121,49 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
   //   loadData(search)
   // }
 
-  // Tính toán các item hiển thị trên trang hiện tại
-  const indexOfLastItem = currentPage * itemsPerPage // Vị trí item cuối trên trang hiện tại
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage // Vị trí item đầu trên trang hiện tại
-  let currentItems = []
-  if (Array.isArray(searchData)) {
-    currentItems = searchData.slice(indexOfFirstItem, indexOfLastItem)
-    // console.log(currentItems) // Hiển thị các phần tử hiện tại
-  } else {
-    currentItems = []
+  const [message, setMessage] = useState('')
+
+  useEffect(() => {
+    if (Array.isArray(searchData)) {
+      const indexOfLastItem = currentPage * itemsPerPage
+      const indexOfFirstItem = indexOfLastItem - itemsPerPage
+      setCurrentItems(searchData.slice(indexOfFirstItem, indexOfLastItem))
+    } else {
+      setCurrentItems([])
+    }
+  }, [searchData, currentPage])
+  const handleFilter = (sortOrder) => {
+    const sortedItems = [...currentItems].sort((a, b) => {
+      if (sortOrder === 'asc') {
+        return a.rentPrice - b.rentPrice // Sắp xếp tăng dần
+      } else if (sortOrder === 'desc') {
+        return b.rentPrice - a.rentPrice // Sắp xếp giảm dần
+      }
+      return 0
+    })
+    setCurrentItems(sortedItems)
+  }
+
+  const changeArea = (sortOrder) => {
+    const sortedItems = [...currentItems].sort((a, b) => {
+      if (sortOrder === 'asc') {
+        return a.area - b.area // Sắp xếp tăng dần
+      } else if (sortOrder === 'desc') {
+        return b.area - a.area // Sắp xếp giảm dần
+      }
+      return 0
+    })
+    setCurrentItems(sortedItems)
+  }
+
+  const handlePageChangeNumber = (event, value) => {
+    setCurrentPage(value)
   }
 
   return (
     <Box>
       {/* <FilterSearch onSearch={handleSearchResult} /> */}
-      <SearchList totalRooms={totalRooms} />
+      <SearchList setFilter={handleFilter} setArea={changeArea} totalRooms={totalRooms} searchData={searchData} />
       <Box sx={{ width: '100%', overflow: 'hidden', mt: 2 }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -228,27 +288,56 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
                       <Typography variant="caption" color="textSecondary" noWrap>
                         {item1?.account?.username || 'Người dùng không có sẵn'}, 2 ngày trước
                       </Typography>
-                      <IconButton
-                        onClick={() => handleHeartClick(item1?.bulletinBoardRules[0].bulletinBoardRuleId)} // Here we access the bulletinBoardRuleId of the first rule (adjust as necessary)
-                        sx={{
-                          ml: 'auto',
-                          // color: favorites[item1?.bulletinBoardRules[0]?.bulletinBoardRuleId] ? 'red' : 'gray',
-                          // transition: 'color 0.3s ease, border 0.3s ease',
-                          // border: favorites[item1?.bulletinBoardRules[0].bulletinBoardRuleId]
-                          //   ? '2px solid red'
-                          //   : '1px solid transparent',
-                          borderRadius: '50%',
-                          padding: '5px',
-                          mx: 3,
-                          marginLeft: 8,
-                          width: '40px',
-                          height: '40px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}>
-                        <FavoriteIcon sx={{ fontSize: '35px' }} />
-                      </IconButton>
+                      {console.log(hasMatchingItem(hearts, item1))}
+                      {hasMatchingItem(hearts, item1) ? (
+                        <IconButton
+                          sx={{
+                            ml: 'auto',
+                            color: 'red',
+                            transition: 'color 0.3s ease, border 0.3s ease',
+                            border: '2px solid red',
+                            borderRadius: '50%',
+                            padding: '5px',
+                            mx: 3,
+                            marginLeft: 8,
+                            width: '40px',
+                            height: '40px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}>
+                          <FavoriteIcon
+                            onClick={() =>
+                              Swal.fire({
+                                icon: 'error',
+                                title: 'Thông báo',
+                                text: 'Phòng này đã được thêm trước đó'
+                              })
+                            }
+                            sx={{ fontSize: '35px' }}
+                          />
+                        </IconButton>
+                      ) : (
+                        <IconButton
+                          onClick={() => handleHeartClick(item1?.bulletinBoardRules[0].bulletinBoardRuleId)} // Here we access the bulletinBoardRuleId of the first rule (adjust as necessary)
+                          sx={{
+                            ml: 'auto',
+                            borderRadius: '50%',
+                            padding: '5px',
+                            mx: 3,
+                            marginLeft: 8,
+                            width: '40px',
+                            height: '40px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}>
+                          <FavoriteIcon
+                            onClick={() => handleAddHeart(item1.bulletinBoardId)}
+                            sx={{ fontSize: '35px' }}
+                          />
+                        </IconButton>
+                      )}
                     </Box>
                   </CardContent>
 
@@ -303,7 +392,7 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
       <Pagination
         count={Math.ceil(searchData?.length / itemsPerPage)} // Tổng số trang
         page={currentPage} // Trang hiện tại
-        onChange={handlePageChangeNumber} // Hàm xử lý khi thay đổi trang
+        onChange={handlePageChangeNumber}
         variant="outlined"
         color="primary"
         sx={{ mt: 4, display: 'flex', justifyContent: 'center' }} // Đặt margin-top và căn giữa
