@@ -97,7 +97,7 @@ public class AuthenController {
             Optional<Account> accountOptional = accountService.findByPhone(loginRequest.getPhone());
             if (accountOptional.isEmpty()) {
                 response.put("status", false);
-                response.put("message", "Tài khoản không tồn tại.");
+                response.put("message", "Sai thông tin đăng nhập");
                 response.put("data", null);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
@@ -110,7 +110,7 @@ public class AuthenController {
 
         } catch (AppException ex) {
             response.put("status", false);
-            response.put("message", "Sai mật khẩu");
+            response.put("message", "Sai thông tin đăng nhập");
             response.put("data", null);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         } catch (Exception ex) {
@@ -350,9 +350,9 @@ public class AuthenController {
         }
     }
 
-    @PostMapping("/checkregister/{phone}")
-    public ApiResponse<Boolean> checkRegister(@PathVariable("phone") String phone) {
-        boolean result = accountService.existsByPhone(phone);
+    @PostMapping("/checkregister/{username}")
+    public ApiResponse<Boolean> checkRegister(@PathVariable("username") String username) {
+        boolean result = accountService.existsByUsername(username);
         if (result) {
             return ApiResponse.<Boolean>builder()
                     .code(HttpStatus.OK.value())
