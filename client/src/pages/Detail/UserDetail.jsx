@@ -1,6 +1,7 @@
 import { Avatar, Box, Button, Typography, useMediaQuery } from '@mui/material'
 import { useState } from 'react'
 import { Grid } from '@mui/material'
+import { toast } from 'react-toastify'
 
 const UserDetail = ({ item }) => {
   const [showPhone, setShowPhone] = useState(false)
@@ -8,7 +9,7 @@ const UserDetail = ({ item }) => {
     setShowPhone(!showPhone)
     if (!showPhone) {
       navigator.clipboard.writeText(item.phone)
-      alert('Đã sao chép điện thoại')
+      toast.success('Đã sao chép điện thoại')
     }
   }
 

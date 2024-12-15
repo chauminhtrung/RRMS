@@ -112,27 +112,27 @@ const Profile = ({ setIsAdmin, username }) => {
               <Divider sx={{ bgcolor: '#ced6e0', mt: 1 }} />
               <Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2 }}>
-                  <Typography variant="body1">Opportunities applied</Typography>
-                  <Typography variant="body1" color="orange">
-                    56
-                  </Typography>
+                  <Typography variant="body1">Tổng số tháng đã thuê</Typography>
+                  <Typography variant="body1">0</Typography>
                 </Box>
                 <Divider sx={{ bgcolor: '#ced6e0' }} />
                 <Box item sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2 }}>
-                  <Typography variant="body1">Opportunities won</Typography>
+                  <Typography variant="body1">Tống số tháng đã thanh toán</Typography>
                   <Typography variant="body1" color="green">
-                    546
+                    0
                   </Typography>
                 </Box>
                 <Divider sx={{ bgcolor: '#ced6e0' }} />
                 <Box item sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2 }}>
-                  <Typography variant="body1">Current opportunities</Typography>
-                  <Typography variant="body1">5676</Typography>
+                  <Typography variant="body1">Tổng số tháng chưa thanh toán</Typography>
+                  <Typography variant="body1" color="red">
+                    0
+                  </Typography>
                 </Box>
               </Box>
               <Divider sx={{ bgcolor: '#ced6e0' }} />
               <Button sx={{ mt: 5, width: '80%', height: 45 }} variant="outlined">
-                View Public Profile
+                Xem trang cá nhân công khai
               </Button>
               <Paper
                 variant="outlined"

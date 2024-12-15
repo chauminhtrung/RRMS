@@ -139,7 +139,7 @@ const ProfileTab = ({ profile, setProfile, selectedImage }) => {
           </Grid>
           <Grid item xs={12} md={6}>
             <FormControl fullWidth error={formik.touched.gender && Boolean(formik.errors.gender)}>
-              <InputLabel id="gender-select-label">Gender</InputLabel>
+              <InputLabel id="gender-select-label">Giới tính</InputLabel>
               <Select
                 labelId="gender-select-label"
                 id="gender-select"
@@ -150,9 +150,9 @@ const ProfileTab = ({ profile, setProfile, selectedImage }) => {
                 }}
                 onBlur={formik.handleBlur}
                 label="Gender">
-                <MenuItem value={'MALE'}>Male</MenuItem>
-                <MenuItem value={'FEMALE'}>Female</MenuItem>
-                <MenuItem value={'OTHER'}>Other</MenuItem>
+                <MenuItem value={'MALE'}>Nam</MenuItem>
+                <MenuItem value={'FEMALE'}>Nữ</MenuItem>
+                <MenuItem value={'OTHER'}>Khác</MenuItem>
               </Select>
               <FormHelperText>{formik.touched.gender && formik.errors.gender}</FormHelperText>
             </FormControl>
