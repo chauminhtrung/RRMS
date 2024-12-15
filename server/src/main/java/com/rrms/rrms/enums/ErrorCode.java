@@ -28,7 +28,12 @@ public enum ErrorCode {
     UNAUTHENTICATED(HttpStatus.UNAUTHORIZED.value(), "AUTHENTICATED", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(HttpStatus.FORBIDDEN.value(), "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST.value(), "INVALID_PASSWORD", HttpStatus.BAD_REQUEST),
-    ACCOUNT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST.value(), "Account elready exists", HttpStatus.BAD_REQUEST),
+    INVALID_PHONE(HttpStatus.BAD_REQUEST.value(), "Số điện thoại đã tồn tại!", HttpStatus.BAD_REQUEST),
+    INVALID_PHONE2(
+            HttpStatus.BAD_REQUEST.value(), "Số điện thoại không hợp lệ (phải đủ 10 số)!", HttpStatus.BAD_REQUEST),
+    INVALID_EMAIL(HttpStatus.BAD_REQUEST.value(), "Email đã tồn tại!", HttpStatus.BAD_REQUEST),
+    INVALID_USERNAME(HttpStatus.BAD_REQUEST.value(), "Tên đăng nhập đã tồn tại!", HttpStatus.BAD_REQUEST),
+    ACCOUNT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST.value(), "Tài khoản đã tồn tại", HttpStatus.BAD_REQUEST),
     ROLE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Role not found", HttpStatus.NOT_FOUND),
     ROLE_NOT_PROVIDED(HttpStatus.NOT_FOUND.value(), "ROLE NOT PROVIDED", HttpStatus.NOT_FOUND),
     INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST.value(), "Invalid refresh token", HttpStatus.BAD_REQUEST),

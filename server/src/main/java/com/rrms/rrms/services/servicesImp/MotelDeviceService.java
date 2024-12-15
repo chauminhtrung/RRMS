@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.rrms.rrms.models.RoomDevice;
-import com.rrms.rrms.repositories.RoomDeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +13,10 @@ import com.rrms.rrms.enums.Unit;
 import com.rrms.rrms.mapper.MotelDeviceMapper;
 import com.rrms.rrms.models.Motel;
 import com.rrms.rrms.models.MotelDevice;
+import com.rrms.rrms.models.RoomDevice;
 import com.rrms.rrms.repositories.MotelDeviceRepository;
 import com.rrms.rrms.repositories.MotelRepository;
+import com.rrms.rrms.repositories.RoomDeviceRepository;
 import com.rrms.rrms.services.IMotelDeviceService;
 
 @Service
@@ -32,6 +32,7 @@ public class MotelDeviceService implements IMotelDeviceService {
 
     @Autowired
     RoomDeviceRepository roomDeviceRepository;
+
     @Override
     public List<MotelDeviceResponse> getAllMotelDevicesByMotel(UUID motelId) {
         Motel find = motelRepository.findById(motelId).orElse(null);
@@ -110,5 +111,4 @@ public class MotelDeviceService implements IMotelDeviceService {
         motelDeviceRepository.delete(motelDevice.get());
         return true;
     }
-
 }
