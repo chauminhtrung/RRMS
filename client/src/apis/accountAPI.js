@@ -58,3 +58,19 @@ export const checkRegister = async (data) => {
   })
   return response.data
 }
+export const sendOTPRegister = async (data) => {
+  const response = await axios.post(`${env.API_URL}/authen/authenticationRegister`, data, {
+    headers: {
+      'ngrok-skip-browser-warning': '69420'
+    }
+  })
+  return response.data
+}
+export const acceptAuthenticationRegister = async (data) => {
+  const response = await axios.post(`${env.API_URL}/authen/acceptAuthenticationRegister`, data, {
+    headers: {
+      'ngrok-skip-browser-warning': '69420'
+    }
+  })
+  return response.data
+}
