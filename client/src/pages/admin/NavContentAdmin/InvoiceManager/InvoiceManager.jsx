@@ -136,12 +136,27 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
       }
     },
     { title: 'Tên phòng', field: 'roomName', hozAlign: 'center', width: 163 },
-    { title: 'Tiền phòng', field: 'roomPrice', formatter: 'money', hozAlign: 'center', width: 164 },
+    { title: 'Tiền phòng', field: 'roomPrice', formatter: (cell) => Number(cell.getValue()).toLocaleString('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }) , hozAlign: 'center', width: 164 },
     ...dynamicServiceColumns, 
-    { title: 'Thu/Trả cọc', field: 'deposit', formatter: 'money', hozAlign: 'center', width: 164 },
-    { title: 'Cộng thêm/Giảm trừ', field: 'adjustments', formatter: 'money', hozAlign: 'center', width: 164 },
-    { title: 'Tổng cộng', field: 'total', formatter: 'money', hozAlign: 'center', width: 164 },
-    { title: 'Cần thu', field: 'total', formatter: 'money', hozAlign: 'center', width: 164 },
+    { title: 'Thu/Trả cọc', field: 'deposit', formatter: (cell) => Number(cell.getValue()).toLocaleString('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }) , hozAlign: 'center', width: 164 },
+    { title: 'Cộng thêm/Giảm trừ', field: 'adjustments', formatter: (cell) => Number(cell.getValue()).toLocaleString('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }) , hozAlign: 'center', width: 164 },
+    { title: 'Tổng cộng', field: 'total', formatter: (cell) => Number(cell.getValue()).toLocaleString('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }) , hozAlign: 'center', width: 164 },
+    { title: 'Cần thu', field: 'total', formatter: (cell) => Number(cell.getValue()).toLocaleString('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }) , hozAlign: 'center', width: 164 },
     { title: 'Trạng thái', field: 'status', hozAlign: 'center', width: 164,formatter: StatusFormatter },
     {
       title: 'Action',
