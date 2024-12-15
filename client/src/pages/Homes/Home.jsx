@@ -255,7 +255,7 @@ export default function HomePage({ setIsAdmin }) {
             <Grid container spacing={2}>
               <Grid item xl={7} md={12} className="d-flex align-content-center text-center">
                 <div className="inner-slider align-self-center align-baseline">
-                  <Typography variant="h3" className="title" fontWeight="bold">
+                  <Typography variant="h3" className="title" fontWeight="bold" style={{width:'690px'}}>
                     {t('phan-mem-quan-ly-nha-cho-thue')}
                   </Typography>
                   <Typography variant="h3" className="title" fontWeight="bold">
@@ -422,12 +422,12 @@ export default function HomePage({ setIsAdmin }) {
 
           <Box sx={{ width: '100%' }}>
             <Tabs value={value} onChange={handleChange} centered>
-              <Tab style={{ marginRight: '290px' }} label={<span style={{ fontSize: '20px' }}>Smartos OMS</span>} />
+              <Tab style={{ marginRight: '290px' }} label={<span style={{ fontSize: '20px' }}>Thông minh</span>} />
               <Tab
                 style={{ marginRight: '290px' }}
-                label={<span style={{ fontSize: '20px' }}>Bespoke Solution</span>}
+                label={<span style={{ fontSize: '20px' }}>Giải pháp theo yêu cầu</span>}
               />
-              <Tab label={<span style={{ fontSize: '20px' }}>On-Demand Booking</span>} />
+              <Tab label={<span style={{ fontSize: '20px' }}>Đặt chỗ theo yêu cầu</span>} />
             </Tabs>
             <Box p={3}>
               {value === 0 && <Tab1 />}
@@ -717,7 +717,7 @@ const testimonials = [
     rooms: '8 phòng',
     role: 'Chủ nhà',
     feedback:
-      'Tôi rất thích ứng dụng vì rất tiện lợi, phòng của tôi không nhiều nhưng trước khi biết đến ứng dụng tôi phải quản lý sổ sách rất cực. Giờ thì khoẻ hơn nhiều. Cảm ơn LOZIDO!',
+      'Tôi rất thích ứng dụng vì rất tiện lợi, phòng của tôi không nhiều nhưng trước khi biết đến ứng dụng tôi phải quản lý sổ sách rất cực. Giờ thì khoẻ hơn nhiều. Cảm ơn RRMS!',
     image: 'https://quanlytro.me/images/owner_avatars/chu-tro-02-80x80.webp?version=29842'
   },
   {
@@ -733,7 +733,7 @@ const testimonials = [
     rooms: '20 phòng',
     role: 'Chủ nhà',
     feedback:
-      'Tôi có nhiều thời gian cho bản thân hơn từ khi biết đến ứng dụng quản lý nhà trọ của LOZIDO. Thật sự cảm ơn các bạn đã giới thiệu và hỗ trợ tôi!',
+      'Tôi có nhiều thời gian cho bản thân hơn từ khi biết đến ứng dụng quản lý nhà trọ của RRMS. Thật sự cảm ơn các bạn đã giới thiệu và hỗ trợ tôi!',
     image: 'https://quanlytro.me/images/owner_avatars/chu-tro-04-80x80.webp?version=29842'
   }
 ]
