@@ -5,6 +5,9 @@ import java.util.UUID;
 
 import com.rrms.rrms.dto.request.RoomDeviceRequest;
 import com.rrms.rrms.dto.response.RoomDeviceResponse;
+import com.rrms.rrms.models.RoomDevice;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface IRoomDeviceService {
     RoomDeviceResponse insertRoomDevice(RoomDeviceRequest roomDeviceRequest);
@@ -14,4 +17,5 @@ public interface IRoomDeviceService {
     List<RoomDeviceResponse> getAllDeviceByRoomId(UUID roomId);
 
     Boolean updateQuantity(UUID roomId, UUID motelDeviceId, Integer quantity);
+
 }

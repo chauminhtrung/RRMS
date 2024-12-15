@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.rrms.rrms.models.RoomDevice;
+import com.rrms.rrms.repositories.RoomDeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,8 @@ public class MotelDeviceService implements IMotelDeviceService {
     @Autowired
     MotelRepository motelRepository;
 
+    @Autowired
+    RoomDeviceRepository roomDeviceRepository;
     @Override
     public List<MotelDeviceResponse> getAllMotelDevicesByMotel(UUID motelId) {
         Motel find = motelRepository.findById(motelId).orElse(null);
@@ -53,7 +57,7 @@ public class MotelDeviceService implements IMotelDeviceService {
             motelDevice.setValueInput(motelDeviceRequest.getValueInput());
             motelDevice.setTotalQuantity(motelDeviceRequest.getTotalQuantity());
             motelDevice.setTotalUsing(motelDeviceRequest.getTotalUsing());
-            motelDevice.setTotalNull(motelDeviceRequest.getTotalNull());
+            motelDevice.setTotalNull(motelDeviceRequest.getTotalQuantity());
             motelDevice.setSupplier(motelDeviceRequest.getSupplier());
 
             // Logging thông tin cho từng thuộc tính
@@ -93,10 +97,18 @@ public class MotelDeviceService implements IMotelDeviceService {
     }
 
     @Override
-    public void deleteMotelDevice(UUID motelDeviceId) {
+    public boolean deleteMotelDevice(UUID motelDeviceId) {
         Optional<MotelDevice> motelDevice = motelDeviceRepository.findById(motelDeviceId);
-        if (motelDevice.isPresent()) {
-            motelDeviceRepository.delete(motelDevice.get());
+
+        if (motelDevice.isEmpty()) {
+            return false;
         }
+        RoomDevice exists = roomDeviceRepository.findByMotelDevice(motelDevice.get());
+        if (exists != null) {
+            return false;
+        }
+        motelDeviceRepository.delete(motelDevice.get());
+        return true;
     }
+
 }
