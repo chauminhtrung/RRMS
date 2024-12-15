@@ -29,6 +29,7 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
   const [visiblePhoneNumbers, setVisiblePhoneNumbers] = useState({})
   const [open, setOpen] = useState(false)
   const [linkCopied, setLinkCopied] = useState(false)
+  const [currentItems, setCurrentItems] = useState([])
 
   // Thêm trạng thái cho trang hiện tại
   const [currentPage, setCurrentPage] = useState(1)
@@ -40,13 +41,10 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
     console.log(response.data.result.bulletinBoards)
     if (response.data.code == 200) {
       setHearts(response.data.result.bulletinBoards)
-      console.log(hearts)
     } else {
       setHearts([])
     }
   }
-  console.log('77777')
-  console.log(hearts)
 
   const handleToggle = (id) => {
     setVisiblePhoneNumbers((prev) => ({
@@ -106,10 +104,6 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
       return newFavorites
     })
   }
-  // Hàm xử lý sự kiện thay đổi trang
-  const handlePageChangeNumber = (event, value) => {
-    setCurrentPage(value)
-  }
   const navigate = useNavigate()
 
   const handlePageChange = (roomId) => {
@@ -127,40 +121,49 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
   //   loadData(search)
   // }
 
-  // Tính toán các item hiển thị trên trang hiện tại
-  const indexOfLastItem = currentPage * itemsPerPage // Vị trí item cuối trên trang hiện tại
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage // Vị trí item đầu trên trang hiện tại
-  let currentItems = []
-  if (Array.isArray(searchData)) {
-    currentItems = searchData.slice(indexOfFirstItem, indexOfLastItem)
-    // console.log(currentItems) // Hiển thị các phần tử hiện tại
-  } else {
-    currentItems = []
-  }
   const [message, setMessage] = useState('')
 
-  // Hàm sẽ được gọi từ component con
-  const handleFilter = (e) => {
-    console.log(e) // Kiểm tra giá trị, ví dụ: "asc" hoặc "desc"
-
-    // Tạo bản sao mảng `currentItems` (đảm bảo bạn định nghĩa trước đó)
+  useEffect(() => {
+    if (Array.isArray(searchData)) {
+      const indexOfLastItem = currentPage * itemsPerPage
+      const indexOfFirstItem = indexOfLastItem - itemsPerPage
+      setCurrentItems(searchData.slice(indexOfFirstItem, indexOfLastItem))
+    } else {
+      setCurrentItems([])
+    }
+  }, [searchData, currentPage])
+  const handleFilter = (sortOrder) => {
     const sortedItems = [...currentItems].sort((a, b) => {
-      if (e === 'asc') {
+      if (sortOrder === 'asc') {
         return a.rentPrice - b.rentPrice // Sắp xếp tăng dần
-      } else if (e === 'desc') {
+      } else if (sortOrder === 'desc') {
         return b.rentPrice - a.rentPrice // Sắp xếp giảm dần
       }
-      return 0 // Nếu không phải "asc" hoặc "desc", không thay đổi thứ tự
+      return 0
     })
+    setCurrentItems(sortedItems)
+  }
 
-    console.log(sortedItems) // Kiểm tra mảng đã sắp xếp
-    currentItems = sortedItems // Cập nhật state
+  const changeArea = (sortOrder) => {
+    const sortedItems = [...currentItems].sort((a, b) => {
+      if (sortOrder === 'asc') {
+        return a.area - b.area // Sắp xếp tăng dần
+      } else if (sortOrder === 'desc') {
+        return b.area - a.area // Sắp xếp giảm dần
+      }
+      return 0
+    })
+    setCurrentItems(sortedItems)
+  }
+
+  const handlePageChangeNumber = (event, value) => {
+    setCurrentPage(value)
   }
 
   return (
     <Box>
       {/* <FilterSearch onSearch={handleSearchResult} /> */}
-      <SearchList setFilter={handleFilter} totalRooms={totalRooms} searchData={searchData} />
+      <SearchList setFilter={handleFilter} setArea={changeArea} totalRooms={totalRooms} searchData={searchData} />
       <Box sx={{ width: '100%', overflow: 'hidden', mt: 2 }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -389,7 +392,7 @@ const RoomList = ({ setSearchValue, searchData, totalRooms }) => {
       <Pagination
         count={Math.ceil(searchData?.length / itemsPerPage)} // Tổng số trang
         page={currentPage} // Trang hiện tại
-        onChange={handlePageChangeNumber} // Hàm xử lý khi thay đổi trang
+        onChange={handlePageChangeNumber}
         variant="outlined"
         color="primary"
         sx={{ mt: 4, display: 'flex', justifyContent: 'center' }} // Đặt margin-top và căn giữa

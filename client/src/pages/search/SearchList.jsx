@@ -1,30 +1,13 @@
 import { Box, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material'
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toast } from 'react-toastify'
-import { roomASC } from '~/apis/searchAPI'
 
-const SearchList = ({ totalRooms, searchData, setFilter }) => {
-  const [sortByPrice, setSortByPrice] = useState('ASC')
-  const [sortByArea, setSortByArea] = useState('asc')
-  const fetchRooms = async () => {
-    try {
-      const response = await roomASC(sortByPrice)
-      console.log(response)
-      searchData(response)
-    } catch (error) {
-      console.error('Error loading rooms:', error)
-    }
-  }
+const SearchList = ({ totalRooms, setFilter, setArea }) => {
   const changeFilter = (e) => {
     setFilter(e)
   }
-  useEffect(() => {
-    fetchRooms()
-  }, [sortByPrice])
 
-  const handleAreaChange = (event) => {
-    setSortByArea(event.target.value)
+  const changeArea = (event) => {
+    setArea(event)
   }
   const { t } = useTranslation()
   return (
@@ -46,7 +29,7 @@ const SearchList = ({ totalRooms, searchData, setFilter }) => {
 
           <FormControl sx={{ minWidth: 150 }}>
             <InputLabel>{t('dien-tich')}</InputLabel>
-            <Select value={sortByArea} label={t('dien-tich')} onChange={handleAreaChange}>
+            <Select label={t('dien-tich')} onChange={(e) => changeArea(e.target.value)}>
               <MenuItem value="asc">{t('nho-den-lon')}</MenuItem>
               <MenuItem value="desc">{t('lon-den-nho')}</MenuItem>
             </Select>
