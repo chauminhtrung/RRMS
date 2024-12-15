@@ -81,6 +81,5 @@ public class MotelDeviceController {
                     .result(false)
                     .build();
         }
-
     }
 }

@@ -81,9 +81,26 @@ public class AccountService implements IAccountService {
     @Override
     public Account register(RegisterRequest request) {
         // Kiểm tra xem username hoặc phone đã tồn tại chưa
-        if (accountRepository.existsByUsername(request.getUsername())
-                || accountRepository.existsByPhone(request.getPhone())) {
-            throw new AppException(ErrorCode.ACCOUNT_ALREADY_EXISTS);
+        if (accountRepository.existsByUsername(request.getUsername())) {
+            throw new AppException(ErrorCode.INVALID_USERNAME);
+        }
+
+        if (accountRepository.existsByPhone(request.getPhone())) {
+            throw new AppException(ErrorCode.INVALID_PHONE);
+        }
+
+        if (accountRepository.existsAccountByEmail(request.getEmail())) {
+            throw new AppException(ErrorCode.INVALID_EMAIL);
+        }
+
+        // Kiểm tra độ dài mật khẩu (ít nhất 8 ký tự)
+        if (request.getPassword().length() < 8) {
+            throw new AppException(ErrorCode.INVALID_PASSWORD);
+        }
+
+        // Kiểm tra số điện thoại (đủ 10 số)
+        if (!request.getPhone().matches("\\d{10}")) {
+            throw new AppException(ErrorCode.INVALID_PHONE2);
         }
 
         // Mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu

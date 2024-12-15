@@ -3,7 +3,6 @@ package com.rrms.rrms.controllers;
 import java.util.List;
 import java.util.UUID;
 
-import com.rrms.rrms.dto.request.ChangeQuantityRoomDevice;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
