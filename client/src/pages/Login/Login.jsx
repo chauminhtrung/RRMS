@@ -26,14 +26,14 @@ const Login = ({ setUsername, setAvatar }) => {
       console.log(decoded)
 
       if (decoded != null) {
-        const response = await checkRegister(decoded.email)
+        const response = await checkRegister(decoded.sub)
+        console.log(response)
+
         if (!response.result) {
           const accountnew = {
-            username: decoded.email,
-            email: decoded.email,
-            phone: decoded.email,
-            password: decoded.sub,
-            userType: 'CUSTOMER'
+            username: decoded.sub,
+            phone: decoded.sub,
+            password: decoded.sub
           }
           try {
             const response = await axios.post(`${env.API_URL}/authen/register`, accountnew, {
@@ -42,7 +42,9 @@ const Login = ({ setUsername, setAvatar }) => {
               }
             })
             if (response.data.status === true) {
-              loginSocial(decoded.email, decoded.sub)
+              console.log('login th')
+
+              loginSocial(decoded.sub, decoded.sub)
             } else {
               Swal.fire({
                 icon: 'error',
@@ -58,7 +60,7 @@ const Login = ({ setUsername, setAvatar }) => {
             })
           }
         } else {
-          loginSocial(decoded.email, decoded.sub)
+          loginSocial(decoded.sub, decoded.sub)
         }
       }
     } catch (error) {
@@ -76,10 +78,9 @@ const Login = ({ setUsername, setAvatar }) => {
 
         if (!response.result) {
           const accountnew = {
-            username: param.data.email,
+            username: param.data.userID,
             phone: param.data.userID,
-            password: param.data.userID,
-            userType: 'CUSTOMER'
+            password: param.data.userID
           }
           try {
             const response = await axios.post(`${env.API_URL}/authen/register`, accountnew, {
@@ -138,7 +139,6 @@ const Login = ({ setUsername, setAvatar }) => {
           avatar: avtFromResponse,
           username: usernameFromResponse,
           token: token // Lưu trữ token
-
         }
         sessionStorage.setItem('user', JSON.stringify(userData)) // Lưu dữ liệu người dùng cùng với token
 
@@ -159,7 +159,6 @@ const Login = ({ setUsername, setAvatar }) => {
       })
     }
   }
-
 
   //login
   const handleSubmit = async (event) => {
@@ -205,7 +204,7 @@ const Login = ({ setUsername, setAvatar }) => {
           avatar: avtFromResponse,
           username: usernameFromResponse,
           token: token, // Lưu trữ token
-          roles:roles
+          roles: roles
         }
 
         sessionStorage.setItem('user', JSON.stringify(userData)) // Lưu dữ liệu người dùng cùng với token
@@ -214,8 +213,8 @@ const Login = ({ setUsername, setAvatar }) => {
         setUsername(usernameFromResponse)
         setAvatar(avtFromResponse)
 
-         // Điều hướng sau khi login thành công
-        navigate('/RRMS');
+        // Điều hướng sau khi login thành công
+        navigate('/RRMS')
       }
     } catch (error) {
       if (error.response) {

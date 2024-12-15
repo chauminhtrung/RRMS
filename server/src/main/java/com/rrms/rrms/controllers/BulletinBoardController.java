@@ -127,7 +127,7 @@ public class BulletinBoardController {
         });
         log.info("Search bulletin board successfully");
         return ApiResponse.<List<BulletinBoardSearchResponse>>builder()
-                .message("Search bulletin board successfully")
+                .message("Search bulletin board successfully by elasticsearch: " + resultElastic.size())
                 .code(HttpStatus.OK.value())
                 .result(result)
                 .build();

@@ -150,16 +150,21 @@ const SecurityTab = () => {
         <Grid item xs={12} md={4}>
           <Paper elevation={3} sx={{ padding: '20px' }}>
             <Typography variant="h6" gutterBottom>
-              Two-Factor Authentication
+              Xác thực bằng 2 lớp
             </Typography>
             <Typography variant="body2" sx={{ marginBottom: '15px' }}>
-              Add another level of security by enabling two-factor authentication.
+              Thêm một cấp độ an toàn bộ bảo mật bằng cách bật xác thực bằng 2 lớp.
             </Typography>
             <RadioGroup defaultValue="on">
               <FormControlLabel value="on" control={<Radio />} label="On" />
               <FormControlLabel value="off" control={<Radio />} label="Off" />
             </RadioGroup>
-            <TextField label="SMS Number" fullWidth defaultValue="555-123-4567" sx={{ marginTop: '15px' }} />
+            <TextField
+              label="Số điện thoại"
+              fullWidth
+              placeholder="Nhập số điện thoại SMS"
+              sx={{ marginTop: '15px' }}
+            />
           </Paper>
         </Grid>
 
@@ -167,29 +172,29 @@ const SecurityTab = () => {
         <Grid item xs={12} md={8}>
           <Paper elevation={3} sx={{ padding: '20px' }}>
             <Typography variant="h6" gutterBottom>
-              Security Preferences
+              Tuỳ chọn bảo mật
             </Typography>
 
             <Typography variant="subtitle1" gutterBottom>
-              Account Privacy
+              Quyền riêng tư của tài khoản
             </Typography>
             <Typography variant="body2" sx={{ marginBottom: '10px' }}>
-              Set your account to private or public.
+              Đặt tài khoản của bạn ở chế độ riêng tư hoặc công khai.
             </Typography>
             <RadioGroup defaultValue="public">
-              <FormControlLabel value="public" control={<Radio />} label="Public" />
-              <FormControlLabel value="private" control={<Radio />} label="Private" />
+              <FormControlLabel value="public" control={<Radio />} label="Công khai" />
+              <FormControlLabel value="private" control={<Radio />} label="Riêng tư" />
             </RadioGroup>
 
             <Typography variant="subtitle1" gutterBottom sx={{ marginTop: '20px' }}>
-              Data Sharing
+              Chia sẻ dữ liệu
             </Typography>
             <Typography variant="body2" sx={{ marginBottom: '10px' }}>
-              Control how your data is shared with the app developers.
+              Chọn cách dữ liệu của bạn được chia sẻ với nhà phát triển ứng dụng.
             </Typography>
             <RadioGroup defaultValue="yes">
-              <FormControlLabel value="yes" control={<Radio />} label="Yes, share data" />
-              <FormControlLabel value="no" control={<Radio />} label="No, limit data sharing" />
+              <FormControlLabel value="yes" control={<Radio />} label="Có, chia sẻ dữ liệu" />
+              <FormControlLabel value="no" control={<Radio />} label="Không, giới hạn chia sẻ dữ liệu" />
             </RadioGroup>
           </Paper>
         </Grid>
@@ -198,13 +203,13 @@ const SecurityTab = () => {
         <Grid item xs={12} md={4}>
           <Paper elevation={3} sx={{ padding: '20px', textAlign: 'center' }}>
             <Typography variant="h6" gutterBottom>
-              Delete Account
+              Xóa tài khoản
             </Typography>
             <Typography variant="body2" sx={{ marginBottom: '15px' }}>
-              Deleting your account is permanent and cannot be undone.
+              Xóa tài khoản của bạn là bất đồng bộ và không thể hoàn tác.
             </Typography>
             <Button variant="contained" color="error">
-              I understand, delete my account
+              Tôi hiểu, xóa tài khoản của tôi
             </Button>
           </Paper>
         </Grid>

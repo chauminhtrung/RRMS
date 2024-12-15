@@ -1,15 +1,14 @@
 package com.rrms.rrms.services;
 
-import com.rrms.rrms.dto.request.AccountRequest;
-import com.rrms.rrms.dto.response.AccountResponse;
-import com.rrms.rrms.dto.response.BulletinBoardResponse;
+import java.util.UUID;
+
 import com.rrms.rrms.dto.response.HeartResponse;
 
 public interface IHeartService {
 
-    HeartResponse getHeartByAccount(AccountRequest accountRequest);
+    HeartResponse getHeartByUsername(String username);
 
-    HeartResponse addHeart(AccountResponse accountResponse, BulletinBoardResponse bulletinBoardResponse);
+    HeartResponse addHeart(String username, UUID uuidBulletinBoard);
 
-    HeartResponse removeHeart(AccountResponse accountResponse, BulletinBoardResponse bulletinBoardResponse);
+    HeartResponse removeHeart(String username, UUID uuidBulletinBoard);
 }

@@ -18,5 +18,5 @@ import lombok.experimental.FieldDefaults;
 public class HeartResponse {
     UUID heartId;
     AccountResponse account;
-    List<RoomDetailResponse> rooms;
+    List<BulletinBoardResponse> bulletinBoards;
 }

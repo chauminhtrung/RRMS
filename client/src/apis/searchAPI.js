@@ -8,3 +8,20 @@ export const searchByName = async (keyword) => {
     }
   })
 }
+
+export const roomASC = async (sortOrder = 'ASC') => {
+  try {
+    const response = await axios.get(`${env.API_URL}/searchs/asc`, {
+      params: {
+        sortOrder: sortOrder
+      },
+      headers: {
+        'ngrok-skip-browser-warning': '69420'
+      }
+    })
+    return response.data
+  } catch (error) {
+    console.error('Error fetching data:', error)
+    throw error
+  }
+}

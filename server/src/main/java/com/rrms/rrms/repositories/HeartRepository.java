@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.rrms.rrms.models.Heart;
 
 public interface HeartRepository extends JpaRepository<Heart, UUID> {
-    Heart findHeartByAccount_Username(String username);
+    Heart findAllByAccountUsername(String username);
 }

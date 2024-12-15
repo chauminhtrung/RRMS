@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import jakarta.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -45,5 +47,6 @@ public class Transaction {
     // Thêm trường username
     @ManyToOne
     @JoinColumn(name = "username", nullable = false)
+    @JsonIgnore // Tránh serialize account
     private Account account; // Tài khoản liên quan đến giao dịch
 }

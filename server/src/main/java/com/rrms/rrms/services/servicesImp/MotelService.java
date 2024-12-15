@@ -1,5 +1,7 @@
 package com.rrms.rrms.services.servicesImp;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -11,13 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rrms.rrms.dto.request.MotelRequest;
 import com.rrms.rrms.dto.response.MotelResponse;
+import com.rrms.rrms.dto.response.MotelRoomCountResponse;
+import com.rrms.rrms.enums.ContractStatus;
 import com.rrms.rrms.mapper.AccountMapper;
 import com.rrms.rrms.mapper.MotelMapper;
-import com.rrms.rrms.models.Account;
-import com.rrms.rrms.models.ContractTemplate;
-import com.rrms.rrms.models.Motel;
-import com.rrms.rrms.repositories.ContractTemplateRepository;
-import com.rrms.rrms.repositories.MotelRepository;
+import com.rrms.rrms.models.*;
+import com.rrms.rrms.repositories.*;
 import com.rrms.rrms.services.IMotelService;
 
 @Service
@@ -33,6 +34,21 @@ public class MotelService implements IMotelService {
 
     @Autowired
     private ContractTemplateRepository contractTemplateRepository;
+
+    @Autowired
+    private ContractRepository contractRepository;
+
+    @Autowired
+    private RoomRepository roomRepository;
+
+    @Autowired
+    private ReserveAPlaceRepository reserveAPlaceRepository;
+
+    @Override
+    public Optional<Integer> getTotalRooms(UUID motelId, String username) {
+        Optional<Motel> motel = motelRepository.findByMotelNameAndUsername(motelId, username);
+        return motel.map(m -> m.getRooms().size()); // Trả về số lượng phòng
+    }
 
     @Override
     public MotelResponse insert(MotelRequest motel) {
@@ -115,7 +131,88 @@ public class MotelService implements IMotelService {
     }
 
     @Override
-    public Integer getTotalAreaByUsername(Account username) {
-        return motelRepository.findTotalAreaByUsername(username);
+    public List<MotelRoomCountResponse> getRoomCountsByContractStatus() {
+        List<Motel> motels = motelRepository.findAll();
+        List<MotelRoomCountResponse> responseList = new ArrayList<>();
+
+        for (Motel motel : motels) {
+            int activeCount = contractRepository
+                    .findContractsByMotelIdAndStatus(motel.getMotelId(), ContractStatus.ACTIVE)
+                    .size();
+            int endedCount = contractRepository
+                    .findContractsByMotelIdAndStatus(motel.getMotelId(), ContractStatus.ENDED)
+                    .size();
+            int iatExpireCount = contractRepository
+                    .findContractsByMotelIdAndStatus(motel.getMotelId(), ContractStatus.IATExpire)
+                    .size();
+            int stakeCount = contractRepository
+                    .findContractsByMotelIdAndStatus(motel.getMotelId(), ContractStatus.Stake)
+                    .size();
+            int reportEndCount = contractRepository
+                    .findContractsByMotelIdAndStatus(motel.getMotelId(), ContractStatus.ReportEnd)
+                    .size();
+
+            // Đếm số phòng không có hợp đồng và số phòng đã đặt cọc
+            List<Room> rooms = roomRepository.findByMotelMotelId(motel.getMotelId());
+            int noContractCount = 0;
+            int reservedCount = 0; // Biến để đếm số phòng đã đặt cọc
+
+            for (Room room : rooms) {
+                boolean hasContract = contractRepository
+                                .findContractsByRoomId(room.getRoomId())
+                                .size()
+                        > 0;
+                if (!hasContract) {
+                    noContractCount++;
+                }
+                // Kiểm tra phòng có đặt cọc
+                List<Reserve_a_place> reserves = reserveAPlaceRepository.findByRoom_RoomId(room.getRoomId());
+                reservedCount += reserves.size(); // Tổng số phòng đã đặt cọc
+            }
+
+            MotelRoomCountResponse response = new MotelRoomCountResponse(
+                    motel.getMotelId(),
+                    motel.getMotelName(),
+                    activeCount,
+                    endedCount,
+                    iatExpireCount,
+                    stakeCount,
+                    reportEndCount,
+                    noContractCount,
+                    reservedCount // Thêm số phòng đã đặt cọc
+                    );
+
+            responseList.add(response);
+        }
+
+        return responseList;
+    }
+
+    @Override
+    public Double calculateTotalDeposit(UUID motelId) {
+        return contractRepository.findTotalDepositByMotelId(motelId);
+    }
+
+    @Override
+    public Double calculateTotalReserveDeposit(UUID motelId) {
+        return reserveAPlaceRepository.findTotalReserveDepositByMotelId(motelId);
+    }
+
+    @Override
+    public BigDecimal getTotalPaidInvoices(UUID motelId) {
+        List<Object[]> results = motelRepository.getTotalPaidInvoicesByMotelId(motelId);
+        if (!results.isEmpty() && results.get(0)[1] != null) {
+            return (BigDecimal) results.get(0)[1]; // Trả về BigDecimal
+        }
+        return BigDecimal.ZERO; // Trả về 0 nếu không có kết quả
+    }
+
+    @Override
+    public BigDecimal getTotalPaidRoomPrice(UUID motelId) {
+        List<Object[]> results = motelRepository.getTotalPaidRoomPriceByMotelId(motelId);
+        if (!results.isEmpty() && results.get(0)[1] != null) {
+            return (BigDecimal) results.get(0)[1]; // Trả về BigDecimal
+        }
+        return BigDecimal.ZERO; // Trả về 0 nếu không có kết quả
     }
 }

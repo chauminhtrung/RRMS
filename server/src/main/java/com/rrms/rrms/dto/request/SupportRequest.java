@@ -12,6 +12,8 @@ import lombok.experimental.FieldDefaults;
 @Builder
 public class SupportRequest {
     private AccountRequest account;
+    private String nameContact;
+    private String phoneContact;
     private Date dateOfStay;
     private long priceFirst;
     private long priceEnd;

@@ -114,23 +114,23 @@ const ImportFileExcel = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
       STT: '14'
     }
   ]
-
+  //group,name,price,prioritize,area,deposit,debt,countTenant,invoiceDate,paymentCircle,moveInDate,contractDuration,status,finance
   const rows = [
     {
-      Nhóm: '',
-      Tên: '',
-      'Giá thuê': '',
-      'Ưu tiên': '',
-      'Diện tích': '',
-      'Mức giá tiền cọc': '',
-      'Số tiền cọc đã thu': '',
-      'Số lượng thành viên': '',
-      'Chu kỳ đóng tiền': '',
-      'Ngày vào ở': '',
-      'Ngày hợp đồng': '',
-      'Ngày kết thúc hợp đồng': '',
-      'Trạng thái': '',
-      'Tài chính': ''
+      group: 'Nhóm',
+      name: 'Tên',
+      price: '0',
+      prioritize: 'Trung Bình',
+      area: '0',
+      deposit: '0',
+      debt: '0',
+      countTenant: '0',
+      paymentCircle: '0',
+      invoiceDate: '0',
+      moveInDate: '1970-01-02',
+      contractDuration: '1970-01-03',
+      status: 'false',
+      finance: 'Thanh toán'
     }
   ]
 

@@ -1,6 +1,5 @@
 package com.rrms.rrms.services.servicesImp;
 
-import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,8 +33,9 @@ public class SupportService implements ISupportService {
         if (account != null) {
             Support support = new Support();
             support.setAccount(account);
+            support.setNameContact(request.getNameContact());
+            support.setPhoneContact(request.getPhoneContact());
             support.setDateOfStay(request.getDateOfStay());
-            support.setCreateDate(new Date(System.currentTimeMillis()));
             support.setPriceFirst(request.getPriceFirst());
             support.setPriceEnd(request.getPriceEnd());
             return support;
@@ -47,8 +47,9 @@ public class SupportService implements ISupportService {
         SupportResponse response = new SupportResponse();
         response.setSupportId(support.getSupportId());
         response.setAccount(accountMapper.toAccountResponse(support.getAccount()));
+        response.setNameContact(support.getNameContact());
+        response.setPhoneContact(support.getPhoneContact());
         response.setDateOfStay(support.getDateOfStay());
-        response.setCreateDate(support.getCreateDate());
         response.setPriceFirst(support.getPriceFirst());
         response.setPriceEnd(support.getPriceEnd());
         return response;
@@ -67,7 +68,7 @@ public class SupportService implements ISupportService {
 
     @Override
     public List<SupportResponse> listSupport() {
-        List<Support> supports = supportRepository.findAll();
+        List<Support> supports = supportRepository.findAllByOrderByCreateDateDesc();
         return supports.stream().map(this::toSupportResponse).collect(Collectors.toList());
     }
 }

@@ -55,6 +55,14 @@ public class SearchService implements ISearchService {
                 .toList();
     }
 
+    @Override
+    public List<BulletinBoardSearchResponse> getRoomsSortedByPriceASC() {
+        List<BulletinBoard> bulletinBoards = bulletinBoardRepository.findAllActiveOrderByPriceAsc();
+        return bulletinBoards.stream()
+                .map(bulletinBoardMapper::toBulletinBoardSearchResponse)
+                .toList();
+    }
+
     //        @Override
     //        public List<RoomDetailResponse> listRoomPrice(Double startPrice, Double endPrice) {
     //            // Tìm kiếm các phòng trong khoảng giá
