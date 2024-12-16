@@ -46,6 +46,9 @@ public class InvoiceService implements IInvoices {
     @Autowired
     private PaymentRepository paymentRepository;
 
+    @Autowired
+    private InvoiceAdditionItemRepository additionItemRepository;
+
     @Override
     public List<InvoiceResponse> getInvoicesByMotelId(UUID motelId) {
         List<Room> rooms = roomRepository.findByMotelMotelId(motelId);
@@ -84,6 +87,28 @@ public class InvoiceService implements IInvoices {
                     return mapToResponse(invoice, details, moveInDate, dueDateOfMoveInDate, totalServiceAmount);
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void cancelInvoice(UUID invoiceId) {
+        // Tìm hóa đơn theo ID
+        Invoice invoice =
+                invoiceRepository.findById(invoiceId).orElseThrow(() -> new AppException(ErrorCode.INVOICE_NOT_FOUND));
+
+        // Kiểm tra trạng thái hóa đơn
+        if (invoice.getPaymentStatus() == PaymentStatus.PAID) {
+            throw new AppException(ErrorCode.INVOICE_ALREADY_CANCELED);
+        }
+
+        if (invoice.getPaymentStatus() == PaymentStatus.CANCELED) {
+            throw new AppException(ErrorCode.INVOICE_ALREADY_PAID);
+        }
+
+        // Cập nhật trạng thái hóa đơn
+        invoice.setPaymentStatus(PaymentStatus.CANCELED);
+
+        // Lưu hóa đơn vào cơ sở dữ liệu
+        invoiceRepository.save(invoice);
     }
 
     @Override
@@ -258,6 +283,30 @@ public class InvoiceService implements IInvoices {
         }
 
         return response;
+    }
+
+    @Override
+    public void deleteInvoice(UUID invoiceId) {
+        // 1. Tìm kiếm hóa đơn theo ID
+        Invoice invoice =
+                invoiceRepository.findById(invoiceId).orElseThrow(() -> new AppException(ErrorCode.INVOICE_NOT_FOUND));
+
+        // 2. Kiểm tra trạng thái thanh toán
+        if (invoice.getPaymentStatus() == PaymentStatus.PAID) {
+            throw new AppException(ErrorCode.INVOICE_CANNOT_BE_DELETED);
+        }
+
+        // Xóa InvoiceDetail
+        if (invoice.getDetailInvoices() != null) {
+            detailInvoiceRepository.deleteAll(invoice.getDetailInvoices());
+        }
+
+        // Xóa InvoiceAdditionItem
+        if (invoice.getAdditionItems() != null) {
+            additionItemRepository.deleteAll(invoice.getAdditionItems());
+        }
+
+        invoiceRepository.delete(invoice);
     }
 
     @Override

@@ -39,6 +39,11 @@ public enum ErrorCode {
     INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST.value(), "Invalid refresh token", HttpStatus.BAD_REQUEST),
 
     INVOICE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Hợp đồng không tồn tại", HttpStatus.NOT_FOUND),
+    INVOICE_ALREADY_CANCELED(
+            HttpStatus.NOT_FOUND.value(), "Hóa đơn đã thanh toán, không thể hủy.", HttpStatus.NOT_FOUND),
+    INVOICE_ALREADY_PAID(HttpStatus.NOT_FOUND.value(), "Hóa đơn này đã bị hủy trước đó.", HttpStatus.NOT_FOUND),
+    INVOICE_CANNOT_BE_DELETED(
+            HttpStatus.NOT_FOUND.value(), "Không thể xóa hóa đơn đã được thanh toán.", HttpStatus.NOT_FOUND),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
