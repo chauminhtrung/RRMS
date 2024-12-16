@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -355,7 +356,8 @@ public class AuthenController {
         }
     }
 
-    @PostMapping("/checkRegister")
+    @PostMapping("/checkregister")
+    @PermitAll
     public ApiResponse<Boolean> checkRegister(@RequestBody RegisterRequest request) {
         // Kiểm tra tên đăng nhập đã tồn tại chưa
         if (accountRepository.existsByUsername(request.getUsername())) {

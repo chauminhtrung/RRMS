@@ -56,8 +56,8 @@ public class DB {
             ContractTemplateRepository contractTemplateRepository,
             TenantRepository tenantRepository) {
         return args -> {
-            int roomsLength = 5;
-            int bulletinBoardsLength = 5;
+            int roomsLength = 50;
+            int bulletinBoardsLength = 50;
             log.info("Starting to create data... length: {}", roomsLength);
 
             BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
