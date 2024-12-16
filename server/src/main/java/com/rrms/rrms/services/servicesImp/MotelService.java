@@ -201,8 +201,24 @@ public class MotelService implements IMotelService {
     @Override
     public BigDecimal getTotalPaidInvoices(UUID motelId) {
         List<Object[]> results = motelRepository.getTotalPaidInvoicesByMotelId(motelId);
-        if (!results.isEmpty() && results.get(0)[1] != null) {
-            return (BigDecimal) results.get(0)[1]; // Trả về BigDecimal
+
+        if (!results.isEmpty() && results.get(0)[2] != null) {
+            Object value = results.get(0)[2]; // Cột "Total_Paid_Amount" trong stored procedure
+
+            // Kiểm tra kiểu dữ liệu trả về
+            if (value instanceof BigDecimal) {
+                return (BigDecimal) value; // Nếu là BigDecimal, trả về trực tiếp
+            }
+            if (value instanceof String) {
+                try {
+                    return new BigDecimal((String) value); // Chuyển đổi từ String
+                } catch (NumberFormatException e) {
+                    throw new IllegalStateException("Giá trị trả về không hợp lệ: " + value, e);
+                }
+            }
+            if (value instanceof Number) {
+                return BigDecimal.valueOf(((Number) value).doubleValue()); // Chuyển đổi từ các kiểu số khác
+            }
         }
         return BigDecimal.ZERO; // Trả về 0 nếu không có kết quả
     }
@@ -211,7 +227,19 @@ public class MotelService implements IMotelService {
     public BigDecimal getTotalPaidRoomPrice(UUID motelId) {
         List<Object[]> results = motelRepository.getTotalPaidRoomPriceByMotelId(motelId);
         if (!results.isEmpty() && results.get(0)[1] != null) {
-            return (BigDecimal) results.get(0)[1]; // Trả về BigDecimal
+            Object value = results.get(0)[1];
+
+            // Xử lý kết quả trả về
+            if (value instanceof String) {
+                try {
+                    return new BigDecimal((String) value); // Chuyển từ String sang BigDecimal
+                } catch (NumberFormatException e) {
+                    return BigDecimal.ZERO; // Trả về 0 nếu không chuyển được
+                }
+            }
+            if (value instanceof BigDecimal) {
+                return (BigDecimal) value; // Nếu là BigDecimal, trả về trực tiếp
+            }
         }
         return BigDecimal.ZERO; // Trả về 0 nếu không có kết quả
     }

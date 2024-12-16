@@ -11,6 +11,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +29,7 @@ public class InvoiceAdditionItem {
 
     @ManyToOne
     @JoinColumn(name = "invoice_id")
+    @JsonBackReference(value = "invoiceAdditon-Invoice") // Đặt tên cho tham chiếu ngược
     private Invoice invoice;
 
     @Column(columnDefinition = "VARCHAR(255)")
