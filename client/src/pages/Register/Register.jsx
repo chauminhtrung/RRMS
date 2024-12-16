@@ -43,14 +43,14 @@ const Register = ({ setIsAdmin }) => {
     }
 
     // Kiểm tra số điện thoại (đủ 10 số)
-    if (!/^\d{10}$/.test(phone)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Lỗi',
-        text: 'Số điện thoại không hợp lệ (phải đủ 10 số).'
-      })
-      return
-    }
+    // if (!/^\d{10}$/.test(phone)) {
+    //   Swal.fire({
+    //     icon: 'error',
+    //     title: 'Lỗi',
+    //     text: 'Số điện thoại không hợp lệ (phải đủ 10 số).'
+    //   })
+    //   return
+    // }
 
     // Kiểm tra mật khẩu (ít nhất 8 ký tự)
     if (password.length < 8) {

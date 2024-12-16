@@ -173,7 +173,7 @@ const Forgot_Password = ({ setIsAdmin }) => {
                                     type="text"
                                     className="form-control"
                                     name="gmail"
-                                    placeholder="Nhập số điện thoại"
+                                    placeholder="Nhập gmail gắn với tài khoản của bạn"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                   />
@@ -193,7 +193,7 @@ const Forgot_Password = ({ setIsAdmin }) => {
                                     type="password"
                                     className="form-control"
                                     name="password"
-                                    placeholder="Nhập nhập khẩu"
+                                    placeholder="Nhập nhập khẩu mới"
                                     value={passold}
                                     onChange={(e) => setPassold(e.target.value)}
                                   />
@@ -213,7 +213,7 @@ const Forgot_Password = ({ setIsAdmin }) => {
                                     type="password"
                                     className="form-control"
                                     name="password_confirmation"
-                                    placeholder="Nhập lại mật khẩu"
+                                    placeholder="Nhập lại mật khẩu mới"
                                     value={passnew}
                                     onChange={(e) => setPassnew(e.target.value)}
                                   />

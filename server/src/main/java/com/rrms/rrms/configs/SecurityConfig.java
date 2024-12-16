@@ -54,8 +54,7 @@ public class SecurityConfig {
         "/payment/paymentFailed/*",
         "/payment/vnpay-callback/**",
         "/api/verify-captcha/**",
-        "/support/**",
-            "/authen/checkregister/*"
+        "/support/**"
     };
 
     @Value("${jwt.signer-key}")
