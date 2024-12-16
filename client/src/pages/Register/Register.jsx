@@ -43,11 +43,11 @@ const Register = ({ setIsAdmin }) => {
     }
 
     // Kiểm tra số điện thoại (đủ 10 số)
-    if (!/^\d{10}$/.test(phone)) {
+    if (!/^(0[3-9]{1}[0-9]{8})$/.test(phone)) {
       Swal.fire({
         icon: 'error',
         title: 'Lỗi',
-        text: 'Số điện thoại không hợp lệ (phải đủ 10 số).'
+        text: 'Số điện thoại không hợp lệ (phải bắt đầu với một trong các mã 03, 05, 07, 08, 09, và có đủ 10 số).'
       })
       return
     }
