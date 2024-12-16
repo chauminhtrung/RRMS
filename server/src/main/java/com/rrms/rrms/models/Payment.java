@@ -33,6 +33,6 @@ public class Payment {
     private LocalDate paymentDate;
 
     @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @JsonManagedReference(value = "Payment-Invoice") // Đặt tên cho tham chiếu quản lý
+    @JsonManagedReference(value = "Payment-Invoice") // Quản lý liên kết tới Invoice
     private List<Invoice> invoices;
 }

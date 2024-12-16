@@ -69,6 +69,9 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
       setTransactions(transactionsResponse.data);
       setPayments(paymentsResponse.data);
       setSummary(summaryResponse.data);
+ 
+      console.log(paymentsResponse.data);
+console.log(typeof transactions);
     } catch (err) {
       setError(err.message);
       console.error('Có lỗi xảy ra khi lấy dữ liệu:', err);
@@ -375,12 +378,15 @@ const IncomeSummary = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
     WinPrint.print();
     WinPrint.close();
   };
-
-  const totalIncomeReceipts = transactions.filter(transaction => transaction.transactionType).length;
-  const totalExpenseReceipts = transactions.filter(transaction => !transaction.transactionType).length;
+  let totalIncomeReceipts ;
+  let totalExpenseReceipts;
+if(transactions.length > 0){
+ totalIncomeReceipts = transactions.filter(transaction => transaction.transactionType).length;
+   totalExpenseReceipts = transactions.filter(transaction => !transaction.transactionType).length;
 
   console.log(totalIncomeReceipts);
   console.log(totalExpenseReceipts);
+}
   return (
     <div>
       <NavAdmin

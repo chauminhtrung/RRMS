@@ -542,11 +542,7 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
       fetchDataServiceRooms(room.roomId)
     } catch (error) {
       console.error('Lỗi khi cập nhật dịch vụ phòng:', error)
-      Swal.fire({
-        icon: 'error',
-        title: 'Lỗi',
-        text: 'Đã xảy ra lỗi khi cập nhật dịch vụ phòng. Vui lòng thử lại!'
-      })
+ 
     }
   }
 
@@ -598,11 +594,7 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
       fetchDataServiceRooms(room.roomId)
     } catch (error) {
       console.error('Lỗi khi cập nhật Device phòng:', error)
-      Swal.fire({
-        icon: 'error',
-        title: 'Lỗi',
-        text: 'Đã xảy ra lỗi khi cập nhật Device phòng. Vui lòng thử lại!'
-      })
+    
     }
   }
 
@@ -1163,7 +1155,7 @@ const ContractManager = ({ setIsAdmin, setIsNavAdmin, isNavAdmin, motels, setmot
             <Modal.Body style={{ maxHeight: '500px', overflowY: 'auto', padding: '20px' }}>
               <form className="needs-validation" noValidate id="add-contract-form">
                 <div className="row">
-                  <div className="col-lg-7 col-sm-12">
+                  <div className="col-lg-7 col-sm-12" style={{marginTop:"-1880px"}}>
                     <div className="col-12 mb-2">
                       <div className="title-item-small">
                         <b>Danh sách phòng</b>

@@ -3163,14 +3163,14 @@ const HomeWData = ({ Motel }) => {
                         <b>Thu tiền hàng tháng</b>
                         <p style={{ margin: '0', color: 'orange' }}>
                           {contract.collectioncycle} tháng, 0 ngày{' '}
-                          <span style={{ color: 'black' }}>x {contract.price.toLocaleString('vi-VN')} ₫</span>
+                          <span style={{ color: 'black' }}> x {contract.price?contract.price.toLocaleString('vi-VN'):"00"} ₫</span>
                         </p>
                       </label>
                     </div>
                     <div>
                       <label className="form-check-label" htmlFor="subtraction">
                         <b>Thành tiền</b>
-                        <p style={{ margin: '0' }}>{contract.price.toLocaleString('vi-VN')} ₫</p>
+                        <p style={{ margin: '0' }}> {contract.price?contract.price.toLocaleString('vi-VN'):"00"} ₫</p>
                       </label>
                     </div>
                   </div>
@@ -3447,7 +3447,7 @@ const HomeWData = ({ Motel }) => {
                     </div>
                     <b className="show-total total-price bill-total" style={{ color: 'rgb(54 147 230)' }}>
                       {(
-                        (parseFloat(contract.price.toString().replace(/\./g, '').replace(/ ₫/, '')) || 0) + // Giá hợp đồng
+                        (parseFloat(contract.price?contract.price.toString().replace(/\./g, '').replace(/ ₫/, '') :"0") || 0) + // Giá hợp đồng
                         roomSerivces
                           .filter((service) => service.isSelected)
                           .reduce((total, service) => {

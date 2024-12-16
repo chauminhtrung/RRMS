@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import jakarta.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +23,7 @@ public class InvoiceDetail {
 
     @ManyToOne
     @JoinColumn(name = "invoice_id")
+    @JsonBackReference(value = "invoicedetail-Invoice") // Đặt tên cho tham chiếu ngược
     private Invoice invoice;
 
     @ManyToOne
@@ -29,6 +32,7 @@ public class InvoiceDetail {
 
     @ManyToOne
     @JoinColumn(name = "room_device_id")
+    @JsonBackReference(value = "roomdevice-InvoiceDetail") // Đặt tên cho tham chiếu ngược
     private RoomDevice roomDevice;
 
     @Column(columnDefinition = "INT")
