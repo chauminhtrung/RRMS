@@ -30,68 +30,68 @@ const Register = ({ setIsAdmin }) => {
   }, [])
 
   const handleRegister = async (event) => {
-    event.preventDefault(); // Ngăn chặn hành vi mặc định của form
-  
+    event.preventDefault() // Ngăn chặn hành vi mặc định của form
+
     // Kiểm tra xem tất cả các trường đều được điền
     if (!username || !phone || !gmail || !password || !passwordConfirmation) {
       Swal.fire({
         icon: 'warning',
         title: 'Lỗi',
         text: 'Vui lòng nhập đầy đủ thông tin.'
-      });
-      return;
+      })
+      return
     }
-  
+
     // Kiểm tra số điện thoại (đủ 10 số)
-    if (!/^\d{10}$/.test(phone)) {
+    if (!/^(0[3-9]{1}[0-9]{8})$/.test(phone)) {
       Swal.fire({
         icon: 'error',
         title: 'Lỗi',
-        text: 'Số điện thoại không hợp lệ (phải đủ 10 số).'
-      });
-      return;
+        text: 'Số điện thoại không hợp lệ (phải bắt đầu với một trong các mã 03, 05, 07, 08, 09, và có đủ 10 số).'
+      })
+      return
     }
-  
+
     // Kiểm tra mật khẩu (ít nhất 8 ký tự)
     if (password.length < 8) {
       Swal.fire({
         icon: 'error',
         title: 'Lỗi',
         text: 'Mật khẩu phải có ít nhất 8 ký tự.'
-      });
-      return;
+      })
+      return
     }
-  
+
     // Kiểm tra mật khẩu và xác nhận mật khẩu có khớp nhau không
     if (password !== passwordConfirmation) {
       Swal.fire({
         icon: 'error',
         title: 'Lỗi',
         text: 'Mật khẩu và xác nhận mật khẩu không khớp.'
-      });
-      return;
+      })
+      return
     }
-  
+
     // Gửi yêu cầu kiểm tra tính hợp lệ của thông tin đăng ký
     const registerData = {
       username,
       phone,
       email: gmail
-    };
-  
+    }
+
     try {
-      const response = await axios.post(`${env.API_URL}/authen/checkRegister`, registerData);
-  
+      const response = await axios.post(`${env.API_URL}/authen/checkregister`, registerData)
+
       if (response.data.result) {
         // Nếu thông tin hợp lệ, gửi OTP
-        requestChangePassword();
+        requestChangePassword()
       } else {
         // Hiển thị lỗi nếu thông tin không hợp lệ
         Swal.fire({
           icon: 'error',
           title: 'Lỗi',
           text: response.data.message || 'Thông tin không hợp lệ!'
-        });
+        })
       }
     } catch (error) {
       console.err(error)
@@ -99,10 +99,9 @@ const Register = ({ setIsAdmin }) => {
         icon: 'error',
         title: 'Lỗi',
         text: 'Đã xảy ra lỗi khi kiểm tra thông tin. Vui lòng thử lại.'
-      });
+      })
     }
-  };
-  
+  }
 
   const requestChangePassword = async () => {
     console.log('vao r')
@@ -119,7 +118,7 @@ const Register = ({ setIsAdmin }) => {
       return
     }
   }
-  
+
   const handleAcceptChangePass = async () => {
     setLoading(true)
     const data = { gmail: gmail, code: otp }
@@ -166,7 +165,7 @@ const Register = ({ setIsAdmin }) => {
       })
     }
   }
-  
+
   const registerFunc = async () => {
     const account = {
       username,
@@ -174,38 +173,38 @@ const Register = ({ setIsAdmin }) => {
       email: gmail,
       password,
       userType
-    };
-  
+    }
+
     try {
       const response = await axios.post(`${env.API_URL}/authen/register`, account, {
         headers: {
           'ngrok-skip-browser-warning': '69420'
         }
-      });
-  
+      })
+
       Swal.fire({
         icon: 'success',
         title: 'Thành công',
         text: response.data.message || 'Đăng ký thành công'
-      });
-  
-      navigate('/login');
+      })
+
+      navigate('/login')
     } catch (error) {
       if (error.response && error.response.data) {
         Swal.fire({
           icon: 'error',
           title: 'Lỗi',
           text: error.response.data.message || 'Có lỗi xảy ra, vui lòng thử lại.'
-        });
+        })
       } else {
         Swal.fire({
           icon: 'error',
           title: 'Lỗi',
           text: 'Có lỗi xảy ra, vui lòng thử lại.'
-        });
+        })
       }
     }
-  };  
+  }
 
   return (
     <>
