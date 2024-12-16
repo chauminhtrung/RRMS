@@ -368,28 +368,46 @@ public class AuthenController {
                     .build();
         }
 
-        // Kiểm tra số điện thoại đã tồn tại chưa
-        if (accountRepository.existsByPhone(request.getPhone())) {
-            return ApiResponse.<Boolean>builder()
-                    .code(HttpStatus.BAD_REQUEST.value())
-                    .message("Số điện thoại đã tồn tại!")
-                    .result(false)
-                    .build();
-        }
+//        // Kiểm tra số điện thoại đã tồn tại chưa
+//        if (accountRepository.existsByPhone(request.getPhone())) {
+//            return ApiResponse.<Boolean>builder()
+//                    .code(HttpStatus.BAD_REQUEST.value())
+//                    .message("Số điện thoại đã tồn tại!")
+//                    .result(false)
+//                    .build();
+//        }
 
         // Kiểm tra email đã tồn tại chưa
-        if (accountRepository.existsAccountByEmail(request.getEmail())) {
-            return ApiResponse.<Boolean>builder()
-                    .code(HttpStatus.BAD_REQUEST.value())
-                    .message("Email đã tồn tại!")
-                    .result(false)
-                    .build();
-        }
+        // if (accountRepository.existsAccountByEmail(request.getEmail())) {
+        //     return ApiResponse.<Boolean>builder()
+        //             .code(HttpStatus.BAD_REQUEST.value())
+        //             .message("Email đã tồn tại!")
+        //             .result(false)
+        //             .build();
+        // }
 
         return ApiResponse.<Boolean>builder()
                 .code(HttpStatus.OK.value())
                 .message("Thông tin hợp lệ")
                 .result(true)
                 .build();
+    }
+
+    @PostMapping("/checkregister/{username}")
+    public ApiResponse<Boolean> checkRegister(@PathVariable("username") String username) {
+        boolean result = accountService.existsByUsername(username);
+        if (result) {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("success")
+                    .result(true)
+                    .build();
+        } else {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.NOT_FOUND.value())
+                    .message("error")
+                    .result(false)
+                    .build();
+        }
     }
 }
