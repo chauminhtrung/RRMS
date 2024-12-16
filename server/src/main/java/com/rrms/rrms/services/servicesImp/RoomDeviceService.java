@@ -35,6 +35,17 @@ public class RoomDeviceService implements IRoomDeviceService {
     @Override
     public RoomDeviceResponse insertRoomDevice(RoomDeviceRequest roomDeviceRequest) {
         RoomDevice roomDevice = roomDeviceRepository.save(mapper.roomDeviceRequestToRoomDevice(roomDeviceRequest));
+        MotelDevice find = motelDeviceRepository
+                .findById(roomDeviceRequest.getMotelDevice().getMotel_device_id())
+                .orElse(null);
+        if (find != null) {
+            if (find.getTotalNull() <= 0) {
+                return null;
+            }
+            find.setTotalUsing(find.getTotalUsing() + 1);
+            find.setTotalNull(find.getTotalQuantity() - 1);
+            motelDeviceRepository.save(find);
+        }
         return mapper.roomDeviceToRoomDeviceResponse(roomDevice);
     }
 
@@ -47,6 +58,9 @@ public class RoomDeviceService implements IRoomDeviceService {
             RoomDevice status = roomDeviceRepository.getRoomDeviceByRoomAndMotelDevice(findRoom, findMotelDevice);
             if (status != null) {
                 roomDeviceRepository.delete(status);
+                findMotelDevice.setTotalNull(findMotelDevice.getTotalNull() + 1);
+                findMotelDevice.setTotalUsing(findMotelDevice.getTotalUsing() - 1);
+                motelDeviceRepository.save(findMotelDevice);
                 return true;
             } else {
                 return false;

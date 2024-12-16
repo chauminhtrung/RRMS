@@ -196,7 +196,8 @@ function ModalCollectMoneyInvoice({ toggleModal, modalOpen, invoice,fetchInvoice
 
           <ModalBody>
             <form method="POST" className="needs-validation" id="bill-pay-form" noValidate>
-            <div className="col-12 mt-2">
+
+              <div className="col-12 mt-2">
                 <div className="form-floating">
                   <input
                     type="hidden"
@@ -211,7 +212,7 @@ function ModalCollectMoneyInvoice({ toggleModal, modalOpen, invoice,fetchInvoice
                     className="form-control"
                     name="paid_amount"
                     id="input_paid_amount"
-                    value={paidAmount}
+                    value={Number(paidAmount).toLocaleString('vi-VN')}
                     placeholder="Nhập số tiền khách thanh toán (đ)"
                     required
                     onChange={(e) => setPaidAmount(e.target.value)}

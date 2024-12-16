@@ -32,7 +32,7 @@ public class RoomDeviceController {
 
     @Operation(summary = "insert roomDevice")
     @PostMapping()
-    public ApiResponse<RoomDeviceResponse> insertMotelDevice(@RequestBody RoomDeviceRequest roomDeviceRequest) {
+    public ApiResponse<RoomDeviceResponse> insertRoomDevice(@RequestBody RoomDeviceRequest roomDeviceRequest) {
         RoomDeviceResponse roomDeviceResponse = roomDeviceService.insertRoomDevice(roomDeviceRequest);
         if (roomDeviceResponse != null) {
             log.info("Insert roomDevice successfully");

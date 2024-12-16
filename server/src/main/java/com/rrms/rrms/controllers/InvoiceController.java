@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,6 +51,18 @@ public class InvoiceController {
     public ResponseEntity<InvoiceResponse> createInvoice(@RequestBody InvoiceRequest request) {
         InvoiceResponse response = invoices.createInvoice(request);
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{invoiceId}/cancel")
+    public ResponseEntity<String> cancelInvoice(@PathVariable UUID invoiceId) {
+        invoices.cancelInvoice(invoiceId);
+        return ResponseEntity.ok("Hóa đơn đã được hủy thành công");
+    }
+
+    @DeleteMapping("/delete/{invoiceId}")
+    public ResponseEntity<?> deleteInvoice(@PathVariable("invoiceId") UUID invoiceId) {
+        invoices.deleteInvoice(invoiceId);
+        return ResponseEntity.ok("Xóa hóa đơn thành công.");
     }
 
     @PutMapping("/update/{invoiceId}")

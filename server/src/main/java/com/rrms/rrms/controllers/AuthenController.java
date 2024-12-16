@@ -23,6 +23,7 @@ import com.rrms.rrms.dto.response.*;
 import com.rrms.rrms.dto.response.ApiResponse;
 import com.rrms.rrms.exceptions.AppException;
 import com.rrms.rrms.models.Account;
+import com.rrms.rrms.repositories.AccountRepository;
 import com.rrms.rrms.services.IAccountService;
 import com.rrms.rrms.services.IAuthorityService;
 import com.rrms.rrms.services.IMailService;
@@ -46,6 +47,9 @@ public class AuthenController {
 
     @Autowired
     private IMailService mailService;
+
+    @Autowired
+    AccountRepository accountRepository;
 
     @GetMapping("/error")
     public ResponseEntity<String> loginFailure() {
@@ -97,7 +101,7 @@ public class AuthenController {
             Optional<Account> accountOptional = accountService.findByPhone(loginRequest.getPhone());
             if (accountOptional.isEmpty()) {
                 response.put("status", false);
-                response.put("message", "Tài khoản không tồn tại.");
+                response.put("message", "Sai thông tin đăng nhập");
                 response.put("data", null);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
@@ -110,7 +114,7 @@ public class AuthenController {
 
         } catch (AppException ex) {
             response.put("status", false);
-            response.put("message", "Sai mật khẩu");
+            response.put("message", "Sai thông tin đăng nhập");
             response.put("data", null);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         } catch (Exception ex) {
@@ -333,7 +337,8 @@ public class AuthenController {
     }
 
     @PostMapping("/acceptAuthenticationRegister")
-    public ApiResponse<Boolean> acceptAuthenticationRegister(@RequestBody AuthenticationRegister authenticationRegister) {
+    public ApiResponse<Boolean> acceptAuthenticationRegister(
+            @RequestBody AuthenticationRegister authenticationRegister) {
         if (!authenticationRegister.getCode().equals(String.valueOf(randomNumberRegister))) {
             return ApiResponse.<Boolean>builder()
                     .code(HttpStatus.BAD_REQUEST.value())
@@ -350,21 +355,39 @@ public class AuthenController {
         }
     }
 
-    @PostMapping("/checkregister/{phone}")
-    public ApiResponse<Boolean> checkRegister(@PathVariable("phone") String phone) {
-        boolean result = accountService.existsByPhone(phone);
-        if (result) {
+    @PostMapping("/checkRegister")
+    public ApiResponse<Boolean> checkRegister(@RequestBody RegisterRequest request) {
+        // Kiểm tra tên đăng nhập đã tồn tại chưa
+        if (accountRepository.existsByUsername(request.getUsername())) {
             return ApiResponse.<Boolean>builder()
-                    .code(HttpStatus.OK.value())
-                    .message("success")
-                    .result(true)
-                    .build();
-        } else {
-            return ApiResponse.<Boolean>builder()
-                    .code(HttpStatus.NOT_FOUND.value())
-                    .message("error")
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("Tên đăng nhập đã tồn tại!")
                     .result(false)
                     .build();
         }
+
+        // Kiểm tra số điện thoại đã tồn tại chưa
+        if (accountRepository.existsByPhone(request.getPhone())) {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("Số điện thoại đã tồn tại!")
+                    .result(false)
+                    .build();
+        }
+
+        // Kiểm tra email đã tồn tại chưa
+        if (accountRepository.existsAccountByEmail(request.getEmail())) {
+            return ApiResponse.<Boolean>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message("Email đã tồn tại!")
+                    .result(false)
+                    .build();
+        }
+
+        return ApiResponse.<Boolean>builder()
+                .code(HttpStatus.OK.value())
+                .message("Thông tin hợp lệ")
+                .result(true)
+                .build();
     }
 }

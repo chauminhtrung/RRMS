@@ -1,7 +1,6 @@
 package com.rrms.rrms.models;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -33,12 +32,12 @@ public class Support {
     @Column(columnDefinition = "DATE")
     private Date dateOfStay;
 
-
     @Column(columnDefinition = "TIMESTAMP", nullable = false, updatable = false)
     private LocalDateTime createDate;
 
     @Column(columnDefinition = "DECIMAL(10, 2)")
     private long priceFirst;
+
     @Column(columnDefinition = "DECIMAL(10, 2)")
     private long priceEnd;
 

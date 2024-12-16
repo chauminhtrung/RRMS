@@ -27,7 +27,7 @@ import { deleteReserveAPlace } from '~/apis/ReserveAPlaceAPI'
 import { getContractByIdRoom2, updateContractStatusClose, updateContractStatusClose2 } from '~/apis/contractTemplateAPI'
 import { Modal } from 'bootstrap' // Import Bootstrap Modal API
 import {
-  changeQuantityRoomDevice,
+  
   deleteRoomDevice,
   getAllDeviceByRomId,
   getAllMotelDevices,
@@ -95,15 +95,27 @@ const HomeWData = ({ Motel }) => {
   }
 
   const handleChange = (id, field, value) => {
-    setAdditionItems(additionItems.map((item) => (item.id === id ? { ...item, [field]: value } : item)))
-  }
+    const formattedValue = field === 'additionValue' 
+      ? value.replace(/\D/g, '') // Loại bỏ mọi ký tự không phải số
+      : value;
+  
+    setAdditionItems(
+      additionItems.map((item) =>
+        item.id === id ? { ...item, [field]: formattedValue } : item
+      )
+    );
+  };
+   
+  
 
   const calculateTotalAddition = () => {
     return additionItems.reduce((total, item) => {
-      const value = parseFloat(item.additionValue) || 0
-      return total + (item.addition === 1 ? value : -value) // Giảm trừ khi addition === 0
-    }, 0)
-  }
+      const rawValue = parseFloat(item.additionValue.replace(/\./g, '')) || 0;
+      return total + (item.addition === 1 ? rawValue : -rawValue);
+    }, 0);
+  };
+  
+  
 
   const [roomSerivces, setRoomSerivces] = useState([])
   const [room, setRoom] = useState()
@@ -260,27 +272,29 @@ const HomeWData = ({ Motel }) => {
   }
 
   //device
-  const handleChangeQuantityRoomDevice = async (roomId, motel_device_id, quantity) => {
-    const data = {
-      roomId: roomId,
-      motel_device_id: motel_device_id,
-      quantity: quantity
-    }
-    const response = await changeQuantityRoomDevice(data)
-    if (response.result == true) {
-      Swal.fire({
-        icon: 'success',
-        title: 'Thành công',
-        text: 'change quantity successfully!'
-      })
-    } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Thành công',
-        text: 'change quantity failed!'
-      })
-    }
-  }
+  // const handleChangeQuantityRoomDevice = async (roomId, motel_device_id, quantity) => {
+  //   console.log(roomId, motel_device_id, quantity)
+
+  //   // const data = {
+  //   //   roomId: roomId,
+  //   //   motel_device_id: motel_device_id,
+  //   //   quantity: quantity
+  //   // }
+  //   // const response = await changeQuantityRoomDevice(data)
+  //   // if (response.result == true) {
+  //   //   Swal.fire({
+  //   //     icon: 'success',
+  //   //     title: 'Thành công',
+  //   //     text: 'change quantity successfully!'
+  //   //   })
+  //   // } else {
+  //   //   Swal.fire({
+  //   //     icon: 'error',
+  //   //     title: 'Thành công',
+  //   //     text: 'change quantity failed!'
+  //   //   })
+  //   // }
+  // }
 
   // Hàm lấy dữ liệu phòng từ server
   const fetchDataRooms = async (id) => {
@@ -357,7 +371,7 @@ const HomeWData = ({ Motel }) => {
       Swal.fire({
         icon: 'error',
         title: 'Thất bại',
-        text: 'RoomDevice apply failed!'
+        text: 'Không đủ số lượng vui lòng bổ xung!'
       })
     }
   }
@@ -1409,7 +1423,7 @@ const HomeWData = ({ Motel }) => {
         ...invoiceData,
         additionItems: additionItems.map((item) => ({
           reason: item.additionReason,
-          amount: parseFloat(item.additionValue) || 0,
+          amount: parseInt(item.additionValue, 10),
           isAddition: item.addition
         }))
       }
@@ -2730,16 +2744,11 @@ const HomeWData = ({ Motel }) => {
                         <div className="d-flex align-items-center">
                           <input
                             type="number"
-                            onChange={() => {
-                              handleChangeQuantityRoomDevice(room.roomId, item.motel_device_id, 200)
-                            }}
+                            value={1}
+                            // onChange={() => {
+                            //   handleChangeQuantityRoomDevice(room.roomId, item.motel_device_id, 200)
+                            // }}
                             className="form-control text-center"
-                            value={
-                              deviceByRoom.some((it) => it.motelDevice.motel_device_id === item.motel_device_id)
-                                ? deviceByRoom.find((it) => it.motelDevice.motel_device_id === item.motel_device_id)
-                                    .quantity
-                                : 1
-                            }
                             style={{ width: '100px' }}
                           />
                           <span className="mx-2">Số lượng</span>
@@ -3154,14 +3163,14 @@ const HomeWData = ({ Motel }) => {
                         <b>Thu tiền hàng tháng</b>
                         <p style={{ margin: '0', color: 'orange' }}>
                           {contract.collectioncycle} tháng, 0 ngày{' '}
-                          <span style={{ color: 'black' }}>x {contract.price} ₫</span>
+                          <span style={{ color: 'black' }}>x {contract.price.toLocaleString('vi-VN')} ₫</span>
                         </p>
                       </label>
                     </div>
                     <div>
                       <label className="form-check-label" htmlFor="subtraction">
                         <b>Thành tiền</b>
-                        <p style={{ margin: '0' }}>{contract.price} ₫</p>
+                        <p style={{ margin: '0' }}>{contract.price.toLocaleString('vi-VN')} ₫</p>
                       </label>
                     </div>
                   </div>
@@ -3438,15 +3447,19 @@ const HomeWData = ({ Motel }) => {
                     </div>
                     <b className="show-total total-price bill-total" style={{ color: 'rgb(54 147 230)' }}>
                       {(
-                        contract.price +
+                        (parseFloat(contract.price.toString().replace(/\./g, '').replace(/ ₫/, '')) || 0) + // Giá hợp đồng
                         roomSerivces
                           .filter((service) => service.isSelected)
-                          .reduce((total, service) => total + (service.totalPrice || 0), 0) +
-                        calculateTotalAddition()
+                          .reduce((total, service) => {
+                            const rawServicePrice = parseFloat(service.totalPrice?.toString().replace(/\./g, '').replace(/ ₫/, '')) || 0;
+                            return total + rawServicePrice;
+                          }, 0) + // Tổng giá các dịch vụ đã chọn
+                        calculateTotalAddition() // Tổng giá phát sinh
                       ).toLocaleString('vi-VN')}{' '}
                       ₫
                     </b>
                   </div>
+                  
                 </div>
 
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">

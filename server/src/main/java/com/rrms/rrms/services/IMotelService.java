@@ -8,7 +8,6 @@ import java.util.UUID;
 import com.rrms.rrms.dto.request.MotelRequest;
 import com.rrms.rrms.dto.response.MotelResponse;
 import com.rrms.rrms.dto.response.MotelRoomCountResponse;
-import com.rrms.rrms.models.Account;
 
 public interface IMotelService {
 
@@ -35,6 +34,6 @@ public interface IMotelService {
     Double calculateTotalReserveDeposit(UUID motelId);
 
     BigDecimal getTotalPaidInvoices(UUID motelId);
-    BigDecimal  getTotalPaidRoomPrice(UUID motelId);
 
+    BigDecimal getTotalPaidRoomPrice(UUID motelId);
 }

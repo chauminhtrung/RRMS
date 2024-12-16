@@ -12,5 +12,7 @@ import com.rrms.rrms.models.RoomDevice;
 public interface RoomDeviceRepository extends JpaRepository<RoomDevice, UUID> {
     List<RoomDevice> getAllByRoom(Room room);
 
+    RoomDevice findByMotelDevice(MotelDevice motelDevice);
+
     RoomDevice getRoomDeviceByRoomAndMotelDevice(Room room, MotelDevice motelDevice);
 }

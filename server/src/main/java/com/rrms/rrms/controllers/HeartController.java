@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import com.rrms.rrms.dto.request.AccountRequest;
 import com.rrms.rrms.dto.response.*;
 import com.rrms.rrms.services.IBulletinBoard;
 import com.rrms.rrms.services.servicesImp.AccountService;
@@ -76,7 +75,6 @@ public class HeartController {
                     .build();
         }
     }
-
 
     @Operation(summary = "Remove heart")
     @DeleteMapping("/removeHeart/{username}/{bulletinBoard_id}")

@@ -65,15 +65,15 @@ public class MotelDeviceController {
     @Operation(summary = "Delete moteldevice by id")
     @DeleteMapping("/{motelDeviceId}")
     public ApiResponse<Boolean> deleteMotelDevice(@PathVariable("motelDeviceId") UUID motelDeviceId) {
-        try {
-            motelDeviceService.deleteMotelDevice(motelDeviceId);
+        boolean result = motelDeviceService.deleteMotelDevice(motelDeviceId);
+        if (result) {
             log.info("Delete moteldevice successfully");
             return ApiResponse.<Boolean>builder()
                     .code(HttpStatus.OK.value())
                     .message("success")
                     .result(true)
                     .build();
-        } catch (Exception e) {
+        } else {
             log.error("Delete moteldevice failed ");
             return ApiResponse.<Boolean>builder()
                     .code(HttpStatus.BAD_REQUEST.value())

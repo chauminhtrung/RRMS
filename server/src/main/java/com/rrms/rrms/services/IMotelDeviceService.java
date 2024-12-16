@@ -11,5 +11,5 @@ public interface IMotelDeviceService {
 
     MotelDeviceResponse insertMotelDevice(MotelDeviceRequest motelDeviceRequest);
 
-    void deleteMotelDevice(UUID motelDeviceId);
+    boolean deleteMotelDevice(UUID motelDeviceId);
 }

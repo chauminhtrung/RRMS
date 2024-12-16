@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.rrms.rrms.models.Account;
 import com.rrms.rrms.models.Motel;
 
 public interface MotelRepository extends JpaRepository<Motel, UUID> {
@@ -27,6 +26,4 @@ public interface MotelRepository extends JpaRepository<Motel, UUID> {
 
     @Query(value = "CALL GetTotalPaidRoomPriceByMotelId(:motelId)", nativeQuery = true)
     List<Object[]> getTotalPaidRoomPriceByMotelId(@Param("motelId") UUID motelId);
-
-
 }
