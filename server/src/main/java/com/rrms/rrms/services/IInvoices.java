@@ -15,6 +15,10 @@ public interface IInvoices {
 
     InvoiceResponse createInvoice(InvoiceRequest request);
 
+    void deleteInvoice(UUID invoiceId);
+
+    void cancelInvoice(UUID invoiceId);
+
     InvoiceResponse updateInvoice(UUID invoiceId, UpdateInvoiceRequest request);
 
     Invoice findInvoiceById(UUID invoiceId);
