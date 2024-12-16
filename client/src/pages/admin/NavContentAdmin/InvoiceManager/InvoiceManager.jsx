@@ -15,6 +15,8 @@ import axios from 'axios'
 import { env } from '~/configs/environment'
 import ModalEditInvoice from './ModalEditInvoice'
 import ModalCollectMoneyInvoice from './ModalCollectMoneyInvoice'
+import Swal from 'sweetalert2';
+
 const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
   const token = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).token : null
   const { motelId } = useParams()
@@ -103,18 +105,26 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
         field: serviceName, // Tên trường trong dữ liệu
         hozAlign: "center", // Canh phải
         width: serviceColumnWidth, // Tính toán độ rộng
-        formatter: "money", // Định dạng số tiền
+        formatter: (cell) => Number(cell.getValue()).toLocaleString('vi-VN', {
+          style: 'currency',
+          currency: 'VND',
+        }) // Định dạng số tiền
     }));
   }, [services]);
 
 
   const StatusFormatter = (cell) => {
-    const data = cell.getRow().getData();
-    const paymentStatus = data.status; 
-    return paymentStatus === "Chưa thu"
-        ? `<span class="badge mt-2" style="background-color: #ED6004; white-space: break-spaces;">Chưa thu</span>`
-        : `<span class="badge mt-2" style="background-color: #7dc242; white-space: break-spaces;">Đã thu xong</span>`;
+    const status = cell.getValue();
+    let bgColor = "#7dc242"; // Mặc định: Đã thu
+    if (status === "Chưa thu") bgColor = "#ED6004";
+    if (status === "Đã bị hủy") bgColor = "#B0B0B0"; // Màu xám cho trạng thái hủy
+  
+    return `
+      <span class="badge mt-2" style="background-color: ${bgColor};">
+        ${status}
+      </span>`;
   };
+  
 
 
   const columns = [
@@ -205,7 +215,9 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
           isSelected: true,
         }));
   
-        const status = invoiceData.paymentStatus === "PAID" ? "Đã thu xong" : "Chưa thu";
+        const status = invoiceData.paymentStatus === "CANCELED" ? "Đã bị hủy" 
+             : invoiceData.paymentStatus === "PAID" ? "Đã thu xong" 
+             : "Chưa thu";
         setInvoice({ ...invoiceData, serviceDetails, status });
       } else {
         console.warn(`Invoice with ID ${id} not found in invoices list.`);
@@ -243,7 +255,9 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
                 0
             ),
             total: invoice.totalAmount,
-            status: invoice.paymentStatus === "PAID" ? "Đã thu xong" : "Chưa thu",
+            status: invoice.paymentStatus === "PAID" ? "Đã thu xong" 
+            : invoice.paymentStatus === "CANCELED" ? "Đã bị hủy" 
+            : "Chưa thu",
         };
     });
   }, [invoices, services]);
@@ -273,6 +287,72 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
         invoice.invoiceId === updatedInvoice.invoiceId ? updatedInvoice : invoice
       )
     );
+  };
+
+  const cancelInvoice = async (invoiceId) => {
+    // Hiển thị hộp thoại xác nhận hủy hóa đơn
+    const result = await Swal.fire({
+      title: 'Xác nhận hủy hóa đơn?',
+      text: 'Bạn có chắc chắn muốn hủy hóa đơn này không? Thao tác này không thể hoàn tác!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Xác nhận',
+      cancelButtonText: 'Hủy',
+      reverseButtons: true, // Nút xác nhận và hủy đảo vị trí
+    });
+  
+    // Nếu người dùng nhấn xác nhận
+    if (result.isConfirmed) {
+      try {
+        await axios.put(
+          `${env.API_URL}/invoices/${invoiceId}/cancel`,
+          {}, // API không yêu cầu body
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+  
+        // Cập nhật trạng thái của hóa đơn
+        setInvoices((prevInvoices) =>
+          prevInvoices.map((invoice) =>
+            invoice.invoiceId === invoiceId
+              ? { ...invoice, status: "Đã bị hủy" }
+              : invoice
+          )
+        );
+  
+        // Thông báo thành công
+        Swal.fire('Đã hủy!', 'Hóa đơn đã được hủy thành công.', 'success');
+        await fetchInvoices(motelId);
+      } catch (error) {
+        console.error("Error canceling invoice:", error);
+  
+        // Thông báo lỗi
+        Swal.fire('Thất bại!', 'Hủy hóa đơn thất bại. Vui lòng thử lại!', 'error');
+      }
+    }
+  };
+  
+  const deleteInvoice = async (invoiceId) => {
+    try {
+      // Gọi API DELETE
+      await axios.delete(`${env.API_URL}/invoices/delete/${invoiceId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      Swal.fire("Thành công!", "Hóa đơn đã được xóa.", "success");
+  
+      // Cập nhật danh sách hóa đơn
+      setInvoices((prevInvoices) =>
+        prevInvoices.filter((invoice) => invoice.invoiceId !== invoiceId)
+      );
+    } catch (error) {
+      console.error("Error deleting invoice:", error);
+      Swal.fire("Lỗi!", "Xóa hóa đơn thất bại.", "error");
+    }
   };
   
   //Menu thu tien r 
@@ -356,17 +436,26 @@ const InvoiceManager = ({ setIsAdmin, setIsNavAdmin, motels, setmotels }) => {
       fetchDataInvoice(showMenu)
       setShowMenu(null) // Đóng menu
     } else if (label === 'Xóa hóa đơn') {
-      alert(` Xóa hóa đơn cua hoa don ${showMenu}`)
-      fetchDataInvoice(showMenu)
-      setShowMenu(null) // Đóng menu
+      Swal.fire({
+        title: 'Xác nhận xóa hóa đơn?',
+        text: 'Hành động này không thể hoàn tác!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Xác nhận',
+        cancelButtonText: 'Hủy',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          deleteInvoice(showMenu); // Gọi hàm xóa hóa đơn
+        }
+      });
+      setShowMenu(null); // Đóng menu
     } else if (label === 'Thu tiền') {
       toggleModalCollectMoney(!toggleModalCollectMoney)
       fetchDataInvoice(showMenu)
       setShowMenu(null) // Đóng menu
     } else if (label === 'Hủy hóa đơn') {
-      alert(` Hủy hóa đơn  cua hoa don ${showMenu}`)
-      fetchDataInvoice(showMenu)
-      setShowMenu(null) // Đóng menu
+      cancelInvoice(showMenu);
+      setShowMenu(null); // Đóng menu
     } else if (label === 'Chỉnh sửa') {
       toggleModalInvoice(!modalOpenInvoice)
       fetchDataInvoice(showMenu)
